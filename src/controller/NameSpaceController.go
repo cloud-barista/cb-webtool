@@ -25,3 +25,12 @@ func NsRegForm(c echo.Context) error {
 	}
 	return c.Redirect(http.StatusPermanentRedirect, "/login")
 }
+
+func NsListForm(c echo.Context) error {
+	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		return c.Render(http.StatusOK, "NSList.html", map[string]interface{}{
+			"LoginInfo": loginInfo,
+		})
+	}
+	return c.Redirect(http.StatusPermanentRedirect, "/login")
+}
