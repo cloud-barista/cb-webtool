@@ -1,0 +1,55 @@
+{{define "Header"}}
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+        <!-- https://fontawesome.com/cheatsheet -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <link rel="stylesheet" href="../assets/css/custom.css">
+
+        <title>Cloud Baristar</title>
+    </head>
+    <body>
+        <!-- header -->
+        <header class="header">
+            <nav class="navbar">
+                <a class="navbar-brand" href="#" ><img src="../assets/apps/img/logo.png" alt="Cloud Baristar" style="height:64px;"></a>
+                <ul class="nav px-3">
+                    <li class="nav-item">
+                        <select class="form-control form-control-sm">
+                            <option>Select nameSpace</option>
+                            <option value="{{.NameSpace}}" selected>{{ .NameSpace}}</option>
+                        </select>
+                    </li>
+                    <li class="nav-item">
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-dark btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+                                <a class="dropdown-item" href="#">Region 관리</a>
+                                <a class="dropdown-item" href="#">클라우드 연결 관리</a>
+                                <a class="dropdown-item" href="#">Driver 관리</a>
+                                <a class="dropdown-item" href="#">네임스페이스 관리</a>
+                                <a class="dropdown-item" href="#">Credential 관리</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="text-light" href="#">
+                            
+                            <strong>{{ .Username }}</strong>님
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <!-- //header -->
+{{end}}

@@ -1,0 +1,9 @@
+
+<h2>Header Template</h2>
+
+{{with  .Name -}}{{ .Age}} / {{ .Name}} / {{ .Height}}{{- end}}
+
+{{define "hello" -}}
+{{with $s := "output" -}}{{$s}}{{- end}}
+
+{{- end}}
