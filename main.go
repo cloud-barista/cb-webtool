@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"io/ioutil"
-	"log"
 	"net/http"
 
 	controller "github.com/cloud-barista/cb-webtool/src/controller"
@@ -65,6 +63,7 @@ func main() {
 	e.Renderer = renderer
 
 	e.GET("/", func(c echo.Context) error {
+		fmt.Println("어디에 걸리나 보자")
 		store := echosession.FromContext(c)
 		getUser, ok := store.Get("username")
 
@@ -89,26 +88,7 @@ func main() {
 				fmt.Printf("error : %s\r\n ", e)
 			}
 		}()
-		// //panic("test")
-		// proxyReq, err := http.NewRequest("GET", "http://localhost:1024/connectionconfig", nil)
-		// if err != nil {
-		// 	//log.Fatal(err)
-		// }
-		// client := &http.Client{}
-		// proxyRes, err := client.Do(proxyReq)
-		// if err != nil {
-		// 	//log.Fatal(err)
-		// }
 
-		// defer proxyRes.Body.Close()
-		// var cInfo []connectionInfo
-		// e := json.NewDecoder(proxyRes.Body).Decode(&cInfo)
-		// if e != nil {
-		// 	//http.Error(w, e.Error(), http.StatusBadRequest)
-		// 	//log.Fatal(e)
-		// }
-		// fmt.Println("bind :", cInfo[0])
-		// spew.Dump(cInfo)
 		return c.Render(http.StatusAccepted, "dashboard.html", result)
 
 	})
@@ -132,6 +112,7 @@ func main() {
 
 	})
 
+	e.GET("/login", controller.LoginForm)
 	e.POST("/login/proc", controller.LoginController)
 	e.POST("/regUser", controller.RegUserConrtoller)
 
@@ -154,114 +135,60 @@ func main() {
 			})
 
 		}
-
-		// return c.Render(http.StatusOK, "MCISlist.html", map[string]interface{}{
-		// 	"Name": myStruct{Name: "Dennis", Age: 36, Height: 170},
-		// })
 		return c.Redirect(http.StatusPermanentRedirect, "/login")
 	})
 
-	e.GET("/initial", func(c echo.Context) error {
-
-		//fmt.Println("initial err : ", err)
-		// if err != nil {
-		// 	return c.Render(http.StatusOK, "form_wizard.html", nil)
-		// }
-
-		return c.Redirect(http.StatusMovedPermanently, "/dashboard")
-	})
-
-	e.GET("/dashboard2", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "dashboard_3.html", map[string]interface{}{
-			"Name": myStruct{Name: "Dennis", Age: 36, Height: 170},
+	// Namespace 관련 rest server
+	e.GET("/ns", func(c echo.Context) error {
+		res := []map[string]string{
+			{
+				"id":          "879f1c57-857e-4430-b904-0cda2c16c580",
+				"name":        "Seokho Son Name Space",
+				"description": "description-2019-10-01",
+			},
+			{
+				"id":          "bce5fb65-f617-4d45-97b7-f6c299559010",
+				"name":        "my name spaced",
+				"description": "description-2019-08-14",
+			},
+		}
+		return c.JSON(http.StatusOK, map[string][]map[string]string{
+			"ns": res,
 		})
 	})
-	e.GET("/login", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "login.html", nil)
+
+	e.GET("/ns/:nsid", func(c echo.Context) error {
+		nsID := c.Param("nsid")
+		fmt.Println("nameSpaceID : ", nsID)
+		res := map[string]string{
+			"id":          "879f1c57-857e-4430-b904-0cda2c16c580",
+			"name":        "Seokho Son Name Space",
+			"description": "description-2019-10-01",
+		}
+
+		return c.JSON(http.StatusOK, res)
 	})
 
-	e.POST("/testPost", func(c echo.Context) error {
-		return c.String(http.StatusOK, "testPost")
+	e.POST("/ns", func(c echo.Context) error {
+		res := map[string]string{
+			"message": "success",
+		}
+		return c.JSON(http.StatusOK, res)
+	})
+	e.DELETE("/ns/:nsid", func(c echo.Context) error {
+		res := map[string]string{
+			"message": "success",
+		}
+		return c.JSON(http.StatusOK, res)
 	})
 
-	e.GET("/getTest", func(c echo.Context) error {
-		u := new(user)
-		if err := c.Bind(u); err != nil {
-			log.Fatal(err)
-		}
-		return c.JSON(http.StatusOK, u)
-	})
+	e.GET("/SET/NS/:nsid", controller.SetNameSpace)
 
-	e.GET("/getJson", func(c echo.Context) error {
-		url := `"http//localhost:1234/getTest?email=jazmandorf@gmail.com&name=Dennis"`
-
-		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			log.Fatal(err)
-		}
-		client := &http.Client{}
-		res, err := client.Do(req)
-		if err != nil {
-			fmt.Println("에러1")
-			log.Fatal(err)
-		}
-
-		defer res.Body.Close()
-
-		data, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			fmt.Println("에러2")
-			log.Fatal(err)
-		}
-		fmt.Println("data : ", data)
-		return c.String(http.StatusOK, "gethtml")
-	})
-
-	e.GET("/getHtml", func(c echo.Context) error {
-		url := "http//localhost:1234/getTest"
-		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		client := &http.Client{}
-		res, err := client.Do(req)
-		if err != nil {
-			fmt.Println("에러1")
-			log.Fatal(err)
-		}
-
-		defer res.Body.Close()
-
-		data, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			fmt.Println("에러2")
-			log.Fatal(err)
-		}
-		fmt.Println("data : ", data)
-
-		//return c.HTML(200, string(data))
-		return c.String(http.StatusOK, "gethtml")
-	})
-
-	// e.GET("/ns",func(c echo.Context)error{
-	// 	return c.JSON(StatusOK,map[string][]map[string]string{}{
-	// 		"ns": [
-	// 				{
-	// 					"id": "879f1c57-857e-4430-b904-0cda2c16c580",
-	// 					"name": "Seokho Son Name Space",
-	// 					"description": "description-2019-10-01",
-	// 				},
-	// 				{
-	// 					"id": "bce5fb65-f617-4d45-97b7-f6c299559010",
-	// 					"name": "my name spaced",
-	// 					"description": "description-2019-08-14",
-	// 				},
-	// 			],
-	// 	})
-	// })
+	// 웹툴에서 처리할 NameSpace
+	e.GET("/NS/list", controller.NsListForm)
 	e.GET("/NS/reg", controller.NsRegForm)
-	e.POST("NS/reg/proc", controller.NsRegController)
+	e.POST("/NS/reg/proc", controller.NsRegController)
+	e.GET("/GET/ns", controller.GetNameSpace)
 
 	e.Logger.Fatal(e.Start(":1234"))
 

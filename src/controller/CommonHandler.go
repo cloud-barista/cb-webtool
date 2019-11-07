@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -14,6 +15,67 @@ type LoginInfo struct {
 	NameSpace string
 }
 
+type CredentialInfo struct {
+	Username string
+	Password string
+}
+
+func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
+	store := echosession.FromContext(c)
+	getObj, ok := store.Get(username)
+	if !ok {
+		return CredentialInfo{}
+	}
+	result := getObj.(map[string]string)
+	credentialInfo := CredentialInfo{
+		Username: result["username"],
+		Password: result["password"],
+	}
+	return credentialInfo
+}
+
+// func SetLoginInfo(c echo.Context) LoginInfo {
+// 	store := echosession.FromContext(c)
+// 	nsList := service.GetNSList()
+// 	store.Set("username")
+// }
+
+func SetNameSpace(c echo.Context) error {
+	fmt.Println("====== SET NAME SPACE ========")
+	store := echosession.FromContext(c)
+	ns := c.Param("nsid")
+	fmt.Println("SetNameSpaceID : ", ns)
+	store.Set("namespace", ns)
+	err := store.Save()
+	res := map[string]string{
+		"message": "success",
+	}
+	if err != nil {
+		res["message"] = "fail"
+		return c.JSON(http.StatusNotAcceptable, res)
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
+func GetNameSpace(c echo.Context) error {
+	fmt.Println("====== GET NAME SPACE ========")
+	store := echosession.FromContext(c)
+
+	getInfo, ok := store.Get("namespace")
+	if !ok {
+		return c.JSON(http.StatusNotAcceptable, map[string]string{
+			"message": "Not Exist",
+		})
+	}
+	nsId := getInfo.(string)
+
+	res := map[string]string{
+		"message": "success",
+		"nsID":    nsId,
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
 func CallLoginInfo(c echo.Context) LoginInfo {
 	store := echosession.FromContext(c)
 	getUser, ok := store.Get("username")
@@ -32,6 +94,24 @@ func CallLoginInfo(c echo.Context) LoginInfo {
 
 	return loginInfo
 
+}
+
+func LoginCheck(c echo.Context) bool {
+	store := echosession.FromContext(c)
+
+	inputName := c.FormValue("username")
+	inputPass := c.FormValue("password")
+
+	getInfo, ok := store.Get(inputName)
+	if !ok {
+		return false
+	}
+	result := getInfo.(map[string]string)
+	if result["password"] == inputPass && result["username"] == inputName {
+		return true
+	}
+
+	return false
 }
 
 func MakeNameSpace(name string) string {

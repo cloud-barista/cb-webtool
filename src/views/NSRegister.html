@@ -35,13 +35,13 @@
                                 <tr>
                                     <th>Name<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="Default input" name="username">
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="username" id="username">
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Description</th>
                                     <td>
-                                        <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <textarea class="form-control" name="description" id="description" rows="3"></textarea>
                                     </td>
                                 </tr>
                             </tbody>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-end align-items-center">
-                            <button type="submit" class="btn btn-dark btn-sm">Confirm</button>
+                            <button type="button" class="btn btn-dark btn-sm" id="reg_btn">Confirm</button>
                         </div>
                     </div>
                 </div>
@@ -66,3 +66,34 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>
+
+<script>
+$(document).ready(function(){
+    $("#reg_btn").click(function(){
+        var username = $("#username").val();
+        var description = $("#description").val();
+        var url = CBTumbleBugURL+"/ns"
+        var req_body = {
+            name:username,
+            description
+        }
+        var req = {
+            headers :{
+                 'Content-type': 'application/json',
+                },
+            req_body
+            
+        }
+        console.log(req)
+        axios.post(url,req).then(result=>{
+            console.log(result.data)
+            var data = result.data
+            if(data.message == "success"){
+                alert("등록되었습니다.");
+                location.href = "/NS/list";
+            }
+        })
+    })
+})
+
+</script>

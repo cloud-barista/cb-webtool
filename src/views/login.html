@@ -26,13 +26,13 @@
                                 <form role="form">
                                     <div class="form-group mb-4">
                                         <div class="input-group input-id">
-                                            <input class="form-control form-control-lg" placeholder="Email" type="text" id="email">
+                                            <input class="form-control form-control-lg" placeholder="Email" name="username" type="text" id="email">
                                             <i class="fas fa-envelope"></i>
                                         </div>
                                     </div>
                                     <div class="form-group mb-4">
                                         <div class="input-group input-password">
-                                            <input class="form-control form-control-lg" placeholder="Password" type="password" id="password">
+                                            <input class="form-control form-control-lg" placeholder="Password" name="password" type="password" id="password">
                                             <i class="fas fa-key"></i>
                                         </div>
                                     </div>
@@ -55,7 +55,7 @@ $(document).ready(function(){
      }).then(result =>{
             console.log(result);
         });
-    var nsUrl = "http://localhost:1234/"
+    var nsUrl = "http://127.0.0.1:1234/"
     $("#sign_btn").click(function(){
        // alert("test")
         var username = $("#email").val();
@@ -71,18 +71,18 @@ $(document).ready(function(){
             if(result.data.status == "success"){
                 alert("Login Success");
                 //location.reload();
-                axios.get("http://localhost:1234/ns").then(result=>{
+                axios.get("http://127.0.0.1:1234/ns").then(result=>{
                     console.log(result.data);
-                    data = result.data;
-                })
-                var ns = result.data.nameSpace
-                if(ns){
+                    var data = result.data;
+
+                    console.log(data)
+                    if(data){
                     location.href ="/dashboard";
-                }else{
-                    alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
-                    location.href ="/NS/reg";
-                }
-                
+                    }else{
+                        alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
+                        location.href ="/NS/reg";
+                    }
+                })      
             }
         });
         // $.ajax({

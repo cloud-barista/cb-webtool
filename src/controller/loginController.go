@@ -14,6 +14,11 @@ type ReqInfo struct {
 	Password string `json:"password"`
 }
 
+func LoginForm(c echo.Context) error {
+	fmt.Println("============== Login Form ===============")
+	return c.Render(http.StatusOK, "login.html", nil)
+}
+
 func RegUserConrtoller(c echo.Context) error {
 
 	reqInfo := new(ReqInfo)
@@ -24,6 +29,7 @@ func RegUserConrtoller(c echo.Context) error {
 	}
 	user := reqInfo.UserName
 	pass := reqInfo.Password
+	//
 	fmt.Println("c.Request : ", user, pass)
 	store := echosession.FromContext(c)
 	get, ok := store.Get(user)
@@ -115,3 +121,16 @@ func LoginController(c echo.Context) error {
 		"status":  "200",
 	})
 }
+
+// 여기서 둘다 다 되게 처리 해야 한다.
+// 로그인체크와, ns check
+// func LoginProc(c echo.Context) error {
+
+// 	inputName := c.FormValue("username")
+// 	inputPass := c.FormValue("password")
+// 	//username에저장되어 있는 크리덴셜 정보를 가져 오자.
+// 	credentialInfo := GetCredentialInfo(c, inputName)
+// 	if credentialInfo.Username == inputName && credentialInfo.Password == inputPass {
+
+// 	}
+// }
