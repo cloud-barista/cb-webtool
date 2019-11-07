@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 
-	controller "./src/controller"
+	controller "github.com/cloud-barista/cb-webtool/src/controller"
 	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -121,7 +121,7 @@ func main() {
 
 	e.GET("/dashboard", func(c echo.Context) error {
 		fmt.Println("=========== DashBoard start ==============")
-		if loginInfo := controller.CallLoginInfo(c); loginInfo.NameSpace != "" {
+		if loginInfo := controller.CallLoginInfo(c); loginInfo.Username != "" {
 			return c.Render(http.StatusOK, "dashboard.html", map[string]interface{}{
 				"LoginInfo": loginInfo,
 			})
