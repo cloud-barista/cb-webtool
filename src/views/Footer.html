@@ -30,10 +30,10 @@
        var ns = "";
        for(var i in res){
            if(i == 0){
-                html += '<option value="'+res[i].id+'" selected>'+res[i].id+'</option>';
+                html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
                 ns = res[i].id;
             }else{
-                html += '<option value="'+res[i].id+'">'+res[i].id+'</option>';
+                html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
         }
        }
        $("#name_select").empty();

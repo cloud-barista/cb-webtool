@@ -277,7 +277,7 @@ func main() {
 		return c.JSON(http.StatusOK, res)
 	})
 
-	e.GET("/ns/:nsid/resources/securityGroupconnectionconfig", func(c echo.Context) error {
+	e.GET("/ns/:nsid/resources/securityGroup", func(c echo.Context) error {
 
 		res := map[string]interface{}{
 			"securityGroup": []map[string]interface{}{
