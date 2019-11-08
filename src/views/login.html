@@ -32,7 +32,7 @@
                                     </div>
                                     <div class="form-group mb-4">
                                         <div class="input-group input-password">
-                                            <input class="form-control form-control-lg" placeholder="Password" name="password" type="password" id="password">
+                                            <input onkeyup="enterkey();" class="form-control form-control-lg" placeholder="Password" name="password" type="password" id="password">
                                             <i class="fas fa-key"></i>
                                         </div>
                                     </div>
@@ -49,9 +49,20 @@
     </body>
 </html>
 <script>
+
+function enterkey() {
+        if (window.event.keyCode == 13) {
+ 
+             // 엔터키가 눌렸을 때 실행할 내용
+             $("#sign_btn").click();
+        }
+}
+
+
+출처: https://cofs.tistory.com/12 [CofS]
 $(document).ready(function(){
     axios.post("/regUser",{headers: { 'Content-type': 'application/json', }, 
-        username:"thaeao",password:"jys1007"
+        username:"admin",password:"1234"
      }).then(result =>{
             console.log(result);
         });
