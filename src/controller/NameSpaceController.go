@@ -6,6 +6,7 @@ import (
 	"net/http"
 	_ "net/http"
 
+	"github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
 )
 
@@ -23,14 +24,21 @@ func NsRegForm(c echo.Context) error {
 			"LoginInfo": loginInfo,
 		})
 	}
-	return c.Redirect(http.StatusPermanentRedirect, "/login")
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	//return c.Render(http.StatusOK, "NSRegister.html", nil)
 }
 
 func NsListForm(c echo.Context) error {
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	fmt.Println("=============start NsListForm =============")
+	loginInfo := CallLoginInfo(c)
+	if loginInfo.Username != "" {
+		nsList := service.GetNSList()
 		return c.Render(http.StatusOK, "NSList.html", map[string]interface{}{
-			"LoginInfo": loginInfo,
+			"LoginInfo": loginInfo, "NSList": nsList,
 		})
 	}
-	return c.Redirect(http.StatusPermanentRedirect, "/login")
+
+	fmt.Println("LoginInfo : ", loginInfo)
+	//return c.Redirect(http.StatusPermanentRedirect, "/login")
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }

@@ -10,7 +10,7 @@
             <main role="main" class="main">
                 <div class="page-header">
                     <div>
-                        <h1>NameSpace 등록</h1>
+                        <h1>Driver 등록</h1>
                     </div>
                 </div>
                 <div class="card">
@@ -30,18 +30,40 @@
                             <colgroup>
                                 <col style="width: 20%">
                                 <col>
+                                <col>
+                                <col>
                             </colgroup>
                             <tbody>
                                 <tr>
-                                    <th>Name<strong class="text-danger">*</strong></th>
+                                    <th>DriverName<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="username" id="username">
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="dName" id="dName">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Description</th>
+                                    <th>Provider</th>
                                     <td>
-                                        <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                                        <select class="form-control form-control-sm">
+                                            <option selected>Select Provider</option>
+                                            <option value="AWS">AWS</option>
+                                            <option value="AZURE">AZURE</option>
+                                            <option value="Alibaba">Alibaba</option>
+                                            <option value="GCP">GCP</option>
+                                            <option value="Cloudit">Cloudit</option>
+                                            <option value="Openstack">Openstack</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>ProviderName<strong class="text-danger">*</strong></th>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="pName" id="pName">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>DriverLibFileName</th>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="dfName" id="dfName">
                                     </td>
                                 </tr>
                             </tbody>
@@ -59,7 +81,8 @@
         </div>
         <!-- //container -->
 
-{{template "Footer" .}}
+
+        {{template "Footer" .}}
 
 <script>
 $(document).ready(function(){
