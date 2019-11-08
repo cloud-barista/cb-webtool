@@ -5,7 +5,6 @@ import (
 
 	"net/http"
 
-	"github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
 )
 
@@ -31,9 +30,10 @@ func DriverListForm(c echo.Context) error {
 	fmt.Println("=============start NsListForm =============")
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
-		nsList := service.GetDriverList()
+		//nsList := service.GetDriverList()
 		return c.Render(http.StatusOK, "DriverList.html", map[string]interface{}{
-			"LoginInfo": loginInfo, "NSList": nsList,
+			"LoginInfo": loginInfo,
+			//"NSList": nsList,
 		})
 	}
 
@@ -56,9 +56,10 @@ func CredertialListForm(c echo.Context) error {
 	fmt.Println("=============start CredertialRegForm =============")
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
-		nsList := service.GetCredentialList()
+		//nsList := service.GetCredentialList()
 		return c.Render(http.StatusOK, "CredentialList.html", map[string]interface{}{
-			"LoginInfo": loginInfo, "NSList": nsList,
+			"LoginInfo": loginInfo,
+			// "NSList": nsList,
 		})
 	}
 
@@ -82,9 +83,9 @@ func RegionListForm(c echo.Context) error {
 
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
-		nsList := service.GetCredentialList()
+		//nsList := service.GetCredentialList()
 		return c.Render(http.StatusOK, "RegionList.html", map[string]interface{}{
-			"LoginInfo": loginInfo, "NSList": nsList,
+			"LoginInfo": loginInfo,
 		})
 	}
 
@@ -108,9 +109,10 @@ func ConnectionListForm(c echo.Context) error {
 
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
-		nsList := service.GetCredentialList()
-		return c.Render(http.StatusOK, "Connectionist.html", map[string]interface{}{
-			"LoginInfo": loginInfo, "NSList": nsList,
+		//nsList := service.GetCredentialList()
+		return c.Render(http.StatusOK, "ConnectionList.html", map[string]interface{}{
+			"LoginInfo": loginInfo,
+			//"NSList": nsList,
 		})
 	}
 

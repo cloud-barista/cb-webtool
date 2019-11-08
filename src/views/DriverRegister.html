@@ -10,7 +10,7 @@
             <main role="main" class="main">
                 <div class="page-header">
                     <div>
-                        <h1>NameSpace 등록</h1>
+                        <h1>Driver 등록</h1>
                     </div>
                 </div>
                 <div class="card">
@@ -33,15 +33,35 @@
                             </colgroup>
                             <tbody>
                                 <tr>
-                                    <th>Name<strong class="text-danger">*</strong></th>
+                                    <th>DriverName<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="username" id="username">
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="dName" id="dName">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Description</th>
+                                    <th>Provider</th>
                                     <td>
-                                        <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                                        <select class="form-control form-control-sm">
+                                            <option selected>Select Provider</option>
+                                            <option value="AWS">AWS</option>
+                                            <option value="AZURE">AZURE</option>
+                                            <option value="Alibaba">Alibaba</option>
+                                            <option value="GCP">GCP</option>
+                                            <option value="Cloudit">Cloudit</option>
+                                            <option value="Openstack">Openstack</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>ProviderName<strong class="text-danger">*</strong></th>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="pName" id="pName">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>DriverLibFileName</th>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="dfName" id="dfName">
                                     </td>
                                 </tr>
                             </tbody>
@@ -60,12 +80,7 @@
         <!-- //container -->
 
 
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
-</html>
+        {{template "Footer" .}}
 
 <script>
 $(document).ready(function(){
