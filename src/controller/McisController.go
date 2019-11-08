@@ -22,8 +22,10 @@ func McisListForm(c echo.Context) error {
 
 func McisRegForm(c echo.Context) error {
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "MCISRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"NameSpace": namespace,
 		})
 
 	}
