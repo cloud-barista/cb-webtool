@@ -76,12 +76,28 @@ func GetNameSpace(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, res)
 }
+
+func GetNameSpaceToString(c echo.Context) string {
+	fmt.Println("====== GET NAME SPACE ========")
+	store := echosession.FromContext(c)
+
+	getInfo, ok := store.Get("namespace")
+	if !ok {
+		return ""
+	}
+	nsId := getInfo.(string)
+
+	return nsId
+}
+
 func CallLoginInfo(c echo.Context) LoginInfo {
 	store := echosession.FromContext(c)
 	getUser, ok := store.Get("username")
 	if !ok {
+		fmt.Println("========= CallLoginInfo Nothing =========")
 		return LoginInfo{}
 	}
+	fmt.Println("GETUSER : ", getUser.(string))
 	getObj, ok := store.Get(getUser.(string))
 	if !ok {
 		return LoginInfo{}

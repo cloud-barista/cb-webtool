@@ -24,8 +24,8 @@ func NsRegForm(c echo.Context) error {
 			"LoginInfo": loginInfo,
 		})
 	}
-	// return c.Redirect(http.StatusPermanentRedirect, "/login")
-	return c.Render(http.StatusOK, "NSRegister.html", nil)
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	//return c.Render(http.StatusOK, "NSRegister.html", nil)
 }
 
 func NsListForm(c echo.Context) error {
@@ -40,7 +40,5 @@ func NsListForm(c echo.Context) error {
 
 	fmt.Println("LoginInfo : ", loginInfo)
 	//return c.Redirect(http.StatusPermanentRedirect, "/login")
-	return c.Render(http.StatusOK, "NSList.html", map[string]interface{}{
-		"LoginInfo": "",
-	})
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }

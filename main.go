@@ -62,83 +62,110 @@ func main() {
 
 	e.Renderer = renderer
 
-	e.GET("/", func(c echo.Context) error {
-		fmt.Println("어디에 걸리나 보자")
-		store := echosession.FromContext(c)
-		getUser, ok := store.Get("username")
+	e.GET("/", controller.IndexController)
+	e.GET("/dashboard", controller.DashBoard)
 
-		if !ok {
-			fmt.Println("nothing ")
-			//return c.Render(http.StatusNotAcceptable, "login.html", nil)
-			return c.Redirect(http.StatusPermanentRedirect, "/login")
-		}
-		result := map[string]string{}
-		getObj, ok := store.Get(getUser.(string))
-
-		if !ok {
-			//return c.Render(http.StatusPermanentRedirect, "login.html", nil)
-			return c.Redirect(http.StatusPermanentRedirect, "/login")
-		}
-		for k, v := range getObj.(map[string]string) {
-			result[k] = v
-		}
-
-		defer func() {
-			if e := recover(); e != nil {
-				fmt.Printf("error : %s\r\n ", e)
-			}
-		}()
-
-		return c.Render(http.StatusAccepted, "dashboard.html", result)
-
-	})
-
-	e.GET("/hello", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "hello.html", map[string]interface{}{
-			"Name": myStruct{Name: "Dennis", Age: 36, Height: 170},
-		})
-	})
-
-	e.GET("/dashboard", func(c echo.Context) error {
-		fmt.Println("=========== DashBoard start ==============")
-		if loginInfo := controller.CallLoginInfo(c); loginInfo.Username != "" {
-			return c.Render(http.StatusOK, "dashboard.html", map[string]interface{}{
-				"LoginInfo": loginInfo,
-			})
-
-		}
-
-		return c.Redirect(http.StatusPermanentRedirect, "/login")
-
-	})
-
+	//login 관련
 	e.GET("/login", controller.LoginForm)
 	e.POST("/login/proc", controller.LoginController)
 	e.POST("/regUser", controller.RegUserConrtoller)
 
-	e.GET("/MCIS/register", func(c echo.Context) error {
-		if loginInfo := controller.CallLoginInfo(c); loginInfo.NameSpace != "" {
-			return c.Render(http.StatusOK, "MCISRegister.html", map[string]interface{}{
-				"LoginInfo": loginInfo,
-			})
-
+	// MCIS
+	e.GET("/MCIS/register", controller.McisRegForm)
+	e.GET("/MCIS/list", controller.McisListForm)
+	// MCIS지울것
+	//예가 리스트 전부
+	e.GET("/ns/:nsid/mcis", func(c echo.Context) error {
+		res := map[string]interface{}{
+			"mcis": []map[string]string{
+				{
+					"id":     "7e3130a0-a811-47b8-a82c-b155267edef5",
+					"name":   "mcis-1-t001",
+					"vm_num": "3",
+					"status": "launching",
+				},
+				{
+					"id":     "423123123-a811-47b8-a82c-b155267edef5",
+					"name":   "mcis-2-t002",
+					"vm_num": "4",
+					"status": "launching",
+				},
+				{
+					"id":     "087070987-a811-47b8-a82c-b155267edef5",
+					"name":   "mcis-3-t003",
+					"vm_num": "2",
+					"status": "launching",
+				},
+			},
 		}
-
-		return c.Redirect(http.StatusPermanentRedirect, "/login")
-
+		return c.JSON(http.StatusOK, res)
 	})
-
-	e.GET("/MCIS/list", func(c echo.Context) error {
-		if loginInfo := controller.CallLoginInfo(c); loginInfo.NameSpace != "" {
-			return c.Render(http.StatusOK, "MCISlist.html", map[string]interface{}{
-				"LoginInfo": loginInfo,
-			})
-
+	e.GET("/ns/:nsid/mcis/:mcis_id", func(c echo.Context) error {
+		res := map[string]interface{}{
+			"id":     "7e3130a0-a811-47b8-a82c-b155267edef5",
+			"name":   "mcis-2-t003",
+			"vm_num": "3",
+			"status": "launching",
+			"vm": []map[string]string{
+				{
+					"id":                "04b9a6f1-c210-4941-bae1-545fb76fbb63",
+					"csp_vm_id":         "azureshson0",
+					"name":              "azure-t09",
+					"status":            "Running",
+					"public_ip":         "52.231.161.89",
+					"private_ip":        "192.168.0.2",
+					"domain_name":       "Not assigned yet",
+					"config_name":       "aws-connection-config-01",
+					"spec_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"image_id":          "UUID-for-aws-ubuntu-image",
+					"vnet_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"vnic_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"security_group_id": "17c12631-d29c-46c9-8390-322ad065cc39",
+					"ssh_key_id":        "17c12631-d29c-46c9-8390-322ad065cc39",
+					"description":       "description",
+				},
+				{
+					"id":                "66074602-bc67-4604-b736-fc75205afeb3",
+					"csp_vm_id":         "etri-shson0",
+					"name":              "gcp-vmt05",
+					"status":            "Running",
+					"public_ip":         "34.97.218.87",
+					"private_ip":        "192.168.0.6",
+					"domain_name":       "Not assigned yet",
+					"config_name":       "aws-connection-config-01",
+					"spec_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"image_id":          "UUID-for-aws-ubuntu-image",
+					"vnet_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"vnic_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"security_group_id": "17c12631-d29c-46c9-8390-322ad065cc39",
+					"ssh_key_id":        "17c12631-d29c-46c9-8390-322ad065cc39",
+					"description":       "description",
+				},
+				{
+					"id":                "7a76be36-f8aa-4ac9-a715-e6201c73365a",
+					"csp_vm_id":         "i-08b5318cb5c61fa9c",
+					"name":              "aws-vmtest06",
+					"status":            "Running",
+					"public_ip":         "52.78.122.12",
+					"private_ip":        "192.168.0.9",
+					"domain_name":       "Not assigned yet",
+					"config_name":       "aws-connection-config-01",
+					"spec_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"image_id":          "UUID-for-aws-ubuntu-image",
+					"vnet_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"vnic_id":           "17c12631-d29c-46c9-8390-322ad065cc39",
+					"security_group_id": "17c12631-d29c-46c9-8390-322ad065cc39",
+					"ssh_key_id":        "17c12631-d29c-46c9-8390-322ad065cc39",
+					"description":       "description",
+				},
+			},
+			"description": "Test description",
 		}
-		return c.Redirect(http.StatusPermanentRedirect, "/login")
+		return c.JSON(http.StatusOK, res)
 	})
 
 	// Namespace 관련 rest server
+	// 나중에 전부 지울것
 	e.GET("/ns", func(c echo.Context) error {
 		res := []map[string]string{
 			{
@@ -189,6 +216,20 @@ func main() {
 	e.GET("/NS/reg", controller.NsRegForm)
 	e.POST("/NS/reg/proc", controller.NsRegController)
 	e.GET("/GET/ns", controller.GetNameSpace)
+
+	// 웹툴에서 처리할 Connection
+	e.GET("/Connection/list", controller.ConnectionListForm)
+	e.GET("/Connection/reg", controller.ConnectionRegForm)
+	e.POST("/Connection/reg/proc", controller.NsRegController)
+
+	// 웹툴에서 처리할 Region
+	e.GET("/Region/list", controller.RegionListForm)
+	e.GET("/Region/reg", controller.RegionRegForm)
+	e.POST("/Region/reg/proc", controller.NsRegController)
+
+	// 웹툴에서 처리할 Credential
+	e.GET("/Credential/list", controller.CredertialListForm)
+	e.GET("/Credential/reg", controller.CredertialRegForm)
 
 	e.Logger.Fatal(e.Start(":1234"))
 
