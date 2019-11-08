@@ -186,7 +186,7 @@ $(document).ready(function(){
         }
         if(cnt == 1){
            
-            var u = CBTumbleBugURL+"/ns/"+id
+            var u = CommonURL+"/ns/"+id
             alert("url: "+u)
             if(confirm("삭제하시겠습니까?")){
              axios.delete(u).then(result=>{

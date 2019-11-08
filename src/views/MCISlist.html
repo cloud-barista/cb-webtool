@@ -311,7 +311,7 @@
      <script>
      $(document).ready(function(){
          var nsid = "{{ .NameSpace}}"
-         var url = CBTumbleBugURL+"/ns/"+nsid+"/mcis"
+         var url = CommonURL+"/ns/"+nsid+"/mcis"
          axios.get(url).then(result=>{
              var data = result.data;
              console.log(data)

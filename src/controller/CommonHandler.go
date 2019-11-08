@@ -99,14 +99,21 @@ func CallLoginInfo(c echo.Context) LoginInfo {
 	}
 	fmt.Println("GETUSER : ", getUser.(string))
 	getObj, ok := store.Get(getUser.(string))
+
 	if !ok {
 		return LoginInfo{}
 	}
+
 	result := getObj.(map[string]string)
 	loginInfo := LoginInfo{
 		Username:  result["username"],
 		NameSpace: result["namespace"],
 	}
+	getNs, ok := store.Get("namespace")
+	if !ok {
+		return loginInfo
+	}
+	loginInfo.NameSpace = getNs.(string)
 
 	return loginInfo
 

@@ -9,6 +9,9 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
         <!-- https://fontawesome.com/cheatsheet -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
         <link rel="stylesheet" href="../assets/css/custom.css">
@@ -16,11 +19,13 @@
         <title>Cloud Baristar</title>
     </head>
     <script>
-        const CBTumbleBugURL ="http://127.0.0.1:1234";
+        const CommonURL ="http://127.0.0.1:1234";
+        const NAMESPACE ="{{with .LoginInfo}}{{ .NameSpace }}{{end}}";
+        console.log("namespace : ",NAMESPACE)
        
     
     </script>
-    <body>
+    
         <!-- header -->
         <header class="header">
             <nav class="navbar">
@@ -57,4 +62,5 @@
             </nav>
         </header>
         <!-- //header -->
+        <body>
 {{end}}

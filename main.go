@@ -252,8 +252,8 @@ func main() {
 
 		res := map[string]interface{}{
 			"image": []map[string]interface{}{
-
-				{"id": "bb3cd5b6-c1ee-471e-810e-6d20eea072da",
+				{
+					"id":             "bb3cd5b6-c1ee-471e-810e-6d20eea072da",
 					"connectionName": "aws-config01",
 					"cspImageId":     "ami-00a54827eb7ffcd3c",
 					"cspImageName":   "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20190814",
@@ -271,7 +271,123 @@ func main() {
 							"Value": "value2, written in Postman req",
 						},
 					},
-				}},
+				},
+				{
+					"id":             "12345-c1ee-471e-810e-6d20eea072da",
+					"connectionName": "aws-config01",
+					"cspImageId":     "ami-00a54827eb7ffcd3c",
+					"cspImageName":   "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20190814",
+					"creationDate":   "2019-08-19T18:11:28.000Z",
+					"description":    "Canonical, Ubuntu, 18.04 LTS, amd64 bionic image build on 2019-08-14",
+					"guestOS":        "ubuntu",
+					"status":         "",
+					"keyValueList": []map[string]string{
+						{
+							"Key":   "key1, written in Postman req",
+							"Value": "value1, written in Postman req",
+						},
+						{
+							"Key":   "key2, written in Postman req",
+							"Value": "value2, written in Postman req",
+						},
+					},
+				},
+				{
+					"id":             "543212-c1ee-471e-810e-6d20eea072da",
+					"connectionName": "aws-config01",
+					"cspImageId":     "ami-00a54827eb7ffcd3c",
+					"cspImageName":   "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20190814",
+					"creationDate":   "2019-08-19T18:11:28.000Z",
+					"description":    "Canonical, Ubuntu, 18.04 LTS, amd64 bionic image build on 2019-08-14",
+					"guestOS":        "ubuntu",
+					"status":         "",
+					"keyValueList": []map[string]string{
+						{
+							"Key":   "key1, written in Postman req",
+							"Value": "value1, written in Postman req",
+						},
+						{
+							"Key":   "key2, written in Postman req",
+							"Value": "value2, written in Postman req",
+						},
+					},
+				},
+			},
+		}
+
+		return c.JSON(http.StatusOK, res)
+	})
+
+	e.GET("/ns/:nsid/resources/network", func(c echo.Context) error {
+
+		res := map[string]interface{}{
+			"network": []map[string]interface{}{
+				{
+					"id":             "08b5de73-fcd4-4fd9-a074-7071796aec03",
+					"connectionName": "aws-config01",
+					"cspNetworkId":   "subnet-0a6d2e9a1c2052703",
+					"cspNetworkName": "CB-VNet-Subnet",
+					"cidrBlock":      "192.168.0.0/16",
+					"description":    "",
+					"status":         "pending",
+					"keyValueList": []map[string]string{
+						{
+							"Key":   "VpcId",
+							"Value": "vpc-0ccb5c735b1dcd646",
+						},
+						{
+							"Key":   "MapPublicIpOnLaunch",
+							"Value": "false",
+						},
+						{
+							"Key":   "AvailableIpAddressCount",
+							"Value": "65531",
+						},
+						{
+							"Key":   "AvailabilityZone",
+							"Value": "ap-southeast-2a",
+						},
+					},
+				},
+			},
+		}
+
+		return c.JSON(http.StatusOK, res)
+	})
+
+	e.GET("/ns/:nsid/resources/publicIp", func(c echo.Context) error {
+
+		res := map[string]interface{}{
+			"publicIp": []map[string]interface{}{
+				{
+					"id":              "af4633ac-0beb-4f9f-a40e-f5d33ba3b6c2",
+					"connectionName":  "aws-config01",
+					"cspPublicIpId":   "eipalloc-03ed95943b2adafab",
+					"cspPublicIpName": "ShsonTest",
+					"publicIp":        "52.64.97.175",
+					"ownedVmId":       "",
+					"description":     "Shson test description",
+					"status":          "",
+					"keyValueList": []map[string]string{
+						{
+							"Key":   "Domain",
+							"Value": "vpc",
+						},
+						{
+							"Key":   "PublicIpv4Pool",
+							"Value": "amazon",
+						},
+						{
+							"Key":   "AllocationId",
+							"Value": "eipalloc-03ed95943b2adafab",
+						},
+						{
+							"Key":   "Name",
+							"Value": "ShsonTest",
+						},
+					},
+				},
+			},
 		}
 
 		return c.JSON(http.StatusOK, res)
@@ -351,6 +467,227 @@ func main() {
 	// 웹툴에서 처리할 Driver
 	e.GET("/Driver/list", controller.DriverListForm)
 	e.GET("/Driver/reg", controller.DriverRegForm)
+
+	// Select Pop
+	e.GET("/Pop/spec", controller.PopSpec)
+	e.GET("/ns/:nsid/resources/spec", func(c echo.Context) error {
+
+		res := map[string]interface{}{
+			"spec": []map[string]interface{}{
+				{
+					"id":                    "041c71da-c024-4e30-9b6e-092bfcca6e25",
+					"name":                  "t2.medium-02",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "2",
+					"num_core":              "",
+					"mem_GiB":               "2",
+					"storage_GiB":           "2",
+					"description":           "",
+					"cost_per_hour":         "6",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "0cd007b3-d2c4-4913-a773-77bc43b94eaf",
+					"name":                  "t2.micro-01",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "1",
+					"num_core":              "",
+					"mem_GiB":               "1",
+					"storage_GiB":           "1",
+					"description":           "",
+					"cost_per_hour":         "1",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "0ee6c54f-43f5-479f-818d-eb18af42c02f",
+					"name":                  "t2.micro-04",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "1",
+					"num_core":              "",
+					"mem_GiB":               "1",
+					"storage_GiB":           "1",
+					"description":           "",
+					"cost_per_hour":         "4",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "58ade7fd-d108-44a3-99db-3a018c961e9a",
+					"name":                  "t2.micro-03",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "1",
+					"num_core":              "",
+					"mem_GiB":               "1",
+					"storage_GiB":           "1",
+					"description":           "",
+					"cost_per_hour":         "3",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "6111d39a-d676-4c87-b247-01dce72f3292",
+					"name":                  "t2.2xlarge",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "8",
+					"num_core":              "",
+					"mem_GiB":               "20",
+					"storage_GiB":           "100",
+					"description":           "",
+					"cost_per_hour":         "29",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "69c573cf-0341-43c1-80a3-426835684e42",
+					"name":                  "t2.micro-02",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "1",
+					"num_core":              "",
+					"mem_GiB":               "1",
+					"storage_GiB":           "1",
+					"description":           "",
+					"cost_per_hour":         "2",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "9c744220-b28a-4636-a6c1-078f05c38ec9",
+					"name":                  "t2.medium-01",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "2",
+					"num_core":              "",
+					"mem_GiB":               "2",
+					"storage_GiB":           "2",
+					"description":           "",
+					"cost_per_hour":         "5",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "c477f9f7-8e78-4678-8e42-b7f266658888",
+					"name":                  "t2.large",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "4",
+					"num_core":              "",
+					"mem_GiB":               "20",
+					"storage_GiB":           "80",
+					"description":           "",
+					"cost_per_hour":         "29",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "d3959c21-af25-46b0-9316-ab7f08934371",
+					"name":                  "t2.micro",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "1",
+					"num_core":              "",
+					"mem_GiB":               "1",
+					"storage_GiB":           "1",
+					"description":           "",
+					"cost_per_hour":         "1",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+				{
+					"id":                    "ffb7657a-0f4a-40cd-b84e-8147744c001d",
+					"name":                  "t2.medium-03",
+					"connectionName":        "aws-config01",
+					"os_type":               "ubuntu",
+					"num_vCPU":              "2",
+					"num_core":              "",
+					"mem_GiB":               "2",
+					"storage_GiB":           "2",
+					"description":           "",
+					"cost_per_hour":         "7",
+					"num_storage":           "",
+					"max_num_storage":       "",
+					"max_total_storage_TiB": "",
+					"net_bw_Gbps":           "",
+					"ebs_bw_Mbps":           "",
+					"gpu_model":             "",
+					"num_gpu":               "",
+					"gpumem_GiB":            "",
+					"gpu_p2p":               "",
+				},
+			},
+		}
+		return c.JSON(http.StatusOK, res)
+	})
 
 	e.Logger.Fatal(e.Start(":1234"))
 
