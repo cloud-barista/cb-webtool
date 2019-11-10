@@ -11,7 +11,7 @@ function show_pop(count) {
         dataType:"html",
 
     }).done(result=>{
-        console.log(result);
+        
         $("#transDiv").html(result);
         $("#transDiv").show();
     })
@@ -42,6 +42,7 @@ function show_pop(count) {
                             </div>
                         </div>
                     </div>
+                    <form name="Form" action="/MCIS/reg/proc" method="POST">
                     <div class="card-body">
 
                         <table class="table table-bordered table-horizontal mb-0">
@@ -53,13 +54,13 @@ function show_pop(count) {
                                 <tr>
                                     <th>MCIS Name</th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="Default input">
+                                        <input class="form-control form-control-sm" type="text" name="mcis_name"placeholder="Default input">
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>NameSpace</th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="Default input" value="{{ .NameSpace}}" />
+                                        <input class="form-control form-control-sm" type="text" placeholder="Default input" value="{{ .NameSpace}}" name="namespace"/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -74,7 +75,7 @@ function show_pop(count) {
                
             </main>
             <!-- //contents -->
-
+        </form>
         </div>
         <!-- //container -->
 
@@ -253,11 +254,11 @@ $(document).ready(function(){
                 +'<option selected>Select Configname</option>'
                 +'</select></td></tr>'
                 +'<tr><th>VM Name</th><td>'
-                +'<input class="form-control form-control-sm" type="text" name="vmName[]" placeholder="VM Name" id="vmName_'+vm_cnt+'"></td></tr>'
+                +'<input class="form-control form-control-sm" type="text" name="vmName" placeholder="VM Name" id="vmName_'+vm_cnt+'"></td></tr>'
                 +'<tr><th>VM Spec</th><td>'
                 +'<div class="form-row">'
                 +'<div class="col">'
-                +'<input type="text" id="vmspec_'+vm_cnt+'" name="vmspec[]" class="form-control form-control-sm" placeholder="Select Spec" readonly></div>'
+                +'<input type="text" id="vmspec_'+vm_cnt+'" name="vmspec" class="form-control form-control-sm" placeholder="Select Spec" readonly></div>'
                 +'<div class="col">'
                 +'<button type="button" class="btn btn-dark btn-sm" onclick="show_pop('+vm_cnt+');">Search VM Spec</button>'
                 +'</div></div></td></tr>'
@@ -295,7 +296,7 @@ $(document).ready(function(){
                 // +'</td></tr>'
                 +'<tr><th>Security Group</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="sg[]" id="sg_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" multiple name="sg[]" id="sg_'+vm_cnt+'"  >'
                 +'<option selected>Select Security Group</option>'
                 +'</select></td></tr>'
                 +'<tr><th>SSH KEY</th>'
@@ -309,7 +310,7 @@ $(document).ready(function(){
                 +'</tbody></table></div>'
                 +'<div class="card-footer">'
                 +'<div class="d-flex justify-content-end align-items-center">'
-                +'<button type="button" class="btn btn-dark btn-sm">Confirm</button></div></div></div>'
+                +'<button type="submit" class="btn btn-dark btn-sm">Confirm</button></div></div></div>'
 
                 $("#target").after(html);
                // $("#main").append(html)

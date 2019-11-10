@@ -72,6 +72,7 @@ func main() {
 
 	// MCIS
 	e.GET("/MCIS/reg", controller.McisRegForm)
+	e.POST("/MCIS/reg/proc", controller.McisRegController)
 	e.GET("/MCIS/list", controller.McisListForm)
 	// MCIS지울것
 	//예가 리스트 전부
