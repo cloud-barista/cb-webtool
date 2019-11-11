@@ -69,6 +69,8 @@
                                             <col>
                                             <col>
                                             <col>
+                                            <col>
+                                            <col>
                                             <col style="width: 50px">
                                            
                                         </colgroup>
@@ -85,6 +87,8 @@
                                                 <th>Name</th>
                                                 <th>ConnectionName</th>
                                                 <th>vCpu</th>
+                                                <th>Memory</th>
+                                                <th>Storage</th>
                                                 <th>Cost/Hour</th>
                                                 <th>OsType</th>
                                                
@@ -148,12 +152,14 @@ $(document).ready(function(){
                     +'<td class="text-center">'
                     +'<div class="form-input">'
                     +'<span class="input">'
-                    +'<input type="checkbox" id="" class="chk" value="'+res[i].id+'|'+res[i].name+'|'+res[i].num_vCPU+'|'+res[i].cost_per_hour+'|'+res[i].os_type+'"><i></i>'
+                    +'<input type="radio" id="" class="chk" value="'+res[i].id+'|'+res[i].name+'|'+res[i].num_vCPU+'|'+res[i].mem_GiB+'|'+res[i].storage_GiB+'|'+res[i].cost_per_hour+'|'+res[i].os_type+'"><i></i>'
                     +'</span></div></td>'
                     +'<td>'+cnt+'</td>'
                     +'<td>'+res[i].name+'</td>'
                     +'<td>'+res[i].connectionName+'</td>'
                     +'<td>'+res[i].num_vCPU+'</td>'
+                    +'<td>'+res[i].mem_GiB+'</td>'
+                    +'<td>'+res[i].storage_GiB+'</td>'
                     +'<td>'+res[i].cost_per_hour+'</td>'
                     +'<td>'+res[i].os_type+'</td><tr>';
             }
@@ -190,10 +196,12 @@ $(document).ready(function(){
           $("#vmspec_"+vm_cnt+"").val(values[0]);
           // name이 들어갈때
           //$("#vmspec_"+vm_cnt+"").val(values[1]);
+          $("#vmspecName_"+vm_cnt+"").val(values[1]+"("+value[0]+")");
           $("#vcpu_"+vm_cnt+"").val(values[2]);
           $("#mem_"+vm_cnt+"").val(values[3]);
           $("#storage_"+vm_cnt+"").val(values[4]);
-          $("#osType_"+vm_cnt+"").val(values[5]);
+          $("#cPh"+vm_cnt+"").val(values[5]);
+          $("#osType_"+vm_cnt+"").val(values[6]);
 
 
           $('#transDiv').remove();
