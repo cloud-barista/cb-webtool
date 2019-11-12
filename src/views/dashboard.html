@@ -233,10 +233,27 @@
                                 </div>
                             </div>
                             <div class="card-body">
+                                    <script>
+                                            $(document).ready(function () {
+                                              $('#vmap').vectorMap({
+                                                map: 'world_en',
+                                                backgroundColor: '#ffffff',
+                                                color: '#ffffff',
+                                                hoverOpacity: 0.7,
+                                                selectedColor: '#666666',
+                                                enableZoom: true,
+                                                showTooltip: true,
+                                                scaleColors: ['#C8EEFF', '#006491'],
+                                                values: sample_data,
+                                                normalizeFunction: 'polynomial'
+                                              });
+                                            });
+                                          </script>
                                 <!-- Chart -->
-                                <div class="d-flex h-100 align-items-center justify-content-center">
-                                    <div class="spinner-border" role="status">
-                                        <span class="sr-only">Loading...</span>
+                                <div class="d-flex h-100 align-items-center justify-content-center" id="vmap">
+                                   
+                                    <div class="border" role="status">
+                                            <span class="sr-only" >Loading</span>
                                     </div>
                                 </div>
                             </div>
