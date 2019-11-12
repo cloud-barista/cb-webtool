@@ -92,7 +92,7 @@ func main() {
 							"name":        "aws-shson-vm02",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "52.64.97.175",
@@ -104,7 +104,7 @@ func main() {
 							"name":        "aws-shson-vm01",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -116,7 +116,7 @@ func main() {
 							"name":        "aws-shson-vm03",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -128,7 +128,7 @@ func main() {
 							"name":        "aws-shson-vm04",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -140,7 +140,7 @@ func main() {
 							"name":        "aws-shson-vm05",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -161,7 +161,7 @@ func main() {
 							"name":        "aws-shson-vm02",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "52.64.97.175",
@@ -173,7 +173,7 @@ func main() {
 							"name":        "aws-shson-vm01",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -185,7 +185,7 @@ func main() {
 							"name":        "aws-shson-vm03",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -197,7 +197,7 @@ func main() {
 							"name":        "aws-shson-vm04",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -209,7 +209,7 @@ func main() {
 							"name":        "aws-shson-vm05",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -222,7 +222,7 @@ func main() {
 					"id":             "42357184d-7307-468b-8a14-68ae69307968",
 					"name":           "mcis-t03",
 					"status":         "Running",
-					"placement_algo": "",
+					"placement_algo": "ap-southeast",
 					"description":    "Test description",
 					"vm": []map[string]interface{}{
 						{
@@ -230,7 +230,7 @@ func main() {
 							"name":        "aws-shson-vm02",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "52.64.97.175",
@@ -242,7 +242,7 @@ func main() {
 							"name":        "aws-shson-vm01",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -254,7 +254,7 @@ func main() {
 							"name":        "aws-shson-vm03",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -454,6 +454,88 @@ func main() {
 			},
 			"placement_algo": "",
 			"description":    "Test description",
+		}
+
+		return c.JSON(http.StatusOK, res)
+	})
+	e.GET("/ns/:nsid/mcis/:mcis_id/vm/:vm_id", func(c echo.Context) error {
+		res := map[string]interface{}{
+
+			"id":           "09177a33-63d7-477c-a81f-91a258255450",
+			"name":         "aws-shson-vm02",
+			"config_name":  "aws-config01",
+			"spec_id":      "d3959c21-af25-46b0-9316-ab7f08934371",
+			"image_id":     "bc352bf1-93d6-47f1-a558-485f1dff695b",
+			"vnet_id":      "08b5de73-fcd4-4fd9-a074-7071796aec03",
+			"vnic_id":      "",
+			"public_ip_id": "af4633ac-0beb-4f9f-a40e-f5d33ba3b6c2",
+			"security_group_ids": []string{
+				"149d0be5-767d-4bbc-a943-3e5c6b824d71",
+			},
+			"ssh_key_id":       "1ac8c088-69cb-4c3b-b3ad-1c7e79eb5889",
+			"description":      "description",
+			"vm_access_id":     "",
+			"vm_access_passwd": "",
+			"vmUserId":         "",
+			"vmUserPasswd":     "",
+			"region": map[string]string{
+				"Region": "ap-southeast",
+				"Zone":   "ap-southeast-2a",
+			},
+			"publicIP":    "52.64.97.175",
+			"publicDNS":   "",
+			"privateIP":   "192.168.135.182",
+			"privateDNS":  "ip-192-168-135-182.ap-southeast-2.compute.internal",
+			"vmBootDisk":  "/dev/sda1",
+			"vmBlockDisk": "/dev/sda1",
+			"status":      "Running",
+			"cspViewVmDetail": map[string]interface{}{
+				"Name":      "aws-shson-vm02",
+				"Id":        "i-0249226ec5e613be5",
+				"StartTime": "0001-01-01T00:00:00Z",
+				"Region": map[string]string{
+					"Region": "ap-southeast",
+					"Zone":   "ap-southeast-2a",
+				},
+				"ImageId":          "ami-00a54827eb7ffcd3c",
+				"VMSpecId":         "t2.micro",
+				"VirtualNetworkId": "vpc-0ccb5c735b1dcd646",
+				"SecurityGroupIds": []string{
+					"sg-032cdc7495f2dd3e0",
+				},
+				"NetworkInterfaceId": "eni-attach-049edd0dd3219b6b8",
+				"PublicIP":           "52.64.97.175",
+				"PublicDNS":          "",
+				"PrivateIP":          "192.168.135.182",
+				"PrivateDNS":         "ip-192-168-135-182.ap-southeast-2.compute.internal",
+				"KeyPairName":        "shson-ssh-test1",
+				"VMUserId":           "",
+				"VMUserPasswd":       "",
+				"VMBootDisk":         "/dev/sda1",
+				"VMBlockDisk":        "/dev/sda1",
+				"KeyValueList": []map[string]string{
+					{
+						"Key":   "State",
+						"Value": "running",
+					},
+					{
+						"Key":   "Architecture",
+						"Value": "x86_64",
+					},
+					{
+						"Key":   "VpcId",
+						"Value": "vpc-0ccb5c735b1dcd646",
+					},
+					{
+						"Key":   "SubnetId",
+						"Value": "subnet-0a6d2e9a1c2052703",
+					},
+					{
+						"Key":   "KeyName",
+						"Value": "shson-ssh-test1",
+					},
+				},
+			},
 		}
 
 		return c.JSON(http.StatusOK, res)
