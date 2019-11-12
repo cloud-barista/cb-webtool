@@ -1,0 +1,491 @@
+{{template "Header" .}}
+
+        <!-- container -->
+        <div class="container-fluid">
+            <!-- sidebar -->
+            {{template "LNB" .}}
+            <!-- //sidebar -->
+
+            <!-- contents -->
+            <main role="main" class="main" id="box_dialog">
+                <div class="page-header" id="box_dialog">
+                    <div>
+                        <h1>MCIS Management</h1>
+                    </div>
+                </div>
+                <!-- table -->
+                <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Service - MCIS</strong>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-sm btn-danger">Stop</button>
+                                    <button type="button" class="btn btn-sm btn-warning">Resume</button>
+                                    <button type="button" class="btn btn-sm btn-primary">Restart</button>
+                                    <button type="button" class="btn btn-sm btn-outline-dark">Settings</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex mb-3 justify-content-between align-items-center">
+                                <!-- <div>
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">show</label>
+                                        </div>
+                                        <select class="custom-select" id="inputGroupSelect01">
+                                            <option selected>Choose...</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">search</span>
+                                        </div>
+                                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="table">
+                                <table class="table table-bordered">
+                                    <colgroup>
+                                        <col style="width: 50px">
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col style="width: 50px">
+                                        <col>
+                                        <col style="width: 150px">
+                                    </colgroup>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="text-center">
+                                                <div class="form-input">
+                                                    <span class="input">
+                                                        <input type="checkbox" id=""><i></i>
+                                                    </span>
+                                                </div>
+                                            </th>                                            
+                                            <th>NAME(ID)</th>
+                                            <th>TIME</th>
+                                            <th>CNT(VM/CP)</th>
+                                            <th>Desc</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table_1">
+                                        <tr>
+                                            <td class="text-center">
+                                                <div class="form-input">
+                                                    <span class="input">
+                                                        <input type="checkbox" id=""><i></i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td><a href="">Baristar1</a></td>
+                                            <td>aws driver 1aws driver ver0.1</td>
+                                            <td>aws key 1</td>
+                                            <td>ap-northest-1</td>
+                                            <td>
+                                                <span class="badge badge-pill badge-warning">stop</span>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-icon">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-icon">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+                <!-- table -->
+                <!-- card type -->
+                <div class="row mb-12" style="padding-top:20px;" id="card">
+                    <!-- <div class="col-xl-12 col-lg-12">
+                        <div class="card card-stats mb-12 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">MCIS 1</h5>
+                                        <span class="h2 font-weight-bold mb-0">350,897</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                                        <i class="fas fa-chart-bar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <!-- card type -->
+                <!-- table -->
+                <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Resource - VM</strong>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-outline-dark">Modify</button>
+                                    <button type="button" class="btn btn-sm btn-dark">Regist</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex mb-3 justify-content-between align-items-center">
+                               
+                            </div>
+                            <div class="table">
+                                <table class="table table-bordered">
+                                    <colgroup>
+                                        <col style="width: 50px">
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col style="width: 100px">
+                                    </colgroup>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="text-center">
+                                                <div class="form-input">
+                                                    <span class="input">
+                                                        <input type="checkbox" id=""><i></i>
+                                                    </span>
+                                                </div>
+                                            </th>                                            
+                                            <th>NAME(ID)</th>
+                                            <th>TIME</th>
+                                            <th>CP</th>
+                                            <th>Region</th>
+                                            <th>Desc</th>
+                                            <th>Status</th>
+                                            <th>Alert</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table_2">                                      
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- <div class="d-flex align-items-center">
+                                    <span class="mr-2">
+                                        showing 1 to <span>5</span> <span>25</span> record
+                                    </span>
+                                    <nav>
+                                        <ul class="pagination pagination-sm">
+                                            <li class="page-item disabled">
+                                                <span class="page-link"><i class="fas fa-angle-left"></i></span>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item active" aria-current="page">
+                                                <span class="page-link">
+                                                    2
+                                                    <span class="sr-only">(current)</span>
+                                                </span>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#"><i class="fas fa-angle-right"></i></a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-dark btn-sm">등록</button>
+                                </div> -->
+                            </div>
+                        </div>
+                </div>
+                <!-- table -->
+            </main>
+            <!-- //contents -->
+
+        </div>
+        <!-- //container -->
+
+
+     {{template "Footer" .}}
+     <script>
+     $(document).ready(function(){
+         var nsid = "{{ .NameSpace}}";
+         var url = CommonURL+"/ns/"+nsid+"/mcis";
+         console.log("url :",url);
+         show_mcis(url);
+         
+       
+     })
+     </script>
+     <script>
+
+     function short_desc(str){
+        var len = str.length;
+        var result = "";
+        if(len > 15){
+            result = str.substr(0,15)+"...";
+        }else{
+            result = str;
+        }
+
+        return result;
+     }
+     
+     function show_mcis(url){
+        var html = "";
+        axios.get(url).then(result=>{
+            var data = result.data;
+             console.log("showmcis Data : ",data)
+             var html = "";
+             var mcis = data.mcis;
+             var len = mcis.length;
+             var count = 0;
+             
+              
+             for(var i in mcis){
+                 var sta = mcis[i].status;
+                 var badge = "";
+                 var status = sta.toLowerCase()
+                 var vms = mcis[i].vm
+                 var vm_len = vms.length 
+
+                 if(status == "running"){
+                    badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+                 }
+                 count++;
+                 if(count == 1){
+
+                 }
+                 html += '<tr id="tr_id_'+count+'" onclick="show_card(\' '+mcis[i].id+'\' )">'
+                  +'<td class="text-center">'
+                  +'<div class="form-input">'
+                  +'<span class="input">'
+                  +'<input type="checkbox" class="chk" id="chk_'+count+'" value="'+mcis[i].id+'"><i></i></span></div>'
+                  +'</td>'
+                  +'<td><a href="">'+mcis[i].name+'</a></td>'
+                  +'<td>12:32:30</td>'
+                  +'<td>'+vm_len+'</td>'
+                  +'<td>'+short_desc(mcis[i].description)+'</td>'
+                  +'<td>'
+                  +badge
+                  +'</td>'
+                  +'<td>'
+                  +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                  +'<i class="fas fa-edit"></i>'
+                  +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
+                      +'<a class="dropdown-item" href="/Region/list">Region 관리</a>'
+                      +'<a class="dropdown-item" href="/Region/list">Region 관리</a>'
+                      +'<a class="dropdown-item" href="/Region/list">Region 관리</a>'
+                      +'<a class="dropdown-item" href="/Region/list">Region 관리</a>'
+                  +'</div>'
+                  +'</button>'
+                 +'</td>'
+                 +'</tr>';
+            }
+            console.log("html : ",html)
+            $("#table_1").empty();
+            $("#table_1").append(html);
+            show_card(mcis[0].id);
+            show_vmList(mcis[0].id);
+        });
+     }
+     function show_vmList(mcis_id){
+       
+        var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+        var html = "";
+        axios.get(url).then(result=>{
+             var data = result.data;
+             var mcis_id = data.id
+             var vm = data.vm
+             var count = 0;
+             
+              
+             for(var i in vm){
+                 var sta = vm[i].status;
+                 var badge = "";
+                 var status = sta.toLowerCase()
+                
+
+                 if(status == "running"){
+                    badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+                 }
+                 count++;
+                 if(count == 1){
+
+                 }
+                 html += '<tr id="tr_id_'+count+'" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'
+                  +'<td class="text-center">'
+                  +'<div class="form-input">'
+                  +'<span class="input">'
+                  +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'"><i></i></span></div>'
+                  +'</td>'
+                  +'<td><a href="">'+vm[i].name+'</a></td>'
+                  +'<td>12:32:30</td>'
+                  +'<td>'+"AWS"+'</td>'
+                  +'<td>'+vm[i].region.Region+'</td>'
+                  +'<td>'+short_desc(vm[i].description)+'</td>'
+                  +'<td>'
+                  +badge
+                  +'</td>'
+                  +'<td>'
+                  +"3/8"
+                  +'</td>'
+                  +'<td>'
+                  +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                  +'<i class="fas fa-edit"></i>'
+                  +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
+                      +'<a class="dropdown-item" href="/Region/list">Region 관리</a>'
+                      +'<a class="dropdown-item" href="/Region/list">Region 관리</a>'
+                      +'<a class="dropdown-item" href="/Region/list">Region 관리</a>'
+                      +'<a class="dropdown-item" href="/Region/list">Region 관리</a>'
+                  +'</div>'
+                  +'</button>'
+                 +'</td>'
+                 +'</tr>';
+            }
+            
+            $("#table_2").empty();
+            $("#table_2").append(html);
+            //show_vm(mcis_id,vm[0].id);
+        });
+     }
+   
+     function show_card(mcis_id){
+         var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+         var html = "";
+        axios.get(url).then(result=>{
+            var data = result.data
+            console.log("show card data : ",data)
+            var vm_cnt = data.vm
+            vm_cnt = vm_cnt.length
+            
+                html += '<div class="col-xl-12 col-lg-12">'
+                        +'<div class="card card-stats mb-12 mb-xl-0">'
+                        +'<div class="card-body">'
+                        +'<div class="row">'
+                        +'<div class="col">'
+                        +'<h5 class="card-title text-uppercase text-muted mb-0">'+data.name+'</h5>'
+                        +'<span class="h2 font-weight-bold mb-0">350,897</span>'
+                        +'</div>'
+                        +'<div class="col-auto">'
+                        +'<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
+                        //+'<i class="fas fa-chart-bar"></i>'
+                        +vm_cnt
+                        +'</div>'
+                        +'</div>'
+                        +'</div>'
+                        +'<p class="mt-3 mb-0 text-muted text-sm">'
+                        +'<span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>'
+                        +'<span class="text-nowrap">Since last month</span>'
+                        +'</p>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>';
+            
+            $("#card").empty()
+            $("#card").append(html)
+
+            show_vmList(mcis_id)
+           
+        })
+     }
+     function show_vm(mcis_id,vm_id){
+         var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id;
+         var html = "";
+        axios.get(url).then(result=>{
+            var data = result.data
+            console.log("show card data : ",data)
+                       
+                html += '<div class="col-xl-12 col-lg-12">'
+                        +'<div class="card card-stats mb-12 mb-xl-0">'
+                        +'<div class="card-body">'
+                        +'<div class="row">'
+                        +'<div class="col">'
+                        +'<h5 class="card-title text-uppercase text-muted mb-0">'+data.name+'</h5>'
+                        +'<span class="h2 font-weight-bold mb-0">350,897</span>'
+                        +'</div>'
+                        +'<div class="col-auto">'
+                        +'<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
+                        //+'<i class="fas fa-chart-bar"></i>'
+                        +vm_cnt
+                        +'</div>'
+                        +'</div>'
+                        +'</div>'
+                        +'<p class="mt-3 mb-0 text-muted text-sm">'
+                        +'<span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>'
+                        +'<span class="text-nowrap">Since last month</span>'
+                        +'</p>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>';
+            
+            $("#card").empty()
+            $("#card").append(html)
+           
+        })
+     }
+     function sel_table(targetNo,mcid){
+         var $target = $("#card_"+targetNo+"");
+         var html = "";
+         url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcid
+         axios.get(url).then(result=>{
+             var data = result.data.vm
+             for(var i in data){
+
+             }
+         })
+         html += '<tr>'
+                 +'<td class="text-center">'
+                 +'<div class="form-input">'
+                 +'<span class="input">'
+                 +'<input type="checkbox" id=""><i></i>'
+                 +'</span></div>'
+                 +'</td>'
+                 +'<td>1</td>'
+                 +'<td><a href="">Baristar1</a></td>'
+                 +'<td>aws driver 1aws driver ver0.1</td>'
+                 +'<td>aws key 1</td>'
+                 +'<td>ap-northest-1</td>'
+                 +'<td>'
+                 +'<div class="custom-control custom-switch">'
+                 +'<input type="checkbox" class="custom-control-input" id="customSwitch1">'
+                 +'<label class="custom-control-label" for="customSwitch1"></label></div>'
+                 +'</td>'
+                 +'<td>'
+                 +'<span class="badge badge-pill badge-warning">stop</span>'
+                 +'</td>'
+                 +'<td>2019-05-05</td>'
+                 +'</tr>';
+                 
+        $target.empty();         
+        $target.append(html);
+
+     }
+     
+     </script>
