@@ -10,12 +10,17 @@ import (
 )
 
 type MCISRequest struct {
-	VMSpec    []string `form:"vmspec"`
-	NameSpace string   `form:"namespace"`
-	McisName  string   `form:"mcis_name"`
-	VMName    []string `form:"vmName"`
-	Provider  []string `form:"provider"`
+	VMSpec           []string `form:"vmspec"`
+	NameSpace        string   `form:"namespace"`
+	McisName         string   `form:"mcis_name"`
+	VMName           []string `form:"vmName"`
+	Provider         []string `form:"provider"`
+	SecurityGroupIds []string `form:"sg"`
 }
+
+// type SecurityGroup struct {
+// 	Id []string `form:"sg"`
+// }
 
 func McisListForm(c echo.Context) error {
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
@@ -51,11 +56,13 @@ func McisRegController(c echo.Context) error {
 	namespace := c.FormValue("namespace")
 	mcis_name := c.FormValue("mcis_name")
 	provider := c.FormValue("provider")
+	sg := c.FormValue("sg")
 
 	fmt.Println("namespace : ", namespace)
 	fmt.Println("mcis_name : ", mcis_name)
 	fmt.Println("vmSpec : ", vmspec)
 	fmt.Println("provider : ", provider)
+	fmt.Println("sg : ", sg)
 
 	if err := c.Bind(m); err != nil {
 		fmt.Println("bind Error")

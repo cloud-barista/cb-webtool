@@ -152,6 +152,10 @@ function show_pop(count) {
                             html += '<option value="'+data[i].id+'" >'+data[i].cspSecurityGroupName+'('+data[i].id+')</option>'; 
                         }
                     }
+                    html +="<option value='12345'>12345</option>"
+                    +"<option value='67789'>67789</option>"
+                    +"<option value='abcder'>abcder</option>"
+                    +"<option value='poirwer'>poirwer</option>";
                     $("#sg_"+cnt+"").empty();
                     $("#sg_"+cnt+"").append(html);
                     
