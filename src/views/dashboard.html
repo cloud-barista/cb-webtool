@@ -86,20 +86,9 @@
                                     <div class="col">
                                         <h2>Service</h2>
                                     </div>
-                                    <div class="col">
-                                        <ul class="nav nav-pills justify-content-end">
-                                            <li class="nav-item" data-toggle="chart" data-target="#chart-sales">
-                                                <a href="#" class="nav-link active" data-toggle="tab">
-                                                    <span>Month</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item" data-toggle="chart" data-target="#chart-sales">
-                                                <a href="#" class="nav-link" data-toggle="tab">
-                                                    <span>Week</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <div class="col text-right">
+                                            <a href="/MCIS/reg" class="btn btn-sm btn-dark">MCIS REG</a>
+                                        </div>
                                 </div>
                             </div>
                             <div class="table-overflow">
@@ -244,10 +233,27 @@
                                 </div>
                             </div>
                             <div class="card-body">
+                                    <script>
+                                            $(document).ready(function () {
+                                              $('#vmap').vectorMap({
+                                                map: 'world_en',
+                                                backgroundColor: '#ffffff',
+                                                color: '#ffffff',
+                                                hoverOpacity: 0.7,
+                                                selectedColor: '#666666',
+                                                enableZoom: true,
+                                                showTooltip: true,
+                                                scaleColors: ['#C8EEFF', '#006491'],
+                                                values: sample_data,
+                                                normalizeFunction: 'polynomial'
+                                              });
+                                            });
+                                          </script>
                                 <!-- Chart -->
-                                <div class="d-flex h-100 align-items-center justify-content-center">
-                                    <div class="spinner-border" role="status">
-                                        <span class="sr-only">Loading...</span>
+                                <div class="d-flex h-100 align-items-center justify-content-center" id="vmap">
+                                   
+                                    <div class="border" role="status">
+                                            <span class="sr-only" >Loading</span>
                                     </div>
                                 </div>
                             </div>

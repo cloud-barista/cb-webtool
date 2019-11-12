@@ -74,8 +74,9 @@
                                                 </div>
                                             </th>
                                             <th>No</th>
-                                            <th>ID</th>
                                             <th>Name</th>
+                                            <th>ID</th>
+                                            
                                             <th>Description</th>
                                         
                                         </tr>
@@ -94,8 +95,9 @@
                                             </td>
                                             <td>{{ $index  }}</td>
                                             
-                                            <td><a href="">{{ .ID }}</a></td>
+                                           
                                             <td>{{ .Name }}</td>
+                                            <td><a href="">{{ .ID }}</a></td>
                                             <td>{{ .Description }}</td>
                                         
                                         </tr>
@@ -186,7 +188,7 @@ $(document).ready(function(){
         }
         if(cnt == 1){
            
-            var u = CBTumbleBugURL+"/ns/"+id
+            var u = CommonURL+"/ns/"+id
             alert("url: "+u)
             if(confirm("삭제하시겠습니까?")){
              axios.delete(u).then(result=>{

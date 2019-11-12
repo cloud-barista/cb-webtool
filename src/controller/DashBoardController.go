@@ -29,3 +29,8 @@ func IndexController(c echo.Context) error {
 	fmt.Println("=========== Index Controller nothing ==============")
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
+func PopSpec(c echo.Context) error {
+	fmt.Println("=========== popup ==============")
+
+	return c.Render(http.StatusOK, "PopSpec.html", nil)
+}
