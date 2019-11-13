@@ -70,6 +70,22 @@ func main() {
 	e.POST("/login/proc", controller.LoginController)
 	e.POST("/regUser", controller.RegUserConrtoller)
 
+	// // MCIS LifeCycle
+	// e.GET("/ns/:nsid/mcis/:mcis_id", func(c echo.Context) error {
+	// 	action := c.QueryParam("action")
+	// 	return c.JSON(http.StatusOK, map[string]interface{}{
+	// 		"message": "MCIS : " + action,
+	// 	})
+	// })
+
+	// // VM LifeCycle
+	// e.GET("/ns/:nsid/mcis/:mcis_id/vm/:vm_id", func(c echo.Context) error {
+	// 	action := c.QueryParam("action")
+	// 	return c.JSON(http.StatusOK, map[string]interface{}{
+	// 		"message": "VM : " + action,
+	// 	})
+	// })
+
 	// MCIS
 	e.GET("/MCIS/reg", controller.McisRegForm)
 	e.POST("/MCIS/reg/proc", controller.McisRegController)
@@ -266,7 +282,7 @@ func main() {
 							"name":        "aws-shson-vm04",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -278,7 +294,7 @@ func main() {
 							"name":        "aws-shson-vm05",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -292,6 +308,12 @@ func main() {
 		return c.JSON(http.StatusOK, res)
 	})
 	e.GET("/ns/:nsid/mcis/:mcis_id", func(c echo.Context) error {
+		action := c.QueryParam("action")
+		if action != "" {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"message": "MCIS : " + action,
+			})
+		}
 		res := map[string]interface{}{
 			"id":     "5d910c76-364f-484e-a2b2-90ea4feabe3a",
 			"name":   "mcis-t01",
@@ -316,7 +338,7 @@ func main() {
 					"vmUserId":         "",
 					"vmUserPasswd":     "",
 					"region": map[string]string{
-						"Region": "",
+						"Region": "ap-southeast",
 						"Zone":   "ap-southeast-2a",
 					},
 					"publicIP":    "52.64.97.175",
@@ -331,7 +353,7 @@ func main() {
 						"Id":        "i-0249226ec5e613be5",
 						"StartTime": "0001-01-01T00:00:00Z",
 						"Region": map[string]string{
-							"Region": "",
+							"Region": "ap-southeast",
 							"Zone":   "ap-southeast-2a",
 						},
 						"ImageId":          "ami-00a54827eb7ffcd3c",
@@ -376,8 +398,8 @@ func main() {
 				},
 				{
 					"id":           "cf1f5704-7612-41c3-9235-14c519a8c0a5",
-					"name":         "aws-shson-vm01",
-					"config_name":  "aws-config01",
+					"name":         "gcp-shson-vm01",
+					"config_name":  "gcp-config01",
 					"spec_id":      "d3959c21-af25-46b0-9316-ab7f08934371",
 					"image_id":     "bc352bf1-93d6-47f1-a558-485f1dff695b",
 					"vnet_id":      "08b5de73-fcd4-4fd9-a074-7071796aec03",
@@ -393,7 +415,7 @@ func main() {
 					"vmUserId":         "",
 					"vmUserPasswd":     "",
 					"region": map[string]string{
-						"Region": "",
+						"Region": "ap-southeast",
 						"Zone":   "ap-southeast-2a",
 					},
 					"publicIP":    "52.64.97.175",
@@ -404,11 +426,11 @@ func main() {
 					"vmBlockDisk": "/dev/sda1",
 					"status":      "Running",
 					"cspViewVmDetail": map[string]interface{}{
-						"Name":      "aws-shson-vm01",
+						"Name":      "gcp-shson-vm01",
 						"Id":        "i-06af16714219adbb3",
 						"StartTime": "0001-01-01T00:00:00Z",
 						"Region": map[string]string{
-							"Region": "",
+							"Region": "ap-southeast",
 							"Zone":   "ap-southeast-2a",
 						},
 						"ImageId":          "ami-00a54827eb7ffcd3c",
@@ -459,6 +481,12 @@ func main() {
 		return c.JSON(http.StatusOK, res)
 	})
 	e.GET("/ns/:nsid/mcis/:mcis_id/vm/:vm_id", func(c echo.Context) error {
+		action := c.QueryParam("action")
+		if action != "" {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"message": "VM : " + action,
+			})
+		}
 		res := map[string]interface{}{
 
 			"id":           "09177a33-63d7-477c-a81f-91a258255450",
@@ -619,6 +647,13 @@ func main() {
 				"DriverName":     "aws-driver01",
 				"CredentialName": "aws-credential01",
 				"RegionName":     "aws-region01",
+			},
+			{
+				"ConfigName":     "gcp-config01",
+				"ProviderName":   "GCP",
+				"DriverName":     "gcp-driver01",
+				"CredentialName": "gcp-credential01",
+				"RegionName":     "gcp-region01",
 			},
 		}
 

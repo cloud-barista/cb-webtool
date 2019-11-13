@@ -30,6 +30,7 @@
         const CommonURL ="http://127.0.0.1:1234";
         const NAMESPACE ="{{with .LoginInfo}}{{ .NameSpace }}{{end}}";
         console.log("namespace : ",NAMESPACE)
+        var btn_click_cnt = 1;
        
     
     </script>
@@ -70,4 +71,7 @@
         </header>
         <!-- //header -->
         <body>
+            <!-- common methods -->
+            <script type="text/javascript" src="/assets/js/jquery.serialize.object.js"></script>
+            <!-- common methods -->
 {{end}}
