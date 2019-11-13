@@ -70,6 +70,22 @@ func main() {
 	e.POST("/login/proc", controller.LoginController)
 	e.POST("/regUser", controller.RegUserConrtoller)
 
+	// // MCIS LifeCycle
+	// e.GET("/ns/:nsid/mcis/:mcis_id", func(c echo.Context) error {
+	// 	action := c.QueryParam("action")
+	// 	return c.JSON(http.StatusOK, map[string]interface{}{
+	// 		"message": "MCIS : " + action,
+	// 	})
+	// })
+
+	// // VM LifeCycle
+	// e.GET("/ns/:nsid/mcis/:mcis_id/vm/:vm_id", func(c echo.Context) error {
+	// 	action := c.QueryParam("action")
+	// 	return c.JSON(http.StatusOK, map[string]interface{}{
+	// 		"message": "VM : " + action,
+	// 	})
+	// })
+
 	// MCIS
 	e.GET("/MCIS/reg", controller.McisRegForm)
 	e.POST("/MCIS/reg/proc", controller.McisRegController)
@@ -266,7 +282,7 @@ func main() {
 							"name":        "aws-shson-vm04",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -278,7 +294,7 @@ func main() {
 							"name":        "aws-shson-vm05",
 							"config_name": "aws-config01",
 							"region": map[string]string{
-								"Region": "",
+								"Region": "ap-southeast",
 								"Zone":   "ap-southeast-2a",
 							},
 							"publicIP":  "",
@@ -292,6 +308,12 @@ func main() {
 		return c.JSON(http.StatusOK, res)
 	})
 	e.GET("/ns/:nsid/mcis/:mcis_id", func(c echo.Context) error {
+		action := c.QueryParam("action")
+		if action != "" {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"message": "MCIS : " + action,
+			})
+		}
 		res := map[string]interface{}{
 			"id":     "5d910c76-364f-484e-a2b2-90ea4feabe3a",
 			"name":   "mcis-t01",
@@ -316,7 +338,7 @@ func main() {
 					"vmUserId":         "",
 					"vmUserPasswd":     "",
 					"region": map[string]string{
-						"Region": "",
+						"Region": "ap-southeast",
 						"Zone":   "ap-southeast-2a",
 					},
 					"publicIP":    "52.64.97.175",
@@ -331,7 +353,7 @@ func main() {
 						"Id":        "i-0249226ec5e613be5",
 						"StartTime": "0001-01-01T00:00:00Z",
 						"Region": map[string]string{
-							"Region": "",
+							"Region": "ap-southeast",
 							"Zone":   "ap-southeast-2a",
 						},
 						"ImageId":          "ami-00a54827eb7ffcd3c",
@@ -408,7 +430,7 @@ func main() {
 						"Id":        "i-06af16714219adbb3",
 						"StartTime": "0001-01-01T00:00:00Z",
 						"Region": map[string]string{
-							"Region": "",
+							"Region": "ap-southeast",
 							"Zone":   "ap-southeast-2a",
 						},
 						"ImageId":          "ami-00a54827eb7ffcd3c",
@@ -459,6 +481,12 @@ func main() {
 		return c.JSON(http.StatusOK, res)
 	})
 	e.GET("/ns/:nsid/mcis/:mcis_id/vm/:vm_id", func(c echo.Context) error {
+		action := c.QueryParam("action")
+		if action != "" {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"message": "VM : " + action,
+			})
+		}
 		res := map[string]interface{}{
 
 			"id":           "09177a33-63d7-477c-a81f-91a258255450",
