@@ -42,7 +42,7 @@ function show_pop(count) {
                             </div>
                         </div>
                     </div>
-                    <form name="Form" action="/MCIS/reg/proc" method="POST">
+                    <form name="Form" action="/MCIS/reg/proc" method="POST" id="form">
                     <div class="card-body">
 
                         <table class="table table-bordered table-horizontal mb-0">
@@ -227,14 +227,19 @@ $(document).ready(function(){
     $("#vm_add").click(function(){
         vm_cnt++;
         show_vm(vm_cnt);
+        btn_click_cnt++;
     });
+
+    
 })
 
 function show_vm(vm_cnt){
         //vm_cnt++;
         console.log(vm_cnt);
+        var arrCnt = vm_cnt-1;
         var html = "";
-        html += '<div class="card">'
+        html += '<form id="form_'+vm_cnt+'">'
+                +'<div class="card">'
                 +'<div class="card-header">'
                 +'<div class="d-flex justify-content-between align-items-center">'
                 +'<div>'
@@ -262,21 +267,21 @@ function show_vm(vm_cnt){
                 +'</td></tr>'
                 +'<tr><th>ConfigName</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="cn" id="configName_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="config_name" id="configName_'+vm_cnt+'"  >'
                 +'<option selected>Select Configname</option>'
                 +'</select></td></tr>'
                 +'<tr><th>VM Name</th><td>'
-                +'<input class="form-control form-control-sm" type="text" name="vmName" placeholder="VM Name" id="vmName_'+vm_cnt+'"></td></tr>'
+                +'<input class="form-control form-control-sm" type="text" name="name" placeholder="VM Name" id="vmName_'+vm_cnt+'"></td></tr>'
                 +'<tr><th>VM Spec</th><td>'
                 +'<div class="form-row">'
                 +'<div class="col">'
-                +'<input type="hidden" id="vmspec_'+vm_cnt+'" name="vmspec" class="form-control form-control-sm" placeholder="Select Spec" readonly>'
+                +'<input type="hidden" id="vmspec_'+vm_cnt+'" name="spec_id" class="form-control form-control-sm" placeholder="Select Spec" readonly>'
                 +'<input type="text" id="vmspecName_'+vm_cnt+'" name="vmspec" class="form-control form-control-sm" placeholder="Select Spec" readonly></div>'
                 +'<div class="col">'
                 +'<button type="button" class="btn btn-dark btn-sm" onclick="show_pop('+vm_cnt+');">Search VM Spec</button>'
                 +'</div></div></td></tr>'
                 +'<tr><th>vCPU</th><td>'
-                +'<input class="form-control form-control-sm" type="text" placeholder="VM Name" id="vcpu_'+vm_cnt+'" name="vcpu" readonly></td></tr>'
+                +'<input class="form-control form-control-sm" type="text" placeholder="CPU" id="vcpu_'+vm_cnt+'" name="vcpu" readonly></td></tr>'
                 +'<tr><th>Memory</th><td>'
                 +'<input class="form-control form-control-sm" type="text" placeholder="Memory" id="mem_'+vm_cnt+'" name="mem" readonly></td></tr>'
                 +'<tr><th>Storage</th><td>'
@@ -286,21 +291,22 @@ function show_vm(vm_cnt){
                 +'<tr><th>Cost / Hour</th><td>'
                 +'<input class="form-control form-control-sm" type="text" placeholder="Cost Per Hour" id="cPh'+vm_cnt+'" name="costPerHour" readonly></td></tr>'
                 +'<tr><th>Image</th><td>'
-                +'<select class="form-control form-control-sm" name="image" id="image_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="image_id" id="image_'+vm_cnt+'"  >'
                 +'<option selected>Select Image</option>'
                 +'<option value="123456">1234567</option>'
                 +'<option value="131313">131313</option>'
                 +'</select></td></tr>'
                 +'<tr><th>Virtual Network</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="vnet" id="vnet_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="vnet_id" id="vnet_'+vm_cnt+'"  >'
                 +'<option selected>Select Virtual Network</option>'
                 +'</select></td></tr>'
                 +'<tr><th>PublicIP</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="publicIp" id="publicIp_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="public_ip_id" id="publicIp_'+vm_cnt+'"  >'
                 +'<option selected>Select PublicIP</option>'
                 +'</select></td></tr>'
+                
                 // +'<tr><th>PublicIP</th><td>'
                 // +'<div class="form-row">'
                 // +'<div class="col">'
@@ -311,21 +317,22 @@ function show_vm(vm_cnt){
                 // +'</td></tr>'
                 +'<tr><th>Security Group</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" multiple name="sg" id="sg_'+vm_cnt+'"  >'
-                +'<option selected>Select Security Group</option>'
+                +'<select class="form-control form-control-sm" multiple name="security_group_ids" id="sg_'+vm_cnt+'"  >'
+                +'<option>Select Security Group</option>'
                 +'</select></td></tr>'
                 +'<tr><th>SSH KEY</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="sshKey" id="sshKey_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="ssh_key_id" id="sshKey_'+vm_cnt+'"  >'
                 +'<option selected>Select SSH KEY</option>'
                 +'</select></td></tr>'
                 +'<tr><th>Description<strong class="text-danger">*</strong></th><td>'
-                +'<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea></td></tr>'  
+                +'<textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3"></textarea></td></tr>'  
                 
                 +'</tbody></table></div>'
                 +'<div class="card-footer">'
                 +'<div class="d-flex justify-content-end align-items-center">'
-                +'<button type="submit" class="btn btn-dark btn-sm">Confirm</button></div></div></div>'
+                +'<button type="button" onclick="btn_click();" class="btn btn-dark btn-sm">Confirm</button></div></div></div>'
+                +'</form>'
 
                 $("#target").after(html);
                // $("#main").append(html)
@@ -338,8 +345,32 @@ function show_pop2() {
     // $("#transDiv").show();
 }
 
+function btn_click(){
+   
+    console.log("Btn Click Cnt : ",btn_click_cnt);
+    var obj = $("#form").serializeObject();
+    var obj2 = $("#form").serializeArray()
+    var ov = new Array();
+    var t = 0;
+    for(var i = 0; i < btn_click_cnt;i++){
+        t++;
+        console.log("t :",t)
+        console.log("i :",i)
+        ov[i] = $("#form_"+t+"").serializeArray();
+    }
+    console.log("req obj : ",obj)
+    console.log("req obj2 : ",obj2)
+    console.log("req ov : ",ov)
+}
+
 function setPublicIP(configName){
 
+}
+
+function setObj(obj){
+    for(var i in obj){
+
+    }
 }
         
         </script>
