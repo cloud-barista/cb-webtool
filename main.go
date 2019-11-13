@@ -398,8 +398,8 @@ func main() {
 				},
 				{
 					"id":           "cf1f5704-7612-41c3-9235-14c519a8c0a5",
-					"name":         "aws-shson-vm01",
-					"config_name":  "aws-config01",
+					"name":         "gcp-shson-vm01",
+					"config_name":  "gcp-config01",
 					"spec_id":      "d3959c21-af25-46b0-9316-ab7f08934371",
 					"image_id":     "bc352bf1-93d6-47f1-a558-485f1dff695b",
 					"vnet_id":      "08b5de73-fcd4-4fd9-a074-7071796aec03",
@@ -415,7 +415,7 @@ func main() {
 					"vmUserId":         "",
 					"vmUserPasswd":     "",
 					"region": map[string]string{
-						"Region": "",
+						"Region": "ap-southeast",
 						"Zone":   "ap-southeast-2a",
 					},
 					"publicIP":    "52.64.97.175",
@@ -426,7 +426,7 @@ func main() {
 					"vmBlockDisk": "/dev/sda1",
 					"status":      "Running",
 					"cspViewVmDetail": map[string]interface{}{
-						"Name":      "aws-shson-vm01",
+						"Name":      "gcp-shson-vm01",
 						"Id":        "i-06af16714219adbb3",
 						"StartTime": "0001-01-01T00:00:00Z",
 						"Region": map[string]string{
@@ -647,6 +647,13 @@ func main() {
 				"DriverName":     "aws-driver01",
 				"CredentialName": "aws-credential01",
 				"RegionName":     "aws-region01",
+			},
+			{
+				"ConfigName":     "gcp-config01",
+				"ProviderName":   "GCP",
+				"DriverName":     "gcp-driver01",
+				"CredentialName": "gcp-credential01",
+				"RegionName":     "gcp-region01",
 			},
 		}
 

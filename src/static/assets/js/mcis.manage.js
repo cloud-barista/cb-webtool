@@ -99,63 +99,88 @@ function short_desc(str){
  function show_vmList(mcis_id){
    
     var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id;
-    var html = "";
-    axios.get(url).then(result=>{
-         var data = result.data;
-         var mcis_id = data.id
-         var mcis_name = data.name
-         var vm = data.vm
-         var count = 0;
-         
-          
-         for(var i in vm){
-             var sta = vm[i].status;
-             var badge = "";
-             var status = sta.toLowerCase()
+    $.ajax({
+        type:'GET',
+        url:url,
+       // async:false,
+        success:function(data){
+            var vm = data.vm
+            var mcis_name = data.name 
+            var html = "";
             
+            for(var i in vm){
+                var sta = vm[i].status;
+                console.log(" i value is : ",i)
+               
+                var status = sta.toLowerCase()
+                var configName = vm[i].config_name
+                console.log("outer vm configName : ",configName)
+                var count = 0;
+                $.ajax({
+                    url:"/connectionconfig",
+                    async:false,
+                    type:'GET',
+                    success : function(res){
+                        var badge = "";
+                        for(var k in res){
+                            console.log(" i value is : ",i)
+                            console.log("outer config name : ",configName)
+                            console.log("Inner ConfigName : ",res[k].ConfigName)
+                            if(res[k].ConfigName == vm[i].config_name){
+                                var provider = res[k].ProviderName
+                                console.log("Inner Provider : ",provider)
+                                if(status == "running"){
+                                    badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+                                 }
+                                 count++;
+                                 if(count == 1){
+                    
+                                 }
+                                 html += '<tr id="tr_id_'+count+'" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'
+                                  +'<td class="text-center">'
+                                  +'<div class="form-input">'
+                                  +'<span class="input">'
+                                  +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'"><i></i></span></div>'
+                                  +'</td>'
+                                  +'<td><a href="">'+vm[i].name+'</a></td>'
+                                  +'<td>12:32:30</td>'
+                                  +'<td>'+provider+'</td>'
+                                  +'<td>'+vm[i].region.Region+'</td>'
+                                  +'<td>'+short_desc(vm[i].description)+'</td>'
+                                  +'<td>'
+                                  +badge
+                                  +'</td>'
+                                  +'<td>'
+                                  +"3/8"
+                                  +'</td>'
+                                  +'<td>'
+                                  +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                                  +'<i class="fas fa-edit"></i>'
+                                  +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
+                                      +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
+                                      +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
+                                      +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
+                                      +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
+                                  +'</div>'
+                                  +'</button>'
+                                 +'</td>'
+                                 +'</tr>';
+                            }
+                            
+                            
+                            }
+                            $("#table_2").empty();
+                            $("#table_2").append(html);
 
-             if(status == "running"){
-                badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
-             }
-             count++;
-             if(count == 1){
+                    }
 
-             }
-             html += '<tr id="tr_id_'+count+'" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'
-              +'<td class="text-center">'
-              +'<div class="form-input">'
-              +'<span class="input">'
-              +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'"><i></i></span></div>'
-              +'</td>'
-              +'<td><a href="">'+vm[i].name+'</a></td>'
-              +'<td>12:32:30</td>'
-              +'<td>'+"AWS"+'</td>'
-              +'<td>'+vm[i].region.Region+'</td>'
-              +'<td>'+short_desc(vm[i].description)+'</td>'
-              +'<td>'
-              +badge
-              +'</td>'
-              +'<td>'
-              +"3/8"
-              +'</td>'
-              +'<td>'
-              +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-              +'<i class="fas fa-edit"></i>'
-              +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
-                  +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
-                  +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
-                  +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
-                  +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
-              +'</div>'
-              +'</button>'
-             +'</td>'
-             +'</tr>';
+                })
+                
+                }
         }
-        
-        $("#table_2").empty();
-        $("#table_2").append(html);
-        //show_vm(mcis_id,vm[0].id);
-    });
+    })
+            
+    
  }
  
  function show_card(mcis_id){
@@ -270,4 +295,18 @@ function short_desc(str){
 
  }
 
+ function deleteHandler(cl,target,){
+
+ }
+
+ function getProvider(connectionInfo){
+     url ="/connectionconfig"
+     axios.get(url).then(result=>{
+         var data = result.data
+
+         for(var i in data){
+             if(connetionInfo == data[i].ConfigName){}
+         }
+     })
+ }
 
