@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                    <form name="Form" action="/NS/reg/proc" method="POST">
+                    <form name="Form" action="/NS/reg/proc" method="POST" id="form">
                         <table class="table table-bordered table-horizontal mb-0">
                             <colgroup>
                                 <col style="width: 20%">
@@ -35,13 +35,13 @@
                                 <tr>
                                     <th>RegionName<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="username" id="username">
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="RegionName" id="RegionName">
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Provider</th>
                                     <td>
-                                        <select class="form-control form-control-sm">
+                                        <select class="form-control form-control-sm" name="ProviderName">
                                             <option selected>Select Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
@@ -53,10 +53,34 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Description</th>
+                                    <th>Key</th>
                                     <td>
-                                        <textarea class="form-control" name="description" id="description" rows="3"></textarea>
-                                    </td>
+                                        <input type="text" name="KeyValueInfoList[0][Key]" value=""/>                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Value</th>
+                                    <td>
+                                        <input type="text" name="KeyValueInfoList[0][Value]" value=""/>                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Key</th>
+                                    <td>
+                                        <input type="text" name="KeyValueInfoList[1][Key]" value=""/>                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Value</th>
+                                    <td>
+                                        <input type="text" name="KeyValueInfoList[1][Value]" value=""/>                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Key</th>
+                                    <td>
+                                        <input type="text" name="KeyValueInfoList[2][Key]" value=""/>                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Value</th>
+                                    <td>
+                                        <input type="text" name="KeyValueInfoList[2][Value]" value=""/>                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -78,29 +102,10 @@
 <script>
 $(document).ready(function(){
     $("#reg_btn").click(function(){
-        var username = $("#username").val();
-        var description = $("#description").val();
-        var url = CommonURL+"/ns"
-        var req_body = {
-            name:username,
-            description
-        }
-        var req = {
-            headers :{
-                 'Content-type': 'application/json',
-                },
-            req_body
-            
-        }
-        console.log(req)
-        axios.post(url,req).then(result=>{
-            console.log(result.data)
-            var data = result.data
-            if(data.message == "success"){
-                alert("등록되었습니다.");
-                location.href = "/NS/list";
-            }
-        })
+
+        var obj = $("#form").serializeObject()
+        console.log(obj);
+        
     })
 })
 
