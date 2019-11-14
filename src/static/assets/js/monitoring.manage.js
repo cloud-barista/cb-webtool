@@ -310,3 +310,22 @@ function short_desc(str){
      })
  }
 
+ function mappingMetric(obj){
+    var name = obj.name
+    var columnArr = obj.columns
+    var valuesArr = obj.values
+    var valuesCnt = valuesArr.length
+    var objArr = new Array();
+    for(var i in  valuesArr){
+       var newObject = {}
+        for(var k in valuesArr[i]){
+            var key = columnArr[k]
+            var value = valuesArr[i][k]
+            newObject[key] = value
+        }
+        objArr.push(newObject)
+    }
+    console.log("Mapping Metric : ",objArr);
+    return objArr
+}
+
