@@ -50,6 +50,10 @@ func main() {
 	e.Use(echosession.New())
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://210.207.104.150"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 
 	e.Static("/assets", "./src/static/assets")
 
@@ -69,6 +73,9 @@ func main() {
 	e.GET("/login", controller.LoginForm)
 	e.POST("/login/proc", controller.LoginController)
 	e.POST("/regUser", controller.RegUserConrtoller)
+
+	// Monitoring Control
+	e.GET("/monitoring", controller.MornitoringListForm)
 
 	// // MCIS LifeCycle
 	// e.GET("/ns/:nsid/mcis/:mcis_id", func(c echo.Context) error {
@@ -307,6 +314,7 @@ func main() {
 		}
 		return c.JSON(http.StatusOK, res)
 	})
+
 	e.GET("/ns/:nsid/mcis/:mcis_id", func(c echo.Context) error {
 		action := c.QueryParam("action")
 		if action != "" {
