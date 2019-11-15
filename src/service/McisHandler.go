@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-var MCISUrl = "http://localhost:1234"
+var MCISUrl = "http://15.165.16.67:1323"
 
 type MCISInfo struct {
 	ID     string `json:"id"`

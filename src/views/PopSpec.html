@@ -137,7 +137,7 @@ $(document).ready(function(){
     var configName = $("#configName_"+vm_cnt+" option:selected").val();
     console.log("configname : ",configName);
     var nsid = NAMESPACE;
-    var specUrl ="http://localhost:1234/ns/"+nsid+"/resources/spec"
+    var specUrl = CommonURL+"/ns/"+nsid+"/resources/spec"
     console.log("specUrl : ",specUrl)
     axios.get(specUrl).then(result=>{
         var res = result.data.spec

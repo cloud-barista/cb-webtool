@@ -24,7 +24,7 @@
                                     <strong>Service - MCIS</strong>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="mcis_delete();">Delete</button>
                                     <button type="button" class="btn btn-sm btn-outline-dark">Modify</button>
                                     <button type="button" class="btn btn-sm btn-dark">Regist</button>
                                 </div>
@@ -228,7 +228,7 @@
                 </div>
                 <!-- table -->
                 <!-- table -->
-                <div class="card">
+                <div class="card" id="vm_detail" style="display:none;">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
@@ -249,82 +249,23 @@
                             <tbody id="vm">                                       
                             </tbody>
                             <tbody id="vm_spec">
-                                <tr>
-                                    <th scope="colgroup" rowspan="4">VM Spec</th>
-                                    <th scope="colgroup">vCPUs</th>
-                                    <td colspan="3">2Vcpu</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">Memory</th>
-                                    <td  colspan="3">1024MB</td>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">vCPUs</th>
-                                    <td colspan="3">2Vcpu</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">Storage</th>
-                                    <td  colspan="3">1024MB</td>
-                                </tr>                  
+                                
                                     
                             </tbody>
                             <tbody id="vm_vnetwork">
-                                <tr>
-                                    <th scope="colgroup" rowspan="4">vNetwork</th>
-                                    <th scope="colgroup">Network Name</th>
-                                    <td colspan="3">networkName</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">NetworkID</th>
-                                    <td  colspan="3">192.168.0.1</td>
-                                </tr>                  
-                                <tr>                      
-                                    <th scope="colgroup">Network Name</th>
-                                    <td  colspan="3">us-east1</td>
-                                </tr> 
-                                <tr>                      
-                                    <th scope="colgroup">Cidr Block</th>
-                                    <td  colspan="3">us-east1</td>
-                                </tr>              
+                               
                             </tbody>
                             
                             <tbody id="vm_sg">
-                                <tr>
-                                    <th scope="colgroup" rowspan="3">SecurityGroup</th>
-                                    <th scope="colgroup">SecurityGroupID</th>
-                                    <td colspan="3">networkName</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">SecurityGroupName</th>
-                                    <td  colspan="3">1024MB</td>
-                                </tr>
-                                                
-                                <tr>                      
-                                    <th scope="colgroup">Description</th>
-                                    <td  colspan="3">us-east1</td>
-                                </tr>               
+                                
                             </tbody>
-                            <tbody>
-                                <tr>
-                                    <th scope="colgroup" rowspan="3">SSH KEY</th>
-                                    <th scope="colgroup">SSH Key ID</th>
-                                    <td colspan="3">networkName</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">Key Name</th>
-                                    <td  colspan="3">1024MB</td>
-                                </tr>          
-                                <tr>                      
-                                    <th scope="colgroup">Description</th>
-                                    <td  colspan="3">us-east1</td>
-                                </tr>               
+                            <tbody id="sshKey">
+                                
                             </tbody>
                         </table>
                     </div>
                     <div class="card-footer">
-                        <div class="d-flex justify-content-end align-items-center">
-                            <button type="button" class="btn btn-dark btn-sm">Confirm</button>
-                        </div>
+                        
                     </div>
                 </div>
                 <!-- table-->

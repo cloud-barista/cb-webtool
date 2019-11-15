@@ -4,10 +4,10 @@ function life_cycle(tag,type, mcis_id,mcis_name,vm_id,vm_name){
     var message = ""
     
     if(tag == "mcis"){
-        url ="/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
+        url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
         message = mcis_name+" "+type+ " complete!."
      }else{
-        url ="/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
+        url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
         message = vm_name+" "+type+ " complete!."
      }
 

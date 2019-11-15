@@ -10,6 +10,7 @@
             <!-- //sidebar -->
 
             <!-- contents -->
+            <input type="hidden" name="namespace" id="namespace1" />
             <main role="main" class="main">
                 <div class="page-header">
                     <div>
@@ -488,8 +489,14 @@
      <script>
             $(document).ready(function(){
                 var nsid = "{{ .NameSpace}}";
+                if(!nsid){
+                    nsid = $("#namespace1").val()
+                }
+                if(!NAMESPACE){
+                    nsid = $("#namespace1").val()
+                }
                 var url = CommonURL+"/ns/"+nsid+"/mcis";
-                console.log("url :",url);
+                console.log("Dashboard url :",url);
                 show_mcis(url);
             })
     </script>

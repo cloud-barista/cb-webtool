@@ -65,7 +65,7 @@ $(document).ready(function(){
      }).then(result =>{
             console.log(result);
         });
-    var nsUrl = "http://localhost:1234/"
+   // var nsUrl = "http://localhost:1234/"
     $("#sign_btn").click(function(){
        // alert("test")
         var username = $("#email").val();
@@ -81,11 +81,27 @@ $(document).ready(function(){
             if(result.data.status == "success"){
                 alert("Login Success");
                 //location.reload();
-                axios.get("http://localhost:1234/ns").then(result=>{
+                var url = "http://15.165.16.67:1323/ns"
+                axios.get(url).then(result=>{
                     console.log(result.data);
-                    var data = result.data;
+                    var data = result.data.ns;
+                    var ns = ""
+                    for(var i in data){
+                        if(i == 0){
+                            ns = data[i].id
+                        }
+                    }
 
                     console.log(data)
+                    $.ajax({
+                        url:"/SET/NS/"+ns,
+                        type:'GET',
+                        async:false,
+                        success:function(res){
+                            console.log(res)
+                        }
+
+                    })
                     if(data){
                     location.href ="/dashboard";
                     }else{
