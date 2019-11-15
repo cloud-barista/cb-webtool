@@ -1,6 +1,6 @@
 {{template "Header" .}}
     <!-- MCIS Control methods -->
-    <script type="text/javascript" src="/assets/js/mcis.manage.js"></script>
+    <script type="text/javascript" src="/assets/js/monitoring.manage.js"></script>
     <!-- MCIS Control methods -->
 
         <!-- container -->
@@ -117,7 +117,7 @@
                 <!-- table -->
                 <!-- card type -->
                 <div class="row mb-12" style="padding-top:20px;" id="card">
-                    <!-- <div class="col-xl-12 col-lg-12">
+                    <div class="col-xl-12 col-lg-12">
                         <div class="card card-stats mb-12 mb-xl-0">
                             <div class="card-body">
                                 <div class="row">
@@ -137,7 +137,7 @@
                                 </p>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
                 <!-- card type -->
                 <!-- table -->
@@ -227,107 +227,94 @@
                         </div>
                 </div>
                 <!-- table -->
-                <!-- table -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>VM - Detail </strong>
-                            </div>
-                            <div>
-                                <!-- 좌우측 정렬되는 버튼이 필요할때 여기에 넣어주세요 -->
+                 <!-- card type -->
+            <div class="row mb-4" style="padding-top:20px;" >
+                <div class="col-xl-3 col-lg-6" id="cpu">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">CPU</h5>
+                                        <span class="h2 font-weight-bold mb-0">350,897</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                                        <i class="fas fa-chart-bar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-
-                        <table class="table table-bordered table-horizontal mb-0">
-                            <colgroup>
-                                <col style="width: 20%">
-                                <col style="width: 20%">
-                            </colgroup>
-                            <tbody id="vm">                                       
-                            </tbody>
-                            <tbody id="vm_spec">
-                                <tr>
-                                    <th scope="colgroup" rowspan="4">VM Spec</th>
-                                    <th scope="colgroup">vCPUs</th>
-                                    <td colspan="3">2Vcpu</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">Memory</th>
-                                    <td  colspan="3">1024MB</td>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">vCPUs</th>
-                                    <td colspan="3">2Vcpu</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">Storage</th>
-                                    <td  colspan="3">1024MB</td>
-                                </tr>                  
-                                    
-                            </tbody>
-                            <tbody id="vm_vnetwork">
-                                <tr>
-                                    <th scope="colgroup" rowspan="4">vNetwork</th>
-                                    <th scope="colgroup">Network Name</th>
-                                    <td colspan="3">networkName</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">NetworkID</th>
-                                    <td  colspan="3">192.168.0.1</td>
-                                </tr>                  
-                                <tr>                      
-                                    <th scope="colgroup">Network Name</th>
-                                    <td  colspan="3">us-east1</td>
-                                </tr> 
-                                <tr>                      
-                                    <th scope="colgroup">Cidr Block</th>
-                                    <td  colspan="3">us-east1</td>
-                                </tr>              
-                            </tbody>
-                            
-                            <tbody id="vm_sg">
-                                <tr>
-                                    <th scope="colgroup" rowspan="3">SecurityGroup</th>
-                                    <th scope="colgroup">SecurityGroupID</th>
-                                    <td colspan="3">networkName</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">SecurityGroupName</th>
-                                    <td  colspan="3">1024MB</td>
-                                </tr>
-                                                
-                                <tr>                      
-                                    <th scope="colgroup">Description</th>
-                                    <td  colspan="3">us-east1</td>
-                                </tr>               
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <th scope="colgroup" rowspan="3">SSH KEY</th>
-                                    <th scope="colgroup">SSH Key ID</th>
-                                    <td colspan="3">networkName</th>
-                                </tr>                  
-                                <tr>
-                                    <th scope="colgroup">Key Name</th>
-                                    <td  colspan="3">1024MB</td>
-                                </tr>          
-                                <tr>                      
-                                    <th scope="colgroup">Description</th>
-                                    <td  colspan="3">us-east1</td>
-                                </tr>               
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-end align-items-center">
-                            <button type="button" class="btn btn-dark btn-sm">Confirm</button>
+                    <div class="col-xl-3 col-lg-6" id="memory">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Memory</h5>
+                                        <span class="h2 font-weight-bold mb-0">2,356</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                        <i class="fas fa-chart-pie"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
+                                    <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last week</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- table-->
+                    <div class="col-xl-3 col-lg-6" id="disk">
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Disk</h5>
+                                            <span class="h2 font-weight-bold mb-0">350,897</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                                            <i class="fas fa-chart-bar"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                        <span class="text-nowrap">Since last month</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6" id="network">
+                            <div class="card card-stats mb-4 mb-xl-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Network</h5>
+                                            <span class="h2 font-weight-bold mb-0">2,356</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                            <i class="fas fa-chart-pie"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-3 mb-0 text-muted text-sm">
+                                        <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>
+                                        <span class="text-nowrap">Since last week</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- card type -->
             </main>
             <!-- //contents -->
 
@@ -344,4 +331,67 @@
          show_mcis(url);
      })
      </script>
+     <script>
+     function showMonitoring(mcis_id, vm_id){
+          var arr = ["cpu","memory","disk","network"];
+          var periodType = "m";
+          var duration = "5m"
+          var statisticsCriteria = "last"
+
+          for (var i in arr){
+              getMetric(arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration)
+          }
+     }
+     function getMetric(target, mcis_id, vm_id, metric, periodType,statisticsCriteria, duration){
+         console.log("====== Start GetMetric ====== ")
+        var color = "";
+        if(target == "cpu"){
+            color = "green"
+        }else if(target == "memory"){
+            color = "yellow"
+        }else if(target == "disk"){
+            color = "indigo"
+        }else if(target == "netwokr"){
+            color = "blue"
+        }
+        var mcis_id = "7e3130a0-a811-47b8-a82c-b155267edef5"
+        var vm_id = "99345fbe-7b20-4d5b-88bd-174691e62ef7"
+        var url = "http://cors-anywhere.herokuapp.com/"+DragonFlyURL+"/mon/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+        console.log("Request URL : ",url)
+        var html = "";
+       
+        axios.get(url).then(result=>{
+              var data = result.data
+              console.log("Get Monitoring Data : ",data)
+              var metricObject = mappingMetric(data);
+                    html += '<div class="card card-stats mb-4 mb-xl-0">'
+                         +'<div class="card-body">'
+                         +'<div class="row">'
+                         +'<div class="col">'
+                         +'<h5 class="card-title text-uppercase text-muted mb-0">'+metric+'</h5>'
+                         +'<span class="h2 font-weight-bold mb-0">2,356</span>'
+                         +'</div>'
+                         +'<div class="col-auto">'
+                         +'<div class="icon icon-shape bg-'
+                         +color
+                         +' text-white rounded-circle shadow">'
+                         +''   
+                         //+'<i class="fas fa-chart-pie"></i>'
+                         +'</div>'
+                         +'</div>'
+                         +'</div>'
+                         +'<p class="mt-3 mb-0 text-muted text-sm">'
+                         +'<span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>'
+                         +'<span class="text-nowrap">'+metricObject[0].time+'</span>'
+                         +'</p>'
+                         +'</div>'
+                         +'</div>';
+              
+              $("#"+target+"").empty()
+              $("#"+target+"").append(html)
+          })
+     }
+  
+    console.log("Mapping Object : ",mm)
      
+     </script>

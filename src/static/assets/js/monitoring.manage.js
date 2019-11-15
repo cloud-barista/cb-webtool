@@ -136,7 +136,7 @@ function short_desc(str){
                                  if(count == 1){
                     
                                  }
-                                 html += '<tr id="tr_id_'+count+'" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'
+                                 html += '<tr id="tr_id_'+count+'" onclick="showMonitoring(\''+mcis_id+'\',\''+vm[i].id+'\');">'
                                   +'<td class="text-center">'
                                   +'<div class="form-input">'
                                   +'<span class="input">'
@@ -310,202 +310,22 @@ function short_desc(str){
      })
  }
 
- function show_vmDetailList(mcis_id, vm_id){
-     url ="/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-     axios.get(url).then(result=>{
-         var data = result.data
-         var html = ""
-         $.ajax({
-            url:"/connectionconfig",
-            async:false,
-            type:'GET',
-            success : function(res){
-                
-                var provider = "";
-                for(var k in res){
-                    if(res[k].ConfigName == data.config_name){
-                        provider = res[k].ProviderName
-                        console.log("Inner Provider : ",provider)
-                    }
-                }
-                html += '<tr>'
-                    +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                    +'<th scope="colgroup">cloud Provider</th>'
-                    +'<td colspan="3">'+provider+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">VM ID</th>'
-                    +'<td  colspan="3">'+data.id+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">Region</th>'
-                    +'<td  colspan="3">'+data.region.Region+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">Zone</th>'
-                    +'<td  colspan="3">'+data.region.Zone+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">PublicIP</th>'
-                    +'<td  colspan="3">'+data.publicIP+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">PrivateIP</th>'
-                    +'<td colspan="3">'+data.privateIP+'</td>'
-                    +'</tr>';
-                  
-                $("#vm").empty();
-                $("#vm").append(html);
-
-            }
-
-        })
-       
-            
-         
-     })
-
- }
-
- function show_vmDetailList(mcis_id, vm_id){
-    var url ="/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
-        var data = result.data
-        var html = ""
-        $.ajax({
-           url:"/connectionconfig",
-           async:false,
-           type:'GET',
-           success : function(res){
-               
-               var provider = "";
-               for(var k in res){
-                   if(res[k].ConfigName == data.config_name){
-                       provider = res[k].ProviderName
-                       console.log("Inner Provider : ",provider)
-                   }
-               }
-               html += '<tr>'
-                   +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                   +'<th scope="colgroup">cloud Provider</th>'
-                   +'<td colspan="3">'+provider+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td  colspan="3">'+data.id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Region</th>'
-                   +'<td  colspan="3">'+data.region.Region+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Zone</th>'
-                   +'<td  colspan="3">'+data.region.Zone+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PublicIP</th>'
-                   +'<td  colspan="3">'+data.publicIP+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PrivateIP</th>'
-                   +'<td colspan="3">'+data.privateIP+'</td>'
-                   +'</tr>'
-                   +'</tbody>'
-                   +'<tbody>'
-                   +'<tr>'
-                   +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM NAME</th>'
-                   +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
-                   +'</tr>'
-                   
-
-                 
-               $("#vm").empty();
-               $("#vm").append(html);
-
-           }
-
-       })
-      
-           
-        
-    })
-
-}
-
-function show_vmSpecList(mcis_id, vm_id){
-    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
-        var data = result.data
-        var html = ""
-        var url2 = "/ns/"+NAMESPACE+"/resources/sshKey"
-        var spec_id = data.spec_id
-        $.ajax({
-           url: url2,
-           async:false,
-           type:'GET',
-           success : function(res){
-               
-               var provider = "";
-               for(var k in res){
-                   if(res[k].ConfigName == data.config_name){
-                       provider = res[k].ProviderName
-                       console.log("Inner Provider : ",provider)
-                   }
-               }
-               html += '<tr>'
-                   +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                   +'<th scope="colgroup">cloud Provider</th>'
-                   +'<td colspan="3">'+provider+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td  colspan="3">'+data.id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Region</th>'
-                   +'<td  colspan="3">'+data.region.Region+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Zone</th>'
-                   +'<td  colspan="3">'+data.region.Zone+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PublicIP</th>'
-                   +'<td  colspan="3">'+data.publicIP+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PrivateIP</th>'
-                   +'<td colspan="3">'+data.privateIP+'</td>'
-                   +'</tr>'
-                   +'</tbody>'
-                   +'<tbody>'
-                   +'<tr>'
-                   +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM NAME</th>'
-                   +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
-                   +'</tr>'
-                   
-
-                 
-               $("#vm").empty();
-               $("#vm").append(html);
-
-           }
-
-       })
-      
-           
-        
-    })
-
+ function mappingMetric(obj){
+    var name = obj.name
+    var columnArr = obj.columns
+    var valuesArr = obj.values
+    var valuesCnt = valuesArr.length
+    var objArr = new Array();
+    for(var i in  valuesArr){
+       var newObject = {}
+        for(var k in valuesArr[i]){
+            var key = columnArr[k]
+            var value = valuesArr[i][k]
+            newObject[key] = value
+        }
+        objArr.push(newObject)
+    }
+    console.log("Mapping Metric : ",objArr);
+    return objArr
 }
 
