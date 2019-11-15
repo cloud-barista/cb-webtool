@@ -223,39 +223,12 @@ function short_desc(str){
     })
  }
  function show_vm(mcis_id,vm_id){
-     var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id;
-     var html = "";
-    axios.get(url).then(result=>{
-        var data = result.data
-        console.log("show card result : ",result)
-                   
-            html += '<div class="col-xl-12 col-lg-12">'
-                    +'<div class="card card-stats mb-12 mb-xl-0">'
-                    +'<div class="card-body">'
-                    +'<div class="row">'
-                    +'<div class="col">'
-                    +'<h5 class="card-title text-uppercase text-muted mb-0">'+data.name+'</h5>'
-                    +'<span class="h2 font-weight-bold mb-0">350,897</span>'
-                    +'</div>'
-                    +'<div class="col-auto">'
-                    +'<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
-                    //+'<i class="fas fa-chart-bar"></i>'
-                    +"vm_cnt"
-                    +'</div>'
-                    +'</div>'
-                    +'</div>'
-                    +'<p class="mt-3 mb-0 text-muted text-sm">'
-                    +'<span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>'
-                    +'<span class="text-nowrap">Since last month</span>'
-                    +'</p>'
-                    +'</div>'
-                    +'</div>'
-                    +'</div>';
-        
-        $("#card").empty()
-        $("#card").append(html)
-       
-    })
+    show_vmDetailList(mcis_id, vm_id);
+    show_vmSpecInfo(mcis_id, vm_id);
+    show_vmNetworkInfo(mcis_id, vm_id);
+    show_vmSecurityGroupInfo(mcis_id, vm_id);
+    show_vmSSHInfo(mcis_id, vm_id);
+    $("#vm_detail").show();
  }
  function sel_table(targetNo,mcid){
      var $target = $("#card_"+targetNo+"");
@@ -367,7 +340,7 @@ function short_desc(str){
 
  }
 
- function show_vmDetailList(mcis_id, vm_id){
+ function show_vmDetailInfo(mcis_id, vm_id){
     var url ="/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
@@ -437,67 +410,44 @@ function short_desc(str){
 
 }
 
-function show_vmSpecList(mcis_id, vm_id){
+function show_vmSpecInfo(mcis_id, vm_id){
     var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
         var html = ""
-        var url2 = "/ns/"+NAMESPACE+"/resources/sshKey"
+        var url2 = "/ns/"+NAMESPACE+"/resources/spec"
         var spec_id = data.spec_id
         $.ajax({
            url: url2,
            async:false,
            type:'GET',
-           success : function(res){
-               
-               var provider = "";
+           success : function(result){
+               var res = result.spec
+              
                for(var k in res){
-                   if(res[k].ConfigName == data.config_name){
-                       provider = res[k].ProviderName
-                       console.log("Inner Provider : ",provider)
+                   if(res[k].id == spec_id){
+                    html += '<tr>'
+                           +'<tr>'
+                           +'<th scope="colgroup" rowspan="4">VM Spec</th>'
+                           +'<th scope="colgroup">vCPUs</th>'
+                           +'<td colspan="3">'+res[k].num_vCPU+'vcpu</td>'
+                           +'</tr>                  '
+                           +'<tr>'
+                           +'<th scope="colgroup">Memory</th>'
+                           +'<td  colspan="3">'+res[k].mem_GiB+'GiB</td>'
+                           +'</tr>                  '
+                           +'<tr>'
+                           +'<th scope="colgroup">Storage</th>'
+                           +'<td colspan="3">'+res[k].storage_GiB+'GiB</th>'
+                           +'</tr>                  '
+                           +'<tr>'
+                           +'<th scope="colgroup">OsType</th>'
+                           +'<td  colspan="3">'+res[k].os_type+'</td>'
+                           +'</tr>                  '
                    }
-               }
-               html += '<tr>'
-                   +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                   +'<th scope="colgroup">cloud Provider</th>'
-                   +'<td colspan="3">'+provider+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td  colspan="3">'+data.id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Region</th>'
-                   +'<td  colspan="3">'+data.region.Region+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Zone</th>'
-                   +'<td  colspan="3">'+data.region.Zone+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PublicIP</th>'
-                   +'<td  colspan="3">'+data.publicIP+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PrivateIP</th>'
-                   +'<td colspan="3">'+data.privateIP+'</td>'
-                   +'</tr>'
-                   +'</tbody>'
-                   +'<tbody>'
-                   +'<tr>'
-                   +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM NAME</th>'
-                   +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
-                   +'</tr>'
-                   
-
-                 
-               $("#vm").empty();
-               $("#vm").append(html);
+               } 
+               $("#vm_spec").empty();
+               $("#vm_spec").append(html);
 
            }
 
@@ -509,3 +459,122 @@ function show_vmSpecList(mcis_id, vm_id){
 
 }
 
+function show_vmNetworkInfo(mcis_id, vm_id){
+    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    axios.get(url).then(result=>{
+        var data = result.data
+        var html = ""
+        var url2 = "/ns/"+NAMESPACE+"/resources/network"
+        var spec_id = data.vnet_id
+        $.ajax({
+           url: url2,
+           async:false,
+           type:'GET',
+           success : function(result){
+               var res = result.network
+              
+               for(var k in res){
+                   if(res[k].id == spec_id){
+                    html += '<tr>'
+                           +'<th scope="colgroup" rowspan="3">vNetwork</th>'
+                           +'<th scope="colgroup">NetworkID</th>'
+                           +'<td colspan="3">'+res[k].cspNetworkId+'</td>'
+                           +'</tr>'
+                           +'<tr>'
+                           +'<th scope="colgroup">Network Name</th>'
+                           +'<td  colspan="3">'+res[k].cspNetworkName+'</td>'
+                           +'</tr>'
+                           +'<tr>'
+                           +'<th scope="colgroup">Cidr Block</th>'
+                           +'<td colspan="3">'+res[k].cidrBlock+'</th>'
+                           +'</tr>'
+                          
+                   }
+               } 
+               $("#vm_vnetwork").empty();
+               $("#vm_vnetwork").append(html);
+
+           }
+
+       })
+      
+           
+        
+    })
+
+}
+
+function show_vmSecurityGroupInfo(mcis_id, vm_id){
+    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    axios.get(url).then(result=>{
+        var data = result.data
+        var html = ""
+        // var url2 = "/ns/"+NAMESPACE+"/resources/securityGroup"
+        var spec_id = data.security_group_ids
+        var cnt = spec_id.length
+        html += '<tr>'
+             +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroup</th>'
+             +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroupID</th>'
+        for(var i in spec_id){
+            if( i == 0){
+                html +='<td colspan="3">'+spec_id[i]+'</td></tr>'
+            }else{
+                html +='<tr><td colspan="3">'+spec_id[i]+'</td></tr>'
+            }
+        }
+        
+
+        $("#vm_sg").empty();
+        $("#vm_sg").append(html);
+
+                
+        
+    })
+
+}
+
+
+function show_vmSSHInfo(mcis_id, vm_id){
+    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    axios.get(url).then(result=>{
+        var data = result.data
+        var html = ""
+        var url2 = "/ns/"+NAMESPACE+"/resources/sshKey"
+        var spec_id = data.ssh_key_id
+        $.ajax({
+           url: url2,
+           async:false,
+           type:'GET',
+           success : function(result){
+               var res = result.sshKey
+              
+               for(var k in res){
+                   if(res[k].id == spec_id){
+                    html += '<tr>'
+                           +'<th scope="colgroup" rowspan="3">SSH KEY</th>'
+                           +'<th scope="colgroup">SSH Key ID</th>'
+                           +'<td colspan="3">'+res[k].id+'</td>'
+                           +'</tr>'
+                           +'<tr>'
+                           +'<th scope="colgroup">Key Name</th>'
+                           +'<td  colspan="3">'+res[k].cspSshKeyName+'</td>'
+                           +'</tr>'
+                           +'<tr>'
+                           +'<th scope="colgroup">Description</th>'
+                           +'<td colspan="3">'+res[k].description+'</th>'
+                           +'</tr>'
+                          
+                   }
+               } 
+               $("#sshKey").empty();
+               $("#sshKey").append(html);
+
+           }
+
+       })
+      
+           
+        
+    })
+
+}
