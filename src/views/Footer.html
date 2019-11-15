@@ -9,7 +9,7 @@
 
     
     function setNS(nsid){
-        reqUrl = CommonURL+"/SET/NS/"+nsid;
+        reqUrl = "/SET/NS/"+nsid;
            console.log(reqUrl);
         axios.get(reqUrl).then(result=>{
             var data = result.data
@@ -18,7 +18,7 @@
     } 
 
     function getNS(){
-        reqURL =CommonURL+"/GET/ns";
+        reqURL = CommonURL+"/GET/ns";
         axios.get(reqURL).then(result=>{
             console.log(result.data)
         })
@@ -42,7 +42,7 @@
        $("#name_select").append(html);
 
        if(ns){
-           reqUrl = CommonURL+"/SET/NS/"+ns
+           reqUrl = "/SET/NS/"+ns
            console.log(reqUrl);
         axios.get(reqUrl).then(result=>{
             var data = result.data

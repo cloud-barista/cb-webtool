@@ -6,10 +6,10 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
     console.log("Start LifeCycle method!!!")
     
     if(tag == "mcis"){
-        url ="/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
+        url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
         message = mcis_name+" "+type+ " complete!."
     }else{
-        url ="/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
+        url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
         message = vm_name+" "+type+ " complete!."
     }
 
@@ -42,6 +42,10 @@ function short_desc(str){
     var html = "";
     axios.get(url).then(result=>{
         var data = result.data;
+        if(!data.mcis){
+            location.href = "/MCIS/reg";
+            return;
+        }
          console.log("showmcis Data : ",data)
          var html = "";
          var mcis = data.mcis;
@@ -98,7 +102,7 @@ function short_desc(str){
  }
  function show_vmList(mcis_id){
    
-    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
     $.ajax({
         type:'GET',
         url:url,
@@ -184,7 +188,7 @@ function short_desc(str){
  }
  
  function show_card(mcis_id){
-     var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
      var html = "";
     axios.get(url).then(result=>{
         var data = result.data
@@ -273,7 +277,7 @@ function short_desc(str){
  }
 
  function getProvider(connectionInfo){
-     url ="/connectionconfig"
+     url = SpiderURL+"/connectionconfig"
      axios.get(url).then(result=>{
          var data = result.data
 
@@ -284,7 +288,7 @@ function short_desc(str){
  }
 
  function show_vmDetailList(mcis_id, vm_id){
-     url ="/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+     url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
      axios.get(url).then(result=>{
          var data = result.data
          var html = ""
@@ -341,7 +345,7 @@ function short_desc(str){
  }
 
  function show_vmDetailInfo(mcis_id, vm_id){
-    var url ="/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
         var html = ""
@@ -411,11 +415,11 @@ function short_desc(str){
 }
 
 function show_vmSpecInfo(mcis_id, vm_id){
-    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
         var html = ""
-        var url2 = "/ns/"+NAMESPACE+"/resources/spec"
+        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/spec"
         var spec_id = data.spec_id
         $.ajax({
            url: url2,
@@ -460,11 +464,11 @@ function show_vmSpecInfo(mcis_id, vm_id){
 }
 
 function show_vmNetworkInfo(mcis_id, vm_id){
-    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
         var html = ""
-        var url2 = "/ns/"+NAMESPACE+"/resources/network"
+        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/network"
         var spec_id = data.vnet_id
         $.ajax({
            url: url2,
@@ -505,7 +509,7 @@ function show_vmNetworkInfo(mcis_id, vm_id){
 }
 
 function show_vmSecurityGroupInfo(mcis_id, vm_id){
-    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
         var html = ""
@@ -535,11 +539,11 @@ function show_vmSecurityGroupInfo(mcis_id, vm_id){
 
 
 function show_vmSSHInfo(mcis_id, vm_id){
-    var url = "/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
         var html = ""
-        var url2 = "/ns/"+NAMESPACE+"/resources/sshKey"
+        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
         var spec_id = data.ssh_key_id
         $.ajax({
            url: url2,
