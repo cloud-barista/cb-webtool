@@ -133,6 +133,10 @@ function show_pop(count) {
                 var html = "";
                 axios.get(url).then(result=>{
                     data = result.data.image
+                    if(!data){
+                        alert("등록된 이미지 정보가 없습니다.")
+                        return;
+                    }
                     for(var i in data){
                         if(data[i].connectionName == configName){
                             html += '<option value="'+data[i].id+'" >'+data[i].cspImageName+'('+data[i].id+'</option>'; 
@@ -158,10 +162,7 @@ function show_pop(count) {
                             html += '<option value="'+data[i].id+'" >'+data[i].cspSecurityGroupName+'('+data[i].id+')</option>'; 
                         }
                     }
-                    html +="<option value='12345'>12345</option>"
-                    +"<option value='67789'>67789</option>"
-                    +"<option value='abcder'>abcder</option>"
-                    +"<option value='poirwer'>poirwer</option>";
+                  
                     $("#sg_"+cnt+"").empty();
                     $("#sg_"+cnt+"").append(html);
                     
@@ -357,7 +358,8 @@ function btn_click(){
     result.description = $("#mcis_description").val()
     console.log("seObj result : ",result)
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis"
-    axio.post(url,result).then(result=>{
+    console.log("request Create mcis url : ",url)
+    axios.post(url,result).then(result=>{
         if(result.status == 201){
             alert("Register Success")
             location.href = "/MCIS/list";

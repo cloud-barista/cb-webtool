@@ -12,3 +12,18 @@ funtcion requestAjax(url, method, data){
 }
 
 function requestAxios()
+
+function getNameSpace(){
+    var url = CommonURL+"/ns"
+    axios.get(url).then(result =>{
+        var data = result.data.ns
+        var namespace = ""
+        for( var i in data){
+            if(i == 0 ){
+                namespace = data[i].id
+            }
+        }
+        $("#namespace1").val(namespace);
+
+    })
+}

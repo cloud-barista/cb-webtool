@@ -39,12 +39,13 @@ function short_desc(str){
     return result;
  }
  function show_mcis(url){
+     console.log("Show mcis Url : ",url)
     var html = "";
     axios.get(url).then(result=>{
         var data = result.data;
         if(!data.mcis){
-            location.href = "/MCIS/reg";
-            return;
+           location.href = "/MCIS/reg";
+           return;
         }
          console.log("showmcis Data : ",data)
          var html = "";
@@ -67,7 +68,7 @@ function short_desc(str){
              if(count == 1){
 
              }
-             html += '<tr id="tr_id_'+count+'" onclick="show_card(\' '+mcis[i].id+'\' )">'
+             html += '<tr id="tr_id_'+count+'" onclick="show_card(\''+mcis[i].id+'\' )">'
               +'<td class="text-center">'
               +'<div class="form-input">'
               +'<span class="input">'
@@ -144,7 +145,7 @@ function short_desc(str){
                                   +'<td class="text-center">'
                                   +'<div class="form-input">'
                                   +'<span class="input">'
-                                  +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'"><i></i></span></div>'
+                                  +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                   +'</td>'
                                   +'<td><a href="">'+vm[i].name+'</a></td>'
                                   +'<td>12:32:30</td>'
@@ -273,7 +274,87 @@ function short_desc(str){
  }
 
  function deleteHandler(cl,target,){
+    var url = CommonURL+"/connectionconfig"
+ }
 
+ function mcis_delete(){
+    
+    var cnt = 0;
+    var mcis_id = "";
+    $(".chk").each(function(){
+        if($(this).is(":checked")){
+            //alert("chk");
+            cnt++;
+            mcis_id = $(this).val();        
+        }
+        if(cnt < 1 ){
+            alert("삭제할 대상을 선택해 주세요.");
+            return;
+        }
+
+        if(cnt == 1){
+           console.log("mcis_id ; ",mcis_id)
+            var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id
+            
+            if(confirm("삭제하시겠습니까?")){
+             axios.delete(url).then(result=>{
+                 var data = result.data
+                 if(result.status == 200){
+                     alert(data.message)
+                     location.reload()
+                 }
+             })
+            }
+        }
+
+        if(cnt >1){
+            alert("한개씩만 삭제 가능합니다.")
+            return;
+        }
+
+    })
+ }
+
+ function vm_delete(){
+    
+    var cnt = 0;
+    var vm_id = "";
+    var mcis_id ="";
+    $(".chk").each(function(){
+        if($(this).is(":checked")){
+            //alert("chk");
+            cnt++;
+            id = $(this).val(); 
+            idArr = id.split ("|")  
+            vm_id = idArr[0]
+            mcis_id = idArr[1]    
+        }
+        if(cnt < 1 ){
+            alert("삭제할 대상을 선택해 주세요.");
+            return;
+        }
+
+        if(cnt == 1){
+           console.log("mcis_id ; ",vm_id)
+            var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+            
+            if(confirm("삭제하시겠습니까?")){
+             axios.delete(url).then(result=>{
+                 var data = result.data
+                 if(result.status == 200){
+                     alert(data.message)
+                     location.reload()
+                 }
+             })
+            }
+        }
+
+        if(cnt >1){
+            alert("한개씩만 삭제 가능합니다.")
+            return;
+        }
+
+    })
  }
 
  function getProvider(connectionInfo){

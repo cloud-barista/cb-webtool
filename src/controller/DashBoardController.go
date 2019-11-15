@@ -10,8 +10,11 @@ import (
 func DashBoard(c echo.Context) error {
 	fmt.Println("=========== DashBoard start ==============")
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		nameSpace := GetNameSpaceToString(c)
+		fmt.Println("Namespace : ", nameSpace)
 		return c.Render(http.StatusOK, "dashboard.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"NameSpace": nameSpace,
 		})
 
 	}
