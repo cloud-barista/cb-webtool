@@ -65,7 +65,7 @@ $(document).ready(function(){
      }).then(result =>{
             console.log(result);
         });
-    var nsUrl = "http://127.0.0.1:1234/"
+    var nsUrl = "http://localhost:1234/"
     $("#sign_btn").click(function(){
        // alert("test")
         var username = $("#email").val();
@@ -81,7 +81,7 @@ $(document).ready(function(){
             if(result.data.status == "success"){
                 alert("Login Success");
                 //location.reload();
-                axios.get("http://127.0.0.1:1234/ns").then(result=>{
+                axios.get("http://localhost:1234/ns").then(result=>{
                     console.log(result.data);
                     var data = result.data;
 

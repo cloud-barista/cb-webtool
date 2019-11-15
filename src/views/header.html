@@ -22,12 +22,19 @@
         <script type="text/javascript" src="/assets/js/jquery.vmap.sampledata.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+        <!-- chart -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">
+        <!-- chart -->
+        
         <link rel="stylesheet" href="/assets/css/custom.css">
+
+        
 
         <title>Cloud Baristar</title>
     </head>
     <script>
-        const CommonURL ="http://127.0.0.1:1234";
+        const CommonURL ="http://localhost:1234";
         const NAMESPACE ="{{with .LoginInfo}}{{ .NameSpace }}{{end}}";
         console.log("namespace : ",NAMESPACE)
         var btn_click_cnt = 1;

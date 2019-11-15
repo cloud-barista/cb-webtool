@@ -343,13 +343,27 @@
           }
      }
      function getMetric(target, mcis_id, vm_id, metric, periodType,statisticsCriteria, duration){
+         console.log("====== Start GetMetric ====== ")
+        var color = "";
+        if(target == "cpu"){
+            color = "green"
+        }else if(target == "memory"){
+            color = "yellow"
+        }else if(target == "disk"){
+            color = "indigo"
+        }else if(target == "netwokr"){
+            color = "blue"
+        }
         var mcis_id = "7e3130a0-a811-47b8-a82c-b155267edef5"
-        var vm_id = "0a21106f-e420-4152-b549-8eeb14e3a453"
-        var url =DragonFlyURL+"/mon/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+        var vm_id = "99345fbe-7b20-4d5b-88bd-174691e62ef7"
+        var url = "http://cors-anywhere.herokuapp.com/"+DragonFlyURL+"/mon/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+        console.log("Request URL : ",url)
         var html = "";
+       
         axios.get(url).then(result=>{
               var data = result.data
-              var metricObject = mappintMetric(data);
+              console.log("Get Monitoring Data : ",data)
+              var metricObject = mappingMetric(data);
                     html += '<div class="card card-stats mb-4 mb-xl-0">'
                          +'<div class="card-body">'
                          +'<div class="row">'
@@ -358,7 +372,9 @@
                          +'<span class="h2 font-weight-bold mb-0">2,356</span>'
                          +'</div>'
                          +'<div class="col-auto">'
-                         +'<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
+                         +'<div class="icon icon-shape bg-'
+                         +color
+                         +' text-white rounded-circle shadow">'
                          +''   
                          //+'<i class="fas fa-chart-pie"></i>'
                          +'</div>'
@@ -375,68 +391,7 @@
               $("#"+target+"").append(html)
           })
      }
-     var obj = {
-  "name": "cpu",
-  "columns": [
-    "time",
-    "usage_guest",
-    "usage_guest_nice",
-    "usage_idle",
-    "usage_iowait",
-    "usage_irq",
-    "usage_nice",
-    "usage_softirq",
-    "usage_steal",
-    "usage_system",
-    "usage_user",
-    "usage_utilization"
-  ],
-  "values": [
-    [
-      "2019-10-07T12:44:00Z",
-      0,
-      0,
-      98.25387657794911,
-      0.06236358573282738,
-      0,
-      0,
-      0.031152647973780492,
-      0,
-      0.873032541061727,
-      0.8104739931659429,
-      1.7461234220508928
-    ],
-    [
-      "2019-10-07T12:45:00Z",
-      0,
-      0,
-      98.27411137929118,
-      0.06235711985991006,
-      0,
-      0,
-      0.02596053997806187,
-      0,
-      0.8260244698087682,
-      0.831436902117358,
-      1.725888620708814
-    ],
-    [
-      "2019-10-07T12:46:00Z",
-      0,
-      0,
-      98.3937399357125,
-      0.057197426069846,
-      0,
-      0,
-      0.010397171969045778,
-      0,
-      0.8109020052688636,
-      0.7277634610594736,
-      1.6062600642874947
-    ]
-  ]
-}
-    var mm = mappingMetric(obj);
+  
     console.log("Mapping Object : ",mm)
      
      </script>
