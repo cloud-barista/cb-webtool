@@ -20,9 +20,12 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
         var data = result.data
         console.log("result Message : ",data.message)
         if(status == 200){
-            
-            alert(data.message);
-            location.reload();
+            setTimeout(function(){
+                alert(data.message);
+                location.reload();
+            },5000)
+            // alert(data.message);
+            // location.reload();
         }
     })
 }
@@ -66,8 +69,12 @@ function short_desc(str){
                 badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
              }else if(status == "include-notdefinedstatus" ){
                 badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+             }else if(status == "suspended"){
+                badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+             }else if(status == "terminate"){
+                badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
              }else{
-
+                badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
              }
              count++;
              if(count == 1){
@@ -149,7 +156,7 @@ function short_desc(str){
                                  }else if(status == "terminate"){
                                     badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
                                  }else{
-                                    badge += '<span class="badge badge-pill badge-orange">REBOOT</span>'
+                                    badge += '<span class="badge badge-pill badge-orange">'+status+'</span>'
                                  }
                                  count++;
                                  if(count == 1){

@@ -67,22 +67,21 @@ $(document).ready(function(){
         var username = $("#username").val();
         var description = $("#description").val();
         var url = CommonURL+"/ns"
-        var req_body = {
-            name:username,
-            description
-        }
+       
         var req = {
             headers :{
                  'Content-type': 'application/json',
                 },
-            req_body
+            name:username,
+            description: description,
             
         }
         console.log(req)
         axios.post(url,req).then(result=>{
             console.log(result.data)
             var data = result.data
-            if(data.message == "success"){
+            console.log("result : ",result)
+            if(result.status == 201){
                 alert("등록되었습니다.");
                 location.href = "/NS/list";
             }
