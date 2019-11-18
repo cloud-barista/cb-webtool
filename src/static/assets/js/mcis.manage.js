@@ -166,7 +166,7 @@ function short_desc(str){
                                   +'<td class="text-center">'
                                   +'<div class="form-input">'
                                   +'<span class="input">'
-                                  +'<input type="checkbox" item="'+mcis_name+'"    mcisId="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
+                                  +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                   +'</td>'
                                   +'<td><a href="#!">'+vm[i].name+'</a></td>'
                                   +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
@@ -378,7 +378,7 @@ function short_desc(str){
         if($(this).is(":checked")){
             //alert("chk");
             cnt++;
-            mcis_id = $(this).attr("mcisId");
+            mcis_id = $(this).attr("mcisid");
             mcis_name = $(this).attr("item");
 
         }
