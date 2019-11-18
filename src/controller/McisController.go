@@ -23,11 +23,16 @@ type MCISRequest struct {
 // }
 
 func McisListForm(c echo.Context) error {
+	mcis_id := c.Param("mcis_id")
+	if mcis_id == "" {
+		mcis_id = ""
+	}
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "MCISlist.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
+			"McisID":    mcis_id,
 		})
 
 	}

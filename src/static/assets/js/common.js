@@ -27,3 +27,9 @@ function getNameSpace(){
 
     })
 }
+
+function fnMove(target){
+    var offset = $("#" + target+"").offset();
+    console.log("FnMove offset : ",offset)
+    $('html, body').animate({scrollTop : offset.top}, 400);
+}

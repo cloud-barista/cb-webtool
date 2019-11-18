@@ -60,9 +60,14 @@ function short_desc(str){
              var status = sta.toLowerCase()
              var vms = mcis[i].vm
              var vm_len = vms.length 
-
+             console.log("mcis Status 1: ", mcis[i].status)
+            console.log("mcis Status 2: ", status)
              if(status == "running"){
                 badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+             }else if(status == "include-notdefinedstatus" ){
+                badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+             }else{
+
              }
              count++;
              if(count == 1){
@@ -74,7 +79,7 @@ function short_desc(str){
               +'<span class="input">'
               +'<input type="checkbox" class="chk" id="chk_'+count+'" value="'+mcis[i].id+'"><i></i></span></div>'
               +'</td>'
-              +'<td><a href="">'+mcis[i].name+'</a></td>'
+              +'<td>'+mcis[i].name+'</td>'
               +'<td>12:32:30</td>'
               +'<td>'+vm_len+'</td>'
               +'<td>'+short_desc(mcis[i].description)+'</td>'
@@ -99,6 +104,7 @@ function short_desc(str){
         $("#table_1").append(html);
         show_card(mcis[0].id);
         show_vmList(mcis[0].id);
+        //fnMove("table_1");
     });
  }
  function show_vmList(mcis_id){
@@ -128,14 +134,20 @@ function short_desc(str){
                     success : function(res){
                         var badge = "";
                         for(var k in res){
-                            console.log(" i value is : ",i)
-                            console.log("outer config name : ",configName)
-                            console.log("Inner ConfigName : ",res[k].ConfigName)
+                            // console.log(" i value is : ",i)
+                            // console.log("outer config name : ",configName)
+                            // console.log("Inner ConfigName : ",res[k].ConfigName)
                             if(res[k].ConfigName == vm[i].config_name){
                                 var provider = res[k].ProviderName
                                 console.log("Inner Provider : ",provider)
                                 if(status == "running"){
                                     badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+                                 }else if(status == "suspend"){
+                                    badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+                                 }else if(status == "terminate"){
+                                    badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+                                 }else{
+                                    badge += '<span class="badge badge-pill badge-orance">REBOOT</span>'
                                  }
                                  count++;
                                  if(count == 1){
@@ -147,7 +159,7 @@ function short_desc(str){
                                   +'<span class="input">'
                                   +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                   +'</td>'
-                                  +'<td><a href="">'+vm[i].name+'</a></td>'
+                                  +'<td><a href="#!">'+vm[i].name+'</a></td>'
                                   +'<td>12:32:30</td>'
                                   +'<td>'+provider+'</td>'
                                   +'<td>'+vm[i].region.Region+'</td>'
@@ -176,6 +188,7 @@ function short_desc(str){
                             }
                             $("#table_2").empty();
                             $("#table_2").append(html);
+                            fnMove("#table_2");
 
                     }
 
@@ -315,6 +328,38 @@ function short_desc(str){
     })
  }
 
+ function mcis_reg(){
+    
+    var cnt = 0;
+    var mcis_id = "";
+    $(".chk").each(function(){
+        if($(this).is(":checked")){
+            //alert("chk");
+            cnt++;
+            mcis_id = $(this).val();        
+        }
+        if(cnt < 1 ){
+            alert("등록ㅋ할 대상을 선택해 주세요.");
+            return;
+        }
+
+        if(cnt == 1){
+           console.log("mcis_id ; ",mcis_id)
+            var url = "/MCIS/list/"+mcis_id
+            
+            if(confirm("등록하시겠습니까?")){
+                location.href = url;
+            }
+        }
+
+        if(cnt >1){
+            alert("한개씩만 등록 가능합니다.")
+            return;
+        }
+
+    })
+ }
+
  function vm_delete(){
     
     var cnt = 0;
@@ -414,6 +459,7 @@ function short_desc(str){
                   
                 $("#vm").empty();
                 $("#vm").append(html);
+                fnMove("vm_detail");
 
             }
 
@@ -484,6 +530,8 @@ function short_desc(str){
                  
                $("#vm").empty();
                $("#vm").append(html);
+               fnMove("vm_detail");
+
 
            }
 
