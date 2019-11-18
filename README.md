@@ -1,7 +1,8 @@
 cb-webtool
 ==========
 ***
-cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-webtool에서 처리하게 해 사용자로 하여금 간단하고 편안하게 클라우드를 접할 수 있게 해준다.
+cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-webtool에서 처리해 <br>
+사용자로 하여금 간단하고 편안하게 클라우드를 접할 수 있게 해준다.
 ***
 ## [Index]
 1. [설치환경](#설치-환경)
@@ -35,23 +36,36 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
 
 ## [실행 준비]
 ***
-    - cb-tumblebug 실행에 필요한 환경변수 설정
-        ````bash
+   - cb-tumblebug 실행에 필요한 환경변수 설정
+       
+       ````bash
         $  source setup.env
         ````
-    - cb-spider 실행에 필요한 환경변수 설정
-        ````bash
+   
+   - cb-spider 실행에 필요한 환경변수 설정
+       
+       ````bash
         $  source setup.env
         ````
+        
 ## [서버 실행]
 ***
-    - cb-tumblebug
-    ````bash
-    $ cd github.com/cloud-barista/cb-tumblebug/src/
-    $ ./mcir
-    ````
-    - cb-spider
-    ````bash
-    $ cd github.com/cloud-barista/cb-spider/api-runtime/rest-runtime
-    $ go run *.go
-    ````
+   - cb-tumblebug
+    
+      ````bash
+      $ cd github.com/cloud-barista/cb-tumblebug/src/
+      ````
+    
+      ````bash
+      $ ./mcir
+      ````
+    
+   - cb-spider
+    
+       ````bash
+       $ cd github.com/cloud-barista/cb-spider/api-runtime/rest-runtime
+       ````
+    
+       ````bash
+       $ go run *.go
+       ````
