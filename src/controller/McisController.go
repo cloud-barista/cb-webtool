@@ -23,16 +23,35 @@ type MCISRequest struct {
 // }
 
 func McisListForm(c echo.Context) error {
-	mcis_id := c.Param("mcis_id")
-	if mcis_id == "" {
-		mcis_id = ""
-	}
+	
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "MCISlist.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
+			
+		})
+
+	}
+
+	//return c.Render(http.StatusOK, "MCISlist.html", nil)
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
+
+func VMAddForm(c echo.Context) error {
+	mcis_id := c.Param("mcis_id")
+	mcis_name := c.Param("mcis_name")
+	if mcis_id == "" && mcis_name == "" {
+		mcis_id = ""
+		mcis_name = ""
+	}
+	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := GetNameSpaceToString(c)
+		return c.Render(http.StatusOK, "VMAdd.html", map[string]interface{}{
+			"LoginInfo": loginInfo,
+			"NameSpace": namespace,
 			"McisID":    mcis_id,
+			"McisName":  mcis_name,
 		})
 
 	}

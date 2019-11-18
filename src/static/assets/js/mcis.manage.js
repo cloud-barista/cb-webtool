@@ -77,7 +77,7 @@ function short_desc(str){
               +'<td class="text-center">'
               +'<div class="form-input">'
               +'<span class="input">'
-              +'<input type="checkbox" class="chk" id="chk_'+count+'" value="'+mcis[i].id+'"><i></i></span></div>'
+              +'<input type="checkbox" class="chk" id="chk_'+count+'" value="'+mcis[i].id+'" item="'+mcis[i].name+'"><i></i></span></div>'
               +'</td>'
               +'<td>'+mcis[i].name+'</td>'
               +'<td>12:32:30</td>'
@@ -128,7 +128,7 @@ function short_desc(str){
                 console.log("outer vm configName : ",configName)
                 var count = 0;
                 $.ajax({
-                    url:"/connectionconfig",
+                    url: SpiderURL+"/connectionconfig",
                     async:false,
                     type:'GET',
                     success : function(res){
@@ -287,7 +287,7 @@ function short_desc(str){
  }
 
  function deleteHandler(cl,target,){
-    var url = CommonURL+"/connectionconfig"
+    var url = SpiderURL+"/connectionconfig"
  }
 
  function mcis_delete(){
@@ -336,16 +336,18 @@ function short_desc(str){
         if($(this).is(":checked")){
             //alert("chk");
             cnt++;
-            mcis_id = $(this).val();        
+            mcis_id = $(this).val();
+            mcis_name = $(this).attr("item");
+
         }
         if(cnt < 1 ){
-            alert("등록ㅋ할 대상을 선택해 주세요.");
+            alert("등록할 대상을 선택해 주세요.");
             return;
         }
 
         if(cnt == 1){
            console.log("mcis_id ; ",mcis_id)
-            var url = "/MCIS/list/"+mcis_id
+            var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
             
             if(confirm("등록하시겠습니까?")){
                 location.href = url;
@@ -419,7 +421,7 @@ function short_desc(str){
          var data = result.data
          var html = ""
          $.ajax({
-            url:"/connectionconfig",
+            url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
             success : function(res){
@@ -477,7 +479,7 @@ function short_desc(str){
         var data = result.data
         var html = ""
         $.ajax({
-           url:"/connectionconfig",
+           url:SpiderURL+"/connectionconfig",
            async:false,
            type:'GET',
            success : function(res){

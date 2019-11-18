@@ -83,12 +83,9 @@ func main() {
 
 	// MCIS
 	e.GET("/MCIS/reg", controller.McisRegForm)
+	e.GET("/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	e.POST("/MCIS/reg/proc", controller.McisRegController)
 	e.GET("/MCIS/list", controller.McisListForm)
-	e.GET("/MCIS/list/:mcis_id", controller.McisListForm)
-	//e.GET("/MCIS/list/:mcis_id", controller.McisListForm)
-
-	// Namespace 관련 rest server
 
 	// 웹툴에서 사용할 rest
 	e.GET("/SET/NS/:nsid", controller.SetNameSpace)
