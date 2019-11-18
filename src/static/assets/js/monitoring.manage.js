@@ -136,7 +136,7 @@ function short_desc(str){
                 console.log("outer vm configName : ",configName)
                 var count = 0;
                 $.ajax({
-                    url:"/connectionconfig",
+                    url: SpiderURL+"/connectionconfig",
                     async:false,
                     type:'GET',
                     success : function(res){
@@ -365,7 +365,7 @@ function show_vmDetailList(mcis_id, vm_id){
         var data = result.data
         var html = ""
         $.ajax({
-           url:"/connectionconfig",
+           url: SpiderURL+"/connectionconfig",
            async:false,
            type:'GET',
            success : function(res){
@@ -422,7 +422,7 @@ function show_vmDetailInfo(mcis_id, vm_id){
        var data = result.data
        var html = ""
        $.ajax({
-          url:"/connectionconfig",
+          url: SpiderURL+"/connectionconfig",
           async:false,
           type:'GET',
           success : function(res){

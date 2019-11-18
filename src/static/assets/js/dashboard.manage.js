@@ -21,7 +21,7 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
         console.log("result Message : ",data.message)
         if(status == 200){
             
-            alert(data.message);
+            alert(message);
             location.reload();
         }
     })
@@ -53,6 +53,13 @@ function short_desc(str){
          var len = mcis.length;
          var count = 0;
          
+         if(len){
+             var tag = '<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
+                     +len
+                     +'</div>'
+             $("#service_cnt").empty();
+             $("#service_cnt").append(tag)      
+         }
           
          for(var i in mcis){
              var sta = mcis[i].status;
@@ -118,13 +125,12 @@ function short_desc(str){
             var vm = data.vm
             var mcis_name = data.name 
             var html = "";
-            console.log("VM DATA : ",vm)
+            
             for(var i in vm){
                 var sta = vm[i].status;
-                
+                console.log(" i value is : ",i)
                
                 var status = sta.toLowerCase()
-                console.log("VM Status : ",status)
                 var configName = vm[i].config_name
                 console.log("outer vm configName : ",configName)
                 var count = 0;
@@ -140,16 +146,15 @@ function short_desc(str){
                             // console.log("Inner ConfigName : ",res[k].ConfigName)
                             if(res[k].ConfigName == vm[i].config_name){
                                 var provider = res[k].ProviderName
-                                
-                                
+                                console.log("Inner Provider : ",provider)
                                 if(status == "running"){
                                     badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
-                                 }else if(status == "suspended"){
+                                 }else if(status == "suspend"){
                                     badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
                                  }else if(status == "terminate"){
                                     badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
                                  }else{
-                                    badge += '<span class="badge badge-pill badge-orange">REBOOT</span>'
+                                    badge += '<span class="badge badge-pill badge-orance">REBOOT</span>'
                                  }
                                  count++;
                                  if(count == 1){
@@ -162,7 +167,7 @@ function short_desc(str){
                                   +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                   +'</td>'
                                   +'<td><a href="#!">'+vm[i].name+'</a></td>'
-                                  +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
+                                  +'<td>12:32:30</td>'
                                   +'<td>'+provider+'</td>'
                                   +'<td>'+vm[i].region.Region+'</td>'
                                   +'<td>'+short_desc(vm[i].description)+'</td>'
@@ -250,43 +255,43 @@ function short_desc(str){
     show_vmSSHInfo(mcis_id, vm_id);
     $("#vm_detail").show();
  }
-//  function sel_table(targetNo,mcid){
-//      var $target = $("#card_"+targetNo+"");
-//      var html = "";
-//      url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcid
-//      axios.get(url).then(result=>{
-//          var data = result.data.vm
-//          for(var i in data){
+ function sel_table(targetNo,mcid){
+     var $target = $("#card_"+targetNo+"");
+     var html = "";
+     url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcid
+     axios.get(url).then(result=>{
+         var data = result.data.vm
+         for(var i in data){
 
-//          }
-//      })
-//      html += '<tr>'
-//              +'<td class="text-center">'
-//              +'<div class="form-input">'
-//              +'<span class="input">'
-//              +'<input type="checkbox" id=""><i></i>'
-//              +'</span></div>'
-//              +'</td>'
-//              +'<td>1</td>'
-//              +'<td><a href="">Baristar1</a></td>'
-//              +'<td>aws driver 1aws driver ver0.1</td>'
-//              +'<td>aws key 1</td>'
-//              +'<td>ap-northest-1</td>'
-//              +'<td>'
-//              +'<div class="custom-control custom-switch">'
-//              +'<input type="checkbox" class="custom-control-input" id="customSwitch1">'
-//              +'<label class="custom-control-label" for="customSwitch1"></label></div>'
-//              +'</td>'
-//              +'<td>'
-//              +'<span class="badge badge-pill badge-warning">stop</span>'
-//              +'</td>'
-//              +'<td>2019-05-05</td>'
-//              +'</tr>';
+         }
+     })
+     html += '<tr>'
+             +'<td class="text-center">'
+             +'<div class="form-input">'
+             +'<span class="input">'
+             +'<input type="checkbox" id=""><i></i>'
+             +'</span></div>'
+             +'</td>'
+             +'<td>1</td>'
+             +'<td><a href="">Baristar1</a></td>'
+             +'<td>aws driver 1aws driver ver0.1</td>'
+             +'<td>aws key 1</td>'
+             +'<td>ap-northest-1</td>'
+             +'<td>'
+             +'<div class="custom-control custom-switch">'
+             +'<input type="checkbox" class="custom-control-input" id="customSwitch1">'
+             +'<label class="custom-control-label" for="customSwitch1"></label></div>'
+             +'</td>'
+             +'<td>'
+             +'<span class="badge badge-pill badge-warning">stop</span>'
+             +'</td>'
+             +'<td>2019-05-05</td>'
+             +'</tr>';
              
-//     $target.empty();         
-//     $target.append(html);
+    $target.empty();         
+    $target.append(html);
 
-//  }
+ }
 
  function deleteHandler(cl,target,){
     var url = SpiderURL+"/connectionconfig"
