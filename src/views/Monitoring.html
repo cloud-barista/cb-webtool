@@ -345,15 +345,8 @@
      function getMetric(target, mcis_id, vm_id, metric, periodType,statisticsCriteria, duration){
          console.log("====== Start GetMetric ====== ")
         var color = "";
-        if(target == "cpu"){
-            color = "green"
-        }else if(target == "memory"){
-            color = "yellow"
-        }else if(target == "disk"){
-            color = "indigo"
-        }else if(target == "netwokr"){
-            color = "blue"
-        }
+        var metric_size ="";
+        
         var mcis_id = "7e3130a0-a811-47b8-a82c-b155267edef5"
         var vm_id = "99345fbe-7b20-4d5b-88bd-174691e62ef7"
         var url = "http://cors-anywhere.herokuapp.com/"+DragonFlyURL+"/mon/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
@@ -364,18 +357,41 @@
               var data = result.data
               console.log("Get Monitoring Data : ",data)
               var metricObject = mappingMetric(data);
+              var m_len = metricObject.length-1
+
+              if(target == "cpu"){
+                color += '<div class="icon icon-shape bg-success text-white rounded-circle shadow">'
+                      + '<i class="fas fa-microchip"></i>';
+                var num = parseFloat(metricObject[m_len].cpu_utilization)
+                metric_size +='<span class="h2 font-weight-bold mb-0">'+num.toFixed(3)+'%</span>'                  
+              }else if(target == "memory"){
+                color += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
+                      + '<i class="fas fa-memory"></i>'
+                var num = parseFloat(metricObject[m_len].mem_utilization)
+                metric_size +='<span class="h2 font-weight-bold mb-0">'+num.toFixed(3)+'%</span>' 
+              }else if(target == "disk"){
+                color += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
+                      + '<i class="far fa-save"></i>'
+                var num = parseFloat(metricObject[m_len].used_percent)
+                metric_size +='<span class="h2 font-weight-bold mb-0">'+num.toFixed(3)+'%</span>' 
+              }else if(target == "network"){
+                color += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow">'
+                      + '<i class="fas fa-network-wired"></i>'
+                var num = parseFloat(metricObject[m_len].bytes_in)
+                metric_size +='<span class="h2 font-weight-bold mb-0">'+num.toFixed(1)+'byte</span>' 
+              }
                     html += '<div class="card card-stats mb-4 mb-xl-0">'
                          +'<div class="card-body">'
                          +'<div class="row">'
                          +'<div class="col">'
                          +'<h5 class="card-title text-uppercase text-muted mb-0">'+metric+'</h5>'
-                         +'<span class="h2 font-weight-bold mb-0">2,356</span>'
+                         //+'<span class="h2 font-weight-bold mb-0">2,356</span>'
+                         +metric_size
                          +'</div>'
                          +'<div class="col-auto">'
-                         +'<div class="icon icon-shape bg-'
+                       
                          +color
-                         +' text-white rounded-circle shadow">'
-                         +''   
+                         
                          //+'<i class="fas fa-chart-pie"></i>'
                          +'</div>'
                          +'</div>'

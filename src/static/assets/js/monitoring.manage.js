@@ -77,6 +77,14 @@ function short_desc(str){
 
              if(status == "running"){
                 badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+             }else if(status == "include-notdefinedstatus" ){
+                badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+             }else if(status == "suspended"){
+                badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+             }else if(status == "terminate"){
+                badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+             }else{
+                badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
              }
              count++;
              if(count == 1){
@@ -150,6 +158,14 @@ function short_desc(str){
                                 console.log("Inner Provider : ",provider)
                                 if(status == "running"){
                                     badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+                                 }else if(status == "include-notdefinedstatus" ){
+                                    badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+                                 }else if(status == "suspended"){
+                                    badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+                                 }else if(status == "terminate"){
+                                    badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+                                 }else{
+                                    badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
                                  }
                                  count++;
                                  if(count == 1){
@@ -162,7 +178,7 @@ function short_desc(str){
                                   +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'"><i></i></span></div>'
                                   +'</td>'
                                   +'<td><a href="">'+vm[i].name+'</a></td>'
-                                  +'<td>12:32:30</td>'
+                                  +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
                                   +'<td>'+provider+'</td>'
                                   +'<td>'+vm[i].region.Region+'</td>'
                                   +'<td>'+short_desc(vm[i].description)+'</td>'
