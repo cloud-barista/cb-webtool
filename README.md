@@ -76,3 +76,13 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
        ````bash
        $ go run *.go
        ````
+   
+   - cb-webtool
+   
+       ````bash
+       $ cd github.com/cloud-barista/cb-webtool
+       ````
+       
+       ````bash
+       $ go run main.go
+       ````
