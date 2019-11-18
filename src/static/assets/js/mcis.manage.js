@@ -20,9 +20,12 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
         var data = result.data
         console.log("result Message : ",data.message)
         if(status == 200){
-            
-            alert(data.message);
-            location.reload();
+            setTimeout(function(){
+                alert(data.message);
+                location.reload();
+            },5000)
+            // alert(data.message);
+            // location.reload();
         }
     })
 }
@@ -66,8 +69,12 @@ function short_desc(str){
                 badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
              }else if(status == "include-notdefinedstatus" ){
                 badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+             }else if(status == "suspended"){
+                badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+             }else if(status == "terminate"){
+                badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
              }else{
-
+                badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
              }
              count++;
              if(count == 1){
@@ -149,7 +156,7 @@ function short_desc(str){
                                  }else if(status == "terminate"){
                                     badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
                                  }else{
-                                    badge += '<span class="badge badge-pill badge-orange">REBOOT</span>'
+                                    badge += '<span class="badge badge-pill badge-orange">'+status+'</span>'
                                  }
                                  count++;
                                  if(count == 1){
@@ -159,7 +166,7 @@ function short_desc(str){
                                   +'<td class="text-center">'
                                   +'<div class="form-input">'
                                   +'<span class="input">'
-                                  +'<input type="checkbox" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
+                                  +'<input type="checkbox" item="'+mcis_name+'"    mcisId="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                   +'</td>'
                                   +'<td><a href="#!">'+vm[i].name+'</a></td>'
                                   +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
@@ -363,13 +370,46 @@ function short_desc(str){
 
     })
  }
+ function vm_reg(){
+    
+    var cnt = 0;
+    var mcis_id = "";
+    $(".chk2").each(function(){
+        if($(this).is(":checked")){
+            //alert("chk");
+            cnt++;
+            mcis_id = $(this).attr("mcisId");
+            mcis_name = $(this).attr("item");
+
+        }
+        if(cnt < 1 ){
+            alert("등록할 대상을 선택해 주세요.");
+            return;
+        }
+
+        if(cnt == 1){
+           console.log("mcis_id ; ",mcis_id)
+            var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
+            
+            if(confirm("등록하시겠습니까?")){
+                location.href = url;
+            }
+        }
+
+        if(cnt >1){
+            alert("한개씩만 등록 가능합니다.")
+            return;
+        }
+
+    })
+ }
 
  function vm_delete(){
     
     var cnt = 0;
     var vm_id = "";
     var mcis_id ="";
-    $(".chk").each(function(){
+    $(".chk2").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
             cnt++;

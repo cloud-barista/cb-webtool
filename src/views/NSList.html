@@ -55,7 +55,7 @@
                                 <table class="table table-bordered">
                                     <colgroup>
                                         <col style="width: 50px">
-                                        <col style="width: 50px">
+                                        
                                         <col>
                                         <col>
                                         <col>
@@ -73,7 +73,7 @@
                                                     </span>
                                                 </div>
                                             </th>
-                                            <th>No</th>
+                                          
                                             <th>Name</th>
                                             <th>ID</th>
                                             
@@ -93,7 +93,7 @@
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td>{{ $index  }}</td>
+                                          
                                             
                                            
                                             <td>{{ .Name }}</td>
@@ -189,11 +189,12 @@ $(document).ready(function(){
         if(cnt == 1){
            
             var u = CommonURL+"/ns/"+id
-            alert("url: "+u)
+           
             if(confirm("삭제하시겠습니까?")){
              axios.delete(u).then(result=>{
                  var data = result.data
-                 if(data.message == "success"){
+                 console.log("delete result : ",result)
+                 if(result.status == 200){
                      alert("삭제되었습니다.")
                      location.reload()
                  }

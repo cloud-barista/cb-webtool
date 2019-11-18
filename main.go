@@ -77,6 +77,8 @@ func main() {
 	e.GET("/login", controller.LoginForm)
 	e.POST("/login/proc", controller.LoginController)
 	e.POST("/regUser", controller.RegUserConrtoller)
+	e.GET("/logout", controller.LogoutForm)
+	e.GET("/logout/proc", controller.LoginController)
 
 	// Monitoring Control
 	e.GET("/monitoring", controller.MornitoringListForm)

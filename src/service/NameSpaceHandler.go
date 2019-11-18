@@ -8,7 +8,7 @@ import (
 	"reflect"
 )
 
-var NameSpaceUrl = "http://localhost:1234"
+var NameSpaceUrl = "http://15.165.16.67:1323"
 
 type NSInfo struct {
 	ID          string `json:"id"`

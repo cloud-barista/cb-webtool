@@ -19,6 +19,11 @@ func LoginForm(c echo.Context) error {
 	return c.Render(http.StatusOK, "login.html", nil)
 }
 
+func LogoutForm(c echo.Context) error {
+	fmt.Println("============== Logout Form ===============")
+	return c.Render(http.StatusOK, "logout.html", nil)
+}
+
 func RegUserConrtoller(c echo.Context) error {
 
 	reqInfo := new(ReqInfo)
