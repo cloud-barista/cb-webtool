@@ -22,16 +22,24 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
     - go get -u -v github.com/go-session/echo-session
  - cloud-barista alliance 설치
     - cb-log install
-        - go get -u -v github.com/cloud-barista/cb-log
+        ````bash
+         $ go get -u -v github.com/cloud-barista/cb-log
+         ````
         - [https://github.com/cloud-barista/cb-log](https://github.com/cloud-barista/cb-log) README 참고하여 설치 및 설정
     - cb-store install
-        - go get -u -v github.com/cloud-barista/cb-store
+        ````bash
+         $ go get -u -v github.com/cloud-barista/cb-store
+         ````
         - [https://github.com/cloud-barista/cb-store](https://github.com/cloud-barista/cb-store) README 참고하여 설치 및 설정
     - cb-spider install
-        - go get -u -v github.com/cloud-barista/cb-spider
+        ````bash
+         $ go get -u -v github.com/cloud-barista/cb-spider
+         ````
         - [https://github.com/cloud-barista/cb-spider](https://github.com/cloud-barista/cb-spider) README 참고하여 설치 및 설정
     - cb-tumblebug install
-        - go get -u -v github.com/cloud-barista/cb-tubmlebug
+        ````bash
+         $ go get -u -v github.com/cloud-barista/cb-tubmlebug
+         ````
         - [https://github.com/cloud-barista/cb-tubmlebug](https://github.com/cloud-barista/cb-tubmlebug) README 참고하여 설치 및 설정
 
 ## [실행 준비]
