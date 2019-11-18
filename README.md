@@ -16,13 +16,20 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
  - Git 설치
  - Go설치(1.12이상)
  - echo 설치
-    - go get -u -v github.com/labstack/echo
+ 
+    ````bash
+      $ go get -u -v github.com/labstack/echo
+    ````
+ 
  - echo-session 설치
-    - go get -u -v github.com/go-session/echo-session
+     ````bash
+       $ go get -u -v github.com/go-session/echo-session
+     ````
+     
  - cloud-barista alliance 설치
     - cb-log install
-        ````bash
-         $ go get -u -v github.com/cloud-barista/cb-log
+         ````bash
+          $ go get -u -v github.com/cloud-barista/cb-log
          ````
         - [https://github.com/cloud-barista/cb-log](https://github.com/cloud-barista/cb-log) README 참고하여 설치 및 설정
     - cb-store install
@@ -61,9 +68,6 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
     
       ````bash
       $ cd github.com/cloud-barista/cb-tumblebug/src/
-      ````
-    
-      ````bash
       $ ./mcir
       ````
     
