@@ -33,3 +33,17 @@ function fnMove(target){
     console.log("FnMove offset : ",offset)
     $('html, body').animate({scrollTop : offset.top}, 400);
 }
+
+function getVMStatus(vm_name, connection_name){
+    var url = "/vmstatus/"+vm_name+"?connection_name="+connection_name
+
+    $.ajax({
+        url: url,
+        async:false,
+        type:'GET',
+        success : function(res){
+            var vm_status = res.Status 
+
+        }
+    })
+}
