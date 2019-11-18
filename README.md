@@ -9,10 +9,10 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
 3. [실행준비][3]
 4. [서버실행][4]
 ***
-[1] ## [설치 환경]
+[1] ## [설치환경]
  - Linux(검증시험 : ubuntu 18.0.4)
 
-[2] ## [소스 설치]
+[2] ## [소스설치]
  - Git 설치
  - Go설치(1.12이상)
  - echo 설치
@@ -33,7 +33,7 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
         - go get -u -v github.com/cloud-barista/cb-tubmlebug
         - [https://github.com/cloud-barista/cb-tubmlebug](https://github.com/cloud-barista/cb-tubmlebug) README 참고하여 설치 및 설정
 
-[3] ## [실행 준비]
+[3] [##실행준비]
 ***
     - cb-tumblebug 실행에 필요한 환경변수 설정
         ```bash
