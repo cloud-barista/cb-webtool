@@ -233,7 +233,7 @@
                             <div class="card-header border-0">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <h3 class="mb-0">Traffic</h3>
+                                        <h3 class="mb-0">TopN Traffic - MCIS</h3>
                                     </div>
                                     <div class="col text-right">
                                         <a href="#!" class="btn btn-sm btn-dark">See all</a>
@@ -244,18 +244,22 @@
                                 <table class="table align-items-center table-flush">
                                     <thead class="thead-light">
                                         <tr>
-                                        <th scope="col">Referral</th>
-                                        <th scope="col">Visitors</th>
+                                        <th scope="col">Name(ID)</th>
+                                        <th scope="col">Amt</th>
+                                        <th scope="col">TBD</th>
                                         <th scope="col">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                1,480
+                                                mcis-1
                                             </td>
                                             <td>
-                                                1,480
+                                                123421
+                                            </td>
+                                            <td>
+                                                -
                                             </td>
                                             <td>
                                                 <span class="badge badge-pill badge-dark">terminated</span>
@@ -263,10 +267,13 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                1,480
+                                                mcis-2
                                             </td>
                                             <td>
                                                 1,480
+                                            </td>
+                                            <td>
+                                                -
                                             </td>
                                             <td>
                                                 <span class="badge badge-pill badge-warning">stop</span>
@@ -290,7 +297,7 @@
    
    
 
-     {{template "Footer"}}
+     {{template "Footer" .}}
 
      <script>
             $(document).ready(function(){

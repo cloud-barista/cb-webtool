@@ -112,6 +112,8 @@ function short_desc(str){
         show_card(mcis[0].id);
         show_vmList(mcis[0].id);
         //fnMove("table_1");
+        $("#mcis_id").val(mcis[0].id)
+        $("#mcis_name").val(mcis[0].name)
     });
  }
  function show_vmList(mcis_id){
@@ -162,13 +164,13 @@ function short_desc(str){
                                  if(count == 1){
                     
                                  }
-                                 html += '<tr id="tr_id_'+count+'" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'
+                                 html += '<tr id="tr_id_'+count+'" >'
                                   +'<td class="text-center">'
                                   +'<div class="form-input">'
                                   +'<span class="input">'
                                   +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                   +'</td>'
-                                  +'<td><a href="#!">'+vm[i].name+'</a></td>'
+                                  +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
                                   +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
                                   +'<td>'+provider+'</td>'
                                   +'<td>'+vm[i].region.Region+'</td>'
@@ -217,6 +219,7 @@ function short_desc(str){
         var data = result.data
         console.log("show card data : ",result)
         var vm_cnt = data.vm
+        var mcis_name = data.name
         vm_cnt = vm_cnt.length
         
             html += '<div class="col-xl-12 col-lg-12">'
@@ -246,6 +249,8 @@ function short_desc(str){
         $("#card").append(html)
 
         show_vmList(mcis_id)
+        $("#mcis_id").val(mcis_id)
+        $("#mcis_name").val(mcis_name)
        
     })
  }
@@ -374,34 +379,16 @@ function short_desc(str){
     
     var cnt = 0;
     var mcis_id = "";
-    $(".chk2").each(function(){
-        if($(this).is(":checked")){
-            //alert("chk");
-            cnt++;
-            mcis_id = $(this).attr("mcisid");
-            mcis_name = $(this).attr("item");
+    var mcis_name = "";
+    
+    mcis_id = $("#mcis_id").val()
+    mcis_name = $("#mcis_name").val()
+    var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
+    console.log("vm reg url : ",url)
+    if(confirm("VM 추가 등록하시겠습니까?")){
+        location.href = url;
+    }
 
-        }
-        if(cnt < 1 ){
-            alert("등록할 대상을 선택해 주세요.");
-            return;
-        }
-
-        if(cnt == 1){
-           console.log("mcis_id ; ",mcis_id)
-            var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
-            
-            if(confirm("등록하시겠습니까?")){
-                location.href = url;
-            }
-        }
-
-        if(cnt >1){
-            alert("한개씩만 등록 가능합니다.")
-            return;
-        }
-
-    })
  }
 
  function vm_delete(){
