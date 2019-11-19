@@ -156,7 +156,7 @@ function short_desc(str){
                                  }else if(status == "terminate"){
                                     badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
                                  }else{
-                                    badge += '<span class="badge badge-pill badge-orange">'+status+'</span>'
+                                    badge += '<span class="badge badge-pill badge-dark">'+status+'</span>'
                                  }
                                  count++;
                                  if(count == 1){
