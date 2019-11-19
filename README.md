@@ -44,9 +44,9 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
         - [https://github.com/cloud-barista/cb-spider](https://github.com/cloud-barista/cb-spider) README 참고하여 설치 및 설정
     - cb-tumblebug install
         ````bash
-         $ go get -u -v github.com/cloud-barista/cb-tubmlebug
+         $ go get -u -v github.com/cloud-barista/cb-tumblebug
          ````
-        - [https://github.com/cloud-barista/cb-tubmlebug](https://github.com/cloud-barista/cb-tumblebug) README 참고하여 설치 및 설정
+        - [https://github.com/cloud-barista/cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug) README 참고하여 설치 및 설정
 
 ## [실행 준비]
 
