@@ -13,7 +13,7 @@
             <main role="main" class="main" id="box_dialog">
                 <div class="page-header" id="box_dialog">
                     <div>
-                        <h1>MCIS Management</h1>
+                        <h1>MCIS Monitoring</h1>
                     </div>
                 </div>
                 <!-- table -->
@@ -84,30 +84,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="table_1">
-                                        <tr>
-                                            <td class="text-center">
-                                                <div class="form-input">
-                                                    <span class="input">
-                                                        <input type="checkbox" id=""><i></i>
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td><a href="">Baristar1</a></td>
-                                            <td>aws driver 1aws driver ver0.1</td>
-                                            <td>aws key 1</td>
-                                            <td>ap-northest-1</td>
-                                            <td>
-                                                <span class="badge badge-pill badge-warning">stop</span>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-icon">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-icon">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                      
                                         
                                     </tbody>
                                 </table>
@@ -261,6 +238,10 @@
      </script>
      <script>
      function showMonitoring(mcis_id, vm_id){
+         $("#cpu").empty()
+         $("#memory").empty()
+         $("#disk").empty()
+         $("#network").empty()
           var arr = ["cpu","memory","disk","network"];
           var periodType = "m";
           var duration = "5m"
@@ -336,6 +317,6 @@
           })
      }
   
-    console.log("Mapping Object : ",mm)
+ 
      
      </script>

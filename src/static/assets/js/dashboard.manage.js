@@ -50,11 +50,16 @@ function short_desc(str){
         console.log("showmcis Data : ",data)
         var html = "";
         var mcis = data.mcis;
-        var len = mcis.length;
+        var len = 0
+        if(mcis){
+            len = mcis.length;
+        }
+    
         var count = 0;
         
-         var vm_len = 0
+       
         for(var i in mcis){
+            var vm_len = 0
             var sta = mcis[i].status;
             var badge = "";
             var status = sta.toLowerCase()
@@ -233,7 +238,12 @@ function show_vmList(mcis_id){
         var data = result.data
         console.log("show card data : ",result)
         var vm_cnt = data.vm
-        vm_cnt = vm_cnt.length
+        if(vm_cnt){
+            vm_cnt = vm_cnt.length;
+        }else{
+            vm_cnt = 0;
+        }
+        
         
             html += '<div class="col-xl-12 col-lg-12">'
                     +'<div class="card card-stats mb-12 mb-xl-0">'
@@ -260,8 +270,12 @@ function show_vmList(mcis_id){
         
         $("#card").empty()
         $("#card").append(html)
-
-        show_vmList(mcis_id)
+        if(vm_cnt == 0){
+            show_vmList("")
+        }else{
+            show_vmList(mcis_id)
+        }
+        
        
     })
  }
