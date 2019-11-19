@@ -38,15 +38,9 @@
                             
                             <tbody>
                                 <tr>
-                                    <th>ConfigName<strong class="text-danger">*</strong></th>
-                                    <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="cfName" id="cfName">
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th>Provider<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <select class="form-control form-control-sm" name="pv" id="pName">
+                                        <select class="form-control form-control-sm" name="pv" id="pName" onchange="getInfo(this.value)">
                                             <option selected>Select Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
@@ -58,21 +52,35 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>ConfigName<strong class="text-danger">*</strong></th>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="cfName" id="cfName">
+                                    </td>
+                                </tr>
+                                
+                                <tr>
                                     <th>DriverName<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="dName" id="dName">
+                                        <select class="form-control form-control-sm" name="dName" id="dName">
+                                            <option >Select Driver</option>
+                                           
+                                        </select>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>CredentialName<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="credName" id="credName">
+                                        <select class="form-control form-control-sm" name="credName" id="credName">
+                                            <option >Select Credential</option>
+                                        </select>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>RegionName<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="rName" id="rName">
+                                        <select class="form-control form-control-sm" name="rName" id="rName">
+                                            <option >Select Region</option>
+                                        </select>
                                     </td>
                                 </tr>
                                
@@ -126,4 +134,55 @@ $(document).ready(function(){
     })
 })
 
+function getInfo(provider){
+    getDriverName(provider);
+    getCredentialName(provider);
+    getRegionName(provider);
+
+}
+function getDriverName(provider){
+    var url = SpiderURL+"/driver"
+    axios.get(url).then(result=>{
+        var data = result.data
+        var html = "";
+        for (var i in data){
+            if(provider == data[i].ProviderName){
+                html +='<option value="'+data[i].DriverName+'">'+data[i].DriverName+'</option>'
+            }
+            
+        }
+        $("#dName").empty();
+        $("#dName").append(html);
+    })
+}
+function getCredentialName(provider){
+    var url = SpiderURL+"/credential"
+    axios.get(url).then(result=>{
+        var data = result.data
+        var html = "";
+        for (var i in data){
+            if(provider == data[i].ProviderName){
+                html +='<option value="'+data[i].CredentialName+'">'+data[i].CredentialName+'</option>'
+            }
+            
+        }
+        $("#credName").empty();
+        $("#credName").append(html);
+    })
+}
+function getRegionName(provider){
+    var url = SpiderURL+"/region"
+    axios.get(url).then(result=>{
+        var data = result.data
+        var html = "";
+        for (var i in data){
+            if(provider == data[i].ProviderName){
+                html +='<option value="'+data[i].RegionName+'">'+data[i].RegionName+'</option>'
+            }
+            
+        }
+        $("#rName").empty();
+        $("#rName").append(html);
+    })
+}
 </script>

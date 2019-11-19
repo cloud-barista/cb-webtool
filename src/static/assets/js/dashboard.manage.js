@@ -82,13 +82,13 @@ function short_desc(str){
             if(count == 1){
 
             }
-            html += '<tr id="tr_id_'+count+'" onclick="show_card(\''+mcis[i].id+'\' )">'
+            html += '<tr id="tr_id_'+count+'" >'
              +'<td class="text-center">'
              +'<div class="form-input">'
              +'<span class="input">'
              +'<input type="checkbox" class="chk" id="chk_'+count+'" value="'+mcis[i].id+'" item="'+mcis[i].name+'"><i></i></span></div>'
              +'</td>'
-             +'<td>'+mcis[i].name+'</td>'
+             +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')" >'+mcis[i].name+'</a></td>'
              +'<td>12:32:30</td>'
              +'<td>'+vm_len+'</td>'
              +'<td>'+short_desc(mcis[i].description)+'</td>'
