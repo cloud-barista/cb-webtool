@@ -73,38 +73,28 @@
                                                     </span>
                                                 </div>
                                             </th>
-                                            <th>No</th>
                                             <th>DriverName</th>
                                             <th>ProviderName</th>
                                             <th>DriverLibFileName</th>
+                                           
                                         
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {{ if .NSList}}
-                                        {{ range $index, $item := .NSList}}
-                                    
+                                    <tbody id="con_table">
                                         <tr>
                                             <td class="text-center">
                                                 <div class="form-input">
                                                     <span class="input">
-                                                        <input type="checkbox" class="chk" name="chk[]" id="" value='{{ .ID}}' /><i></i>
+                                                        <input type="checkbox" class="chk" name="chk[]" id="" value='{{ .ConfigName}}' /><i></i>
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td>{{ $index  }}</td>
-                                            
-                                            <td><a href="">{{ .ID }}</a></td>
-                                            <td>{{ .Name }}</td>
-                                            <td>{{ .Description }}</td>
-                                        
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                         
                                         </tr>
-                                        {{end}}
-                                        {{else}}
-                                        <tr>  
-                                            <td colspan="5">등록된 데이터가 없습니다.</td>
-                                        </tr>
-                                        {{end}}
+                                      
                                     </tbody>
                                 </table>
                             </div>
@@ -151,7 +141,7 @@
         <!-- //container -->
 
 
-      {{template "Footer" .}}
+        {{template "Footer" .}}
 <script>
 var getList = "{{ .NSList}}";
 console.log(getList);
@@ -168,6 +158,35 @@ function check_all(f) {
 
 $(document).ready(function(){
     //alert("reload")
+
+    var url = SpiderURL+"/driver";
+    axios.get(url).then(result=>{
+        var data = result.data
+        var html = ""
+        if(data){
+            for(var i in data){
+                html += '<tr>'
+                    +'<td class="text-center">'
+                    +'<div class="form-input">'
+                    +'<span class="input">'
+                    +'<input type="checkbox" class="chk" name="chk[]" id="" value="'+data[i].DriverName+'" /><i></i>'
+                    +'</span>'
+                    +'</div>'
+                    +'</td>'
+                    +'<td>'+data[i].DriverName+'</td>'
+                    +'<td>'+data[i].ProviderName+'</td>'
+                    +'<td>'+data[i].DriverLibFileName+'</td>'
+                  
+                    +'</tr>'
+            }
+            $("#con_table").empty();
+            $("#con_table").append(html);
+        }else{
+            $("#con_table").empty();
+            $("#con_table").append("<td colspan='6'>등록된 데이터가 없습니다.</td>");
+        }
+
+    })
     $("#sel_del").click(function(){
         var cnt = 0;
         var id = "";
@@ -185,12 +204,12 @@ $(document).ready(function(){
         }
         if(cnt == 1){
            
-            var u = CommonURL+"/ns/"+id
-            alert("url: "+u)
+            var u = SpiderURL+"/driver/"+id
+           
             if(confirm("삭제하시겠습니까?")){
              axios.delete(u).then(result=>{
                  var data = result.data
-                 if(data.message == "success"){
+                 if(result.status == 200){
                      alert("삭제되었습니다.")
                      location.reload()
                  }
