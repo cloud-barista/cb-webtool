@@ -56,12 +56,13 @@ function short_desc(str){
          var len = mcis.length;
          var count = 0;
          
-          var vm_len = 0
+         
          for(var i in mcis){
              var sta = mcis[i].status;
              var badge = "";
              var status = sta.toLowerCase()
              var vms = mcis[i].vm
+             var vm_len = 0
             
              if(vms){
                 vm_len = vms.length
@@ -131,6 +132,7 @@ function short_desc(str){
  function show_vmList(mcis_id){
    
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+    console.log("MCIS Mangement mcisID : ",mcis_id);
     if(mcis_id){
         $.ajax({
             type:'GET',
@@ -270,8 +272,12 @@ function short_desc(str){
         
         $("#card").empty()
         $("#card").append(html)
-
-        show_vmList(mcis_id)
+        if(vm_cnt > 0){
+            show_vmList(mcis_id)
+        }else{
+            show_vmList("")
+        }
+       
         $("#mcis_id").val(mcis_id)
         $("#mcis_name").val(mcis_name)
        
