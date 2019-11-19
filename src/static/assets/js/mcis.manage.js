@@ -164,13 +164,13 @@ function short_desc(str){
                                  if(count == 1){
                     
                                  }
-                                 html += '<tr id="tr_id_'+count+'" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'
+                                 html += '<tr id="tr_id_'+count+'" >'
                                   +'<td class="text-center">'
                                   +'<div class="form-input">'
                                   +'<span class="input">'
                                   +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                   +'</td>'
-                                  +'<td><a href="#!">'+vm[i].name+'</a></td>'
+                                  +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
                                   +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
                                   +'<td>'+provider+'</td>'
                                   +'<td>'+vm[i].region.Region+'</td>'
