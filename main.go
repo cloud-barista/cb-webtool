@@ -90,7 +90,6 @@ func main() {
 	e.GET("/MCIS/list", controller.McisListForm)
 
 	// VM
-	//e.GET("/VM/STATUS",controller.)
 
 	// 웹툴에서 사용할 rest
 	e.GET("/SET/NS/:nsid", controller.SetNameSpace)

@@ -97,6 +97,7 @@ func RegionListForm(c echo.Context) error {
 //Connection Controller
 func ConnectionRegForm(c echo.Context) error {
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+
 		return c.Render(http.StatusOK, "ConnectionRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 		})
@@ -109,10 +110,9 @@ func ConnectionListForm(c echo.Context) error {
 
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
-		//nsList := service.GetCredentialList()
+		//cList := service.GetConnectionList()
 		return c.Render(http.StatusOK, "ConnectionList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
-			//"NSList": nsList,
 		})
 	}
 
