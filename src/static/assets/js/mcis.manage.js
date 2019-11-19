@@ -56,14 +56,19 @@ function short_desc(str){
          var len = mcis.length;
          var count = 0;
          
-          
+          var vm_len = 0
          for(var i in mcis){
              var sta = mcis[i].status;
              var badge = "";
              var status = sta.toLowerCase()
              var vms = mcis[i].vm
-             var vm_len = vms.length 
-             console.log("mcis Status 1: ", mcis[i].status)
+            
+             if(vms){
+                vm_len = vms.length
+             }
+             
+
+            console.log("mcis Status 1: ", mcis[i].status)
             console.log("mcis Status 2: ", status)
              if(status == "running"){
                 badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
@@ -110,7 +115,14 @@ function short_desc(str){
         $("#table_1").empty();
         $("#table_1").append(html);
         show_card(mcis[0].id);
+       if(vm_len > 0){
         show_vmList(mcis[0].id);
+       }else{
+        show_vmList("");
+       }
+        
+       
+        
         //fnMove("table_1");
         $("#mcis_id").val(mcis[0].id)
         $("#mcis_name").val(mcis[0].name)
@@ -119,95 +131,100 @@ function short_desc(str){
  function show_vmList(mcis_id){
    
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
-    $.ajax({
-        type:'GET',
-        url:url,
-       // async:false,
-        success:function(data){
-            var vm = data.vm
-            var mcis_name = data.name 
-            var html = "";
-            console.log("VM DATA : ",vm)
-            for(var i in vm){
-                var sta = vm[i].status;
-                
-               
-                var status = sta.toLowerCase()
-                console.log("VM Status : ",status)
-                var configName = vm[i].config_name
-                console.log("outer vm configName : ",configName)
-                var count = 0;
-                $.ajax({
-                    url: SpiderURL+"/connectionconfig",
-                    async:false,
-                    type:'GET',
-                    success : function(res){
-                        var badge = "";
-                        for(var k in res){
-                            // console.log(" i value is : ",i)
-                            // console.log("outer config name : ",configName)
-                            // console.log("Inner ConfigName : ",res[k].ConfigName)
-                            if(res[k].ConfigName == vm[i].config_name){
-                                var provider = res[k].ProviderName
-                                
-                                
-                                if(status == "running"){
-                                    badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
-                                 }else if(status == "suspended"){
-                                    badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
-                                 }else if(status == "terminate"){
-                                    badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
-                                 }else{
-                                    badge += '<span class="badge badge-pill badge-dark">'+status+'</span>'
-                                 }
-                                 count++;
-                                 if(count == 1){
+    if(mcis_id){
+        $.ajax({
+            type:'GET',
+            url:url,
+        // async:false,
+            success:function(data){
+                var vm = data.vm
+                var mcis_name = data.name 
+                var html = "";
+                console.log("VM DATA : ",vm)
+                for(var i in vm){
+                    var sta = vm[i].status;
                     
-                                 }
-                                 html += '<tr id="tr_id_'+count+'" >'
-                                  +'<td class="text-center">'
-                                  +'<div class="form-input">'
-                                  +'<span class="input">'
-                                  +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
-                                  +'</td>'
-                                  +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
-                                  +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
-                                  +'<td>'+provider+'</td>'
-                                  +'<td>'+vm[i].region.Region+'</td>'
-                                  +'<td>'+short_desc(vm[i].description)+'</td>'
-                                  +'<td>'
-                                  +badge
-                                  +'</td>'
-                                  +'<td>'
-                                  +"3/8"
-                                  +'</td>'
-                                  +'<td>'
-                                  +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-                                  +'<i class="fas fa-edit"></i>'
-                                  +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
-                                      +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
-                                      +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
-                                      +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
-                                      +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
-                                  +'</div>'
-                                  +'</button>'
-                                 +'</td>'
-                                 +'</tr>';
-                            }
-                            
-                            
-                            }
-                            $("#table_2").empty();
-                            $("#table_2").append(html);
-                            fnMove("table_2");
-
-                    }
-
-                })
                 
-                }
-        }
-    })
+                    var status = sta.toLowerCase()
+                    console.log("VM Status : ",status)
+                    var configName = vm[i].config_name
+                    console.log("outer vm configName : ",configName)
+                    var count = 0;
+                    $.ajax({
+                        url: SpiderURL+"/connectionconfig",
+                        async:false,
+                        type:'GET',
+                        success : function(res){
+                            var badge = "";
+                            for(var k in res){
+                                // console.log(" i value is : ",i)
+                                // console.log("outer config name : ",configName)
+                                // console.log("Inner ConfigName : ",res[k].ConfigName)
+                                if(res[k].ConfigName == vm[i].config_name){
+                                    var provider = res[k].ProviderName
+                                    
+                                    
+                                    if(status == "running"){
+                                        badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+                                    }else if(status == "suspended"){
+                                        badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+                                    }else if(status == "terminate"){
+                                        badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+                                    }else{
+                                        badge += '<span class="badge badge-pill badge-dark">'+status+'</span>'
+                                    }
+                                    count++;
+                                    if(count == 1){
+                        
+                                    }
+                                    html += '<tr id="tr_id_'+count+'" >'
+                                    +'<td class="text-center">'
+                                    +'<div class="form-input">'
+                                    +'<span class="input">'
+                                    +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
+                                    +'</td>'
+                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
+                                    +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
+                                    +'<td>'+provider+'</td>'
+                                    +'<td>'+vm[i].region.Region+'</td>'
+                                    +'<td>'+short_desc(vm[i].description)+'</td>'
+                                    +'<td>'
+                                    +badge
+                                    +'</td>'
+                                    +'<td>'
+                                    +"3/8"
+                                    +'</td>'
+                                    +'<td>'
+                                    +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                                    +'<i class="fas fa-edit"></i>'
+                                    +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
+                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
+                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
+                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
+                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
+                                    +'</div>'
+                                    +'</button>'
+                                    +'</td>'
+                                    +'</tr>';
+                                }
+                                
+                                
+                                }
+                                $("#table_2").empty();
+                                $("#table_2").append(html);
+                                fnMove("table_2");
+
+                        }
+
+                    })
+                    
+                    }
+            }
+        })
+    }else{
+        $("#table_2").empty();
+        $("#table_2").append("<td colspan='9'>Does not Exist</td>");
+    }
             
     
  }
@@ -220,7 +237,12 @@ function short_desc(str){
         console.log("show card data : ",result)
         var vm_cnt = data.vm
         var mcis_name = data.name
-        vm_cnt = vm_cnt.length
+        if(vm_cnt){
+            vm_cnt = vm_cnt.length
+        }else{
+            vm_cnt = 0
+        }
+        
         
             html += '<div class="col-xl-12 col-lg-12">'
                     +'<div class="card card-stats mb-12 mb-xl-0">'
@@ -354,26 +376,27 @@ function short_desc(str){
             mcis_name = $(this).attr("item");
 
         }
-        if(cnt < 1 ){
-            alert("등록할 대상을 선택해 주세요.");
-            return;
-        }
 
-        if(cnt == 1){
-           console.log("mcis_id ; ",mcis_id)
-            var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
-            
-            if(confirm("등록하시겠습니까?")){
-                location.href = url;
-            }
-        }
-
-        if(cnt >1){
-            alert("한개씩만 등록 가능합니다.")
-            return;
-        }
 
     })
+    if(cnt < 1 ){
+        alert("등록할 대상을 선택해 주세요.");
+        return;
+    }
+
+    if(cnt == 1){
+       console.log("mcis_id ; ",mcis_id)
+        var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
+        
+        if(confirm("등록하시겠습니까?")){
+            location.href = url;
+        }
+    }
+
+    if(cnt >1){
+        alert("한개씩만 등록 가능합니다.")
+        return;
+    }
  }
  function vm_reg(){
     
@@ -405,32 +428,31 @@ function short_desc(str){
             vm_id = idArr[0]
             mcis_id = idArr[1]    
         }
-        if(cnt < 1 ){
-            alert("삭제할 대상을 선택해 주세요.");
-            return;
-        }
-
-        if(cnt == 1){
-           console.log("mcis_id ; ",vm_id)
-            var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-            
-            if(confirm("삭제하시겠습니까?")){
-             axios.delete(url).then(result=>{
-                 var data = result.data
-                 if(result.status == 200){
-                     alert(data.message)
-                     location.reload()
-                 }
-             })
-            }
-        }
-
-        if(cnt >1){
-            alert("한개씩만 삭제 가능합니다.")
-            return;
-        }
-
     })
+    if(cnt < 1 ){
+        alert("삭제할 대상을 선택해 주세요.");
+        return;
+    }
+
+    if(cnt == 1){
+       console.log("mcis_id ; ",vm_id)
+        var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+        
+        if(confirm("삭제하시겠습니까?")){
+         axios.delete(url).then(result=>{
+             var data = result.data
+             if(result.status == 200){
+                 alert(data.message)
+                 location.reload()
+             }
+         })
+        }
+    }
+
+    if(cnt >1){
+        alert("한개씩만 삭제 가능합니다.")
+        return;
+    }
  }
 
  function getProvider(connectionInfo){
