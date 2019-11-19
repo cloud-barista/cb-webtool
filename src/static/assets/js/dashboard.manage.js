@@ -195,7 +195,7 @@ function short_desc(str){
                             }
                             $("#table_2").empty();
                             $("#table_2").append(html);
-                            fnMove("table_2");
+                            //fnMove("table_2");
 
                     }
 
