@@ -44,9 +44,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Provider</th>
+                                    <th>Provider<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <select class="form-control form-control-sm" name="pv">
+                                        <select class="form-control form-control-sm" name="pv" id="pName">
                                             <option selected>Select Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
@@ -75,12 +75,7 @@
                                         <input class="form-control form-control-sm" type="text" placeholder="input name" name="rName" id="rName">
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>Description</th>
-                                    <td>
-                                        <textarea class="form-control" name="description" id="description" rows="3"></textarea>
-                                    </td>
-                                </tr>
+                               
                             </tbody>
                         </table>
                     </div>
@@ -101,27 +96,31 @@
 <script>
 $(document).ready(function(){
     $("#reg_btn").click(function(){
-        var username = $("#username").val();
-        var description = $("#description").val();
-        var url = CommonURL+"/ns"
-        var req_body = {
-            name:username,
-            description
-        }
+        
+        var url = SpiderURL+"/connectionconfig";
+        var cName = $("#cfName").val();
+        var pName = $("#pName").val();
+        var dName = $("#dName").val();
+        var credName = $("#credName").val();
+        var rName = $("#rName").val();
+       
         var req = {
             headers :{
                  'Content-type': 'application/json',
                 },
-            req_body
-            
+                ConfigName:cName,
+                ProviderName:pName,
+                DriverName:dName,
+                CredentialName:credName,
+                RegionName:rName
         }
         console.log(req)
         axios.post(url,req).then(result=>{
             console.log(result.data)
             var data = result.data
-            if(data.message == "success"){
+            if(result.status == 200){
                 alert("등록되었습니다.");
-                location.href = "/NS/list";
+                location.href = "/Connection/list";
             }
         })
     })

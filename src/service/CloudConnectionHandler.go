@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-var CloudConnectionUrl = "http://localhost:1234"
+var CloudConnectionUrl = "http://15.165.16.67:1024"
 
 type CloudConnectionInfo struct {
 	ID             string `json:"id"`
@@ -18,7 +18,7 @@ type CloudConnectionInfo struct {
 	Description    string `json:"description"`
 }
 
-func GetDriver(drivername string) CloudConnectionInfo {
+func GetConnectionconfig(drivername string) CloudConnectionInfo {
 	url := NameSpaceUrl + "/driver/" + drivername
 
 	resp, err := http.Get(url)
@@ -35,8 +35,8 @@ func GetDriver(drivername string) CloudConnectionInfo {
 
 }
 
-func GetDriverList() []CloudConnectionInfo {
-	url := NameSpaceUrl + "/driver"
+func GetConnectionList() []CloudConnectionInfo {
+	url := CloudConnectionUrl + "/connectionconfig"
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)

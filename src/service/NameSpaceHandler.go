@@ -48,6 +48,8 @@ func GetNSList() []NSInfo {
 
 }
 
+
+
 // func RegNS() error {
 
 // }
