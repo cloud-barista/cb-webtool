@@ -10,7 +10,7 @@
             <main role="main" class="main">
                 <div class="page-header">
                     <div>
-                        <h1>Driver 등록</h1>
+                        <h1>Connection 등록</h1>
                     </div>
                 </div>
                 <div class="card">
@@ -32,7 +32,10 @@
                                 <col>
                                 <col>
                                 <col>
+                                <col>
+                                <col>
                             </colgroup>
+                            
                             <tbody>
                                 <tr>
                                     <th>DriverName<strong class="text-danger">*</strong></th>
@@ -41,9 +44,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Provider</th>
+                                    <th>Provider<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <select class="form-control form-control-sm">
+                                        <select class="form-control form-control-sm" name="pv" id="pName">
                                             <option selected>Select Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
@@ -54,18 +57,15 @@
                                         </select>
                                     </td>
                                 </tr>
+                                
                                 <tr>
-                                    <th>ProviderName<strong class="text-danger">*</strong></th>
+                                    <th>DriverLibFileName<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="pName" id="pName">
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="fPath" id="fPath">
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>DriverLibFileName</th>
-                                    <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="dfName" id="dfName">
-                                    </td>
-                                </tr>
+
+                               
                             </tbody>
                         </table>
                     </div>
@@ -81,33 +81,34 @@
         </div>
         <!-- //container -->
 
-
         {{template "Footer" .}}
 
 <script>
 $(document).ready(function(){
     $("#reg_btn").click(function(){
-        var username = $("#username").val();
-        var description = $("#description").val();
-        var url = CommonURL+"/ns"
-        var req_body = {
-            name:username,
-            description
-        }
+        
+        var url = SpiderURL+"/driver";
+        var pName = $("#pName").val();
+        var dName = $("#dName").val();
+        var fPath = $("#fPath").val();
+        
+       
         var req = {
             headers :{
                  'Content-type': 'application/json',
                 },
-            req_body
             
+                ProviderName:pName,
+                DriverName:dName,
+                DriverLibFileName:fPath,
         }
         console.log(req)
         axios.post(url,req).then(result=>{
             console.log(result.data)
             var data = result.data
-            if(data.message == "success"){
+            if(result.status == 200){
                 alert("등록되었습니다.");
-                location.href = "/NS/list";
+                location.href = "/Driver/list";
             }
         })
     })
