@@ -128,7 +128,7 @@ $(document).ready(function(){
     $("#kv_remove").click(function(){
         var cnt = kv_cnt;
         if(cnt > 0){
-            $("#kv_"+cnt+"").empty();
+            $("#kv_"+cnt+"").remove();
             kv_cnt--;
         }
        
