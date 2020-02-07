@@ -25,6 +25,11 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
      ````bash
        $ go get -u -v github.com/go-session/echo-session
      ````
+
+ - reflex 설치
+     ````bash
+       $ go get github.com/cespare/reflex 
+     ````
      
  - cloud-barista alliance 설치
     - cb-log install
