@@ -1,0 +1,11 @@
+version: '3.1'
+
+services: 
+    webtool:
+        build: .
+        image: cb-webtool-docker-compose
+        ports:
+            - 1234:1234
+        container_name: cb-webtool
+
+
