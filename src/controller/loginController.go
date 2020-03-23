@@ -17,7 +17,9 @@ type ReqInfo struct {
 
 var ComURL = CommonURL{
 	SpiderURL:    os.Getenv("SPIDER_URL"),
-	TumbleBugURL: "http://localhost:4034/Tumblebug",
+	TumbleBugURL: os.Getenv("TUMBLE_URL"),
+	DragonFlyURL: os.Getenv("DRAGONFLY_URL"),
+	LadyBugURL:   os.Getenv("LADYBUG_URL"),
 }
 
 func LoginForm(c echo.Context) error {

@@ -22,7 +22,8 @@ type CredentialInfo struct {
 type CommonURL struct {
 	SpiderURL    string
 	TumbleBugURL string
-	GateWayURL   string
+	DragonFlyURL string
+	LadyBugURL   string
 }
 
 func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
