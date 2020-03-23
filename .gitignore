@@ -10,4 +10,6 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-src/.DS_Store
+.DS_Store
+
+*.code-workspace
