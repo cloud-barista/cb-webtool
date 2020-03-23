@@ -19,6 +19,11 @@ type CredentialInfo struct {
 	Username string
 	Password string
 }
+type CommonURL struct {
+	SpiderURL    string
+	TumbleBugURL string
+	GateWayURL   string
+}
 
 func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
 	store := echosession.FromContext(c)
