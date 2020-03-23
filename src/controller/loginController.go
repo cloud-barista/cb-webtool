@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	echosession "github.com/go-session/echo-session"
@@ -14,9 +15,17 @@ type ReqInfo struct {
 	Password string `json:"password"`
 }
 
+var ComURL = CommonURL{
+	SpiderURL:    os.Getenv("SPIDER_URL"),
+	TumbleBugURL: "http://localhost:4034/Tumblebug",
+}
+
 func LoginForm(c echo.Context) error {
 	fmt.Println("============== Login Form ===============")
-	return c.Render(http.StatusOK, "login.html", nil)
+
+	return c.Render(http.StatusOK, "login.html", map[string]interface{}{
+		"comURL": ComURL,
+	})
 }
 
 func LogoutForm(c echo.Context) error {
