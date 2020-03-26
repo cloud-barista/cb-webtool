@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
 	"reflect"
 )
 
-var NameSpaceUrl = "http://15.165.16.67:1323"
+// var NameSpaceUrl = "http://15.165.16.67:1323"
+var NameSpaceUrl = os.Getenv("TUMBLE_URL")
 
 type NSInfo struct {
 	ID          string `json:"id"`
@@ -47,8 +49,6 @@ func GetNSList() []NSInfo {
 	return nsInfo["ns"]
 
 }
-
-
 
 // func RegNS() error {
 

@@ -19,9 +19,11 @@ func NsRegController(c echo.Context) error {
 }
 
 func NsRegForm(c echo.Context) error {
+	comURL := GetCommonURL()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "NSRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 		})
 	}
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -30,11 +32,14 @@ func NsRegForm(c echo.Context) error {
 
 func NsListForm(c echo.Context) error {
 	fmt.Println("=============start NsListForm =============")
+	comURL := GetCommonURL()
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		nsList := service.GetNSList()
 		return c.Render(http.StatusOK, "NSList.html", map[string]interface{}{
-			"LoginInfo": loginInfo, "NSList": nsList,
+			"LoginInfo": loginInfo,
+			"NSList":    nsList,
+			"comURL":    comURL,
 		})
 	}
 

@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
-var CloudConnectionUrl = "http://15.165.16.67:1024"
+//var CloudConnectionUrl = "http://15.165.16.67:1024"
+var CloudConnectionUrl = os.Getenv("SPIDER_URL")
 
 type CloudConnectionInfo struct {
 	ID             string `json:"id"`

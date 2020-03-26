@@ -2,14 +2,11 @@ package controller
 
 import (
 	"fmt"
-	"os"
 
 	"net/http"
 
 	"github.com/labstack/echo"
 )
-
-var SpiderUrl = os.Getenv("SPIDER_URL")
 
 // Driver Contorller
 func DriverRegController(c echo.Context) error {

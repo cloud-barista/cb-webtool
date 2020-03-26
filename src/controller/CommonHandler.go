@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -24,6 +25,16 @@ type CommonURL struct {
 	TumbleBugURL string
 	DragonFlyURL string
 	LadyBugURL   string
+}
+
+func GetCommonURL() CommonURL {
+	common_url := CommonURL{
+		SpiderURL:    os.Getenv("SPIDER_URL"),
+		TumbleBugURL: os.Getenv("TUMBLE_URL"),
+		DragonFlyURL: os.Getenv("DRAGONFLY_URL"),
+		LadyBugURL:   os.Getenv("LADYBUG_URL"),
+	}
+	return common_url
 }
 
 func GetCredentialInfo(c echo.Context, username string) CredentialInfo {

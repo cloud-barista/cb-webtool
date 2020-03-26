@@ -23,13 +23,14 @@ type MCISRequest struct {
 // }
 
 func McisListForm(c echo.Context) error {
-	
+	comURL := GetCommonURL()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
+
 		return c.Render(http.StatusOK, "MCISlist.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
-			
+			"comURL":    comURL,
 		})
 
 	}
@@ -41,6 +42,7 @@ func McisListForm(c echo.Context) error {
 func VMAddForm(c echo.Context) error {
 	mcis_id := c.Param("mcis_id")
 	mcis_name := c.Param("mcis_name")
+	comURL := GetCommonURL()
 	if mcis_id == "" && mcis_name == "" {
 		mcis_id = ""
 		mcis_name = ""
@@ -52,6 +54,7 @@ func VMAddForm(c echo.Context) error {
 			"NameSpace": namespace,
 			"McisID":    mcis_id,
 			"McisName":  mcis_name,
+			"comURL":    comURL,
 		})
 
 	}
@@ -61,11 +64,13 @@ func VMAddForm(c echo.Context) error {
 }
 
 func McisRegForm(c echo.Context) error {
+	comURL := GetCommonURL()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "MCISRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
+			"comURL":    comURL,
 		})
 
 	}
