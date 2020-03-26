@@ -4,10 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
-var MCISUrl = "http://15.165.16.67:1323"
-var SPiderUrl = "http://15.165.16.67:1024"
+//var MCISUrl = "http://15.165.16.67:1323"
+//var SPiderUrl = "http://15.165.16.67:1024"
+
+var SpiderUrl = os.Getenv("SPIDER_URL")
+var MCISUrl = os.Getenv("TUMBLE_URL")
 
 type MCISInfo struct {
 	ID     string `json:"id"`
@@ -48,7 +52,7 @@ func GetMCIS(nsid string, mcisId string) []MCISInfo {
 }
 
 func GetVMStatus(vm_name string, connectionConfig string) string {
-	url := SPiderUrl + "/vmstatus/" + vm_name + "?connection_name=" + connectionConfig
+	url := SpiderUrl + "/vmstatus/" + vm_name + "?connection_name=" + connectionConfig
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)

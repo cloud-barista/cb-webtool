@@ -88,7 +88,7 @@ $(document).ready(function(){
             if(result.data.status == "success"){
                 alert("Login Success");
                 //location.reload();
-                var url = "http://15.165.16.67:1323/ns"
+                var url = "{{ .comURL.TumbleBugURL}}"+"/ns";
                 axios.get(url).then(result=>{
                     console.log(result.data);
                     var data = result.data.ns;

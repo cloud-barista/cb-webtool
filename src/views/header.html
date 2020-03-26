@@ -37,12 +37,12 @@
         <title>Cloud Baristar</title>
     </head>
     <script>
-        const CommonURL = "http://15.165.16.67:1323";
-        const SpiderURL = "http://15.165.16.67:1024"
+        const CommonURL = "{{ .comURL.TumbleBugURL}}";
+        const SpiderURL = "{{ .comURL.SpiderURL}}"
         const NAMESPACE ="{{with .LoginInfo}}{{ .NameSpace }}{{end}}";
         console.log("namespace : ",NAMESPACE)
         var btn_click_cnt = 1;
-        const DragonFlyURL = "http://182.252.133.22:9090"
+        const DragonFlyURL = "{{ .comURL.DragonFlyURL}}"
        
     
     </script>
