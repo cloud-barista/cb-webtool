@@ -55,16 +55,22 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
 
 ## [실행 준비]
 
-   - cb-tumblebug 실행에 필요한 환경변수 설정
+   - CB-Tumblebug 실행에 필요한 환경변수 설정
+       
+       ````bash
+        $  source conf/setup.env
+        ````
+   
+   - CB-Spider 실행에 필요한 환경변수 설정
        
        ````bash
         $  source setup.env
         ````
-   
-   - cb-spider 실행에 필요한 환경변수 설정
+        
+   - CB-Webtool 실행에 필요한 환경변수 설정
        
        ````bash
-        $  source setup.env
+        $  source conf/setup.env
         ````
         
 ## [서버 실행]
