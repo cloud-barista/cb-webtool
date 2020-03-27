@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
-//var CloudConnectionUrl = "http://15.165.16.67:1024"
-var CloudConnectionUrl = os.Getenv("SPIDER_URL")
+//var SpiderUrl = "http://15.165.16.67:1024"
+var SpiderUrl = os.Getenv("SPIDER_URL")
 
 type CloudConnectionInfo struct {
 	ID             string `json:"id"`
@@ -21,7 +21,7 @@ type CloudConnectionInfo struct {
 }
 
 func GetConnectionconfig(drivername string) CloudConnectionInfo {
-	url := NameSpaceUrl + "/driver/" + drivername
+	url := SpiderUrl + "/driver/" + drivername
 
 	resp, err := http.Get(url)
 
@@ -38,7 +38,7 @@ func GetConnectionconfig(drivername string) CloudConnectionInfo {
 }
 
 func GetConnectionList() []CloudConnectionInfo {
-	url := CloudConnectionUrl + "/connectionconfig"
+	url := SpiderUrl + "/connectionconfig"
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)
@@ -53,7 +53,7 @@ func GetConnectionList() []CloudConnectionInfo {
 }
 
 func GetDriverReg() []CloudConnectionInfo {
-	url := NameSpaceUrl + "/driver"
+	url := SpiderUrl + "/driver"
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)
@@ -68,7 +68,7 @@ func GetDriverReg() []CloudConnectionInfo {
 }
 
 func GetCredentialList() []CloudConnectionInfo {
-	url := NameSpaceUrl + "/driver"
+	url := SpiderUrl + "/driver"
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)
@@ -83,7 +83,7 @@ func GetCredentialList() []CloudConnectionInfo {
 }
 
 func GetCredentialReg() []CloudConnectionInfo {
-	url := NameSpaceUrl + "/driver"
+	url := SpiderUrl + "/driver"
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)

@@ -9,8 +9,8 @@ import (
 	"reflect"
 )
 
-// var NameSpaceUrl = "http://15.165.16.67:1323"
-var NameSpaceUrl = os.Getenv("TUMBLE_URL")
+// var TumblebugUrl = "http://15.165.16.67:1323"
+var TumblebugUrl = os.Getenv("TUMBLE_URL")
 
 type NSInfo struct {
 	ID          string `json:"id"`
@@ -19,7 +19,7 @@ type NSInfo struct {
 }
 
 func GetNS(nsID string) NSInfo {
-	url := NameSpaceUrl + "ns" + nsID
+	url := TumblebugUrl + "/ns/" + nsID
 
 	resp, err := http.Get(url)
 
@@ -36,7 +36,7 @@ func GetNS(nsID string) NSInfo {
 }
 
 func GetNSList() []NSInfo {
-	url := NameSpaceUrl + "/ns"
+	url := TumblebugUrl + "/ns"
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)
