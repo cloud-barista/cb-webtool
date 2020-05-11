@@ -96,17 +96,29 @@ $(document).ready(function(){
 
         var obj = $("#form").serializeObject()
         console.log(obj);
+        obj.headers = { 'Content-type': 'application/json', }
+        console.log(obj)
         var url = SpiderURL+"/region"
         console.log("Region registerDriver URL : ",url)
-        $.ajax({
-            url :url,
-            data : obj,
-            type:"POST",            
-            contentType:"application/json",
+        axios.post(url,obj).then(result =>{
+            console.log(result);
+        });
+        // $.ajax({
+        //     url :url,
+        //     data : {
+        //         RegionName : "op-01234",
+        //         ProviderName :"OPENSTACK",
+        //         KeyValueInfoList : [{
+        //             Key:"region",
+        //             Value:"open-stack-01"
+        //         }]
+        //     },
+        //     type:"POST",            
 
-        }).done(function(res){
-            console.log("res : ",res);
-        })
+
+        // }).done(function(res){
+        //     console.log("res : ",res);
+        // })
         
     })
     var kv_cnt = 0;
