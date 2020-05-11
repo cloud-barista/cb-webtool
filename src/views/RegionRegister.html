@@ -96,7 +96,7 @@ $(document).ready(function(){
 
         var obj = $("#form").serializeObject()
         console.log(obj);
-        obj.headers = { 'Content-type': 'application/json', }
+        //obj.headers = { 'Content-type': 'application/json', }
         console.log(obj)
         var url = SpiderURL+"/region"
         console.log("Region registerDriver URL : ",url)
@@ -105,15 +105,11 @@ $(document).ready(function(){
         });
         // $.ajax({
         //     url :url,
-        //     data : {
-        //         RegionName : "op-01234",
-        //         ProviderName :"OPENSTACK",
-        //         KeyValueInfoList : [{
-        //             Key:"region",
-        //             Value:"open-stack-01"
-        //         }]
-        //     },
-        //     type:"POST",            
+        //     data :obj,
+        //     type:"POST",  
+        //     beforeSend: function(xhr){
+        //         xhr.setRequestHeader("Content-type","application/json");
+        //     },          
 
 
         // }).done(function(res){
