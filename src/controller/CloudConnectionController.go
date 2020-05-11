@@ -7,6 +7,7 @@ import (
 
 	"github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
+	//"github.com/davecgh/go-spew/spew"
 )
 
 // Driver Contorller
@@ -95,6 +96,9 @@ func RegionListForm(c echo.Context) error {
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		nsList := service.GetRegionList()
+		fmt.Println("REGION List : ",nsList)
+		
+		//spew.Dump(nsList)
 		return c.Render(http.StatusOK, "RegionList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,

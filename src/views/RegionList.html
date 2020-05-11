@@ -88,15 +88,15 @@
                                             <td class="text-center">
                                                 <div class="form-input">
                                                     <span class="input">
-                                                        <input type="checkbox" class="chk" name="chk[]" id="" value='{{ .ID}}' /><i></i>
+                                                        <input type="checkbox" class="chk" name="chk[]" id="" value='{{ .RegionName}}' /><i></i>
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td>{{ $index  }}</td>
+                                            <td>{{ $index }}</td>
                                             
-                                            <td><a href="">{{ .ID }}</a></td>
-                                            <td>{{ .Name }}</td>
-                                            <td>{{ .Description }}</td>
+                                            <td><a href="">{{ .RegionName }}</a></td>
+                                            <td>{{ .ProviderName }}</td>
+                                            <td></td>
                                         
                                         </tr>
                                         {{end}}

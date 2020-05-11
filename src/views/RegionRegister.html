@@ -101,7 +101,8 @@ $(document).ready(function(){
         $.ajax({
             url :url,
             data : obj,
-            type:"POST",
+            type:"POST",            
+            contentType:"application/json",
 
         }).done(function(res){
             console.log("res : ",res);
