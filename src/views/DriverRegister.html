@@ -86,7 +86,7 @@
 <script>
 $(document).ready(function(){
     $("#reg_btn").click(function(){
-        
+       console.log("reg btn click : ","{{ .comURL.TumbleBugURL}}") 
         var url = SpiderURL+"/driver";
         var pName = $("#pName").val();
         var dName = $("#dName").val();

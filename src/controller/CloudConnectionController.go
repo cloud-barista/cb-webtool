@@ -10,6 +10,7 @@ import (
 
 // Driver Contorller
 func DriverRegController(c echo.Context) error {
+
 	username := c.FormValue("username")
 	description := c.FormValue("description")
 
@@ -18,9 +19,11 @@ func DriverRegController(c echo.Context) error {
 }
 
 func DriverRegForm(c echo.Context) error {
+	comURL := GetCommonURL()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "DriverRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 		})
 	}
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -28,11 +31,13 @@ func DriverRegForm(c echo.Context) error {
 
 func DriverListForm(c echo.Context) error {
 	fmt.Println("=============start NsListForm =============")
+	comURL := GetCommonURL()
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		//nsList := service.GetDriverList()
 		return c.Render(http.StatusOK, "DriverList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 			//"NSList": nsList,
 		})
 	}
@@ -53,12 +58,15 @@ func CredertialRegForm(c echo.Context) error {
 }
 
 func CredertialListForm(c echo.Context) error {
+
 	fmt.Println("=============start CredertialRegForm =============")
 	loginInfo := CallLoginInfo(c)
+	comURL := GetCommonURL()
 	if loginInfo.Username != "" {
 		//nsList := service.GetCredentialList()
 		return c.Render(http.StatusOK, "CredentialList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 			// "NSList": nsList,
 		})
 	}
@@ -70,9 +78,11 @@ func CredertialListForm(c echo.Context) error {
 
 //Region Controller
 func RegionRegForm(c echo.Context) error {
+	comURL := GetCommonURL()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "RegionRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 		})
 	}
 	// return c.Redirect(http.StatusPermanentRedirect, "/login")
@@ -80,12 +90,13 @@ func RegionRegForm(c echo.Context) error {
 }
 
 func RegionListForm(c echo.Context) error {
-
+	comURL := GetCommonURL()
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		//nsList := service.GetCredentialList()
 		return c.Render(http.StatusOK, "RegionList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 		})
 	}
 
@@ -96,10 +107,12 @@ func RegionListForm(c echo.Context) error {
 
 //Connection Controller
 func ConnectionRegForm(c echo.Context) error {
+	comURL := GetCommonURL()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 
 		return c.Render(http.StatusOK, "ConnectionRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 		})
 	}
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -107,12 +120,13 @@ func ConnectionRegForm(c echo.Context) error {
 }
 
 func ConnectionListForm(c echo.Context) error {
-
+	comURL := GetCommonURL()
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		//cList := service.GetConnectionList()
 		return c.Render(http.StatusOK, "ConnectionList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 		})
 	}
 
