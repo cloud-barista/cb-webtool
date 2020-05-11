@@ -97,6 +97,7 @@ $(document).ready(function(){
         var obj = $("#form").serializeObject()
         console.log(obj);
         var url = SpiderURL+"/region"
+        console.log("Region registerDriver URL : ",url)
         $.ajax({
             url :url,
             data : obj,

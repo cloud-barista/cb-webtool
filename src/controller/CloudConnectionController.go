@@ -5,6 +5,7 @@ import (
 
 	"net/http"
 
+	"github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
 )
 
@@ -93,10 +94,11 @@ func RegionListForm(c echo.Context) error {
 	comURL := GetCommonURL()
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
-		//nsList := service.GetCredentialList()
+		nsList := service.GetRegionList()
 		return c.Render(http.StatusOK, "RegionList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
+			"NSList":    nsList,
 		})
 	}
 

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 //var CloudConnectionUrl = "http://15.165.16.67:1024"
@@ -18,6 +20,15 @@ type CloudConnectionInfo struct {
 	CredentialName string `json:"CredentialName"`
 	RegionName     string `json:"RegionName"`
 	Description    string `json:"description"`
+}
+type KeyValueInfo struct {
+	Key   string
+	Value string
+}
+type RegionInfo struct {
+	RegionName       string `json:"RegionName"`
+	ProviderName     string `json:"ProviderName"`
+	KeyValueInfoList []KeyValueInfo
 }
 
 func GetConnectionconfig(drivername string) CloudConnectionInfo {
@@ -62,7 +73,7 @@ func GetDriverReg() []CloudConnectionInfo {
 	defer resp.Body.Close()
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(resp.Body).Decode(&nsInfo)
-	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
+	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	return nsInfo["ns"]
 
 }
@@ -77,7 +88,23 @@ func GetCredentialList() []CloudConnectionInfo {
 	defer resp.Body.Close()
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(resp.Body).Decode(&nsInfo)
-	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
+	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
+	return nsInfo["ns"]
+
+}
+func GetRegionList() []RegionInfo {
+	url := CloudConnectionUrl + "/region"
+	fmt.Println("=========== Get Start Region List : ", url)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("request URL : ", url)
+	}
+
+	defer resp.Body.Close()
+	nsInfo := map[string][]RegionInfo{}
+	spew.Dump(nsInfo)
+	json.NewDecoder(resp.Body).Decode(&nsInfo)
+	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	return nsInfo["ns"]
 
 }
