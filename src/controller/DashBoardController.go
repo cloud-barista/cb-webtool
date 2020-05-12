@@ -8,6 +8,7 @@ import (
 )
 
 func DashBoard(c echo.Context) error {
+	comURL := GetCommonURL()
 	fmt.Println("=========== DashBoard start ==============")
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		nameSpace := GetNameSpaceToString(c)
@@ -15,6 +16,7 @@ func DashBoard(c echo.Context) error {
 		return c.Render(http.StatusOK, "dashboard.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": nameSpace,
+			"comURL":    comURL,
 		})
 
 	}
@@ -23,6 +25,7 @@ func DashBoard(c echo.Context) error {
 }
 
 func IndexController(c echo.Context) error {
+
 	fmt.Println("=========== DashBoard start ==============")
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 

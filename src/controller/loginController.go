@@ -29,7 +29,7 @@ func LogoutForm(c echo.Context) error {
 }
 
 func RegUserConrtoller(c echo.Context) error {
-
+	//comURL := GetCommonURL()
 	reqInfo := new(ReqInfo)
 	if err := c.Bind(reqInfo); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
@@ -71,9 +71,11 @@ func RegUserConrtoller(c echo.Context) error {
 func LoginController(c echo.Context) error {
 	store := echosession.FromContext(c)
 	reqInfo := new(ReqInfo)
+	comURL := GetCommonURL()
 	if err := c.Bind(reqInfo); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
+			"comURL":  comURL,
 		})
 	}
 	getUser := strings.TrimSpace(reqInfo.UserName)
@@ -83,9 +85,10 @@ func LoginController(c echo.Context) error {
 	get, ok := store.Get(getUser)
 	fmt.Println("GEt USER:", get)
 	if !ok {
-		return c.JSON(http.StatusNotFound, map[string]string{
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"message": " 정보가 없으니 다시 등록 해라",
 			"status":  "fail",
+			"comURL":  comURL,
 		})
 	}
 	//result := map[string]string{}
@@ -105,11 +108,13 @@ func LoginController(c echo.Context) error {
 			"message": "Login Success",
 			//	"nameSpace": result["namespace"],
 			"status": "success",
+			"comURL": comURL,
 		})
 	} else {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "wrong password of ID",
 			"status":  "fail",
+			"comURL":  comURL,
 		})
 	}
 
@@ -125,9 +130,10 @@ func LoginController(c echo.Context) error {
 	// 	}
 	// }
 
-	return c.JSON(http.StatusOK, map[string]string{
+	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  "200",
+		"comURL":  comURL,
 	})
 }
 

@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"reflect"
 )
 
@@ -37,15 +39,21 @@ func GetNS(nsID string) NSInfo {
 
 func GetNSList() []NSInfo {
 	url := NameSpaceUrl + "/ns"
+	fmt.Println("============= NameSpace URL =============", url)
 	resp, err := http.Get(url)
+	fmt.Println("=============result GetNSList =============", resp)
+	spew.Dump(resp)
 	if err != nil {
+		fmt.Println("========= GetNSList Error : ", err)
 		fmt.Println("request URL : ", url)
+		return nil
 	}
 
 	defer resp.Body.Close()
 	nsInfo := map[string][]NSInfo{}
+
 	json.NewDecoder(resp.Body).Decode(&nsInfo)
-	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
+	//fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	return nsInfo["ns"]
 
 }

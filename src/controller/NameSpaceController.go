@@ -35,12 +35,19 @@ func NsListForm(c echo.Context) error {
 	comURL := GetCommonURL()
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
+		fmt.Println("=============start GetNSList =============")
 		nsList := service.GetNSList()
-		return c.Render(http.StatusOK, "NSList.html", map[string]interface{}{
-			"LoginInfo": loginInfo,
-			"NSList":    nsList,
-			"comURL":    comURL,
-		})
+		fmt.Println("=============start GetNSList =============", nsList)
+		if nsList != nil {
+			return c.Render(http.StatusOK, "NSList.html", map[string]interface{}{
+				"LoginInfo": loginInfo,
+				"NSList":    nsList,
+				"comURL":    comURL,
+			})
+		} else {
+			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+		}
+
 	}
 
 	fmt.Println("LoginInfo : ", loginInfo)
