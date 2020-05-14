@@ -66,6 +66,11 @@ $(document).ready(function(){
     $("#reg_btn").click(function(){
         var username = $("#username").val();
         var description = $("#description").val();
+
+        if (!username){
+            alert("Input Namespace")
+            return;
+        }
         var url = CommonURL+"/ns"
        
         var req = {
