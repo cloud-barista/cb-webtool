@@ -121,7 +121,7 @@ function show_pop(count) {
                     getImageInfo(configName,cnt);
                     getSecurityInfo(configName,cnt);
                     getSSHKeyInfo(configName,cnt);
-                  //  getSPublicIPInfo(configName,cnt);
+                  //  getPublicIPInfo(configName,cnt);
                     getVnetInfo(configName,cnt);
 
                     
@@ -132,7 +132,7 @@ function show_pop(count) {
                 getImageInfo(configName,cnt);
                 getSecurityInfo(configName,cnt);
                 getSSHKeyInfo(configName,cnt);
-                getSPublicIPInfo(configName,cnt);
+                //getPublicIPInfo(configName,cnt);
                 getVnetInfo(configName,cnt);
             }
 
@@ -192,6 +192,7 @@ function show_pop(count) {
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey";
                 var html = "";
                 axios.get(url).then(result=>{
+                    console.log("sshKeyInfo result :",result)
                     data = result.data.sshKey
                     for(var i in data){
                         if(data[i].connectionName == configName){
@@ -204,7 +205,7 @@ function show_pop(count) {
                 })
             }
             //Public IP안씀 삭제 안녕 ㅠㅜ
-            // function getSPublicIPInfo(configName,cnt){
+            // function getPublicIPInfo(configName,cnt){
             //     var configName = configName;
             //     if(!configName){
             //         configName = $("#configName_"+cnt+" option:selected").val();
@@ -324,11 +325,11 @@ function show_vm(vm_cnt){
                 +'<select class="form-control form-control-sm" name="vnet_id" id="vnet_'+vm_cnt+'"  >'
                 +'<option selected>Select Virtual Network</option>'
                 +'</select></td></tr>'
-                +'<tr><th>PublicIP</th>'
-                +'<td>'
-                +'<select class="form-control form-control-sm" name="public_ip_id" id="publicIp_'+vm_cnt+'"  >'
-                +'<option selected>Select PublicIP</option>'
-                +'</select></td></tr>'
+                // +'<tr><th>PublicIP</th>'
+                // +'<td>'
+                // +'<select class="form-control form-control-sm" name="public_ip_id" id="publicIp_'+vm_cnt+'"  >'
+                // +'<option selected>Select PublicIP</option>'
+                // +'</select></td></tr>'
                 
                 // +'<tr><th>PublicIP</th><td>'
                 // +'<div class="form-row">'
