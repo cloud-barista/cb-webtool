@@ -51,9 +51,11 @@ func DriverListForm(c echo.Context) error {
 
 //Credential Controller
 func CredertialRegForm(c echo.Context) error {
+	comURL := GetCommonURL()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "CredentialRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"comURL":    comURL,
 		})
 	}
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -96,8 +98,8 @@ func RegionListForm(c echo.Context) error {
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		nsList := service.GetRegionList()
-		fmt.Println("REGION List : ",nsList)
-		
+		fmt.Println("REGION List : ", nsList)
+
 		//spew.Dump(nsList)
 		return c.Render(http.StatusOK, "RegionList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,

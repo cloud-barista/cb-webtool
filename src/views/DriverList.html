@@ -21,7 +21,7 @@
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-sm btn-danger" id="sel_del">삭제</button>
-                                    <button type="button" class="btn btn-sm btn-outline-dark">수정</button>
+                                    <!-- <button type="button" class="btn btn-sm btn-outline-dark">수정</button> -->
                                     <button type="button" onclick="location.href='/Driver/reg';" class="btn btn-sm btn-dark">등록</button>
                                 </div>
                             </div>
@@ -161,7 +161,8 @@ $(document).ready(function(){
 
     var url = SpiderURL+"/driver";
     axios.get(url).then(result=>{
-        var data = result.data
+        console.log(data)
+        var data = result.data.driver
         var html = ""
         if(data){
             for(var i in data){

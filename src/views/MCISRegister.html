@@ -95,7 +95,7 @@ function show_pop(count) {
                 //var provider = $("#provider option:selected").val();
                 var html = "";
                 axios.get(url).then(result=>{
-                    var data = result.data
+                    var data = result.data.connectionconfig
                     console.log("connection data : ",data);
                     var count = 0; 
                     var configName = "";
@@ -121,7 +121,7 @@ function show_pop(count) {
                     getImageInfo(configName,cnt);
                     getSecurityInfo(configName,cnt);
                     getSSHKeyInfo(configName,cnt);
-                    getSPublicIPInfo(configName,cnt);
+                  //  getSPublicIPInfo(configName,cnt);
                     getVnetInfo(configName,cnt);
 
                     
@@ -203,32 +203,33 @@ function show_pop(count) {
                     
                 })
             }
-            function getSPublicIPInfo(configName,cnt){
-                var configName = configName;
-                if(!configName){
-                    configName = $("#configName_"+cnt+" option:selected").val();
-                }
-                var url = CommonURL+"/ns/"+NAMESPACE+"/resources/publicIp";
-                var html = "";
-                axios.get(url).then(result=>{
-                    data = result.data.publicIp
-                    for(var i in data){
-                        if(data[i].connectionName == configName){
-                            html += '<option value="'+data[i].id+'" selected>'+data[i].cspPublicIpName+'('+data[i].id+')</option>'; 
-                        }
-                    }
-                    $("#publicIp_"+cnt+"").empty();
-                    $("#publicIp_"+cnt+"").append(html);
+            //Public IP안씀 삭제 안녕 ㅠㅜ
+            // function getSPublicIPInfo(configName,cnt){
+            //     var configName = configName;
+            //     if(!configName){
+            //         configName = $("#configName_"+cnt+" option:selected").val();
+            //     }
+            //     var url = CommonURL+"/ns/"+NAMESPACE+"/resources/publicIp";
+            //     var html = "";
+            //     axios.get(url).then(result=>{
+            //         data = result.data.publicIp
+            //         for(var i in data){
+            //             if(data[i].connectionName == configName){
+            //                 html += '<option value="'+data[i].id+'" selected>'+data[i].cspPublicIpName+'('+data[i].id+')</option>'; 
+            //             }
+            //         }
+            //         $("#publicIp_"+cnt+"").empty();
+            //         $("#publicIp_"+cnt+"").append(html);
                     
-                })
-            }
+            //     })
+            // }
 
             function getVnetInfo(configName,cnt){
                 var configName = configName;
                 if(!configName){
                     configName = $("#configName_"+cnt+" option:selected").val();
                 }
-                var url = CommonURL+"/ns/"+NAMESPACE+"/resources/network";
+                var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
                 var html = "";
                 axios.get(url).then(result=>{
                     data = result.data.network
