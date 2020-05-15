@@ -449,7 +449,7 @@ function show_vmList(mcis_id){
  function getProvider(connectionInfo){
      url = SpiderURL+"/connectionconfig"
      axios.get(url).then(result=>{
-         var data = result.data
+         var data = result.data.connectionconfig
 
          for(var i in data){
              if(connetionInfo == data[i].ConfigName){}
@@ -466,8 +466,8 @@ function show_vmList(mcis_id){
             url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
-            success : function(res){
-                
+            success : function(data){
+                res = data.connectionconfig
                 var provider = "";
                 for(var k in res){
                     if(res[k].ConfigName == data.config_name){
@@ -524,9 +524,10 @@ function show_vmList(mcis_id){
            url:SpiderURL+"/connectionconfig",
            async:false,
            type:'GET',
-           success : function(res){
+           success : function(data){
                
                var provider = "";
+               res = data.connectionconfig
                for(var k in res){
                    if(res[k].ConfigName == data.config_name){
                        provider = res[k].ProviderName

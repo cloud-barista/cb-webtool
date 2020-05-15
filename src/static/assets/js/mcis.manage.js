@@ -471,7 +471,8 @@ function short_desc(str){
  function getProvider(connectionInfo){
      url = SpiderURL+"/connectionconfig"
      axios.get(url).then(result=>{
-         var data = result.data
+         var data = result.data.connectionconfig
+         
 
          for(var i in data){
              if(connetionInfo == data[i].ConfigName){}
@@ -488,8 +489,8 @@ function short_desc(str){
             url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
-            success : function(res){
-                
+            success : function(data){
+                res = data.connectionconfig
                 var provider = "";
                 for(var k in res){
                     if(res[k].ConfigName == data.config_name){
@@ -546,8 +547,8 @@ function short_desc(str){
            url:SpiderURL+"/connectionconfig",
            async:false,
            type:'GET',
-           success : function(res){
-               
+           success : function(data){
+            res = data.connectionconfig
                var provider = "";
                for(var k in res){
                    if(res[k].ConfigName == data.config_name){
