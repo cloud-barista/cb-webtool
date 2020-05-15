@@ -165,7 +165,21 @@ $(document).ready(function(){
             }
         }
         if(count == 0){
-                html +='<tr><td colspan="7">등록된 스펙이 없습니다.</td></tr>'
+               // html +='<tr><td colspan="7">등록된 스펙이 없습니다.</td></tr>'
+               html += '<tr>'
+                    +'<td class="text-center">'
+                    +'<div class="form-input">'
+                    +'<span class="input">'
+                    +'<input type="radio" id="" class="chk" value="'+'test_spec'+'|'+'test_spec'+'|'+'1'+'|'+'256'+'|'+'200'+'|'+'2$'+'|'+'ubuntu'+'"><i></i>'
+                    +'</span></div></td>'
+
+                    +'<td>'+"t2.small"+'</td>'
+                    +'<td>'+'aws-config01'+'</td>'
+                    +'<td>'+'2'+'</td>'
+                    +'<td>'+'2'+'</td>'
+                    +'<td>'+'200'+'</td>'
+                    +'<td>'+'2$'+'</td>'
+                    +'<td>'+'ubuntu'+'</td><tr>';
             }
         $("#spec_list").empty();
         $("#spec_list").append(html);
