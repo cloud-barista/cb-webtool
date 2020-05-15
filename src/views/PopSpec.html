@@ -27,7 +27,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <strong>
-                                                    Spec List
+                                                    Server Spec List
                                                 </strong>
                                             </div>
                                             <!-- <div>
@@ -57,7 +57,7 @@
                                     <div>
                                             <!-- <button type="button" class="btn btn-sm btn-danger">삭제</button>
                                             <button type="button" class="btn btn-sm btn-outline-dark">수정</button> -->
-                                            <button type="button" class="btn btn-sm btn-dark" id="sel">선택</button>
+                                            <button type="button" class="btn btn-sm btn-dark" id="sel">Select</button>
                                         </div>
                                 </div>
                                 <div class="table-overflow" style="overflow:auto;height:500px;">
@@ -85,12 +85,12 @@
                                                 </th>
                                                 
                                                 <th>Name</th>
-                                                <th>ConnectionName</th>
+                                                <th>Cloud Connection</th>
                                                 <th>vCpu</th>
-                                                <th>Memory</th>
-                                                <th>Storage</th>
-                                                <th>Cost/Hour</th>
-                                                <th>OsType</th>
+                                                <th>Memory(Ghz)</th>
+                                                <th>Disk(GB)</th>
+                                                <th>OS Type</th>
+                                                <th>Cost($)/Hour</th>
                                                
                                             </tr>
                                         </thead>
@@ -160,8 +160,8 @@ $(document).ready(function(){
                     +'<td>'+res[i].num_vCPU+'</td>'
                     +'<td>'+res[i].mem_GiB+'</td>'
                     +'<td>'+res[i].storage_GiB+'</td>'
-                    +'<td>'+res[i].cost_per_hour+'</td>'
                     +'<td>'+res[i].os_type+'</td><tr>';
+                    +'<td>'+res[i].cost_per_hour+'</td>'
             }
         }
         if(count == 0){
