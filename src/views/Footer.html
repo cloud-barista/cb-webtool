@@ -30,13 +30,25 @@
        var res = data.ns
        var html = "";
        var ns = "";
-       for(var i in res){
-           if(i == 0){
-                html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
-                ns = res[i].id;
-            }else{
-                html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
-        }
+       if(res[0].id){
+            for(var i in res){
+            if(i == 0){
+                    html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
+                    ns = res[i].id;
+                }else{
+                    html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
+                }   
+            }
+       
+       }else{
+        for(var i in res){
+            if(i == 1){
+                    html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
+                    ns = res[i].id;
+                }else if(i >1){
+                    html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
+                }   
+            }
        }
        $("#name_select").empty();
        $("#name_select").append(html);

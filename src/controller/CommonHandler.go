@@ -123,7 +123,8 @@ func CallLoginInfo(c echo.Context) LoginInfo {
 
 	result := getObj.(map[string]string)
 	loginInfo := LoginInfo{
-		Username:  result["username"],
+		Username: "admin",
+		//Username:  result["username"],
 		NameSpace: result["namespace"],
 	}
 	getNs, ok := store.Get("namespace")

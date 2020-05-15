@@ -84,23 +84,24 @@
                                     <tbody>
                                         {{ if .NSList}}
                                         {{ range $index, $item := .NSList}}
-                                    
-                                        <tr>
-                                            <td class="text-center">
-                                                <div class="form-input">
-                                                    <span class="input">
-                                                        <input type="checkbox" class="chk" name="chk[]" id="" value='{{ .ID}}' /><i></i>
-                                                    </span>
-                                                </div>
-                                            </td>
-                                          
+                                            {{if .ID}}
+                                            <tr>
+                                                <td class="text-center">
+                                                    <div class="form-input">
+                                                        <span class="input">
+                                                            <input type="checkbox" class="chk" name="chk[]" id="" value='{{ .ID}}' /><i></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
                                             
-                                           
-                                            <td>{{ .Name }}</td>
-                                            <td><a href="">{{ .ID }}</a></td>
-                                            <td>{{ .Description }}</td>
-                                        
-                                        </tr>
+                                                
+                                            
+                                                <td>{{ .Name }}</td>
+                                                <td><a href="">{{ .ID }}</a></td>
+                                                <td>{{ .Description }}</td>
+                                            
+                                            </tr>
+                                            {{end}}
                                         {{end}}
                                         {{else}}
                                         <tr>  

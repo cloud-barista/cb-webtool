@@ -86,12 +86,17 @@ $(document).ready(function(){
                 axios.get(url).then(result=>{
                     console.log(result.data);
                     var data = result.data.ns;
-                    var ns = ""
-                    for(var i in data){
-                        if(i == 0){
-                            ns = data[i].id
+                    var ns = "";
+                    if (data[0].id) {
+                        for(var i in data){
+                            if(i == 0){
+                                ns = data[i].id
+                            }
                         }
+                    }else{
+                        ns = data[1].id;
                     }
+                    
 
                     console.log(data)
                     $.ajax({
