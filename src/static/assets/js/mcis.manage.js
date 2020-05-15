@@ -115,7 +115,9 @@ function short_desc(str){
         
         $("#table_1").empty();
         $("#table_1").append(html);
+        console.log("VM LEN  :" ,vm_len);
         show_card(mcis[0].id);
+        
        if(vm_len > 0){
         show_vmList(mcis[0].id);
        }else{
@@ -150,21 +152,24 @@ function short_desc(str){
                     var status = sta.toLowerCase()
                     console.log("VM Status : ",status)
                     var configName = vm[i].config_name
-                    console.log("outer vm configName : ",configName)
+                    console.log("outer vm configName2 : ",configName)
                     var count = 0;
+                    console.log("Spider URL : ",SpiderURL)
                     $.ajax({
                         url: SpiderURL+"/connectionconfig",
                         async:false,
                         type:'GET',
-                        success : function(res){
+                        success : function(data){
                             var badge = "";
+                           
+                            res = data.connectionconfig
                             for(var k in res){
                                 // console.log(" i value is : ",i)
                                 // console.log("outer config name : ",configName)
                                 // console.log("Inner ConfigName : ",res[k].ConfigName)
                                 if(res[k].ConfigName == vm[i].config_name){
                                     var provider = res[k].ProviderName
-                                    
+                                    console.log("Provider : ",provider);
                                     
                                     if(status == "running"){
                                         badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
