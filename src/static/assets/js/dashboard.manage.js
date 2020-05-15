@@ -641,7 +641,7 @@ function show_vmNetworkInfo(mcis_id, vm_id){
     axios.get(url).then(result=>{
         var data = result.data
         var html = ""
-        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/network"
+        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
         var spec_id = data.vnet_id
         $.ajax({
            url: url2,
