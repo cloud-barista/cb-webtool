@@ -42,6 +42,8 @@ function short_desc(str){
     console.log("Show mcis Url : ",url)
    var html = "";
    axios.get(url).then(result=>{
+      
+       console.log("Dashboard Data :",result.status);
        var data = result.data;
        if(!data.mcis){
           location.href = "/MCIS/reg";
@@ -156,7 +158,8 @@ function show_vmList(mcis_id){
                        url: SpiderURL+"/connectionconfig",
                        async:false,
                        type:'GET',
-                       success : function(res){
+                       success : function(data){
+                           res = data.connectionconfig
                            var badge = "";
                            for(var k in res){
                                // console.log(" i value is : ",i)

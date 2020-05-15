@@ -453,6 +453,7 @@ function short_desc(str){
         if(confirm("삭제하시겠습니까?")){
          axios.delete(url).then(result=>{
              var data = result.data
+             console.log(result);
              if(result.status == 200){
                  alert(data.message)
                  location.reload()

@@ -155,7 +155,7 @@ function show_pop(count) {
                     }
                     for(var i in data){
                         if(data[i].connectionName == configName){
-                            html += '<option value="'+data[i].id+'" >'+data[i].cspImageName+'('+data[i].id+')</option>'; 
+                            html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
                         }
                     }
                     $("#image_"+cnt+"").empty();
@@ -232,15 +232,23 @@ function show_pop(count) {
                 }
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
                 var html = "";
+                var html2 = "";
                 axios.get(url).then(result=>{
-                    data = result.data.network
+                    data = result.data.vNet
+                    console.log("vNetwork Info : ",result)
                     for(var i in data){
                         if(data[i].connectionName == configName){
-                            html += '<option value="'+data[i].id+'" selected>'+data[i].cspNetworkName+'('+data[i].id+')</option>'; 
+                            html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
+                            var subnetInfoList = data[i].subnetInfoList
+                            for(var k in subnetInfoList){
+                                html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].IPv4_CIDR+'</option>'; 
+                            }
                         }
                     }
                     $("#vnet_"+cnt+"").empty();
                     $("#vnet_"+cnt+"").append(html);
+                    $("#subnet_"+cnt+"").empty();
+                    $("#subnet_"+cnt+"").append(html2);
                     
                 })
             }
@@ -301,7 +309,8 @@ function show_vm(vm_cnt){
                 +'<div class="form-row">'
                 +'<div class="col">'
                 +'<input type="hidden" id="vmspec_'+vm_cnt+'" name="spec_id" class="form-control form-control-sm" placeholder="Select Spec" readonly>'
-                +'<input type="text" id="vmspecName_'+vm_cnt+'" name="vmspec" class="form-control form-control-sm" placeholder="Select Spec" readonly></div>'
+                
+                +'<input type="text" id="vmspecName_'+vm_cnt+'" name="vm_access_passwd" class="form-control form-control-sm" placeholder="Select Spec" readonly></div>'
                 +'<div class="col">'
                 +'<button type="button" class="btn btn-dark btn-sm" onclick="show_pop('+vm_cnt+');">Search VM Spec</button>'
                 +'</div></div></td></tr>'
@@ -324,6 +333,11 @@ function show_vm(vm_cnt){
                 +'<td>'
                 +'<select class="form-control form-control-sm" name="vnet_id" id="vnet_'+vm_cnt+'"  >'
                 +'<option selected>Select Virtual Network</option>'
+                +'</select></td></tr>'
+                +'<tr><th>Sub Network</th>'
+                +'<td>'
+                +'<select class="form-control form-control-sm" name="subnet_id" id="subnet_'+vm_cnt+'"  >'
+                +'<option selected>Select SubNetwork</option>'
                 +'</select></td></tr>'
                 // +'<tr><th>PublicIP</th>'
                 // +'<td>'
@@ -377,6 +391,7 @@ function btn_click(){
     console.log("seObj result : ",result)
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis"
     console.log("request Create mcis url : ",url)
+    //return;
     axios.post(url,result).then(result=>{
         if(result.status == 201){
             alert("Register Success")
@@ -424,8 +439,13 @@ function setObj(){
         objArr[i] = obj;
     }
     var result = {
-        vm_req : objArr
+        headers :{
+                 'Content-type': 'application/json',
+                },
+        vm_req : objArr,
+        vm_num : clickCnt
     }
+    console.log("vm num : ",clickCnt);
     console.log("Object result :",result)
     return result
 }
