@@ -13,7 +13,7 @@
             <main role="main" class="main" id="box_dialog">
                 <div class="page-header" id="box_dialog">
                     <div>
-                        <h1>MCIS Management</h1>
+                        <h1>MCIS</h1>
                     </div>
                 </div>
                 <!-- table -->
@@ -21,12 +21,12 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>Service - MCIS</strong>
+                                    <strong>List of MCIS</strong>
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-sm btn-danger" onclick="mcis_delete();">Delete</button>
                                     <!-- <button type="button" class="btn btn-sm btn-outline-dark">Modify</button> -->
-                                    <button type="button" class="btn btn-sm btn-dark" onclick="mcis_reg()">Regist</button>
+                                    <button type="button" class="btn btn-sm btn-dark" onclick="mcis_reg()">New/Add Server</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="location.href='/MCIS/reg';">New MCIS</button>
                                 </div>
                             </div>
@@ -78,11 +78,12 @@
                                                     </span>
                                                 </div>
                                             </th>                                            
-                                            <th>NAME(ID)</th>
-                                            <th>TIME</th>
-                                            <th>CNT(VM/CP)</th>
-                                            <th>Desc</th>
                                             <th>Status</th>
+                                            <th>Name (ID)</th>
+                                            <th>Total infra</th>
+                                            <th># of Server</th>
+                                            <th># of Container</th>
+                                            <th>Description</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -148,12 +149,12 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>Resource - VM</strong>
+                                    <strong>List of Server</strong>
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-sm btn-danger" onclick="vm_delete();">Delete</button>
                                     <button type="button" class="btn btn-sm btn-outline-dark">Modify</button>
-                                    <button type="button" class="btn btn-sm btn-dark" onclick="vm_reg()">Regist</button>
+                                    <button type="button" class="btn btn-sm btn-dark" onclick="vm_reg()">New/Add Server</button>
                                 </div>
                             </div>
                         </div>
@@ -183,13 +184,14 @@
                                                     </span>
                                                 </div>
                                             </th>                                            
-                                            <th>NAME(ID)</th>
-                                            <th>TIME</th>
+                                            <th>Status</th>
+                                            <th>Name (ID)</th>
                                             <th>CP</th>
                                             <th>Region</th>
-                                            <th>Desc</th>
-                                            <th>Status</th>
-                                            <th>Alert</th>
+                                            <th>Cloud Connection</th>
+                                            <th>OS Type</th>
+                                            <th>Public IP</th>
+                                            <th>Description</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -235,7 +237,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>VM - Detail </strong>
+                                <strong>Server Info</strong>
                             </div>
                             <div>
                                 <!-- 좌우측 정렬되는 버튼이 필요할때 여기에 넣어주세요 -->

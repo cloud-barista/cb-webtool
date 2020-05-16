@@ -92,13 +92,14 @@ function short_desc(str){
               +'<span class="input">'
               +'<input type="checkbox" class="chk" id="chk_'+count+'" value="'+mcis[i].id+'" item="'+mcis[i].name+'"><i></i></span></div>'
               +'</td>'
-              +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')">'+mcis[i].name+'</a></td>'
-              +'<td>12:32:30</td>'
-              +'<td>'+vm_len+'</td>'
-              +'<td>'+short_desc(mcis[i].description)+'</td>'
               +'<td>'
               +badge
               +'</td>'
+              +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')">'+mcis[i].name+'</a></td>'
+              +'<td>12:32:30</td>'
+              +'<td>'+vm_len+'</td>'
+              +'<td>0</td>'
+              +'<td>'+short_desc(mcis[i].description)+'</td>'
               +'<td>'
               +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
               +'<i class="fas fa-edit"></i>'
@@ -190,17 +191,17 @@ function short_desc(str){
                                     +'<span class="input">'
                                     +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                     +'</td>'
-                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
-                                    +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
-                                    +'<td>'+provider+'</td>'
-                                    +'<td>'+vm[i].region.Region+'</td>'
-                                    +'<td>'+short_desc(vm[i].description)+'</td>'
                                     +'<td>'
                                     +badge
                                     +'</td>'
-                                    +'<td>'
-                                    +"3/8"
-                                    +'</td>'
+                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
+                        
+                                    +'<td>'+provider+'</td>'
+                                    +'<td>'+vm[i].region.Region+'</td>'
+                                    +'<td>'+vm[i].config_name+'</td>'
+                                    +'<td>OS Type</td>'
+                                    +'<td>'+vm[i].publicIP+'</td>'
+                                    +'<td>'+short_desc(vm[i].description)+'</td>'
                                     +'<td>'
                                     +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
                                     +'<i class="fas fa-edit"></i>'
@@ -484,13 +485,14 @@ function short_desc(str){
      url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
      axios.get(url).then(result=>{
          var data = result.data
+         console.log("show vmDetail List data : ",data)
          var html = ""
          $.ajax({
             url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
-            success : function(data){
-                res = data.connectionconfig
+            success : function(data2){
+                res = data2.connectionconfig
                 var provider = "";
                 for(var k in res){
                     if(res[k].ConfigName == data.config_name){
@@ -499,29 +501,51 @@ function short_desc(str){
                     }
                 }
                 html += '<tr>'
-                    +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                    +'<th scope="colgroup">cloud Provider</th>'
+                    +'<th scope="colgroup"rowspan="10">Infra - Server</th>'
+
+                    +'<th scope="colgroup">Cloud Provider</th>'
                     +'<td colspan="3">'+provider+'</td>'
                     +'</tr>'
+
                     +'<tr>'
-                    +'<th scope="colgroup">VM ID</th>'
+
+                    +'<th scope="colgroup">Server ID</th>'
                     +'<td  colspan="3">'+data.id+'</td>'
                     +'</tr>'
+                    +'<tr>'
+                    +'<th scope="colgroup">CP VMID</th>'
+                    +'<td  colspan="3">'+data.id+'</td>'
+                    +'</tr>'
+
                     +'<tr>'
                     +'<th scope="colgroup">Region</th>'
                     +'<td  colspan="3">'+data.region.Region+'</td>'
                     +'</tr>'
+
+                    
                     +'<tr>'
-                    +'<th scope="colgroup">Zone</th>'
-                    +'<td  colspan="3">'+data.region.Zone+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">PublicIP</th>'
+                    +'<th scope="colgroup">Public IP</th>'
                     +'<td  colspan="3">'+data.publicIP+'</td>'
                     +'</tr>'
+
                     +'<tr>'
-                    +'<th scope="colgroup">PrivateIP</th>'
+                    +'<th scope="colgroup">Public DNS</th>'
+                    +'<td  colspan="3">'+data.publicDNS+'</td>'
+                    +'</tr>'
+
+                    +'<tr>'
+                    +'<th scope="colgroup">Private IP1234</th>'
                     +'<td colspan="3">'+data.privateIP+'</td>'
+                    +'</tr>';
+
+                    +'<tr>'
+                    +'<th scope="colgroup">Private DNS</th>'
+                    +'<td colspan="3">'+data.privateDNS+'</td>'
+                    +'</tr>';
+
+                    +'<tr>'
+                    +'<th scope="colgroup">Server Status</th>'
+                    +'<td colspan="3">'+data.status+'</td>'
                     +'</tr>';
                   
                 $("#vm").empty();
@@ -538,82 +562,103 @@ function short_desc(str){
 
  }
 
- function show_vmDetailInfo(mcis_id, vm_id){
-    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
-        var data = result.data
-        var html = ""
-        $.ajax({
-           url:SpiderURL+"/connectionconfig",
-           async:false,
-           type:'GET',
-           success : function(data){
-            res = data.connectionconfig
-               var provider = "";
-               for(var k in res){
-                   if(res[k].ConfigName == data.config_name){
-                       provider = res[k].ProviderName
-                       console.log("Inner Provider : ",provider)
-                   }
-               }
-               html += '<tr>'
-                   +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                   +'<th scope="colgroup">cloud Provider</th>'
-                   +'<td colspan="3">'+provider+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td  colspan="3">'+data.id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Region</th>'
-                   +'<td  colspan="3">'+data.region.Region+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Zone</th>'
-                   +'<td  colspan="3">'+data.region.Zone+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PublicIP</th>'
-                   +'<td  colspan="3">'+data.publicIP+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PrivateIP</th>'
-                   +'<td colspan="3">'+data.privateIP+'</td>'
-                   +'</tr>'
-                   +'</tbody>'
-                   +'<tbody>'
-                   +'<tr>'
-                   +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM NAME</th>'
-                   +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
-                   +'</tr>'
+//  function show_vmDetailInfo(mcis_id, vm_id){
+//     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+//     axios.get(url).then(result=>{
+//         var data = result.data
+//         console.log("show vmDetailInfo data : ",data)
+//         var html = ""
+//         $.ajax({
+//            url:SpiderURL+"/connectionconfig",
+//            async:false,
+//            type:'GET',
+//            success : function(data2){
+//             res = data2.connectionconfig
+//                var provider = "";
+//                for(var k in res){
+//                    if(res[k].ConfigName == data.config_name){
+//                        provider = res[k].ProviderName
+//                        console.log("Inner Provider : ",provider)
+//                    }
+//                }
+//                html += '<tr>'
+//                     +'<th scope="colgroup"rowspan="8">Infra - Server</th>'
+//                     +'<th scope="colgroup">Cloud Provider</th>'
+//                     +'<td colspan="3">'+provider+'</td>'
+//                     +'</tr>'
+//                     +'<tr>'
+
+//                     +'<th scope="colgroup">Server ID</th>'
+//                     +'<td  colspan="3">'+data.id+'</td>'
+//                     +'</tr>'
+
+//                     +'<th scope="colgroup">CP VMID</th>'
+//                     +'<td  colspan="3">'+data.id+'</td>'
+//                     +'</tr>'
+
+//                     +'<tr>'
+//                     +'<th scope="colgroup">Region</th>'
+//                     +'<td  colspan="3">'+data.region.Region+'</td>'
+//                     +'</tr>'
+
+                    
+//                     +'<tr>'
+//                     +'<th scope="colgroup">Public IP</th>'
+//                     +'<td  colspan="3">'+data.publicIP+'</td>'
+//                     +'</tr>'
+
+//                     +'<tr>'
+//                     +'<th scope="colgroup">Public DNS</th>'
+//                     +'<td  colspan="3">'+data.publicDNS+'</td>'
+//                     +'</tr>'
+
+//                     +'<tr>'
+//                     +'<th scope="colgroup">Private IP</th>'
+//                     +'<td colspan="3">'+data.privateIP+'</td>'
+//                     +'</tr>';
+//                     +'<tr>'
+//                     +'<th scope="colgroup">Private DNS</th>'
+//                     +'<td colspan="3">'+data.privateDNS+'</td>'
+//                     +'</tr>';
+//                     +'<tr>'
+//                     +'<th scope="colgroup">Server Status</th>'
+//                     +'<td colspan="3">'+data.status+'</td>'
+//                     +'</tr>';
+               
+//                    +'</tbody>'
+//                    +'<tbody>'
+//                    +'<tr>'
+//                    +'<th scope="colgroup" rowspan="3">VM Meta</th>'
+//                    +'<th scope="colgroup">VM ID</th>'
+//                    +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
+//                    +'</tr>'
+//                    +'<tr>'
+//                    +'<th scope="colgroup">VM NAME</th>'
+//                    +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
+//                    +'</tr>'
                    
 
                  
-               $("#vm").empty();
-               $("#vm").append(html);
-               fnMove("vm_detail");
+//                $("#vm").empty();
+//                $("#vm").append(html);
+//                fnMove("vm_detail");
 
 
-           }
+//            }
 
-       })
+//        })
       
            
         
-    })
+//     })
 
-}
+// }
 
 function show_vmSpecInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
+        console.log("show vmSpecInfo Data : ",data)
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/spec"
         var spec_id = data.spec_id
@@ -623,23 +668,27 @@ function show_vmSpecInfo(mcis_id, vm_id){
            type:'GET',
            success : function(result){
                var res = result.spec
-              
+              console.log("spec data from tumble : ",res)
                for(var k in res){
                    if(res[k].id == spec_id){
                     html += '<tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup" rowspan="4">VM Spec</th>'
-                           +'<th scope="colgroup">vCPUs</th>'
+                          
+                           +'<th scope="colgroup" rowspan="5">Server Spec</th>'
+                           +'<th scope="colgroup">vCPU</th>'
                            +'<td colspan="3">'+res[k].num_vCPU+'vcpu</td>'
                            +'</tr>                  '
                            +'<tr>'
-                           +'<th scope="colgroup">Memory</th>'
+                           +'<th scope="colgroup">Memory(Ghz)</th>'
                            +'<td  colspan="3">'+res[k].mem_GiB+'GiB</td>'
                            +'</tr>                  '
                            +'<tr>'
-                           +'<th scope="colgroup">Storage</th>'
+                           +'<th scope="colgroup">Disk (GB)</th>'
                            +'<td colspan="3">'+res[k].storage_GiB+'GiB</th>'
-                           +'</tr>                  '
+                           +'</tr>'   
+                           +'<tr>'
+                           +'<th scope="colgroup">Cost($) / Hour </th>'
+                           +'<td  colspan="3">'+res[k].cost_per_hour+'</td>'
+                           +'</tr>                   '
                            +'<tr>'
                            +'<th scope="colgroup">OsType</th>'
                            +'<td  colspan="3">'+res[k].os_type+'</td>'
@@ -671,21 +720,39 @@ function show_vmNetworkInfo(mcis_id, vm_id){
            async:false,
            type:'GET',
            success : function(result){
-               var res = result.network
-              
+               var res = result.vNet
+              console.log("Network Info : ",result)
                for(var k in res){
                    if(res[k].id == spec_id){
                     html += '<tr>'
-                           +'<th scope="colgroup" rowspan="3">vNetwork</th>'
-                           +'<th scope="colgroup">NetworkID</th>'
-                           +'<td colspan="3">'+res[k].cspNetworkId+'</td>'
+                           +'<th scope="colgroup" rowspan="3">Network</th>'
+                           +'<th scope="colgroup">Network ID</th>'
+                           +'<td colspan="3">'+res[k].cspVNetId+'</td>'
                            +'</tr>'
                            +'<tr>'
                            +'<th scope="colgroup">Network Name</th>'
-                           +'<td  colspan="3">'+res[k].cspNetworkName+'</td>'
+                           +'<td  colspan="3">'+res[k].cspVNetName+'</td>'
                            +'</tr>'
                            +'<tr>'
                            +'<th scope="colgroup">Cidr Block</th>'
+                           +'<td colspan="3">'+res[k].cidrBlock+'</th>'
+                           +'</tr>'
+                           var subnetInfoList = res[k].subnetInfoList
+                           var subnetArr = new Array()
+                           var str = "";
+                           if(subnetInfoList){
+                               for(var o in subnetInfoList){
+                                    subnetArr.push(subnetInfoList[o].IPv4_CIDR)
+                               }
+                               str = subnetArr.join(",")
+                           }
+                           console.log("Subnet str : ",str)
+                           +'<tr>'
+                           +'<th scope="colgroup">Subnet</th>'
+                           +'<td colspan="3">'+str+'</th>'
+                           +'</tr>'
+                           +'<tr>'
+                           +'<th scope="colgroup">Interface</th>'
                            +'<td colspan="3">'+res[k].cidrBlock+'</th>'
                            +'</tr>'
                           
@@ -714,7 +781,7 @@ function show_vmSecurityGroupInfo(mcis_id, vm_id){
         var cnt = spec_id.length
         html += '<tr>'
              +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroup</th>'
-             +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroupID</th>'
+             +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroup ID</th>'
         for(var i in spec_id){
             if( i == 0){
                 html +='<td colspan="3">'+spec_id[i]+'</td></tr>'
@@ -751,7 +818,7 @@ function show_vmSSHInfo(mcis_id, vm_id){
                for(var k in res){
                    if(res[k].id == spec_id){
                     html += '<tr>'
-                           +'<th scope="colgroup" rowspan="3">SSH KEY</th>'
+                           +'<th scope="colgroup" rowspan="3">Access(SSH Key)</th>'
                            +'<th scope="colgroup">SSH Key ID</th>'
                            +'<td colspan="3">'+res[k].id+'</td>'
                            +'</tr>'
