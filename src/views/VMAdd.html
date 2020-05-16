@@ -53,13 +53,13 @@ function show_pop(count) {
                             </colgroup>
                             <tbody>
                                 <tr>
-                                    <th>MCIS ID</th>
+                                    <th>MCIS ID<strong class="text-danger">*</strong></th>
                                     <td>
                                         <input class="form-control form-control-sm" type="text" name=""placeholder="Default input" id="mcis_id" value="{{ .McisID }}" readonly/>
                                     </td> 
                                 </tr>
                                 <tr>
-                                    <th>MCIS Name</th>
+                                    <th>MCIS Name<strong class="text-danger">*</strong></th>
                                     <td>
                                         <input class="form-control form-control-sm" type="text" name="" placeholder="MCIS Name input" id="mcis_name" value="{{ .McisName }}" readonly/>
                                     </td>
@@ -76,7 +76,7 @@ function show_pop(count) {
                     </div>
                     <div class="card-footer" id="target" style="display:none;">
                         <div class="d-flex justify-content-end align-items-center">
-                            <button type="button" id="vm_add" class="btn btn-dark btn-sm">ADD VM</button>
+                            <button type="button" id="vm_add" class="btn btn-dark btn-sm">Add Server</button>
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@ function show_pop(count) {
                 //var provider = $("#provider option:selected").val();
                 var html = "";
                 axios.get(url).then(result=>{
-                    var data = result.data
+                    var data = result.data.connectionconfig
                     console.log("connection data : ",data);
                     var count = 0; 
                     var configName = "";
@@ -116,7 +116,7 @@ function show_pop(count) {
                     getImageInfo(configName,cnt);
                     getSecurityInfo(configName,cnt);
                     getSSHKeyInfo(configName,cnt);
-                    getSPublicIPInfo(configName,cnt);
+                  //  getSPublicIPInfo(configName,cnt);
                     getVnetInfo(configName,cnt);
 
                     
@@ -195,46 +195,53 @@ function show_pop(count) {
                     
                 })
             }
-            function getSPublicIPInfo(configName,cnt){
-                var configName = configName;
-                if(!configName){
-                    configName = $("#configName_"+cnt+" option:selected").val();
-                }
-                var url = CommonURL+"/ns/"+NAMESPACE+"/resources/publicIp";
-                var html = "";
-                axios.get(url).then(result=>{
-                    data = result.data.publicIp
-                    for(var i in data){
-                        if(data[i].connectionName == configName){
-                            html += '<option value="'+data[i].id+'" selected>'+data[i].cspPublicIpName
-                                // +'('+data[i].id+')'
-                                 +'</option>'; 
-                        }
-                    }
-                    $("#publicIp_"+cnt+"").empty();
-                    $("#publicIp_"+cnt+"").append(html);
+            // function getSPublicIPInfo(configName,cnt){
+            //     var configName = configName;
+            //     if(!configName){
+            //         configName = $("#configName_"+cnt+" option:selected").val();
+            //     }
+            //     var url = CommonURL+"/ns/"+NAMESPACE+"/resources/publicIp";
+            //     var html = "";
+            //     axios.get(url).then(result=>{
+            //         data = result.data.publicIp
+            //         for(var i in data){
+            //             if(data[i].connectionName == configName){
+            //                 html += '<option value="'+data[i].id+'" selected>'+data[i].cspPublicIpName
+            //                     // +'('+data[i].id+')'
+            //                      +'</option>'; 
+            //             }
+            //         }
+            //         $("#publicIp_"+cnt+"").empty();
+            //         $("#publicIp_"+cnt+"").append(html);
                     
-                })
-            }
+            //     })
+            // }
 
             function getVnetInfo(configName,cnt){
                 var configName = configName;
                 if(!configName){
                     configName = $("#configName_"+cnt+" option:selected").val();
                 }
-                var url = CommonURL+"/ns/"+NAMESPACE+"/resources/network";
+                var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
                 var html = "";
+                var html2 = "";
                 axios.get(url).then(result=>{
-                    data = result.data.network
+                    data = result.data.vNet
                     for(var i in data){
                         if(data[i].connectionName == configName){
-                            html += '<option value="'+data[i].id+'" selected>'+data[i].cspNetworkName
+                            html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName
                                  //+'('+data[i].id+')'
                                  +'</option>'; 
+                            var subnetInfoList = data[i].subnetInfoList
+                            for(var k in subnetInfoList){
+                                html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].IPv4_CIDR+'</option>'; 
+                            }
                         }
                     }
                     $("#vnet_"+cnt+"").empty();
                     $("#vnet_"+cnt+"").append(html);
+                    $("#subnet_"+cnt+"").empty();
+                    $("#subnet_"+cnt+"").append(html2);
                     
                 })
             }
@@ -243,14 +250,36 @@ function show_pop(count) {
 $(document).ready(function(){
     vm_cnt = 1;
     show_vm(vm_cnt)
-    $("#vm_add").click(function(){
+    $("[class^='vm_add'").click(function(){
         vm_cnt++;
         show_vm(vm_cnt);
+        $("#server_cnt").val(vm_cnt);
+        $("#provider_"+vm_cnt).focus();
         btn_click_cnt++;
     });
 
+
     
 })
+
+function view_vm(){
+   
+   var str = ""
+   var arr = new Array();
+   $("[class^='vm_name']").each(function(k,v){
+       console.log("Key : ",k);
+       console.log("value : ",v); 
+       arr.push(this.value)
+   });
+   console.log("view name : ",arr);
+   str = arr.join(",")
+   console.log(str)
+   $("[class^='vm_view']").each(function(k,v){
+      this.value = str
+   });
+
+}
+
 
 function show_vm(vm_cnt){
         //vm_cnt++;
@@ -272,9 +301,10 @@ function show_vm(vm_cnt){
                 +'<colgroup><col style="width: 20%"><col></colgroup>'
                 +'<tbody>'
                 +'<tr>'
+
                 +'<th>Provider</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="provider" id="provider" onchange="getConnectionInfo(this.value,'+vm_cnt+');">'
+                +'<select class="form-control form-control-sm" name="provider" id="provider_'+vm_cnt+'" onchange="getConnectionInfo(this.value,'+vm_cnt+');">'
                 +'<option selected>Select Provider</option>'
                 +'<option value="AWS">AWS</option>'
                 +'<option value="AZURE">AZURE</option>'
@@ -284,6 +314,7 @@ function show_vm(vm_cnt){
                 +'<option value="Openstack">Openstack</option>'
                 +'</select>'
                 +'</td></tr>'
+
                 +'<tr><th>ConfigName</th>'
                 +'<td>'
                 +'<select class="form-control form-control-sm" name="config_name" id="configName_'+vm_cnt+'"  >'
@@ -291,6 +322,10 @@ function show_vm(vm_cnt){
                 +'</select></td></tr>'
                 +'<tr><th>VM Name</th><td>'
                 +'<input class="form-control form-control-sm" type="text" name="name" placeholder="VM Name" id="vmName_'+vm_cnt+'"></td></tr>'
+                +'<tr><th>VM ACCESS ID</th><td>'
+                +'<input class="form-control form-control-sm" type="text" placeholder="VM Access ID" id="vm_access_'+vm_cnt+'" name="vm_access_id" ></td></tr>'
+                +'<tr><th>VM Access Password</th><td>'
+                +'<input class="form-control form-control-sm" type="text" placeholder="VM Access Password" id="vm_access_passwd_'+vm_cnt+'" name="vm_access_passwd" ></td></tr>'
                 +'<tr><th>VM Spec</th><td>'
                 +'<div class="form-row">'
                 +'<div class="col">'
@@ -319,11 +354,16 @@ function show_vm(vm_cnt){
                 +'<select class="form-control form-control-sm" name="vnet_id" id="vnet_'+vm_cnt+'"  >'
                 +'<option selected>Select Virtual Network</option>'
                 +'</select></td></tr>'
-                +'<tr><th>PublicIP</th>'
+                +'<tr><th>Sub Network</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="public_ip_id" id="publicIp_'+vm_cnt+'"  >'
-                +'<option selected>Select PublicIP</option>'
+                +'<select class="form-control form-control-sm" name="subnet_id" id="subnet_'+vm_cnt+'"  >'
+                +'<option selected>Select SubNetwork</option>'
                 +'</select></td></tr>'
+                // +'<tr><th>PublicIP</th>'
+                // +'<td>'
+                // +'<select class="form-control form-control-sm" name="public_ip_id" id="publicIp_'+vm_cnt+'"  >'
+                // +'<option selected>Select PublicIP</option>'
+                // +'</select></td></tr>'
                 
                 // +'<tr><th>PublicIP</th><td>'
                 // +'<div class="form-row">'
@@ -349,7 +389,11 @@ function show_vm(vm_cnt){
                 +'</tbody></table></div>'
                 +'<div class="card-footer">'
                 +'<div class="d-flex justify-content-end align-items-center">'
-                +'<button type="button" onclick="btn_click();" class="btn btn-dark btn-sm">Confirm</button></div></div></div>'
+
+                +'<button type="button"  class="add_vm btn btn-dark btn-sm">Add Server</button>'
+
+               +'<button type="button" onclick="btn_click();" class="btn btn-dark btn-sm">Confirm</button>'
+                +'</div></div></div>'
                 +'</form>'
 
                 $("#target").after(html);
@@ -387,6 +431,51 @@ function btn_click(){
     
 }
 
+function setObj(){
+    var clickCnt = btn_click_cnt
+    var ov = new Array();
+    var objArr = new Array()
+    var t = 0;
+
+    for(var i = 0; i < clickCnt;i++){
+        t++;
+        ov[i] = $("#form_"+t+"").serializeArray();
+    }
+    
+    for(var i in ov){
+        var obj  = {}
+        var security_arr = new Array()
+        for(var k in ov[i]){
+            
+            console.log(ov[i][k].name)
+            var n = ov[i][k].name
+            var v = ov[i][k].value
+            //res.vm_req[i].ov[i].name = ov[i].value
+            var sCnt = 0
+            //var obj = res.vm_req[i]
+            if(n == "security_group_ids"){
+               
+                security_arr.push(v)
+                sCnt++
+                obj[n] = security_arr
+            }else{
+                obj[n] =   v 
+            }
+        }
+        objArr[i] = obj;
+    }
+    var result = {
+        headers :{
+                 'Content-type': 'application/json',
+                },
+        vm_req : objArr,
+        vm_num : clickCnt
+    }
+    console.log("vm num : ",clickCnt);
+    console.log("Object result :",result)
+    return result
+}
+
 
 function setObjSingle(){
     var clickCnt = btn_click_cnt
@@ -421,6 +510,7 @@ function setObjSingle(){
         }
         objArr[i] = obj;
     }
+    obj.headers = {'Content-type': 'application/json',}            
     console.log("Object result :",obj)
     return obj
   

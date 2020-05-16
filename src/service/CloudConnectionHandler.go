@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-
 	//"io/ioutil"
-
 	//"github.com/davecgh/go-spew/spew"
 )
 
@@ -32,10 +30,10 @@ type RegionInfo struct {
 	ProviderName     string `json:"ProviderName"`
 	KeyValueInfoList []KeyValueInfo
 }
-type RESP struct{
+type RESP struct {
 	Region []struct {
-		RegionName       string `json:"RegionName"`
-		ProviderName     string `json:"ProviderName"`
+		RegionName       string         `json:"RegionName"`
+		ProviderName     string         `json:"ProviderName"`
 		KeyValueInfoList []KeyValueInfo `json:"KeyValueInfoList"`
 	} `json:"region"`
 }
@@ -89,7 +87,7 @@ func GetDriverReg() []CloudConnectionInfo {
 }
 
 func GetCredentialList() []CloudConnectionInfo {
-	url := NameSpaceUrl + "/driver"
+	url := CloudConnectionUrl + "/credential"
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)
@@ -121,8 +119,8 @@ func GetRegionList() []RegionInfo {
 	json.NewDecoder(resp.Body).Decode(&nsInfo)
 	var info []RegionInfo
 	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
-	for _, item := range nsInfo.Region{
-		// var kv 
+	for _, item := range nsInfo.Region {
+		// var kv
 		// for i, v := range item.KeyValueInfoList{
 		// 	k := KeyValueInfo{
 		// 		Key: v.Key,
@@ -130,19 +128,18 @@ func GetRegionList() []RegionInfo {
 		// 	}
 		// }
 		reg := RegionInfo{
-			RegionName : item.RegionName,
+			RegionName:   item.RegionName,
 			ProviderName: item.ProviderName,
-			
 		}
-		info = append(info,reg)
+		info = append(info, reg)
 	}
-	fmt.Println("info region list : ",info)
+	fmt.Println("info region list : ", info)
 	return info
 
 }
 
 func GetCredentialReg() []CloudConnectionInfo {
-	url := NameSpaceUrl + "/driver"
+	url := CloudConnectionUrl + "/credential"
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("request URL : ", url)

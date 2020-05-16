@@ -325,6 +325,18 @@ h5 {
 	padding: 10px 16px;
 }
 
+.th-right{
+	text-align: right;
+}
+
+.th-left{
+	text-align: left;
+}
+
+.th-center{
+	text-align: center;
+}
+
 .table td {
 	padding: 16px;
 }
@@ -358,7 +370,7 @@ h5 {
 	color: #8898aa;
 	border-bottom: 1px solid #e9ecef;
 	font-size: 10px;
-	text-transform: uppercase;
+
 	font-weight: normal;
 	letter-spacing: 1px;
 }

@@ -39,9 +39,11 @@ function short_desc(str){
     return result;
  }
  function show_mcis(url){
-    console.log("Show mcis Url : ",url)
-   var html = "";
+   console.log("Show mcis Url : ",url)
+   
    axios.get(url).then(result=>{
+      
+       console.log("Dashboard Data :",result.status);
        var data = result.data;
        if(!data.mcis){
           location.href = "/MCIS/reg";
@@ -51,13 +53,16 @@ function short_desc(str){
         var html = "";
         var mcis = data.mcis;
         var len = 0
+        var mcis_cnt = 0 
         if(mcis){
             len = mcis.length;
         }
-    
+        mcis_cnt = len;
         var count = 0;
         
-       
+        var server_cnt = 0;
+        var run_cnt = 0;
+        var stop_cnt = 0;
         for(var i in mcis){
             var vm_len = 0
             var sta = mcis[i].status;
@@ -67,8 +72,16 @@ function short_desc(str){
            
             if(vms){
                vm_len = vms.length
+               server_cnt = server_cnt+vm_len;
             }
-            
+            for(var o in vms){
+                if(vms[o].status == "Suspended"){
+                    stop_cnt++;
+                }
+                if(vms[o].status == "Running"){
+                    run_cnt++;
+                }
+            }
 
            console.log("mcis Status 1: ", mcis[i].status)
            console.log("mcis Status 2: ", status)
@@ -93,13 +106,14 @@ function short_desc(str){
              +'<span class="input">'
              +'<input type="checkbox" class="chk" id="chk_'+count+'" value="'+mcis[i].id+'" item="'+mcis[i].name+'"><i></i></span></div>'
              +'</td>'
-             +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')" >'+mcis[i].name+'</a></td>'
-             +'<td>12:32:30</td>'
-             +'<td>'+vm_len+'</td>'
-             +'<td>'+short_desc(mcis[i].description)+'</td>'
              +'<td>'
              +badge
              +'</td>'
+             +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')" >'+mcis[i].name+'</a></td>'
+             +'<td>infra</td>'
+             +'<td>'+vm_len+'</td>'
+             +'<td>0</td>'
+             +'<td>'+short_desc(mcis[i].description)+'</td>'
              +'<td>'
              +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
              +'<i class="fas fa-edit"></i>'
@@ -113,7 +127,13 @@ function short_desc(str){
             +'</td>'
             +'</tr>';
        }
-       
+       console.log("server_cnt:",server_cnt)
+       console.log("mcis_cnt:",mcis_cnt)
+       var new_str = mcis_cnt+" / "+server_cnt+" / 0";
+       $("#dash_1").text(new_str);
+       $("#run_cnt").text(run_cnt);
+       $("#stop_cnt").text(stop_cnt);
+
        $("#table_1").empty();
        $("#table_1").append(html);
        show_card(mcis[0].id);
@@ -133,6 +153,7 @@ function short_desc(str){
 function show_vmList(mcis_id){
   
    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+   console.log("vmList",url)
    if(mcis_id){
        $.ajax({
            type:'GET',
@@ -141,6 +162,8 @@ function show_vmList(mcis_id){
            success:function(data){
                var vm = data.vm
                var mcis_name = data.name 
+               $("#mcis_id").val(mcis_id)
+               $("#mcis_name").val(mcis_name)
                var html = "";
                console.log("VM DATA : ",vm)
                for(var i in vm){
@@ -156,7 +179,8 @@ function show_vmList(mcis_id){
                        url: SpiderURL+"/connectionconfig",
                        async:false,
                        type:'GET',
-                       success : function(res){
+                       success : function(data2){
+                           res = data2.connectionconfig
                            var badge = "";
                            for(var k in res){
                                // console.log(" i value is : ",i)
@@ -185,17 +209,18 @@ function show_vmList(mcis_id){
                                    +'<span class="input">'
                                    +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
                                    +'</td>'
-                                   +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
-                                   +'<td>'+vm[i].cspViewVmDetail.StartTime+'</td>'
-                                   +'<td>'+provider+'</td>'
-                                   +'<td>'+vm[i].region.Region+'</td>'
-                                   +'<td>'+short_desc(vm[i].description)+'</td>'
                                    +'<td>'
                                    +badge
                                    +'</td>'
-                                   +'<td>'
-                                   +"3/8"
-                                   +'</td>'
+                                   +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
+                                   
+                                   +'<td>'+provider+'</td>'
+                                   +'<td>'+vm[i].region.Region+'</td>'
+                    
+                                   +'<td>OS Type</td>'
+                                   +'<td>'+vm[i].publicIP+'</td>'
+                                   +'<td>'+short_desc(vm[i].description)+'</td>'
+                                   
                                    +'<td>'
                                    +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
                                    +'<i class="fas fa-edit"></i>'
@@ -446,7 +471,7 @@ function show_vmList(mcis_id){
  function getProvider(connectionInfo){
      url = SpiderURL+"/connectionconfig"
      axios.get(url).then(result=>{
-         var data = result.data
+         var data = result.data.connectionconfig
 
          for(var i in data){
              if(connetionInfo == data[i].ConfigName){}
@@ -463,8 +488,8 @@ function show_vmList(mcis_id){
             url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
-            success : function(res){
-                
+            success : function(data){
+                res = data.connectionconfig
                 var provider = "";
                 for(var k in res){
                     if(res[k].ConfigName == data.config_name){
@@ -511,7 +536,21 @@ function show_vmList(mcis_id){
      })
 
  }
+ function vm_reg(){
+    
+    var cnt = 0;
+    var mcis_id = "";
+    var mcis_name = "";
+    
+    mcis_id = $("#mcis_id").val()
+    mcis_name = $("#mcis_name").val()
+    var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
+    console.log("vm reg url : ",url)
+    if(confirm("Add Server?")){
+        location.href = url;
+    }
 
+ }
  function show_vmDetailInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
@@ -521,9 +560,10 @@ function show_vmList(mcis_id){
            url:SpiderURL+"/connectionconfig",
            async:false,
            type:'GET',
-           success : function(res){
+           success : function(data){
                
                var provider = "";
+               res = data.connectionconfig
                for(var k in res){
                    if(res[k].ConfigName == data.config_name){
                        provider = res[k].ProviderName
@@ -638,7 +678,7 @@ function show_vmNetworkInfo(mcis_id, vm_id){
     axios.get(url).then(result=>{
         var data = result.data
         var html = ""
-        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/network"
+        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
         var spec_id = data.vnet_id
         $.ajax({
            url: url2,

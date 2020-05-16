@@ -14,6 +14,7 @@
         axios.get(reqUrl).then(result=>{
             var data = result.data
             console.log(data);
+            location.reload();
         })
     } 
 
@@ -30,11 +31,24 @@
        var res = data.ns
        var html = "";
        var ns = "";
-       if(res[0].id){
+       if(NAMESPACE){
+        for(var i in res){
+            if(res[i].name){
+                if(NAMESPACE == res[i].name){
+                        html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
+                        ns = res[i].id;
+                }else{
+                    html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
+                }   
+            }
+              
+            }
+       }else{
+        if(res[0].id){
             for(var i in res){
-            if(i == 0){
-                    html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
-                    ns = res[i].id;
+                if(i == 0){
+                        html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
+                        ns = res[i].id;
                 }else{
                     html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
                 }   
@@ -50,6 +64,8 @@
                 }   
             }
        }
+       }
+       
        $("#name_select").empty();
        $("#name_select").append(html);
 

@@ -11,35 +11,40 @@
 
             <!-- contents -->
             <input type="hidden" name="namespace" id="namespace1" />
+            <input type="hidden" id="mcis_id" />
+            <input type="hidden" id="mcis_name" />
             <main role="main" class="main">
                 <div class="page-header">
                     <div>
-                        <h1>Dashboard</h1>
+                        <h1>{{with .LoginInfo}}{{ .NameSpace }}{{end}} Dashboard</h1>
                     </div>
                 </div>
                 <div class="row mb-4">
-                    <div class="col-xl-3 col-lg-6">
+                    <div class="col-xl-6 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Service</h5>
-                                        <span class="h2 font-weight-bold mb-0">350,897</span>
+                                        <h5 class="card-title text-muted mb-0">MCIS / Server / Container</h5>
+                                        <span class="h2 font-weight-bold mb-0" id="dash_1"> </span>
                                     </div>
                                     <div class="col-auto" id="service_cnt">
-                                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                                        <i class="fas fa-chart-bar"></i>
+                                        <div class="icon icon-shape bg-success text-white rounded-rectangle shadow" id="run_cnt">
+                                        
+                                        </div>
+                                        <div class="icon icon-shape bg-secondary text-white rounded-rectangle shadow" id="stop_cnt">
+                                            
                                         </div>
                                     </div>
                                 </div>
                                 <p class="mt-3 mb-0 text-muted text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                    <span class="text-nowrap">Since last month</span>
+                                    <span class="text-success mr-2"> </span>
+                                    <span class="text-sm-left">Status of Infra Service</span>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-6">
+                    <!-- <div class="col-xl-3 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
                                 <div class="row">
@@ -59,17 +64,17 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xl-6 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">CLOUD</h5>
-                                        <span class="h2 font-weight-bold mb-0">3/6</span>
+                                        <h5 class="card-title text-muted mb-0">CP / Connection</h5>
+                                        <span class="h2 font-weight-bold mb-0" id="dash_2">6 /6</span>
                                     </div>
                                     <div class="col-auto" style="padding-right: 5px;padding-left: 5px;">
-                                        <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                        <div class="icon icon-shape bg-warning text-white rounded-cloud shadow">
                                         AWS
                                         </div>
                                     </div>
@@ -100,8 +105,8 @@
                                     </div>
                                 </div>
                                 <p class="mt-3 mb-0 text-muted text-sm">
-                                    <span class="text-warning mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
-                                    <span class="text-nowrap">Since yesterday</span>
+                                    <span class="text-warning mr-2"></span>
+                                    <span class="text-nowrap">Status of Cloud Provider & Connection</span>
                                 </p>
                             </div>
                         </div>
@@ -113,10 +118,10 @@
                             <div class="card-header border-0">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <h2>Service - MCIS</h2>
+                                        <h2>CP - Connection</h2>
                                     </div>
                                     <div class="col text-right">
-                                            <a href="/MCIS/reg" class="btn btn-sm btn-dark">MCIS REG</a>
+                                            <a href="/MCIS/reg" class="btn btn-sm btn-primary">New MCIS</a>
                                         </div>
                                 </div>
                             </div>
@@ -131,11 +136,12 @@
                                                     </span>
                                                 </div>
                                             </th>
-                                            <th scope="col">NAME(ID)</th>
-                                            <th scope="col">TIME</th>
-                                            <th scope="col">CNT(VM/CP)</th>
-                                            <th scope="col">Desc</th>
                                             <th scope="col">Status</th>
+                                            <th scope="col">Name (ID)</th>
+                                            <th scope="col">Total Infra</th>
+                                            <th scope="col"># of Server</th>
+                                            <th scope="col"># of Container</th>
+                                            <th scope="col">Description</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -188,15 +194,15 @@
                     </div>
                 </div>
                 <div class="row mt-4">
-                    <div class="col-xl-8">
+                    <div class="col-xl-12">
                         <div class="card shadow">
                             <div class="card-header border-0">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <h3 class="mb-0">Resource - VM</h3>
+                                        <h3 class="mb-0">Infra - Server</h3>
                                     </div>
                                     <div class="col text-right">
-                                        <a href="#!" class="btn btn-sm btn-dark">See all</a>
+                                        <a href="#!" class="btn btn-sm btn-dark" onclick="vm_reg();">Add Server</a>
                                     </div>
                                 </div>
                             </div>
@@ -211,13 +217,13 @@
                                                     </span>
                                                 </div>
                                             </th>
-                                            <th scope="col">NAME(ID)</th>
-                                            <th scope="col">TIME</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Namd(ID)</th>
                                             <th scope="col">CP</th>
                                             <th scope="col">Region</th>
-                                            <th scope="col">Desc</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Alert</th>
+                                            <th scope="col">OS Type</th>
+                                            <th scope="col">Public IP</th>
+                                            <th scope="col">Description</th>
                                             <th scope="col">Action</th>
                                       </tr>
                                     </thead>
@@ -228,7 +234,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4">
+                    <!-- <div class="col-xl-4">
                         <div class="card shadow">
                             <div class="card-header border-0">
                                 <div class="row align-items-center">
@@ -285,7 +291,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </main>
             <!-- //contents -->
