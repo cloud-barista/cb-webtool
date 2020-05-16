@@ -512,6 +512,7 @@ function short_desc(str){
                     +'<th scope="colgroup">Server ID</th>'
                     +'<td  colspan="3">'+data.id+'</td>'
                     +'</tr>'
+
                     +'<tr>'
                     +'<th scope="colgroup">CP VMID</th>'
                     +'<td  colspan="3">'+data.id+'</td>'
@@ -536,17 +537,17 @@ function short_desc(str){
                     +'<tr>'
                     +'<th scope="colgroup">Private IP1234</th>'
                     +'<td colspan="3">'+data.privateIP+'</td>'
-                    +'</tr>';
+                    +'</tr>'
 
                     +'<tr>'
                     +'<th scope="colgroup">Private DNS</th>'
                     +'<td colspan="3">'+data.privateDNS+'</td>'
-                    +'</tr>';
+                    +'</tr>'
 
                     +'<tr>'
                     +'<th scope="colgroup">Server Status</th>'
                     +'<td colspan="3">'+data.status+'</td>'
-                    +'</tr>';
+                    +'</tr>'
                   
                 $("#vm").empty();
                 $("#vm").append(html);
@@ -676,23 +677,23 @@ function show_vmSpecInfo(mcis_id, vm_id){
                            +'<th scope="colgroup" rowspan="5">Server Spec</th>'
                            +'<th scope="colgroup">vCPU</th>'
                            +'<td colspan="3">'+res[k].num_vCPU+'vcpu</td>'
-                           +'</tr>                  '
+                           +'</tr>'
                            +'<tr>'
                            +'<th scope="colgroup">Memory(Ghz)</th>'
                            +'<td  colspan="3">'+res[k].mem_GiB+'GiB</td>'
-                           +'</tr>                  '
+                           +'</tr>'
                            +'<tr>'
                            +'<th scope="colgroup">Disk (GB)</th>'
                            +'<td colspan="3">'+res[k].storage_GiB+'GiB</th>'
                            +'</tr>'   
                            +'<tr>'
                            +'<th scope="colgroup">Cost($) / Hour </th>'
-                           +'<td  colspan="3">'+res[k].cost_per_hour+'</td>'
-                           +'</tr>                   '
+                           +'<td colspan="3">'+res[k].cost_per_hour+'</td>'
+                           +'</tr>'
                            +'<tr>'
                            +'<th scope="colgroup">OsType</th>'
                            +'<td  colspan="3">'+res[k].os_type+'</td>'
-                           +'</tr>                  '
+                           +'</tr>'
                    }
                } 
                $("#vm_spec").empty();
@@ -724,8 +725,18 @@ function show_vmNetworkInfo(mcis_id, vm_id){
               console.log("Network Info : ",result)
                for(var k in res){
                    if(res[k].id == spec_id){
+                    var subnetInfoList = res[k].subnetInfoList
+                    var subnetArr = new Array()
+                    var str = ""
+                    if(subnetInfoList){
+                        for(var o in subnetInfoList){
+                             subnetArr.push(subnetInfoList[o].IPv4_CIDR)
+                        }
+                        str = subnetArr.join(",")
+                    }
+                    console.log("Subnet str : ",str)
                     html += '<tr>'
-                           +'<th scope="colgroup" rowspan="3">Network</th>'
+                           +'<th scope="colgroup" rowspan="5">Network</th>'
                            +'<th scope="colgroup">Network ID</th>'
                            +'<td colspan="3">'+res[k].cspVNetId+'</td>'
                            +'</tr>'
@@ -737,16 +748,6 @@ function show_vmNetworkInfo(mcis_id, vm_id){
                            +'<th scope="colgroup">Cidr Block</th>'
                            +'<td colspan="3">'+res[k].cidrBlock+'</th>'
                            +'</tr>'
-                           var subnetInfoList = res[k].subnetInfoList
-                           var subnetArr = new Array()
-                           var str = "";
-                           if(subnetInfoList){
-                               for(var o in subnetInfoList){
-                                    subnetArr.push(subnetInfoList[o].IPv4_CIDR)
-                               }
-                               str = subnetArr.join(",")
-                           }
-                           console.log("Subnet str : ",str)
                            +'<tr>'
                            +'<th scope="colgroup">Subnet</th>'
                            +'<td colspan="3">'+str+'</th>'
@@ -758,6 +759,7 @@ function show_vmNetworkInfo(mcis_id, vm_id){
                           
                    }
                } 
+               console.log("vnetwork html : ",html)
                $("#vm_vnetwork").empty();
                $("#vm_vnetwork").append(html);
 
