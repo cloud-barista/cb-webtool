@@ -95,8 +95,8 @@ function short_desc(str){
               +'<td>'
               +badge
               +'</td>'
-              +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')">'+mcis[i].name+'</a></td>'
-              +'<td>12:32:30</td>'
+              +'<td><a href="#!" onclick="show_vmList(\''+mcis[i].id+'\')">'+mcis[i].name+'</a></td>'
+              +'<td>Infra</td>'
               +'<td>'+vm_len+'</td>'
               +'<td>0</td>'
               +'<td>'+short_desc(mcis[i].description)+'</td>'
@@ -117,7 +117,7 @@ function short_desc(str){
         $("#table_1").empty();
         $("#table_1").append(html);
         console.log("VM LEN  :" ,vm_len);
-        show_card(mcis[0].id);
+       // show_card(mcis[0].id);
         
        if(vm_len > 0){
         show_vmList(mcis[0].id);
@@ -144,6 +144,8 @@ function short_desc(str){
             success:function(data){
                 var vm = data.vm
                 var mcis_name = data.name 
+                $("#mcis_id").val(mcis_id)
+                $("#mcis_name").val(mcis_name)
                 var html = "";
                 console.log("VM DATA : ",vm)
                 for(var i in vm){
@@ -160,10 +162,10 @@ function short_desc(str){
                         url: SpiderURL+"/connectionconfig",
                         async:false,
                         type:'GET',
-                        success : function(data){
+                        success : function(data2){
                             var badge = "";
                            
-                            res = data.connectionconfig
+                            res = data2.connectionconfig
                             for(var k in res){
                                 // console.log(" i value is : ",i)
                                 // console.log("outer config name : ",configName)
@@ -220,6 +222,7 @@ function short_desc(str){
                                 }
                                 $("#table_2").empty();
                                 $("#table_2").append(html);
+                                $("#vm_detail").hide();
                                 fnMove("table_2");
 
                         }
@@ -421,7 +424,7 @@ function short_desc(str){
     mcis_name = $("#mcis_name").val()
     var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
     console.log("vm reg url : ",url)
-    if(confirm("VM 추가 등록하시겠습니까?")){
+    if(confirm("Add Server?")){
         location.href = url;
     }
 
