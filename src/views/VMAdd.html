@@ -53,13 +53,13 @@ function show_pop(count) {
                             </colgroup>
                             <tbody>
                                 <tr>
-                                    <th>MCIS ID</th>
+                                    <th>MCIS ID<strong class="text-danger">*</strong></th>
                                     <td>
                                         <input class="form-control form-control-sm" type="text" name=""placeholder="Default input" id="mcis_id" value="{{ .McisID }}" readonly/>
                                     </td> 
                                 </tr>
                                 <tr>
-                                    <th>MCIS Name</th>
+                                    <th>MCIS Name<strong class="text-danger">*</strong></th>
                                     <td>
                                         <input class="form-control form-control-sm" type="text" name="" placeholder="MCIS Name input" id="mcis_name" value="{{ .McisName }}" readonly/>
                                     </td>
@@ -76,7 +76,7 @@ function show_pop(count) {
                     </div>
                     <div class="card-footer" id="target" style="display:none;">
                         <div class="d-flex justify-content-end align-items-center">
-                            <button type="button" id="vm_add" class="btn btn-dark btn-sm">ADD VM</button>
+                            <button type="button" id="vm_add" class="btn btn-dark btn-sm">Add Server</button>
                         </div>
                     </div>
                 </div>
@@ -250,11 +250,14 @@ function show_pop(count) {
 $(document).ready(function(){
     vm_cnt = 1;
     show_vm(vm_cnt)
-    $("#vm_add").click(function(){
+    $("[class^='vm_add'").click(function(){
         vm_cnt++;
         show_vm(vm_cnt);
+        $("#server_cnt").val(vm_cnt);
+        $("#provider_"+vm_cnt).focus();
         btn_click_cnt++;
     });
+
 
     
 })
@@ -279,9 +282,10 @@ function show_vm(vm_cnt){
                 +'<colgroup><col style="width: 20%"><col></colgroup>'
                 +'<tbody>'
                 +'<tr>'
+
                 +'<th>Provider</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="provider" id="provider" onchange="getConnectionInfo(this.value,'+vm_cnt+');">'
+                +'<select class="form-control form-control-sm" name="provider" id="provider_'+vm_cnt+'" onchange="getConnectionInfo(this.value,'+vm_cnt+');">'
                 +'<option selected>Select Provider</option>'
                 +'<option value="AWS">AWS</option>'
                 +'<option value="AZURE">AZURE</option>'
@@ -291,6 +295,7 @@ function show_vm(vm_cnt){
                 +'<option value="Openstack">Openstack</option>'
                 +'</select>'
                 +'</td></tr>'
+
                 +'<tr><th>ConfigName</th>'
                 +'<td>'
                 +'<select class="form-control form-control-sm" name="config_name" id="configName_'+vm_cnt+'"  >'
@@ -365,7 +370,11 @@ function show_vm(vm_cnt){
                 +'</tbody></table></div>'
                 +'<div class="card-footer">'
                 +'<div class="d-flex justify-content-end align-items-center">'
-                +'<button type="button" onclick="btn_click();" class="btn btn-dark btn-sm">Confirm</button></div></div></div>'
+
+                +'<button type="button"  class="add_vm btn btn-dark btn-sm">Add Server</button>'
+
+               +'<button type="button" onclick="btn_click();" class="btn btn-dark btn-sm">Confirm</button>'
+                +'</div></div></div>'
                 +'</form>'
 
                 $("#target").after(html);
