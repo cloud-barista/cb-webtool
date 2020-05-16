@@ -262,6 +262,25 @@ $(document).ready(function(){
     
 })
 
+function view_vm(){
+   
+   var str = ""
+   var arr = new Array();
+   $("[class^='vm_name']").each(function(k,v){
+       console.log("Key : ",k);
+       console.log("value : ",v); 
+       arr.push(this.value)
+   });
+   console.log("view name : ",arr);
+   str = arr.join(",")
+   console.log(str)
+   $("[class^='vm_view']").each(function(k,v){
+      this.value = str
+   });
+
+}
+
+
 function show_vm(vm_cnt){
         //vm_cnt++;
         console.log(vm_cnt);
@@ -410,6 +429,51 @@ function btn_click(){
         }
     })
     
+}
+
+function setObj(){
+    var clickCnt = btn_click_cnt
+    var ov = new Array();
+    var objArr = new Array()
+    var t = 0;
+
+    for(var i = 0; i < clickCnt;i++){
+        t++;
+        ov[i] = $("#form_"+t+"").serializeArray();
+    }
+    
+    for(var i in ov){
+        var obj  = {}
+        var security_arr = new Array()
+        for(var k in ov[i]){
+            
+            console.log(ov[i][k].name)
+            var n = ov[i][k].name
+            var v = ov[i][k].value
+            //res.vm_req[i].ov[i].name = ov[i].value
+            var sCnt = 0
+            //var obj = res.vm_req[i]
+            if(n == "security_group_ids"){
+               
+                security_arr.push(v)
+                sCnt++
+                obj[n] = security_arr
+            }else{
+                obj[n] =   v 
+            }
+        }
+        objArr[i] = obj;
+    }
+    var result = {
+        headers :{
+                 'Content-type': 'application/json',
+                },
+        vm_req : objArr,
+        vm_num : clickCnt
+    }
+    console.log("vm num : ",clickCnt);
+    console.log("Object result :",result)
+    return result
 }
 
 
