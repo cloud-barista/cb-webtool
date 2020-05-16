@@ -110,7 +110,7 @@ function short_desc(str){
              +badge
              +'</td>'
              +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')" >'+mcis[i].name+'</a></td>'
-             +'<td>infra</td>'
+             +'<td>'+vm_len+'</td>'
              +'<td>'+vm_len+'</td>'
              +'<td>0</td>'
              +'<td>'+short_desc(mcis[i].description)+'</td>'
