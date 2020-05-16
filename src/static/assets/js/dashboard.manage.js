@@ -391,7 +391,53 @@ function show_vmList(mcis_id){
 
     })
  }
+function getConnection(){
+    $.ajax({
+        url: SpiderURL+"/connectionconfig",
+        async:false,
+        type:'GET',
+        success : function(data2){
+            res = data2.connectionconfig
+            console.log("connection info : ",res);
+            var provider = "";
+            var aws_cnt = 0;
+            var gcp_cnt = 0;
+            var azure_cnt = 0;
+            var open_cnt = 0;
+            var cloudIt_cnt = 0;
+            var ali_cnt = 0;
+            var cp_cnt = 0;
+            var connection_cnt = 0;
+            for(var k in res){
+                provider = res[k].ProviderName 
+                connection_cnt++;
+                if(provider == "AWS"){
+                    aws_cnt++;
+                }
+                if(provider == "AZURE"){
+                    azure_cnt++;
+                }
+                if(provider == "Alibaba"){
+                    ali_cnt++;
+                }
+                if(provider == "GCP"){
+                    gcp_cnt++;
+                }
+                if(provider == "Cloudit"){
+                    cloudIt_cnt++;
+                }
+                if(provider == "Openstack"){
+                    open_cnt++;
+                }
+            }
+            cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
+            var str = cp_cnt+" / "+ connection_cnt;
+            $("#dash_2").text(str);
+        }
 
+    })
+    
+}
  function mcis_reg(){
     
     var cnt = 0;
