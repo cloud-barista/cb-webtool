@@ -216,7 +216,7 @@ function show_vmList(mcis_id){
                                    
                                    +'<td>'+provider+'</td>'
                                    +'<td>'+vm[i].region.Region+'</td>'
-                                   +'<td>'+vm[i].config_name+'</td>'
+                    
                                    +'<td>OS Type</td>'
                                    +'<td>'+vm[i].publicIP+'</td>'
                                    +'<td>'+short_desc(vm[i].description)+'</td>'
