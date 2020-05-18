@@ -21,7 +21,7 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>Service - MCIS</strong>
+                                    <strong>List of MCIS</strong>
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-sm btn-danger">Delete</button>
@@ -75,11 +75,12 @@
                                                     </span>
                                                 </div>
                                             </th>                                            
-                                            <th>NAME(ID)</th>
-                                            <th>TIME</th>
-                                            <th>CNT(VM/CP)</th>
-                                            <th>Desc</th>
                                             <th>Status</th>
+                                            <th>Name (ID)</th>
+                                            <th>Total infra</th>
+                                            <th># of Server</th>
+                                            <th># of Container</th>
+                                            <th>Description</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -93,7 +94,7 @@
                 </div>
                 <!-- table -->
                 <!-- card type -->
-                <div class="row mb-12" style="padding-top:20px;" id="card">
+                <!-- <div class="row mb-12" style="padding-top:20px;" id="card">
                     <div class="col-xl-12 col-lg-12">
                         <div class="card card-stats mb-12 mb-xl-0">
                             <div class="card-body">
@@ -115,19 +116,19 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- card type -->
                 <!-- table -->
                 <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>Resource - VM</strong>
+                                    <strong>List of Server</strong>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="vm_delete();">Delete</button>
                                     <button type="button" class="btn btn-sm btn-outline-dark">Modify</button>
-                                    <button type="button" class="btn btn-sm btn-dark">Regist</button>
+                                    <button type="button" class="btn btn-sm btn-dark" onclick="vm_reg()">New/Add Server</button>
                                 </div>
                             </div>
                         </div>
