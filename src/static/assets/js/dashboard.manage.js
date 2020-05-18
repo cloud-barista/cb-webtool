@@ -456,7 +456,7 @@ function getConnection(){
                 if(provider == "AWS"){
                     aws_cnt++;
                     var html = "";
-                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
+                    html += '<div class="icon icon-shape bg-success text-white rounded-circle shadow">'
                          +'AWS('
                          +aws_cnt
                          +')'
