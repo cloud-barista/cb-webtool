@@ -231,6 +231,15 @@ function show_vmList(mcis_id){
                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
                                    +'</div>'
                                    +'</button>'
+                                   +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                                   +'<i class="fas fa-desktop"></i>'
+                                  // +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop2">'
+                                      // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
+                                      // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
+                                      // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
+                                      // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
+                                  // +'</div>'
+                                   +'</button>'
                                    +'</td>'
                                    +'</tr>';
                                }
@@ -583,7 +592,7 @@ function getConnection(){
                 }
                 html += '<tr>'
                     +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                    +'<th scope="colgroup">cloud Provider</th>'
+                    +'<th scope="colgroup">Cloud Provider</th>'
                     +'<td colspan="3">'+provider+'</td>'
                     +'</tr>'
                     +'<tr>'
