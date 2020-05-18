@@ -408,26 +408,64 @@ function getConnection(){
             var ali_cnt = 0;
             var cp_cnt = 0;
             var connection_cnt = 0;
+           
             for(var k in res){
                 provider = res[k].ProviderName 
                 connection_cnt++;
                 if(provider == "AWS"){
                     aws_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
+                         +'AWS'
+                         +'</div>';
+                         $("#aws").empty();
+                         $("#aws").append(html);
                 }
                 if(provider == "AZURE"){
+
                     azure_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
+                         +'AZure'
+                         +'</div>';
+                         $("#az").empty();
+                         $("#az").append(html);
                 }
                 if(provider == "Alibaba"){
                     ali_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow">'
+                         +'Ali'
+                         +'</div>';
+                         $("#az").empty();
+                         $("#az").append(html);
                 }
                 if(provider == "GCP"){
                     gcp_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow">'
+                         +'GCP'
+                         +'</div>';
+                         $("#gcp").empty();
+                         $("#gcp").append(html);
                 }
                 if(provider == "Cloudit"){
                     cloudIt_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
+                         +'CI'
+                         +'</div>';
+                         $("#ci").empty();
+                         $("#ci").append(html);
                 }
                 if(provider == "Openstack"){
                     open_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow">'
+                         +'OS'
+                         +'</div>';
+                         $("#os").empty();
+                         $("#os").append(html);
                 }
             }
             cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
