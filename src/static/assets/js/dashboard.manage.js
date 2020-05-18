@@ -572,8 +572,8 @@ function getConnection(){
             url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
-            success : function(data){
-                res = data.connectionconfig
+            success : function(data2){
+                res = data2.connectionconfig
                 var provider = "";
                 for(var k in res){
                     if(res[k].ConfigName == data.config_name){
