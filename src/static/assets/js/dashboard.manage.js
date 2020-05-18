@@ -365,7 +365,7 @@ function show_vmList(mcis_id){
             mcis_id = $(this).val();        
         }
         if(cnt < 1 ){
-            alert("삭제할 대상을 선택해 주세요.");
+            alert("Select Delete");
             return;
         }
 
@@ -373,7 +373,7 @@ function show_vmList(mcis_id){
            console.log("mcis_id ; ",mcis_id)
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id
             
-            if(confirm("삭제하시겠습니까?")){
+            if(confirm("Delete?")){
              axios.delete(url).then(result=>{
                  var data = result.data
                  if(result.status == 200){
@@ -385,7 +385,7 @@ function show_vmList(mcis_id){
         }
 
         if(cnt >1){
-            alert("한개씩만 삭제 가능합니다.")
+            alert("It Only one Delete")
             return;
         }
 
@@ -489,7 +489,7 @@ function getConnection(){
 
         }
         if(cnt < 1 ){
-            alert("등록할 대상을 선택해 주세요.");
+            alert("Select Regist");
             return;
         }
 
@@ -497,13 +497,13 @@ function getConnection(){
            console.log("mcis_id ; ",mcis_id)
             var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
             
-            if(confirm("등록하시겠습니까?")){
+            if(confirm("Register?")){
                 location.href = url;
             }
         }
 
         if(cnt >1){
-            alert("한개씩만 등록 가능합니다.")
+            alert("Only one Regist")
             return;
         }
 
@@ -525,7 +525,7 @@ function getConnection(){
             mcis_id = idArr[1]    
         }
         if(cnt < 1 ){
-            alert("삭제할 대상을 선택해 주세요.");
+            alert("Select Delete.");
             return;
         }
 
@@ -533,7 +533,7 @@ function getConnection(){
            console.log("mcis_id ; ",vm_id)
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
             
-            if(confirm("삭제하시겠습니까?")){
+            if(confirm("Delete?")){
              axios.delete(url).then(result=>{
                  var data = result.data
                  if(result.status == 200){
@@ -545,7 +545,7 @@ function getConnection(){
         }
 
         if(cnt >1){
-            alert("한개씩만 삭제 가능합니다.")
+            alert("Only one Delete")
             return;
         }
 
