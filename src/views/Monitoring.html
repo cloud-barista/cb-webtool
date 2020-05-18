@@ -246,7 +246,7 @@
          $("#network").empty()
           var arr = ["cpu","memory","disk","network"];
           var periodType = "m";
-          var duration = "5m"
+          var duration = "1h"
           var statisticsCriteria = "last"
 
           for (var i in arr){
@@ -258,8 +258,8 @@
         var color = "";
         var metric_size ="";
         
-        var mcis_id = "7e3130a0-a811-47b8-a82c-b155267edef5"
-        var vm_id = "i-054b4593e9b811a86"
+        //var mcis_id = "7e3130a0-a811-47b8-a82c-b155267edef5"
+        //var vm_id = "i-054b4593e9b811a86"
         var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
         console.log("Request URL : ",url)
         var html = "";
@@ -308,7 +308,7 @@
                          +'</div>'
                          +'</div>'
                          +'<p class="mt-3 mb-0 text-muted text-sm">'
-                         +'<span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>'
+                         +'<span class="text-danger mr-2"> 3.48%</span>'
                          +'<span class="text-nowrap">'+metricObject[0].time+'</span>'
                          +'</p>'
                          +'</div>'

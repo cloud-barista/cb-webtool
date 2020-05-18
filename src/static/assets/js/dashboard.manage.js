@@ -109,9 +109,10 @@ function short_desc(str){
              +'<td>'
              +badge
              +'</td>'
-             +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')" >'+mcis[i].name+'</a></td>'
+             +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\',\''+mcis[i].name+'\')" >'+mcis[i].name+'</a></td>'
              +'<td>'+vm_len+'</td>'
              +'<td>'+vm_len+'</td>'
+            
              +'<td>0</td>'
              +'<td>'+short_desc(mcis[i].description)+'</td>'
              +'<td>'
@@ -129,14 +130,16 @@ function short_desc(str){
        }
        console.log("server_cnt:",server_cnt)
        console.log("mcis_cnt:",mcis_cnt)
-       var new_str = mcis_cnt+" / "+server_cnt+" / 0";
+       var new_str = mcis_cnt+" / "+server_cnt;
        $("#dash_1").text(new_str);
        $("#run_cnt").text(run_cnt);
        $("#stop_cnt").text(stop_cnt);
 
        $("#table_1").empty();
        $("#table_1").append(html);
-       show_card(mcis[0].id);
+    //    var infra_str = "Infra - Server (MCIS : "+mcis[0].name+")"
+    //    $("#infra_mcis").text(infra_str)
+       show_card(mcis[0].id,mcis[0].name);
       if(vm_len > 0){
        show_vmList(mcis[0].id);
       }else{
@@ -188,7 +191,13 @@ function show_vmList(mcis_id){
                                // console.log("Inner ConfigName : ",res[k].ConfigName)
                                if(res[k].ConfigName == vm[i].config_name){
                                    var provider = res[k].ProviderName
-                                   
+                                   var kv_list = vm[i].cspViewVmDetail.KeyValueList
+                                   var archi = ""
+                                   for(var p in kv_list){
+                                       if(kv_list[p].Key == "Architecture"){
+                                        archi = kv_list[p].Value 
+                                       }
+                                   }
                                    
                                    if(status == "running"){
                                        badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
@@ -217,7 +226,8 @@ function show_vmList(mcis_id){
                                    +'<td>'+provider+'</td>'
                                    +'<td>'+vm[i].region.Region+'</td>'
                     
-                                   +'<td>OS Type</td>'
+                                  
+                                   +'<td>'+archi+'</td>'
                                    +'<td>'+vm[i].publicIP+'</td>'
                                    +'<td>'+short_desc(vm[i].description)+'</td>'
                                    
@@ -285,9 +295,11 @@ function agentSetup(mcis_id,vm_id,public_ip){
     
 }
  
- function show_card(mcis_id){
+ function show_card(mcis_id,mcis_name){
      var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
      var html = "";
+     var infra_str = "Infra - Server (MCIS : "+mcis_name+")"
+     $("#infra_mcis").text(infra_str)
     axios.get(url).then(result=>{
         var data = result.data
         console.log("show card data : ",result)
@@ -444,8 +456,10 @@ function getConnection(){
                 if(provider == "AWS"){
                     aws_cnt++;
                     var html = "";
-                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
-                         +'AWS'
+                    html += '<div class="icon icon-shape bg-success text-white rounded-circle shadow">'
+                         +'AWS('
+                         +aws_cnt
+                         +')'
                          +'</div>';
                          $("#aws").empty();
                          $("#aws").append(html);
@@ -455,7 +469,9 @@ function getConnection(){
                     azure_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
-                         +'AZure'
+                         +'AZ('
+                         +azure_cnt
+                         +')'
                          +'</div>';
                          $("#az").empty();
                          $("#az").append(html);
@@ -464,7 +480,9 @@ function getConnection(){
                     ali_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow">'
-                         +'Ali'
+                         +'Ali('
+                         +ali_cnt
+                         +')'
                          +'</div>';
                          $("#az").empty();
                          $("#az").append(html);
@@ -473,7 +491,9 @@ function getConnection(){
                     gcp_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow">'
-                         +'GCP'
+                         +'GCP('
+                         +gcp_cnt
+                         +')'
                          +'</div>';
                          $("#gcp").empty();
                          $("#gcp").append(html);
@@ -482,7 +502,9 @@ function getConnection(){
                     cloudIt_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
-                         +'CI'
+                         +'CI('
+                         +cloudIt_cnt
+                         +')'
                          +'</div>';
                          $("#ci").empty();
                          $("#ci").append(html);
@@ -491,7 +513,9 @@ function getConnection(){
                     open_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow">'
-                         +'OS'
+                         +'OS('
+                         +open_cnt
+                         +')'
                          +'</div>';
                          $("#os").empty();
                          $("#os").append(html);
@@ -612,13 +636,15 @@ function getConnection(){
                 }
                 html += '<tr>'
                     +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
+                    +'<th scope="colgroup">Server ID</th>'
+                    +'<td  colspan="3">'+data.id+'</td>'
+                    +'</tr>'
+                    
+                    +'<tr>'
                     +'<th scope="colgroup">Cloud Provider</th>'
                     +'<td colspan="3">'+provider+'</td>'
                     +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">VM ID</th>'
-                    +'<td  colspan="3">'+data.id+'</td>'
-                    +'</tr>'
+                    
                     +'<tr>'
                     +'<th scope="colgroup">Region</th>'
                     +'<td  colspan="3">'+data.region.Region+'</td>'
@@ -685,12 +711,12 @@ function getConnection(){
                }
                html += '<tr>'
                    +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
+                   +'<th scope="colgroup">Server ID</th>'
+                   +'<td  colspan="3">'+data.id+'</td>'
+                   +'<tr>'
                    +'<th scope="colgroup">cloud Provider</th>'
                    +'<td colspan="3">'+provider+'</td>'
                    +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td  colspan="3">'+data.id+'</td>'
                    +'</tr>'
                    +'<tr>'
                    +'<th scope="colgroup">Region</th>'
@@ -712,7 +738,7 @@ function getConnection(){
                    +'<tbody>'
                    +'<tr>'
                    +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-                   +'<th scope="colgroup">VM ID</th>'
+                   +'<th scope="colgroup">Sever ID</th>'
                    +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
                    +'</tr>'
                    +'<tr>'
