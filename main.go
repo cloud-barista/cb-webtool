@@ -82,7 +82,7 @@ func main() {
 
 	// Monitoring Control
 	e.GET("/monitoring", controller.MornitoringListForm)
-	e.GET("/monitoring/install/agent", controller.AgentRegForm)
+	e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 
 	// MCIS
 	e.GET("/MCIS/reg", controller.McisRegForm)

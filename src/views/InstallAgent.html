@@ -40,25 +40,19 @@
                                 <tr>
                                     <th>MCID ID<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <select class="form-control form-control-sm" name="mcis_id" id="mcis_id">
-                                            <option selected>Select Cloud Provider</option>
-                                            
-                                        </select>
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="mcis_id" id="mcis_id" value="{{ .mcis_id }}" readonly />
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>VM ID<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <select class="form-control form-control-sm" name="vm_id" id="vm_id">
-                                            <option selected>Select MCIS</option>
-                                            
-                                        </select>
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="vm_id" id="vm_id" value="{{ .vm_id }}" readonly />
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Public IP<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="public_ip" id="public_ip">
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="public_ip" id="public_ip" value="{{ .public_ip }}" readonly/>
                                     </td>
                                 </tr>
                                 <tr>

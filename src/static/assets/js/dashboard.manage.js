@@ -231,7 +231,7 @@ function show_vmList(mcis_id){
                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
                                    +'</div>'
                                    +'</button>'
-                                   +'<button type="button" class="btn btn-icon "  aria-haspopup="true" aria-expanded="false">'
+                                   +'<button type="button" class="btn btn-icon"  aria-haspopup="true" aria-expanded="false" onclick="agentSetup(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].publicIP+'\')">'
                                    +'<i class="fas fa-desktop"></i>'
                                   // +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop2">'
                                       // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
@@ -263,6 +263,26 @@ function show_vmList(mcis_id){
    }
            
    
+}
+
+function agentSetup(mcis_id,vm_id,public_ip){
+    var first = true;
+    if(first){
+        alert("Not Install Agent on thie Server");
+        if(confirm("Install Agent?")){
+            var reg_url = "/monitoring/install/agent"
+            var query_param = "/"+mcis_id+"/"+vm_id+"/"+public_ip;
+            location.href = reg_url+query_param;
+        }else{
+            return;
+        }
+       
+    }else{
+        showMonitoring(mcis_id,vm_id);
+    }
+    
+
+    
 }
  
  function show_card(mcis_id){

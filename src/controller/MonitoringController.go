@@ -24,12 +24,19 @@ func MornitoringListForm(c echo.Context) error {
 
 func AgentRegForm(c echo.Context) error {
 	comURL := GetCommonURL()
+	mcis_id := c.Param("mcis_id")
+	vm_id := c.Param("vm_id")
+	public_ip := c.Param("public_ip")
+
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "InstallAgent.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
 			"comURL":    comURL,
+			"mcis_id":   mcis_id,
+			"vm_id":     vm_id,
+			"public_ip": public_ip,
 		})
 
 	}
