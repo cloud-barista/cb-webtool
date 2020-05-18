@@ -81,7 +81,7 @@ function show_pop(count) {
                     </div>
                     <div class="card-footer" id="target">
                         <div class="d-flex justify-content-end align-items-center">
-                            <button type="button" id="vm_add" class="vm_add btn btn-dark btn-sm">ADD Server</button>
+                            <button type="button" id="vm_add" class="vm_add btn btn-dark btn-sm">Add Server Template</button>
                         </div>
                     </div>
                 </div>
@@ -392,10 +392,11 @@ function show_vm(vm_cnt){
                 +'</tbody></table></div>'
                 +'<div class="card-footer">'
                 +'<div class="d-flex justify-content-end align-items-center">'
-                +'<button type="button" class="add_vm btn btn-dark btn-sm">Add Server</button>'
-                
+                //+'<button type="button" class="add_vm btn btn-dark btn-sm">Add Server</button>'
+                +'추가할 서버 : '
+                +'&nbsp;'
                 +'<input class="vm_view " type="text" id="vm_view_'+vm_cnt+'" name="" >'
-
+                +'&nbsp;'
                 +'<button type="button" onclick="btn_click();" class="btn btn-dark btn-sm">Confirm</button>'
                 +'</div></div></div>'
                 +'</form>'

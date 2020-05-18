@@ -529,14 +529,16 @@ function show_vmDetailList(mcis_id, vm_id){
                html += '<tr>'
                    +'<th scope="colgroup"rowspan="10">Infra - Server</th>'
 
-                   +'<th scope="colgroup">Cloud Provider</th>'
-                   +'<td colspan="3">'+provider+'</td>'
+                   +'<th scope="colgroup">Server ID</th>'
+                   +'<td  colspan="3">'+data.id+'</td>'
                    +'</tr>'
 
                    +'<tr>'
 
-                   +'<th scope="colgroup">Server ID</th>'
-                   +'<td  colspan="3">'+data.id+'</td>'
+                   +'<th scope="colgroup">Cloud Provider</th>'
+                   +'<td colspan="3">'+provider+'</td>'
+
+                   
                    +'</tr>'
 
                    +'<tr>'

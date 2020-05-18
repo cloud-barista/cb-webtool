@@ -109,9 +109,10 @@ function short_desc(str){
              +'<td>'
              +badge
              +'</td>'
-             +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')" >'+mcis[i].name+'</a></td>'
+             +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\',\''+mcis[i].name+'\')" >'+mcis[i].name+'</a></td>'
              +'<td>'+vm_len+'</td>'
              +'<td>'+vm_len+'</td>'
+            
              +'<td>0</td>'
              +'<td>'+short_desc(mcis[i].description)+'</td>'
              +'<td>'
@@ -129,14 +130,16 @@ function short_desc(str){
        }
        console.log("server_cnt:",server_cnt)
        console.log("mcis_cnt:",mcis_cnt)
-       var new_str = mcis_cnt+" / "+server_cnt+" / 0";
+       var new_str = mcis_cnt+" / "+server_cnt;
        $("#dash_1").text(new_str);
        $("#run_cnt").text(run_cnt);
        $("#stop_cnt").text(stop_cnt);
 
        $("#table_1").empty();
        $("#table_1").append(html);
-       show_card(mcis[0].id);
+    //    var infra_str = "Infra - Server (MCIS : "+mcis[0].name+")"
+    //    $("#infra_mcis").text(infra_str)
+       show_card(mcis[0].id,mcis[0].name);
       if(vm_len > 0){
        show_vmList(mcis[0].id);
       }else{
@@ -285,9 +288,11 @@ function agentSetup(mcis_id,vm_id,public_ip){
     
 }
  
- function show_card(mcis_id){
+ function show_card(mcis_id,mcis_name){
      var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
      var html = "";
+     var infra_str = "Infra - Server (MCIS : "+mcis_name+")"
+     $("#infra_mcis").text(infra_str)
     axios.get(url).then(result=>{
         var data = result.data
         console.log("show card data : ",result)
@@ -612,13 +617,15 @@ function getConnection(){
                 }
                 html += '<tr>'
                     +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
+                    +'<th scope="colgroup">Server ID</th>'
+                    +'<td  colspan="3">'+data.id+'</td>'
+                    +'</tr>'
+                    
+                    +'<tr>'
                     +'<th scope="colgroup">Cloud Provider</th>'
                     +'<td colspan="3">'+provider+'</td>'
                     +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">VM ID</th>'
-                    +'<td  colspan="3">'+data.id+'</td>'
-                    +'</tr>'
+                    
                     +'<tr>'
                     +'<th scope="colgroup">Region</th>'
                     +'<td  colspan="3">'+data.region.Region+'</td>'
@@ -685,12 +692,12 @@ function getConnection(){
                }
                html += '<tr>'
                    +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
+                   +'<th scope="colgroup">Server ID</th>'
+                   +'<td  colspan="3">'+data.id+'</td>'
+                   +'<tr>'
                    +'<th scope="colgroup">cloud Provider</th>'
                    +'<td colspan="3">'+provider+'</td>'
                    +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM ID</th>'
-                   +'<td  colspan="3">'+data.id+'</td>'
                    +'</tr>'
                    +'<tr>'
                    +'<th scope="colgroup">Region</th>'
@@ -712,7 +719,7 @@ function getConnection(){
                    +'<tbody>'
                    +'<tr>'
                    +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-                   +'<th scope="colgroup">VM ID</th>'
+                   +'<th scope="colgroup">Sever ID</th>'
                    +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
                    +'</tr>'
                    +'<tr>'

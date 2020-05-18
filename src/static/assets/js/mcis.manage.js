@@ -506,15 +506,17 @@ function short_desc(str){
                 html += '<tr>'
                     +'<th scope="colgroup"rowspan="10">Infra - Server</th>'
 
+                    +'<th scope="colgroup">Server ID</th>'
+                    +'<td  colspan="3">'+data.id+'</td>'
+                    +'</tr>'
+                    
                     +'<th scope="colgroup">Cloud Provider</th>'
                     +'<td colspan="3">'+provider+'</td>'
                     +'</tr>'
 
+
                     +'<tr>'
 
-                    +'<th scope="colgroup">Server ID</th>'
-                    +'<td  colspan="3">'+data.id+'</td>'
-                    +'</tr>'
 
                     +'<tr>'
                     +'<th scope="colgroup">CP VMID</th>'
