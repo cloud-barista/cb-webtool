@@ -22,7 +22,7 @@
                 <div class="row mb-4">
                     <div class="col-xl-6 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
-                            <div class="card-body">
+                            <div class="card-body" style="height: 120px;">
                                 <div class="row">
                                     <div class="col">
                                         <h5 class="card-title text-muted mb-0">MCIS / Server / Container</h5>
@@ -37,9 +37,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="mt-3 mb-0 text-muted text-sm">
+                                <p class="mt-3 mb-0 text-muted text-sm-right">
                                     <span class="text-success mr-2"> </span>
-                                    <span class="text-sm-left">Status of Infra Service</span>
+                                    <span class="text-sm">Status of Infra Service</span>
                                 </p>
                             </div>
                         </div>
@@ -67,44 +67,32 @@
                     </div> -->
                     <div class="col-xl-6 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
-                            <div class="card-body">
+                            <div class="card-body" style="height: 120px;">
                                 <div class="row">
                                     <div class="col">
                                         <h5 class="card-title text-muted mb-0">CP / Connection</h5>
                                         <span class="h2 font-weight-bold mb-0" id="dash_2">6 /6</span>
                                     </div>
-                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;">
-                                        <div class="icon icon-shape bg-warning text-white rounded-cloud shadow">
-                                        AWS
-                                        </div>
+                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;" id="aws">
+                                        
                                     </div>
-                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;">
-                                        <div class="icon icon-shape bg-success text-white rounded-circle shadow">
-                                        AZURE
-                                        </div>
+                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;" id="az">
+                                        
                                     </div>
-                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;">
-                                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
-                                        GCP
-                                        </div>
+                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;" id="gcp">
+                                      
                                     </div>
-                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;">
-                                        <div class="icon icon-shape bg-secondary text-white rounded-circle shadow">
-                                        AB
-                                        </div>
+                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;" id="ab">
+                                       
                                     </div>
-                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;">
-                                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                                        OS
-                                        </div>
+                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;" id="os">
+                                        
                                     </div>
-                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;">
-                                        <div class="icon icon-shape bg-dark text-white rounded-circle shadow">
-                                        CI
-                                        </div>
+                                    <div class="col-auto" style="padding-right: 5px;padding-left: 5px;" id="ci">
+                                       
                                     </div>
                                 </div>
-                                <p class="mt-3 mb-0 text-muted text-sm">
+                                <p class="mt-3 mb-0 text-muted text-sm-right">
                                     <span class="text-warning mr-2"></span>
                                     <span class="text-nowrap">Status of Cloud Provider & Connection</span>
                                 </p>
@@ -118,7 +106,7 @@
                             <div class="card-header border-0">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <h2>CP - Connection</h2>
+                                        <h2>Service MCIS</h2>
                                     </div>
                                     <div class="col text-right">
                                             <a href="/MCIS/reg" class="btn btn-sm btn-primary">New MCIS</a>
@@ -317,5 +305,7 @@
                 var url = CommonURL+"/ns/"+nsid+"/mcis";
                 console.log("Dashboard url :",url);
                 show_mcis(url);
+
+                getConnection();
             })
     </script>

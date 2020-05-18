@@ -110,7 +110,7 @@ function short_desc(str){
              +badge
              +'</td>'
              +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\')" >'+mcis[i].name+'</a></td>'
-             +'<td>infra</td>'
+             +'<td>'+vm_len+'</td>'
              +'<td>'+vm_len+'</td>'
              +'<td>0</td>'
              +'<td>'+short_desc(mcis[i].description)+'</td>'
@@ -365,7 +365,7 @@ function show_vmList(mcis_id){
             mcis_id = $(this).val();        
         }
         if(cnt < 1 ){
-            alert("삭제할 대상을 선택해 주세요.");
+            alert("Select Delete");
             return;
         }
 
@@ -373,7 +373,7 @@ function show_vmList(mcis_id){
            console.log("mcis_id ; ",mcis_id)
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id
             
-            if(confirm("삭제하시겠습니까?")){
+            if(confirm("Delete?")){
              axios.delete(url).then(result=>{
                  var data = result.data
                  if(result.status == 200){
@@ -385,13 +385,97 @@ function show_vmList(mcis_id){
         }
 
         if(cnt >1){
-            alert("한개씩만 삭제 가능합니다.")
+            alert("It Only one Delete")
             return;
         }
 
     })
  }
+function getConnection(){
+    $.ajax({
+        url: SpiderURL+"/connectionconfig",
+        async:false,
+        type:'GET',
+        success : function(data2){
+            res = data2.connectionconfig
+            console.log("connection info : ",res);
+            var provider = "";
+            var aws_cnt = 0;
+            var gcp_cnt = 0;
+            var azure_cnt = 0;
+            var open_cnt = 0;
+            var cloudIt_cnt = 0;
+            var ali_cnt = 0;
+            var cp_cnt = 0;
+            var connection_cnt = 0;
+           
+            for(var k in res){
+                provider = res[k].ProviderName 
+                connection_cnt++;
+                if(provider == "AWS"){
+                    aws_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
+                         +'AWS'
+                         +'</div>';
+                         $("#aws").empty();
+                         $("#aws").append(html);
+                }
+                if(provider == "AZURE"){
 
+                    azure_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
+                         +'AZure'
+                         +'</div>';
+                         $("#az").empty();
+                         $("#az").append(html);
+                }
+                if(provider == "Alibaba"){
+                    ali_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow">'
+                         +'Ali'
+                         +'</div>';
+                         $("#az").empty();
+                         $("#az").append(html);
+                }
+                if(provider == "GCP"){
+                    gcp_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow">'
+                         +'GCP'
+                         +'</div>';
+                         $("#gcp").empty();
+                         $("#gcp").append(html);
+                }
+                if(provider == "Cloudit"){
+                    cloudIt_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
+                         +'CI'
+                         +'</div>';
+                         $("#ci").empty();
+                         $("#ci").append(html);
+                }
+                if(provider == "Openstack"){
+                    open_cnt++;
+                    var html = "";
+                    html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow">'
+                         +'OS'
+                         +'</div>';
+                         $("#os").empty();
+                         $("#os").append(html);
+                }
+            }
+            cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
+            var str = cp_cnt+" / "+ connection_cnt;
+            $("#dash_2").text(str);
+        }
+
+    })
+    
+}
  function mcis_reg(){
     
     var cnt = 0;
@@ -405,7 +489,7 @@ function show_vmList(mcis_id){
 
         }
         if(cnt < 1 ){
-            alert("등록할 대상을 선택해 주세요.");
+            alert("Select Regist");
             return;
         }
 
@@ -413,13 +497,13 @@ function show_vmList(mcis_id){
            console.log("mcis_id ; ",mcis_id)
             var url = "/MCIS/reg/"+mcis_id+"/"+mcis_name
             
-            if(confirm("등록하시겠습니까?")){
+            if(confirm("Register?")){
                 location.href = url;
             }
         }
 
         if(cnt >1){
-            alert("한개씩만 등록 가능합니다.")
+            alert("Only one Regist")
             return;
         }
 
@@ -441,7 +525,7 @@ function show_vmList(mcis_id){
             mcis_id = idArr[1]    
         }
         if(cnt < 1 ){
-            alert("삭제할 대상을 선택해 주세요.");
+            alert("Select Delete.");
             return;
         }
 
@@ -449,7 +533,7 @@ function show_vmList(mcis_id){
            console.log("mcis_id ; ",vm_id)
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
             
-            if(confirm("삭제하시겠습니까?")){
+            if(confirm("Delete?")){
              axios.delete(url).then(result=>{
                  var data = result.data
                  if(result.status == 200){
@@ -461,7 +545,7 @@ function show_vmList(mcis_id){
         }
 
         if(cnt >1){
-            alert("한개씩만 삭제 가능합니다.")
+            alert("Only one Delete")
             return;
         }
 

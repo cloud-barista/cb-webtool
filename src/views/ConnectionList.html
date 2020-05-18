@@ -9,20 +9,20 @@
                 <main role="main" class="main">
                     <div class="page-header">
                         <div>
-                            <h1>Connection List</h1>
+                            <h1>Cloud Connections </h1>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>Managed Connection
+                                    <strong>List of Connection
                                     </strong>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-sm btn-danger" id="sel_del">삭제</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="sel_del">Delete</button>
                                     <!-- <button type="button" class="btn btn-sm btn-outline-dark">수정</button> -->
-                                    <button type="button" onclick="location.href='/Connection/reg';" class="btn btn-sm btn-dark">등록</button>
+                                    <button type="button" onclick="location.href='/Connection/reg';" class="btn btn-sm btn-dark">Regist</button>
                                 </div>
                             </div>
                         </div>
@@ -44,10 +44,10 @@
                                 </div> -->
                                 <div>
                                     <div class="input-group input-group-sm">
-                                        <div class="input-group-prepend">
+                                        <!-- <div class="input-group-prepend">
                                             <span class="input-group-text" id="inputGroup-sizing-default">search</span>
                                         </div>
-                                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"> -->
                                     </div>
                                 </div>
                             </div>
@@ -73,11 +73,11 @@
                                                     </span>
                                                 </div>
                                             </th>
-                                            <th>ConfigName</th>
-                                            <th>ProviderName</th>
-                                            <th>DriverName</th>
-                                            <th>Credentialname</th>
-                                            <th>RegionName</th>
+                                            <th>Cloud Connection</th>
+                                            <th>Cloud Provider</th>
+                                            <th>Driver</th>
+                                            <th>Credential</th>
+                                            <th>Region</th>
 
                                         
                                         </tr>
@@ -189,7 +189,7 @@ $(document).ready(function(){
             $("#con_table").append(html);
         }else{
             $("#con_table").empty();
-            $("#con_table").append("<td colspan='6'>등록된 데이터가 없습니다.</td>");
+            $("#con_table").append("<td colspan='6'>Does not Exist.</td>");
         }
 
     })
@@ -205,18 +205,18 @@ $(document).ready(function(){
 			}
 		});
 		if(cnt < 1 ){
-            alert("삭제할 대상을 선택해 주세요.");
+            alert("Select Delete");
             return;
         }
         if(cnt == 1){
            
             var u = SpiderURL+"/connectionconfig/"+id
            
-            if(confirm("삭제하시겠습니까?")){
+            if(confirm("Delete it?")){
              axios.delete(u).then(result=>{
                  var data = result.data
                  if(result.status == 200){
-                     alert("삭제되었습니다.")
+                     alert("Delete.")
                      location.reload()
                  }
              })
