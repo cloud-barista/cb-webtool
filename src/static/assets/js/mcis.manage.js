@@ -173,7 +173,14 @@ function short_desc(str){
                                 if(res[k].ConfigName == vm[i].config_name){
                                     var provider = res[k].ProviderName
                                     console.log("Provider : ",provider);
-                                    
+                                    var kv_list = vm[i].cspViewVmDetail.KeyValueList
+                                    var archi = ""
+                                    for(var p in kv_list){
+                                        if(kv_list[p].Key == "Architecture"){
+                                         archi = kv_list[p].Value 
+                                        }
+                                    }
+
                                     if(status == "running"){
                                         badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
                                     }else if(status == "suspended"){
@@ -201,7 +208,7 @@ function short_desc(str){
                                     +'<td>'+provider+'</td>'
                                     +'<td>'+vm[i].region.Region+'</td>'
                                     +'<td>'+vm[i].config_name+'</td>'
-                                    +'<td>OS Type</td>'
+                                    +'<td>'+archi+'</td>'
                                     +'<td>'+vm[i].publicIP+'</td>'
                                     +'<td>'+short_desc(vm[i].description)+'</td>'
                                     +'<td>'

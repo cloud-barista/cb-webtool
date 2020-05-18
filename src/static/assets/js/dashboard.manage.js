@@ -191,7 +191,13 @@ function show_vmList(mcis_id){
                                // console.log("Inner ConfigName : ",res[k].ConfigName)
                                if(res[k].ConfigName == vm[i].config_name){
                                    var provider = res[k].ProviderName
-                                   
+                                   var kv_list = vm[i].cspViewVmDetail.KeyValueList
+                                   var archi = ""
+                                   for(var p in kv_list){
+                                       if(kv_list[p].Key == "Architecture"){
+                                        archi = kv_list[p].Value 
+                                       }
+                                   }
                                    
                                    if(status == "running"){
                                        badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
@@ -220,7 +226,8 @@ function show_vmList(mcis_id){
                                    +'<td>'+provider+'</td>'
                                    +'<td>'+vm[i].region.Region+'</td>'
                     
-                                   +'<td>OS Type</td>'
+                                  
+                                   +'<td>'+archi+'</td>'
                                    +'<td>'+vm[i].publicIP+'</td>'
                                    +'<td>'+short_desc(vm[i].description)+'</td>'
                                    
@@ -450,7 +457,9 @@ function getConnection(){
                     aws_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
-                         +'AWS'
+                         +'AWS('
+                         +aws_cnt
+                         +')'
                          +'</div>';
                          $("#aws").empty();
                          $("#aws").append(html);
@@ -460,7 +469,9 @@ function getConnection(){
                     azure_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
-                         +'AZure'
+                         +'AZ('
+                         +azure_cnt
+                         +')'
                          +'</div>';
                          $("#az").empty();
                          $("#az").append(html);
@@ -469,7 +480,9 @@ function getConnection(){
                     ali_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow">'
-                         +'Ali'
+                         +'Ali('
+                         +ali_cnt
+                         +')'
                          +'</div>';
                          $("#az").empty();
                          $("#az").append(html);
@@ -478,7 +491,9 @@ function getConnection(){
                     gcp_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow">'
-                         +'GCP'
+                         +'GCP('
+                         +gcp_cnt
+                         +')'
                          +'</div>';
                          $("#gcp").empty();
                          $("#gcp").append(html);
@@ -487,7 +502,9 @@ function getConnection(){
                     cloudIt_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
-                         +'CI'
+                         +'CI('
+                         +cloudIt_cnt
+                         +')'
                          +'</div>';
                          $("#ci").empty();
                          $("#ci").append(html);
@@ -496,7 +513,9 @@ function getConnection(){
                     open_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow">'
-                         +'OS'
+                         +'OS('
+                         +open_cnt
+                         +')'
                          +'</div>';
                          $("#os").empty();
                          $("#os").append(html);

@@ -27,7 +27,20 @@ function getNameSpace(){
 
     })
 }
-
+function cancel_btn(){
+    if(confirm("Cancel it?")){
+        history.back();
+    }else{
+        return;
+    }
+}
+function close_btn(){
+    if(confirm("close it?")){
+        $("#transDiv").hide();
+    }else{
+        return;
+    }
+}
 function fnMove(target){
     var offset = $("#" + target+"").offset();
     console.log("FnMove offset : ",offset)
