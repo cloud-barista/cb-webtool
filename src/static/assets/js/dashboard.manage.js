@@ -231,7 +231,7 @@ function show_vmList(mcis_id){
                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
                                    +'</div>'
                                    +'</button>'
-                                   +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                                   +'<button type="button" class="btn btn-icon "  aria-haspopup="true" aria-expanded="false">'
                                    +'<i class="fas fa-desktop"></i>'
                                   // +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop2">'
                                       // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
