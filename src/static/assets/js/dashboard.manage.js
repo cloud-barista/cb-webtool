@@ -476,7 +476,7 @@ function getConnection(){
                          $("#az").empty();
                          $("#az").append(html);
                 }
-                if(provider == "Alibaba"){
+                if(provider == "ALIBABA"){
                     ali_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow">'
