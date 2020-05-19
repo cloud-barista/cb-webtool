@@ -155,7 +155,7 @@ function show_pop(count) {
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
                 var html = "";
                 axios.get(url).then(result=>{
-                    console.log(result.data)
+                    console.log("Image Info : ",result.data)
                     data = result.data.image
                     if(!data){
                         alert("등록된 이미지 정보가 없습니다.")

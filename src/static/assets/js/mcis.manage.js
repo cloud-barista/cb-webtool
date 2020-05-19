@@ -204,7 +204,7 @@ function short_desc(str){
                                     +'<td>'
                                     +badge
                                     +'</td>'
-                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
+                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].image_id+'\');">'+vm[i].name+'</a></td>'
                         
                                     +'<td>'+provider+'</td>'
                                     +'<td>'+vm[i].region.Region+'</td>'
@@ -301,12 +301,13 @@ function short_desc(str){
        
     })
  }
- function show_vm(mcis_id,vm_id){
+ function show_vm(mcis_id,vm_id,image_id){
     show_vmDetailList(mcis_id, vm_id);
     show_vmSpecInfo(mcis_id, vm_id);
     show_vmNetworkInfo(mcis_id, vm_id);
     show_vmSecurityGroupInfo(mcis_id, vm_id);
     show_vmSSHInfo(mcis_id, vm_id);
+    show_images(image_id);
     $("#vm_detail").show();
  }
 //  function sel_table(targetNo,mcid){
@@ -851,5 +852,40 @@ function show_vmSSHInfo(mcis_id, vm_id){
            
         
     })
+
+}
+
+function show_images(image_id){
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+image_id
+    axios.get(url).then(result=>{
+        var data = result.data
+        console.log("Image Data : ",data);
+        var html = ""
+            
+        html += '<tr>'
+                +'<th scope="colgroup" rowspan="5" class="text-right"><i class="fas fa-compact-disc"></i>Image</th>'
+                +'<th scope="colgroup" class="text-right">Image Name</th>'
+                +'<td  colspan="1">'+data.name+'</td>'
+                +'<th scope="colgroup" class="text-right">Image ID</th>'
+                +'<td colspan="1">'+data.id+'</td>'
+                
+                +'</tr>'
+                +'<tr>'
+                +'<th scope="colgroup" class="text-right">Guest OS</th>'
+                +'<td colspan="1">'+data.guestOS+'</th>'
+                
+                +'<th scope="colgroup" class="text-right">Description</th>'
+                +'<td colspan="1">'+data.description+'</th>'
+                +'</tr>'
+            
+                          
+             
+             
+               $("#vm_image").empty();
+               $("#vm_image").append(html);
+
+           })
+
+    
 
 }
