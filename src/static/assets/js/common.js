@@ -11,7 +11,15 @@
 //     })
 // }
 
-
+function getOSType(image_id){
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+image_id
+    return axios.get(url).then(result=>{
+        var data = result.data
+        var osType = data.guestOS
+        console.log("Image Data : ",data);
+        return osType;
+        })
+}
 
 function getNameSpace(){
     var url = CommonURL+"/ns"

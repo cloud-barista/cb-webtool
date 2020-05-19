@@ -552,6 +552,11 @@ function getConnection(){
     })
     
 }
+
+var f = getOSType("IMAGE-aws-developer").then(data=>{
+    console.log("axios inner data : ",data)
+});
+console.log("axios return value : ",f);
  function mcis_reg(){
     
     var cnt = 0;
