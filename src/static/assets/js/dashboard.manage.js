@@ -119,10 +119,11 @@ function short_desc(str){
              +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
              +'<i class="fas fa-edit"></i>'
              +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
-                 +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'mcis\',\'resume\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Resume</a>'
-                 +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'mcis\',\'suspend\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Suspend</a>'
-                 +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'mcis\',\'reboot\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Reboot</a>'
-                 +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'mcis\',\'terminate\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Terminate</a>'
+             +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
+                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'resume\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Resume</a>'
+                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'suspend\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Suspend</a>'
+                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'reboot\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Reboot</a>'
+                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'terminate\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Terminate</a>'
              +'</div>'
              +'</button>'
             +'</td>'
@@ -130,8 +131,8 @@ function short_desc(str){
        }
        console.log("server_cnt:",server_cnt)
        console.log("mcis_cnt:",mcis_cnt)
-       var new_str = mcis_cnt+" / "+server_cnt;
-       $("#dash_1").text(new_str);
+       var new_str = mcis_cnt+'<small class="text-muted ml-2 mb-0"> / '+server_cnt+'</small>';
+       $("#dash_1").append(new_str);
        $("#run_cnt").text(run_cnt);
        $("#stop_cnt").text(stop_cnt);
 
@@ -235,10 +236,11 @@ function show_vmList(mcis_id){
                                    +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
                                    +'<i class="fas fa-edit"></i>'
                                    +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
-                                       +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
-                                       +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
-                                       +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
-                                       +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
+                                   +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
+                                       +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
+                                       +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
+                                       +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
+                                       +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
                                    +'</div>'
                                    +'</button>'
                                    +'<button type="button" class="btn btn-icon"  aria-haspopup="true" aria-expanded="false" onclick="agentSetup(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].publicIP+'\')">'
@@ -456,10 +458,10 @@ function getConnection(){
                 if(provider == "AWS"){
                     aws_cnt++;
                     var html = "";
-                    html += '<div class="icon icon-shape bg-success text-white rounded-circle shadow">'
-                         +'AWS('
+                    html += '<div class="icon icon-shape bg-success text-white rounded-circle shadow mb-0 h3">'
+                         +'AWS<p class="mb-0">('
                          +aws_cnt
-                         +')'
+                         +')</p>'
                          +'</div>';
                          $("#aws").empty();
                          $("#aws").append(html);
@@ -468,10 +470,10 @@ function getConnection(){
 
                     azure_cnt++;
                     var html = "";
-                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
-                         +'AZ('
+                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow mb-0 h3">'
+                         +'AZ<p class="mb-0">('
                          +azure_cnt
-                         +')'
+                         +')</p>'
                          +'</div>';
                          $("#az").empty();
                          $("#az").append(html);
@@ -479,10 +481,10 @@ function getConnection(){
                 if(provider == "ALIBABA"){
                     ali_cnt++;
                     var html = "";
-                    html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow">'
-                         +'Ali('
+                    html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow mb-0 h3" >'
+                         +'Ali<p class="mb-0">('
                          +ali_cnt
-                         +')'
+                         +')</p>'
                          +'</div>';
                          $("#az").empty();
                          $("#az").append(html);
@@ -490,10 +492,10 @@ function getConnection(){
                 if(provider == "GCP"){
                     gcp_cnt++;
                     var html = "";
-                    html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow">'
-                         +'GCP('
+                    html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow mb-0 h3">'
+                         +'GCP<p class="mb-0">('
                          +gcp_cnt
-                         +')'
+                         +')</p>'
                          +'</div>';
                          $("#gcp").empty();
                          $("#gcp").append(html);
@@ -501,10 +503,10 @@ function getConnection(){
                 if(provider == "Cloudit"){
                     cloudIt_cnt++;
                     var html = "";
-                    html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
-                         +'CI('
+                    html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow mb-0 h3">'
+                         +'CI<p class="mb-0">('
                          +cloudIt_cnt
-                         +')'
+                         +')</p>'
                          +'</div>';
                          $("#ci").empty();
                          $("#ci").append(html);
@@ -512,18 +514,19 @@ function getConnection(){
                 if(provider == "Openstack"){
                     open_cnt++;
                     var html = "";
-                    html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow">'
-                         +'OS('
+                    html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow mb-0 h3">'
+                         +'OS<p class="mb-0">('
                          +open_cnt
-                         +')'
+                         +')</p>'
                          +'</div>';
                          $("#os").empty();
                          $("#os").append(html);
                 }
             }
             cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
-            var str = cp_cnt+" / "+ connection_cnt;
-            $("#dash_2").text(str);
+            var str = cp_cnt+'<small class="ml-2 mb-0 text-muted">/ '+ connection_cnt+'</small>';
+            $("#dash_2").empty();
+            $("#dash_2").append(str);
         }
 
     })
@@ -635,31 +638,32 @@ function getConnection(){
                     }
                 }
                 html += '<tr>'
-                    +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                    +'<th scope="colgroup">Server ID</th>'
-                    +'<td  colspan="3">'+data.id+'</td>'
+                    +'<th scope="colgroup"rowspan="6" class="text-center">Infra - Server</th>'
+                    +'<th scope="colgroup" class="text-right">Server ID</th>'
+                    +'<td  colspan="1">'+data.id+'</td>'
+                   
+                    +'<th scope="colgroup" class="text-right">Cloud Provider</th>'
+                    +'<td colspan="1">'+provider+'</td>'
                     +'</tr>'
                     
                     +'<tr>'
-                    +'<th scope="colgroup">Cloud Provider</th>'
-                    +'<td colspan="3">'+provider+'</td>'
+                    +'<th scope="colgroup" class="text-right">Region</th>'
+                    +'<td  colspan="1">'+data.region.Region+'</td>'
+                   
+                    +'<th scope="colgroup" class="text-right">Zone</th>'
+                    +'<td  colspan="1">'+data.region.Zone+'</td>'
                     +'</tr>'
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">Private IP</th>'
+                    +'<td colspan="1">'+data.privateIP+'</td>'
                     
-                    +'<tr>'
-                    +'<th scope="colgroup">Region</th>'
-                    +'<td  colspan="3">'+data.region.Region+'</td>'
+                    +'<th scope="colgroup" class="text-right">Private DNS</th>'
+                    +'<td colspan="1">'+data.privateDNS+'</td>'
                     +'</tr>'
+
                     +'<tr>'
-                    +'<th scope="colgroup">Zone</th>'
-                    +'<td  colspan="3">'+data.region.Zone+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">PublicIP</th>'
-                    +'<td  colspan="3">'+data.publicIP+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup">PrivateIP</th>'
-                    +'<td colspan="3">'+data.privateIP+'</td>'
+                    +'<th scope="colgroup" class="text-right">Server Status</th>'
+                    +'<td colspan="3">'+data.status+'</td>'
                     +'</tr>';
                   
                 $("#vm").empty();
@@ -690,78 +694,77 @@ function getConnection(){
     }
 
  }
- function show_vmDetailInfo(mcis_id, vm_id){
-    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
-        var data = result.data
-        var html = ""
-        $.ajax({
-           url:SpiderURL+"/connectionconfig",
-           async:false,
-           type:'GET',
-           success : function(data){
+//  function show_vmDetailInfo(mcis_id, vm_id){
+//     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+//     axios.get(url).then(result=>{
+//         var data = result.data
+//         var html = ""
+//         $.ajax({
+//            url:SpiderURL+"/connectionconfig",
+//            async:false,
+//            type:'GET',
+//            success : function(data){
                
-               var provider = "";
-               res = data.connectionconfig
-               for(var k in res){
-                   if(res[k].ConfigName == data.config_name){
-                       provider = res[k].ProviderName
-                       console.log("Inner Provider : ",provider)
-                   }
-               }
-               html += '<tr>'
-                   +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-                   +'<th scope="colgroup">Server ID</th>'
-                   +'<td  colspan="3">'+data.id+'</td>'
-                   +'<tr>'
-                   +'<th scope="colgroup">cloud Provider</th>'
-                   +'<td colspan="3">'+provider+'</td>'
-                   +'</tr>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Region</th>'
-                   +'<td  colspan="3">'+data.region.Region+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">Zone</th>'
-                   +'<td  colspan="3">'+data.region.Zone+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PublicIP</th>'
-                   +'<td  colspan="3">'+data.publicIP+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">PrivateIP</th>'
-                   +'<td colspan="3">'+data.privateIP+'</td>'
-                   +'</tr>'
-                   +'</tbody>'
-                   +'<tbody>'
-                   +'<tr>'
-                   +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-                   +'<th scope="colgroup">Sever ID</th>'
-                   +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
-                   +'</tr>'
-                   +'<tr>'
-                   +'<th scope="colgroup">VM NAME</th>'
-                   +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
-                   +'</tr>'
+//                var provider = "";
+//                res = data.connectionconfig
+//                for(var k in res){
+//                    if(res[k].ConfigName == data.config_name){
+//                        provider = res[k].ProviderName
+//                        console.log("Inner Provider : ",provider)
+//                    }
+//                }
+//                html += '<tr>'
+//                    +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
+//                    +'<th scope="colgroup" class="text-right">Server ID</th>'
+//                    +'<td  colspan="1" >'+data.id+'</td>'
+//                    +'<th scope="colgroup" class="text-right">cloud Provider</th>'
+//                    +'<td colspan="1">'+provider+'</td>'
+//                    +'</tr>'
+                   
+//                    +'<tr>'
+//                    +'<th scope="colgroup" class="text-right">Region</th>'
+//                    +'<td  colspan="3">'+data.region.Region+'</td>'
+//                    +'</tr>'
+//                    +'<tr>'
+//                    +'<th scope="colgroup" class="text-right">Zone</th>'
+//                    +'<td  colspan="3">'+data.region.Zone+'</td>'
+//                    +'</tr>'
+//                    +'<tr>'
+//                    +'<th scope="colgroup" class="text-right">PublicIP</th>'
+//                    +'<td  colspan="3">'+data.publicIP+'</td>'
+//                    +'</tr>'
+//                    +'<tr>'
+//                    +'<th scope="colgroup" class="text-right">PrivateIP</th>'
+//                    +'<td colspan="3">'+data.privateIP+'</td>'
+//                    +'</tr>'
+//                    +'</tbody>'
+//                    +'<tbody>'
+//                    +'<tr>'
+//                    +'<th scope="colgroup" rowspan="3">VM Meta</th>'
+//                    +'<th scope="colgroup" class="text-right">Sever ID</th>'
+//                    +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
+//                    +'</tr>'
+//                    +'<tr>'
+//                    +'<th scope="colgroup" class="text-right">VM NAME</th>'
+//                    +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
+//                    +'</tr>'
                    
 
                  
-               $("#vm").empty();
-               $("#vm").append(html);
-               fnMove("vm_detail");
+//                $("#vm").empty();
+//                $("#vm").append(html);
+//                fnMove("vm_detail");
 
 
-           }
+//            }
 
-       })
+//        })
       
            
         
-    })
+//     })
 
-}
+// }
 
 function show_vmSpecInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
@@ -781,22 +784,23 @@ function show_vmSpecInfo(mcis_id, vm_id){
                    if(res[k].id == spec_id){
                     html += '<tr>'
                            +'<tr>'
-                           +'<th scope="colgroup" rowspan="4">VM Spec</th>'
-                           +'<th scope="colgroup">vCPUs</th>'
-                           +'<td colspan="3">'+res[k].num_vCPU+'vcpu</td>'
-                           +'</tr>                  '
+                           +'<th scope="colgroup" rowspan="4" class="text-right"><i class="fas fa-server"></i>Server Spec</th>'
+                           +'<th scope="colgroup" class="text-right">vCPU</th>'
+                           +'<td colspan="1">'+res[k].num_vCPU+' vcpu</td>'
+                         
+                           +'<th scope="colgroup" class="text-right">Memory(Ghz)</th>'
+                           +'<td  colspan="1">'+res[k].mem_GiB+' GiB</td>'
+                           +'</tr>'
                            +'<tr>'
-                           +'<th scope="colgroup">Memory</th>'
-                           +'<td  colspan="3">'+res[k].mem_GiB+'GiB</td>'
-                           +'</tr>                  '
+                           +'<th scope="colgroup" class="text-right">Disk(GB)</th>'
+                           +'<td colspan="1">'+res[k].storage_GiB+' GiB</th>'
+                           +'<th scope="colgroup" class="text-right">Cost($) / Hour </th>'
+                           +'<td colspan="1">'+res[k].cost_per_hour+'</td>'
+                           +'</tr>'
                            +'<tr>'
-                           +'<th scope="colgroup">Storage</th>'
-                           +'<td colspan="3">'+res[k].storage_GiB+'GiB</th>'
-                           +'</tr>                  '
-                           +'<tr>'
-                           +'<th scope="colgroup">OsType</th>'
+                           +'<th scope="colgroup" class="text-right">OS Type</th>'
                            +'<td  colspan="3">'+res[k].os_type+'</td>'
-                           +'</tr>                  '
+                           +'</tr>'
                    }
                } 
                $("#vm_spec").empty();
@@ -839,26 +843,25 @@ function show_vmNetworkInfo(mcis_id, vm_id){
                     }
                     console.log("Subnet str : ",str)
                     html += '<tr>'
-                           +'<th scope="colgroup" rowspan="5">Network</th>'
-                           +'<th scope="colgroup">Network ID</th>'
-                           +'<td colspan="3">'+res[k].cspVNetId+'</td>'
+                           +'<th scope="colgroup" rowspan="5" class="text-right"><i class="fas fa-network-wired"></i>Network</th>'
+                           +'<th scope="colgroup" class="text-right">Network Name</th>'
+                           +'<td  colspan="1">'+res[k].cspVNetName+'</td>'
+                           +'<th scope="colgroup" class="text-right">Network ID</th>'
+                           +'<td colspan="1">'+res[k].cspVNetId+'</td>'
+                           
                            +'</tr>'
                            +'<tr>'
-                           +'<th scope="colgroup">Network Name</th>'
-                           +'<td  colspan="3">'+res[k].cspVNetName+'</td>'
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup">Cidr Block</th>'
+                           +'<th scope="colgroup" class="text-right">Cidr Block</th>'
                            +'<td colspan="3">'+res[k].cidrBlock+'</th>'
                            +'</tr>'
                            +'<tr>'
-                           +'<th scope="colgroup">Subnet</th>'
+                           +'<th scope="colgroup" class="text-right">Subnet</th>'
                            +'<td colspan="3">'+str+'</th>'
                            +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup">Interface</th>'
-                           +'<td colspan="3">'+res[k].cidrBlock+'</th>'
-                           +'</tr>'
+                        //    +'<tr>'
+                        //    +'<th scope="colgroup">Interface</th>'
+                        //    +'<td colspan="3">'+res[k].cidrBlock+'</th>'
+                        //    +'</tr>'
                           
                    }
                } 
@@ -880,13 +883,14 @@ function show_vmSecurityGroupInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
         var data = result.data
+        console.log("Security Group : ",data);
         var html = ""
         // var url2 = "/ns/"+NAMESPACE+"/resources/securityGroup"
         var spec_id = data.security_group_ids
         var cnt = spec_id.length
         html += '<tr>'
-             +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroup</th>'
-             +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroupID</th>'
+             +'<th scope="colgroup" colspan="'+cnt+' "class="text-right"><i class="fas fa-shield-alt"></i>SecurityGroup</th>'
+             +'<th scope="colgroup" colspan="'+cnt+'" class="text-right">SecurityGroup ID</th>'
         for(var i in spec_id){
             if( i == 0){
                 html +='<td colspan="3">'+spec_id[i]+'</td></tr>'
@@ -913,26 +917,26 @@ function show_vmSSHInfo(mcis_id, vm_id){
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
         var spec_id = data.ssh_key_id
+       
         $.ajax({
            url: url2,
            async:false,
            type:'GET',
            success : function(result){
                var res = result.sshKey
-              
+              console.log("sshKey info :",res);
                for(var k in res){
                    if(res[k].id == spec_id){
                     html += '<tr>'
-                           +'<th scope="colgroup" rowspan="3">SSH KEY</th>'
-                           +'<th scope="colgroup">SSH Key ID</th>'
-                           +'<td colspan="3">'+res[k].id+'</td>'
+                           +'<th scope="colgroup" rowspan="3" class="text-right"><i class="fas fa-key"></i>Access(SSH Key)</th>'
+                           +'<th scope="colgroup" class="text-right">Key Name</th>'
+                           +'<td  colspan="1">'+res[k].cspSshKeyName+'</td>'
+                           +'<th scope="colgroup" class="text-right">SSH Key ID</th>'
+                           +'<td colspan="1">'+res[k].id+'</td>'
+                         
                            +'</tr>'
                            +'<tr>'
-                           +'<th scope="colgroup">Key Name</th>'
-                           +'<td  colspan="3">'+res[k].cspSshKeyName+'</td>'
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup">Description</th>'
+                           +'<th scope="colgroup" class="text-right">Description</th>'
                            +'<td colspan="3">'+res[k].description+'</th>'
                            +'</tr>'
                           
