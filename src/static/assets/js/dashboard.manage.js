@@ -524,6 +524,25 @@ function getConnection(){
                          $("#os").append(html);
                 }
             }
+            
+            if(aws_cnt > 1){
+                aws_cnt = 1
+            }
+            if(azure_cnt > 1){
+                azure_cnt = 1
+            }
+            if(ali_cnt > 1){
+                ali_cnt = 1
+            }
+            if(open_cnt > 1){
+                open_cnt = 1
+            }
+            if(cloudIt_cnt > 1){
+                cloudIt_cnt = 1
+            }
+            if(gcp_cnt > 1){
+                gcp_cnt = 1
+            }
             cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
             var str = cp_cnt+'<small class="ml-2 mb-0 text-muted">/ '+ connection_cnt+'</small>';
             $("#dash_2").empty();
