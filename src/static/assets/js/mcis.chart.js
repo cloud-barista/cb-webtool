@@ -14,7 +14,7 @@ var config = {
 
 
 
-function time_arr(obj){
+function time_arr(obj, title){
     //data sets
    var labels = obj.columns;
    var datasets = obj.values;
@@ -60,7 +60,7 @@ function time_arr(obj){
     responsive: true,
     title: {
         display: true,
-        text: 'Chart.js Line Chart'
+        text: title
     },
     tooltips: {
         mode: 'index',
