@@ -87,7 +87,7 @@ function time_arr(obj, title){
         }
     }
 }
-   return config;
+   return new_obj;
 }
 
 window.chartColors = {

@@ -291,6 +291,43 @@
          console.log("====== Start GetMetric ====== ")
         var color = "";
         var metric_size ="";
+        var ctx = document.getElementById(chart_target).getContext('2d')
+        var chart = new Chart(ctx,{
+            type:"line",
+            data:{},
+            options:{
+    responsive: true,
+    title: {
+        display: true,
+        text: target
+    },
+    tooltips: {
+        mode: 'index',
+        intersect: false,
+    },
+    hover: {
+        mode: 'nearest',
+        intersect: true
+    },
+    scales: {
+        x: {
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Time'
+            }
+        },
+        y: {
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Value'
+            }
+        }
+    }
+}
+        });
+        
         
         var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
         console.log("Request URL : ",url)
@@ -305,9 +342,10 @@
               console.log("======== start mapping data ======");
               var time_obj = time_arr(data,target);
               console.log("chart_target :",chart_target);
-              var ctx = document.getElementById(chart_target).getContext('2d')
-              var myChart = new Chart(ctx, time_obj);
-             // myChart.update(); 
+             
+             // var myChart = new Chart(ctx, time_obj);
+             chart.data = time_obj;
+             chart.update();
 
         },
         error : function(request,status, error){
