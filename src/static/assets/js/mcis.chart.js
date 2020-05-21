@@ -24,7 +24,7 @@ function time_arr(obj){
    var data_set = new Array();
    // 최종 객체 data
    var new_obj = {}
-   
+   var color_arr = ['rgb(255, 99, 132)','rgb(255, 159, 64)', 'rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgb(99, 255, 243)']   
 
    for(var i in labels){
     var dt = {}    
@@ -37,8 +37,8 @@ function time_arr(obj){
         }  
     }
     dt.data = series_data
-    dt.borderColor = window.chartColors.red;
-    dt.backgroundColor = window.chartColors.red;
+    dt.borderColor = color_arr[i];
+    dt.backgroundColor = color_arr[i];
     data_set.push(dt)
    }
    console.log("data set : ",data_set);
@@ -56,5 +56,6 @@ window.chartColors = {
 	green: 'rgb(75, 192, 192)',
 	blue: 'rgb(54, 162, 235)',
 	purple: 'rgb(153, 102, 255)',
-	grey: 'rgb(201, 203, 207)'
+    grey: 'rgb(201, 203, 207)',
+    mint: 'rgb(99, 255, 243)'
 };

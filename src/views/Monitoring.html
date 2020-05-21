@@ -1,6 +1,7 @@
 {{template "Header" .}}
     <!-- MCIS Control methods -->
     <script type="text/javascript" src="/assets/js/monitoring.manage.js"></script>
+    <script type="text/javascript" src="/assets/js/mcis.chart.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <!-- MCIS Control methods -->
 
@@ -254,6 +255,9 @@
         axios.get(url).then(result=>{
               var data = result.data
               console.log("Get Monitoring Data : ",data)
+              console.log("======== start mapping data ======");
+              var time_obj = time_arr(data);
+              console.log("==time series==",time_obj);
               var metricObject = mappingMetric(data);
               var m_len = metricObject.length-1
 
