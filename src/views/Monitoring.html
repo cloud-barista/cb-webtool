@@ -96,11 +96,23 @@
                 </div>
                 <!-- table -->
                 <!-- card type -->
-                <div class="row mb-12" style="padding-top:20px;" id="card">
-                    <div class="col-xl-12 col-lg-12">
+                <div class="row mb-12" style="padding-top:20px;" id="card"> 
+                        <div class="col-xl-12 col-lg-12">
                         <div class="card card-stats mb-12 mb-xl-0">
-                            <div class="card-body" id="canvas">
-                                
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">MCIS 1</h5>
+                                        <span class="h2 font-weight-bold mb-0">350,897</span>
+                                    </div>
+                                    <div class="col-auto">
+                                       <canvas id="canvas1"></canvas>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -210,13 +222,11 @@
                 </div>
 
             </div>
-            <div class="row mb-4" style="padding-top:20px;" >
-               
-                <div class="col-xl-3 col-lg-6" id="">
-                    <canvas id="canvas1"></canvas>
-                </div>
-
+            <div style="width:75%;">
+                여기는 차트가 들어갈 공간입니다.
+                <canvas id="canvas"></canvas>
             </div>
+           
            
                 <!-- card type -->
             </main>
@@ -243,11 +253,17 @@
          $("#network").empty()
           var arr = ["cpu","memory","disk","network"];
           var periodType = "m";
-          var duration = "1h"
+          var duration = "10m"
           var statisticsCriteria = "last"
-
+        // 나중에 원복
+        //   for (var i in arr){
+        //       getMetric(arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration)
+        //   }
           for (var i in arr){
-              getMetric(arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration)
+              if(i ==0){
+                getMetric(arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration)
+              }
+              
           }
      }
      function getMetric(target, mcis_id, vm_id, metric, periodType,statisticsCriteria, duration){
@@ -266,8 +282,9 @@
               console.log("Get Monitoring Data : ",data)
               console.log("======== start mapping data ======");
               var time_obj = time_arr(data);
-              var ctx = document.getElementById('canvas1')
+              var ctx = document.getElementById('canvas').getContext('2d')
               var myChart = new Chart(ctx, time_obj);
+              myChart.update();
              // Chart.Line('canvas1',time_obj);
               console.log("==time series==",time_obj);
               var metricObject = mappingMetric(data);
