@@ -456,7 +456,9 @@ function getConnection(){
             for(var k in res){
                 provider = res[k].ProviderName 
                 connection_cnt++;
-                if(provider == "AWS"){
+                provider = provider.toLowerCase();
+                console.log("provider lowercase : ",provider);
+                if(provider == "aws"){
                     aws_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-success text-white rounded-circle shadow mb-0 h3">'
@@ -467,7 +469,7 @@ function getConnection(){
                          $("#aws").empty();
                          $("#aws").append(html);
                 }
-                if(provider == "AZURE"){
+                if(provider == "azure"){
 
                     azure_cnt++;
                     var html = "";
@@ -479,7 +481,7 @@ function getConnection(){
                          $("#az").empty();
                          $("#az").append(html);
                 }
-                if(provider == "ALIBABA"){
+                if(provider == "alibaba"){
                     ali_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow mb-0 h3" >'
@@ -487,10 +489,10 @@ function getConnection(){
                          +ali_cnt
                          +')</p>'
                          +'</div>';
-                         $("#az").empty();
-                         $("#az").append(html);
+                         $("#ab").empty();
+                         $("#ab").append(html);
                 }
-                if(provider == "GCP"){
+                if(provider == "gcp"){
                     gcp_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow mb-0 h3">'
@@ -501,7 +503,7 @@ function getConnection(){
                          $("#gcp").empty();
                          $("#gcp").append(html);
                 }
-                if(provider == "Cloudit"){
+                if(provider == "cloudit"){
                     cloudIt_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow mb-0 h3">'
@@ -512,7 +514,7 @@ function getConnection(){
                          $("#ci").empty();
                          $("#ci").append(html);
                 }
-                if(provider == "Openstack"){
+                if(provider == "openstack"){
                     open_cnt++;
                     var html = "";
                     html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow mb-0 h3">'
