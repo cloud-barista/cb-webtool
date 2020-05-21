@@ -109,8 +109,8 @@ $(document).ready(function(){
         //폼의 필수 필드를 검증 함.
         if (!chkFormValidate($("#form"))) return false;
         
-        var obj = $("#form").serializeObject()
-        obj.headers = { 'Content-type': 'application/json', }
+        var obj = $("#form").serialize()
+        //obj.headers = { 'Content-type': 'application/json', }
 
         //console.log(req)
         axios.post(url,obj)            
