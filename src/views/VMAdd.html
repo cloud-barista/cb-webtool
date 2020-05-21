@@ -29,14 +29,14 @@ function show_pop(count) {
             <main role="main" class="main" id="main">
                 <div class="page-header">
                     <div>
-                        <h1>MCIS REGISTER</h1>
+                        <h1>MCIS Config</h1>
                     </div>
                 </div>
                 <div class="card" id="mcis_form">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>Create </strong>
+                                <strong>Create MCIS </strong>
                             </div>
                             <div>
                                 <!-- 좌우측 정렬되는 버튼이 필요할때 여기에 넣어주세요 -->
@@ -136,6 +136,7 @@ function show_pop(count) {
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
                 var html = "";
                 axios.get(url).then(result=>{
+                    console.log("Image Info : ",result.data)
                     data = result.data.image
                     if(!data){
                         alert("등록된 이미지 정보가 없습니다.")
@@ -143,9 +144,7 @@ function show_pop(count) {
                     }
                     for(var i in data){
                         if(data[i].connectionName == configName){
-                            html += '<option value="'+data[i].id+'" >'+data[i].cspImageName
-                                 //+'('+data[i].id+')'
-                                 +'</option>'; 
+                            html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
                         }
                     }
                     $("#image_"+cnt+"").empty();
@@ -153,6 +152,7 @@ function show_pop(count) {
                     
                 })
             }
+
 
             function getSecurityInfo(configName,cnt){
                 var configName = configName;
@@ -319,7 +319,7 @@ function show_vm(vm_cnt){
 
                 +'<tr><th>ConfigName</th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="config_name" id="configName_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="config_name" id="configName_'+vm_cnt+'" onchange="changeConnectionInfo(this.value,'+vm_cnt+')" >'
                 +'<option selected>Select Configname</option>'
                 +'</select></td></tr>'
                 +'<tr><th>VM Name</th><td>'
@@ -392,9 +392,11 @@ function show_vm(vm_cnt){
                 +'<div class="card-footer">'
                 +'<div class="d-flex justify-content-end align-items-center">'
 
-                +'<button type="button"  class="add_vm btn btn-dark btn-sm">Add Server</button>'
+               // +'<button type="button"  class="add_vm btn btn-dark btn-sm">Add Server</button>'
 
                +'<button type="button" onclick="btn_click();" class="btn btn-dark btn-sm">Confirm</button>'
+               +'&nbsp;'
+               +' <button type="button" class="btn btn-sm btn-danger" onclick="cancel_btn();">Cancel</button>'
                 +'</div></div></div>'
                 +'</form>'
 
@@ -517,6 +519,13 @@ function setObjSingle(){
     return obj
   
 }
-        
+
+function changeConnectionInfo(configName,cnt){
+                getImageInfo(configName,cnt);
+                getSecurityInfo(configName,cnt);
+                getSSHKeyInfo(configName,cnt);
+                //getPublicIPInfo(configName,cnt);
+                getVnetInfo(configName,cnt);
+            }
         </script>
         

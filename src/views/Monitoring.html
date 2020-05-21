@@ -208,7 +208,16 @@
                 <div class="col-xl-3 col-lg-6" id="network">
                     
                 </div>
+
+            </div>
+            <div class="row mb-4" style="padding-top:20px;" >
+               
+                <div class="col-xl-3 col-lg-6" id="">
+                    <canvas id="canvas1"></canvas>
                 </div>
+
+            </div>
+           
                 <!-- card type -->
             </main>
             <!-- //contents -->
@@ -257,6 +266,9 @@
               console.log("Get Monitoring Data : ",data)
               console.log("======== start mapping data ======");
               var time_obj = time_arr(data);
+              var ctx = document.getElementById('canvas1')
+              var myChart = new Chart(ctx, time_obj);
+             // Chart.Line('canvas1',time_obj);
               console.log("==time series==",time_obj);
               var metricObject = mappingMetric(data);
               var m_len = metricObject.length-1
