@@ -111,9 +111,9 @@ function short_desc(str){
              +'</td>'
              +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\',\''+mcis[i].name+'\')" >'+mcis[i].name+'</a></td>'
              +'<td>'+vm_len+'</td>'
-             +'<td>'+vm_len+'</td>'
+            //  +'<td>'+vm_len+'</td>'
             
-             +'<td>0</td>'
+            //  +'<td>0</td>'
              +'<td>'+short_desc(mcis[i].description)+'</td>'
              +'<td>'
              +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
@@ -163,112 +163,112 @@ function show_vmList(mcis_id){
            type:'GET',
            url:url,
        // async:false,
-           success:function(data){
-               var vm = data.vm
-               var mcis_name = data.name 
-               $("#mcis_id").val(mcis_id)
-               $("#mcis_name").val(mcis_name)
-               var html = "";
-               console.log("VM DATA : ",vm)
-               for(var i in vm){
-                   var sta = vm[i].status;
-                   
+          
+       }).done(function(data){
+        var vm = data.vm
+        var mcis_name = data.name 
+        $("#mcis_id").val(mcis_id)
+        $("#mcis_name").val(mcis_name)
+        var html = "";
+        console.log("VM DATA : ",vm)
+        for(var i in vm){
+            var sta = vm[i].status;
+            
+        
+            var status = sta.toLowerCase()
+            console.log("VM Status : ",status)
+            var configName = vm[i].config_name
+            console.log("outer vm configName : ",configName)
+            var count = 0;
+            $.ajax({
+                url: SpiderURL+"/connectionconfig",
+                async:false,
+                type:'GET',
                
-                   var status = sta.toLowerCase()
-                   console.log("VM Status : ",status)
-                   var configName = vm[i].config_name
-                   console.log("outer vm configName : ",configName)
-                   var count = 0;
-                   $.ajax({
-                       url: SpiderURL+"/connectionconfig",
-                       async:false,
-                       type:'GET',
-                       success : function(data2){
-                           res = data2.connectionconfig
-                           var badge = "";
-                           for(var k in res){
-                               // console.log(" i value is : ",i)
-                               // console.log("outer config name : ",configName)
-                               // console.log("Inner ConfigName : ",res[k].ConfigName)
-                               if(res[k].ConfigName == vm[i].config_name){
-                                   var provider = res[k].ProviderName
-                                   var kv_list = vm[i].cspViewVmDetail.KeyValueList
-                                   var archi = ""
-                                   for(var p in kv_list){
-                                       if(kv_list[p].Key == "Architecture"){
-                                        archi = kv_list[p].Value 
-                                       }
-                                   }
-                                   
-                                   if(status == "running"){
-                                       badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
-                                   }else if(status == "suspended"){
-                                       badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
-                                   }else if(status == "terminate"){
-                                       badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
-                                   }else{
-                                       badge += '<span class="badge badge-pill badge-dark">'+status+'</span>'
-                                   }
-                                   count++;
-                                   if(count == 1){
+
+            }).done(function(data2){
+                res = data2.connectionconfig
+                var badge = "";
+                for(var k in res){
+                    // console.log(" i value is : ",i)
+                    // console.log("outer config name : ",configName)
+                    // console.log("Inner ConfigName : ",res[k].ConfigName)
+                    if(res[k].ConfigName == vm[i].config_name){
+                        var provider = res[k].ProviderName
+                        var kv_list = vm[i].cspViewVmDetail.KeyValueList
+                        var archi = ""
+                        for(var p in kv_list){
+                            if(kv_list[p].Key == "Architecture"){
+                             archi = kv_list[p].Value 
+                            }
+                        }
+                        
+                        if(status == "running"){
+                            badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+                        }else if(status == "suspended"){
+                            badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+                        }else if(status == "terminate"){
+                            badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+                        }else{
+                            badge += '<span class="badge badge-pill badge-dark">'+status+'</span>'
+                        }
+                        count++;
+                        if(count == 1){
+            
+                        }
+                        html += '<tr id="tr_id_'+count+'" >'
+                        +'<td class="text-center">'
+                        +'<div class="form-input">'
+                        +'<span class="input">'
+                        +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
+                        +'</td>'
+                        +'<td>'
+                        +badge
+                        +'</td>'
+                        +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].image_id+'\');">'+vm[i].name+'</a></td>'
+                        
+                        +'<td>'+provider+'</td>'
+                        +'<td>'+vm[i].region.Region+'</td>'
+         
                        
-                                   }
-                                   html += '<tr id="tr_id_'+count+'" >'
-                                   +'<td class="text-center">'
-                                   +'<div class="form-input">'
-                                   +'<span class="input">'
-                                   +'<input type="checkbox" item="'+mcis_name+'"    mcisid="'+mcis_id+'" class="chk2" id="chk2_'+count+'" value="'+vm[i].id+'|'+mcis_id+'"><i></i></span></div>'
-                                   +'</td>'
-                                   +'<td>'
-                                   +badge
-                                   +'</td>'
-                                   +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].image_id+'\');">'+vm[i].name+'</a></td>'
-                                   
-                                   +'<td>'+provider+'</td>'
-                                   +'<td>'+vm[i].region.Region+'</td>'
+                        +'<td>'+archi+'</td>'
+                        +'<td>'+vm[i].publicIP+'</td>'
+                        +'<td>'+short_desc(vm[i].description)+'</td>'
+                        
+                        +'<td>'
+                        +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                        +'<i class="fas fa-edit"></i>'
+                        +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
+                        +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
+                        +'</div>'
+                        +'</button>'
+                        +'<button type="button" class="btn btn-icon"  aria-haspopup="true" aria-expanded="false" onclick="agentSetup(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].publicIP+'\')">'
+                        +'<i class="fas fa-desktop"></i>'
+                       // +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop2">'
+                           // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
+                           // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
+                           // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
+                           // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
+                       // +'</div>'
+                        +'</button>'
+                        +'</td>'
+                        +'</tr>';
+                    }
                     
-                                  
-                                   +'<td>'+archi+'</td>'
-                                   +'<td>'+vm[i].publicIP+'</td>'
-                                   +'<td>'+short_desc(vm[i].description)+'</td>'
-                                   
-                                   +'<td>'
-                                   +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-                                   +'<i class="fas fa-edit"></i>'
-                                   +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
-                                   +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
-                                       +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
-                                       +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
-                                       +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
-                                       +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
-                                   +'</div>'
-                                   +'</button>'
-                                   +'<button type="button" class="btn btn-icon"  aria-haspopup="true" aria-expanded="false" onclick="agentSetup(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].publicIP+'\')">'
-                                   +'<i class="fas fa-desktop"></i>'
-                                  // +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop2">'
-                                      // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
-                                      // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
-                                      // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
-                                      // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
-                                  // +'</div>'
-                                   +'</button>'
-                                   +'</td>'
-                                   +'</tr>';
-                               }
-                               
-                               
-                               }
-                               $("#table_2").empty();
-                               $("#table_2").append(html);
-                               fnMove("table_2");
+                    
+                    }
+                    $("#table_2").empty();
+                    $("#table_2").append(html);
+                    fnMove("table_2");
 
-                       }
-
-                   })
-                   
-                   }
-           }
-       })
+            })
+            
+            }
+    })
    }else{
        $("#table_2").empty();
        $("#table_2").append("<td colspan='8'>Does not Exist</td>");
@@ -439,118 +439,118 @@ function getConnection(){
     $.ajax({
         url: SpiderURL+"/connectionconfig",
         async:false,
-        type:'GET',
-        success : function(data2){
-            res = data2.connectionconfig
-            console.log("connection info : ",res);
-            var provider = "";
-            var aws_cnt = 0;
-            var gcp_cnt = 0;
-            var azure_cnt = 0;
-            var open_cnt = 0;
-            var cloudIt_cnt = 0;
-            var ali_cnt = 0;
-            var cp_cnt = 0;
-            var connection_cnt = 0;
-           
-            for(var k in res){
-                provider = res[k].ProviderName 
-                connection_cnt++;
-                provider = provider.toLowerCase();
-                console.log("provider lowercase : ",provider);
-                if(provider == "aws"){
-                    aws_cnt++;
-                    var html = "";
-                    html += '<div class="icon icon-shape bg-success text-white rounded-circle shadow mb-0 h3">'
-                         +'AWS<p class="mb-0">('
-                         +aws_cnt
-                         +')</p>'
-                         +'</div>';
-                         $("#aws").empty();
-                         $("#aws").append(html);
-                }
-                if(provider == "azure"){
+        type:'GET'
+       
 
-                    azure_cnt++;
-                    var html = "";
-                    html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow mb-0 h3">'
-                         +'AZ<p class="mb-0">('
-                         +azure_cnt
-                         +')</p>'
-                         +'</div>';
-                         $("#az").empty();
-                         $("#az").append(html);
-                }
-                if(provider == "alibaba"){
-                    ali_cnt++;
-                    var html = "";
-                    html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow mb-0 h3" >'
-                         +'Ali<p class="mb-0">('
-                         +ali_cnt
-                         +')</p>'
-                         +'</div>';
-                         $("#ab").empty();
-                         $("#ab").append(html);
-                }
-                if(provider == "gcp"){
-                    gcp_cnt++;
-                    var html = "";
-                    html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow mb-0 h3">'
-                         +'GCP<p class="mb-0">('
-                         +gcp_cnt
-                         +')</p>'
-                         +'</div>';
-                         $("#gcp").empty();
-                         $("#gcp").append(html);
-                }
-                if(provider == "cloudit"){
-                    cloudIt_cnt++;
-                    var html = "";
-                    html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow mb-0 h3">'
-                         +'CI<p class="mb-0">('
-                         +cloudIt_cnt
-                         +')</p>'
-                         +'</div>';
-                         $("#ci").empty();
-                         $("#ci").append(html);
-                }
-                if(provider == "openstack"){
-                    open_cnt++;
-                    var html = "";
-                    html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow mb-0 h3">'
-                         +'OS<p class="mb-0">('
-                         +open_cnt
-                         +')</p>'
-                         +'</div>';
-                         $("#os").empty();
-                         $("#os").append(html);
-                }
+    }).done( function(data2){
+        res = data2.connectionconfig
+        console.log("connection info : ",res);
+        var provider = "";
+        var aws_cnt = 0;
+        var gcp_cnt = 0;
+        var azure_cnt = 0;
+        var open_cnt = 0;
+        var cloudIt_cnt = 0;
+        var ali_cnt = 0;
+        var cp_cnt = 0;
+        var connection_cnt = 0;
+       
+        for(var k in res){
+            provider = res[k].ProviderName 
+            connection_cnt++;
+            provider = provider.toLowerCase();
+            console.log("provider lowercase : ",provider);
+            if(provider == "aws"){
+                aws_cnt++;
+                var html = "";
+                html += '<div class="icon icon-shape bg-success text-white rounded-circle shadow mb-0 h3">'
+                     +'AWS<p class="mb-0 h3">('
+                     +aws_cnt
+                     +')</p>'
+                     +'</div>';
+                     $("#aws").empty();
+                     $("#aws").append(html);
             }
-            
-            if(aws_cnt > 1){
-                aws_cnt = 1
+            if(provider == "azure"){
+
+                azure_cnt++;
+                var html = "";
+                html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow mb-0 h3">'
+                     +'AZ<p class="mb-0 h3">('
+                     +azure_cnt
+                     +')</p>'
+                     +'</div>';
+                     $("#az").empty();
+                     $("#az").append(html);
             }
-            if(azure_cnt > 1){
-                azure_cnt = 1
+            if(provider == "alibaba"){
+                ali_cnt++;
+                var html = "";
+                html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow mb-0 h3" >'
+                     +'Ali<p class="mb-0 h3">('
+                     +ali_cnt
+                     +')</p>'
+                     +'</div>';
+                     $("#ab").empty();
+                     $("#ab").append(html);
             }
-            if(ali_cnt > 1){
-                ali_cnt = 1
+            if(provider == "gcp"){
+                gcp_cnt++;
+                var html = "";
+                html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow mb-0 h3">'
+                     +'GCP<p class="mb-0 h3">('
+                     +gcp_cnt
+                     +')</p>'
+                     +'</div>';
+                     $("#gcp").empty();
+                     $("#gcp").append(html);
             }
-            if(open_cnt > 1){
-                open_cnt = 1
+            if(provider == "cloudit"){
+                cloudIt_cnt++;
+                var html = "";
+                html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow mb-0 h3">'
+                     +'CI<p class="mb-0 h3">('
+                     +cloudIt_cnt
+                     +')</p>'
+                     +'</div>';
+                     $("#ci").empty();
+                     $("#ci").append(html);
             }
-            if(cloudIt_cnt > 1){
-                cloudIt_cnt = 1
+            if(provider == "openstack"){
+                open_cnt++;
+                var html = "";
+                html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow mb-0 h3">'
+                     +'OS<p class="mb-0 h3">('
+                     +open_cnt
+                     +')</p>'
+                     +'</div>';
+                     $("#os").empty();
+                     $("#os").append(html);
             }
-            if(gcp_cnt > 1){
-                gcp_cnt = 1
-            }
-            cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
-            var str = cp_cnt+'<small class="ml-2 mb-0 text-muted">/ '+ connection_cnt+'</small>';
-            $("#dash_2").empty();
-            $("#dash_2").append(str);
         }
-
+        
+        if(aws_cnt > 1){
+            aws_cnt = 1
+        }
+        if(azure_cnt > 1){
+            azure_cnt = 1
+        }
+        if(ali_cnt > 1){
+            ali_cnt = 1
+        }
+        if(open_cnt > 1){
+            open_cnt = 1
+        }
+        if(cloudIt_cnt > 1){
+            cloudIt_cnt = 1
+        }
+        if(gcp_cnt > 1){
+            gcp_cnt = 1
+        }
+        cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
+        var str = cp_cnt+'<small class="ml-2 mb-0 text-muted">/ '+ connection_cnt+'</small>';
+        $("#dash_2").empty();
+        $("#dash_2").append(str);
     })
     
 }
@@ -655,49 +655,49 @@ console.log("axios return value : ",f);
             url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
-            success : function(data2){
-                res = data2.connectionconfig
-                var provider = "";
-                for(var k in res){
-                    if(res[k].ConfigName == data.config_name){
-                        provider = res[k].ProviderName
-                        console.log("Inner Provider : ",provider)
-                    }
+            
+
+        }).done(function(data2){
+            res = data2.connectionconfig
+            var provider = "";
+            for(var k in res){
+                if(res[k].ConfigName == data.config_name){
+                    provider = res[k].ProviderName
+                    console.log("Inner Provider : ",provider)
                 }
-                html += '<tr>'
-                    +'<th scope="colgroup"rowspan="6" class="text-center">Infra - Server</th>'
-                    +'<th scope="colgroup" class="text-right">Server ID</th>'
-                    +'<td  colspan="1">'+data.id+'</td>'
-                   
-                    +'<th scope="colgroup" class="text-right">Cloud Provider</th>'
-                    +'<td colspan="1">'+provider+'</td>'
-                    +'</tr>'
-                    
-                    +'<tr>'
-                    +'<th scope="colgroup" class="text-right">Region</th>'
-                    +'<td  colspan="1">'+data.region.Region+'</td>'
-                   
-                    +'<th scope="colgroup" class="text-right">Zone</th>'
-                    +'<td  colspan="1">'+data.region.Zone+'</td>'
-                    +'</tr>'
-                    +'<tr>'
-                    +'<th scope="colgroup" class="text-right">Private IP</th>'
-                    +'<td colspan="1">'+data.privateIP+'</td>'
-                    
-                    +'<th scope="colgroup" class="text-right">Private DNS</th>'
-                    +'<td colspan="1">'+data.privateDNS+'</td>'
-                    +'</tr>'
-
-                    +'<tr>'
-                    +'<th scope="colgroup" class="text-right">Server Status</th>'
-                    +'<td colspan="3">'+data.status+'</td>'
-                    +'</tr>';
-                  
-                $("#vm").empty();
-                $("#vm").append(html);
-                fnMove("vm_detail");
-
             }
+            html += '<tr>'
+                +'<th scope="colgroup"rowspan="6" class="text-center">Infra - Server</th>'
+                +'<th scope="colgroup" class="text-right">Server ID</th>'
+                +'<td  colspan="1">'+data.id+'</td>'
+               
+                +'<th scope="colgroup" class="text-right">Cloud Provider</th>'
+                +'<td colspan="1">'+provider+'</td>'
+                +'</tr>'
+                
+                +'<tr>'
+                +'<th scope="colgroup" class="text-right">Region</th>'
+                +'<td  colspan="1">'+data.region.Region+'</td>'
+               
+                +'<th scope="colgroup" class="text-right">Zone</th>'
+                +'<td  colspan="1">'+data.region.Zone+'</td>'
+                +'</tr>'
+                +'<tr>'
+                +'<th scope="colgroup" class="text-right">Private IP</th>'
+                +'<td colspan="1">'+data.privateIP+'</td>'
+                
+                +'<th scope="colgroup" class="text-right">Private DNS</th>'
+                +'<td colspan="1">'+data.privateDNS+'</td>'
+                +'</tr>'
+
+                +'<tr>'
+                +'<th scope="colgroup" class="text-right">Server Status</th>'
+                +'<td colspan="3">'+data.status+'</td>'
+                +'</tr>';
+              
+            $("#vm").empty();
+            $("#vm").append(html);
+            fnMove("vm_detail");
 
         })
        
@@ -804,38 +804,38 @@ function show_vmSpecInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
-           success : function(result){
-               var res = result.spec
-              
-               for(var k in res){
-                   if(res[k].id == spec_id){
-                    html += '<tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup" rowspan="4" class="text-right"><i class="fas fa-server"></i>Server Spec</th>'
-                           +'<th scope="colgroup" class="text-right">vCPU</th>'
-                           +'<td colspan="1">'+res[k].num_vCPU+' vcpu</td>'
-                         
-                           +'<th scope="colgroup" class="text-right">Memory(Ghz)</th>'
-                           +'<td  colspan="1">'+res[k].mem_GiB+' GiB</td>'
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup" class="text-right">Disk(GB)</th>'
-                           +'<td colspan="1">'+res[k].storage_GiB+' GiB</th>'
-                           +'<th scope="colgroup" class="text-right">Cost($) / Hour </th>'
-                           +'<td colspan="1">'+res[k].cost_per_hour+'</td>'
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup" class="text-right">OS Type</th>'
-                           +'<td  colspan="3">'+res[k].os_type+'</td>'
-                           +'</tr>'
-                   }
-               } 
-               $("#vm_spec").empty();
-               $("#vm_spec").append(html);
+           
 
-           }
+       }).done( function(result){
+        var res = result.spec
+       
+        for(var k in res){
+            if(res[k].id == spec_id){
+             html += '<tr>'
+                    +'<tr>'
+                    +'<th scope="colgroup" rowspan="4" class="text-right"><i class="fas fa-server"></i>Server Spec</th>'
+                    +'<th scope="colgroup" class="text-right">vCPU</th>'
+                    +'<td colspan="1">'+res[k].num_vCPU+' vcpu</td>'
+                  
+                    +'<th scope="colgroup" class="text-right">Memory(Ghz)</th>'
+                    +'<td  colspan="1">'+res[k].mem_GiB+' GiB</td>'
+                    +'</tr>'
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">Disk(GB)</th>'
+                    +'<td colspan="1">'+res[k].storage_GiB+' GiB</th>'
+                    +'<th scope="colgroup" class="text-right">Cost($) / Hour </th>'
+                    +'<td colspan="1">'+res[k].cost_per_hour+'</td>'
+                    +'</tr>'
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">OS Type</th>'
+                    +'<td  colspan="3">'+res[k].os_type+'</td>'
+                    +'</tr>'
+            }
+        } 
+        $("#vm_spec").empty();
+        $("#vm_spec").append(html);
 
-       })
+    })
       
            
         
@@ -854,51 +854,51 @@ function show_vmNetworkInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
-           success : function(result){
-               var res = result.vNet
-              console.log("Network Info : ",result)
-               for(var k in res){
-                   if(res[k].id == spec_id){
-                    var subnetInfoList = res[k].subnetInfoList
-                    var subnetArr = new Array()
-                    var str = ""
-                    if(subnetInfoList){
-                        for(var o in subnetInfoList){
-                             subnetArr.push(subnetInfoList[o].IPv4_CIDR)
-                        }
-                        str = subnetArr.join(",")
-                    }
-                    console.log("Subnet str : ",str)
-                    html += '<tr>'
-                           +'<th scope="colgroup" rowspan="5" class="text-right"><i class="fas fa-network-wired"></i>Network</th>'
-                           +'<th scope="colgroup" class="text-right">Network Name</th>'
-                           +'<td  colspan="1">'+res[k].cspVNetName+'</td>'
-                           +'<th scope="colgroup" class="text-right">Network ID</th>'
-                           +'<td colspan="1">'+res[k].cspVNetId+'</td>'
-                           
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup" class="text-right">Cidr Block</th>'
-                           +'<td colspan="3">'+res[k].cidrBlock+'</th>'
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup" class="text-right">Subnet</th>'
-                           +'<td colspan="3">'+str+'</th>'
-                           +'</tr>'
-                        //    +'<tr>'
-                        //    +'<th scope="colgroup">Interface</th>'
-                        //    +'<td colspan="3">'+res[k].cidrBlock+'</th>'
-                        //    +'</tr>'
-                          
-                   }
-               } 
-               console.log("vnetwork html : ",html)
-               $("#vm_vnetwork").empty();
-               $("#vm_vnetwork").append(html);
+           
 
-           }
+       }).done(function(result){
+        var res = result.vNet
+       console.log("Network Info : ",result)
+        for(var k in res){
+            if(res[k].id == spec_id){
+             var subnetInfoList = res[k].subnetInfoList
+             var subnetArr = new Array()
+             var str = ""
+             if(subnetInfoList){
+                 for(var o in subnetInfoList){
+                      subnetArr.push(subnetInfoList[o].IPv4_CIDR)
+                 }
+                 str = subnetArr.join(",")
+             }
+             console.log("Subnet str : ",str)
+             html += '<tr>'
+                    +'<th scope="colgroup" rowspan="5" class="text-right"><i class="fas fa-network-wired"></i>Network</th>'
+                    +'<th scope="colgroup" class="text-right">Network Name</th>'
+                    +'<td  colspan="1">'+res[k].cspVNetName+'</td>'
+                    +'<th scope="colgroup" class="text-right">Network ID</th>'
+                    +'<td colspan="1">'+res[k].cspVNetId+'</td>'
+                    
+                    +'</tr>'
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">Cidr Block</th>'
+                    +'<td colspan="3">'+res[k].cidrBlock+'</th>'
+                    +'</tr>'
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">Subnet</th>'
+                    +'<td colspan="3">'+str+'</th>'
+                    +'</tr>'
+                 //    +'<tr>'
+                 //    +'<th scope="colgroup">Interface</th>'
+                 //    +'<td colspan="3">'+res[k].cidrBlock+'</th>'
+                 //    +'</tr>'
+                   
+            }
+        } 
+        console.log("vnetwork html : ",html)
+        $("#vm_vnetwork").empty();
+        $("#vm_vnetwork").append(html);
 
-       })
+    })
       
            
         
@@ -985,32 +985,32 @@ function show_vmSSHInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
-           success : function(result){
-               var res = result.sshKey
-              console.log("sshKey info :",res);
-               for(var k in res){
-                   if(res[k].id == spec_id){
-                    html += '<tr>'
-                           +'<th scope="colgroup" rowspan="3" class="text-right"><i class="fas fa-key"></i>Access(SSH Key)</th>'
-                           +'<th scope="colgroup" class="text-right">Key Name</th>'
-                           +'<td  colspan="1">'+res[k].cspSshKeyName+'</td>'
-                           +'<th scope="colgroup" class="text-right">SSH Key ID</th>'
-                           +'<td colspan="1">'+res[k].id+'</td>'
-                         
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup" class="text-right">Description</th>'
-                           +'<td colspan="3">'+res[k].description+'</th>'
-                           +'</tr>'
-                          
-                   }
-               } 
-               $("#sshKey").empty();
-               $("#sshKey").append(html);
+          
 
-           }
+       }).done(function(result){
+        var res = result.sshKey
+       console.log("sshKey info :",res);
+        for(var k in res){
+            if(res[k].id == spec_id){
+             html += '<tr>'
+                    +'<th scope="colgroup" rowspan="3" class="text-right"><i class="fas fa-key"></i>Access(SSH Key)</th>'
+                    +'<th scope="colgroup" class="text-right">Key Name</th>'
+                    +'<td  colspan="1">'+res[k].cspSshKeyName+'</td>'
+                    +'<th scope="colgroup" class="text-right">SSH Key ID</th>'
+                    +'<td colspan="1">'+res[k].id+'</td>'
+                  
+                    +'</tr>'
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">Description</th>'
+                    +'<td colspan="3">'+res[k].description+'</th>'
+                    +'</tr>'
+                   
+            }
+        } 
+        $("#sshKey").empty();
+        $("#sshKey").append(html);
 
-       })
+    })
       
            
         
