@@ -164,14 +164,14 @@
                                         <h2 class="mb-0">Location</h2>
                                     </div>
                                     <div class="col text-right">
-                                        <a href="#!" class="btn btn-sm btn-dark">See all</a>
+                                        <a href="#!" class="btn btn-sm btn-dark" id="see_all" onclick="viewMap();">See all</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
                                     
                                 <!-- Chart -->
-                                <div class="d-flex h-100 align-items-center justify-content-center map" id="" >
+                                <div class="d-flex h-100 align-items-center justify-content-center map" id="map" >
                                    
                                   
                                  
@@ -281,16 +281,19 @@
                         </div>
                     </div> -->
                 </div>
-                <div class="card shadow" id="" >
+                <div class="card shadow" id="map_detail" style="display:none;">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>MAP Info</strong>
                             </div>
+                            <div class="col text-right">
+                                <a href="#!" class="btn btn-sm btn-danger" onclick='$("#map_detail").hide();'>Close</a>
+                            </div>
                            
                         </div>
                     </div>
-                    <div class="align-items-center justify-content-center map" id="map" >
+                    <div class="align-items-center justify-content-center map" id="map2" >
                                    
                                   
                                  

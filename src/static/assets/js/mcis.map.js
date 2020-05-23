@@ -13,6 +13,13 @@ function getIPStackRegion(ip_address){
         
     })
 }
+function viewMap(){
+    var mcis_id = $("#mcis_id").val();
+    $("#map_detail").show();
+    $("#map2").empty();
+    var map = map_init_target('map2')
+    getGeoLocationInfo(mcis_id,map);
+}
 function getGeoLocationInfo(mcis_id,map){
   var JZMap = map;
   $.ajax({
@@ -22,7 +29,26 @@ function getGeoLocationInfo(mcis_id,map){
     }).done(function(result){
         console.log("region Info : ",result)
         var polyArr = new Array();
-      
+      result = [{
+        longitude: 126.990407,
+        latitude:37.550246,
+      },
+     
+      {
+        
+        longitude: 10.403993,
+        latitude:51.241497,
+       },
+       {
+        latitude: 39.043701171875,
+        longitude: -77.47419738769531
+      },
+       {
+        
+        longitude: 129.315757,
+        latitude: -27.635010
+       }
+    ]
         for(var i in result){
             console.log("region lat long info : ",result[i])
             // var json_parse = JSON.parse(result[i])
@@ -40,16 +66,31 @@ function getGeoLocationInfo(mcis_id,map){
         }else{
           polygon = "POLYGON(("+polyArr[0]+"))";
         }
-  //       var wkt =
-  // "POLYGON((10.689 -25.092, 34.595 " +
-  // "-20.170, 38.814 -35.639, 13.502 " +
-  // "-39.155, 10.689 -25.092))";
+       
         if(polyArr.length >1){
           drawPoligon(JZMap,polygon);
         }
         //drawPoligon(map,wkt);
        
     })
+}
+function map_init_target(target){
+ 
+  const osmLayer = new ol.layer.Tile({
+    source: new ol.source.OSM(),
+  });
+
+var m = new ol.Map({
+    target: target,
+    layers: [
+      osmLayer
+    ],
+    view: new ol.View({
+      center: [0,0],
+      zoom: 1
+    })
+  });
+return m;
 }
 function map_init(){
  
@@ -64,7 +105,7 @@ function map_init(){
       ],
       view: new ol.View({
         center: ol.proj.fromLonLat([37.41, 8.82]),
-        zoom: 2
+        zoom: 1
       })
     });
   return m;
@@ -75,6 +116,7 @@ function drawMap(map,long,lat){
     image: new ol.style.Icon({
         src:'/assets/img/marker/purple.png', // pin Image
         anchor: [0.5, 1],
+        scale: 0.5
     
     })
 })
