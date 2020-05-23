@@ -85,6 +85,7 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
    
    
    var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+  // url = 'http://182.252.135.42:9090/dragonfly/mcis/mzc-aws-montest-01-mcis/vm/aws-mon-test-east-01/metric/'+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
    console.log("Request URL : ",url)
    var html = "";
    $.ajax({
@@ -102,6 +103,7 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
         chart.data = time_obj;
         chart.update();
         $("#chart_detail").show();
+        fnMove('chart_detail');
 
    },
    error : function(request,status, error){
@@ -182,6 +184,7 @@ function checkDragonFly(mcis_id, vm_id){
    var statisticsCriteria = "last";
    var metric = "cpu" 
    var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+   //url = 'http://182.252.135.42:9090/dragonfly/mcis/mzc-aws-montest-01-mcis/vm/aws-mon-test-east-01/metric/'+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
    console.log("Request URL : ",url)
    
    $.ajax({
