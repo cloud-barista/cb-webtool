@@ -123,6 +123,10 @@ func main() {
 	// 웹툴에서 Select Pop
 	e.GET("/Pop/spec", controller.PopSpec)
 
+	// MAP Test
+	e.GET("/map", controller.Map)
+	e.GET("/map/geo/:mcis_id", controller.GeoInfo)
+
 	e.Logger.Fatal(e.Start(":1234"))
 
 }

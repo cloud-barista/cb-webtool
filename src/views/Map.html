@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css" type="text/css">
+    <style>
+      .map {
+        height: 600px;
+        width: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+    
+  
+    <title>OpenLayers example</title>
+  </head>
+  <body>
+    <h2>My Map</h2>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+
+    // const faFlagSolidStyle = new ol.style.Style({
+    // text: new ol.style.Text({
+    //     text: '\uf024', // fas flag solid
+    //     scale: 1,
+    //     font: 'normal 18px FontAwesome',
+    //     offsety: -30,
+    //     offsetx: -10,
+    //     fill: new ol.style.Fill({color: 'black'}),
+    // })
+    // })
+
+    // const faCircleSolidStyle = new ol.style.Style({
+    // text: new ol.style.Text({
+    //     text: '\uf111', // fas circle
+    //     scale: 2,
+    //     font: 'normal 18px FontAwesome',
+    //     offsety: -30,
+    //     offsetx: -10,
+    //     fill: new ol.style.Fill({color: 'red'})
+    // })
+    // })
+    const icon = new ol.style.Style({
+    image: new ol.style.Icon({
+        src:'/assets/img/marker/purple.png', // fas circle
+        anchor: [0.5, 1],
+      
+    })
+    })
+// 처음 보여줄 지도의 중심 위경도    
+const centerCoord = ol.proj.fromLonLat([127.4, 36.4]);
+const centerCoord2 = ol.proj.fromLonLat([-42,-19]);
+const startGeo = ol.proj.fromLonLat([37.41, 8.82])
+// 포인트를 찍을 부분
+const pointGeom = new ol.geom.Point(centerCoord);
+const pointGeom2 = new ol.geom.Point(centerCoord2);
+const point = new ol.geom.Point(startGeo)
+// 포인트를 찍을 부분의 피쳐
+const pointFeature = new ol.Feature(pointGeom);
+const pointFeature2 = new ol.Feature(pointGeom2);
+const point_f = new ol.Feature(point)
+// 벡터로 들어가기 피쳐에 배열로 넣어주면 될꺼 같은데
+
+var wkt =
+  "POLYGON((127.4 36.4, -42 -19, 37.41 8.82))";
+console.log(wkt)
+var format = new ol.format.WKT();
+
+var feature = format.readFeature(wkt, {
+  dataProjection: "EPSG:4326",
+  featureProjection: "EPSG:3857"
+});
+
+const stackVectorSource = new ol.source.Vector({
+  features: [ point_f,pointFeature,pointFeature2,feature]
+});
+
+// 레이어로 덮어주기.
+const stackedPointLayer = new ol.layer.Vector({
+  source: stackVectorSource
+});
+
+
+
+
+// 이게 지도 불러 오는거
+const osmLayer = new ol.layer.Tile({
+      source: new ol.source.OSM(),
+    });
+
+pointFeature.setStyle([icon])
+pointFeature2.setStyle([icon])
+point_f.setStyle([icon])
+
+      const map = new ol.Map({
+        target: 'map',
+        layers: [
+          osmLayer,stackedPointLayer
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([37.41, 8.82]),
+          zoom: 1
+        })
+      });
+      console.log("MAP info : ",map);
+      var wkt2 =
+  "POLYGON((10.689 -25.092, 34.595 " +
+  "-20.170, 38.814 -35.639, 13.502 " +
+  "-39.155, 10.689 -25.092))";
+
+
+
+var feature2 = format.readFeature(wkt2, {
+  dataProjection: "EPSG:4326",
+  featureProjection: "EPSG:3857"
+});
+
+const stackVectorSource2 = new ol.source.Vector({
+  features: [feature2]
+});
+
+// 레이어로 덮어주기.
+const stackedPointLayer2 = new ol.layer.Vector({
+  source: stackVectorSource2
+});
+
+map.addLayer(stackedPointLayer2);
+var geo = map.getLayerGroup()
+console.log("geometry info : ",geo)
+
+    </script>
+  </body>
+</html>
+
+<!-- <script>
+    var selectClick = new ol.interaction.Select({
+  condition: ol.events.condition.click
+});
+
+var raster = new ol.layer.Tile({
+  source: new ol.source.OSM()
+});
+
+var wkt =
+  "POLYGON((10.689 -25.092, 34.595 " +
+  "-20.170, 38.814 -35.639, 13.502 " +
+  "-39.155, 10.689 -25.092))";
+
+var format = new ol.format.WKT();
+
+var feature = format.readFeature(wkt, {
+  dataProjection: "EPSG:4326",
+  featureProjection: "EPSG:3857"
+});
+
+var vector = new ol.layer.Vector({
+  renderMode: 'image',
+  source: new ol.source.Vector({
+    features: [feature]
+  })
+});
+
+var map = new ol.Map({
+  layers: [raster, vector],
+  target: "map",
+  view: new ol.View({
+    center: [2952104.0199, -3277504.823],
+    zoom: 1
+  })
+});
+
+map.addInteraction(selectClick);
+
+this.selectClick.on("select", e => {
+  console.log("e", e);
+});
+
+
+
+</script> -->

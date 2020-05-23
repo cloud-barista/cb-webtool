@@ -38,7 +38,7 @@ function short_desc(str){
 
     return result;
  }
- function show_mcis(url){
+ function show_mcis(url, map){
    console.log("Show mcis Url : ",url)
    
    axios.get(url).then(result=>{
@@ -49,6 +49,7 @@ function short_desc(str){
           location.href = "/MCIS/reg";
           return;
        }
+       console.log("show mcis's map data : ",map);
         console.log("showmcis Data : ",data)
         var html = "";
         var mcis = data.mcis;
@@ -142,9 +143,9 @@ function short_desc(str){
     //    $("#infra_mcis").text(infra_str)
        show_card(mcis[0].id,mcis[0].name);
       if(vm_len > 0){
-       show_vmList(mcis[0].id);
+       show_vmList(mcis[0].id,map);
       }else{
-       show_vmList("");
+       show_vmList("",map);
       }
        
       
@@ -154,11 +155,14 @@ function short_desc(str){
        $("#mcis_name").val(mcis[0].name)
    });
 }
-function show_vmList(mcis_id){
+function show_vmList(mcis_id,map){
   
    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
    console.log("vmList",url)
    if(mcis_id){
+       //여기가 geo location 정보 가져 오는 곳
+    getGeoLocationInfo(mcis_id,map);
+    //여기는 차트 불러 오는 부분
        $.ajax({
            type:'GET',
            url:url,
@@ -173,6 +177,8 @@ function show_vmList(mcis_id){
         console.log("VM DATA : ",vm)
         for(var i in vm){
             var sta = vm[i].status;
+            //ip 정보 가져 오기
+            console.log("========get ip region info=======")
             
         
             var status = sta.toLowerCase()
@@ -269,6 +275,7 @@ function show_vmList(mcis_id){
             
             }
     })
+
    }else{
        $("#table_2").empty();
        $("#table_2").append("<td colspan='8'>Does not Exist</td>");

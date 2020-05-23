@@ -3,14 +3,18 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"os"
+	"strconv"
+	"sync"
 	//"io/ioutil"
 	//"github.com/davecgh/go-spew/spew"
 )
 
 //var CloudConnectionUrl = "http://15.165.16.67:1024"
 var CloudConnectionUrl = os.Getenv("SPIDER_URL")
+var TumbleUrl = os.Getenv("TUMBLE_URL")
 
 type CloudConnectionInfo struct {
 	ID             string `json:"id"`
@@ -36,6 +40,34 @@ type RESP struct {
 		ProviderName     string         `json:"ProviderName"`
 		KeyValueInfoList []KeyValueInfo `json:"KeyValueInfoList"`
 	} `json:"region"`
+}
+
+type IPStackInfo struct {
+	IP          string  `json:"ip"`
+	Lat         float64 `json:"latitude"`
+	Long        float64 `json:"longitude"`
+	CountryCode string  `json:"country_code"`
+}
+
+type KeepZero float64
+
+func (f KeepZero) MarshalJSON() ([]byte, error) {
+	if float64(f) == float64(int(f)) {
+		return []byte(strconv.FormatFloat(float64(f), 'f', 1, 32)), nil
+	}
+	return []byte(strconv.FormatFloat(float64(f), 'f', -1, 32)), nil
+}
+
+type myFloat64 float64
+
+func (mf myFloat64) MarshalJSON() ([]byte, error) {
+	const ε = 1e-12
+	v := float64(mf)
+	w, f := math.Modf(v)
+	if f < ε {
+		return []byte(fmt.Sprintf(`%v.0`, math.Trunc(w))), nil
+	}
+	return json.Marshal(v)
 }
 
 func GetConnectionconfig(drivername string) CloudConnectionInfo {
@@ -150,6 +182,35 @@ func GetCredentialReg() []CloudConnectionInfo {
 	json.NewDecoder(resp.Body).Decode(&nsInfo)
 	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	return nsInfo["ns"]
+
+}
+
+func GetGeoMetryInfo(wg *sync.WaitGroup, ip_address string, returnResult *[]IPStackInfo) {
+	defer wg.Done() //goroutin sync done
+
+	apiUrl := "http://api.ipstack.com/"
+	access_key := "86c895286435070c0369a53d2d0b03d1"
+	url := apiUrl + ip_address + "?access_key=" + access_key
+	resp, err := http.Get(url)
+	fmt.Println("GetGeoMetryInfo request URL : ", url)
+	if err != nil {
+		fmt.Println("GetGeoMetryInfo request URL : ", url)
+	}
+	defer resp.Body.Close()
+
+	//그냥 스트링으로 반환해서 프론트에서 JSON.parse로 처리 하는 방법도 괜찮네
+	//spew.Dump(resp.Body)
+	// bytes, _ := ioutil.ReadAll(resp.Body)
+	// str := string(bytes)
+	// fmt.Println(str)
+	// *returnStr = append(*returnStr, str)
+
+	ipStackInfo := IPStackInfo{}
+
+	json.NewDecoder(resp.Body).Decode(&ipStackInfo)
+	fmt.Println("Get GeoMetry INFO :", ipStackInfo)
+
+	*returnResult = append(*returnResult, ipStackInfo)
 
 }
 
