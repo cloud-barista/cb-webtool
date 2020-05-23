@@ -296,8 +296,8 @@ function show_vmList(mcis_id,map){
 
 function agentSetup(mcis_id,vm_id,public_ip){
    
-        alert("Not Install Agent on thie Server");
-        if(confirm("Install Agent?")){
+        alert("Monitoring service on this server is turned off.");
+        if(confirm("Would to enable the monitoring service?")){
             var reg_url = "/monitoring/install/agent"
             var query_param = "/"+mcis_id+"/"+vm_id+"/"+public_ip;
             console.log("agent setup query param: ",query_param);
