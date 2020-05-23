@@ -14,6 +14,7 @@ function getIPStackRegion(ip_address){
     })
 }
 function getGeoLocationInfo(mcis_id,map){
+  var JZMap = map;
   $.ajax({
     type:'GET',
     url: '/map/geo/'+mcis_id,
@@ -30,7 +31,7 @@ function getGeoLocationInfo(mcis_id,map){
             var lat = result[i].latitude
             var fromLonLat = long+" "+lat;
             polyArr.push(fromLonLat)
-            drawMap(map,long,lat)
+            drawMap(JZMap,long,lat)
         }
         var polygon = "";
         if(polyArr.length > 1){
@@ -44,7 +45,7 @@ function getGeoLocationInfo(mcis_id,map){
   // "-20.170, 38.814 -35.639, 13.502 " +
   // "-39.155, 10.689 -25.092))";
         if(polyArr.length >1){
-          drawPoligon(map,polygon);
+          drawPoligon(JZMap,polygon);
         }
         //drawPoligon(map,wkt);
        
@@ -56,7 +57,7 @@ function map_init(){
       source: new ol.source.OSM(),
     });
 
-    var map = new ol.Map({
+  var m = new ol.Map({
       target: 'map',
       layers: [
         osmLayer
@@ -66,9 +67,10 @@ function map_init(){
         zoom: 2
       })
     });
-  return map;
+  return m;
 }
-function drawMap(JZMap,long,lat){
+function drawMap(map,long,lat){
+  var JZMap = map;
   var icon = new ol.style.Style({
     image: new ol.style.Icon({
         src:'/assets/img/marker/purple.png', // pin Image

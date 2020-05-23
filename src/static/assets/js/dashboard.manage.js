@@ -110,7 +110,7 @@ function short_desc(str){
              +'<td>'
              +badge
              +'</td>'
-             +'<td><a href="#!" onclick="show_card(\''+mcis[i].id+'\',\''+mcis[i].name+'\')" >'+mcis[i].name+'</a></td>'
+             +'<td><a href="#!" onclick="show_vmList(\''+mcis[i].id+'\',\''+map+'\')" >'+mcis[i].name+'</a></td>'
              +'<td>'+vm_len+'</td>'
             //  +'<td>'+vm_len+'</td>'
             
@@ -141,13 +141,13 @@ function short_desc(str){
        $("#table_1").append(html);
     //    var infra_str = "Infra - Server (MCIS : "+mcis[0].name+")"
     //    $("#infra_mcis").text(infra_str)
-       show_card(mcis[0].id,mcis[0].name);
+      // show_card(mcis[0].id,mcis[0].name);
       if(vm_len > 0){
        show_vmList(mcis[0].id,map);
       }else{
        show_vmList("",map);
       }
-       
+    
       
        
        //fnMove("table_1");
@@ -161,6 +161,13 @@ function show_vmList(mcis_id,map){
    console.log("vmList",url)
    if(mcis_id){
        //여기가 geo location 정보 가져 오는 곳
+    
+    console.log("vm list map info : ",map)
+    $("#map").empty();
+    if(!map){
+        map = map_init();
+    }
+    //map = map_init();
     getGeoLocationInfo(mcis_id,map);
     //여기는 차트 불러 오는 부분
        $.ajax({
@@ -304,56 +311,60 @@ function agentSetup(mcis_id,vm_id,public_ip){
     
 }
  
- function show_card(mcis_id,mcis_name){
-     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
-     var html = "";
-     var infra_str = "Infra - Server (MCIS : "+mcis_name+")"
-     $("#infra_mcis").text(infra_str)
-    axios.get(url).then(result=>{
-        var data = result.data
-        console.log("show card data : ",result)
-        var vm_cnt = data.vm
-        if(vm_cnt){
-            vm_cnt = vm_cnt.length;
-        }else{
-            vm_cnt = 0;
-        }
+//  function show_card(mcis_id,mcis_name){
+//      var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+//      var html = "";
+//      var infra_str = "Infra - Server (MCIS : "+mcis_name+")"
+//      $("#infra_mcis").text(infra_str)
+//     axios.get(url).then(result=>{
+//         var data = result.data
+//         console.log("show card data : ",result)
+//         var vm_cnt = data.vm
+//         if(vm_cnt){
+//             vm_cnt = vm_cnt.length;
+//         }else{
+//             vm_cnt = 0;
+//         }
         
         
-            html += '<div class="col-xl-12 col-lg-12">'
-                    +'<div class="card card-stats mb-12 mb-xl-0">'
-                    +'<div class="card-body">'
-                    +'<div class="row">'
-                    +'<div class="col">'
-                    +'<h5 class="card-title text-uppercase text-muted mb-0">'+data.name+'</h5>'
-                    +'<span class="h2 font-weight-bold mb-0">350,897</span>'
-                    +'</div>'
-                    +'<div class="col-auto">'
-                    +'<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
-                    //+'<i class="fas fa-chart-bar"></i>'
-                    +vm_cnt
-                    +'</div>'
-                    +'</div>'
-                    +'</div>'
-                    +'<p class="mt-3 mb-0 text-muted text-sm">'
-                    +'<span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>'
-                    +'<span class="text-nowrap">Since last month</span>'
-                    +'</p>'
-                    +'</div>'
-                    +'</div>'
-                    +'</div>';
+//             html += '<div class="col-xl-12 col-lg-12">'
+//                     +'<div class="card card-stats mb-12 mb-xl-0">'
+//                     +'<div class="card-body">'
+//                     +'<div class="row">'
+//                     +'<div class="col">'
+//                     +'<h5 class="card-title text-uppercase text-muted mb-0">'+data.name+'</h5>'
+//                     +'<span class="h2 font-weight-bold mb-0">350,897</span>'
+//                     +'</div>'
+//                     +'<div class="col-auto">'
+//                     +'<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
+//                     //+'<i class="fas fa-chart-bar"></i>'
+//                     +vm_cnt
+//                     +'</div>'
+//                     +'</div>'
+//                     +'</div>'
+//                     +'<p class="mt-3 mb-0 text-muted text-sm">'
+//                     +'<span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>'
+//                     +'<span class="text-nowrap">Since last month</span>'
+//                     +'</p>'
+//                     +'</div>'
+//                     +'</div>'
+//                     +'</div>';
         
-        $("#card").empty()
-        $("#card").append(html)
-        if(vm_cnt == 0){
-            show_vmList("")
-        }else{
-            show_vmList(mcis_id)
-        }
+//         $("#card").empty()
+//         $("#card").append(html)
+
+//         if(!JZMap){
+//             var JZMap = map_init();
+//         }
+//         if(vm_cnt == 0){
+//             show_vmList("",JZMap)
+//         }else{
+//             show_vmList(mcis_id,JZMap)
+//         }
         
        
-    })
- }
+//     })
+//  }
  function show_vm(mcis_id,vm_id,image_id){
     show_vmDetailList(mcis_id, vm_id);
     show_vmSpecInfo(mcis_id, vm_id);
