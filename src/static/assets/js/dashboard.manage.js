@@ -40,6 +40,7 @@ function short_desc(str){
  }
  function show_mcis(url, map){
    console.log("Show mcis Url : ",url)
+   $("#vm_detail").hide();
    
    axios.get(url).then(result=>{
       
@@ -157,7 +158,8 @@ function short_desc(str){
    });
 }
 function show_vmList(mcis_id,map){
-  
+    $("#vm_detail").hide();
+   
    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
    console.log("vmList",url)
    if(mcis_id){
@@ -374,6 +376,7 @@ function agentSetup(mcis_id,vm_id,public_ip){
     
     show_images(image_id);
     $("#current_vmid").val(vm_id);
+    $("#server_text").empty();
     $("#server_text").append("<strong>"+vm_name+" Server Info</strong>");
     $("#vm_detail").show();
  }
