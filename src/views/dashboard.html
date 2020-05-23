@@ -374,16 +374,7 @@
                     source: new ol.source.OSM(),
                 });
 
-                var JZMap = new ol.Map({
-                    target: 'map',
-                    layers: [
-                        osmLayer
-                    ],
-                    view: new ol.View({
-                        center: ol.proj.fromLonLat([37.41, 8.82]),
-                        zoom: 2
-                    })
-                });
+                var JZMap = map_init();
                 console.log("JZMAP here : ",JZMap);
                 
                 show_mcis(url,JZMap);

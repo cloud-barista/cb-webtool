@@ -21,6 +21,7 @@ function getGeoLocationInfo(mcis_id,map){
     }).done(function(result){
         console.log("region Info : ",result)
         var polyArr = new Array();
+      
         for(var i in result){
             console.log("region lat long info : ",result[i])
             // var json_parse = JSON.parse(result[i])
@@ -38,16 +39,24 @@ function getGeoLocationInfo(mcis_id,map){
         }else{
           polygon = "POLYGON(("+polyArr[0]+"))";
         }
-        drawPoligon(map,polygon);
+  //       var wkt =
+  // "POLYGON((10.689 -25.092, 34.595 " +
+  // "-20.170, 38.814 -35.639, 13.502 " +
+  // "-39.155, 10.689 -25.092))";
+        if(polyArr.length >1){
+          drawPoligon(map,polygon);
+        }
+        //drawPoligon(map,wkt);
+       
     })
 }
 function map_init(){
-  if(!JZMap){
+ 
     const osmLayer = new ol.layer.Tile({
       source: new ol.source.OSM(),
     });
 
-    var JZMap = new ol.Map({
+    var map = new ol.Map({
       target: 'map',
       layers: [
         osmLayer
@@ -57,7 +66,7 @@ function map_init(){
         zoom: 2
       })
     });
-  }
+  return map;
 }
 function drawMap(JZMap,long,lat){
   var icon = new ol.style.Style({
