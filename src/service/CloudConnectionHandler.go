@@ -47,6 +47,9 @@ type IPStackInfo struct {
 	Lat         float64 `json:"latitude"`
 	Long        float64 `json:"longitude"`
 	CountryCode string  `json:"country_code"`
+	VMName      string
+	VMID        string
+	Status      string
 }
 
 type KeepZero float64
@@ -185,7 +188,7 @@ func GetCredentialReg() []CloudConnectionInfo {
 
 }
 
-func GetGeoMetryInfo(wg *sync.WaitGroup, ip_address string, returnResult *[]IPStackInfo) {
+func GetGeoMetryInfo(wg *sync.WaitGroup, ip_address string, status string, vm_id string, vm_name string, returnResult *[]IPStackInfo) {
 	defer wg.Done() //goroutin sync done
 
 	apiUrl := "http://api.ipstack.com/"
@@ -205,7 +208,11 @@ func GetGeoMetryInfo(wg *sync.WaitGroup, ip_address string, returnResult *[]IPSt
 	// fmt.Println(str)
 	// *returnStr = append(*returnStr, str)
 
-	ipStackInfo := IPStackInfo{}
+	ipStackInfo := IPStackInfo{
+		VMID:   vm_id,
+		Status: status,
+		VMName: vm_name,
+	}
 
 	json.NewDecoder(resp.Body).Decode(&ipStackInfo)
 	fmt.Println("Get GeoMetry INFO :", ipStackInfo)

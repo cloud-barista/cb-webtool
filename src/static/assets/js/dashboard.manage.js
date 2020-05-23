@@ -67,8 +67,9 @@ function short_desc(str){
         for(var i in mcis){
             var vm_len = 0
             var sta = mcis[i].status;
+            var sl = sta.split("-");
             var badge = "";
-            var status = sta.toLowerCase()
+            var status = sl[0].toLowerCase()
             var vms = mcis[i].vm
            
             if(vms){
@@ -88,14 +89,14 @@ function short_desc(str){
            console.log("mcis Status 2: ", status)
             if(status == "running"){
                badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
-            }else if(status == "include-notdefinedstatus" ){
+            }else if(status == "include" ){
                badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
             }else if(status == "suspended"){
                badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
             }else if(status == "terminate"){
                badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
             }else{
-               badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
+               badge += '<span class="badge badge-pill badge-warning">'+sta+'</span>'
             }
             count++;
             if(count == 1){
@@ -238,7 +239,7 @@ function show_vmList(mcis_id,map){
                         +'<td>'
                         +badge
                         +'</td>'
-                        +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].image_id+'\');">'+vm[i].name+'</a></td>'
+                        +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+vm[i].image_id+'\');">'+vm[i].name+'</a></td>'
                         
                         +'<td>'+provider+'</td>'
                         +'<td>'+vm[i].region.Region+'</td>'
@@ -259,15 +260,15 @@ function show_vmList(mcis_id,map){
                             +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
                         +'</div>'
                         +'</button>'
-                        +'<button type="button" class="btn btn-icon"  aria-haspopup="true" aria-expanded="false" onclick="agentSetup(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].publicIP+'\')">'
-                        +'<i class="fas fa-desktop"></i>'
+                        // +'<button type="button" class="btn btn-icon"  aria-haspopup="true" aria-expanded="false" onclick="agentSetup(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].publicIP+'\')">'
+                        // +'<i class="fas fa-desktop"></i>'
                        // +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop2">'
                            // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
                            // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
                            // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
                            // +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
                        // +'</div>'
-                        +'</button>'
+                       // +'</button>'
                         +'</td>'
                         +'</tr>';
                     }
@@ -292,20 +293,18 @@ function show_vmList(mcis_id,map){
 }
 
 function agentSetup(mcis_id,vm_id,public_ip){
-    var first = true;
-    if(first){
+   
         alert("Not Install Agent on thie Server");
         if(confirm("Install Agent?")){
             var reg_url = "/monitoring/install/agent"
             var query_param = "/"+mcis_id+"/"+vm_id+"/"+public_ip;
+            console.log("agent setup query param: ",query_param);
             location.href = reg_url+query_param;
         }else{
             return;
         }
        
-    }else{
-        showMonitoring(mcis_id,vm_id);
-    }
+
     
 
     
@@ -365,15 +364,20 @@ function agentSetup(mcis_id,vm_id,public_ip){
        
 //     })
 //  }
- function show_vm(mcis_id,vm_id,image_id){
+ function show_vm(mcis_id,vm_id,vm_name,image_id){
+    checkDragonFly(mcis_id,vm_id);
+    show_vmSSHInfo(mcis_id, vm_id);
     show_vmDetailList(mcis_id, vm_id);
     show_vmSpecInfo(mcis_id, vm_id);
     show_vmNetworkInfo(mcis_id, vm_id);
     show_vmSecurityGroupInfo(mcis_id, vm_id);
-    show_vmSSHInfo(mcis_id, vm_id);
+    
     show_images(image_id);
+    $("#current_vmid").val(vm_id);
+    $("#server_text").append("<strong>"+vm_name+" Server Info</strong>");
     $("#vm_detail").show();
  }
+
  function sel_table(targetNo,mcid){
      var $target = $("#card_"+targetNo+"");
      var html = "";
@@ -667,7 +671,9 @@ console.log("axios return value : ",f);
  function show_vmDetailList(mcis_id, vm_id){
      url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
      axios.get(url).then(result=>{
-         var data = result.data
+         var data = result.data;
+         var publicIP = data.publicIP;
+         $("#current_publicIP").val(publicIP);
          var html = ""
          $.ajax({
             url: SpiderURL+"/connectionconfig",
@@ -684,34 +690,51 @@ console.log("axios return value : ",f);
                     console.log("Inner Provider : ",provider)
                 }
             }
-            html += '<tr>'
-                +'<th scope="colgroup"rowspan="6" class="text-center">Infra - Server</th>'
-                +'<th scope="colgroup" class="text-right">Server ID</th>'
-                +'<td  colspan="1">'+data.id+'</td>'
-               
-                +'<th scope="colgroup" class="text-right">Cloud Provider</th>'
-                +'<td colspan="1">'+provider+'</td>'
-                +'</tr>'
-                
-                +'<tr>'
-                +'<th scope="colgroup" class="text-right">Region</th>'
-                +'<td  colspan="1">'+data.region.Region+'</td>'
-               
-                +'<th scope="colgroup" class="text-right">Zone</th>'
-                +'<td  colspan="1">'+data.region.Zone+'</td>'
-                +'</tr>'
-                +'<tr>'
-                +'<th scope="colgroup" class="text-right">Private IP</th>'
-                +'<td colspan="1">'+data.privateIP+'</td>'
-                
-                +'<th scope="colgroup" class="text-right">Private DNS</th>'
-                +'<td colspan="1">'+data.privateDNS+'</td>'
-                +'</tr>'
 
-                +'<tr>'
-                +'<th scope="colgroup" class="text-right">Server Status</th>'
-                +'<td colspan="3">'+data.status+'</td>'
-                +'</tr>';
+            html += '<tr>'
+                    +'<th scope="colgroup"rowspan="10" class="text-center">Infra - Server</th>'
+
+                    +'<th scope="colgroup" class="text-right">Server ID</th>'
+                    +'<td  colspan="1">'+data.id+'</td>'
+                    
+                    
+                    +'<th scope="colgroup" class="text-right">Cloud Provider</th>'
+                    +'<td colspan="1">'+provider+'</td>'
+                    +'</tr>'
+
+
+                    +'<tr>'
+                    // +'<th scope="colgroup" class="text-right">CP VMID</th>'
+                    // +'<td  colspan="1">'+data.id+'</td>'
+                   
+                    +'<th scope="colgroup" class="text-right">Region</th>'
+                    +'<td  colspan="1" >'+data.region.Region+'</td>'
+                    +'<th scope="colgroup" class="text-right">Zone</th>'
+                    +'<td  colspan="1">'+data.region.Zone+'</td>'
+                    +'</tr>'
+
+                    
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">Public IP</th>'
+                    +'<td  colspan="1">'+data.publicIP+'</td>'
+                    
+                    +'<th scope="colgroup" class="text-right">Public DNS</th>'
+                    +'<td  colspan="1">'+data.publicDNS+'</td>'
+                    +'</tr>'
+
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">Private IP</th>'
+                    +'<td colspan="1">'+data.privateIP+'</td>'
+                    
+                    +'<th scope="colgroup" class="text-right">Private DNS</th>'
+                    +'<td colspan="1">'+data.privateDNS+'</td>'
+                    +'</tr>'
+
+                    +'<tr>'
+                    +'<th scope="colgroup" class="text-right">Server Status</th>'
+                    +'<td colspan="3">'+data.status+'</td>'
+                    +'</tr>';
+
               
             $("#vm").empty();
             $("#vm").append(html);
@@ -994,6 +1017,7 @@ function show_vmSecurityGroupInfo(mcis_id, vm_id){
 function show_vmSSHInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     axios.get(url).then(result=>{
+
         var data = result.data
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"

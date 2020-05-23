@@ -252,7 +252,7 @@
      <script>
      $(document).ready(function(){
          var nsid = "{{ .NameSpace}}";
-         var url = CommonURL+"/ns/"+nsid+"/mcis";
+         var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
          console.log("url :",url);
          show_mcis(url);
      })
@@ -270,17 +270,7 @@
           
           for (var i in arr){
             var chart_target = "canvas_"+i;
-            // if(i == 1){
-                
-            //     getMetric(chart_target,arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration)              
-            // }
-            // if(i == 2){
-                
-            //     getMetric(chart_target,arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration)              
-            // }
-
-            
-                window.setTimeout( getMetric(chart_target,arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration),2000 );
+             getMetric(chart_target,arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration);
                
             
 

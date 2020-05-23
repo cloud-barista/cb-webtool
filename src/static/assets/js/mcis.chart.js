@@ -12,6 +12,195 @@ var config = {
     }
 }
 
+function showMonitoring(mcis_id, vm_id){
+    $("#cpu").empty()
+    $("#memory").empty()
+    $("#disk").empty()
+    $("#network").empty()
+     var arr = ["cpu","memory","disk","network"];
+     var periodType = "m";
+     var duration = "10m";
+     var statisticsCriteria = "last";
+     
+     for (var i in arr){
+       var chart_target = "canvas_"+i;
+        getMetric(chart_target,arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration);
+  
+     }
+}
+
+function show_monitoring(){
+    var mcis_id = $("#mcis_id").val();
+    var vm_id = $("#current_vmid").val();
+    var checkDragonValue = $("#check_dragonFly").val();
+    var public_ip = $("#current_publicIP").val();
+
+    if(checkDragonValue == "200"){
+        showMonitoring(mcis_id,vm_id);
+    }else{
+        agentSetup(mcis_id,vm_id,public_ip);
+    }
+    
+}
+
+function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,statisticsCriteria, duration){
+    console.log("====== Start GetMetric ====== ")
+  
+   var ctx = document.getElementById(chart_target).getContext('2d')
+   var chart = new Chart(ctx,{
+       type:"line",
+       data:{},
+       options:{
+        responsive: true,
+        title: {
+            display: true,
+            text: target
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            x: {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Time'
+                }
+            },
+            y: {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Value'
+                }
+            }
+        }
+    }
+   });
+   
+   
+   var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+   console.log("Request URL : ",url)
+   var html = "";
+   $.ajax({
+   url: url,
+   async:false,
+   type:'GET',
+   success : function(result){
+       var data = result
+         console.log("Get Monitoring Data : ",data)
+         console.log("======== start mapping data ======");
+         var time_obj = time_arr(data,target);
+         console.log("chart_target :",chart_target);
+        
+        // var myChart = new Chart(ctx, time_obj);
+        chart.data = time_obj;
+        chart.update();
+        $("#chart_detail").show();
+
+   },
+   error : function(request,status, error){
+       console.log("ERROR request status at DragonFly : ",status);
+     
+       
+       
+   }
+   
+})
+   // axios.get(url).then(result=>{
+   //       var data = result.data
+   //       console.log("Get Monitoring Data : ",data)
+   //       console.log("======== start mapping data ======");
+   //       var time_obj = time_arr(data,target);
+   //       console.log("chart_target :",chart_target);
+   //       var ctx = document.getElementById(chart_target).getContext('2d')
+   //       var myChart = new Chart(ctx, time_obj);
+   //       myChart.update();
+   //      // Chart.Line('canvas1',time_obj);
+   //       console.log("==time series==",time_obj);
+   //      // var metricObject = mappingMetric(data);
+   //      // var m_len = metricObject.length-1
+
+   //     //   if(target == "cpu"){
+   //     //     color += '<div class="icon icon-shape bg-success text-white rounded-circle shadow">'
+   //     //           + '<i class="fas fa-microchip"></i>';
+   //     //     var num = parseFloat(metricObject[m_len].cpu_utilization)
+   //     //     metric_size +='<span class="h2 font-weight-bold mb-0">'+num.toFixed(3)+'%</span>'                  
+   //     //   }else if(target == "memory"){
+   //     //     color += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow">'
+   //     //           + '<i class="fas fa-memory"></i>'
+   //     //     var num = parseFloat(metricObject[m_len].mem_utilization)
+   //     //     metric_size +='<span class="h2 font-weight-bold mb-0">'+num.toFixed(3)+'%</span>' 
+   //     //   }else if(target == "disk"){
+   //     //     color += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
+   //     //           + '<i class="far fa-save"></i>'
+   //     //     var num = parseFloat(metricObject[m_len].used_percent)
+   //     //     metric_size +='<span class="h2 font-weight-bold mb-0">'+num.toFixed(3)+'%</span>' 
+   //     //   }else if(target == "network"){
+   //     //     color += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow">'
+   //     //           + '<i class="fas fa-network-wired"></i>'
+   //     //     var num = parseFloat(metricObject[m_len].bytes_in)
+   //     //     metric_size +='<span class="h2 font-weight-bold mb-0">'+num.toFixed(1)+'byte</span>' 
+   //     //   }
+   //     //         html += '<div class="card card-stats mb-4 mb-xl-0">'
+   //     //              +'<div class="card-body">'
+   //     //              +'<div class="row">'
+   //     //              +'<div class="col">'
+   //     //              +'<h5 class="card-title text-uppercase text-muted mb-0">'+metric+'</h5>'
+   //     //              //+'<span class="h2 font-weight-bold mb-0">2,356</span>'
+   //     //              +metric_size
+   //     //              +'</div>'
+   //     //              +'<div class="col-auto">'
+                  
+   //     //              +color
+                    
+   //     //              //+'<i class="fas fa-chart-pie"></i>'
+   //     //              +'</div>'
+   //     //              +'</div>'
+   //     //              +'</div>'
+   //     //              +'<p class="mt-3 mb-0 text-muted text-sm">'
+   //     //              +'<span class="text-danger mr-2"> 3.48%</span>'
+   //     //              +'<span class="text-nowrap">'+metricObject[0].time+'</span>'
+   //     //              +'</p>'
+   //     //              +'</div>'
+   //     //              +'</div>';
+         
+   //     //   $("#"+target+"").empty()
+   //     //   $("#"+target+"").append(html)
+   //   })
+}
+
+function checkDragonFly(mcis_id, vm_id){
+   console.log("====== Start Check DragonFly ====== ")
+   var periodType = "m";
+   var duration = "10m";
+   var statisticsCriteria = "last";
+   var metric = "cpu" 
+   var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+   console.log("Request URL : ",url)
+   
+   $.ajax({
+        url: url,
+        async:false,
+        type:'GET',
+        success : function(result){
+            
+            $("#check_dragonFly").val("200");
+        },
+        error : function(request,status, error){
+        
+            $("#check_dragonFly").val("400");
+            
+        }          
+    })
+   
+}
+
 
 
 function time_arr(obj, title){

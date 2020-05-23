@@ -59,8 +59,9 @@ function short_desc(str){
          
          for(var i in mcis){
              var sta = mcis[i].status;
+             var sl = sta.split("-");
              var badge = "";
-             var status = sta.toLowerCase()
+             var status = sl[0].toLowerCase()
              var vms = mcis[i].vm
              var vm_len = 0
             
@@ -73,14 +74,14 @@ function short_desc(str){
             console.log("mcis Status 2: ", status)
              if(status == "running"){
                 badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
-             }else if(status == "include-notdefinedstatus" ){
+             }else if(status == "include" ){
                 badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
              }else if(status == "suspended"){
                 badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
              }else if(status == "terminate"){
                 badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
              }else{
-                badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
+                badge += '<span class="badge badge-pill badge-warning">'+sta+'</span>'
              }
              count++;
              if(count == 1){

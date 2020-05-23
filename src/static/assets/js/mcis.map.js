@@ -32,19 +32,30 @@ function getGeoLocationInfo(mcis_id,map){
       result = [{
         longitude: 126.990407,
         latitude:37.550246,
+        Status: "Running",
+        VMID: "VM-aws-developer-01",
+        VMName: "VM-aws-developer-01"
       },
      
       {
+        Status: "Running",
+        VMID: "VM-aws-developer-02",
+        VMName: "VM-aws-developer-02",
         
         longitude: 10.403993,
         latitude:51.241497,
        },
        {
+        Status: "partial",
+        VMID: "VM-aws-developer-03",
+        VMName: "VM-aws-developer-03",
         latitude: 39.043701171875,
         longitude: -77.47419738769531
       },
        {
-        
+        Status: "Warning",
+        VMID: "VM-aws-developer-04",
+        VMName: "VM-aws-developer-04",
         longitude: 129.315757,
         latitude: -27.635010
        }
@@ -57,7 +68,7 @@ function getGeoLocationInfo(mcis_id,map){
             var lat = result[i].latitude
             var fromLonLat = long+" "+lat;
             polyArr.push(fromLonLat)
-            drawMap(JZMap,long,lat)
+            drawMap(JZMap,long,lat,result[i])
         }
         var polygon = "";
         if(polyArr.length > 1){
@@ -79,6 +90,7 @@ function map_init_target(target){
   const osmLayer = new ol.layer.Tile({
     source: new ol.source.OSM(),
   });
+  
 
 var m = new ol.Map({
     target: target,
@@ -90,6 +102,7 @@ var m = new ol.Map({
       zoom: 1
     })
   });
+ 
 return m;
 }
 function map_init(){
@@ -105,13 +118,22 @@ function map_init(){
       ],
       view: new ol.View({
         center: ol.proj.fromLonLat([37.41, 8.82]),
-        zoom: 1
+        zoom: 0
       })
     });
   return m;
 }
-function drawMap(map,long,lat){
+function drawMap(map,long,lat,info){
   var JZMap = map;
+  var element = document.getElementById('popup');
+
+  var popup = new ol.Overlay({
+    element: element,
+    positioning: 'bottom-center',
+    stopEvent: false,
+    offset: [0, -50]
+  });
+  
   var icon = new ol.style.Style({
     image: new ol.style.Icon({
         src:'/assets/img/marker/purple.png', // pin Image
@@ -132,6 +154,30 @@ function drawMap(map,long,lat){
     source: stackVectorMap
   })
   JZMap.addLayer(stackLayer)
+  // JZMap.addOverlay(popup);
+  // JZMap.on('click',function(evt){
+  //   var feature = map.forEachFeatureAtPixel(evt.pixel,function(feature){
+  //     return feature;
+  //   })
+   
+  //   if(feature){
+  //     var coordinates = feature.getGeometry().getCoordinates();
+  //     popup.setPosition(coordinates);
+  //     $(element).empty()
+  //     $(element).show()      
+  //     // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
+     
+  //     $(element).popover({
+  //       placement: 'top',
+  //       html: true,
+  //       content: "ID : "+info.VMID+"\n"+"Status :"+info.Status,
+  //       title: info.VMName,
+  //     });
+  //     $(element).popover('show');
+  //   }else{
+  //     $(element).popover('disable');
+  //   }
+  // })
   
  
 }

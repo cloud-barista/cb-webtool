@@ -97,10 +97,48 @@
         {{template "Footer" .}}
 
 <script>
+function show_vmSSHInfo(){
+    var mcis_id =  $("#mcis_id").val();
+    var vm_id = $("#vm_id").val();
+    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    axios.get(url).then(result=>{
 
+        var data = result.data
+        var html = ""
+        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
+        var spec_id = data.ssh_key_id
+       
+        $.ajax({
+           url: url2,
+           async:false,
+           type:'GET',
+          
+
+       }).done(function(result){
+        var res = result.sshKey
+        var pv_key = "";
+       console.log("sshKey info :",res);
+        for(var k in res){
+            if(res[k].id == spec_id){
+                pv_key  = res[k].privateKey;                   
+            }
+        } 
+        if(pv_key){
+            $("#ssh_key").val(pv_key);
+            $("#ssh_key").attr('readonly',true);
+        }
+
+    })
+      
+           
+        
+    })
+
+}
 
 
 $(document).ready(function(){
+    show_vmSSHInfo();
     $("#reg_btn").click(function(){
         console.log("reg btn click : ","{{ .comURL.DragonFlyURL}}") 
         var url = DragonFlyURL+"/agent/install";

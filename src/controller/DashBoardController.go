@@ -86,7 +86,8 @@ func GeoInfo(c echo.Context) error {
 
 	for _, item := range publicIpInfo.PublicIPInfo {
 		wg.Add(1)
-		go service.GetGeoMetryInfo(&wg, item.PublicIp, &ipStackInfo)
+
+		go service.GetGeoMetryInfo(&wg, item.PublicIp, item.Status, item.VMID, item.VMName, &ipStackInfo)
 
 	}
 	wg.Wait()
