@@ -215,10 +215,17 @@ function map_init(){
       var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
         return feature;
       })
-      var element = document.createElement('div');
-     // element.setAttribute("class", "popover");
+      
+      console.log("feature click info : ",feature.get("id"));
+      var id = feature.get("id")
+      if(feature.get("id") != null){
+        JZMap.removeOverlay(JZMap.getOverlayById(id));
+      }
+      if(feature){
+        var element = document.createElement('div');
+      element.setAttribute("class", "popover");
       element.setAttribute("onclick", "$(this).hide()");
-      element.innerHTML="<div class='popover fade bs-popover-auto show' data-toggle='popover' style='width:150px;'>"+feature.get("title")+"</div>"
+      element.innerHTML="<div data-toggle='popover' style='width:100%;'>"+feature.get("title")+"</div>"
       
       
 
@@ -228,17 +235,11 @@ function map_init(){
   
       var popup = new ol.Overlay({
         element: element,
-        positioning: 'bottom-center',
+        positioning: 'auto',
         stopEvent: false,
-        offset: [0, -50],
+        offset: [0, 0],
         id:feature.get("id")
       });
-      console.log("feature click info : ",feature.get("id"));
-      var id = feature.get("id")
-      if(feature.get("id") != null){
-        JZMap.removeOverlay(JZMap.getOverlayById(id));
-      }
-      if(feature){
         var coordinates = feature.getGeometry().getCoordinates();
         popup.setPosition(coordinates);
         // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
