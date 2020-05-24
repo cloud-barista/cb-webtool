@@ -102,6 +102,63 @@ var m = new ol.Map({
       zoom: 1
     })
   });
+   var JZMap = m;
+   var element = document.getElementById('map_pop2');
+  JZMap.on('click',function(evt){
+    
+    var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
+      return feature;
+    })
+    console.log("feature click info : ",feature.get("vm_id"));
+   
+    var popup = new ol.Overlay({
+      element: element,
+      positioning: 'bottom-center',
+      stopEvent: false,
+      offset: [0, -50]
+    });
+
+   
+    if(feature){
+      var coordinates = feature.getGeometry().getCoordinates();
+      popup.setPosition(coordinates);
+      // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
+     
+     
+      // element.setAttribute("class", "overlayElement");
+      // element.setAttribute("id", feature.get('vm_id'));
+      // element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
+     
+      
+      // $(element).empty()
+      // $(element).show()    
+
+      $(element).popover({
+        placement: 'top',
+        html: true,
+        content: "ID : "+feature.get('vm_id')+"\n"+"Status :"+feature.get('vm_status'),
+        title: feature.get('title'),
+      });
+
+      
+      // var popup = new ol.Overlay({
+      //   element: element,
+      //   id:feature.get("vm_id"),
+      //   positioning: 'bottom-center',
+      //   position: coordinates,
+      //   offset: [0, -70],
+      //   stopEvent: false,
+      //   offset: [0, -50]
+      // });
+      
+       
+      JZMap.addOverlay(popup);
+      
+      $(element).popover('show');
+    }else{
+      $(element).popover('hide');
+    }
+  });
  
 return m;
 }
@@ -124,29 +181,54 @@ function map_init(){
     var JZMap = m;
 
     
-    JZMap.on('pointermove', function(e) {
-      if (e.dragging) {
-        $(element).popover('hide');
-        return;
-      }
-      var pixel = JZMap.getEventPixel(e.originalEvent);
-      var hit = JZMap.hasFeatureAtPixel(pixel);
     
-    });
 
-    var deleteOverlay = function(id){
+  //   var deleteOverlay = function(id){
+  //     JZMap.removeOverlay(JZMap.getOverlayById(id));
+  // }
+ 
+  JZMap.on('pointermove', function(e) {
+    var feature = JZMap.forEachFeatureAtPixel(e.pixel,function(feature){
+      return feature;
+    })
+    if (e.dragging) {
+      var element = feature.get("element");
+      var id = feature.get("id");
+      $(element).popover('hide');
       JZMap.removeOverlay(JZMap.getOverlayById(id));
-  }
+      return;
+    }
+    var pixel = JZMap.getEventPixel(e.originalEvent);
+    var hit = JZMap.hasFeatureAtPixel(pixel);
+  
+  });
     JZMap.on('click',function(evt){
-      
+     
       var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
         return feature;
       })
+
+      $(element).popover('hide');
+      JZMap.removeOverlay(JZMap.getOverlayById(id));
+
       var element = document.createElement('div');
-      
+      overlayElement.setAttribute("onclick", "deleteOverlay('"+feature.get("id")+"')");
+      feature.set("element");
+      $(element).popover('hide');
+      var popup = new ol.Overlay({
+        element: element,
+        positioning: 'bottom-center',
+        stopEvent: false,
+        offset: [0, -50]
+      });
+      console.log("feature click info : ",feature.get("id"));
+      var id = feature.get("id")
+      if(feature.get("id") != null){
+        JZMap.removeOverlay(JZMap.getOverlayById(id));
+      }
       if(feature){
         var coordinates = feature.getGeometry().getCoordinates();
-        console.log("Feature : ",feature.getId()); 
+        popup.setPosition(coordinates);
         // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
        
        
@@ -155,25 +237,30 @@ function map_init(){
         // element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
        
         
+        $(element).empty()
+        $(element).show()    
+
         $(element).popover({
           placement: 'top',
           html: true,
           content: "ID : "+feature.get('vm_id')+"\n"+"Status :"+feature.get('vm_status'),
           title: feature.get('title'),
         });
-  
-        var popup = new ol.Overlay({
-          element: element,
-          id:feature.get("vm_id"),
-          positioning: 'bottom-center',
-          position: coordinates,
-          offset: [0, -70],
-          stopEvent: false,
-          offset: [0, -50]
-        });
-       // $(element).show()    
+
+        
+        // var popup = new ol.Overlay({
+        //   element: element,
+        //   id:feature.get("vm_id"),
+        //   positioning: 'bottom-center',
+        //   position: coordinates,
+        //   offset: [0, -70],
+        //   stopEvent: false,
+        //   offset: [0, -50]
+        // });
+        
+         
         JZMap.addOverlay(popup);
-        $(element).popover('hide');
+        
         $(element).popover('show');
       }else{
         $(element).popover('hide');
@@ -200,6 +287,7 @@ function drawMap(map,long,lat,info){
   point_feature.set('title',info.VMName)
   point_feature.set('vm_status',info.Status)
   point_feature.set('vm_id',info.VMID)
+  point_feature.set('id',info.VMID)
 
   var stackVectorMap = new ol.source.Vector({
     features : [point_feature]
@@ -209,11 +297,6 @@ function drawMap(map,long,lat,info){
     source: stackVectorMap
   })
   JZMap.addLayer(stackLayer)
-  
-  
-
- 
-  
  
 }
 
