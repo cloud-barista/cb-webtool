@@ -123,3 +123,77 @@
             map.removeOverlay(map.getOverlayById(id));
         }
           
+        init();
+        function init(){
+          var wms=new OpenLayers.Layer.WMS('USA Population','https://demo.geo-solutions.it/geoserver/wms',{layers:'topp:states'},{attribution:'<a target="_blank" href="https://demo.geo-solutions.it/geoserver" title="USA Population">USA Population</a>'}),
+            vector=new OpenLayers.Layer.Vector(),
+            map=new OpenLayers.Map('map',{
+              center:[-98,38],
+              zoom:5,
+              layers:[wms,vector]
+            });
+          map.events.register('click',wms,GetFeatureInfoWMS);
+          function GetFeatureInfoWMS(e){
+            var me=this,
+              xy=e.xy,
+              map=me.map,
+              loc=map.getLonLatFromPixel(xy),			
+              bounds=map.getExtent(),
+              size=map.getSize(),
+              obj=OpenLayers.Util.getParameters(me.getURL(bounds)),			
+              params ={
+                REQUEST:'GetFeatureInfo',
+                //VERSION:obj.VERSION,//comes from getMapUrl
+                QUERY_LAYERS:obj.LAYERS,
+                INFO_FORMAT:'application/json',
+                FEATURE_COUNT:5,
+                //EXCEPTIONS:'application/vnd.ogc.se_xml',//deafault
+                //BBOX:bounds.toBBOX(),//comes from getMapUrl
+                WIDTH:size.w,//WIDTH, comes from getMapUrl isn't working
+                HEIGHT:size.h //HEIGHT, comes from getMapUrl isn't working
+              };
+            if(parseFloat(obj.VERSION)>=1.3){
+              params.I=xy.x;params.J=xy.y;
+            }else{
+              params.X=xy.x;params.Y=xy.y;
+            }
+            OpenLayers.Util.applyDefaults(params,obj);
+            OpenLayers.Request.GET({
+              url:me.url,
+              params:params,
+              success:function(res){
+                var dif=new OpenLayers.Format.GeoJSON(),
+                  features=dif.read(res.responseText),
+                  html='',
+                  popup;
+                vector.removeAllFeatures();
+                if(features.length){
+                  vector.addFeatures(features);
+                  for(var k in features){
+                    var feature=features[k],
+                      attributes=feature.attributes;
+                    html+='<br/><b>State Code: </b>'+attributes.STATE_ABBR+'<br/><b>State Name: </b>'+attributes.STATE_NAME+'<br/>';
+                  }
+                  popup=new OpenLayers.Popup.FramedCloud('popup',loc,size,html,null,true,
+                    onPopupClose=function(e){
+                      var me=this;
+                      me.destroy();
+                      vector.removeAllFeatures();
+                      OpenLayers.Event.stop(e);
+                    }
+                  );
+                }else{
+                  html='No features found...';
+                  popup=new OpenLayers.Popup.FramedCloud('popup',loc,size,html,null,true);
+                }
+                map.addPopup(popup,true);
+              },
+              failure:function(res){
+                vector.removeAllFeatures();
+                html='Unable to complete the request...:'+res.responseText;
+                popup=new OpenLayers.Popup.FramedCloud('popup',loc,size,html,null,true);
+                map.addPopup(popup,true);
+              }
+            });
+          }
+        }

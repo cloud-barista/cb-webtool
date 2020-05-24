@@ -29,37 +29,37 @@ function getGeoLocationInfo(mcis_id,map){
     }).done(function(result){
         console.log("region Info : ",result)
         var polyArr = new Array();
-      result = [{
-        longitude: 126.990407,
-        latitude:37.550246,
-        Status: "Running",
-        VMID: "VM-aws-developer-01",
-        VMName: "VM-aws-developer-01"
-      },
+    //   result = [{
+    //     longitude: 126.990407,
+    //     latitude:37.550246,
+    //     Status: "Running",
+    //     VMID: "VM-aws-developer-01",
+    //     VMName: "VM-aws-developer-01"
+    //   },
      
-      {
-        Status: "Running",
-        VMID: "VM-aws-developer-02",
-        VMName: "VM-aws-developer-02",
+    //   {
+    //     Status: "Running",
+    //     VMID: "VM-aws-developer-02",
+    //     VMName: "VM-aws-developer-02",
         
-        longitude: 10.403993,
-        latitude:51.241497,
-       },
-       {
-        Status: "partial",
-        VMID: "VM-aws-developer-03",
-        VMName: "VM-aws-developer-03",
-        latitude: 39.043701171875,
-        longitude: -77.47419738769531
-      },
-       {
-        Status: "Warning",
-        VMID: "VM-aws-developer-04",
-        VMName: "VM-aws-developer-04",
-        longitude: 129.315757,
-        latitude: -27.635010
-       }
-    ]
+    //     longitude: 10.403993,
+    //     latitude:51.241497,
+    //    },
+    //    {
+    //     Status: "partial",
+    //     VMID: "VM-aws-developer-03",
+    //     VMName: "VM-aws-developer-03",
+    //     latitude: 39.043701171875,
+    //     longitude: -77.47419738769531
+    //   },
+    //    {
+    //     Status: "Warning",
+    //     VMID: "VM-aws-developer-04",
+    //     VMName: "VM-aws-developer-04",
+    //     longitude: 129.315757,
+    //     latitude: -27.635010
+    //    }
+    // ]
         for(var i in result){
             console.log("region lat long info : ",result[i])
             // var json_parse = JSON.parse(result[i])
@@ -103,44 +103,52 @@ var m = new ol.Map({
     })
   });
    var JZMap = m;
-   var element = document.getElementById('map_pop2');
+;
   JZMap.on('click',function(evt){
-    
+   // var element = document.getElementById('map_pop2');
+    var element = document.createElement('div');
     var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
       return feature;
     })
     console.log("feature click info : ",feature.get("vm_id"));
    
-    var popup = new ol.Overlay({
-      element: element,
-      positioning: 'bottom-center',
-      stopEvent: false,
-      offset: [0, -50]
-    });
+    
 
    
     if(feature){
       var coordinates = feature.getGeometry().getCoordinates();
-      popup.setPosition(coordinates);
+      
       // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
      
      
-      // element.setAttribute("class", "overlayElement");
-      // element.setAttribute("id", feature.get('vm_id'));
-      // element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
+      element.setAttribute("class", "popover");
+      
+      
+      //element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
+      element.setAttribute("onclick", "$(this).hide()");
+     // element.innerHTML="<p>"+feature.get("title")+"</p>";
+      // element.innerHTML='<div tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here\'s some amazing content. It\'s very engaging. Right?">Dismissible popover</a>';
      
       
       // $(element).empty()
       // $(element).show()    
 
       $(element).popover({
-        placement: 'top',
+        placement: 'auto',
         html: true,
-        content: "ID : "+feature.get('vm_id')+"\n"+"Status :"+feature.get('vm_status'),
+        content: "<div onclick='alert(\"Hello\")'><p>ID : "+feature.get('vm_id')+"</p>"+"Status :"+feature.get('vm_status')+"</div>",
         title: feature.get('title'),
+        trigger:'click',
       });
 
-      
+      var popup = new ol.Overlay({
+        element: element,
+        id:feature.get("id"),
+        positioning: 'bottom-center',
+        stopEvent: false,
+        offset: [0, -50]
+      });
+      popup.setPosition(coordinates);
       // var popup = new ol.Overlay({
       //   element: element,
       //   id:feature.get("vm_id"),
@@ -154,7 +162,7 @@ var m = new ol.Map({
        
       JZMap.addOverlay(popup);
       
-      $(element).popover('show');
+      $(element).popover('toggle');
     }else{
       $(element).popover('hide');
     }
@@ -219,7 +227,8 @@ function map_init(){
         element: element,
         positioning: 'bottom-center',
         stopEvent: false,
-        offset: [0, -50]
+        offset: [0, -50],
+        id:feature.get("id")
       });
       console.log("feature click info : ",feature.get("id"));
       var id = feature.get("id")
