@@ -159,6 +159,9 @@ function short_desc(str){
 }
 function show_vmList(mcis_id,map){
     $("#vm_detail").hide();
+    $("#chart_detail").hide();
+    $("#map_detail").hide();
+
    
    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
    console.log("vmList",url)
@@ -166,8 +169,9 @@ function show_vmList(mcis_id,map){
        //여기가 geo location 정보 가져 오는 곳
     
     console.log("vm list map info : ",map)
-    $("#map").empty();
+   
     if(!map){
+        $("#map").empty();
         map = map_init();
     }
     //map = map_init();

@@ -121,68 +121,18 @@ function map_init(){
         zoom: 0
       })
     });
-    var JZMap = m;
-
-    
-    JZMap.on('pointermove', function(e) {
-      if (e.dragging) {
-        $(element).popover('hide');
-        return;
-      }
-      var pixel = JZMap.getEventPixel(e.originalEvent);
-      var hit = JZMap.hasFeatureAtPixel(pixel);
-    
-    });
-
-    var deleteOverlay = function(id){
-      JZMap.removeOverlay(JZMap.getOverlayById(id));
-  }
-    JZMap.on('click',function(evt){
-      
-      var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
-        return feature;
-      })
-      var element = document.createElement('div');
-      
-      if(feature){
-        var coordinates = feature.getGeometry().getCoordinates();
-        console.log("Feature : ",feature.getId()); 
-        // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
-       
-       
-        // element.setAttribute("class", "overlayElement");
-        // element.setAttribute("id", feature.get('vm_id'));
-        // element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
-       
-        
-        $(element).popover({
-          placement: 'top',
-          html: true,
-          content: "ID : "+feature.get('vm_id')+"\n"+"Status :"+feature.get('vm_status'),
-          title: feature.get('title'),
-        });
-  
-        var popup = new ol.Overlay({
-          element: element,
-          id:feature.get("vm_id"),
-          positioning: 'bottom-center',
-          position: coordinates,
-          offset: [0, -70],
-          stopEvent: false,
-          offset: [0, -50]
-        });
-       // $(element).show()    
-        JZMap.addOverlay(popup);
-        $(element).popover('hide');
-        $(element).popover('show');
-      }else{
-        $(element).popover('hide');
-      }
-    });
   return m;
 }
 function drawMap(map,long,lat,info){
   var JZMap = map;
+  var element = document.getElementById('popup');
+
+  var popup = new ol.Overlay({
+    element: element,
+    positioning: 'bottom-center',
+    stopEvent: false,
+    offset: [0, -50]
+  });
   
   var icon = new ol.style.Style({
     image: new ol.style.Icon({
@@ -210,12 +160,45 @@ function drawMap(map,long,lat,info){
   })
   JZMap.addLayer(stackLayer)
   
+  JZMap.on('click',function(evt){
+    
+    var pixel = evt.pixel
+    
+    JZMap.forEachFeatureAtPixel(pixel, function(feature, layer) {
+      var title = feature.get("title");
+      console.log("feature get id : ",feature.get('vm_id'));
+      if(title.length>0){
+            
+          var overlayElement= document.createElement("div"); // 오버레이 팝업설정 
+            
+          overlayElement.setAttribute("class", "overlayElement");
+          overlayElement.setAttribute("style", "background-color: #3399CC; border: 2px solid white; color:white");
+          overlayElement.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
+          overlayElement.innerHTML="<p>"+title+"</p>";
+          var coordinates = feature.getGeometry().getCoordinates();
+         
+          var overlayInfo = new ol.Overlay({
+              id:feature.get("vm_id"),
+              element:overlayElement,
+              offset: [0, -70],
+              position: coordinates
+          });
+            
+          if(feature.get("vm_id") != null){
+            JZMap.removeOverlay(JZMap.getOverlayById(feature.get("vm_id")));
+          }
+            
+          JZMap.addOverlay(overlayInfo);
+      }
+  });
   
-
- 
+    
+  })
+  
   
  
 }
+
 
 function drawPoligon(JZMap,polygon){
   var wkt = polygon;
