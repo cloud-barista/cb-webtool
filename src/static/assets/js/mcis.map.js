@@ -195,34 +195,37 @@ function map_init(){
   //     JZMap.removeOverlay(JZMap.getOverlayById(id));
   // }
  
-  JZMap.on('pointermove', function(e) {
-    var feature = JZMap.forEachFeatureAtPixel(e.pixel,function(feature){
-      return feature;
-    })
-    if (e.dragging) {
-      var element = feature.get("element");
-      var id = feature.get("id");
-      $(element).popover('hide');
-      JZMap.removeOverlay(JZMap.getOverlayById(id));
-      return;
-    }
-    var pixel = JZMap.getEventPixel(e.originalEvent);
-    var hit = JZMap.hasFeatureAtPixel(pixel);
+  // JZMap.on('pointermove', function(e) {
+  //   var feature = JZMap.forEachFeatureAtPixel(e.pixel,function(feature){
+  //     return feature;
+  //   })
+  //   if (e.dragging) {
+  //     var element = feature.get("element");
+  //     var id = feature.get("id");
+  //     $(element).popover('hide');
+  //     JZMap.removeOverlay(JZMap.getOverlayById(id));
+  //     return;
+  //   }
+  //   var pixel = JZMap.getEventPixel(e.originalEvent);
+  //   var hit = JZMap.hasFeatureAtPixel(pixel);
   
-  });
+  // });
     JZMap.on('click',function(evt){
      
       var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
         return feature;
       })
-
-      $(element).popover('hide');
-      JZMap.removeOverlay(JZMap.getOverlayById(id));
-
       var element = document.createElement('div');
-      overlayElement.setAttribute("onclick", "deleteOverlay('"+feature.get("id")+"')");
+     // element.setAttribute("class", "popover");
+      element.setAttribute("onclick", "$(this).hide()");
+      element.innerHTML="<div class='popover fade bs-popover-auto show' data-toggle='popover' style='width:150px;'>"+feature.get("title")+"</div>"
+      
+      
+
+      
+      
       feature.set("element");
-      $(element).popover('hide');
+  
       var popup = new ol.Overlay({
         element: element,
         positioning: 'bottom-center',
@@ -246,15 +249,15 @@ function map_init(){
         // element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
        
         
-        $(element).empty()
-        $(element).show()    
+        // $(element).empty()
+        // $(element).show()    
 
-        $(element).popover({
-          placement: 'top',
-          html: true,
-          content: "ID : "+feature.get('vm_id')+"\n"+"Status :"+feature.get('vm_status'),
-          title: feature.get('title'),
-        });
+        // $(element).popover({
+        //   placement: 'top',
+        //   html: true,
+        //   content: "ID : "+feature.get('vm_id')+"\n"+"Status :"+feature.get('vm_status'),
+        //   title: feature.get('title'),
+        // });
 
         
         // var popup = new ol.Overlay({
