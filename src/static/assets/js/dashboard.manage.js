@@ -1,5 +1,5 @@
 // MCIS Control
-function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
+function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name,mcis_url){
     var url = ""
     var nameSpace = NAMESPACE;
     var message = ""
@@ -23,6 +23,7 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
             
             alert(message);
             location.reload();
+            show_mcis(mcis_url,"");
         }
     })
 }
@@ -123,10 +124,10 @@ function short_desc(str){
              +'<i class="fas fa-edit"></i>'
              +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
              +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
-                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'resume\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Resume</a>'
-                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'suspend\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Suspend</a>'
-                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'reboot\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Reboot</a>'
-                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'terminate\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Terminate</a>'
+                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'resume\',\''+mcis[i].id+'\',\''+mcis[i].name+'\',\''+url+'\')">Resume</a>'
+                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'suspend\',\''+mcis[i].id+'\',\''+mcis[i].name+'\',\''+url+'\')">Suspend</a>'
+                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'reboot\',\''+mcis[i].id+'\',\''+mcis[i].name+'\',\''+url+'\')">Reboot</a>'
+                 +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'terminate\',\''+mcis[i].id+'\',\''+mcis[i].name+'\',\''+url+'\')">Terminate</a>'
              +'</div>'
              +'</button>'
             +'</td>'
@@ -159,15 +160,20 @@ function short_desc(str){
 }
 function show_vmList(mcis_id,map){
     $("#vm_detail").hide();
+    $("#chart_detail").hide();
+    $("#map_detail").hide();
+
    
    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+   var mcis_url = CommonURL+"/ns/"+NAMESPACE+"/mcis?option=status";
    console.log("vmList",url)
    if(mcis_id){
        //여기가 geo location 정보 가져 오는 곳
     
     console.log("vm list map info : ",map)
-    $("#map").empty();
+   
     if(!map){
+        $("#map").empty();
         map = map_init();
     }
     //map = map_init();
@@ -256,10 +262,10 @@ function show_vmList(mcis_id,map){
                         +'<i class="fas fa-edit"></i>'
                         +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
                         +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
-                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
-                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
-                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
-                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+mcis_url+'\')">Resume</a>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+mcis_url+'\')">Suspend</a>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+mcis_url+'\')">Reboot</a>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',,\''+mcis_url+'\')">Terminate</a>'
                         +'</div>'
                         +'</button>'
                         // +'<button type="button" class="btn btn-icon"  aria-haspopup="true" aria-expanded="false" onclick="agentSetup(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].publicIP+'\')">'
