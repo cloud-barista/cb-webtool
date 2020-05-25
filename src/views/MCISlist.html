@@ -233,6 +233,7 @@
      {{template "Footer" .}}
      <script>
      $(document).ready(function(){
+        checkNS();
          var nsid = "{{ .NameSpace}}";
          var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
          console.log("url :",url);

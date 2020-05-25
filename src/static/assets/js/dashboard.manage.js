@@ -42,7 +42,7 @@ function short_desc(str){
  function show_mcis(url, map){
    console.log("Show mcis Url : ",url)
    $("#vm_detail").hide();
-   
+   checkNS();
    axios.get(url).then(result=>{
       
        console.log("Dashboard Data :",result.status);
