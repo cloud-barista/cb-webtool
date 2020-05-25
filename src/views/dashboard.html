@@ -134,7 +134,7 @@
                                 </div>
                             </div>
                             <div class="table-overflow">
-                                <table class="table align-items-center table-flush table-hover">
+                                <table class="table align-items-center table-flush table-hover" id="mcisListTable">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">
@@ -199,7 +199,7 @@
                                 </div>
                             </div>
                             <div class="table-overflow">
-                                <table class="table align-items-center table-flush table-hover">
+                                <table class="table align-items-center table-flush table-hover" id="serverListTable">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">
@@ -408,6 +408,22 @@
      {{template "Footer" .}}
 
      <script>
+            // add for list talble selected
+            $('#mcisListTable').on('click', '.clickable-row', function(event) {
+                if($(this).hasClass('table-active')){
+                    $(this).removeClass('table-active'); 
+                } else {
+                    $(this).addClass('table-active').siblings().removeClass('table-active');
+                }
+            });
+            $('#serverListTable').on('click', '.clickable-row', function(event) {
+                if($(this).hasClass('table-active')){
+                    $(this).removeClass('table-active'); 
+                } else {
+                    $(this).addClass('table-active').siblings().removeClass('table-active');
+                }
+            });
+
             $(document).ready(function(){
                 var nsid = "{{ .NameSpace}}";
                 if(!nsid){
