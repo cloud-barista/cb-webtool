@@ -18,6 +18,7 @@ function viewMap(){
     $("#map_detail").show();
     $("#map2").empty();
     var map = map_init_target('map2')
+    fnMove('map_detail');
     getGeoLocationInfo(mcis_id,map);
 }
 function getGeoLocationInfo(mcis_id,map){
