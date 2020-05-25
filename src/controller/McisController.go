@@ -26,13 +26,15 @@ func McisListForm(c echo.Context) error {
 	comURL := GetCommonURL()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
-
-		return c.Render(http.StatusOK, "MCISlist.html", map[string]interface{}{
-			"LoginInfo": loginInfo,
-			"NameSpace": namespace,
-			"comURL":    comURL,
-		})
-
+		if namespace != "" {
+			return c.Render(http.StatusOK, "MCISlist.html", map[string]interface{}{
+				"LoginInfo": loginInfo,
+				"NameSpace": namespace,
+				"comURL":    comURL,
+			})
+		} else {
+			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+		}
 	}
 
 	//return c.Render(http.StatusOK, "MCISlist.html", nil)
