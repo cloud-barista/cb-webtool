@@ -104,7 +104,7 @@ function short_desc(str){
             if(count == 1){
 
             }
-            html += '<tr id="tr_id_'+count+'" >'
+            html += '<tr id="tr_id_'+count+'" class="clickable-row">'
              +'<td class="text-center">'
              +'<div class="form-input">'
              +'<span class="input">'
@@ -238,7 +238,7 @@ function show_vmList(mcis_id,map){
                         if(count == 1){
             
                         }
-                        html += '<tr id="tr_id_'+count+'" >'
+                        html += '<tr id="tr_id_'+count+'"  class="clickable-row">'
                         +'<td class="text-center">'
                         +'<div class="form-input">'
                         +'<span class="input">'
