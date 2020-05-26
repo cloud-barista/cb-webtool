@@ -454,7 +454,9 @@ function btn_click(){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis"
     console.log("request Create mcis url : ",url)
     //return;
-    axios.post(url,result).then(result=>{
+    try{
+        AjaxLoadingShow(true);
+        axios.post(url,result).then(result=>{
         if(result.status == 201){
             alert("Register Success")
             location.href = "/MCIS/list";
@@ -462,8 +464,10 @@ function btn_click(){
             alert("Register Fail")
             location.reload();
         }
-    })
-    
+        })
+    }finally{
+        AjaxLoadingShow(false);
+    }    
 }
 
 
