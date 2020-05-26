@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="row mb-4">
-                    <div class="col-xl-6 col-lg-6">
+                    <div class="col-xl-5 col-lg-5">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body" style="">
                                 <div class="row">
@@ -85,7 +85,7 @@
                             </div>
                         </div>
                     </div> -->
-                    <div class="col-xl-6 col-lg-6">
+                    <div class="col-xl-7 col-lg-7">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body" style="">
                                 <div class="row">
@@ -121,8 +121,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xl-8">
-                        <div class="card shadow">
+                    <div class="col-xl-7">
+                        <div class="card shadow" style="min-height:350px;">
                             <div class="card-header border-0">
                                 <div class="row align-items-center">
                                     <div class="col">
@@ -134,7 +134,7 @@
                                 </div>
                             </div>
                             <div class="table-overflow">
-                                <table class="table align-items-center table-flush table-hover">
+                                <table class="table align-items-center table-flush table-hover" id="mcisListTable">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">
@@ -160,8 +160,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4">
-                        <div class="card shadow h-100">
+                    <div class="col-xl-5">
+                        <div class="card shadow h-100" style="min-height:350px;">
                             <div class="card-header bg-transparent">
                                 <div class="row align-items-center">
                                     <div class="col">
@@ -200,7 +200,7 @@
                                 </div>
                             </div>
                             <div class="table-overflow">
-                                <table class="table align-items-center table-flush table-hover">
+                                <table class="table align-items-center table-flush table-hover" id="serverListTable">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">
@@ -409,6 +409,22 @@
      {{template "Footer" .}}
 
      <script>
+            // add for list talble selected
+            $('#mcisListTable').on('click', '.clickable-row', function(event) {
+                if($(this).hasClass('table-active')){
+                    $(this).removeClass('table-active'); 
+                } else {
+                    $(this).addClass('table-active').siblings().removeClass('table-active');
+                }
+            });
+            $('#serverListTable').on('click', '.clickable-row', function(event) {
+                if($(this).hasClass('table-active')){
+                    $(this).removeClass('table-active'); 
+                } else {
+                    $(this).addClass('table-active').siblings().removeClass('table-active');
+                }
+            });
+
             $(document).ready(function(){
                 var nsid = "{{ .NameSpace}}";
                 if(!nsid){
