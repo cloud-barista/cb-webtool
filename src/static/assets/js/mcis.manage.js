@@ -1,4 +1,4 @@
-// MCIS Control
+// MCIS Control 
 function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
     var url = ""
     var nameSpace = NAMESPACE;
