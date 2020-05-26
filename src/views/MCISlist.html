@@ -58,7 +58,7 @@
                             </div> -->
                             </div>
                             <div class="table">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-hover">
                                     <colgroup>
                                         <col style="width: 50px">
                                         <col>
@@ -139,7 +139,7 @@
                                
                             </div>
                             <div class="table">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-hover">
                                     <colgroup>
                                         <col style="width: 50px">
                                         <col>
@@ -176,37 +176,7 @@
                                 </table>
                             </div>
                         </div>
-                        <!-- <div class="card-footer">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <span class="mr-2">
-                                        showing 1 to <span>5</span> <span>25</span> record
-                                    </span>
-                                    <nav>
-                                        <ul class="pagination pagination-sm">
-                                            <li class="page-item disabled">
-                                                <span class="page-link"><i class="fas fa-angle-left"></i></span>
-                                            </li>
-                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item active" aria-current="page">
-                                                <span class="page-link">
-                                                    2
-                                                    <span class="sr-only">(current)</span>
-                                                </span>
-                                            </li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#"><i class="fas fa-angle-right"></i></a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div>
-                                    <button type="button" class="btn btn-dark btn-sm">등록</button>
-                                </div>
-                            </div>
-                        </div> -->
-                </div>
+                       </div>
                 <!-- table -->
                 <!-- table -->
                 <div class="card" id="vm_detail" style="display:none;">
@@ -222,7 +192,7 @@
                     </div>
                     <div class="card-body">
 
-                        <table class="table table-bordered table-horizontal mb-0">
+                        <table class="table table-bordered table-horizontal mb-0 table-hover">
                             <colgroup>
                                 <col style="width: 20%">
                                 <col style="width: 20%">
@@ -235,6 +205,9 @@
                             </tbody>
                             <tbody id="vm_vnetwork">
                                
+                            </tbody>
+                            <tbody id="vm_image">
+                            
                             </tbody>
                             
                             <tbody id="vm_sg">
@@ -260,8 +233,9 @@
      {{template "Footer" .}}
      <script>
      $(document).ready(function(){
+        checkNS();
          var nsid = "{{ .NameSpace}}";
-         var url = CommonURL+"/ns/"+nsid+"/mcis";
+         var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
          console.log("url :",url);
          show_mcis(url);
      })

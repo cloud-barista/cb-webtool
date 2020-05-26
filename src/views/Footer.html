@@ -1,21 +1,24 @@
 {{define "Footer"}}
-   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-   
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  
 </body>
 </html>
 <script>
 
     
     function setNS(nsid){
-        reqUrl = "/SET/NS/"+nsid;
-           console.log(reqUrl);
-        axios.get(reqUrl).then(result=>{
-            var data = result.data
-            console.log(data);
-            location.reload();
-        })
+        if(nsid){
+            reqUrl = "/SET/NS/"+nsid;
+            console.log(reqUrl);
+            axios.get(reqUrl).then(result=>{
+                var data = result.data
+                console.log(data);
+                location.reload();
+             })
+        }else{
+            alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
+            location.href ="/NS/reg";
+        }
+        
     } 
 
     function getNS(){
@@ -29,6 +32,11 @@
        var data = result.data
        console.log(data);
        var res = data.ns
+    //    if (!res){
+    //     alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.1")
+    //     location.href ="/NS/reg";
+    //     return;
+    //    }
        var html = "";
        var ns = "";
        if(NAMESPACE){
@@ -44,7 +52,8 @@
               
             }
        }else{
-        if(res[0].id){
+           if(res){
+            if(res[0].id){
             for(var i in res){
                 if(i == 0){
                         html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
@@ -64,6 +73,8 @@
                 }   
             }
        }
+           }
+        
        }
        
        $("#name_select").empty();

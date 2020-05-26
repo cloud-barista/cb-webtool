@@ -26,7 +26,7 @@
                     </div>
                     <div class="card-body">
                     <form name="Form" action="/NS/reg/proc" method="POST">
-                        <table class="table table-bordered table-horizontal mb-0">
+                        <table class="table table-bordered table-horizontal mb-0 ">
                             <colgroup>
                                 <col style="width: 20%">
                                 <col>
@@ -44,10 +44,10 @@
                                             <option selected>Select Cloud Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
-                                            <option value="Alibaba">Alibaba</option>
+                                            <option value="ALIBABA">Alibaba</option>
                                             <option value="GCP">GCP</option>
-                                            <option value="Cloudit">Cloudit</option>
-                                            <option value="Openstack">Openstack</option>
+                                            <option value="CLOUDIT">Cloudit</option>
+                                            <option value="OPENSTACK">Openstack</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -90,6 +90,8 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-end align-items-center">
                             <button type="button" class="btn btn-dark btn-sm" id="reg_btn">Confirm</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-sm btn-danger" onclick="cancel_btn();">Cancel</button>
                         </div>
                     </div>
                 </div>

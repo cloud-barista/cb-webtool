@@ -82,7 +82,7 @@ func main() {
 
 	// Monitoring Control
 	e.GET("/monitoring", controller.MornitoringListForm)
-	e.GET("/monitoring/install/agent", controller.AgentRegForm)
+	e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 
 	// MCIS
 	e.GET("/MCIS/reg", controller.McisRegForm)
@@ -122,6 +122,10 @@ func main() {
 
 	// 웹툴에서 Select Pop
 	e.GET("/Pop/spec", controller.PopSpec)
+
+	// MAP Test
+	e.GET("/map", controller.Map)
+	e.GET("/map/geo/:mcis_id", controller.GeoInfo)
 
 	e.Logger.Fatal(e.Start(":1234"))
 

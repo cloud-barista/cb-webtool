@@ -1,19 +1,7 @@
 {{template "Header" .}}
-
-<style>
-    .map {
-      height: 600px;
-      width: 100%;
-    }
-  </style>
  <!-- MCIS Control methods -->
-
- 
-
-<script type="text/javascript" src="/assets/js/mcis.map.js"></script>
-<script type="text/javascript" src="/assets/js/dashboard.manage.js"></script>
-<script type="text/javascript" src="/assets/js/mcis.chart.js"></script>
- 
+ <script type="text/javascript" src="/assets/js/dashboard.manage.js"></script>
+ <script type="text/javascript" src="/assets/js/mcis.map.js"></script>
  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script> -->
 
 
@@ -30,9 +18,6 @@
             <input type="hidden" name="namespace" id="namespace1" />
             <input type="hidden" id="mcis_id" />
             <input type="hidden" id="mcis_name" />
-            <input type="hidden" id="current_vmid" />
-            <input type="hidden" id="current_publicIP" />
-            <input type="hidden" id="check_dragonFly" />
             <main role="main" class="main">
                 <div class="page-header">
                     <div>
@@ -40,9 +25,9 @@
                     </div>
                 </div>
                 <div class="row mb-4">
-                    <div class="col-xl-5 col-lg-5">
+                    <div class="col-xl-6 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
-                            <div class="card-body" style="">
+                            <div class="card-body" style="height: 120px;">
                                 <div class="row">
                                     <div class="col">
                                         <h2 class="card-title text-muted mb-0"><storng>MCIS</storng><small class="ml-2 mb-0 text-muted">/ Server</small></h2>
@@ -85,9 +70,9 @@
                             </div>
                         </div>
                     </div> -->
-                    <div class="col-xl-7 col-lg-7">
+                    <div class="col-xl-6 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
-                            <div class="card-body" style="">
+                            <div class="card-body" style="height: 120px;">
                                 <div class="row">
                                     <div class="col">
                                         <h2 class="card-title text-muted mb-0"><storng>CP</storng><small class="ml-2 mb-0 text-muted">/ Connection</small></h2>
@@ -121,8 +106,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xl-7">
-                        <div class="card shadow" style="min-height:350px;">
+                    <div class="col-xl-8">
+                        <div class="card shadow">
                             <div class="card-header border-0">
                                 <div class="row align-items-center">
                                     <div class="col">
@@ -134,7 +119,7 @@
                                 </div>
                             </div>
                             <div class="table-overflow">
-                                <table class="table align-items-center table-flush table-hover" id="mcisListTable">
+                                <table class="table align-items-center table-flush table-hover">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">
@@ -160,29 +145,116 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-5">
-                        <div class="card shadow h-100" style="min-height:350px;">
+                    <div class="col-xl-4">
+                        <div class="card shadow h-100">
                             <div class="card-header bg-transparent">
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <h2 class="mb-0">Location</h2>
                                     </div>
                                     <div class="col text-right">
-                                        <a href="#!" class="btn btn-sm btn-dark" id="see_all" onclick="viewMap();">See all</a>
+                                        <a href="#!" class="btn btn-sm btn-dark">See all</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
                                     
                                 <!-- Chart -->
-                                <div class="d-flex h-100 align-items-center justify-content-center map" id="map" >
+                                <div class="d-flex h-100 align-items-center justify-content-center" id="vmap" >
                                    
-                                    
+                                    <div id="directions"></div>
+                                    <div id="backButton" onClick="backButtonClick();">Back</div>
+		
+                                    <!--Use this to display data-->
+                                    <div id="description-box"></div>
                                  
                                 </div>
-                                <div class="" id="map_pop"></div> 
                             </div>
-                           
+                            <script>
+                                var isZoom=false;
+                                var dX,dY,dS;
+                                console.log(test);
+                                 var pins = {
+                                    us: escapeXml('<div class="map-pin red"><span>US</span></div>'),
+                                    kr: escapeXml('<div class="map-pin green"><span>KR</span></div>'),
+                                 
+                                    ca: escapeXml('<div class="map-pin purple"><span>CA</span></div>'),
+                                };
+                                     $(document).ready(function () {
+                                        console.log("sample data : ",sample_data)
+                                      $('#vmap').vectorMap({
+                                        map: 'world_en',
+                                        backgroundColor: '#ffffff',
+                                        color: '#ffffff',
+                                        hoverOpacity: 0.7,
+                                        selectedColor: '#666666',
+                                        borderColor: '#ffffff',
+                                        colors:test,
+                                        enableZoom: false,
+                                        showTooltip: true,
+                                        values:sample_data,
+                                        normalizeFuncion:'polynomial',
+                                      
+                                        pins:pins,
+                                        pinMode:'content',
+                                        
+                                        // onRegionOver : function (element, code, region)
+                                        // {
+                                        //     highlightRegionOfCountry(code);
+                                        // },
+                                        onRegionOut : function (element, code, region)
+                                        {
+                                            unhighlightRegionOfCountry(code);
+                                        },
+                                        onRegionClick: function (element, code, region)
+                                        {
+                                            if(!isZoom){ //first click; zooms in
+                                                if(countryMap[code]=="Asia"){
+                                                    dX=280;dY=-100;dS=1.3;
+                                                }
+                                                if(countryMap[code]=="Africa"){
+                                                    dX=150;dY=150;dS=1.7;
+                                                }
+                                                if(countryMap[code]=="Europe"){
+                                                    dX=170;dY=50;dS=2.4;
+                                                }
+                                                if(countryMap[code]=="northAmerica"){
+                                                    dX=-200;dY=-200;dS=1.5;
+                                                }
+                                                if(countryMap[code]=="Australia"){
+                                                    dX=470;dY=300;dS=2;
+                                                }
+                                                if(countryMap[code]=="southAmerica"){
+                                                    dX=-200;dY=300;dS=1.5;
+                                                }
+                                                zoomInOnContinent(dX,dY,dS);
+                                                isZoom=true;
+                                                setRegion(code);
+                                                setRegionColors();
+                                              //  $('#directions').text('Please select a country');
+                                            }
+                                            else{ //second click on country
+                                                $('#description-box').html('');
+                                                countrySelected = true;
+                                                selectedCode = code;
+                                               // displayBoxText(code);
+                                            }
+                                        }
+  
+                                      });
+                                      document.getElementById("description-box").style.display = "none";
+                                      document.getElementById("backButton").style.display = "none";
+                                  
+                                     
+                                    });
+                                    function backButtonClick(){
+                                        if(isZoom){
+                                            zoomOutOnContinent(dX,dY,dS);
+                                            isZoom=false;
+                                            jQuery('#vmap').vectorMap('set', 'colors', test);
+                                        }
+                                    }
+                                  </script>
                         </div>
                     </div>
                 </div>
@@ -200,7 +272,7 @@
                                 </div>
                             </div>
                             <div class="table-overflow">
-                                <table class="table align-items-center table-flush table-hover" id="serverListTable">
+                                <table class="table align-items-center table-flush table-hover">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">
@@ -286,43 +358,13 @@
                         </div>
                     </div> -->
                 </div>
-                <div class="card shadow" id="map_detail" style="display:none;">
+                <div class="card shadow" id="map" >
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>MAP Info</strong>
                             </div>
-                            <div class="col text-right">
-                                
-                                <a href="#!" class="btn btn-sm btn-danger" onclick='$("#map_detail").hide();'>Close</a>
-                            </div>
                            
-                        </div>
-                    </div>
-                    <div class="align-items-center justify-content-center map" id="map2" >
-                                   
-                          <div id="map_pop2"></div>        
-                                 
-                    </div>
-                   
-                </div>
-                <div class="card shadow" id="vm_detail" style="display:none;">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div id="server_text">
-                                
-                            </div>
-                            <div class="col text-right">
-                                <button type="button" class="btn btn-sm btn-outline-dark" onclick='show_monitoring();'>
-                                <i class="fas fa-desktop"></i>
-                                </button>
-                                <a href="#!" class="btn btn-sm btn-outline-danger" onclick='$("#vm_detail").hide();'>Close</a>
-                            </div>
-                           <script>
-                               
-
-
-                           </script>
                         </div>
                     </div>
                     <div class="table">
@@ -357,38 +399,44 @@
                     </div>
                    
                 </div>
-                <div class="card shadow" id="chart_detail" style="display:none;">
+                <div class="card shadow" id="vm_detail" style="display:none;">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>Monitoring Info</strong>
-                            </div>
-                            <div class="col text-right">
-                                
-                                <a href="#!" class="btn btn-sm btn-danger" onclick='$("#chart_detail").hide();'>Close</a>
+                                <strong>Server Info</strong>
                             </div>
                            
                         </div>
                     </div>
-                    <div class="align-items-center justify-content-center" id="" >
-                                   
-                    <div style="width:75%;">
-                       
-                        <canvas id="canvas_0"></canvas>
-                    </div>
-                    <div style="width:75%;">
-                       
-                        <canvas id="canvas_1"></canvas>
-                    </div>
-                    <div style="width:75%;">
-                        
-                        <canvas id="canvas_2"></canvas>
-                    </div>
-                    <div style="width:75%;">
-                       
-                        <canvas id="canvas_3"></canvas>
-                    </div>        
-                                 
+                    <div class="table">
+
+                        <table class="table table-bordered table-horizontal ">
+                            <colgroup>
+                                <col style="width: 15%">
+                                <col style="width: 15%">
+                                <col style="width: 25%">
+                                <col style="width: 15%">
+                            </colgroup>
+                            <tbody id="vm">                                       
+                            </tbody>
+                            <tbody id="vm_spec">
+                                
+                                    
+                            </tbody>
+                            <tbody id="vm_vnetwork">
+                            
+                            </tbody>
+                            <tbody id="vm_image">
+                            
+                            </tbody>
+                            
+                            <tbody id="vm_sg">
+                                
+                            </tbody>
+                            <tbody id="sshKey">
+                                
+                            </tbody>
+                        </table>
                     </div>
                    
                 </div>
@@ -397,34 +445,14 @@
 
         </div>
         <!-- //container -->
-<script>
-    
-</script>
-       
 
-        
+     
    
    
 
      {{template "Footer" .}}
 
      <script>
-            // add for list talble selected
-            $('#mcisListTable').on('click', '.clickable-row', function(event) {
-                if($(this).hasClass('table-active')){
-                    $(this).removeClass('table-active'); 
-                } else {
-                    $(this).addClass('table-active').siblings().removeClass('table-active');
-                }
-            });
-            $('#serverListTable').on('click', '.clickable-row', function(event) {
-                if($(this).hasClass('table-active')){
-                    $(this).removeClass('table-active'); 
-                } else {
-                    $(this).addClass('table-active').siblings().removeClass('table-active');
-                }
-            });
-
             $(document).ready(function(){
                 var nsid = "{{ .NameSpace}}";
                 if(!nsid){
@@ -433,16 +461,9 @@
                 if(!NAMESPACE){
                     nsid = $("#namespace1").val()
                 }
-                var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
+                var url = CommonURL+"/ns/"+nsid+"/mcis";
                 console.log("Dashboard url :",url);
-                const osmLayer = new ol.layer.Tile({
-                    source: new ol.source.OSM(),
-                });
-
-                var JZMap = ""
-                console.log("JZMAP here : ",JZMap);
-                
-                show_mcis(url,JZMap);
+                show_mcis(url);
 
                 getConnection();
             })

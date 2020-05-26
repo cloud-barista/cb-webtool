@@ -59,8 +59,9 @@ function short_desc(str){
          
          for(var i in mcis){
              var sta = mcis[i].status;
+             var sl = sta.split("-");
              var badge = "";
-             var status = sta.toLowerCase()
+             var status = sl[0].toLowerCase()
              var vms = mcis[i].vm
              var vm_len = 0
             
@@ -73,14 +74,14 @@ function short_desc(str){
             console.log("mcis Status 2: ", status)
              if(status == "running"){
                 badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
-             }else if(status == "include-notdefinedstatus" ){
+             }else if(status == "include" ){
                 badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
              }else if(status == "suspended"){
                 badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
              }else if(status == "terminate"){
                 badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
              }else{
-                badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
+                badge += '<span class="badge badge-pill badge-warning">'+sta+'</span>'
              }
              count++;
              if(count == 1){
@@ -104,10 +105,11 @@ function short_desc(str){
               +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
               +'<i class="fas fa-edit"></i>'
               +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
-                  +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'mcis\',\'resume\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Resume</a>'
-                  +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'mcis\',\'suspend\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Suspend</a>'
-                  +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'mcis\',\'reboot\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Reboot</a>'
-                  +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'mcis\',\'terminate\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Terminate</a>'
+              +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
+                  +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'resume\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Resume</a>'
+                  +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'suspend\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Suspend</a>'
+                  +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'reboot\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Reboot</a>'
+                  +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'terminate\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Terminate</a>'
               +'</div>'
               +'</button>'
              +'</td>'
@@ -173,7 +175,14 @@ function short_desc(str){
                                 if(res[k].ConfigName == vm[i].config_name){
                                     var provider = res[k].ProviderName
                                     console.log("Provider : ",provider);
-                                    
+                                    var kv_list = vm[i].cspViewVmDetail.KeyValueList
+                                    var archi = ""
+                                    for(var p in kv_list){
+                                        if(kv_list[p].Key == "Architecture"){
+                                         archi = kv_list[p].Value 
+                                        }
+                                    }
+
                                     if(status == "running"){
                                         badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
                                     }else if(status == "suspended"){
@@ -196,22 +205,23 @@ function short_desc(str){
                                     +'<td>'
                                     +badge
                                     +'</td>'
-                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\');">'+vm[i].name+'</a></td>'
+                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].image_id+'\');">'+vm[i].name+'</a></td>'
                         
                                     +'<td>'+provider+'</td>'
                                     +'<td>'+vm[i].region.Region+'</td>'
                                     +'<td>'+vm[i].config_name+'</td>'
-                                    +'<td>OS Type</td>'
+                                    +'<td>'+archi+'</td>'
                                     +'<td>'+vm[i].publicIP+'</td>'
                                     +'<td>'+short_desc(vm[i].description)+'</td>'
                                     +'<td>'
                                     +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
                                     +'<i class="fas fa-edit"></i>'
                                     +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
-                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
-                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
-                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
-                                        +'<a class="dropdown-item" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
+                                    +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
+                                        +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Resume</a>'
+                                        +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Suspend</a>'
+                                        +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Reboot</a>'
+                                        +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\')">Terminate</a>'
                                     +'</div>'
                                     +'</button>'
                                     +'</td>'
@@ -292,12 +302,13 @@ function short_desc(str){
        
     })
  }
- function show_vm(mcis_id,vm_id){
+ function show_vm(mcis_id,vm_id,image_id){
     show_vmDetailList(mcis_id, vm_id);
     show_vmSpecInfo(mcis_id, vm_id);
     show_vmNetworkInfo(mcis_id, vm_id);
     show_vmSecurityGroupInfo(mcis_id, vm_id);
     show_vmSSHInfo(mcis_id, vm_id);
+    show_images(image_id);
     $("#vm_detail").show();
  }
 //  function sel_table(targetNo,mcid){
@@ -504,53 +515,48 @@ function short_desc(str){
                     }
                 }
                 html += '<tr>'
-                    +'<th scope="colgroup"rowspan="10">Infra - Server</th>'
+                    +'<th scope="colgroup"rowspan="10" class="text-center">Infra - Server</th>'
 
-                    +'<th scope="colgroup">Cloud Provider</th>'
-                    +'<td colspan="3">'+provider+'</td>'
+                    +'<th scope="colgroup" class="text-right">Server ID</th>'
+                    +'<td  colspan="1">'+data.id+'</td>'
+                    
+                    
+                    +'<th scope="colgroup" class="text-right">Cloud Provider</th>'
+                    +'<td colspan="1">'+provider+'</td>'
                     +'</tr>'
 
-                    +'<tr>'
-
-                    +'<th scope="colgroup">Server ID</th>'
-                    +'<td  colspan="3">'+data.id+'</td>'
-                    +'</tr>'
 
                     +'<tr>'
-                    +'<th scope="colgroup">CP VMID</th>'
-                    +'<td  colspan="3">'+data.id+'</td>'
-                    +'</tr>'
-
-                    +'<tr>'
-                    +'<th scope="colgroup">Region</th>'
-                    +'<td  colspan="3">'+data.region.Region+'</td>'
+                    // +'<th scope="colgroup" class="text-right">CP VMID</th>'
+                    // +'<td  colspan="1">'+data.id+'</td>'
+                   
+                    +'<th scope="colgroup" class="text-right">Region</th>'
+                    +'<td  colspan="1" >'+data.region.Region+'</td>'
+                    +'<th scope="colgroup" class="text-right">Zone</th>'
+                    +'<td  colspan="1">'+data.region.Zone+'</td>'
                     +'</tr>'
 
                     
                     +'<tr>'
-                    +'<th scope="colgroup">Public IP</th>'
-                    +'<td  colspan="3">'+data.publicIP+'</td>'
+                    +'<th scope="colgroup" class="text-right">Public IP</th>'
+                    +'<td  colspan="1">'+data.publicIP+'</td>'
+                    
+                    +'<th scope="colgroup" class="text-right">Public DNS</th>'
+                    +'<td  colspan="1">'+data.publicDNS+'</td>'
                     +'</tr>'
 
                     +'<tr>'
-                    +'<th scope="colgroup">Public DNS</th>'
-                    +'<td  colspan="3">'+data.publicDNS+'</td>'
+                    +'<th scope="colgroup" class="text-right">Private IP</th>'
+                    +'<td colspan="1">'+data.privateIP+'</td>'
+                    
+                    +'<th scope="colgroup" class="text-right">Private DNS</th>'
+                    +'<td colspan="1">'+data.privateDNS+'</td>'
                     +'</tr>'
 
                     +'<tr>'
-                    +'<th scope="colgroup">Private IP1234</th>'
-                    +'<td colspan="3">'+data.privateIP+'</td>'
-                    +'</tr>'
-
-                    +'<tr>'
-                    +'<th scope="colgroup">Private DNS</th>'
-                    +'<td colspan="3">'+data.privateDNS+'</td>'
-                    +'</tr>'
-
-                    +'<tr>'
-                    +'<th scope="colgroup">Server Status</th>'
+                    +'<th scope="colgroup" class="text-right">Server Status</th>'
                     +'<td colspan="3">'+data.status+'</td>'
-                    +'</tr>'
+                    +'</tr>';
                   
                 $("#vm").empty();
                 $("#vm").append(html);
@@ -677,22 +683,22 @@ function show_vmSpecInfo(mcis_id, vm_id){
                    if(res[k].id == spec_id){
                     html += '<tr>'
                           
-                           +'<th scope="colgroup" rowspan="5">Server Spec</th>'
-                           +'<th scope="colgroup">vCPU</th>'
-                           +'<td colspan="3">'+res[k].num_vCPU+'vcpu</td>'
+                           +'<th scope="colgroup" rowspan="5"class="text-right"><i class="fas fa-server"></i>Server Spec</th>'
+                           +'<th scope="colgroup" class="text-right">vCPU</th>'
+                           +'<td colspan="1">'+res[k].num_vCPU+' vcpu</td>'
+                         
+                           +'<th scope="colgroup" class="text-right">Memory(Ghz)</th>'
+                           +'<td  colspan="1">'+res[k].mem_GiB+' GiB</td>'
                            +'</tr>'
+
                            +'<tr>'
-                           +'<th scope="colgroup">Memory(Ghz)</th>'
-                           +'<td  colspan="3">'+res[k].mem_GiB+'GiB</td>'
+                           +'<th scope="colgroup" class="text-right">Disk (GB)</th>'
+                           +'<td colspan="1">'+res[k].storage_GiB+' GiB</th>'
+                          
+                           +'<th scope="colgroup" class="text-right">Cost($) / Hour </th>'
+                           +'<td colspan="1">'+res[k].cost_per_hour+'</td>'
                            +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup">Disk (GB)</th>'
-                           +'<td colspan="3">'+res[k].storage_GiB+'GiB</th>'
-                           +'</tr>'   
-                           +'<tr>'
-                           +'<th scope="colgroup">Cost($) / Hour </th>'
-                           +'<td colspan="3">'+res[k].cost_per_hour+'</td>'
-                           +'</tr>'
+
                            +'<tr>'
                            +'<th scope="colgroup">OsType</th>'
                            +'<td  colspan="3">'+res[k].os_type+'</td>'
@@ -739,26 +745,25 @@ function show_vmNetworkInfo(mcis_id, vm_id){
                     }
                     console.log("Subnet str : ",str)
                     html += '<tr>'
-                           +'<th scope="colgroup" rowspan="5">Network</th>'
-                           +'<th scope="colgroup">Network ID</th>'
-                           +'<td colspan="3">'+res[k].cspVNetId+'</td>'
+                           +'<th scope="colgroup" rowspan="5" class="text-right"><i class="fas fa-network-wired"></i>Network</th>'
+                           +'<th scope="colgroup" class="text-right">Network Name</th>'
+                           +'<td  colspan="1">'+res[k].cspVNetName+'</td>'
+                           +'<th scope="colgroup" class="text-right">Network ID</th>'
+                           +'<td colspan="1">'+res[k].cspVNetId+'</td>'
+                          
                            +'</tr>'
                            +'<tr>'
-                           +'<th scope="colgroup">Network Name</th>'
-                           +'<td  colspan="3">'+res[k].cspVNetName+'</td>'
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup">Cidr Block</th>'
+                           +'<th scope="colgroup" class="text-right">Cidr Block</th>'
                            +'<td colspan="3">'+res[k].cidrBlock+'</th>'
                            +'</tr>'
                            +'<tr>'
-                           +'<th scope="colgroup">Subnet</th>'
+                           +'<th scope="colgroup" class="text-right">Subnet</th>'
                            +'<td colspan="3">'+str+'</th>'
                            +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup">Interface</th>'
-                           +'<td colspan="3">'+res[k].cidrBlock+'</th>'
-                           +'</tr>'
+                        //    +'<tr>'
+                        //    +'<th scope="colgroup">Interface</th>'
+                        //    +'<td colspan="3">'+res[k].cidrBlock+'</th>'
+                        //    +'</tr>'
                           
                    }
                } 
@@ -785,7 +790,7 @@ function show_vmSecurityGroupInfo(mcis_id, vm_id){
         var spec_id = data.security_group_ids
         var cnt = spec_id.length
         html += '<tr>'
-             +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroup</th>'
+             +'<th scope="colgroup" colspan="'+cnt+'" "class="text-right"><i class="fas fa-shield-alt"></i>SecurityGroup</th>'
              +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroup ID</th>'
         for(var i in spec_id){
             if( i == 0){
@@ -823,16 +828,16 @@ function show_vmSSHInfo(mcis_id, vm_id){
                for(var k in res){
                    if(res[k].id == spec_id){
                     html += '<tr>'
-                           +'<th scope="colgroup" rowspan="3">Access(SSH Key)</th>'
-                           +'<th scope="colgroup">SSH Key ID</th>'
-                           +'<td colspan="3">'+res[k].id+'</td>'
+                           +'<th scope="colgroup" rowspan="3" class="text-right"><i class="fas fa-key"></i>Access(SSH Key)</th>'
+                           +'<th scope="colgroup" class="text-right">Key Name</th>'
+                           +'<td  colspan="1">'+res[k].cspSshKeyName+'</td>'
+                           +'<th scope="colgroup" class="text-right">SSH Key ID</th>'
+                           +'<td colspan="1">'+res[k].id+'</td>'
+                          
+                           
                            +'</tr>'
                            +'<tr>'
-                           +'<th scope="colgroup">Key Name</th>'
-                           +'<td  colspan="3">'+res[k].cspSshKeyName+'</td>'
-                           +'</tr>'
-                           +'<tr>'
-                           +'<th scope="colgroup">Description</th>'
+                           +'<th scope="colgroup" class="text-right">Description</th>'
                            +'<td colspan="3">'+res[k].description+'</th>'
                            +'</tr>'
                           
@@ -848,5 +853,40 @@ function show_vmSSHInfo(mcis_id, vm_id){
            
         
     })
+
+}
+
+function show_images(image_id){
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+image_id
+    axios.get(url).then(result=>{
+        var data = result.data
+        console.log("Image Data : ",data);
+        var html = ""
+            
+        html += '<tr>'
+                +'<th scope="colgroup" rowspan="5" class="text-right"><i class="fas fa-compact-disc"></i>Image</th>'
+                +'<th scope="colgroup" class="text-right">Image Name</th>'
+                +'<td  colspan="1">'+data.name+'</td>'
+                +'<th scope="colgroup" class="text-right">Image ID</th>'
+                +'<td colspan="1">'+data.id+'</td>'
+                
+                +'</tr>'
+                +'<tr>'
+                +'<th scope="colgroup" class="text-right">Guest OS</th>'
+                +'<td colspan="1">'+data.guestOS+'</th>'
+                
+                +'<th scope="colgroup" class="text-right">Description</th>'
+                +'<td colspan="1">'+data.description+'</th>'
+                +'</tr>'
+            
+                          
+             
+             
+               $("#vm_image").empty();
+               $("#vm_image").append(html);
+
+           })
+
+    
 
 }

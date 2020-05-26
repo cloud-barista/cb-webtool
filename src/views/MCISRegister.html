@@ -55,7 +55,7 @@ function show_pop(count) {
                                 <tr>
                                     <th>MCIS Name<strong class="text-danger">*</strong></th>
                                     <td>
-                                        <input class="form-control form-control-sm" type="text" name="" placeholder="input name" id="mcis_name">
+                                        <input class="form-control form-control-sm" type="text" name="" placeholder="input name" id="mcis_name" required>
                                     </td>
                                 </tr>
                                 <tr>
@@ -81,7 +81,9 @@ function show_pop(count) {
                     </div>
                     <div class="card-footer" id="target">
                         <div class="d-flex justify-content-end align-items-center">
-                            <button type="button" id="vm_add" class="vm_add btn btn-dark btn-sm">ADD Server</button>
+                            <button type="button" id="vm_add" class="vm_add btn btn-primary btn-sm">Add Server Template</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-sm btn-danger" onclick="cancel_btn();">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -153,7 +155,7 @@ function show_pop(count) {
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
                 var html = "";
                 axios.get(url).then(result=>{
-                    console.log(result.data)
+                    console.log("Image Info : ",result.data)
                     data = result.data.image
                     if(!data){
                         alert("등록된 이미지 정보가 없습니다.")
@@ -299,24 +301,24 @@ function show_vm(vm_cnt){
 
                 +'<th>Cloud Provider<strong class="text-danger">*</strong></th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="provider" id="provider_'+vm_cnt+'" onchange="getConnectionInfo(this.value,'+vm_cnt+');">'
+                +'<select class="form-control form-control-sm" name="provider" id="provider_'+vm_cnt+'" onchange="getConnectionInfo(this.value,'+vm_cnt+');"  required>'
                 +'<option selected>Select Cloud Provider</option>'
                 +'<option value="AWS">AWS</option>'
                 +'<option value="AZURE">AZURE</option>'
-                +'<option value="Alibaba">Alibaba</option>'
+                +'<option value="ALIBABA">Alibaba</option>'
                 +'<option value="GCP">GCP</option>'
-                +'<option value="Cloudit">Cloudit</option>'
-                +'<option value="Openstack">Openstack</option>'
+                +'<option value="CLOUDIT">Cloudit</option>'
+                +'<option value="OPENSTACK">Openstack</option>'
                 +'</select>'
                 +'</td></tr>'
 
                 +'<tr><th>Cloud Connection<strong class="text-danger">*</strong></th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="config_name" id="configName_'+vm_cnt+'"  onchange="changeConnectionInfo(this.value,'+vm_cnt+')">'
+                +'<select class="form-control form-control-sm" name="config_name" id="configName_'+vm_cnt+'"  onchange="changeConnectionInfo(this.value,'+vm_cnt+')"  required>'
                 +'<option selected>Select Cloud Connection</option>'
                 +'</select></td></tr>'
                 +'<tr><th>Server Name</th><td>'
-                +'<input class="vm_name form-control form-control-sm" type="text" name="name" onkeyup="view_vm();" placeholder="input Name" id="vmName_'+vm_cnt+'"></td></tr>'
+                +'<input class="vm_name form-control form-control-sm" type="text" name="name" onkeyup="view_vm();" placeholder="input Name" id="vmName_'+vm_cnt+'"  required></td></tr>'
                 
                 +'<tr><th>Server Spec<strong class="text-danger">*</strong></th><td>'
                 +'<div class="form-row">'
@@ -339,13 +341,13 @@ function show_vm(vm_cnt){
                 +'<tr><th class="th-right">Cost($) / Hour</th><td>'
                 +'<input class="form-control form-control-sm" type="text" placeholder="Cost Per Hour" id="cPh'+vm_cnt+'" name="costPerHour" readonly></td></tr>'
                 +'<tr><th>Select Image</th><td>'
-                +'<select class="form-control form-control-sm" name="image_id" id="image_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="image_id" id="image_'+vm_cnt+'"   required>'
                 +'<option selected>Select Image</option>'
                 
                 +'</select></td></tr>'
                 +'<tr><th>Network<strong class="text-danger">*</strong></th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="vnet_id" id="vnet_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="vnet_id" id="vnet_'+vm_cnt+'"  required >'
                 +'<option selected>Select Network</option>'
                 +'</select></td></tr>'
 
@@ -370,13 +372,13 @@ function show_vm(vm_cnt){
                 // +'</td></tr>'
                 +'<tr><th>SecurityGroup<strong class="text-danger">*</strong></th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" multiple name="security_group_ids" id="sg_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" multiple name="security_group_ids" id="sg_'+vm_cnt+'"  required>'
                 +'<option>Select SecurityGroup</option>'
                 +'</select></td></tr>'
 
                 +'<tr><th>Access (SSH Key)<strong class="text-danger">*</strong></th>'
                 +'<td>'
-                +'<select class="form-control form-control-sm" name="ssh_key_id" id="sshKey_'+vm_cnt+'"  >'
+                +'<select class="form-control form-control-sm" name="ssh_key_id" id="sshKey_'+vm_cnt+'"  required >'
                 +'<option selected>Select SSH KEY</option>'
                 +'</select></td></tr>'
 
@@ -392,11 +394,14 @@ function show_vm(vm_cnt){
                 +'</tbody></table></div>'
                 +'<div class="card-footer">'
                 +'<div class="d-flex justify-content-end align-items-center">'
-                +'<button type="button" class="add_vm btn btn-dark btn-sm">Add Server</button>'
-                
+                //+'<button type="button" class="add_vm btn btn-dark btn-sm">Add Server</button>'
+                +'추가할 서버 : '
+                +'&nbsp;'
                 +'<input class="vm_view " type="text" id="vm_view_'+vm_cnt+'" name="" >'
-
+                +'&nbsp;'
                 +'<button type="button" onclick="btn_click();" class="btn btn-dark btn-sm">Confirm</button>'
+                +'&nbsp;'
+                +'<button type="button" class="btn btn-sm btn-danger" onclick="cancel_btn();">Cancel</button>'
                 +'</div></div></div>'
                 +'</form>'
 
@@ -414,13 +419,23 @@ function view_vm(){
    
     var str = ""
     var arr = new Array();
+   
     $("[class^='vm_name']").each(function(k,v){
         console.log("Key : ",k);
         console.log("value : ",v); 
-        arr.push(this.value)
+        
+       
+            arr.push(this.value)
+        
     });
     console.log("view name : ",arr);
-    str = arr.join(",")
+    
+    if(arr.length > 1){
+        str = arr.join(", ");
+    }else{
+        str = arr[0];
+    }
+   
     console.log(str)
     $("[class^='vm_view']").each(function(k,v){
        this.value = str
@@ -429,6 +444,9 @@ function view_vm(){
 }
 function btn_click(){
    
+    //폼의 필수 필드를 검증 함.
+    if (!chkFormValidate($("#form"))) return false;
+
     var result = setObj();
     result.name = $("#mcis_name").val()
     result.description = $("#mcis_description").val()
@@ -436,7 +454,9 @@ function btn_click(){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis"
     console.log("request Create mcis url : ",url)
     //return;
-    axios.post(url,result).then(result=>{
+    try{
+        AjaxLoadingShow(true);
+        axios.post(url,result).then(result=>{
         if(result.status == 201){
             alert("Register Success")
             location.href = "/MCIS/list";
@@ -444,8 +464,10 @@ function btn_click(){
             alert("Register Fail")
             location.reload();
         }
-    })
-    
+        })
+    }finally{
+        AjaxLoadingShow(false);
+    }    
 }
 
 

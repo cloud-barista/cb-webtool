@@ -58,10 +58,12 @@
                                             <!-- <button type="button" class="btn btn-sm btn-danger">삭제</button>
                                             <button type="button" class="btn btn-sm btn-outline-dark">수정</button> -->
                                             <button type="button" class="btn btn-sm btn-dark" id="sel">Select</button>
+                                            &nbsp;
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="close_btn();">Cancel</button>
                                         </div>
                                 </div>
                                 <div class="table-overflow" style="overflow:auto;height:500px;">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered table-hover">
                                         <colgroup>
                                             <col style="width: 50px">
                                             <col style="width: 50px">
@@ -85,7 +87,7 @@
                                                 </th>
                                                 
                                                 <th>Name</th>
-                                                <th>Cloud Connection</th>
+                                                <th>CSP Spec Name</th>
                                                 <th>vCpu</th>
                                                 <th>Memory(Ghz)</th>
                                                 <th>Disk(GB)</th>
@@ -129,19 +131,25 @@ $(document).ready(function(){
                     +'<td class="text-center">'
                     +'<div class="form-input">'
                     +'<span class="input">'
-                    +'<input type="radio" id="" class="chk" value="'+res[i].id+'|'+res[i].name+'|'+res[i].num_vCPU+'|'+res[i].mem_GiB+'|'+res[i].storage_GiB+'|'+res[i].cost_per_hour+'|'+res[i].os_type+'"><i></i>'
+                    +'<input type="radio" id="spec" name="spec" class="chk" value="'+res[i].id+'|'+res[i].cspSpecName+'|'+res[i].num_vCPU+'|'+res[i].mem_GiB+'|'+res[i].storage_GiB+'|'+res[i].cost_per_hour+'|'+res[i].os_type+'"><i></i>'
                     +'</span></div></td>'
 
                     +'<td>'+res[i].name+'</td>'
-                    +'<td>'+res[i].connectionName+'</td>'
+                    +'<td>'+res[i].cspSpecName+'</td>'
                     +'<td>'+res[i].num_vCPU+'</td>'
                     +'<td>'+res[i].mem_GiB+'</td>'
                     +'<td>'+res[i].storage_GiB+'</td>'
-                    +'<td>'+res[i].os_type+'</td><tr>';
+                    +'<td>'+res[i].os_type+'</td>'
                     +'<td>'+res[i].cost_per_hour+'</td>'
-                    +'<tr>'
+                    +'<tr>';
             }
         }
+
+		//체크 박스 체크 해제
+        $(".chk").each(function(){
+			$(this).prop("checked", false);
+		});
+
         if(count == 0){
                html +='<tr><td colspan="8">등록된 스펙이 없습니다.</td></tr>'
             //    html += '<tr>'
@@ -173,15 +181,15 @@ $(document).ready(function(){
 				//alert("chk");
                 cnt++;
                 values  = $(this).val();
-                
-			
+                //alert(cnt + " chk : " + values);
 			}
 		});
+        //alert("전체 선택 개수 : " + cnt)
 		if(cnt < 1 ){
             alert("대상을 선택해 주세요.");
             return;
         }
-        if(cnt == 1){
+        else if(cnt == 1){
           //alert(id);
           console.log("values : ",values)
           values = values.split("|");
@@ -198,7 +206,7 @@ $(document).ready(function(){
 
           $('#transDiv').remove();
         }
-        if(cnt >1){
+        else if(cnt >1){
             alert("한개씩 등록 가능합니다.")
             return;
         }
