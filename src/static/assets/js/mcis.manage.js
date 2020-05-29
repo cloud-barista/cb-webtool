@@ -1,4 +1,4 @@
-// MCIS Control
+// MCIS Control 
 function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
     var url = ""
     var nameSpace = NAMESPACE;
@@ -791,7 +791,7 @@ function show_vmSecurityGroupInfo(mcis_id, vm_id){
         var cnt = spec_id.length
         html += '<tr>'
              +'<th scope="colgroup" colspan="'+cnt+'" "class="text-right"><i class="fas fa-shield-alt"></i>SecurityGroup</th>'
-             +'<th scope="colgroup" colspan="'+cnt+'">SecurityGroup ID</th>'
+             +'<th scope="colgroup" colspan="'+cnt+'" class="text-right">SecurityGroup ID</th>'
         for(var i in spec_id){
             if( i == 0){
                 html +='<td colspan="3">'+spec_id[i]+'</td></tr>'

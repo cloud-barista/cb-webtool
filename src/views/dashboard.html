@@ -160,7 +160,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-5">
+                    <div class="col-xl-5" style="max-height:245px;" >
                         <div class="card shadow h-100" style="min-height:350px;">
                             <div class="card-header bg-transparent">
                                 <div class="row align-items-center">
@@ -200,7 +200,7 @@
                                 </div>
                             </div>
                             <div class="table-overflow">
-                                <table class="table align-items-center table-flush table-hover" id="serverListTable">
+                                <table class="table align-items-center table-flush table-hover" id="serverListTable" >
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">
@@ -409,22 +409,22 @@
      {{template "Footer" .}}
 
      <script>
-            // add for list talble selected
             $('#mcisListTable').on('click', '.clickable-row', function(event) {
-                if($(this).hasClass('table-active')){
-                    $(this).removeClass('table-active'); 
-                } else {
-                    $(this).addClass('table-active').siblings().removeClass('table-active');
-                }
-            });
-            $('#serverListTable').on('click', '.clickable-row', function(event) {
-                if($(this).hasClass('table-active')){
-                    $(this).removeClass('table-active'); 
-                } else {
-                    $(this).addClass('table-active').siblings().removeClass('table-active');
-                }
+            if($(this).hasClass('table-active')){
+                $(this).removeClass('table-active'); 
+            } else {
+                $(this).addClass('table-active').siblings().removeClass('table-active');
+            }
             });
 
+            $('#serverListTable').on('click', '.clickable-row', function(event) {
+            if($(this).hasClass('table-active')){
+                $(this).removeClass('table-active'); 
+            } else {
+                $(this).addClass('table-active').siblings().removeClass('table-active');
+            }
+            });
+            
             $(document).ready(function(){
                 var nsid = "{{ .NameSpace}}";
                 if(!nsid){
