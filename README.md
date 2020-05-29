@@ -11,13 +11,11 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
 4. [서버 실행](#서버-실행)
 ***
 ## [설치 환경]
-cb-webtool은 1.12 이상의 Go 버전이 설치된 Windows & Linux & Mac OS 등에서 실행 가능합니다.<br>
-Windows 8/10 & Mac OS 10.14.6(Mojave) 환경에서 개발을 진행했으며 최종 전체 동작을 검증한 OS는 Ubuntu 18.0.4입니다.<br>
+cb-webtool은 1.12 이상의 Go 버전이 설치된 다양한 환경에서 실행 가능하지만 최종 동작을 검증한 OS는 Ubuntu 18.0.4입니다.<br>
 <br>
 
 ## [의존성]
-cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly 프로젝트를 이용하며, <br>
-개별 프로젝트들의 문서를 통해서 동일 서버 또는 개별 서버에 설치 및 실행합니다.<br>
+cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly 프로젝트를 이용하기 때문에, 각 프로젝트들의 문서를 참고하셔서 동일한 서버 또는 독립 서버에 미리 설치 및 실행해야 합니다.<br>
 - [https://github.com/cloud-barista/cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug) README 참고하여 설치 및 실행
 - [https://github.com/cloud-barista/cb-spider](https://github.com/cloud-barista/cb-spider) README 참고하여 설치 및 실행
 - [https://github.com/cloud-barista/cb-dragonfly](https://github.com/cloud-barista/cb-dragonfly) README 참고하여 설치 및 실행
@@ -64,11 +62,14 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly 프로젝�
      ````
 
 ## [환경 설정]
-   - 의존성 프로젝트를 다른 서버에 설치한 경우 URL 설정<br>
-     conf/setup.env 파일에 cb-tumblebug & cb-spider & cb-dragonfly의 URL 정보를 수정합니다.
+   - [의존성](#의존성) 프로젝트를 cb-webtool과 다른 서버에 설치한 경우<br>
+     conf/setup.env 파일에서 cb-tumblebug & cb-spider & cb-dragonfly의 URL 정보를 수정합니다.
    
    - 초기 Data 구축<br>
-https://github.com/cloud-barista/cb-spider의 [API규격] 및 [활용 예시]를 참고해서 CLI및 json 방식의 웹 호출로 데이터 구축이 가능합니다.
+     내부적으로 cb-spider와 cb-tumblebug을 이용하기 때문에 cb-spider의 [API규격](https://github.com/cloud-barista/cb-spider#api-%EA%B7%9C%EA%B2%A9)을 참고해서 JSON 방식의 REST 호출로 데이터를 구축하거나 [활용 예시](https://github.com/cloud-barista/cb-spider#%ED%99%9C%EC%9A%A9-%EC%98%88%EC%8B%9C_)를 참고해서 제공되는 쉘 스크립트 기반의 시험 도구를 이용해서 손쉽게 기초 데이터의 구축이 가능합니다.
+
+  - Credential 정보<br>
+    Credential 정보의 경우 [cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug)에서 각 CSP 드라이버마다 설정해야하는 Key 값들이 다르기 때문에 설정해야하는 키 값을 모를 경우 [cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug)이나 [cb-spider](https://github.com/cloud-barista/cb-spider)의 [활용 예시](https://github.com/cloud-barista/cb-spider#%ED%99%9C%EC%9A%A9-%EC%98%88%EC%8B%9C_)에 있는 시험 도구 중 Credential 정보를 확인하시기 바랍니다.
 
 
 ## [서버 실행]
@@ -81,6 +82,5 @@ https://github.com/cloud-barista/cb-spider의 [API규격] 및 [활용 예시]를
 - Bash를 설치하지 않은 Windows 환경에서는 reflex를 사용할 수 없으므로 직접 구동해야 합니다.
     ````bash (Windows)
     $ cd github.com/cloud-barista/cb-webtool
-    $ source ./conf/setup.env
-    $ go run main.go
+    $ run-windows.sh
     ````
