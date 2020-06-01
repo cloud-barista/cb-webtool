@@ -190,7 +190,7 @@ $(document).ready(function(){
            // alert("url: "+u)
             if(confirm("Delete?")){
              axios.delete(u).then(result=>{
-                 var data = result.data
+                
                  if(result.status == 200){
                      alert("delete it.")
                      location.reload()
