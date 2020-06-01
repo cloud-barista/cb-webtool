@@ -104,6 +104,10 @@ $(document).ready(function(){
         console.log("Region registerDriver URL : ",url)
         axios.post(url,obj).then(result =>{
             console.log(result);
+            if(result.status == 200){
+                alert("Regist it");
+                location.href="/Region/list";
+            }
         });
         // $.ajax({
         //     url :url,
@@ -122,11 +126,11 @@ $(document).ready(function(){
         kv_cnt++;
         html = ""
         html += '<tr id="kv_'+kv_cnt+'">'
-               +'<th>Key</th>'
+               +'<th class="th-right">Key</th>'
                +'<td>'
                +'<input type="text" name="KeyValueInfoList['+kv_cnt+'][Key]" value=""/>'
                +'</td>'
-               +'<th>Value</th>'
+               +'<th class="th-right">Value</th>'
                +'<td>'
                +'<input type="text" name="KeyValueInfoList['+kv_cnt+'][Value]" value=""/>'
                +'</td>'
