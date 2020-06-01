@@ -61,8 +61,7 @@ function enterkey() {
 
 
 $(document).ready(function(){
-    axios.post("/regUser",{headers: { 'Content-type': 'application/json', }, 
-        username:"admin",password:"1234"
+    axios.post("/regUser",{headers: { 'Content-type': 'application/json', }
      }).then(result =>{
             console.log(result);
         });
@@ -80,7 +79,7 @@ $(document).ready(function(){
             axios.post("/login/proc",{headers: { 'Content-type': 'application/json', }
             ,username:username,password:password }).then(result =>{
                 console.log(result);
-                if(result.data.status == "success"){
+                if(result.status == 200){
                     alert("Login Success");
                     //location.reload();
                     var url = "{{ .comURL.TumbleBugURL}}"+"/ns";
@@ -130,8 +129,16 @@ $(document).ready(function(){
                         }
                         //console.log(error.config);
                     })
+                }else{
+                    alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
+                    location.reload();
+
                 }
-            });
+            }).catch(function(error){
+                console.log("login error : ",error);
+                alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
+                location.reload();
+            })
             // $.ajax({
             //     url:"/login/proc/",
             //     contentType: "application/json",

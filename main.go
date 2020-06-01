@@ -43,6 +43,9 @@ func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, c ec
 func requestApi(method string, restUrl string, body io.Reader) {
 
 }
+func init() {
+
+}
 
 func main() {
 	e := echo.New()

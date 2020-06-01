@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	echosession "github.com/go-session/echo-session"
@@ -30,41 +31,26 @@ func LogoutForm(c echo.Context) error {
 
 func RegUserConrtoller(c echo.Context) error {
 	//comURL := GetCommonURL()
-	reqInfo := new(ReqInfo)
-	if err := c.Bind(reqInfo); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{
-			"message": "fail",
-		})
-	}
-	user := reqInfo.UserName
-	pass := reqInfo.Password
-	//
-	fmt.Println("c.Request : ", user, pass)
+
+	user := os.Getenv("LoginEmail")
+	pass := os.Getenv("LoginPassword")
+
 	store := echosession.FromContext(c)
-	get, ok := store.Get(user)
-	fmt.Println(get)
 	obj := map[string]string{
 		"username": user,
-		// "namespace": MakeNameSpace(user),
 		"password": pass,
 	}
-	if !ok {
-
-		store.Set(user, obj)
-		err := store.Save()
-		if err != nil {
-			return c.JSON(http.StatusServiceUnavailable, map[string]string{
-				"message": "Fail",
-			})
-		}
-		return c.JSON(http.StatusOK, map[string]string{
-			"message": "SUCCESS",
-		})
-	} else {
-		return c.JSON(301, map[string]string{
-			"message": "already register",
+	store.Set(user, obj)
+	err := store.Save()
+	if err != nil {
+		return c.JSON(http.StatusServiceUnavailable, map[string]string{
+			"message": "Fail",
 		})
 	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"message": "SUCCESS",
+		"user":    user,
+	})
 
 }
 
