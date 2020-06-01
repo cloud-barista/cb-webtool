@@ -187,11 +187,11 @@ $(document).ready(function(){
         if(cnt == 1){
            
             var u = SpiderURL+"/region/"+id
-            alert("url: "+u)
+           // alert("url: "+u)
             if(confirm("Delete?")){
              axios.delete(u).then(result=>{
-                 var data = result.data
-                 if(data.message == "success"){
+                
+                 if(result.status == 200){
                      alert("delete it.")
                      location.reload()
                  }
