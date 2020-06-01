@@ -191,7 +191,7 @@ $(document).ready(function(){
             if(confirm("Delete?")){
              axios.delete(u).then(result=>{
                  var data = result.data
-                 if(data.status == 200){
+                 if(rseult.status == 200){
                      alert("delete it.")
                      location.reload()
                  }
