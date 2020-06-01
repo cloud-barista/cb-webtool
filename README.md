@@ -64,7 +64,9 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly 프로젝�
 ## [환경 설정]
    - conf/setup.env 파일에서 cb-tumblebug & cb-spider & cb-dragonfly의 실제 URL 정보로 수정합니다.<br>
      **[주의사항]** localhost나 127.0.01 주소를 사용할 수 없습니다.
-   
+
+   - conf/setup.env 파일에서 cb-webtool에 로그인할 사용자의 LoginEmail & LoginPassword 정보를 수정하세요.<br>
+
    - 초기 Data 구축<br>
      내부적으로 cb-spider와 cb-tumblebug을 이용하기 때문에 cb-spider의 [API규격](https://github.com/cloud-barista/cb-spider#api-%EA%B7%9C%EA%B2%A9)을 참고해서 JSON 방식의 REST 호출로 데이터를 구축하거나 [활용 예시](https://github.com/cloud-barista/cb-spider#%ED%99%9C%EC%9A%A9-%EC%98%88%EC%8B%9C_)를 참고해서 제공되는 쉘 스크립트 기반의 시험 도구를 이용해서 손쉽게 기초 데이터의 구축이 가능합니다.
 
