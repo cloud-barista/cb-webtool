@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/labstack/echo"
 )
 
@@ -106,7 +104,7 @@ func McisRegController(c echo.Context) error {
 	fmt.Println("vmSpec 0 : ", m.VMSpec[0])
 	fmt.Println("vmspec 1 : ", m.VMSpec[1])
 
-	spew.Dump(m)
+	//spew.Dump(m)
 	//return c.Redirect(http.StatusTemporaryRedirect, "/MCIS/list")
 	return nil
 }
