@@ -1,3 +1,13 @@
+```
+[NOTE]
+CB-Webtool is currently under development. (the latest version is 0.2 cappuccino)
+So, we do not recommend using the current release in production.
+Please note that the functionalities of CB-Webtool are not stable and secure yet.
+If you have any difficulties in using CB-Webtool, please let us know.
+(Open an issue or Join the cloud-barista Slack)
+```
+***
+
 cb-webtool
 ==========
 cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-webtool에서 처리해 <br>
