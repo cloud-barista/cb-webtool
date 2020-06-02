@@ -156,6 +156,8 @@ function short_desc(str){
        //fnMove("table_1");
        $("#mcis_id").val(mcis[0].id)
        $("#mcis_name").val(mcis[0].name)
+   }).catch(function(error){
+    console.log("show mcis error at dashboard js: ",error);
    });
 }
 function show_vmList(mcis_id,map){
