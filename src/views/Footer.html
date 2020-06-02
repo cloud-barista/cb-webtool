@@ -12,7 +12,7 @@
             axios.get(reqUrl).then(result=>{
                 var data = result.data
                 console.log(data);
-                location.reload();
+                location.reload(true);
              })
         }else{
             alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")

@@ -22,7 +22,7 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name,mcis_url){
         if(status == 200){
             
             alert(message);
-            location.reload();
+            location.reload(true);
             show_mcis(mcis_url,"");
         }
     })
@@ -453,7 +453,7 @@ function agentSetup(mcis_id,vm_id,public_ip){
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
-                     location.reload()
+                     location.reload(true)
                  }
              })
             }
@@ -653,7 +653,7 @@ console.log("axios return value : ",f);
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
-                     location.reload()
+                     location.reload(true)
                  }
              })
             }

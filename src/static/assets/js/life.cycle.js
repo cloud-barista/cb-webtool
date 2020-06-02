@@ -16,7 +16,7 @@ function life_cycle(tag,type, mcis_id,mcis_name,vm_id,vm_name){
         console.log("result Message : ",result.data.message)
         if(status == 200){
             alert(message);
-            location.reload();
+            location.reload(true);
         }
      })
  }
@@ -39,7 +39,7 @@ function life_cycle(tag,type, mcis_id,mcis_name,vm_id,vm_name){
 //         console.log("result Message : ",result.data.message)
 //         if(status == 200){
 //             alert(message);
-//             location.reload();
+//             location.reload(true);
 //         }
 //      })
 //  }
@@ -62,7 +62,7 @@ function life_cycle(tag,type, mcis_id,mcis_name,vm_id,vm_name){
 //         console.log("result Message : ",result.data.message)
 //         if(status == 200){
 //             alert(message);
-//             location.reload();
+//             location.reload(true);
 //         }
 //      })
 //  }
@@ -85,7 +85,7 @@ function life_cycle(tag,type, mcis_id,mcis_name,vm_id,vm_name){
 //         console.log("result Message : ",result.data.message)
 //         if(status == 200){
 //             alert(message);
-//             location.reload();
+//             location.reload(true);
 //         }
 //      })
 //  }
