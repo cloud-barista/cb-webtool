@@ -1,9 +1,9 @@
 ```
 [NOTE]
-CB-Webtool is currently under development. (the latest version is 0.2 cappuccino)
+cb-webtool is currently under development. (the latest version is 0.2 cappuccino)
 So, we do not recommend using the current release in production.
-Please note that the functionalities of CB-Webtool are not stable and secure yet.
-If you have any difficulties in using CB-Webtool, please let us know.
+Please note that the functionalities of cb-webtool are not stable and secure yet.
+If you have any difficulties in using cb-webtool, please let us know.
 (Open an issue or Join the cloud-barista Slack)
 ```
 ***
