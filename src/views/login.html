@@ -81,7 +81,7 @@ $(document).ready(function(){
                 console.log(result);
                 if(result.status == 200){
                     alert("Login Success");
-                    //location.reload();
+                    //location.reload(true);
                     var url = "{{ .comURL.TumbleBugURL}}"+"/ns";
                     axios.get(url).then(result=>{
                         console.log("get NameSpace Data : ",result.data);
@@ -135,13 +135,13 @@ $(document).ready(function(){
                     })
                 }else{
                     alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
-                    location.reload();
+                    location.reload(true);
 
                 }
             }).catch(function(error){
                 console.log("login error : ",error);
                 alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
-                location.reload();
+                location.reload(true);
             })
             // $.ajax({
             //     url:"/login/proc/",

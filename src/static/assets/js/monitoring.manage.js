@@ -22,7 +22,7 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
         if(status == 200){
             
             alert(message);
-            location.reload();
+            location.reload(true);
         }
     })
 }
@@ -462,7 +462,7 @@ function show_vmList(mcis_id){
              console.log(result);
              if(result.status == 200){
                  alert(data.message)
-                 location.reload()
+                 location.reload(true)
              }
          })
         }

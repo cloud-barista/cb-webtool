@@ -22,10 +22,10 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
         if(status == 200){
             setTimeout(function(){
                 alert(data.message);
-                location.reload();
+                location.reload(true);
             },5000)
             // alert(data.message);
-            // location.reload();
+            // location.reload(true);
         }
     })
 }
@@ -377,7 +377,7 @@ function short_desc(str){
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
-                     location.reload()
+                     location.reload(true)
                  }
              })
             }
@@ -471,7 +471,7 @@ function short_desc(str){
              console.log(result);
              if(result.status == 200){
                  alert(data.message)
-                 location.reload()
+                 location.reload(true)
              }
          })
         }

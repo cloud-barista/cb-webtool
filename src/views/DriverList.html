@@ -182,9 +182,10 @@ $(document).ready(function(){
             }
             $("#con_table").empty();
             $("#con_table").append(html);
-        }else{
+        }
+        if(data.length == 0){
             $("#con_table").empty();
-            $("#con_table").append("<td colspan='6'>Does not exist.</td>");
+            $("#con_table").append("<tr><td colspan='6'>Does not exist.</td></tr>");
         }
 
     })
@@ -212,7 +213,7 @@ $(document).ready(function(){
                  var data = result.data
                  if(result.status == 200){
                      alert("Delete.")
-                     location.reload()
+                     location.reload(true)
                  }
              })
             }
