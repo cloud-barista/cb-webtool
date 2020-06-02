@@ -79,7 +79,7 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly 프로젝�
 
    - 초기 Data 구축<br>
      내부적으로 cb-spider와 cb-tumblebug을 이용하기 때문에 cb-spider의 [API규격](https://github.com/cloud-barista/cb-spider#api-%EA%B7%9C%EA%B2%A9)을 참고해서 JSON 방식의 REST 호출로 데이터를 구축하거나 [활용 예시](https://github.com/cloud-barista/cb-spider#%ED%99%9C%EC%9A%A9-%EC%98%88%EC%8B%9C_)를 참고해서 제공되는 쉘 스크립트 기반의 시험 도구를 이용해서 손쉽게 기초 데이터의 구축이 가능합니다.<br>
-     **Network/Security Group/Image/Spec/Keypair는 v0.2.0-cappuccino cb-webtool에서 지원하지 않으므로 현재는 외부에서 생성해야 합니다.**
+     **Network/Security Group/Image/Spec/Keypair는 cb-webtool v0.2.0-cappuccino에서 지원하지 않으므로 현재는 외부에서 생성해야 합니다.**
 
   - Credential 정보<br>
     Credential 정보의 경우 [cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug)에서 각 CSP 드라이버마다 설정해야하는 Key 값들이 다르기 때문에 설정해야하는 키 값을 모를 경우 [cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug)이나 [cb-spider](https://github.com/cloud-barista/cb-spider)의 [활용 예시](https://github.com/cloud-barista/cb-spider#%ED%99%9C%EC%9A%A9-%EC%98%88%EC%8B%9C_)에 있는 시험 도구 중 Credential 정보를 확인하시기 바랍니다.
