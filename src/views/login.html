@@ -87,6 +87,7 @@ $(document).ready(function(){
                         console.log("get NameSpace Data : ",result.data);
                         var data = result.data.ns;
                         var ns = "";
+                        console.log("namespace data :",data);
                         if(data){ 
                             if (data[0].id) {
                                 for(var i in data){
@@ -97,6 +98,9 @@ $(document).ready(function(){
                             }else{
                                 ns = data[1].id;
                             }
+                        }else{
+                            alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
+                            location.href ="/NS/reg";
                         }
                         if(data){
                             $.ajax({
