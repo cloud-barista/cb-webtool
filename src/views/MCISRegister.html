@@ -457,12 +457,14 @@ function btn_click(){
     try{
         AjaxLoadingShow(true);
         axios.post(url,result).then(result=>{
-        if(result.status == 201){
+        console.log("MCIR Register data : ",result);
+        console.log("Result Status : ",result.status); 
+        if(result.status == 201 || result.status == 200){
             alert("Register Success")
             location.href = "/MCIS/list";
         }else{
             alert("Register Fail")
-            location.reload(true);
+            //location.reload(true);
         }
         })
     }finally{
