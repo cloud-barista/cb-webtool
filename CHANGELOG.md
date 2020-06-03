@@ -1,5 +1,12 @@
 
 # v0.2.0-cappuccino (2020.06.01.)
+
+### API Change
+- Geolocation API 추가
+- 전체 Request 및 Response Body의 상세 항목 변경
+- 각 MCIS에서 PublicIP 추출 기능 API 추가
+- Common URL API 추가
+
 ### Feature
 - Location에 선택된 서비스의 위치 반영
 - VM 모니터링 활성화 & 모니터링 차트 추가
