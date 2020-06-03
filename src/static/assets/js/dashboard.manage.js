@@ -267,7 +267,7 @@ function show_vmList(mcis_id,map){
                             +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'resume\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+mcis_url+'\')">Resume</a>'
                             +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'suspend\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+mcis_url+'\')">Suspend</a>'
                             +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'reboot\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+mcis_url+'\')">Reboot</a>'
-                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',,\''+mcis_url+'\')">Terminate</a>'
+                            +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'vm\',\'terminate\',\''+mcis_id+'\',\''+mcis_name+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+mcis_url+'\')">Terminate</a>'
                         +'</div>'
                         +'</button>'
                         // +'<button type="button" class="btn btn-icon"  aria-haspopup="true" aria-expanded="false" onclick="agentSetup(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].publicIP+'\')">'
