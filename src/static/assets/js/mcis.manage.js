@@ -205,7 +205,7 @@ function short_desc(str){
                                     +'<td>'
                                     +badge
                                     +'</td>'
-                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].image_id+'\');">'+vm[i].name+'</a></td>'
+                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].imageId+'\');">'+vm[i].name+'</a></td>'
                         
                                     +'<td>'+provider+'</td>'
                                     +'<td>'+vm[i].region.Region+'</td>'
