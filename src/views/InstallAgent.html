@@ -106,7 +106,7 @@ function show_vmSSHInfo(){
         var data = result.data
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
-        var spec_id = data.ssh_key_id
+        var spec_id = data.sshKeyId
        
         $.ajax({
            url: url2,

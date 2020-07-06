@@ -156,7 +156,7 @@ function short_desc(str){
                 
                     var status = sta.toLowerCase()
                     console.log("VM Status : ",status)
-                    var configName = vm[i].config_name
+                    var configName = vm[i].connectionName
                     console.log("outer vm configName2 : ",configName)
                     var count = 0;
                     console.log("Spider URL : ",SpiderURL)
@@ -172,7 +172,7 @@ function short_desc(str){
                                 // console.log(" i value is : ",i)
                                 // console.log("outer config name : ",configName)
                                 // console.log("Inner ConfigName : ",res[k].ConfigName)
-                                if(res[k].ConfigName == vm[i].config_name){
+                                if(res[k].ConfigName == vm[i].connectionName){
                                     var provider = res[k].ProviderName
                                     console.log("Provider : ",provider);
                                     var kv_list = vm[i].cspViewVmDetail.KeyValueList
@@ -209,7 +209,7 @@ function short_desc(str){
                         
                                     +'<td>'+provider+'</td>'
                                     +'<td>'+vm[i].region.Region+'</td>'
-                                    +'<td>'+vm[i].config_name+'</td>'
+                                    +'<td>'+vm[i].connectionName+'</td>'
                                     +'<td>'+archi+'</td>'
                                     +'<td>'+vm[i].publicIP+'</td>'
                                     +'<td>'+short_desc(vm[i].description)+'</td>'
@@ -509,7 +509,7 @@ function short_desc(str){
                 res = data2.connectionconfig
                 var provider = "";
                 for(var k in res){
-                    if(res[k].ConfigName == data.config_name){
+                    if(res[k].ConfigName == data.connectionName){
                         provider = res[k].ProviderName
                         console.log("Inner Provider : ",provider)
                     }
@@ -586,7 +586,7 @@ function short_desc(str){
 //             res = data2.connectionconfig
 //                var provider = "";
 //                for(var k in res){
-//                    if(res[k].ConfigName == data.config_name){
+//                    if(res[k].ConfigName == data.connectionName){
 //                        provider = res[k].ProviderName
 //                        console.log("Inner Provider : ",provider)
 //                    }
@@ -817,7 +817,7 @@ function show_vmSSHInfo(mcis_id, vm_id){
         var data = result.data
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
-        var spec_id = data.ssh_key_id
+        var spec_id = data.sshKeyId
         $.ajax({
            url: url2,
            async:false,
