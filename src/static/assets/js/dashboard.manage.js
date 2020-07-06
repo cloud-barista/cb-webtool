@@ -852,7 +852,7 @@ function show_vmSpecInfo(mcis_id, vm_id){
         var data = result.data
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/spec"
-        var spec_id = data.spec_id
+        var spec_id = data.specId
         $.ajax({
            url: url2,
            async:false,
@@ -1001,7 +1001,7 @@ function show_vmSecurityGroupInfo(mcis_id, vm_id){
         console.log("Security Group : ",data);
         var html = ""
         // var url2 = "/ns/"+NAMESPACE+"/resources/securityGroup"
-        var spec_id = data.security_group_ids
+        var spec_id = data.securityGroupIds
         var cnt = spec_id.length
         html += '<tr>'
              +'<th scope="colgroup" colspan="'+cnt+' "class="text-right"><i class="fas fa-shield-alt"></i>SecurityGroup</th>'
