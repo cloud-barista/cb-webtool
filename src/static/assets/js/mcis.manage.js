@@ -724,7 +724,7 @@ function show_vmNetworkInfo(mcis_id, vm_id){
         var data = result.data
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
-        var spec_id = data.vnet_id
+        var spec_id = data.vNetId
         $.ajax({
            url: url2,
            async:false,
