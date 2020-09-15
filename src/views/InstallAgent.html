@@ -161,7 +161,12 @@ $(document).ready(function(){
             //AjaxLoadingShow(true);
 
             //console.log(req)
-            axios.post(url,obj)            
+            axios.post(url,obj,{
+            headers :{
+                 'Content-type': 'application/json',
+                 'Authorization': ApiInfo,
+                },
+        })            
             .then(result=>{
                 console.log(result.data)
                 var data = result.data

@@ -487,7 +487,12 @@ function btn_click(){
     //return;
     try{
         AjaxLoadingShow(true);
-        axios.post(url,result).then(result=>{
+        axios.post(url,result,{
+            headers :{
+                 'Content-type': 'application/json',
+                 'Authorization': apiInfo,
+                },
+        }).then(result=>{
         console.log("MCIR Register data : ",result);
         console.log("Result Status : ",result.status); 
         if(result.status == 201 || result.status == 200){
@@ -539,10 +544,7 @@ function setObj(){
     }
     var apiInfo = ApiInfo
     var result = {
-        headers :{
-                 'Content-type': 'application/json',
-                 'Authorization': apiInfo,
-                },
+       
         vm_req : objArr,
         vm_num : clickCnt
     }

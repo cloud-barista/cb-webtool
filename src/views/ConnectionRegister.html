@@ -115,10 +115,7 @@ $(document).ready(function(){
         var rName = $("#rName").val();
         var apiInfo = ApiInfo;
         var req = {
-            headers :{
-                 'Content-type': 'application/json',
-                 'Authorization': apiInfo,
-                },
+           
                 ConfigName:cName,
                 ProviderName:pName,
                 DriverName:dName,
@@ -126,7 +123,12 @@ $(document).ready(function(){
                 RegionName:rName
         }
         console.log(req)
-        axios.post(url,req).then(result=>{
+        axios.post(url,req,{
+            headers :{
+                 'Content-type': 'application/json',
+                 'Authorization': apiInfo,
+                },
+        }).then(result=>{
             console.log(result.data)
             var data = result.data
             if(result.status == 200){

@@ -96,17 +96,18 @@ $(document).ready(function(){
         
        var apiInfo = ApiInfo;
         var req = {
-            headers :{
-                 'Content-type': 'application/json',
-                 'Authorization': apiInfo,
-                },
-            
+                      
                 ProviderName:pName,
                 DriverName:dName,
                 DriverLibFileName:fPath,
         }
         console.log(req)
-        axios.post(url,req).then(result=>{
+        axios.post(url,req,{
+            headers :{
+                 'Content-type': 'application/json',
+                 'Authorization': apiInfo,
+                },
+        }).then(result=>{
             console.log(result.data)
             var data = result.data
             if(result.status == 200){
