@@ -165,16 +165,16 @@ func MakeNameSpace(name string) string {
 	return result
 }
 
-func AuthenticationHandler(method string, url string) {
-	req, err := http.NewRequest(method, url, nil)
+func AuthenticationHandler() string {
 
-	if err != nil {
+	api_username := os.Getenv("API_USERNAME")
+	api_password := os.Getenv("API_PASSWORD")
 
-	}
 	//The header "KEY: VAL" is "Authorization: Basic {base64 encoded $USERNAME:$PASSWORD}".
-	userInfo := "jaz:password"
-	encA := base64.StdEncoding.EncodeToString([]byte(userInfo))
-	req.Header.Add("Authorization", "Basic"+encA)
+	apiUserInfo := api_username + ":" + api_password
+	encA := base64.StdEncoding.EncodeToString([]byte(apiUserInfo))
+	//req.Header.Add("Authorization", "Basic"+encA)
+	return "Basic" + encA
 
 }
 
