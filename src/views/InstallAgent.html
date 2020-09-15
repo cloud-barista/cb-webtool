@@ -101,7 +101,12 @@ function show_vmSSHInfo(){
     var mcis_id =  $("#mcis_id").val();
     var vm_id = $("#vm_id").val();
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
 
         var data = result.data
         var html = ""
@@ -148,7 +153,9 @@ $(document).ready(function(){
         if (!chkFormValidate($("#form"))) return false;
         
         var obj = $("#form").serialize()
-        //obj.headers = { 'Content-type': 'application/json', }
+        
+        //obj.headers = { 'Content-type': 'application/json',
+       // 'Authorization': ApiInfo, }
 
         //try{
             //AjaxLoadingShow(true);

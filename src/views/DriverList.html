@@ -160,7 +160,12 @@ $(document).ready(function(){
     //alert("reload")
 
     var url = SpiderURL+"/driver";
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         console.log(data)
         var data = result.data.driver
         var html = ""

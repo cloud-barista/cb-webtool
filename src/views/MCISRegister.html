@@ -102,7 +102,12 @@ function show_pop(count) {
                 console.log("provider : ",provider)
                 //var provider = $("#provider option:selected").val();
                 var html = "";
-                axios.get(url).then(result=>{
+                var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
                     var data = result.data.connectionconfig
                     console.log("connection data : ",data);
                     var count = 0; 
@@ -154,7 +159,12 @@ function show_pop(count) {
             
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
                 var html = "";
-                axios.get(url).then(result=>{
+                var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
                     console.log("Image Info : ",result.data)
                     data = result.data.image
                     if(!data){
@@ -179,7 +189,12 @@ function show_pop(count) {
                 }
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup";
                 var html = "";
-                axios.get(url).then(result=>{
+                var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
                     data = result.data.securityGroup
                     for(var i in data){
                         if(data[i].connectionName == configName){
@@ -199,7 +214,12 @@ function show_pop(count) {
                 }
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey";
                 var html = "";
-                axios.get(url).then(result=>{
+                var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
                     console.log("sshKeyInfo result :",result)
                     data = result.data.sshKey
                     for(var i in data){
@@ -220,7 +240,12 @@ function show_pop(count) {
             //     }
             //     var url = CommonURL+"/ns/"+NAMESPACE+"/resources/publicIp";
             //     var html = "";
-            //     axios.get(url).then(result=>{
+            //     var apiInfo = ApiInfo
+    // axios.get(url,{
+    //     headers:{
+    //         'Authorization': apiInfo
+    //     }
+    // })then(result=>{
             //         data = result.data.publicIp
             //         for(var i in data){
             //             if(data[i].connectionName == configName){
@@ -241,7 +266,12 @@ function show_pop(count) {
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
                 var html = "";
                 var html2 = "";
-                axios.get(url).then(result=>{
+                var apiInfo = ApiInfo
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
                     data = result.data.vNet
                     console.log("vNetwork Info : ",result)
                     for(var i in data){
@@ -450,6 +480,7 @@ function btn_click(){
     var result = setObj();
     result.name = $("#mcis_name").val()
     result.description = $("#mcis_description").val()
+    //result.headers = {'Authorization': apiInfo,'Content-type': 'application/json',}
     console.log("seObj result : ",result)
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis"
     console.log("request Create mcis url : ",url)
@@ -506,9 +537,11 @@ function setObj(){
         }
         objArr[i] = obj;
     }
+    var apiInfo = ApiInfo
     var result = {
         headers :{
                  'Content-type': 'application/json',
+                 'Authorization': apiInfo,
                 },
         vm_req : objArr,
         vm_num : clickCnt
