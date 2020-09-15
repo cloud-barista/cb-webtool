@@ -77,16 +77,18 @@ $(document).ready(function(){
         var apiInfo = ApiInfo
         console.log("apiInfo : ",apiInfo)
         var req = {
-            headers :{
-                 'Content-type': 'application/json',
-                 'Authorization': apiInfo,
-                },
+            
             name:username,
             description: description,
             
         }
         console.log(req)
-        axios.post(url,req).then(result=>{
+        axios.post(url,req,{
+            headers :{
+                 'Content-type': 'application/json',
+                 'Authorization': apiInfo,
+                },
+        }).then(result=>{
             console.log(result.data)
             var data = result.data
             console.log("result : ",result)

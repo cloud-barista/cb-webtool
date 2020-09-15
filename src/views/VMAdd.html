@@ -476,7 +476,12 @@ function btn_click(){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm"
     console.log("request Create mcis url : ",url)
     //return;
-    axios.post(url,result).then(result=>{
+    axios.post(url,result,{
+            headers :{
+                 'Content-type': 'application/json',
+                 'Authorization': ApiInfo,
+                },
+        }).then(result=>{
         if(result.status == 201){
             alert("Success Add VM to MCIS")
             location.href = "/MCIS/list";
