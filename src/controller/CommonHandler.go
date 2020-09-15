@@ -174,7 +174,7 @@ func AuthenticationHandler() string {
 	apiUserInfo := api_username + ":" + api_password
 	encA := base64.StdEncoding.EncodeToString([]byte(apiUserInfo))
 	//req.Header.Add("Authorization", "Basic"+encA)
-	return "Basic" + encA
+	return "Basic " + encA
 
 }
 
