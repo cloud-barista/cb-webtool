@@ -21,6 +21,7 @@ type RespPublicIPInfo struct {
 
 func DashBoard(c echo.Context) error {
 	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
 	fmt.Println("=========== DashBoard start ==============")
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		nameSpace := GetNameSpaceToString(c)
@@ -30,6 +31,7 @@ func DashBoard(c echo.Context) error {
 				"LoginInfo": loginInfo,
 				"NameSpace": nameSpace,
 				"comURL":    comURL,
+				"apiInfo":   apiInfo,
 			})
 		} else {
 			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
@@ -68,6 +70,7 @@ func GeoInfo(c echo.Context) error {
 	var wg sync.WaitGroup
 	nameSpace := GetNameSpaceToString(c)
 	comURL := GetCommonURL()
+	//apiInfo := AuthenticationHandler()
 	tumble_url := comURL.TumbleBugURL
 
 	mcis_id := c.Param("mcis_id")

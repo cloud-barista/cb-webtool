@@ -24,6 +24,7 @@ func MornitoringListForm(c echo.Context) error {
 
 func AgentRegForm(c echo.Context) error {
 	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
 	mcis_id := c.Param("mcis_id")
 	vm_id := c.Param("vm_id")
 	public_ip := c.Param("public_ip")
@@ -37,6 +38,7 @@ func AgentRegForm(c echo.Context) error {
 			"mcis_id":   mcis_id,
 			"vm_id":     vm_id,
 			"public_ip": public_ip,
+			"apiInfo":   apiInfo,
 		})
 
 	}
