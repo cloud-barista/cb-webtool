@@ -114,7 +114,12 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
    }
    
 })
-   // axios.get(url).then(result=>{
+   // var apiInfo = ApiInfo
+    // axios.get(url,{
+    //     headers:{
+    //         'Authorization': apiInfo
+    //     }
+    // })then(result=>{
    //       var data = result.data
    //       console.log("Get Monitoring Data : ",data)
    //       console.log("======== start mapping data ======");

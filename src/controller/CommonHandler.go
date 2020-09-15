@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"os"
@@ -162,6 +163,19 @@ func MakeNameSpace(name string) string {
 	result := name + "-" + nanos
 	fmt.Println("makeNameSpace : ", result)
 	return result
+}
+
+func AuthenticationHandler() string {
+
+	api_username := os.Getenv("API_USERNAME")
+	api_password := os.Getenv("API_PASSWORD")
+
+	//The header "KEY: VAL" is "Authorization: Basic {base64 encoded $USERNAME:$PASSWORD}".
+	apiUserInfo := api_username + ":" + api_password
+	encA := base64.StdEncoding.EncodeToString([]byte(apiUserInfo))
+	//req.Header.Add("Authorization", "Basic"+encA)
+	return "Basic" + encA
+
 }
 
 // func RequestTumBleBug(method string, url string, s ) {

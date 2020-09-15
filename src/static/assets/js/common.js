@@ -35,7 +35,13 @@ function chkFormValidate(formObj) {
 
 function getOSType(image_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+image_id
-    return axios.get(url).then(result=>{
+    console.log("api Info : ",ApiInfo);
+    return axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    
+    }).then(result=>{
         var data = result.data
         var osType = data.guestOS
         console.log("Image Data : ",data);
@@ -44,7 +50,12 @@ function getOSType(image_id){
 }
 function checkNS(){
     var url = CommonURL+"/ns";
-    axios.get(url).then(result =>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result =>{
         var data = result.data.ns
        if(!data){
         alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
@@ -58,7 +69,12 @@ function checkNS(){
 }
 function getNameSpace(){
     var url = CommonURL+"/ns"
-    axios.get(url).then(result =>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result =>{
         var data = result.data.ns
         var namespace = ""
         for( var i in data){

@@ -74,10 +74,11 @@ $(document).ready(function(){
             return;
         }
         var url = CommonURL+"/ns"
-       
+        var apiInfo = ApiInfo
         var req = {
             headers :{
                  'Content-type': 'application/json',
+                 'Authorization': apiInfo,
                 },
             name:username,
             description: description,

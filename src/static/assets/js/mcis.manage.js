@@ -13,7 +13,12 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
         message = vm_name+" "+type+ " complete!."
     }
 
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         var status = result.status
         
         console.log("life cycle result : ",result)
@@ -44,7 +49,12 @@ function short_desc(str){
  function show_mcis(url){
      console.log("Show mcis Url : ",url)
     var html = "";
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         var data = result.data;
         if(!data.mcis){
            location.href = "/MCIS/reg";
@@ -156,7 +166,7 @@ function short_desc(str){
                 
                     var status = sta.toLowerCase()
                     console.log("VM Status : ",status)
-                    var configName = vm[i].config_name
+                    var configName = vm[i].connectionName
                     console.log("outer vm configName2 : ",configName)
                     var count = 0;
                     console.log("Spider URL : ",SpiderURL)
@@ -172,7 +182,7 @@ function short_desc(str){
                                 // console.log(" i value is : ",i)
                                 // console.log("outer config name : ",configName)
                                 // console.log("Inner ConfigName : ",res[k].ConfigName)
-                                if(res[k].ConfigName == vm[i].config_name){
+                                if(res[k].ConfigName == vm[i].connectionName){
                                     var provider = res[k].ProviderName
                                     console.log("Provider : ",provider);
                                     var kv_list = vm[i].cspViewVmDetail.KeyValueList
@@ -205,11 +215,11 @@ function short_desc(str){
                                     +'<td>'
                                     +badge
                                     +'</td>'
-                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].image_id+'\');">'+vm[i].name+'</a></td>'
+                                    +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].imageId+'\');">'+vm[i].name+'</a></td>'
                         
                                     +'<td>'+provider+'</td>'
                                     +'<td>'+vm[i].region.Region+'</td>'
-                                    +'<td>'+vm[i].config_name+'</td>'
+                                    +'<td>'+vm[i].connectionName+'</td>'
                                     +'<td>'+archi+'</td>'
                                     +'<td>'+vm[i].publicIP+'</td>'
                                     +'<td>'+short_desc(vm[i].description)+'</td>'
@@ -254,7 +264,12 @@ function short_desc(str){
     $("#vm_detail").hide();
      var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
      var html = "";
-    axios.get(url).then(result=>{
+     var apiInfo = ApiInfo
+     axios.get(url,{
+         headers:{
+             'Authorization': apiInfo
+         }
+     }).then(result=>{
         var data = result.data
         console.log("show card data : ",result)
         var vm_cnt = data.vm
@@ -315,7 +330,12 @@ function short_desc(str){
 //      var $target = $("#card_"+targetNo+"");
 //      var html = "";
 //      url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcid
-//      axios.get(url).then(result=>{
+//      var apiInfo = ApiInfo
+    // axios.get(url,{
+    //     headers:{
+    //         'Authorization': apiInfo
+    //     }
+    // })then(result=>{
 //          var data = result.data.vm
 //          for(var i in data){
 
@@ -485,7 +505,12 @@ function short_desc(str){
 
  function getProvider(connectionInfo){
      url = SpiderURL+"/connectionconfig"
-     axios.get(url).then(result=>{
+     var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
          var data = result.data.connectionconfig
          
 
@@ -497,7 +522,12 @@ function short_desc(str){
 
  function show_vmDetailList(mcis_id, vm_id){
      url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-     axios.get(url).then(result=>{
+     var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
          var data = result.data
          console.log("show vmDetail List data : ",data)
          var html = ""
@@ -509,7 +539,7 @@ function short_desc(str){
                 res = data2.connectionconfig
                 var provider = "";
                 for(var k in res){
-                    if(res[k].ConfigName == data.config_name){
+                    if(res[k].ConfigName == data.connectionName){
                         provider = res[k].ProviderName
                         console.log("Inner Provider : ",provider)
                     }
@@ -574,7 +604,12 @@ function short_desc(str){
 
 //  function show_vmDetailInfo(mcis_id, vm_id){
 //     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-//     axios.get(url).then(result=>{
+//     var apiInfo = ApiInfo
+    // axios.get(url,{
+    //     headers:{
+    //         'Authorization': apiInfo
+    //     }
+    // })then(result=>{
 //         var data = result.data
 //         console.log("show vmDetailInfo data : ",data)
 //         var html = ""
@@ -586,7 +621,7 @@ function short_desc(str){
 //             res = data2.connectionconfig
 //                var provider = "";
 //                for(var k in res){
-//                    if(res[k].ConfigName == data.config_name){
+//                    if(res[k].ConfigName == data.connectionName){
 //                        provider = res[k].ProviderName
 //                        console.log("Inner Provider : ",provider)
 //                    }
@@ -666,12 +701,17 @@ function short_desc(str){
 
 function show_vmSpecInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         var data = result.data
         console.log("show vmSpecInfo Data : ",data)
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/spec"
-        var spec_id = data.spec_id
+        var spec_id = data.specId
         $.ajax({
            url: url2,
            async:false,
@@ -720,11 +760,16 @@ function show_vmSpecInfo(mcis_id, vm_id){
 
 function show_vmNetworkInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         var data = result.data
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
-        var spec_id = data.vnet_id
+        var spec_id = data.vNetId
         $.ajax({
            url: url2,
            async:false,
@@ -783,11 +828,16 @@ function show_vmNetworkInfo(mcis_id, vm_id){
 
 function show_vmSecurityGroupInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         var data = result.data
         var html = ""
         // var url2 = "/ns/"+NAMESPACE+"/resources/securityGroup"
-        var spec_id = data.security_group_ids
+        var spec_id = data.securityGroupIds
         var cnt = spec_id.length
         html += '<tr>'
              +'<th scope="colgroup" colspan="'+cnt+'" "class="text-right"><i class="fas fa-shield-alt"></i>SecurityGroup</th>'
@@ -813,11 +863,16 @@ function show_vmSecurityGroupInfo(mcis_id, vm_id){
 
 function show_vmSSHInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         var data = result.data
         var html = ""
         var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
-        var spec_id = data.ssh_key_id
+        var spec_id = data.sshKeyId
         $.ajax({
            url: url2,
            async:false,
@@ -858,7 +913,12 @@ function show_vmSSHInfo(mcis_id, vm_id){
 
 function show_images(image_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+image_id
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         var data = result.data
         console.log("Image Data : ",data);
         var html = ""

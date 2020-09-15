@@ -98,7 +98,8 @@ $(document).ready(function(){
 
         var obj = $("#form").serializeObject()
         console.log(obj);
-        obj.headers = { 'Content-type': 'application/json', }
+        var apiInfo =ApiInfo
+        obj.headers = { 'Content-type': 'application/json', 'Authorization': apiInfo,}
         console.log(obj)
         var url = SpiderURL+"/region"
         console.log("Region registerDriver URL : ",url)

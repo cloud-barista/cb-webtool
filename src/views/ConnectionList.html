@@ -163,7 +163,12 @@ $(document).ready(function(){
     //alert("reload")
      console.log("Spider url : ",SpiderURL);
     var url = SpiderURL+"/connectionconfig";
-    axios.get(url).then(result=>{
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
         var data = result.data.connectionconfig
         //console.log(data.connectionconfig)
         var html = ""
