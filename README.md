@@ -88,12 +88,14 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly 프로젝�
 ## [서버 실행]
 - Linux & Mac OS에서 실행
     ````bash (Linux & Mac OS)
-    $ cd github.com/cloud-barista/cb-webtool
+    $ cd ~/go/src/github.com/cloud-barista/cb-webtool
+      또는 사용하는 go 폴더의 설치된 경로로 이동
     $ run.sh
     ````
 
 - Bash를 설치하지 않은 Windows 환경에서는 reflex를 사용할 수 없으므로 직접 구동해야 합니다.
     ````bash (Windows)
-    $ cd github.com/cloud-barista/cb-webtool
+    $ cd ~/go/src/github.com/cloud-barista/cb-webtool
+      또는 사용하는 go 폴더의 설치된 경로로 이동
     $ run-windows.sh
     ````
