@@ -6,10 +6,15 @@
 
     
     function setNS(nsid){
+        var apiInfo = ApiInfo
         if(nsid){
             reqUrl = "/SET/NS/"+nsid;
             console.log(reqUrl);
-            axios.get(reqUrl).then(result=>{
+            axios.get(reqUrl,{
+                headers:{
+                    'Authorization': apiInfo
+                }
+            }).then(result=>{
                 var data = result.data
                 console.log(data);
                 location.reload(true);
@@ -22,13 +27,22 @@
     } 
 
     function getNS(){
+        var apiInfo = ApiInfo
         reqURL = CommonURL+"/GET/ns";
-        axios.get(reqURL).then(result=>{
+        axios.get(reqURL,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
             console.log(result.data)
         })
     }
     var nsListUrl = CommonURL+"/ns"
-   axios.get(nsListUrl).then(result=>{
+   axios.get(nsListUrl,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
        var data = result.data
        console.log(data);
        var res = data.ns
@@ -83,7 +97,11 @@
        if(ns){
            reqUrl = "/SET/NS/"+ns
            console.log(reqUrl);
-        axios.get(reqUrl).then(result=>{
+        axios.get(reqUrl,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
             var data = result.data
             console.log(data);
         })
