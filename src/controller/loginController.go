@@ -18,8 +18,10 @@ type ReqInfo struct {
 func LoginForm(c echo.Context) error {
 	fmt.Println("============== Login Form ===============")
 	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
 	return c.Render(http.StatusOK, "login.html", map[string]interface{}{
-		"comURL": comURL,
+		"comURL":  comURL,
+		"apiInfo": apiInfo,
 	})
 }
 
