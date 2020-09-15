@@ -31,13 +31,14 @@
         reqURL = CommonURL+"/GET/ns";
         axios.get(reqURL,{
         headers:{
-            'Authorization': apiInfo
+            'Authorization': apiInfo,
         }
     }).then(result=>{
             console.log(result.data)
         })
     }
     var nsListUrl = CommonURL+"/ns"
+    var apiInfo = ApiInfo
    axios.get(nsListUrl,{
         headers:{
             'Authorization': apiInfo
