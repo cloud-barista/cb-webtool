@@ -61,7 +61,7 @@ function enterkey() {
 
 
 $(document).ready(function(){
-    var apiInfo = ApiInfo
+   // var apiInfo = ApiInfo
     axios.post("/regUser",{headers: { 'Content-type': 'application/json',
     'Authorization': apiInfo, }
      }).then(result =>{
