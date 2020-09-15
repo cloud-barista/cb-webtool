@@ -61,7 +61,9 @@ function enterkey() {
 
 
 $(document).ready(function(){
-   // var apiInfo = ApiInfo
+   // var apiInfo = ApiIn
+   var apiInfo = "{{ .apiInfo}}";
+   console.log("api Info : ", apiInfo)
     axios.post("/regUser",{headers: { 'Content-type': 'application/json',
     'Authorization': apiInfo, }
      }).then(result =>{
@@ -86,7 +88,7 @@ $(document).ready(function(){
                     alert("Login Success");
                     //location.reload(true);
                     var url = "{{ .comURL.TumbleBugURL}}"+"/ns";
-                    var apiInfo = "{{ .apiInfo}}";
+                    
                     axios.get(url,{
                         headers:{
                             'Authorization': apiInfo
