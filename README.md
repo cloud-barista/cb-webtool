@@ -42,7 +42,7 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly 프로젝�
   - `tar -C /usr/local -xzf go1.13.4.linux-amd64.tar.gz`
   - `.bashrc` 파일 하단에 다음을 추가: 
   ```
-  export PATH=$PATH:/usr/local/go/bin
+  export PATH=$PATH:/usr/local/go/bin:~/go/bin
   export GOPATH=$HOME/go
   ```
 
