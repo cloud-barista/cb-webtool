@@ -76,16 +76,17 @@ func (mf myFloat64) MarshalJSON() ([]byte, error) {
 func GetConnectionconfig(drivername string) CloudConnectionInfo {
 	url := NameSpaceUrl + "/driver/" + drivername
 
-	resp, err := http.Get(url)
+	// resp, err := http.Get(url)
 
-	if err != nil {
-		fmt.Println("request URL : ", url)
-	}
+	// if err != nil {
+	// 	fmt.Println("request URL : ", url)
+	// }
 
-	defer resp.Body.Close()
+	// defer resp.Body.Close()
+	body := httpGetHandler(url)
 	nsInfo := CloudConnectionInfo{}
 
-	json.NewDecoder(resp.Body).Decode(&nsInfo)
+	json.NewDecoder(body).Decode(&nsInfo)
 	fmt.Println("nsInfo : ", nsInfo.ID)
 	return nsInfo
 
@@ -93,14 +94,16 @@ func GetConnectionconfig(drivername string) CloudConnectionInfo {
 
 func GetConnectionList() []CloudConnectionInfo {
 	url := CloudConnectionUrl + "/connectionconfig"
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("request URL : ", url)
-	}
+	// resp, err := http.Get(url)
+	// if err != nil {
+	// 	fmt.Println("request URL : ", url)
+	// }
 
-	defer resp.Body.Close()
+	// defer resp.Body.Close()
+	body := httpGetHandler(url)
+
 	nsInfo := map[string][]CloudConnectionInfo{}
-	json.NewDecoder(resp.Body).Decode(&nsInfo)
+	json.NewDecoder(body).Decode(&nsInfo)
 	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	return nsInfo["ns"]
 
@@ -108,14 +111,15 @@ func GetConnectionList() []CloudConnectionInfo {
 
 func GetDriverReg() []CloudConnectionInfo {
 	url := NameSpaceUrl + "/driver"
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("request URL : ", url)
-	}
+	// resp, err := http.Get(url)
+	// if err != nil {
+	// 	fmt.Println("request URL : ", url)
+	// }
 
-	defer resp.Body.Close()
+	// defer resp.Body.Close()
+	body := httpGetHandler(url)
 	nsInfo := map[string][]CloudConnectionInfo{}
-	json.NewDecoder(resp.Body).Decode(&nsInfo)
+	json.NewDecoder(body).Decode(&nsInfo)
 	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	return nsInfo["ns"]
 
@@ -123,14 +127,15 @@ func GetDriverReg() []CloudConnectionInfo {
 
 func GetCredentialList() []CloudConnectionInfo {
 	url := CloudConnectionUrl + "/credential"
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("request URL : ", url)
-	}
+	// resp, err := http.Get(url)
+	// if err != nil {
+	// 	fmt.Println("request URL : ", url)
+	// }
 
-	defer resp.Body.Close()
+	// defer resp.Body.Close()
+	body := httpGetHandler(url)
 	nsInfo := map[string][]CloudConnectionInfo{}
-	json.NewDecoder(resp.Body).Decode(&nsInfo)
+	json.NewDecoder(body).Decode(&nsInfo)
 	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	return nsInfo["ns"]
 
@@ -138,20 +143,21 @@ func GetCredentialList() []CloudConnectionInfo {
 func GetRegionList() []RegionInfo {
 	url := CloudConnectionUrl + "/region"
 	fmt.Println("=========== Get Start Region List : ", url)
-	resp, err := http.Get(url)
-	//spew.Dump(resp.Body)
-	if err != nil {
-		fmt.Println("request URL : ", url)
-	}
+	// resp, err := http.Get(url)
+	// //spew.Dump(resp.Body)
+	// if err != nil {
+	// 	fmt.Println("request URL : ", url)
+	// }
 
-	defer resp.Body.Close()
+	// defer resp.Body.Close()
+	body := httpGetHandler(url)
 
 	//bytes, _ := ioutil.ReadAll(resp.Body)
 	//str := string(bytes)
 	//fmt.Println(str.region)
 	nsInfo := RESP{}
 	//spew.Dump(nsInfo)
-	json.NewDecoder(resp.Body).Decode(&nsInfo)
+	json.NewDecoder(body).Decode(&nsInfo)
 	var info []RegionInfo
 	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	for _, item := range nsInfo.Region {
@@ -175,14 +181,16 @@ func GetRegionList() []RegionInfo {
 
 func GetCredentialReg() []CloudConnectionInfo {
 	url := CloudConnectionUrl + "/credential"
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("request URL : ", url)
-	}
+	// resp, err := http.Get(url)
+	// if err != nil {
+	// 	fmt.Println("request URL : ", url)
+	// }
 
-	defer resp.Body.Close()
+	// defer resp.Body.Close()
+	body := httpGetHandler(url)
+
 	nsInfo := map[string][]CloudConnectionInfo{}
-	json.NewDecoder(resp.Body).Decode(&nsInfo)
+	json.NewDecoder(body).Decode(&nsInfo)
 	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 	return nsInfo["ns"]
 
