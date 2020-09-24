@@ -3,7 +3,8 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
+
+	//"net/http"
 	"os"
 )
 
@@ -29,7 +30,8 @@ func GetMCISList(nsid string) []MCISInfo {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 	info := map[string][]MCISInfo{}
 	json.NewDecoder(body).Decode(&info)
 	fmt.Println("nsInfo : ", info["mcis"][0].ID)
@@ -45,7 +47,8 @@ func GetMCIS(nsid string, mcisId string) []MCISInfo {
 	// }
 
 	// defer resp.Body.Close()
-    body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 	info := map[string][]MCISInfo{}
 	json.NewDecoder(body).Decode(&info)
 	fmt.Println("info : ", info["mcis"][0].ID)
@@ -61,7 +64,8 @@ func GetVMStatus(vm_name string, connectionConfig string) string {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 	info := map[string]MCISInfo{}
 	json.NewDecoder(body).Decode(&info)
 	fmt.Println("VM Status : ", info["status"].Status)

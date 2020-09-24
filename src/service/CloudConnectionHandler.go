@@ -83,7 +83,7 @@ func GetConnectionconfig(drivername string) CloudConnectionInfo {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
 	nsInfo := CloudConnectionInfo{}
 
 	json.NewDecoder(body).Decode(&nsInfo)
@@ -100,7 +100,8 @@ func GetConnectionList() []CloudConnectionInfo {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
@@ -117,7 +118,8 @@ func GetDriverReg() []CloudConnectionInfo {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
 	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
@@ -133,7 +135,8 @@ func GetCredentialList() []CloudConnectionInfo {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
 	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
@@ -150,7 +153,8 @@ func GetRegionList() []RegionInfo {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 
 	//bytes, _ := ioutil.ReadAll(resp.Body)
 	//str := string(bytes)
@@ -187,7 +191,8 @@ func GetCredentialReg() []CloudConnectionInfo {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
