@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -8,8 +9,7 @@ import (
 	"os"
 
 	"reflect"
-
-	"github.com/cloud-barista/cb-webtool/src/controller"
+	//"github.com/davecgh/go-spew/spew"
 )
 
 // var NameSpaceUrl = "http://15.165.16.67:1323"
@@ -24,7 +24,8 @@ type NSInfo struct {
 func GetNS(nsID string) NSInfo {
 	url := NameSpaceUrl + "ns" + nsID
 
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
+	defer body.Close()
 	nsInfo := NSInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
 	fmt.Println("nsInfo : ", nsInfo.ID)
@@ -52,11 +53,11 @@ func GetNSList() []NSInfo {
 	// }
 
 	// defer resp.Body.Close()
-	body := httpGetHandler(url)
+	body := HttpGetHandler(url)
 	nsInfo := map[string][]NSInfo{}
-
+	defer body.Close()
 	json.NewDecoder(body).Decode(&nsInfo)
-	//fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
+	//spew.Dump(body)
 	return nsInfo["ns"]
 
 }
@@ -85,15 +86,28 @@ func RequestGet(url string) {
 
 }
 
-func httpGetHandler(url string) io.ReadCloser {
-	authInfo := controller.AuthenticationHandler()
-	client := &http.Client{}
+func HttpGetHandler(url string) io.ReadCloser {
+	authInfo := AuthenticationHandler()
+
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("Authorization", authInfo)
 
+	client := &http.Client{}
 	resp, _ := client.Do(req)
-	fmt.Println("=============result httpGetHandler =============", resp)
-	defer resp.Body.Close()
+
+	//defer resp.Body.Close()
 
 	return resp.Body
+}
+func AuthenticationHandler() string {
+
+	api_username := os.Getenv("API_USERNAME")
+	api_password := os.Getenv("API_PASSWORD")
+
+	//The header "KEY: VAL" is "Authorization: Basic {base64 encoded $USERNAME:$PASSWORD}".
+	apiUserInfo := api_username + ":" + api_password
+	encA := base64.StdEncoding.EncodeToString([]byte(apiUserInfo))
+	//req.Header.Add("Authorization", "Basic"+encA)
+	return "Basic " + encA
+
 }

@@ -5,7 +5,8 @@ import (
 	"io"
 	"net/http"
 
-	controller "github.com/cloud-barista/cb-webtool/src/controller"
+	//"github.com/cloud-barista/cb-webtool/src/controller"
+	"github.com/cloud-barista/cb-webtool/src/controller"
 	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
