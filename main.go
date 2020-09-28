@@ -124,6 +124,14 @@ func main() {
 	e.GET("/Image/list", controller.ImageListForm)
 	e.GET("/Image/reg", controller.ImageRegForm)
 
+	// 웹툴에서 처리할 VPC
+	e.GET("/Vpc/list", controller.VpcListForm)
+	e.GET("/Vpc/reg", controller.VpcRegForm)
+
+	// 웹툴에서 처리할 SecurityGroup
+	e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
+	e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)
+
 	// 웹툴에서 처리할 Driver
 	e.GET("/Driver/list", controller.DriverListForm)
 	e.GET("/Driver/reg", controller.DriverRegForm)
