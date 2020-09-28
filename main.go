@@ -120,6 +120,10 @@ func main() {
 	e.GET("/Credential/list", controller.CredertialListForm)
 	e.GET("/Credential/reg", controller.CredertialRegForm)
 
+	// 웹툴에서 처리할 Image
+	e.GET("/Image/list", controller.ImageListForm)
+	e.GET("/Image/reg", controller.ImageRegForm)
+
 	// 웹툴에서 처리할 Driver
 	e.GET("/Driver/list", controller.DriverListForm)
 	e.GET("/Driver/reg", controller.DriverRegForm)
