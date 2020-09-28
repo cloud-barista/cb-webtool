@@ -103,11 +103,11 @@ function show_pop(count) {
                 //var provider = $("#provider option:selected").val();
                 var html = "";
                 var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
                     var data = result.data.connectionconfig
                     console.log("connection data : ",data);
                     var count = 0; 
@@ -160,15 +160,16 @@ function show_pop(count) {
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
                 var html = "";
                 var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
                     console.log("Image Info : ",result.data)
                     data = result.data.image
                     if(!data){
                         alert("등록된 이미지 정보가 없습니다.")
+                        location.href = "/Image/reg"
                         return;
                     }
                     for(var i in data){
@@ -190,11 +191,11 @@ function show_pop(count) {
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup";
                 var html = "";
                 var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
                     data = result.data.securityGroup
                     for(var i in data){
                         if(data[i].connectionName == configName){
@@ -215,11 +216,11 @@ function show_pop(count) {
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey";
                 var html = "";
                 var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
                     console.log("sshKeyInfo result :",result)
                     data = result.data.sshKey
                     for(var i in data){
