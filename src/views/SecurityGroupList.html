@@ -9,20 +9,20 @@
                 <main role="main" class="main">
                     <div class="page-header">
                         <div>
-                            <h1>Images</h1>
+                            <h1>SecurityGroup</h1>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>List of Image
+                                    <strong>List of SecurityGroup
                                     </strong>
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-sm btn-danger" id="sel_del">Delete</button>
                                     <!-- <button type="button" class="btn btn-sm btn-outline-dark">Modify</button> -->
-                                    <button type="button" onclick="location.href='/Image/reg';" class="btn btn-sm btn-dark">Regist</button>
+                                    <button type="button" onclick="location.href='/SecurityGroup/reg';" class="btn btn-sm btn-dark">Regist</button>
                                 </div>
                             </div>
                         </div>
@@ -74,8 +74,8 @@
                                                 </div>
                                             </th>
                                             <th>No</th>
-                                            <th>Image Name</th>
-                                            <th>Cloud Provider</th>
+                                            <th>SecurityGroup Name</th>
+                                            <th>cidrBlock</th>
                                             <th>Description</th>
                                         
                                         </tr>
@@ -146,15 +146,15 @@ function check_all(f) {
 $(document).ready(function(){
     //alert("reload")
 
-    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image"
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup"
     axios.get(url,{
         headers:{
             'Authorization': apiInfo
         }
     }).then(result=>{
         
-        var data = result.data.image
-        console.log("imageList result : ",result.data)
+        var data = result.data.securityGroup
+        console.log("SecurityGroup List result : ",result.data)
         var html = ""
         var cnt = 0
         for(var i in data){
@@ -166,8 +166,8 @@ $(document).ready(function(){
                  +'<input type="checkbox" class="chk" name="chk[]" id="'+data[i].id+'" value="" /><i></i>'
                  +'</span></div></td>'
                  +'<td>'+cnt+'</td>'
-                 +'<td><a href="#">'+data[i].id+'</a></td>'
-                 +'<td>'+data[i].name+'</td>'
+                 +'<td><a href="#">'+data[i].name+'</a></td>'
+                 +'<td>'+data[i].cspSecurityGroupName+'</td>'
                  +'<td></td>'
                  +'</tr>'
 
@@ -192,7 +192,7 @@ $(document).ready(function(){
         }
         if(cnt == 1){
            
-            var u = SpiderURL+"/region/"+id
+            var u = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet/"+id
            // alert("url: "+u)
             if(confirm("Delete?")){
              axios.delete(u,{
@@ -205,7 +205,7 @@ $(document).ready(function(){
                }
              }).then(result=>{
                 
-                 if(result.status == 200){
+                 if(result.status == 200 || result.status == 201){
                      alert("delete it.")
                      location.reload(true)
                  }

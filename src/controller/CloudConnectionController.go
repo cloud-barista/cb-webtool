@@ -196,3 +196,77 @@ func ImageListForm(c echo.Context) error {
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 
 }
+
+//VPC Controller
+func VpcRegForm(c echo.Context) error {
+	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
+	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		return c.Render(http.StatusOK, "VpcRegister.html", map[string]interface{}{
+			"LoginInfo": loginInfo,
+			"comURL":    comURL,
+			"apiInfo":   apiInfo,
+		})
+	}
+	// return c.Redirect(http.StatusPermanentRedirect, "/login")
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
+
+func VpcListForm(c echo.Context) error {
+	comURL := GetCommonURL()
+	loginInfo := CallLoginInfo(c)
+	apiInfo := AuthenticationHandler()
+	if loginInfo.Username != "" {
+		nsList := service.GetRegionList()
+		fmt.Println("REGION List : ", nsList)
+
+		//spew.Dump(nsList)
+		return c.Render(http.StatusOK, "VpcList.html", map[string]interface{}{
+			"LoginInfo": loginInfo,
+			"comURL":    comURL,
+			"NSList":    nsList,
+			"apiInfo":   apiInfo,
+		})
+	}
+
+	fmt.Println("LoginInfo : ", loginInfo)
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+
+}
+
+// Controller
+func SecurityGroupRegForm(c echo.Context) error {
+	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
+	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		return c.Render(http.StatusOK, "SecurityGroupRegister.html", map[string]interface{}{
+			"LoginInfo": loginInfo,
+			"comURL":    comURL,
+			"apiInfo":   apiInfo,
+		})
+	}
+	// return c.Redirect(http.StatusPermanentRedirect, "/login")
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
+
+func SecurityGroupListForm(c echo.Context) error {
+	comURL := GetCommonURL()
+	loginInfo := CallLoginInfo(c)
+	apiInfo := AuthenticationHandler()
+	if loginInfo.Username != "" {
+		nsList := service.GetRegionList()
+		fmt.Println("REGION List : ", nsList)
+
+		//spew.Dump(nsList)
+		return c.Render(http.StatusOK, "SecurityGroupList.html", map[string]interface{}{
+			"LoginInfo": loginInfo,
+			"comURL":    comURL,
+			"NSList":    nsList,
+			"apiInfo":   apiInfo,
+		})
+	}
+
+	fmt.Println("LoginInfo : ", loginInfo)
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+
+}
