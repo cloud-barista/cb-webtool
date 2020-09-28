@@ -49,7 +49,8 @@ function short_desc(str){
    $("#vm_detail").hide();
    checkNS();
 
-   var apiInfo = ApiInfo
+   var apiInfo = ApiInfo;
+   console.log("apiInfo : ",apiInfo);
     axios.get(url,{
         headers:{
             'Authorization': apiInfo
@@ -58,10 +59,15 @@ function short_desc(str){
       
        console.log("Dashboard Data :",result.status);
        var data = result.data;
+       console.log("func show_mcis result data : ",data)
        if(!data.mcis){
           location.href = "/MCIS/reg";
           return;
        }
+       if(data.mcis.length == 0 ){
+        location.href = "/MCIS/reg";
+        return;
+     }
        console.log("show mcis's map data : ",map);
         console.log("showmcis Data : ",data)
         var html = "";
