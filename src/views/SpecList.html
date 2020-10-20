@@ -9,20 +9,20 @@
                 <main role="main" class="main">
                     <div class="page-header">
                         <div>
-                            <h1>Manage SSH KEY</h1>
+                            <h1>Manage SPEC</h1>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>List of SSH KEY
+                                    <strong>List of SPEC
                                     </strong>
                                 </div>
                                 <div>
                                     <button type="button" class="btn btn-sm btn-danger" id="sel_del">Delete</button>
                                     <!-- <button type="button" class="btn btn-sm btn-outline-dark">수정</button> -->
-                                    <button type="button" onclick="location.href='/SSH/reg';" class="btn btn-sm btn-dark">Regist</button>
+                                    <button type="button" onclick="location.href='/Spec/reg';" class="btn btn-sm btn-dark">Regist</button>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                                             </th>
                                             <th>Name</th>
                                             <th>Connection Name</th>
-                                            <th>SSH KEY Name</th>
+                                            <th>Csp SPec Name</th>
                                            
                                         
                                         </tr>
@@ -160,7 +160,7 @@ $(document).ready(function(){
     //alert("reload")
 
     
-    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/spec"
     var apiInfo = ApiInfo
     axios.get(url,{
         headers:{
@@ -168,7 +168,7 @@ $(document).ready(function(){
         }
     }).then(result=>{
         
-        var data = result.data.sshKey
+        var data = result.data.spec
         console.log("data : ",data)
         var html = ""
         if(data){
@@ -183,7 +183,7 @@ $(document).ready(function(){
                     +'</td>'
                     +'<td>'+data[i].id+'</td>'
                     +'<td>'+data[i].connectionName+'</td>'
-                    +'<td>'+data[i].cspSshKeyName+'</td>'
+                    +'<td>'+data[i].cspSpecName+'</td>'
                   
                     +'</tr>'
             }
