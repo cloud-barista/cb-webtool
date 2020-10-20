@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="format-detection" content="telephone=no">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes,target-densitydpi=medium-dpi" />
+		<title>CLOUD BARISTA</title>
+		
+		<link rel="stylesheet" href="../js/bootstrap-4.5.2/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="../css/style.css"/>
+		
+		<script src="../js/jquery-1.11.0/jquery.min.js"></script>
+		<script src="../js/bootstrap-4.5.2/js/bootstrap.min.js"></script>
+		<script src="../js/jquery.scrollbar.js"></script>
+		<script src="../js/jquery.nice-select.min.js"></script>
+		<script src="../js/common.js"></script>
+		<!--[if lt IE 9]><script src="../js/html5shiv.js"></script><![endif]-->
+	</head>
+	
+	<body>
+		
+	<div id="wrap" class="wrapper scrollbar-dynamic">
+	
+		<div id="lnb">
+			
+			<div class="bg"></div>
+				
+			<div class="m_box">
+				
+				<div class="topbox">
+					<div class="info">
+						<div class="thumb"><span><img src="../img/contents/img_thumb.jpg" alt=""></span></div>
+						<div class="txt_1">Leonardo DiCaprio</div>
+						<div class="txt_2">
+							
+							<span>Name Space</span>
+							<div class="infobox">
+								<div class="box">
+									<ul>
+										<li>
+											<a href="javascript:void(0);">Select NS</a>
+											<ul>
+												<li><a href="javascript:void(0);">ns_aws_1</a></li>
+												<li><a href="javascript:void(0);">ns_global_2</a></li>
+												<li><a href="javascript:void(0);">ns_gcp_3</a></li>
+												<li><a href="javascript:void(0);">ns_demo_4</a></li>
+											</ul>	
+										</li>
+										<li>
+											<a href="javascript:void(0);">Add NS</a>
+											<ul>
+												<li><a href="javascript:void(0);">new NS</a></li>
+												<li><a href="javascript:void(0);">Manage NS</a></li>
+											</ul>	
+										</li>
+									</ul>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				
+				<!-- menu -->
+				<div class="leftmenu">
+					
+					<ul class="nav">
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Operation">Operation</a></li>
+						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Setting">Setting</a></li>
+					</ul>
+					
+					<div class="tab-content">
+						<div class="tab-pane fade" id="Operation">
+							<ul class="menu">
+								<li>
+									<a href="javascript:void(0);">Dashboard</a>
+									<ul>
+										<li><a href="../operation/Dashboard_Ns.html">NS</a></li>
+										<li><a href="../operation/Dashboard_Global.html">Global</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Manage</a>
+									<ul>
+										<li><a href="../operation/Manage_Mcis.html">MCIS</a></li>
+										<li><a href="../operation/Manage_McApp.html">MC-App</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Monitoring</a>
+									<ul>
+										<li><a href="../operation/Monitoring_Mcis.html">MCIS/Server</a></li>
+										<li><a href="../operation/Monitoring_McApp.html">MC-App</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Policy</a>
+									<ul>
+										<li><a href="../operation/Policy_Monitoring.html">Monitoring</a></li>
+										<li><a href="../operation/Policy_Threshold.html">Threshold</a></li>
+										<li><a href="../operation/Policy_Placement.html">Placement</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">About</a>
+									<ul>
+										<li><a href="../operation/About.html">About</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						
+						<div class="tab-pane fade show active" id="Setting">
+							<ul class="menu">
+								<li>
+									<a href="javascript:void(0);">Resources</a>
+									<ul>
+										<li><a href="../setting/Resources_Network.html">Network</a></li>
+										<li><a href="../setting/Resources_Security.html">Security</a></li>
+										<li><a href="../setting/Resources_Ssh.html">SSH key</a></li>
+										<li><a href="../setting/Resources_Image.html">(Server) Image</a></li>
+										<li><a href="../setting/Resources_Spec.html">(Server) Spec</a></li>
+									</ul>
+								</li>
+								<li class="active">
+									<a href="javascript:void(0);">App Resource</a>
+									<ul>
+										<li><a href="../setting/AppResource_Image.html">(Server) Image</a></li>
+										<li class="on"><a href="../setting/AppResource_Pod.html">Pod</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Cloud Connections</a>
+									<ul>
+										<li><a href="../setting/CloudConnections.html">Cloud Connections</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">NameSpace</a>
+									<ul>
+										<li><a href="../setting/NameSpace.html">NameSpace</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+				</div>
+				<!-- //menu -->
+				
+			</div>
+			
+			<div class="bottom"></div>
+			<a href="javascript:;" id="m_close"></a>
+			
+		</div>
+		
+	
+		<div id="contents">
+			
+			<!-- container -->
+			<div id="container">
+				
+				<!-- header -->
+				<div class="header">
+					<div class="logo"><img src="../img/common/img_logo.png" alt="Cloud Barista"/></div>
+					
+					<a href="javascript:;" id="btn_menu"><span></span></a>
+					
+					<div class="topmenu">
+						<ul>
+							<li class="logout"><a href="javascript:void(0);" data-toggle="modal" data-target="#logout"><img src="../img/common/icon_logout.png" alt=""/> Logout</a></li>
+							<li class="add">
+								<img src="../img/common/icon_add.png" alt=""/>
+								<div class="infobox">
+									<div class="box box_txt">See you in the next release !</div>
+								</div>
+							</li>
+							<li class="notice">
+								<img src="../img/common/icon_notice.png" alt=""/>
+								<div class="infobox">
+									<div class="box box_txt">See you in the next release !</div>
+								</div>
+							</li>
+							<li class="email">
+								<img src="../img/common/icon_email.png" alt=""/><span>7</span>
+								<div class="infobox">
+									<div class="box box_txt">See you in the next release !</div>
+								</div>
+							</li>
+							<li class="setting">
+								<a href="javascript:void(0);"><img src="../img/common/icon_setting.png" alt=""/></a>
+								<div class="infobox">
+									<div class="box">
+										<p>Cloud Setting</p>
+										<ul>
+											<li><a href="javascript:void(0);">[Cloud] Config</a></li>
+											<li><a href="javascript:void(0);">[Cloud] Driver SDK</a></li>
+											<li><a href="javascript:void(0);">Credential</a></li>
+											<li><a href="javascript:void(0);">Region</a></li>
+											<li><a href="javascript:void(0);">[Cloud] Provider</a></li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li class="question"><a href="javascript:void(0);"><img src="../img/common/icon_question.png" alt=""/></a></li>
+						</ul>
+					</div>
+					
+				</div>
+				<!-- //header -->
+				
+				<!-- contents -->
+				<div class="contbox">
+					
+					<div class="titlebox">
+						<div class="tit"><img src="../img/common/icon_cont.png" alt=""/><strong>Pod</strong></div>
+						<div class="location">Home  <span>></span>  Setting  <span>></span> App Resource  <span>></span>  <strong>Pod</strong></div>
+					</div>
+					
+					
+				</div>
+				<!-- //contents -->
+
+			</div>
+			<!-- //container -->
+			
+			<!-- footer -->
+			<div id="footer">
+				<div class="txt">ⓒ 2020 Cloud Barista. All Rights Reserved</div>
+				
+				<div class="btn_top"><a href="javascript:void(0);"><span>top</span></a></div>
+			</div>
+			<!-- //footer -->
+			
+		</div>
+	
+	</div>
+	
+	</body>
+</html>

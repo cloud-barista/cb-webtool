@@ -119,6 +119,7 @@ $(document).ready(function(){
     var apiInfo = ApiInfo
     var specUrl = CommonURL+"/ns/"+nsid+"/resources/spec"
     console.log("specUrl : ",specUrl)
+    console.log("apiInfo : ",apiInfo)
     axios.get(specUrl,{
         headers:{
             'Authorization': apiInfo
