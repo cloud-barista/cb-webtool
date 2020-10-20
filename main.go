@@ -136,6 +136,10 @@ func main() {
 	e.GET("/Driver/list", controller.DriverListForm)
 	e.GET("/Driver/reg", controller.DriverRegForm)
 
+	// 웹툴에서 처리할 Driver
+	e.GET("/SSH/list", controller.SSHListForm)
+	e.GET("/SSH/reg", controller.SSHRegForm)
+
 	// 웹툴에서 Select Pop
 	e.GET("/Pop/spec", controller.PopSpec)
 
