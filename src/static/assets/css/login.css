@@ -117,15 +117,15 @@ body.bg_login{ width:100%; height:100%; background-position:center top; backgrou
 #popLogin .modal-content { background:none; border:none; width:1200px; margin:0 auto; padding:0 !important; }
 #popLogin .modal-content > div { position:relative; margin:0 !important; padding:0 !important; }
 #popLogin .modal-content > div > div { position:relative; width:100%; }
-#popLogin .modal-content .wbox { position:relative; width:998px; margin-left:80px; height:598px; }
-#popLogin .modal-content .popbox { float:left; display:inline-block; width:455px; height:598px; border:1px solid #e1e1e1; background-color:#fff; border-radius:10px; }
+#popLogin .modal-content .wbox { position:relative; width:998px; margin-left:80px; min-height:598px; }
+#popLogin .modal-content .popbox { float:left; display:inline-block; width:455px; min-height:598px; padding:0 0 20px 0; border:1px solid #e1e1e1; background-color:#fff; border-radius:10px; }
 #popLogin .modal-content .popbox.popboxNS { float:right; display:none; }
 #popLogin .modal-content .popbox .popcont { padding:40px 35px 0 35px;  }
 #popLogin .modal-content .popbox .titlebox .tit { color:#5e636c; font-size:26px; line-height:28px; font-weight:400; }
 #popLogin .modal-content .popbox .titlebox .tit span { color:#06a9b7; }
 #popLogin .modal-content .popbox .titlebox .txt { margin:10px 0 0 0; color:#8c929c; font-size:16px; font-weight:300; }
 #popLogin .modal-content .popbox .cloudlist { margin:20px 0 0 0; padding:9px 10px 10px 10px; background-color:#d5d9df; border-radius:6px; }
-#popLogin .modal-content .popbox .cloudlist .listbox { height:128px; overflow:auto; }
+#popLogin .modal-content .popbox .cloudlist .listbox { max-height:128px; overflow:auto; }
 #popLogin .modal-content .popbox .cloudlist .listbox .list { cursor:pointer; margin:6px 0 0 0; width:343px; height:61px; background:linear-gradient(to bottom, #fff 70%, #eee); box-shadow:3px 3px 3px 3px #cbcfd5; border-radius:8px; }
 #popLogin .modal-content .popbox .cloudlist .listbox .list:nth-of-type(1) { margin:0; }
 #popLogin .modal-content .popbox .cloudlist .listbox .list .stit { padding:12px 0 0 28px; color:#5e636c; font-size:18px; line-height:18px; font-weight:500; }
@@ -136,8 +136,8 @@ body.bg_login{ width:100%; height:100%; background-position:center top; backgrou
 #popLogin .modal-content .popbox .addbox .txt span { font-weight:500; }
 #popLogin .modal-content .popbox .addbox button.btn_add { display:inline-block; vertical-align:middle; cursor:pointer; width:70px; padding:10px 0; line-height:12px; border:none; font-size:12px; font-weight:600; color:#fff; outline:none; border-radius:5px; background-color:#06a9b7; }
 #popLogin .modal-content .popbox .add_ipbox { display:none; }
-#popLogin .modal-content .popbox .add_ipbox .iplist { margin:13px 0 0 0; min-height:246px; background-color:#f8f9fa; border-radius:6px; text-align:right; }
-#popLogin .modal-content .popbox .add_ipbox .iplist ul { padding:7px 10px 0 0; height:170px; }
+#popLogin .modal-content .popbox .add_ipbox .iplist { margin:13px 0 0 0; padding:0 0 10px 0; min-height:246px; background-color:#f8f9fa; border-radius:6px; text-align:right; }
+#popLogin .modal-content .popbox .add_ipbox .iplist ul { padding:7px 10px 0 0; }
 #popLogin .modal-content .popbox .add_ipbox .iplist li { margin:5px 0 0 0; }
 #popLogin .modal-content .popbox .add_ipbox .iplist li label { position:relative; display:inline-block; font-size:16px; color:#5e636c; vertical-align:top; margin:8px 22px 0 0; font-weight:400; }
 #popLogin .modal-content .popbox .add_ipbox .iplist li label.chk:before{ content:'*'; display:block; color:#ff0000; position:absolute; right:-12px; top:2px; font-weight:300; }

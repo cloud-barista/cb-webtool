@@ -287,7 +287,7 @@ $(document).ready(function(){
             var username = $("#email").val();
             var password = $("#password").val();
             if(!password || !username){
-                $("#sign_btn").attr("data-target","#required")
+                $("#required").modal()
                 return;
             }
             if (password && username){
