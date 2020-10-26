@@ -543,6 +543,7 @@ $(document).ready(function(){
                 if(result.status == 200 || result.status == 201){
                     alert("Success Create Connection Config")
                     getConfig()
+                    $("#btn_add1").click()
                     $("#ConfigName").val('')
                     $("#ProviderName").val('')
                     $("#DriverName").val('')
