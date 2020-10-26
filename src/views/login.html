@@ -328,36 +328,6 @@ $(document).ready(function(){
                             ))
                             $("#cloudList").empty()
                             $("#cloudList").append(html)
-
-                            //혹시모를 데이터 추가를 위해 불러 놓는다?
-                            //여기서 부를까? 아니면 로딩할때 부를까?
-                            $(".popboxCO .cloudlist .list").each(function () {
-                                $(this).click(function () {
-                                    var $list = $(this);
-                                    var $popboxNS = $(".popboxNS");
-                                    var $arr = $('#popLogin .arr');
-                                    var $ok = $(".btn_ok");
-                                        $popboxNS.fadeIn();
-                                        $arr.fadeIn();
-                                    $list.addClass('selected');
-                                    $list.siblings().removeClass("selected");
-                                    $list.off("click").click(function(){
-                                            if( $(this).hasClass("selected") ) {
-                                                $popboxNS.stop().fadeOut();
-                                                $arr.stop().fadeOut();
-                                                $ok.stop().fadeOut();
-                                                $list.removeClass("selected");
-                                        } else {
-                                                $popboxNS.stop().fadeIn();
-                                                $arr.stop().fadeIn();
-                                                $list.addClass("selected");
-                                                $list.siblings().removeClass("selected");
-                                        }
-                                        });
-                                });
-                            });
-
-
                         }
                     })
                     
@@ -373,16 +343,6 @@ $(document).ready(function(){
                 alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
                 location.reload(true);
             })
-            // $.ajax({
-            //     url:"/login/proc/",
-            //     contentType: "application/json",
-            //     data:req,
-            //     method:"POST",
-            
-
-            // }).done(function(data){
-            //     console.log(data)
-            // });
         }catch(e){
                 alert(e);
         }
@@ -427,33 +387,36 @@ $(document).ready(function(){
                 ))
                 $("#cloudList").empty()
                 $("#cloudList").append(html)
-                $(".popboxCO .cloudlist .list").each(function () {
-                    $(this).click(function () {
-                        var $list = $(this);
-                        var $popboxNS = $(".popboxNS");
-                        var $arr = $('#popLogin .arr');
-                        var $ok = $(".btn_ok");
-                            $popboxNS.fadeIn();
-                            $arr.fadeIn();
-                        $list.addClass('selected');
-                        $list.siblings().removeClass("selected");
-                        $list.off("click").click(function(){
-                            if( $(this).hasClass("selected") ) {
-                                $popboxNS.stop().fadeOut();
-                                $arr.stop().fadeOut();
-                                $ok.stop().fadeOut();
-                                $list.removeClass("selected");
-                            } else {
-                                $popboxNS.stop().fadeIn();
-                                $arr.stop().fadeIn();
-                                $list.addClass("selected");
-                                $list.siblings().removeClass("selected");
-                            }
-                        });
-                    });
-                });
+               configModal()
             }
         })
+    }
+    function configModal(){
+        $(".popboxCO .cloudlist .list").each(function () {
+            $(this).click(function () {
+                var $list = $(this);
+                var $popboxNS = $(".popboxNS");
+                var $arr = $('#popLogin .arr');
+                var $ok = $(".btn_ok");
+                    $popboxNS.fadeIn();
+                    $arr.fadeIn();
+                $list.addClass('selected');
+                $list.siblings().removeClass("selected");
+                $list.off("click").click(function(){
+                    if( $(this).hasClass("selected") ) {
+                        $popboxNS.stop().fadeOut();
+                        $arr.stop().fadeOut();
+                        $ok.stop().fadeOut();
+                        $list.removeClass("selected");
+                    } else {
+                        $popboxNS.stop().fadeIn();
+                        $arr.stop().fadeIn();
+                        $list.addClass("selected");
+                        $list.siblings().removeClass("selected");
+                    }
+                });
+            });
+        });
     }
     function createNS(){
         var namespace = $("#namespace").val()
@@ -563,6 +526,7 @@ $(document).ready(function(){
         var spiderURL =  "{{ .comURL.SpiderURL}}"
         var apiInfo = "{{ .apiInfo}}";
         getCloudOS(spiderURL,apiInfo,'ProviderName')
+
         $('.scrollbar-inner').scrollbar();
 
         if($(window).width() > 1024) {
@@ -580,12 +544,7 @@ $(document).ready(function(){
         });
     });
 
-    
-
-
-  
-
-    
+        
     $(".popbox").each(function(){
         var $ipbox = $(this);
         var $add_ipbox = $ipbox.find('.add_ipbox');
@@ -599,9 +558,8 @@ $(document).ready(function(){
         }
         });
     });
-</script>
-<script>
-// 해당 스크립트는 Spider에서 데이터를 가져오기 위해 만들었습니다.
+
+
 function getCloudOS(url, apiInfo, target){
     var req_url = url+"/cloudos"
     var initCSP = ""
@@ -670,7 +628,27 @@ function getCloudCredential(url, csp, target){
     }) 
 
 }
-
+function nsModal(){
+    $(".popboxNS .cloudlist .list").each(function () {
+        $(this).click(function () {
+            var $list = $(this);
+            var $ok = $(".btn_ok");
+                $ok.fadeIn();
+            $list.addClass('selected');
+            $list.siblings().removeClass("selected");
+            $list.off("click").click(function(){
+                if( $(this).hasClass("selected") ) {
+                    $ok.stop().fadeOut();
+                    $list.removeClass("selected");
+                } else {
+                    $ok.stop().fadeIn();
+                    $list.addClass("selected");
+                    $list.siblings().removeClass("selected");
+                }
+            });
+        });
+    });
+}
 function getCloudRegion(url, csp, target){
     var req_url = url+"/region"
     axios.get(req_url,{
@@ -713,25 +691,8 @@ function getNameSpace(){
             ))
             $("#nsList").empty();
             $("#nsList").append(html);
-            $(".popboxNS .cloudlist .list").each(function () {
-            $(this).click(function () {
-                var $list = $(this);
-                var $ok = $(".btn_ok");
-                    $ok.fadeIn();
-                $list.addClass('selected');
-                $list.siblings().removeClass("selected");
-                $list.off("click").click(function(){
-                    if( $(this).hasClass("selected") ) {
-                        $ok.stop().fadeOut();
-                        $list.removeClass("selected");
-                    } else {
-                        $ok.stop().fadeIn();
-                        $list.addClass("selected");
-                        $list.siblings().removeClass("selected");
-                    }
-                });
-            });
-        });
+            nsModal()
+           
     }}
 )}
 function changeProvider(spiderURL, csp){
