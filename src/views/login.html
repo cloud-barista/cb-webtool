@@ -306,30 +306,6 @@ $(document).ready(function(){
                     
                     alert("Login Success");
                     $("#popLogin").modal()
-                   
-                    //location.reload(true);
-                    var spiderURL =  "{{ .comURL.SpiderURL}}"
-                    var connectionURL =spiderURL+"/connectionconfig"
-                    axios.get(connectionURL,{
-                        headers : {
-                            'Authorization': apiInfo 
-                        }
-                    }).then(result=>{
-                        console.log("get Connection config Data : ",result.data);
-                        var data = result.data.connectionconfig;
-                        var html = ""
-                       
-                        if(data){
-                            data.map(item=>(
-                                html += '<div class="list">'
-                                    +'<div class="stit">'+item.ConfigName+'</div>'
-                                    +'<div class="stxt">'+item.ProviderName+' / '+item.RegionName+' </div>'
-                                    +'</div>'
-                            ))
-                            $("#cloudList").empty()
-                            $("#cloudList").append(html)
-                        }
-                    })
                     
                     getConfig();
                     getNameSpace();
