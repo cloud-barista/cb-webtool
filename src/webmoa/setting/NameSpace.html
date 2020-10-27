@@ -105,7 +105,7 @@
 												<th></th>
 											</tr>
 										</thead>
-										<tbody>
+										<tbody id="nsList">
 											<tr>
 												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch1" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>
 												<td class="btn_mtd ovm" data-th="Name">Ns-mcis-t01 <span class="ov"></span></td>
@@ -113,27 +113,7 @@
 												<td class="overlay hidden td_left" data-th="description">가동중인 서비스 01 …</td>
 												<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="../img/contents/icon_link.png" class="icon" alt=""/></a></td>
 											</tr>
-											<tr>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch2" title="" /><label for="td_ch2"></label> <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">Ns-mcis-t02 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="ID">ns-id-mcis-t02</td>
-												<td class="overlay hidden td_left" data-th="description">가동중인 서비스 02 …</td>
-												<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="../img/contents/icon_link.png" class="icon" alt=""/></a></td>
-											</tr>
-											<tr>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch3" title="" /><label for="td_ch3"></label> <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">Ns-mcis-t03 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="ID">ns-id-mcis-t03</td>
-												<td class="overlay hidden td_left" data-th="description">가동중인 서비스 03 …</td>
-												<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="../img/contents/icon_link.png" class="icon" alt=""/></a></td>
-											</tr>
-											<tr>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch4" title="" /><label for="td_ch4"></label> <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">Ns-mcis-t04 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="ID">ns-id-mcis-t04</td>
-												<td class="overlay hidden td_left" data-th="description">종료된 서비스 04 …</td>
-												<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="../img/contents/icon_link.png" class="icon" alt=""/></a></td>
-											</tr>
+											
 										</tbody>
 									</table>
 								</div>
@@ -279,7 +259,7 @@
 				</div>
 				<!-- //contents -->
 <script>
-function getNameSpace(){
+function getNSList(){
     var url = "{{ .comURL.TumbleBugURL}}"+"/ns";
     axios.get(url,{
         headers:{
@@ -290,13 +270,17 @@ function getNameSpace(){
         console.log("get NameSpace Data : ",result.data);
         var data = result.data.ns;
         var html = ""
-        if(data.length){        
-            data.filter((list)=> list.name !== "" ).map((item,index)=>(
-                html += '<div class="list">'
-                    +'<div class="stit">'+item.name+'</div>'
-                    +'<div class="stxt">'+item.description+' </div>'
-                    +'</div>'                
-            ))
+        if(data.length){ 		
+			data.filter((list)=> list.name !== "" ).map((item,index)=>(
+				html +='<tr>'
+					 +'<td class="overlay hidden" data-th="">'
+					 +'<input type="checkbox" name="chk" value="'+item.name+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
+					 +'<td class="btn_mtd ovm" data-th="Name">'+item.name+'<span class="ov"></span></td>'
+					 +'<td class="overlay hidden" data-th="ID">'+item.id+'</td>'
+					 +'<td class="overlay hidden td_left" data-th="description">'+item.description+'</td>'
+					 +'<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+					 +'</tr>'        
+			))
             $("#nsList").empty();
             $("#nsList").append(html);
           //  nsModal()
@@ -323,7 +307,7 @@ function getNameSpace(){
                 if(result.status == 200 || result.status == 201){
                     alert("Success Create NameSpace")
 					//등록하고 나서 화면을 그냥 고칠 것인가?
-					getNameSpace();
+					getNSList();
 					//아니면 화면을 리로딩 시킬것인가?
 					location.reload();
                     $("#btn_add2").click()
@@ -339,7 +323,9 @@ function getNameSpace(){
             return;
         }
     }
-
+function getNS(){
+	
+}
 
 </script>
 {{template "Footer" .}}
