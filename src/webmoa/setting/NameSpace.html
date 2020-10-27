@@ -324,7 +324,34 @@ function getNSList(){
         }
     }
 function getNS(){
-	
+
+}
+function ModalDetail(){
+	$(".dashboard .status_list tbody tr").each(function(){
+  	var $td_list = $(this),
+  			$status = $(".server_status"),
+  			$detail = $(".server_info");
+  	$td_list.off("click").click(function(){
+			$td_list.addClass("on");
+			$td_list.siblings().removeClass("on");
+			$status.addClass("view");
+			$status.siblings().removeClass("on");
+  		$(".dashboard.register_cont").removeClass("active");
+	   	$td_list.off("click").click(function(){
+				if( $(this).hasClass("on") ) {
+					$td_list.removeClass("on");
+					$status.removeClass("view");
+					$detail.removeClass("active");
+		    } else {
+					$td_list.addClass("on");
+					$td_list.siblings().removeClass("on");
+					$status.addClass("view");
+					$status.siblings().removeClass("view");
+  				$(".dashboard.register_cont").removeClass("active");
+		    }
+			});
+		});
+	});
 }
 
 </script>
