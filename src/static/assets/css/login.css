@@ -119,7 +119,7 @@ body.bg_login{ width:100%; height:100%; background-position:center top; backgrou
 #popLogin .modal-content > div > div { position:relative; width:100%; }
 #popLogin .modal-content .wbox { position:relative; width:998px; margin-left:80px; min-height:598px; }
 #popLogin .modal-content .popbox { float:left; display:inline-block; width:455px; min-height:598px; padding:0 0 20px 0; border:1px solid #e1e1e1; background-color:#fff; border-radius:10px; }
-#popLogin .modal-content .popbox.popboxNS { float:right; display:none; }
+#popLogin .modal-content .popbox.popboxNS { float:none; display:inline-block; transform:translate(50%, 0%);}
 #popLogin .modal-content .popbox .popcont { padding:40px 35px 0 35px;  }
 #popLogin .modal-content .popbox .titlebox .tit { color:#5e636c; font-size:26px; line-height:28px; font-weight:400; }
 #popLogin .modal-content .popbox .titlebox .tit span { color:#06a9b7; }
@@ -151,7 +151,7 @@ body.bg_login{ width:100%; height:100%; background-position:center top; backgrou
 #popLogin .modal-content .popbox .add_ipbox .btnbox button.btn_create { background-color:#06a9b7; }
 #popLogin .modal-content .arr { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:52px; height:52px; border-radius:100px; background-color:#fff; }
 #popLogin .modal-content .arr:before{ content:''; display:block; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:13px; height:16px; background:url(../img/common/icon_arr.png) center center no-repeat; }
-#popLogin .modal-content button.btn_ok { display:none; position:absolute; top:50%; right:0; transform:translateY(-50%); width:100px; height:90px; border:none; font-size:22px; font-weight:300; color:#fff; outline:none; border-radius:9px; background-color:#06a9b7; }
+#popLogin .modal-content button.btn_ok { display:none; position:absolute; top:50%; right:0; transform:translate(-300%, -50%); width:100px; height:90px; border:none; font-size:22px; font-weight:300; color:#fff; outline:none; border-radius:9px; background-color:#06a9b7; }
 
 @media screen and (max-width:1270px){
 	#popLogin .modal-content { width:998px; }
