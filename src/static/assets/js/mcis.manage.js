@@ -179,6 +179,10 @@ function short_desc(str){
                         url: SpiderURL+"/connectionconfig",
                         async:false,
                         type:'GET',
+                        beforeSend : function(xhr){
+                            xhr.setRequestHeader("Authorization", apiInfo);
+                            xhr.setRequestHeader("Content-type","application/json");
+                        },
                         success : function(data2){
                             var badge = "";
                            
@@ -798,6 +802,10 @@ function show_vmNetworkInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            success : function(result){
                var res = result.vNet
               console.log("Network Info : ",result)
@@ -901,6 +909,10 @@ function show_vmSSHInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            success : function(result){
                var res = result.sshKey
               
