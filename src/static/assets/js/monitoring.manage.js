@@ -467,6 +467,7 @@ function show_vmList(mcis_id){
     var cnt = 0;
     var vm_id = "";
     var mcis_id ="";
+    var apiInfo = ApiInfo;
     $(".chk2").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
@@ -487,7 +488,12 @@ function show_vmList(mcis_id){
         var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
         
         if(confirm("삭제하시겠습니까?")){
-         axios.delete(url).then(result=>{
+         axios.delete(url,{
+            headers :{
+                'Content-type': 'application/json',
+                'Authorization': apiInfo,
+                }
+         }).then(result=>{
              var data = result.data
              console.log(result);
              if(result.status == 200){
