@@ -117,6 +117,10 @@ function show_vmSSHInfo(){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
           
 
        }).done(function(result){
