@@ -429,3 +429,18 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
     }
   }
 });
+
+function lnb_on(){
+	var url = new URL(location.href)
+	var path = url.pathname
+	path = path.split("/")
+	var target1 = path[1]
+	var target2 = path[2]
+	
+	$("#"+target1).addClass("active")
+	$("#"+target1).addClass("on")
+
+	$(".leftmenu .tab-content ul > li").each(function(){
+		
+	})
+}

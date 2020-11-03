@@ -75,7 +75,8 @@ func main() {
 	e.Renderer = renderer
 
 	e.GET("/", controller.IndexController)
-	e.GET("/dashboard", controller.DashBoard)
+	e.GET("/Dashboard/Global", controller.DashBoard)
+	e.GET("/Dashboard/NS", controller.DashBoard)
 
 	//login 관련
 	e.GET("/login", controller.LoginForm)
@@ -85,14 +86,14 @@ func main() {
 	e.GET("/logout/proc", controller.LoginController)
 
 	// Monitoring Control
-	e.GET("/monitoring", controller.MornitoringListForm)
+	e.GET("/Monitoring/mcis", controller.MornitoringListForm)
 	e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 
 	// MCIS
-	e.GET("/MCIS/reg", controller.McisRegForm)
-	e.GET("/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
-	e.POST("/MCIS/reg/proc", controller.McisRegController)
-	e.GET("/MCIS/list", controller.McisListForm)
+	e.GET("/Manage/MCIS/reg", controller.McisRegForm)
+	e.GET("/Manage/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
+	e.POST("/Manage/MCIS/reg/proc", controller.McisRegController)
+	e.GET("/Manage/MCIS/list", controller.McisListForm)
 
 	// Resource
 	e.GET("/Resource/board", controller.ResourceBoard)
@@ -101,15 +102,15 @@ func main() {
 	e.GET("/SET/NS/:nsid", controller.SetNameSpace)
 
 	// 웹툴에서 처리할 NameSpace
-	e.GET("/NS/list", controller.NsListForm)
+	e.GET("/NameSpace/NS/list", controller.NsListForm)
 	e.GET("/NS/reg", controller.NsRegForm)
 	e.POST("/NS/reg/proc", controller.NsRegController)
 	e.GET("/GET/ns", controller.GetNameSpace)
 
 	// 웹툴에서 처리할 Connection
-	e.GET("/Connection/list", controller.ConnectionListForm)
-	e.GET("/Connection/reg", controller.ConnectionRegForm)
-	e.POST("/Connection/reg/proc", controller.NsRegController)
+	e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
+	e.GET("/Cloud/Connection/reg", controller.ConnectionRegForm)
+	e.POST("/Cloud/Connection/reg/proc", controller.NsRegController)
 
 	// 웹툴에서 처리할 Region
 	e.GET("/Region/list", controller.RegionListForm)

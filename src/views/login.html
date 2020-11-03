@@ -25,7 +25,7 @@
         
             <div class="logintop">
                <div class="loginbox">
-                   
+                   <input type="hidden" id="sel_ns" />
                    <div class="loginlogo"><img src="/assets/img/common/img_login_t.png" alt="Cloud Barista"></div>
                    <div class="title"><span>C</span>loud <span>B</span>arista</div>
                    <!-- Input -->
@@ -118,15 +118,16 @@
                        <div class="wbox">	
                            
                            <!-- Cloud Connection -->
-                           <div class="popbox popboxCO">
+                          
+                           <!-- <div class="popbox popboxCO">
                                <div class="popcont">
                                    <div class="titlebox">
                                        <div class="tit"><span>Select Cloud</span> Connection</div>
                                        <div class="txt">대상 클라우드 연결을 선택 또는 생성해 주세요</div>
-                                   </div>
+                                   </div>  -->
                                    
-                                   <!-- list -->
-                                   <div class="cloudlist">
+                                <!-- list -->
+                                  <!-- <div class="cloudlist">
                                        <div class="listbox scrollbar-inner" id="cloudList">
                                            
                                            <div class="list">
@@ -137,11 +138,11 @@
                                            
                                                
                                        </div>
-                                   </div>
-                                   <!-- //list -->
+                                   </div> -->
+                                   <!-- list -->
                                    
                                    <!-- add -->
-                                   <div class="addbox">
+                                   <!-- <div class="addbox">
                                        <div class="txt">or <span>Add</span> new Connection</div>
                                        <button name="" value="" class="btn_add" id="btn_add1">ADD +</button> 
                                    </div>
@@ -184,14 +185,14 @@
                                            
                                        </div>
                                        
-                                   </div>
-                                   <!-- //add -->
+                                   </div> -->
+                                   <!-- add -->
                                    
-                               </div>
-                           </div>
+                               <!-- </div>
+                           </div> -->
                            <!-- //Cloud Connection -->
-                           
-                           <div class="arr"></div>
+<!--                            
+                           <div class="arr"></div> -->
                            
                            <!-- Select NS (NameSpace) -->
                            <div class="popbox popboxNS">
@@ -245,7 +246,7 @@
                        </div>
                        
                        
-                       <button name="" value="" class="btn_ok" data-dismiss="modal" onclick="location.href='operation/Dashboard_Ns.html'">OK</button> 
+                       <button name="" value="" class="btn_ok" data-dismiss="modal" onclick="clickOK();">OK</button> 
                        
                    </div>
                    
@@ -392,7 +393,9 @@ $(document).ready(function(){
                     }
                 });
             });
-        });
+        }); 
+
+      
     }
     function createNS(){
         var namespace = $("#namespace").val()
@@ -501,7 +504,7 @@ $(document).ready(function(){
         //csp List 미리 가져와서 붙여 놓기
         var spiderURL =  "{{ .comURL.SpiderURL}}"
         var apiInfo = "{{ .apiInfo}}";
-        getCloudOS(spiderURL,apiInfo,'ProviderName')
+        //getCloudOS(spiderURL,apiInfo,'ProviderName')
 
         $('.scrollbar-inner').scrollbar();
 
@@ -660,7 +663,7 @@ function getNameSpace(){
         var html = ""
         if(data.length){        
             data.filter((list)=> list.name !== "" ).map((item,index)=>(
-                html += '<div class="list">'
+                html += '<div class="list" onclick="selectNS(\''+item.id+'\');">'
                     +'<div class="stit">'+item.name+'</div>'
                     +'<div class="stxt">'+item.description+' </div>'
                     +'</div>'                
@@ -675,5 +678,14 @@ function changeProvider(spiderURL, csp){
     getCloudRegion(spiderURL,csp,'RegionName')
     getCloudCredential(spiderURL,csp,'CredentialName')
     getCloudDriver(spiderURL,csp,"DriverName")
+}
+
+function clickOK(){
+    var select_ns =   $("#sel_ns").val();
+    console.log("slect ns is : ",select_ns);
+}
+function selectNS(ns){
+    console.log("select namespace : ",ns)
+    $("#sel_ns").val(ns);
 }
 </script>
