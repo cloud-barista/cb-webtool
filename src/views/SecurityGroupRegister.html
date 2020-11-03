@@ -234,7 +234,7 @@ $(document).ready(function(){
         var apiInfo =ApiInfo
         //obj.headers = { 'Content-type': 'application/json', 'Authorization': apiInfo,}
         console.log(obj)
-        var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
+        var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup"
         console.log("vpc register URL : ",url)
     
         axios.post(url,obj,{
@@ -246,7 +246,7 @@ $(document).ready(function(){
             console.log(result);
             if(result.status == 201){
                 alert("Regist it");
-                location.href="/Vpc/list";
+                location.href="/SecurityGroup/list";
             }
         });
         // $.ajax({

@@ -190,7 +190,7 @@ $(document).ready(function(){
             $("#con_table").empty();
             $("#con_table").append(html);
         }
-        if(data.length == 0){
+        if(!data){
             $("#con_table").empty();
             $("#con_table").append("<tr><td colspan='6'>Does not exist.</td></tr>");
         }
@@ -214,7 +214,7 @@ $(document).ready(function(){
         }
         if(cnt == 1){
            
-            var u = SpiderURL+"/driver/"+id
+            var u = CommonURL+"/ns/"+NAMESPACE+"/resources/spec/"+id
            
             if(confirm("Delete?")){
              axios.delete(u,{
