@@ -61,8 +61,6 @@ function checkNS(){
         alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
         location.href ="/NS/reg";
         return;
-       }else{
-           return;
        }
     })
 

@@ -75,7 +75,7 @@ func main() {
 	e.Renderer = renderer
 
 	e.GET("/", controller.IndexController)
-	e.GET("/Dashboard/Global", controller.DashBoard)
+	e.GET("/Dashboard/Global", controller.GlobalDashBoard)
 	e.GET("/Dashboard/NS", controller.DashBoard)
 
 	//login 관련

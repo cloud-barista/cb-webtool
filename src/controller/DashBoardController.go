@@ -19,6 +19,30 @@ type RespPublicIPInfo struct {
 	} `json:"vm"`
 }
 
+func GlobalDashBoard(c echo.Context) error {
+	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
+	nsCnt := service.GetNSCnt()
+	fmt.Println("=========== DashBoard start ==============")
+	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		nameSpace := GetNameSpaceToString(c)
+		if nameSpace != "" {
+			fmt.Println("Namespace : ", nameSpace)
+			return c.Render(http.StatusOK, "Dashboard_Global.html", map[string]interface{}{
+				"LoginInfo": loginInfo,
+				"NameSpace": nameSpace,
+				"comURL":    comURL,
+				"apiInfo":   apiInfo,
+				"nsCnt":     nsCnt,
+			})
+		} else {
+			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+		}
+
+	}
+
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
 func DashBoard(c echo.Context) error {
 	comURL := GetCommonURL()
 	apiInfo := AuthenticationHandler()
@@ -32,6 +56,31 @@ func DashBoard(c echo.Context) error {
 				"NameSpace": nameSpace,
 				"comURL":    comURL,
 				"apiInfo":   apiInfo,
+			})
+		} else {
+			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+		}
+
+	}
+
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
+
+func NSDashBoard(c echo.Context) error {
+	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
+	nsCnt := service.GetNSCnt()
+	fmt.Println("=========== DashBoard start ==============")
+	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		nameSpace := GetNameSpaceToString(c)
+		if nameSpace != "" {
+			fmt.Println("Namespace : ", nameSpace)
+			return c.Render(http.StatusOK, "Dashboard_Ns.html", map[string]interface{}{
+				"LoginInfo": loginInfo,
+				"NameSpace": nameSpace,
+				"comURL":    comURL,
+				"apiInfo":   apiInfo,
+				"nsCnt":     nsCnt,
 			})
 		} else {
 			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")

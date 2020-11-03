@@ -683,7 +683,29 @@ function changeProvider(spiderURL, csp){
 function clickOK(){
     var select_ns =   $("#sel_ns").val();
     console.log("slect ns is : ",select_ns);
+    setNS(select_ns);
+   
 }
+function setNS(nsid){
+      
+        if(nsid){
+            reqUrl = "/SET/NS/"+nsid;
+            console.log(reqUrl);
+            axios.get(reqUrl,{
+                headers:{
+                    'Authorization': "{{ .apiInfo}}"
+                }
+            }).then(result=>{
+                var data = result.data
+                console.log(data);
+                location.href = "/Dashboard/Global"
+             })
+        }else{
+            alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
+            
+        }
+        
+    } 
 function selectNS(ns){
     console.log("select namespace : ",ns)
     $("#sel_ns").val(ns);

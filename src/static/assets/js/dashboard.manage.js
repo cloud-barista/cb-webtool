@@ -44,6 +44,8 @@ function short_desc(str){
 
     return result;
  }
+
+ //dashboard 에 동작하는 서버 댓수 및 다양한 정보를 뿌린다.
  function show_mcis(url, map){
    console.log("Show mcis Url : ",url)
    $("#vm_detail").hide();
@@ -153,6 +155,8 @@ function short_desc(str){
        console.log("server_cnt:",server_cnt)
        console.log("mcis_cnt:",mcis_cnt)
        var new_str = mcis_cnt+'<small class="text-muted ml-2 mb-0"> / '+server_cnt+'</small>';
+       //새로운 퍼블리싱에 들어가는 텍스트
+       var new_str = '<strong>'+mcis_cnt+'</strong><span>/</span> '+server_cnt;
        $("#dash_1").append(new_str);
        $("#run_cnt").text(run_cnt);
        $("#stop_cnt").text(stop_cnt);
