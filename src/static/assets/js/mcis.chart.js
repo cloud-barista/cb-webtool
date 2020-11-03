@@ -88,10 +88,15 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
   // url = 'http://182.252.135.42:9090/dragonfly/mcis/mzc-aws-montest-01-mcis/vm/aws-mon-test-east-01/metric/'+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
    console.log("Request URL : ",url)
    var html = "";
+   var apiInfo = ApiInfo;
    $.ajax({
    url: url,
    async:false,
    type:'GET',
+   beforeSend : function(xhr){
+    xhr.setRequestHeader("Authorization", apiInfo);
+    xhr.setRequestHeader("Content-type","application/json");
+},
    success : function(result){
        var data = result
          console.log("Get Monitoring Data : ",data)
@@ -188,6 +193,7 @@ function checkDragonFly(mcis_id, vm_id){
    var duration = "10m";
    var statisticsCriteria = "last";
    var metric = "cpu" 
+   var apiInfo = ApiInfo;
    var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
    //url = 'http://182.252.135.42:9090/dragonfly/mcis/mzc-aws-montest-01-mcis/vm/aws-mon-test-east-01/metric/'+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
    console.log("Request URL : ",url)
@@ -196,6 +202,10 @@ function checkDragonFly(mcis_id, vm_id){
         url: url,
         async:false,
         type:'GET',
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
         success : function(result){
             
             $("#check_dragonFly").val("200");

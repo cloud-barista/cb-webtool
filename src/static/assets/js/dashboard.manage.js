@@ -231,6 +231,11 @@ function show_vmList(mcis_id,map){
                 url: SpiderURL+"/connectionconfig",
                 async:false,
                 type:'GET',
+                beforeSend : function(xhr){
+                    xhr.setRequestHeader("Authorization", apiInfo);
+                    xhr.setRequestHeader("Content-type","application/json");
+                },
+                
                
 
             }).done(function(data2){
@@ -272,7 +277,7 @@ function show_vmList(mcis_id,map){
                         +'<td>'
                         +badge
                         +'</td>'
-                        +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+vm[i].imageID+'\');">'+vm[i].name+'</a></td>'
+                        +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+vm[i].imageId+'\');">'+vm[i].name+'</a></td>'
                         
                         +'<td>'+provider+'</td>'
                         +'<td>'+vm[i].region.Region+'</td>'
@@ -508,10 +513,15 @@ function agentSetup(mcis_id,vm_id,public_ip){
     })
  }
 function getConnection(){
+    var apiInfo = ApiInfo;
     $.ajax({
         url: SpiderURL+"/connectionconfig",
         async:false,
-        type:'GET'
+        type:'GET',
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
        
 
     }).done( function(data2){
@@ -922,6 +932,10 @@ function show_vmSpecInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            
 
        }).done( function(result){
