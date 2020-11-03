@@ -185,6 +185,7 @@ function show_vmList(mcis_id,map){
    
    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
    var mcis_url = CommonURL+"/ns/"+NAMESPACE+"/mcis?option=status";
+   var apiInfo = ApiInfo;
    console.log("vmList",url)
    if(mcis_id){
        //여기가 geo location 정보 가져 오는 곳
@@ -201,6 +202,11 @@ function show_vmList(mcis_id,map){
        $.ajax({
            type:'GET',
            url:url,
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
+           
        // async:false,
           
        }).done(function(data){
@@ -971,6 +977,10 @@ function show_vmNetworkInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            
 
        }).done(function(result){
@@ -1118,6 +1128,10 @@ function show_vmSSHInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
           
 
        }).done(function(result){

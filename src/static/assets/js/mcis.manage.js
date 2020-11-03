@@ -147,11 +147,16 @@ function short_desc(str){
  function show_vmList(mcis_id){
    
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+    var apiInfo = ApiInfo;
     console.log("MCIS Mangement mcisID : ",mcis_id);
     if(mcis_id){
         $.ajax({
             type:'GET',
             url:url,
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", apiInfo);
+                xhr.setRequestHeader("Content-type","application/json");
+            },
         // async:false,
             success:function(data){
                 var vm = data.vm
@@ -546,6 +551,10 @@ function short_desc(str){
             url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", apiInfo);
+                xhr.setRequestHeader("Content-type","application/json");
+            },
             success : function(data2){
                 res = data2.connectionconfig
                 var provider = "";
@@ -727,6 +736,10 @@ function show_vmSpecInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            success : function(result){
                var res = result.spec
               console.log("spec data from tumble : ",res)
