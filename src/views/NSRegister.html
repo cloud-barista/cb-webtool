@@ -92,7 +92,7 @@ $(document).ready(function(){
             console.log(result.data)
             var data = result.data
             console.log("result : ",result)
-            if(result.status == 201){
+            if(result.status == 201 || result.status ==200){
                 alert("등록되었습니다.");
                 location.href = "/NS/list";
             }
