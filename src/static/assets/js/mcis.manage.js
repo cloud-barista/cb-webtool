@@ -377,6 +377,7 @@ function short_desc(str){
     
     var cnt = 0;
     var mcis_id = "";
+    var apiInfo = ApiInfo;
     $(".chk").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
@@ -393,7 +394,12 @@ function short_desc(str){
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id
             
             if(confirm("삭제하시겠습니까?")){
-             axios.delete(url).then(result=>{
+             axios.delete(url,{
+                headers :{
+                    'Content-type': 'application/json',
+                    'Authorization': apiInfo,
+                    }
+             }).then(result=>{
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
@@ -486,7 +492,12 @@ function short_desc(str){
         var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
         
         if(confirm("삭제하시겠습니까?")){
-         axios.delete(url).then(result=>{
+         axios.delete(url,{
+            headers :{
+                'Content-type': 'application/json',
+                'Authorization': apiInfo,
+                }
+         }).then(result=>{
              var data = result.data
              console.log(result);
              if(result.status == 200){

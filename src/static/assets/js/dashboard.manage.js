@@ -462,6 +462,7 @@ function agentSetup(mcis_id,vm_id,public_ip){
     
     var cnt = 0;
     var mcis_id = "";
+    var apiInfo = ApiInfo;
     $(".chk").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
@@ -478,7 +479,12 @@ function agentSetup(mcis_id,vm_id,public_ip){
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id
             
             if(confirm("Delete?")){
-             axios.delete(url).then(result=>{
+             axios.delete(url,{
+                headers :{
+                    'Content-type': 'application/json',
+                    'Authorization': apiInfo,
+                    }
+             }).then(result=>{
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
@@ -659,6 +665,7 @@ console.log("axios return value : ",f);
     var cnt = 0;
     var vm_id = "";
     var mcis_id ="";
+    var apiInfo = ApiInfo;
     $(".chk").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
@@ -678,7 +685,12 @@ console.log("axios return value : ",f);
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
             
             if(confirm("Delete?")){
-             axios.delete(url).then(result=>{
+             axios.delete(url,{
+                headers :{
+                    'Content-type': 'application/json',
+                    'Authorization': apiInfo,
+                    }
+             }).then(result=>{
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
