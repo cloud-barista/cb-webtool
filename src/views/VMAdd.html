@@ -482,7 +482,7 @@ function btn_click(){
                  'Authorization': ApiInfo,
                 },
         }).then(result=>{
-        if(result.status == 201){
+        if(result.status == 201 || result.status == 200){
             alert("Success Add VM to MCIS")
             location.href = "/MCIS/list";
         }else{

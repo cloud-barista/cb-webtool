@@ -78,15 +78,12 @@ func GeoInfo(c echo.Context) error {
 	fmt.Println("===========")
 	fmt.Println("=========== GetGeoINFO ==============")
 	fmt.Println("=========== GetGeoINFO request URL : ", url)
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("request param : ", url)
-	}
+	body := service.HttpGetHandler(url)
 
-	defer resp.Body.Close()
+	defer body.Close()
 
 	publicIpInfo := RespPublicIPInfo{}
-	json.NewDecoder(resp.Body).Decode(&publicIpInfo)
+	json.NewDecoder(body).Decode(&publicIpInfo)
 	fmt.Println("================mcis ID info ===============")
 	fmt.Println("Public Info : ", publicIpInfo)
 	var ipStackInfo []service.IPStackInfo

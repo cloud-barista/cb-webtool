@@ -16,4 +16,5 @@
 
 *.code-workspace
 pkg
-conf
+conf/
+conf/*.env
