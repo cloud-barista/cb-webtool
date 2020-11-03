@@ -185,6 +185,7 @@ function show_vmList(mcis_id,map){
    
    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
    var mcis_url = CommonURL+"/ns/"+NAMESPACE+"/mcis?option=status";
+   var apiInfo = ApiInfo;
    console.log("vmList",url)
    if(mcis_id){
        //여기가 geo location 정보 가져 오는 곳
@@ -201,6 +202,11 @@ function show_vmList(mcis_id,map){
        $.ajax({
            type:'GET',
            url:url,
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
+           
        // async:false,
           
        }).done(function(data){
@@ -225,6 +231,11 @@ function show_vmList(mcis_id,map){
                 url: SpiderURL+"/connectionconfig",
                 async:false,
                 type:'GET',
+                beforeSend : function(xhr){
+                    xhr.setRequestHeader("Authorization", apiInfo);
+                    xhr.setRequestHeader("Content-type","application/json");
+                },
+                
                
 
             }).done(function(data2){
@@ -266,7 +277,7 @@ function show_vmList(mcis_id,map){
                         +'<td>'
                         +badge
                         +'</td>'
-                        +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+vm[i].imageID+'\');">'+vm[i].name+'</a></td>'
+                        +'<td><a href="#!" onclick="show_vm(\''+mcis_id+'\',\''+vm[i].id+'\',\''+vm[i].name+'\',\''+vm[i].imageId+'\');">'+vm[i].name+'</a></td>'
                         
                         +'<td>'+provider+'</td>'
                         +'<td>'+vm[i].region.Region+'</td>'
@@ -462,6 +473,7 @@ function agentSetup(mcis_id,vm_id,public_ip){
     
     var cnt = 0;
     var mcis_id = "";
+    var apiInfo = ApiInfo;
     $(".chk").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
@@ -478,7 +490,12 @@ function agentSetup(mcis_id,vm_id,public_ip){
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id
             
             if(confirm("Delete?")){
-             axios.delete(url).then(result=>{
+             axios.delete(url,{
+                headers :{
+                    'Content-type': 'application/json',
+                    'Authorization': apiInfo,
+                    }
+             }).then(result=>{
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
@@ -496,10 +513,15 @@ function agentSetup(mcis_id,vm_id,public_ip){
     })
  }
 function getConnection(){
+    var apiInfo = ApiInfo;
     $.ajax({
         url: SpiderURL+"/connectionconfig",
         async:false,
-        type:'GET'
+        type:'GET',
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
        
 
     }).done( function(data2){
@@ -659,6 +681,7 @@ console.log("axios return value : ",f);
     var cnt = 0;
     var vm_id = "";
     var mcis_id ="";
+    var apiInfo = ApiInfo;
     $(".chk").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
@@ -678,7 +701,12 @@ console.log("axios return value : ",f);
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
             
             if(confirm("Delete?")){
-             axios.delete(url).then(result=>{
+             axios.delete(url,{
+                headers :{
+                    'Content-type': 'application/json',
+                    'Authorization': apiInfo,
+                    }
+             }).then(result=>{
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
@@ -904,6 +932,10 @@ function show_vmSpecInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            
 
        }).done( function(result){
@@ -959,6 +991,10 @@ function show_vmNetworkInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            
 
        }).done(function(result){
@@ -1106,6 +1142,10 @@ function show_vmSSHInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
           
 
        }).done(function(result){

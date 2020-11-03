@@ -178,6 +178,7 @@ $(document).ready(function(){
     $("#sel_del").click(function(){
         var cnt = 0;
         var id = "";
+        var apiInfo = ApiInfo;
 		$(".chk").each(function(){
 			if($(this).is(":checked")){
 				//alert("chk");
@@ -192,7 +193,7 @@ $(document).ready(function(){
         }
         if(cnt == 1){
            
-            var u = SpiderURL+"/region/"+id
+            var u = SpiderURL+"/vmimage/"+id
            // alert("url: "+u)
             if(confirm("Delete?")){
              axios.delete(u,{

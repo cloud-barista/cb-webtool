@@ -154,13 +154,17 @@ function short_desc(str){
    });
 }
 function show_vmList(mcis_id){
-   
+    var apiInfo = ApiInfo;
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
     console.log("MCIS Mangement mcisID : ",mcis_id);
     if(mcis_id){
         $.ajax({
             type:'GET',
             url:url,
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", apiInfo);
+                xhr.setRequestHeader("Content-type","application/json");
+            },
         // async:false,
             success:function(data){
                 var vm = data.vm
@@ -183,6 +187,11 @@ function show_vmList(mcis_id){
                         url: SpiderURL+"/connectionconfig",
                         async:false,
                         type:'GET',
+                        beforeSend : function(xhr){
+                            xhr.setRequestHeader("Authorization", apiInfo);
+                            xhr.setRequestHeader("Content-type","application/json");
+                        },
+                        
                         success : function(data2){
                             var badge = "";
                            
@@ -467,6 +476,7 @@ function show_vmList(mcis_id){
     var cnt = 0;
     var vm_id = "";
     var mcis_id ="";
+    var apiInfo = ApiInfo;
     $(".chk2").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
@@ -487,7 +497,12 @@ function show_vmList(mcis_id){
         var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
         
         if(confirm("삭제하시겠습니까?")){
-         axios.delete(url).then(result=>{
+         axios.delete(url,{
+            headers :{
+                'Content-type': 'application/json',
+                'Authorization': apiInfo,
+                }
+         }).then(result=>{
              var data = result.data
              console.log(result);
              if(result.status == 200){
@@ -552,6 +567,10 @@ function show_vmDetailList(mcis_id, vm_id){
            url: SpiderURL+"/connectionconfig",
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            success : function(data2){
                res = data2.connectionconfig
                var provider = "";
@@ -719,6 +738,10 @@ function show_vmSpecInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            success : function(result){
                var res = result.spec
               console.log("spec data from tumble : ",res)
@@ -777,6 +800,10 @@ function show_vmNetworkInfo(mcis_id, vm_id){
           url: url2,
           async:false,
           type:'GET',
+          beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
           success : function(result){
               var res = result.network
              

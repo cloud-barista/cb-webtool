@@ -147,11 +147,16 @@ function short_desc(str){
  function show_vmList(mcis_id){
    
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
+    var apiInfo = ApiInfo;
     console.log("MCIS Mangement mcisID : ",mcis_id);
     if(mcis_id){
         $.ajax({
             type:'GET',
             url:url,
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", apiInfo);
+                xhr.setRequestHeader("Content-type","application/json");
+            },
         // async:false,
             success:function(data){
                 var vm = data.vm
@@ -174,6 +179,10 @@ function short_desc(str){
                         url: SpiderURL+"/connectionconfig",
                         async:false,
                         type:'GET',
+                        beforeSend : function(xhr){
+                            xhr.setRequestHeader("Authorization", apiInfo);
+                            xhr.setRequestHeader("Content-type","application/json");
+                        },
                         success : function(data2){
                             var badge = "";
                            
@@ -377,6 +386,7 @@ function short_desc(str){
     
     var cnt = 0;
     var mcis_id = "";
+    var apiInfo = ApiInfo;
     $(".chk").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
@@ -393,7 +403,12 @@ function short_desc(str){
             var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id
             
             if(confirm("삭제하시겠습니까?")){
-             axios.delete(url).then(result=>{
+             axios.delete(url,{
+                headers :{
+                    'Content-type': 'application/json',
+                    'Authorization': apiInfo,
+                    }
+             }).then(result=>{
                  var data = result.data
                  if(result.status == 200){
                      alert(data.message)
@@ -486,7 +501,12 @@ function short_desc(str){
         var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
         
         if(confirm("삭제하시겠습니까?")){
-         axios.delete(url).then(result=>{
+         axios.delete(url,{
+            headers :{
+                'Content-type': 'application/json',
+                'Authorization': apiInfo,
+                }
+         }).then(result=>{
              var data = result.data
              console.log(result);
              if(result.status == 200){
@@ -535,6 +555,10 @@ function short_desc(str){
             url: SpiderURL+"/connectionconfig",
             async:false,
             type:'GET',
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", apiInfo);
+                xhr.setRequestHeader("Content-type","application/json");
+            },
             success : function(data2){
                 res = data2.connectionconfig
                 var provider = "";
@@ -716,6 +740,10 @@ function show_vmSpecInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            success : function(result){
                var res = result.spec
               console.log("spec data from tumble : ",res)
@@ -774,6 +802,10 @@ function show_vmNetworkInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            success : function(result){
                var res = result.vNet
               console.log("Network Info : ",result)
@@ -877,6 +909,10 @@ function show_vmSSHInfo(mcis_id, vm_id){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
            success : function(result){
                var res = result.sshKey
               

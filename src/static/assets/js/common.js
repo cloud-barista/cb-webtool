@@ -108,11 +108,15 @@ function fnMove(target){
 
 function getVMStatus(vm_name, connection_name){
     var url = "/vmstatus/"+vm_name+"?connection_name="+connection_name
-
+    var apiInfo = ApiInfo;
     $.ajax({
         url: url,
         async:false,
         type:'GET',
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
         success : function(res){
             var vm_status = res.Status 
 
