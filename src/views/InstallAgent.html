@@ -37,6 +37,20 @@
                             </colgroup>
                             
                             <tbody>
+                                    <tr>
+                                            <th>Cloud Provider<strong class="text-danger">*</strong></th>
+                                            <td>
+                                                <select class="form-control form-control-sm" name="csp_ype" id="cspType" >
+                                                    <option selected>Select Cloud Provider</option>
+                                                    <option value="AWS">AWS</option>
+                                                    <option value="AZURE">AZURE</option>
+                                                    <option value="ALIBABA">Alibaba</option>
+                                                    <option value="GCP">GCP</option>
+                                                    <option value="CLOUDIT">Cloudit</option>
+                                                    <option value="OPENSTACK">Openstack</option>
+                                                </select>
+                                            </td>
+                                        </tr>
                                 <tr>
                                     <th>MCIS ID<strong class="text-danger">*</strong></th>
                                     <td>
@@ -117,6 +131,10 @@ function show_vmSSHInfo(){
            url: url2,
            async:false,
            type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
           
 
        }).done(function(result){
