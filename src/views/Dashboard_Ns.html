@@ -2,6 +2,7 @@
 {{template "LNB" .}}
 {{template "Header" .}}
 {{template "Modal" .}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css" type="text/css">
 <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
 <!-- chart -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
@@ -158,8 +159,8 @@
 								<div class="state color_b"></div>
 							</div>
 							
-							<div class="mapcont" id="map">
-								<div class="map" ></div>
+							<div class="mapcont" >
+								<div class="map" id="map" style="height:300px;"></div>
 							</div>
 							
 						</div>
@@ -182,9 +183,11 @@
                 }
                 var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
                 console.log("Dashboard url :",url);
-               // const osmLayer = new ol.layer.Tile({
-                 //   source: new ol.source.OSM(),
-                //});
+               const osmLayer = new ol.layer.Tile({
+                   source: new ol.source.OSM(),
+                });
+				
+				//osmLayer.Map.renderSync();
 
                 var JZMap = map_init()
                 console.log("JZMAP here : ",JZMap);
