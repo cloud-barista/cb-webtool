@@ -224,6 +224,7 @@ function show_mcis2(url, map){
          
          var html = "";
          for(var i in mcis){
+            count++;
             var run_cnt = 0;
             var stop_cnt = 0;
             var terminate_cnt = 0;
@@ -307,7 +308,12 @@ function show_mcis2(url, map){
              }else{
                 mcis_badge += 'state color_g'
              }
-             html +='<div class="areabox dbinfo cursor active" onclick="">'
+             var cursor = ""
+            //  if(i == mcis_cnt-1){
+            //      cursor = "active"
+            //  }
+
+             html +='<div class="areabox dbinfo cursor '+cursor+'" onclick="change_mcis(\''+mcis[i].id+'\',\''+mcis[i].name+'\')">'
                   +'<div class="box">';
              html += '<div class="top">'
                   +'<div class="txtbox">'
@@ -336,7 +342,7 @@ function show_mcis2(url, map){
             console.log("mcis Status 1: ", mcis[i].status)
             console.log("mcis Status 2: ", status)
              
-             count++;
+             
              if(count == 1){
  
              }
@@ -371,9 +377,28 @@ function show_mcis2(url, map){
         //fnMove("table_1");
         $("#mcis_id").val(mcis[0].id)
         $("#mcis_name").val(mcis[0].name)
+        $(".dashboard.dashboard_cont .ds_cont .dbinfo").each(function(){
+            var $list = $(this);
+            $list.on('click', function(){
+                  if( $(this).hasClass("active") ) {
+                      $list.removeClass("active");
+              } else {
+                      $list.addClass("active");
+                      $list.siblings().removeClass("active");
+              }
+              });
+          });
+
     }).catch(function(error){
      console.log("show mcis error at dashboard js: ",error);
     });
+ }
+ function change_mcis(id,name){
+    var mcis_id = id
+    var mcis_name = name
+    $("#mcis_id").val(mcis_id)
+    $("#mcis_name").val(mcis_name)
+    console.log("mcisid, mcisname : ",mcis_id,mcis_name)
  }
 function show_vmList(mcis_id,map){
     $("#vm_detail").hide();
