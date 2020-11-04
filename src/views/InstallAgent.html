@@ -58,6 +58,12 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>NS ID<strong class="text-danger">*</strong></th>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="text" placeholder="input name" name="ns_id" id="ns_id" value="" readonly />
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>VM ID<strong class="text-danger">*</strong></th>
                                     <td>
                                         <input class="form-control form-control-sm" type="text" placeholder="input name" name="vm_id" id="vm_id" value="{{ .vm_id }}" readonly />
@@ -161,6 +167,7 @@ function show_vmSSHInfo(){
 
 
 $(document).ready(function(){
+    $("#ns_id").val(NAMESPACE)
     show_vmSSHInfo();
     $("#reg_btn").click(function(){
         console.log("reg btn click : ","{{ .comURL.DragonFlyURL}}") 
@@ -179,7 +186,10 @@ $(document).ready(function(){
             //AjaxLoadingShow(true);
 
             //console.log(req)
-            obj["ns_id"] = NAMESPACE;
+        
+           
+            console.log("object : ",obj);
+            
             axios.post(url,obj,{
             headers :{
                  'Content-type': 'application/json',
