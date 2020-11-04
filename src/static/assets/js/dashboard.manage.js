@@ -181,6 +181,176 @@ function short_desc(str){
     console.log("show mcis error at dashboard js: ",error);
    });
 }
+
+//새로운 퍼블리싱에 적용할 function
+function show_mcis2(url, map){
+    console.log("Show mcis Url : ",url)
+    $("#vm_detail").hide();
+    checkNS();
+ 
+    var apiInfo = ApiInfo;
+    console.log("apiInfo : ",apiInfo);
+     axios.get(url,{
+         headers:{
+             'Authorization': apiInfo
+         }
+     }).then(result=>{
+       
+        console.log("Dashboard Data :",result.status);
+        var data = result.data;
+        console.log("func show_mcis result data : ",data)
+        if(!data.mcis){
+           location.href = "/Manage/MCIS/reg";
+           return;
+        }
+        if(data.mcis.length == 0 ){
+         location.href = "/Manage/MCIS/reg";
+         return;
+      }
+         console.log("show mcis's map data : ",map);
+         console.log("showmcis Data : ",data)
+         var html = "";
+         var mcis = data.mcis;
+         var len = 0
+         var mcis_cnt = 0 
+         if(mcis){
+            len = mcis.length;
+         }
+         mcis_cnt = len;
+         var count = 0;
+         
+         var server_cnt = 0;
+         
+         var html = "";
+         for(var i in mcis){
+            var run_cnt = 0;
+            var stop_cnt = 0;
+            var terminate_cnt = 0;
+             var vm_len = 0
+             var sta = mcis[i].status;
+             var sl = sta.split("-");
+             var mcis_badge = "";
+             var vm_badge = "";
+             var status = sl[0].toLowerCase()
+             var vms = mcis[i].vm
+            console.log("mcis status : ",status)
+            var vm_status = "";
+             if(vms){
+                vm_len = vms.length
+                server_cnt = server_cnt+vm_len;
+             }
+             //VM  상태 및 기타 생성하기
+             var vm_cnt = 0
+             var vm_html = "";
+             for(var o in vms){
+                 vm_cnt++;
+                var vm_status = vms[o].status
+                 
+                 if(vms[o].status == "Suspended"){
+                     stop_cnt++;
+                 }
+                 if(vms[o].status == "Running"){
+                     run_cnt++;
+                 }
+                 if(vms[o].status == "Terminated"){
+                    terminate_cnt++;
+                }
+
+                if(vm_status == "Running"){
+                    vm_badge += "shot bgbox_b"
+                 }else if(vm_status == "include" ){
+                    vm_badge += "shot bgbox_y"
+                 }else if(vm_status == "Suspended"){
+                    vm_badge += "shot bgbox_y"
+                 }else if(vm_status == "Terminated"){
+                    vm_badge += "shot bgbox_r"
+                 }else{
+                    vm_badge += "shot bgbox_g"
+                 }
+
+                 vm_html +='<div class="'+vm_badge+'"><a href="javascript:void(0);"><span>'+vm_cnt+'</span></a></div>'
+             }
+
+             //MCIS name  / MCIS 상태
+             if(status == "running"){
+                mcis_badge += 'state color_b'
+             }else if(status == "include" ){
+                mcis_badge += 'state color_y'
+             }else if(status == "suspended"){
+                mcis_badge += 'state color_y'
+             }else if(status == "terminate"){
+                mcis_badge += 'state color_r'
+             }else{
+                mcis_badge += 'state color_g'
+             }
+             html +='<div class="areabox dbinfo cursor active" onclick="">'
+                  +'<div class="box">';
+             html += '<div class="top">'
+                  +'<div class="txtbox">'
+                  +'<div class="tit">'+mcis[i].name+'</div>'
+                  +'<div class="txt"><span class="bgbox_b"></span>Available 01</div>'
+                  +'</div>'
+                  +'<div class="'+mcis_badge+'"></div>'
+                  +'</div>';
+             // 전체 인프라 갯수 및 각각의 상태에 따른 VM 갯수
+             html +='<div class="numbox">infra <strong class="color_b">'+vm_cnt+'</strong>' 
+                   +'<span class="line">(</span> <span class="num color_b">'+run_cnt+'</span>' 
+                   +'<span class="line">/</span> <span class="num color_y">'+stop_cnt+'</span>' 
+                   +'<span class="line">/</span> <span class="num color_r">'+terminate_cnt+'</span>'
+                   +'<span class="line">)</span></div>';
+
+             // 서버 갯수
+             html += '<div class="numinfo">'
+             html += '<div class="num">server'+vm_cnt+'</div>'
+             html += '</div>'
+             // 각각의 VM 항목들
+             html +='<div class="shotbox">'
+             html += vm_html;
+             html +='</div></div></div>'
+
+ 
+            console.log("mcis Status 1: ", mcis[i].status)
+            console.log("mcis Status 2: ", status)
+             
+             count++;
+             if(count == 1){
+ 
+             }
+            
+        }
+        html +='<div class="areabox">'
+             +'<div class="box">'
+             +'<a href="/Manage/MCIS/reg" class="btn_add"><span>+</span></a>'
+             +'</div></div>';
+        console.log("server_cnt:",server_cnt)
+        console.log("mcis_cnt:",mcis_cnt)
+        var new_str = mcis_cnt+'<small class="text-muted ml-2 mb-0"> / '+server_cnt+'</small>';
+        //새로운 퍼블리싱에 들어가는 텍스트
+        var new_str = '<strong>'+mcis_cnt+'</strong><span>/</span> '+server_cnt;
+        $("#dash_1").append(new_str);
+        $("#run_cnt").text(run_cnt);
+        $("#stop_cnt").text(stop_cnt);
+ 
+        $("#table_1").empty();
+        $("#table_1").append(html);
+     //    var infra_str = "Infra - Server (MCIS : "+mcis[0].name+")"
+     //    $("#infra_mcis").text(infra_str)
+       // show_card(mcis[0].id,mcis[0].name);
+    //    if(vm_len > 0){
+    //     show_vmList(mcis[0].id,map);
+    //    }else{
+    //     show_vmList("",map);
+    //    }
+     
+       
+        
+        //fnMove("table_1");
+        $("#mcis_id").val(mcis[0].id)
+        $("#mcis_name").val(mcis[0].name)
+    }).catch(function(error){
+     console.log("show mcis error at dashboard js: ",error);
+    });
+ }
 function show_vmList(mcis_id,map){
     $("#vm_detail").hide();
     $("#chart_detail").hide();
@@ -540,81 +710,84 @@ function getConnection(){
         var ali_cnt = 0;
         var cp_cnt = 0;
         var connection_cnt = 0;
-       
+        var html = "";
         for(var k in res){
             provider = res[k].ProviderName 
             connection_cnt++;
             provider = provider.toLowerCase();
             console.log("provider lowercase : ",provider);
+            
             if(provider == "aws"){
-                aws_cnt++;
-                var html = "";
-                html += '<div class="icon icon-shape bg-success text-white rounded-circle shadow mb-0 h3">'
-                     +'AWS<p class="mb-0 h3">('
-                     +aws_cnt
-                     +')</p>'
-                     +'</div>';
-                     $("#aws").empty();
-                     $("#aws").append(html);
+                aws_cnt++;  
+             
             }
             if(provider == "azure"){
-
                 azure_cnt++;
-                var html = "";
-                html += '<div class="icon icon-shape bg-warning text-white rounded-circle shadow mb-0 h3">'
-                     +'AZ<p class="mb-0 h3">('
-                     +azure_cnt
-                     +')</p>'
-                     +'</div>';
-                     $("#az").empty();
-                     $("#az").append(html);
+                 
             }
             if(provider == "alibaba"){
                 ali_cnt++;
-                var html = "";
-                html += '<div class="icon icon-shape bg-secondary text-white rounded-circle shadow mb-0 h3" >'
-                     +'Ali<p class="mb-0 h3">('
-                     +ali_cnt
-                     +')</p>'
-                     +'</div>';
-                     $("#ab").empty();
-                     $("#ab").append(html);
+              
+                    
             }
             if(provider == "gcp"){
                 gcp_cnt++;
-                var html = "";
-                html += '<div class="icon icon-shape bg-primary text-white rounded-circle shadow mb-0 h3">'
-                     +'GCP<p class="mb-0 h3">('
-                     +gcp_cnt
-                     +')</p>'
-                     +'</div>';
-                     $("#gcp").empty();
-                     $("#gcp").append(html);
+            
             }
             if(provider == "cloudit"){
                 cloudIt_cnt++;
-                var html = "";
-                html += '<div class="icon icon-shape bg-danger text-white rounded-circle shadow mb-0 h3">'
-                     +'CI<p class="mb-0 h3">('
-                     +cloudIt_cnt
-                     +')</p>'
-                     +'</div>';
-                     $("#ci").empty();
-                     $("#ci").append(html);
+              
             }
             if(provider == "openstack"){
                 open_cnt++;
-                var html = "";
-                html += '<div class="icon icon-shape bg-dark text-white rounded-circle shadow mb-0 h3">'
-                     +'OS<p class="mb-0 h3">('
-                     +open_cnt
-                     +')</p>'
-                     +'</div>';
-                     $("#os").empty();
-                     $("#os").append(html);
+              
             }
         }
         
+        
+        if(aws_cnt > 0 ){
+           
+            html +='<li class="bg_b">'
+                 +'<a href="#!"><span>AWS('
+                 +aws_cnt
+                 +')</span></a></li>';          
+        }
+        if(azure_cnt > 0){
+            html +='<li class="bg_y">'
+                 +'<a href="#!"><span>AZ('
+                 +azure_cnt
+                 +')</span></a></li>';       
+        }
+        if(ali_cnt > 0){
+           
+            html +='<li class="bg_r">'
+                 +'<a href="#!"><span>ALI('
+                 +ali_cnt
+                 +')</span></a></li>';       
+                
+        }
+        if(gcp_cnt > 0){
+          
+            html +='<li class="bg_g">'
+            +'<a href="#!"><span>GCP('
+            +gcp_cnt
+            +')</span></a></li>';     
+        }
+        if(cloudIt_cnt > 0){
+          
+            html +='<li class="bg_n">'
+            +'<a href="#!"><span>CLIT('
+            +cloudIt_cnt
+            +')</span></a></li>';  
+        }
+        if(open_cnt > 0){
+           
+            html +='<li class="bg_b">'
+            +'<a href="#!"><span>OPS('
+            +open_cnt
+            +')</span></a></li>';  
+        }
+
         if(aws_cnt > 1){
             aws_cnt = 1
         }
@@ -633,11 +806,13 @@ function getConnection(){
         if(gcp_cnt > 1){
             gcp_cnt = 1
         }
+
         cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
-        var str = cp_cnt+'<small class="ml-2 mb-0 text-muted">/ '+ connection_cnt+'</small>';
         var str = '<strong>'+cp_cnt+'</strong><span>/</span>'+connection_cnt;
         $("#dash_2").empty();
         $("#dash_2").append(str);
+        $("#dash_3").empty();
+        $("#dash_3").append(html);
     })
     
 }
@@ -844,82 +1019,7 @@ console.log("axios return value : ",f);
     }
 
  }
-//  function show_vmDetailInfo(mcis_id, vm_id){
-//     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-//     var apiInfo = ApiInfo
-    // axios.get(url,{
-    //     headers:{
-    //         'Authorization': apiInfo
-    //     }
-    // })then(result=>{
-//         var data = result.data
-//         var html = ""
-//         $.ajax({
-//            url:SpiderURL+"/connectionconfig",
-//            async:false,
-//            type:'GET',
-//            success : function(data){
-               
-//                var provider = "";
-//                res = data.connectionconfig
-//                for(var k in res){
-//                    if(res[k].ConfigName == data.connectionName){
-//                        provider = res[k].ProviderName
-//                        console.log("Inner Provider : ",provider)
-//                    }
-//                }
-//                html += '<tr>'
-//                    +'<th scope="colgroup"rowspan="6">Resource-VM</th>'
-//                    +'<th scope="colgroup" class="text-right">Server ID</th>'
-//                    +'<td  colspan="1" >'+data.id+'</td>'
-//                    +'<th scope="colgroup" class="text-right">cloud Provider</th>'
-//                    +'<td colspan="1">'+provider+'</td>'
-//                    +'</tr>'
-                   
-//                    +'<tr>'
-//                    +'<th scope="colgroup" class="text-right">Region</th>'
-//                    +'<td  colspan="3">'+data.region.Region+'</td>'
-//                    +'</tr>'
-//                    +'<tr>'
-//                    +'<th scope="colgroup" class="text-right">Zone</th>'
-//                    +'<td  colspan="3">'+data.region.Zone+'</td>'
-//                    +'</tr>'
-//                    +'<tr>'
-//                    +'<th scope="colgroup" class="text-right">PublicIP</th>'
-//                    +'<td  colspan="3">'+data.publicIP+'</td>'
-//                    +'</tr>'
-//                    +'<tr>'
-//                    +'<th scope="colgroup" class="text-right">PrivateIP</th>'
-//                    +'<td colspan="3">'+data.privateIP+'</td>'
-//                    +'</tr>'
-//                    +'</tbody>'
-//                    +'<tbody>'
-//                    +'<tr>'
-//                    +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-//                    +'<th scope="colgroup" class="text-right">Sever ID</th>'
-//                    +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
-//                    +'</tr>'
-//                    +'<tr>'
-//                    +'<th scope="colgroup" class="text-right">VM NAME</th>'
-//                    +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
-//                    +'</tr>'
-                   
 
-                 
-//                $("#vm").empty();
-//                $("#vm").append(html);
-//                fnMove("vm_detail");
-
-
-//            }
-
-//        })
-      
-           
-        
-//     })
-
-// }
 
 function show_vmSpecInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id

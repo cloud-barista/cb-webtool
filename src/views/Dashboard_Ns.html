@@ -2,6 +2,7 @@
 {{template "LNB" .}}
 {{template "Header" .}}
 {{template "Modal" .}}
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
 <!-- chart -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">
@@ -12,6 +13,9 @@
 <script type="text/javascript" src="/assets/js/mcis.chart.js"></script>
 <!-- 추가 스크립트 -->
 				<!-- contents -->
+				<input type="hidden" id="mcis_id" />
+				<input type="hidden" id="mcis_name" />
+
 				<div class="contbox">
 					
 					<div class="titlebox">
@@ -31,7 +35,7 @@
 							
 							<div class="box_cont">
 								<div class="lbox" id="dash_1">
-									<strong>8</strong> <span>/</span> 20 <span>/</span> 6
+									
 								</div>
 								<div class="rbox">
 									<div class="numbox">
@@ -57,17 +61,8 @@
 								<div class="cbox">
 									<div class="tcbox">
 										<div class="sc_box scrollbar-inner">
-											<ul>
-												<li class="bg_b"><a href="../operation/Manage_Mcis.html"><span>AWS(3)</span></a></li>
-												<li class="bg_b"><a href="../operation/Manage_Mcis.html"><span>AZ(2)</span></a></li>
-												<li class="bg_r"><a href="../operation/Manage_Mcis.html"><span>ALI</span></a></li>
-												<li class="bg_b"><a href="../operation/Manage_Mcis.html"><span>AWS(3)</span></a></li>
-												<li class="bg_b"><a href="../operation/Manage_Mcis.html"><span>AZ(2)</span></a></li>
-												<li class="bg_b"><a href="../operation/Manage_Mcis.html"><span>GCP</span></a></li>
-												<li class="bg_y"><a href="../operation/Manage_Mcis.html"><span>CLIT</span></a></li>
-												<li class="bg_g"><a href="../operation/Manage_Mcis.html"><span>OPS</span></a></li>
-												<li class="bg_n"><span></span></li>
-												<li class="bg_n"><span></span></li>
+											<ul id="dash_3">
+												
 											</ul>
 										</div>
 									</div>
@@ -147,98 +142,9 @@
 								</div>
 							</div>
 	
-	
-							<!-- popup Start -->
-							<div class="modal fade layerpopup" id="Life_Start" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										
-										<div class="modal-body">
-											<div class="txt">Would you like to start MCIS ?</div>
-											<div class="btnbox">
-												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-							<!-- //popup Start -->
-	
-							<!-- popup Suspend -->
-							<div class="modal fade layerpopup" id="Life_Suspend" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										
-										<div class="modal-body">
-											<div class="txt">Would you like to suspend MCIS ?</div>
-											<div class="btnbox">
-												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-							<!-- //popup Suspend -->
-	
-							<!-- popup Resume -->
-							<div class="modal fade layerpopup" id="Life_Resume" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										
-										<div class="modal-body">
-											<div class="txt">Would you like to resume MCIS ?</div>
-											<div class="btnbox">
-												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-							<!-- //popup Resume -->
-	
-							<!-- popup Manage -->
-							<div class="modal fade layerpopup" id="n_Manage" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										
-										<div class="modal-body">
-											<div class="txt">Would you like to manage MCIS ?</div>
-											<div class="btnbox">
-												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-							<!-- //popup Manage -->
-	
-							<!-- popup New -->
-							<div class="modal fade layerpopup" id="n_New" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										
-										<div class="modal-body">
-											<div class="txt">Would you like to create MCIS ?</div>
-											<div class="btnbox">
-												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-							<!-- //popup New -->
+	{{template "Dashboard_Modal" .}}
 							
-							<div class="ds_cont">
+							<div class="ds_cont" id="table_1">
 								
 								<div class="areabox dbinfo cursor active" ondblclick="location.href='../operation/Manage_Mcis.html'">
 									<div class="box">
@@ -355,7 +261,7 @@
                 var JZMap = map_init()
                 console.log("JZMAP here : ",JZMap);
                 
-                show_mcis(url,JZMap);
+                show_mcis2(url,JZMap);
 
                 getConnection();
             })
