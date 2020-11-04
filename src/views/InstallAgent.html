@@ -40,7 +40,7 @@
                                     <tr>
                                             <th>Cloud Provider<strong class="text-danger">*</strong></th>
                                             <td>
-                                                <select class="form-control form-control-sm" name="csp_type" id="cspType" >
+                                                <select class="form-control form-control-sm" name="cspType" id="cspType" >
                                                     <option selected>Select Cloud Provider</option>
                                                     <option value="AWS">AWS</option>
                                                     <option value="AZURE">AZURE</option>
@@ -179,6 +179,7 @@ $(document).ready(function(){
             //AjaxLoadingShow(true);
 
             //console.log(req)
+            obj["ns_id"] = NAMESPACE;
             axios.post(url,obj,{
             headers :{
                  'Content-type': 'application/json',
