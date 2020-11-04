@@ -76,7 +76,7 @@ func main() {
 
 	e.GET("/", controller.IndexController)
 	e.GET("/Dashboard/Global", controller.GlobalDashBoard)
-	e.GET("/Dashboard/NS", controller.DashBoard)
+	e.GET("/Dashboard/NS", controller.NSDashBoard)
 
 	//login 관련
 	e.GET("/login", controller.LoginForm)

@@ -635,6 +635,7 @@ function getConnection(){
         }
         cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
         var str = cp_cnt+'<small class="ml-2 mb-0 text-muted">/ '+ connection_cnt+'</small>';
+        var str = '<strong>'+cp_cnt+'</strong><span>/</span>'+connection_cnt;
         $("#dash_2").empty();
         $("#dash_2").append(str);
     })

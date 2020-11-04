@@ -2,6 +2,11 @@
 {{template "LNB" .}}
 {{template "Header" .}}
 {{template "Modal" .}}
+<!-- 추가 스크립트 -->
+<script type="text/javascript" src="/assets/js/mcis.map.js"></script>
+<script type="text/javascript" src="/assets/js/dashboard.manage.js"></script>
+<script type="text/javascript" src="/assets/js/mcis.chart.js"></script>
+<!-- 추가 스크립트 -->
 				<!-- contents -->
 				<div class="contbox">
 					
@@ -14,18 +19,20 @@
 						
 						<div class="d_box box_1 box_1m">
 							<div class="titbox">
-								<div class="tit"><strong>Mcis</strong> <span>/</span> server</div>
+								<div class="tit" >
+									<strong>Mcis</strong> <span>/</span> server
+								</div>
 								<div class="state color_b"></div>
 							</div>
 							
 							<div class="box_cont">
-								<div class="lbox">
+								<div class="lbox" id="dash_1">
 									<strong>8</strong> <span>/</span> 20 <span>/</span> 6
 								</div>
 								<div class="rbox">
 									<div class="numbox">
-										<div class="num bgbox_b cursor" onclick="location.href='../operation/Manage_Mcis.html'"><span>5</span></div>
-										<div class="num bgbox_g cursor" onclick="location.href='../operation/Manage_Mcis.html'"><span>2</span></div>
+										<div class="num bgbox_b cursor" ><span id="run_cnt">5</span></div>
+										<div class="num bgbox_g cursor" ><span id="stop_cnt">2</span></div>
 									</div>
 									<div class="txt">Status of Infra Service</div>
 								</div>
@@ -40,8 +47,8 @@
 							</div>
 							
 							<div class="box_cont">
-								<div class="lbox">
-									<strong>7</strong> <span>/</span> 8
+								<div class="lbox" id="dash_2">
+									<!-- 여기에는 dashboard-->
 								</div>
 								<div class="cbox">
 									<div class="tcbox">
@@ -131,7 +138,7 @@
 												</div>
 											</div>
 										</li>
-										<li><a href="../operation/About.html"><img src="../img/common/icon_question.png" alt=""/></a></li>
+										<li><a href="../operation/About.html"><img src="/assets/img/common/icon_question.png" alt=""/></a></li>
 									</ul>
 								</div>
 							</div>
@@ -314,7 +321,7 @@
 							</div>
 							
 							<div class="mapcont">
-								<div class="map"><a href="../operation/Manage_Mcis.html"><img src="../img/contents/img_map_d.jpg" alt=""/></a></div>
+								<div class="map"><a href="../operation/Manage_Mcis.html"><img src="/assets/img/contents/img_map_d.jpg" alt=""/></a></div>
 							</div>
 							
 						</div>
@@ -324,6 +331,30 @@
 					
 				</div>
 				<!-- //contents -->
+    <script>
+          
+            
+            $(document).ready(function(){
+                var nsid = "{{ .NameSpace}}";
+                if(!nsid){
+                    nsid = $("#namespace1").val()
+                }
+                if(!NAMESPACE){
+                    nsid = $("#namespace1").val()
+                }
+                var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
+                console.log("Dashboard url :",url);
+                const osmLayer = new ol.layer.Tile({
+                    source: new ol.source.OSM(),
+                });
 
+                var JZMap = map_init()
+                console.log("JZMAP here : ",JZMap);
+                
+                show_mcis(url,JZMap);
+
+                getConnection();
+            })
+    </script>
 
 {{template "Footer" .}}
