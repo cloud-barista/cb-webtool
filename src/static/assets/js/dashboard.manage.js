@@ -1,4 +1,37 @@
-// MCIS Control
+
+function life_cycle2(type){
+    var mcis_id = $("#mcis_id").val();
+    var mcis_name = $("#mcis_name").val();
+    if(!mcis_id){
+        alert("Please Select MCIS!!")
+        return;
+    }
+    var nameSpace = NAMESPACE;
+    console.log("Start LifeCycle method!!!")
+  
+    var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
+    var message = mcis_name+" "+type+ " complete!."
+  
+
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+        var status = result.status
+        
+        console.log("life cycle result : ",result)
+        var data = result.data
+        console.log("result Message : ",data.message)
+        if(status == 200 || status == 201){
+            
+            alert(message);
+            location.reload();
+            //show_mcis(mcis_url,"");
+        }
+    })
+}
 function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name,mcis_url){
     var url = ""
     var nameSpace = NAMESPACE;
@@ -24,11 +57,11 @@ function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name,mcis_url){
         console.log("life cycle result : ",result)
         var data = result.data
         console.log("result Message : ",data.message)
-        if(status == 200){
+        if(status == 200 || status == 201){
             
             alert(message);
-            location.reload(true);
-            show_mcis(mcis_url,"");
+            location.reload();
+            //show_mcis(mcis_url,"");
         }
     })
 }
@@ -175,8 +208,8 @@ function short_desc(str){
       
        
        //fnMove("table_1");
-       $("#mcis_id").val(mcis[0].id)
-       $("#mcis_name").val(mcis[0].name)
+    //    $("#mcis_id").val(mcis[0].id)
+    //    $("#mcis_name").val(mcis[0].name)
    }).catch(function(error){
     console.log("show mcis error at dashboard js: ",error);
    });
@@ -223,10 +256,12 @@ function show_mcis2(url, map){
          var server_cnt = 0;
          
          var html = "";
+         var run_cnt = 0;
+         var stop_cnt = 0;
          for(var i in mcis){
             count++;
-            var run_cnt = 0;
-            var stop_cnt = 0;
+           var vm_run_cnt = 0;
+           var vm_stop_cnt = 0;
             var terminate_cnt = 0;
              var vm_len = 0
              var sta = mcis[i].status;
@@ -263,9 +298,11 @@ function show_mcis2(url, map){
                  
                  if(vms[o].status == "Suspended"){
                      stop_cnt++;
+                     vm_stop_cnt++;
                  }
                  if(vms[o].status == "Running"){
                      run_cnt++;
+                     vm_run_cnt++;
                  }
                  if(vms[o].status == "Terminated"){
                     terminate_cnt++;
@@ -324,8 +361,8 @@ function show_mcis2(url, map){
                   +'</div>';
              // 전체 인프라 갯수 및 각각의 상태에 따른 VM 갯수
              html +='<div class="numbox">infra <strong class="color_b">'+vm_cnt+'</strong>' 
-                   +'<span class="line">(</span> <span class="num color_b">'+run_cnt+'</span>' 
-                   +'<span class="line">/</span> <span class="num color_y">'+stop_cnt+'</span>' 
+                   +'<span class="line">(</span> <span class="num color_b">'+vm_run_cnt+'</span>' 
+                   +'<span class="line">/</span> <span class="num color_y">'+vm_stop_cnt+'</span>' 
                    +'<span class="line">/</span> <span class="num color_r">'+terminate_cnt+'</span>'
                    +'<span class="line">)</span></div>';
 
@@ -377,6 +414,7 @@ function show_mcis2(url, map){
         //fnMove("table_1");
         $("#mcis_id").val(mcis[0].id)
         $("#mcis_name").val(mcis[0].name)
+        //event 속성
         $(".dashboard.dashboard_cont .ds_cont .dbinfo").each(function(){
             var $list = $(this);
             $list.on('click', function(){
