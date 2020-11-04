@@ -346,7 +346,7 @@ $(function() {
 		});
 	});
 	
-function mcis_box(){
+
 	$(".dashboard.dashboard_cont .ds_cont .dbinfo").each(function(){
   	var $list = $(this);
   	$list.on('click', function(){
@@ -358,7 +358,7 @@ function mcis_box(){
 	    }
 		});
 	});
-}
+
 
 	// btn_top
 	$("#footer .btn_top").click(function(){
