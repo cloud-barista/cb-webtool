@@ -40,7 +40,7 @@
                                     <tr>
                                             <th>Cloud Provider<strong class="text-danger">*</strong></th>
                                             <td>
-                                                <select class="form-control form-control-sm" name="csp_ype" id="cspType" >
+                                                <select class="form-control form-control-sm" name="csp_type" id="cspType" >
                                                     <option selected>Select Cloud Provider</option>
                                                     <option value="AWS">AWS</option>
                                                     <option value="AZURE">AZURE</option>
@@ -164,7 +164,8 @@ $(document).ready(function(){
     show_vmSSHInfo();
     $("#reg_btn").click(function(){
         console.log("reg btn click : ","{{ .comURL.DragonFlyURL}}") 
-        var url = DragonFlyURL+"/agent/install";
+        var url = DragonFlyURLddd
+        +"/agent/install";
         console.log("Monitoring Service Activation URI : ", url)
 
         //폼의 필수 필드를 검증 함.
@@ -188,7 +189,7 @@ $(document).ready(function(){
             .then(result=>{
                 console.log(result.data)
                 var data = result.data
-                if(result.status == 200){
+                if(result.status == 200 || result.status == 201){
                     alert("Monitoring Service Activation is complete.");
                     //location.href = "/Driver/list";
                     location.href = "/dashboard";
