@@ -146,79 +146,7 @@
 							
 							<div class="ds_cont" id="table_1">
 								
-								<div class="areabox dbinfo cursor active" ondblclick="location.href='../operation/Manage_Mcis.html'">
-									<div class="box">
-										
-										<div class="top">
-											<div class="txtbox">
-												<div class="tit">MCIS-t01</div>
-												<div class="txt"><span class="bgbox_b"></span>Available 01</div>
-											</div>
-											<div class="state color_b"></div>
-										</div>
-										
-										<div class="numbox">infra <strong class="color_b">10</strong> <span class="line">(</span> <span class="num color_b">7</span> <span class="line">/</span> <span class="num color_g">1</span> <span class="line">/</span> <span class="num color_y">2</span> <span class="line">/</span> <span class="num color_r">1</span><span class="line">)</span></div>
-										
-										<div class="numinfo">
-											<div class="num">server (8)</div>
-										</div>
-										
-										<div class="shotbox">
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>1</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>2</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>3</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>4</span></a></div>
-											<div class="shot bgbox_y"><a href="javascript:void(0);"><span>5</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>6</span></a></div>
-											<div class="shot bgbox_y"><a href="javascript:void(0);"><span>7</span></a></div>
-											<div class="shot bgbox_g"><a href="javascript:void(0);"><span>8</span></a></div>
-											<div class="shot bgbox_r"><a href="javascript:void(0);"><span>9</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>10</span></a></div>
-										</div>
-										
-									</div>
-									
-								</div>
-								
-								<div class="areabox dbinfo cursor" ondblclick="location.href='../operation/Manage_Mcis.html'">
-									<div class="box">
-										
-										<div class="top">
-											<div class="txtbox">
-												<div class="tit">MCIS-t01</div>
-												<div class="txt"><span class="bgbox_b"></span>Available 01</div>
-											</div>
-											<div class="state color_b"></div>
-										</div>
-										
-										<div class="numbox">infra <strong class="color_b">9</strong> <span class="line">(</span> <span class="num color_b">7</span> <span class="line">/</span> <span class="num color_g">1</span> <span class="line">/</span> <span class="num color_y">1</span><span class="line">)</span></div>
-										
-										<div class="numinfo">
-											<div class="num">server (8)</div>
-										</div>
-										
-										<div class="shotbox">
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>1</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>2</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>3</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>4</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>5</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>6</span></a></div>
-											<div class="shot bgbox_b"><a href="javascript:void(0);"><span>7</span></a></div>
-											<div class="shot bgbox_g"><a href="javascript:void(0);"><span>8</span></a></div>
-											<div class="shot bgbox_y"><a href="javascript:void(0);"><span>9</span></a></div>
-										</div>
-										
-									</div>
-									
-								</div>
-								
-								<div class="areabox">
-									<div class="box">
-										<a href="../operation/Manage_Create_Mcis.html" class="btn_add"><span>+</span></a>
-									</div>
-									
-								</div>
+							
 								
 							</div>
 							
@@ -230,8 +158,8 @@
 								<div class="state color_b"></div>
 							</div>
 							
-							<div class="mapcont">
-								<div class="map"><a href="../operation/Manage_Mcis.html"><img src="/assets/img/contents/img_map_d.jpg" alt=""/></a></div>
+							<div class="mapcont" id="map">
+								<div class="map" ></div>
 							</div>
 							
 						</div>
@@ -254,16 +182,17 @@
                 }
                 var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
                 console.log("Dashboard url :",url);
-                const osmLayer = new ol.layer.Tile({
-                    source: new ol.source.OSM(),
-                });
+               // const osmLayer = new ol.layer.Tile({
+                 //   source: new ol.source.OSM(),
+                //});
 
                 var JZMap = map_init()
                 console.log("JZMAP here : ",JZMap);
-                
-                show_mcis2(url,JZMap);
 
                 getConnection();
+                show_mcis2(url,JZMap);
+
+                
             })
     </script>
 

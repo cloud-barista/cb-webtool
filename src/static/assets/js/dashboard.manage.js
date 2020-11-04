@@ -189,6 +189,7 @@ function show_mcis2(url, map){
     checkNS();
  
     var apiInfo = ApiInfo;
+    var JZMap = map;
     console.log("apiInfo : ",apiInfo);
      axios.get(url,{
          headers:{
@@ -242,9 +243,22 @@ function show_mcis2(url, map){
              //VM  상태 및 기타 생성하기
              var vm_cnt = 0
              var vm_html = "";
+             //지도 그리기 관련
+             var polyArr = new Array();
              for(var o in vms){
                  vm_cnt++;
                 var vm_status = vms[o].status
+                var lat = vms[0].location.latitude
+                var long = vms[0].location.longitude
+                var provider = vms[0].location.cloudType
+
+                var fromLonLat = long+" "+lat;
+                polyArr.push(fromLonLat)
+                drawMap(JZMap,long,lat,vms[o])
+
+
+
+                console.log(lat, long, provider)
                  
                  if(vms[o].status == "Suspended"){
                      stop_cnt++;
@@ -270,6 +284,16 @@ function show_mcis2(url, map){
 
                  vm_html +='<div class="'+vm_badge+'"><a href="javascript:void(0);"><span>'+vm_cnt+'</span></a></div>'
              }
+             var polygon = "";
+             if(polyArr.length > 1){
+               polygon = polyArr.join(", ")
+               polygon = "POLYGON(("+polygon+"))";
+             }else{
+               polygon = "POLYGON(("+polyArr[0]+"))";
+             }
+             if(polyArr.length >1){
+                drawPoligon(JZMap,polygon);
+              }
 
              //MCIS name  / MCIS 상태
              if(status == "running"){

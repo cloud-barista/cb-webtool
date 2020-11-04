@@ -35,37 +35,7 @@ function getGeoLocationInfo(mcis_id,map){
     }).done(function(result){
         console.log("region Info : ",result)
         var polyArr = new Array();
-    //   result = [{
-    //     longitude: 126.990407,
-    //     latitude:37.550246,
-    //     Status: "Running",
-    //     VMID: "VM-aws-developer-01",
-    //     VMName: "VM-aws-developer-01"
-    //   },
-     
-    //   {
-    //     Status: "Running",
-    //     VMID: "VM-aws-developer-02",
-    //     VMName: "VM-aws-developer-02",
-        
-    //     longitude: 10.403993,
-    //     latitude:51.241497,
-    //    },
-    //    {
-    //     Status: "partial",
-    //     VMID: "VM-aws-developer-03",
-    //     VMName: "VM-aws-developer-03",
-    //     latitude: 39.043701171875,
-    //     longitude: -77.47419738769531
-    //   },
-    //    {
-    //     Status: "Warning",
-    //     VMID: "VM-aws-developer-04",
-    //     VMName: "VM-aws-developer-04",
-    //     longitude: 129.315757,
-    //     latitude: -27.635010
-    //    }
-    // ]
+  
         for(var i in result){
             console.log("region lat long info : ",result[i])
             // var json_parse = JSON.parse(result[i])
@@ -91,6 +61,7 @@ function getGeoLocationInfo(mcis_id,map){
        
     })
 }
+
 function map_init_target(target){
  
   const osmLayer = new ol.layer.Tile({
@@ -304,10 +275,11 @@ function drawMap(map,long,lat,info){
   var point_feature = new ol.Feature(point_gem);
   point_feature.setStyle([icon])
   //feature 에 set info
-  point_feature.set('title',info.VMName)
-  point_feature.set('vm_status',info.Status)
-  point_feature.set('vm_id',info.VMID)
-  point_feature.set('id',info.VMID)
+  console.log("info : ",info)
+  point_feature.set('title',info.name)
+  point_feature.set('vm_status',info.status)
+  point_feature.set('vm_id',info.id)
+  point_feature.set('id',info.id)
 
   var stackVectorMap = new ol.source.Vector({
     features : [point_feature]
