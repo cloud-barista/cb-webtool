@@ -196,7 +196,7 @@ function show_vmList(mcis_id,map){
     
     console.log("vm list map info : ",map)
    
-    if(!map){
+    if(map){
         $("#map").empty();
         map = map_init();
     }
