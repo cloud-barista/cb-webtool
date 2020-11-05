@@ -13,7 +13,7 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>Server Name</label>
-							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_3" title="" />
+							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_3" title="" id="simple_server_name" />
 						</li>
 					</ul>
 				</div>
@@ -21,7 +21,7 @@
 					<ul>
 						<li>
 							<label>Description</label>
-							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_3" title="" ></textarea>
+							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_3" title="" id="simple_desc" ></textarea>
 						</li>
 					</ul>
 				</div>
@@ -32,7 +32,7 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>Where</label>
-							<select class="selectbox white pline sel_4">
+							<select  id="cp_region">
 								<option value="1">Select CP & Region</option>
 							</select>
 						</li>
@@ -137,6 +137,36 @@
 			</div>
 		</div>
 		<!-- //button -->
+		<script>
+			$(document).ready(function(){
+				getRegionName();
+			})
+function getRegionName(){
+    var url = SpiderURL+"/region"
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+		console.log("getRegionName : ",result.data.region);
+        var data = result.data.region
+        var html = "";
+        for (var i in data){
+            
+				html +='<option value="'+data[i].RegionName+'">'+data[i].ProviderName+'&'+data[i].RegionName    
+					 +'</option>'
+          
+            
+		}
+		console.log("html : ",html)
+        $("#cp_region").empty();
+		$("#cp_region").append(html);
+		$("#cp_region").addClass("selectbox white pline sel_4");
+		$("#cp_region").attr('display',"none");
+    })
+}
+		</script>
 		
 	</div>
 	
