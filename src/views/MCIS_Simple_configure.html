@@ -1,0 +1,144 @@
+{{define "Mcis_simple_configure"}}
+<div class="servers_config simple_servers_config">
+													
+	<div class="top_box">
+		<div class="titbox_sc">
+			<div class="tit">Simple Server Configuration</div>
+		</div>
+	
+		<div class="ip_box">
+			
+			<div class="svc_ipbox">
+				<div class="ipbox ipbox3">
+					<ul>
+						<li>
+							<label><span class="ch">*</span>Server Name</label>
+							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_3" title="" />
+						</li>
+					</ul>
+				</div>
+				<div class="ipbox ipbox4">
+					<ul>
+						<li>
+							<label>Description</label>
+							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_3" title="" ></textarea>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="svc_ipbox svc_ipbox_2">
+				<div class="ipbox ipbox3">
+					<ul>
+						<li>
+							<label><span class="ch">*</span>Where</label>
+							<select class="selectbox white pline sel_4">
+								<option value="1">Select CP & Region</option>
+							</select>
+						</li>
+						<li>
+							<label><span class="ch">*</span>which OS</label>
+							<select class="selectbox white pline sel_4">
+								<option value="1">Select OS Platform</option>
+							</select>
+						</li>
+					</ul>
+				</div>
+				<div class="ipbox ipbox4 ipbox5">
+					<ul>
+						<li>
+							<label>vCPU core</label>
+							<div class="spec_select_box">
+								<div class="s_slider_box">
+									<div class="slider_ip">
+										<button class="btn_s btn_s_minus">-</button>
+										<div>
+											<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
+										</div>
+										<button class="btn_s btn_s_plus">+</button>
+									</div>
+									<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+								</div>
+								<span class="stxt">Unit</span>
+							</div>
+						</li>
+						<li>
+							<label>memory</label>
+							<div class="spec_select_box">
+								<div class="s_slider_box">
+									<div class="slider_ip">
+										<button class="btn_s btn_s_minus">-</button>
+										<div>
+											<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="1000" data-slider-step="1" data-slider-value="0" />
+										</div>
+										<button class="btn_s btn_s_plus">+</button>
+									</div>
+									<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+								</div>
+								<span class="stxt">Unit</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="svc_ipbox svc_ipbox_2">
+				<div class="ipbox ipbox3">
+					<ul>
+						<li>
+							<label><span class="ch">*</span>Access (ssh key)</label>
+							<select class="selectbox white pline sel_3">
+								<option value="1">All</option>
+							</select>
+							<span class="sbox">
+								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_4 search_ip" title="" />
+								<input type="submit" name="" class="btn_search" value="" title="" />
+							</span>
+						</li>
+					</ul>
+				</div>
+				<div class="ipbox ipbox4">
+					<ul>
+						<li>
+							<input type="text" name="" value="" placeholder="" class="gray ip_3" title=""readonly />
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		<!-- button -->
+		<div class="btnbox spec_select_box">
+			<div class="btn_right">
+				
+				<div class="amount_add s_slider_box">
+					<input type="text" name="" value="0" placeholder="" class="a_ip components_input" title="" disabled />
+					<a href="javascript:void(0);" class="btn_add btn_s_plus"></a>
+					<div class="add_box">
+						<div class="a_box">
+							<strong class="t font-NotoKR">추가 수량</strong>
+							<div class="a_slider">
+								<div class="slider_ip">
+									<button class="btn_s btn_s_minus">-</button>
+									<div>
+										<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
+									</div>
+									<button class="btn_s btn_s_plus">+</button>
+								</div>
+								<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<button name="" value="" class="btn_done btn_co btn_cr_g"><span>DONE</span></button> 
+				<button name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
+				
+			</div>
+		</div>
+		<!-- //button -->
+		
+	</div>
+	
+</div>
+{{end}}
