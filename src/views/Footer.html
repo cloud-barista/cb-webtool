@@ -76,10 +76,10 @@
         for(var i in res){
             if(res[i].name){
                 if(NAMESPACE == res[i].name){
-                        html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
-                        ns = res[i].id;
+                      
                 }else{
-                    html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
+                   // html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
+                   html +='<li><a href="javascript:void(0);" onclick="select_namespace(\''+res[i].id+'\')" data-toggle="modal" data-target="#NameSpace">'+res[i].name+'</a></li>'
                 }   
             }
               
@@ -128,5 +128,10 @@
        }
 
    })
+
+   function select_namespace(ns_id){
+       console.log("select namespace : ",ns_id)
+       $("#select_namespace").val(ns_id)
+   }
 </script>
 {{end}}
