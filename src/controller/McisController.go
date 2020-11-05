@@ -72,7 +72,7 @@ func McisRegForm(c echo.Context) error {
 	apiInfo := AuthenticationHandler()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
-		return c.Render(http.StatusOK, "MCISRegister.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Manage_Create_Mcis.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
 			"comURL":    comURL,

@@ -400,20 +400,7 @@ function show_mcis2(url, map){
  
         $("#table_1").empty();
         $("#table_1").append(html);
-     //    var infra_str = "Infra - Server (MCIS : "+mcis[0].name+")"
-     //    $("#infra_mcis").text(infra_str)
-       // show_card(mcis[0].id,mcis[0].name);
-    //    if(vm_len > 0){
-    //     show_vmList(mcis[0].id,map);
-    //    }else{
-    //     show_vmList("",map);
-    //    }
-     
-       
-        
-        //fnMove("table_1");
-        $("#mcis_id").val(mcis[0].id)
-        $("#mcis_name").val(mcis[0].name)
+   
         //event 속성
         $(".dashboard.dashboard_cont .ds_cont .dbinfo").each(function(){
             var $list = $(this);
