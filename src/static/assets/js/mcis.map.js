@@ -289,6 +289,7 @@ function map_init(){
 }
 function drawMap(map,long,lat,info){
   var JZMap = map;
+  console.log("JZMap : ",JZMap);
   
   var icon = new ol.style.Style({
     image: new ol.style.Icon({
