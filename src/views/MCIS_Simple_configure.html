@@ -1,7 +1,11 @@
 {{define "Mcis_simple_configure"}}
 <div class="servers_config simple_servers_config" id="simple_server_config">
 	<form id="simple_form">	
-		<input type="hidden" name="provider" id="" />					
+		<input type="hidden" name="provider" id="" />	
+		<input type="hidden" name="installMonAgent"  value="" id="s_installMonAgent" />
+		<input type="hidden" name="specId"  value="" id="s_specId" />
+		<input type="hidden" name="subnetId"  value="" id="s_subnetId"/>
+		<input type="hidden" name="vNetId"  value="" id="s_vNetId"/>				
 		<div class="top_box">
 			<div class="titbox_sc">
 				<div class="tit">Simple Server Configuration</div>
@@ -51,14 +55,14 @@
 					<div class="ipbox ipbox3">
 						<ul>
 							<li>
-								<label><span class="ch">*</span>Where</label>
-								<select class="selectbox white pline sel_4" readonly>
-									<option value="1">Select CP & Region</option>
+								<label><span class="ch">*</span>Spec</label>
+								<select class="selectbox white pline sel_4" id="s_spec" name="specId">
+									<option value="1">Select Spec</option>
 								</select>
 							</li>
 							<li>
 								<label><span class="ch">*</span>which OS</label>
-								<select class="selectbox white pline sel_4">
+								<select class="selectbox white pline sel_4" name="imageId" id="s_imageId"> 
 									<option value="1">Select OS Platform</option>
 								</select>
 							</li>
@@ -108,7 +112,7 @@
 							<li>
 								<label><span class="ch">*</span>Access (ssh key)</label>
 								<select class="selectbox white pline sel_3" id="sshKey">
-									<option value="1">All</option>
+									<option value="">Select SSH Key</option>
 								</select>
 								<span class="sbox">
 									<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_4 search_ip" title="" />
@@ -223,7 +227,8 @@
                 getImageInfo(configName);
                 getSecurityInfo(configName);
                 getSSHKeyInfo(configName);
-                getVnetInfo(configName);
+				getVnetInfo(configName);
+				getSpecInfo(configName);
 			}
 			
 			function getImageInfo(configName){
@@ -254,8 +259,8 @@
 							 html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
 						 }
 					 }
-					 $("#image").empty();
-					 $("#image").append(html);
+					 $("#s_imageId").empty();
+					 $("#s_imageId").append(html);
 					 
 				 })
 			 }
@@ -284,6 +289,37 @@
 					 
 				 })
 			 }
+			 function getSpecInfo(configName){
+				var configName = configName;
+				if(!configName){
+					configName = $("#configName option:selected").val();
+				}
+				var url = CommonURL+"/ns/"+NAMESPACE+"/resources/spec";
+				var html = "";
+				var apiInfo = ApiInfo
+				axios.get(url,{
+					headers:{
+						'Authorization': apiInfo
+					}
+				}).then(result=>{
+					var data = result.data.spec
+					console.log("spec result : ",data)
+					if(data){
+						html +="<option value=''>Select SpecName</option>"
+						data.filter(csp => csp.connectionName === configName).map(item =>(
+							html += '<option value="'+item.id+'">'+item.name+'</option>'	
+						))
+
+					}else{
+						html +=""
+					}
+					
+				  
+					$("#s_spec").empty();
+					$("#s_spec").append(html);
+					
+				})
+			}
 			function getSSHKeyInfo(configName){
 				 var configName = configName;
 				 if(!configName){
@@ -324,12 +360,18 @@
                     }
                 }).then(result=>{
                     data = result.data.vNet
-                    console.log("vNetwork Info : ",result)
+					console.log("vNetwork Info : ",result)
+					var init_vnet = "";
+					var init_subnet = "";
                     for(var i in data){
                         if(data[i].connectionName == configName){
                             html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
-                            var subnetInfoList = data[i].subnetInfoList
+							var subnetInfoList = data[i].subnetInfoList
+							init_vnet = data[0].id
                             for(var k in subnetInfoList){
+								if(i == 0){
+									init_subnet = subnetInfoList[0].IId.NameId
+								}
                                 html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].IPv4_CIDR+'</option>'; 
                             }
                         }
@@ -337,7 +379,11 @@
                     $("#vnet").empty();
                     $("#vnet").append(html);
                     $("#subnet").empty();
-                    $("#subnet").append(html2);
+					$("#subnet").append(html2);
+					
+					//setting default
+					$("#s_subnetId").val(init_subnet);
+					$("#s_vNetId").val(init_vnet);				
                     
                 })
             }
