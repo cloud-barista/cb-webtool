@@ -33,7 +33,7 @@
 						<ul>
 							<li>
 								<label><span class="ch">*</span>Provider</label>
-								<select  class="selectbox white pline sel_4"  name="provider">
+								<select  class="selectbox white pline sel_4"  name="provider"  id="select_provider">
 									<option value="">Select Provider</option>
 								</select>
 							</li>
@@ -331,6 +331,9 @@
 				console.log('view simple cnt : ',cnt);
 				var select_form_data = Simple_Server_Config_Arr[cnt]
 				console.log('select_form_data : ', select_form_data);
+				$(".simple_servers_config").addClass("active")
+				$(".new_servers_config").removeClass("active")
+
 			}
 			
 
