@@ -1,174 +1,503 @@
 {{define "Mcis_simple_configure"}}
-<div class="servers_config simple_servers_config">
-													
-	<div class="top_box">
-		<div class="titbox_sc">
-			<div class="tit">Simple Server Configuration</div>
-		</div>
-	
-		<div class="ip_box">
-			
-			<div class="svc_ipbox">
-				<div class="ipbox ipbox3">
-					<ul>
-						<li>
-							<label><span class="ch">*</span>Server Name</label>
-							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_3" title="" id="simple_server_name" />
-						</li>
-					</ul>
-				</div>
-				<div class="ipbox ipbox4">
-					<ul>
-						<li>
-							<label>Description</label>
-							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_3" title="" id="simple_desc" ></textarea>
-						</li>
-					</ul>
-				</div>
+<div class="servers_config simple_servers_config" id="simple_server_config">
+	<form id="simple_form">	
+		<input type="hidden" name="provider" id="" />					
+		<div class="top_box">
+			<div class="titbox_sc">
+				<div class="tit">Simple Server Configuration</div>
 			</div>
-			
-			<div class="svc_ipbox svc_ipbox_2">
-				<div class="ipbox ipbox3">
-					<ul>
-						<li>
-							<label><span class="ch">*</span>Where</label>
-							<select  id="cp_region">
-								<option value="1">Select CP & Region</option>
-							</select>
-						</li>
-						<li>
-							<label><span class="ch">*</span>which OS</label>
-							<select class="selectbox white pline sel_4">
-								<option value="1">Select OS Platform</option>
-							</select>
-						</li>
-					</ul>
-				</div>
-				<div class="ipbox ipbox4 ipbox5">
-					<ul>
-						<li>
-							<label>vCPU core</label>
-							<div class="spec_select_box">
-								<div class="s_slider_box">
-									<div class="slider_ip">
-										<button class="btn_s btn_s_minus">-</button>
-										<div>
-											<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
-										</div>
-										<button class="btn_s btn_s_plus">+</button>
-									</div>
-									<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
-								</div>
-								<span class="stxt">Unit</span>
-							</div>
-						</li>
-						<li>
-							<label>memory</label>
-							<div class="spec_select_box">
-								<div class="s_slider_box">
-									<div class="slider_ip">
-										<button class="btn_s btn_s_minus">-</button>
-										<div>
-											<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="1000" data-slider-step="1" data-slider-value="0" />
-										</div>
-										<button class="btn_s btn_s_plus">+</button>
-									</div>
-									<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
-								</div>
-								<span class="stxt">Unit</span>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-			
-			<div class="svc_ipbox svc_ipbox_2">
-				<div class="ipbox ipbox3">
-					<ul>
-						<li>
-							<label><span class="ch">*</span>Access (ssh key)</label>
-							<select class="selectbox white pline sel_3">
-								<option value="1">All</option>
-							</select>
-							<span class="sbox">
-								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_4 search_ip" title="" />
-								<input type="submit" name="" class="btn_search" value="" title="" />
-							</span>
-						</li>
-					</ul>
-				</div>
-				<div class="ipbox ipbox4">
-					<ul>
-						<li>
-							<input type="text" name="" value="" placeholder="" class="gray ip_3" title=""readonly />
-						</li>
-					</ul>
-				</div>
-			</div>
-			
-		</div>
-		<!-- button -->
-		<div class="btnbox spec_select_box">
-			<div class="btn_right">
+		
+			<div class="ip_box">
 				
-				<div class="amount_add s_slider_box">
-					<input type="text" name="" value="0" placeholder="" class="a_ip components_input" title="" disabled />
-					<a href="javascript:void(0);" class="btn_add btn_s_plus"></a>
-					<div class="add_box">
-						<div class="a_box">
-							<strong class="t font-NotoKR">추가 수량</strong>
-							<div class="a_slider">
-								<div class="slider_ip">
-									<button class="btn_s btn_s_minus">-</button>
-									<div>
-										<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
+				<div class="svc_ipbox">
+					<div class="ipbox ipbox3">
+						<ul>
+							<li>
+								<label><span class="ch">*</span>Server Name</label>
+								<input type="text" name="vm_name" value="" placeholder="Input Name" class="pline ip_3" title=""  />
+							</li>
+						</ul>
+					</div>
+					<div class="ipbox ipbox4">
+						<ul>
+							<li>
+								<label>Description</label>
+								<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_3" title=""  ></textarea>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="svc_ipbox svc_ipbox_2">
+					<div class="ipbox ipbox3">
+						<ul>
+							<li>
+								<label><span class="ch">*</span>Provider</label>
+								<select  class="selectbox white pline sel_4"  name="provider">
+									<option value="">Select Provider</option>
+								</select>
+							</li>
+							<li>
+								<label><span class="ch">*</span>Connection Name</label>
+								<select class="selectbox white pline sel_4" name="connectionName">
+									<option value="1">Select Connection</option>
+								</select>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="svc_ipbox svc_ipbox_2">
+					<div class="ipbox ipbox3">
+						<ul>
+							<li>
+								<label><span class="ch">*</span>Where</label>
+								<select class="selectbox white pline sel_4" readonly>
+									<option value="1">Select CP & Region</option>
+								</select>
+							</li>
+							<li>
+								<label><span class="ch">*</span>which OS</label>
+								<select class="selectbox white pline sel_4">
+									<option value="1">Select OS Platform</option>
+								</select>
+							</li>
+						</ul>
+					</div>
+					<div class="ipbox ipbox4 ipbox5">
+						<ul>
+							<li>
+								<label>vCPU core</label>
+								<div class="spec_select_box">
+									<div class="s_slider_box">
+										<div class="slider_ip">
+											<button type="button" class="btn_s btn_s_minus">-</button>
+											<div>
+												<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
+											</div>
+											<button type="button" class="btn_s btn_s_plus">+</button>
+										</div>
+										<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
 									</div>
-									<button class="btn_s btn_s_plus">+</button>
+									<span class="stxt">Unit</span>
 								</div>
-								<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
-							</div>
-						</div>
+							</li>
+							<li>
+								<label>memory</label>
+								<div class="spec_select_box">
+									<div class="s_slider_box">
+										<div class="slider_ip">
+											<button type="button" class="btn_s btn_s_minus">-</button>
+											<div>
+												<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="1000" data-slider-step="1" data-slider-value="0" />
+											</div>
+											<button type="button" class="btn_s btn_s_plus">+</button>
+										</div>
+										<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+									</div>
+									<span class="stxt">Unit</span>
+								</div>
+							</li>
+						</ul>
 					</div>
 				</div>
 				
-				<button name="" value="" class="btn_done btn_co btn_cr_g"><span>DONE</span></button> 
-				<button name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
+				<div class="svc_ipbox svc_ipbox_2">
+					<div class="ipbox ipbox3">
+						<ul>
+							<li>
+								<label><span class="ch">*</span>Access (ssh key)</label>
+								<select class="selectbox white pline sel_3">
+									<option value="1">All</option>
+								</select>
+								<span class="sbox">
+									<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_4 search_ip" title="" />
+									<input type="submit" name="" class="btn_search" value="" title="" />
+								</span>
+							</li>
+						</ul>
+					</div>
+					<div class="ipbox ipbox4">
+						<ul>
+							<li>
+								<input type="text" name="" value="" placeholder="" class="gray ip_3" title=""readonly />
+							</li>
+						</ul>
+					</div>
+				</div>
 				
 			</div>
+			<!-- button -->
+			<div class="btnbox spec_select_box">
+				<div class="btn_right">
+					
+					<div class="amount_add s_slider_box">
+						<input type="text" name="" value="0" placeholder="" class="a_ip components_input" title="" disabled />
+						<a href="javascript:void(0);" class="btn_add btn_s_plus"></a>
+						<div class="add_box">
+							<div class="a_box">
+								<strong class="t font-NotoKR">추가 수량</strong>
+								<div class="a_slider">
+									<div class="slider_ip">
+										<button type="button" class="btn_s btn_s_minus">-</button>
+										<div>
+											<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
+										</div>
+										<button type="button" class="btn_s btn_s_plus">+</button>
+									</div>
+									<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="simple_btn();"><span>DONE</span></button> 
+					<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
+					
+				</div>
+				
+			</div>
+			<!-- //button -->
 		</div>
-		<!-- //button -->
-		<script>
-			$(document).ready(function(){
-				getRegionName();
-			})
-function getRegionName(){
-    var url = SpiderURL+"/region"
-    var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
-		console.log("getRegionName : ",result.data.region);
-        var data = result.data.region
-        var html = "";
-        for (var i in data){
-            
-				html +='<option value="'+data[i].RegionName+'">'+data[i].ProviderName+'&'+data[i].RegionName    
-					 +'</option>'
-          
-            
-		}
-		console.log("html : ",html)
-        $("#cp_region").empty();
-		$("#cp_region").append(html);
-		$("#cp_region").addClass("selectbox white pline sel_4");
-		$("#cp_region").attr('display',"none");
-    })
-}
-		</script>
-		
-	</div>
-	
+	</form>
 </div>
+
+<script>
+			$(document).ready(function(){
+				var spiderURL =  "{{ .comURL.SpiderURL}}"
+        		var apiInfo = "{{ .apiInfo}}";
+				var simple_target = "select_provider"
+				var simple_config_cnt = 0
+				getRegionName();
+				getCloudOS(spiderURL, apiInfo, simple_target)
+				
+			})
+
+			function getCloudOS(url, apiInfo, target){
+				var req_url = url+"/cloudos"
+				var initCSP = ""
+				axios.get(req_url,{
+				headers:{
+						'Authorization': apiInfo
+					}
+				}).then(result=>{
+					var data = result.data.cloudos
+					var html =""
+					if(data){
+						html += "<option value=''>Select Provider</option>"
+						data.map(csp=>(html += '<option value="'+csp+'">'+csp+'</option>'))
+					}
+					$("#"+target).empty()
+					$("#"+target).append(html)
+				}) 
+			}
+			function getConnectionInfo(provider, target){
+                var url = SpiderURL+"/connectionconfig";
+                console.log("provider : ",provider)
+				if(!provider){
+					alert("Please select Provider!!")
+					$("#select_provider").focus();
+					return;
+				}
+                //var provider = $("#provider option:selected").val();
+                var html = "";
+                var apiInfo = ApiInfo
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
+                    var data = result.data.connectionconfig
+                    console.log("connection data : ",data);
+					if(data){
+						data.filter(item => item.ProviderName === provider).map(csp=>(
+							html += '<option value' 
+						))
+					}
+                    var count = 0; 
+                    var configName = "";
+                    var confArr = new Array();
+                    for(var i in data){
+                        if(provider == data[i].ProviderName){ 
+                            count++;
+                            html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
+                            configName = data[i].ConfigName
+                            confArr.push(data[i].ConfigName)
+                            
+                        }
+                    }
+                    
+                    $("#"+target).empty();
+                    $("#"+target).append(html);
+               
+
+                    
+                })
+            }
+			 function getConnectionInfo(provider){
+                var url = SpiderURL+"/connectionconfig";
+                console.log("provider : ",provider)
+                //var provider = $("#provider option:selected").val();
+                var html = "";
+                var apiInfo = ApiInfo
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
+                    var data = result.data.connectionconfig
+                    console.log("connection data : ",data);
+                    var count = 0; 
+                    var configName = "";
+                    var confArr = new Array();
+                    for(var i in data){
+                        if(provider == data[i].ProviderName){ 
+                            count++;
+                            html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
+                            configName = data[i].ConfigName
+                            confArr.push(data[i].ConfigName)
+                            
+                        }
+                    }
+                    if(count == 0){
+                        alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
+                            html +='<option selected>Select Configname</option>';
+                    }
+                    if(confArr.length > 1){
+                        configName = confArr[0];
+                    }
+                    $("#configName_"+cnt+"").empty();
+                    $("#configName_"+cnt+"").append(html);
+                    getImageInfo(configName,cnt);
+                    getSecurityInfo(configName,cnt);
+                    getSSHKeyInfo(configName,cnt);
+                  //  getPublicIPInfo(configName,cnt);
+                    getVnetInfo(configName,cnt);
+
+                    
+                })
+            }
+			function setProvider(provider){
+				if(provider){
+					$("#s_provider").val(provider);
+				}
+				
+			}
+			function getRegionName(){
+				var url = SpiderURL+"/region"
+				var apiInfo = ApiInfo
+				axios.get(url,{
+					headers:{
+						'Authorization': apiInfo
+					}
+				}).then(result=>{
+					console.log("getRegionName : ",result.data.region);
+					var data = result.data.region
+					var html = "";
+					html +='<option value=""> select cp & region </option>'	;
+					for (var i in data){
+							html +='<option value="'+data[i].RegionName+'">'+data[i].ProviderName+'&'+data[i].RegionName    
+								 +'</option>'						
+					}
+					console.log("html : ",html)
+					$("#cp_region").empty();
+					$("#cp_region").append(html);
+				})
+			}
+			const Simple_Server_Config_Arr = new Array();
+			var simple_data_cnt = 0
+			function simple_btn(){
+				var simple_form = $("#simple_form").serializeObject()
+				
+				var server_name = simple_form.vm_name
+				$(".simple_servers_config").removeClass("active");
+				Simple_Server_Config_Arr.push(simple_form);
+				add_server_html ='<li onclick="view_simple(\''+simple_data_cnt+'\')">'
+								+'<div class="server server_on bgbox_b">'
+								+'<div class="icon"></div>'
+								+'<div class="txt">'+server_name+'</div>'
+								+'</div>'
+							    +'</li>';
+
+				$("#mcis_server_list").prepend(add_server_html)
+				console.log("simple btn click and simple form data : ",simple_form)
+				console.log("simple data array : ",Simple_Server_Config_Arr);
+				simple_data_cnt++;
+				$("#simple_form").each(function(){
+					this.reset();
+				})
+			}
+			function view_simple(cnt){
+				console.log('view simple cnt : ',cnt);
+				var select_form_data = Simple_Server_Config_Arr[cnt]
+				console.log('select_form_data : ', select_form_data);
+			}
+			
+
+			function simple_config_form(cnt){
+				console.log("simple_config_form cnt : ",cnt)
+				if(cnt == 0){
+					return;
+				}
+				console.log("simple_config_cnt : ",cnt)
+				var before_cnt = cnt -1;
+				$("#simple_form_"+before_cnt).hide()
+				var html  =""
+				html +='<form id="simple_form_'+cnt+'">	'
+				   
+					+'<div class="top_box">'
+					+'<div class="titbox_sc">'
+					+'<div class="tit">Simple Server Configuration</div>'
+					+'</div>'
+					+'<div class="ip_box">'
+					+'<div class="svc_ipbox">'
+					+'<div class="ipbox ipbox3">'
+					+'<ul>'
+					+'<li>'
+					+'<label><span class="ch">*</span>Server Name</label>'
+					+'<input type="text" name="vm_name" value="" placeholder="Input Name" class="pline ip_3" title=""  />'
+					+'</li>'
+					+'</ul>'
+					+'</div>'
+					+'<div class="ipbox ipbox4">'
+					+'<ul>'
+					+'<li>'
+					+'<label>Description</label>'
+					+'<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_3" title=""  ></textarea>'
+					+'</li>'
+					+'</ul>'
+					+'</div>'
+					+'</div>'
+					+'<div class="svc_ipbox svc_ipbox_2">'
+					+'<div class="ipbox ipbox3">'
+					+'<ul>'
+					+'<li>'
+					+'<label><span class="ch">*</span>Provider</label>'
+					+'<select  class="selectbox white pline sel_4"  name="provider">'
+					+'<option value="">Select Provider</option>'
+					+'</select>'
+					+'</li>'
+					+'<li>'
+					+'<label><span class="ch">*</span>Connection Name</label>'
+					+'<select class="selectbox white pline sel_4" name="connectionName">'
+					+'<option value="1">Select Connection</option>'
+					+'</select>'
+					+'</li>'
+					+'</ul>'
+					+'</div>'
+					+'</div>'
+					+'<div class="svc_ipbox svc_ipbox_2">'
+					+'<div class="ipbox ipbox3">'
+					+'<ul>'
+					+'<li>'
+					+'<label><span class="ch">*</span>Where</label>'
+					+'<select class="selectbox white pline sel_4" id="cp_region" readonly>'
+					+'<option value="1">Select CP & Region</option>'
+					+'</select>'
+					+'</li>'
+					+'<li>'
+					+'<label><span class="ch">*</span>which OS</label>'
+					+'<select class="selectbox white pline sel_4">'
+					+'<option value="1">Select OS Platform</option>'
+					+'</select>'
+					+'</li>'
+					+'</ul>'
+					+'</div>'
+					+'<div class="ipbox ipbox4 ipbox5">'
+					+'<ul>'
+					+'<li>'
+					+'<label>vCPU core</label>'
+					+'<div class="spec_select_box">'
+					+'<div class="s_slider_box">'
+					+'<div class="slider_ip">'
+					+'<button type="button" class="btn_s btn_s_minus">-</button>'
+					+'<div>'
+					+'<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />'
+					+'</div>'
+					+'<button type="button" class="btn_s btn_s_plus">+</button>'
+					+'</div>'
+					+'<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />'
+					+'</div>'
+					+'<span class="stxt">Unit</span>'
+					+'</div>'
+					+'</li>'
+					+'<li>'
+					+'<label>memory</label>'
+					+'<div class="spec_select_box">'
+					+'<div class="s_slider_box">'
+					+'<div class="slider_ip">'
+					+'<button type="button" class="btn_s btn_s_minus">-</button>'
+					+'<div>'
+					+'<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="1000" data-slider-step="1" data-slider-value="0" />'
+					+'</div>'
+					+'<button type="button" class="btn_s btn_s_plus">+</button>'
+					+'</div>'
+					+'<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />'
+					+'</div>'
+					+'<span class="stxt">Unit</span>'
+					+'</div>'
+					+'</li>'
+					+'</ul>'
+					+'</div>'
+					+'</div>'
+					+''
+					+'<div class="svc_ipbox svc_ipbox_2">'
+					+'<div class="ipbox ipbox3">'
+					+'<ul>'
+					+'<li>'
+					+'<label><span class="ch">*</span>Access (ssh key)</label>'
+					+'<select class="selectbox white pline sel_3">'
+					+'<option value="1">All</option>'
+					+'</select>'
+					+'<span class="sbox">'
+					+'<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_4 search_ip" title="" />'
+					+'<input type="submit" name="" class="btn_search" value="" title="" />'
+					+'</span>'
+					+'</li>'
+					+'</ul>'
+					+'</div>'
+					+'<div class="ipbox ipbox4">'
+					+'<ul>'
+					+'<li>'
+					+'<input type="text" name="" value="" placeholder="" class="gray ip_3" title=""readonly />'
+					+'</li>'
+					+'</ul>'
+					+'</div>'
+					+'</div>'
+					+''
+					+'</div>'
+				
+					+'<div class="btnbox spec_select_box">'
+					+'<div class="btn_right">'
+					+''
+					+'<div class="amount_add s_slider_box">'
+					+'<input type="text" name="" value="0" placeholder="" class="a_ip components_input" title="" disabled />'
+					+'<a href="javascript:void(0);" class="btn_add btn_s_plus"></a>'
+					+'<div class="add_box">'
+					+'<div class="a_box">'
+					+'<strong class="t font-NotoKR">추가 수량</strong>'
+					+'<div class="a_slider">'
+					+'<div class="slider_ip">'
+					+'<button type="button" class="btn_s btn_s_minus">-</button>'
+					+'<div>'
+					+'<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />'
+					+'</div>'
+					+'<button type="button" class="btn_s btn_s_plus">+</button>'
+					+'</div>'
+					+'<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />'
+					+'</div>'
+					+'</div>'
+					+'</div>'
+					+'</div>'
+					+'<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="simple_btn();"><span>DONE</span></button>'
+					+'<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button>'
+					+'</div>'
+				
+					+'</div>'
+					+'</div>'
+					+'</form>'
+					
+					$("#simple_server_config").append(html);
+					}
+					</script>
 {{end}}

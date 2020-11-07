@@ -143,7 +143,7 @@ $(function() {
 	//Server List scrollbar
 	jQuery('.ds_cont .listbox.scrollbar-inner').scrollbar();
 	//selectbox
-	jQuery('.selectbox').niceSelect();
+	//jQuery('.selectbox').niceSelect();
 	
 	/* lnb s */
 	var $menu_li = $('.menu > li'),

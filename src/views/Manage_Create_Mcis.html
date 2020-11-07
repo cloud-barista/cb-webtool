@@ -105,7 +105,9 @@
 </div>
 {{template "Header" .}}
 {{template "Modal" .}}
-				
+				<script>
+			
+				</script>
 				<!-- contents -->
 				<div class="contbox">
 					
@@ -177,6 +179,9 @@
 															var $Servers = $(".servers_config");
 															var $NewServers = $(".new_servers_config");
 															var $SimpleServers = $(".simple_servers_config");
+															var simple_config_cnt = 0;
+															var expert_config_cnt = 0;
+															
 															check.click(function(){
 																$(".switch span.txt_c").toggle();
 																$Servers.removeClass("active");
@@ -194,21 +199,25 @@
 															// Simple add
 														  $(".servers_box .switch").change(function() {
 														    if ($(".switch .ch").is(":checked")) {	
-																	$('.servers_box .server_add').click(function(){
+																	$('.servers_box .server_add').click(function(){	
+																		
 																		$NewServers.addClass("active");
 																		$SimpleServers.removeClass("active");		
 																	});
 														    } else {
 																	$('.servers_box .server_add').click(function(){
+																	
 																		$NewServers.removeClass("active");
 																		$SimpleServers.addClass("active");
+																	
+																	
 																	});		
 														    }
 														  });
 														});
 													</script>													
 													<div class="list">
-														<ul>
+														<ul id="mcis_server_list">
 															<!-- <li>
 																<div class="server server_on bgbox_b">
 																	<div class="icon"></div>
