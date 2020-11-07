@@ -33,13 +33,13 @@
 						<ul>
 							<li>
 								<label><span class="ch">*</span>Provider</label>
-								<select  class="selectbox white pline sel_4"  name="provider"  id="select_provider">
+								<select  class="selectbox white pline sel_4"  name="provider"  id="select_provider" onchange="changeProvider(this.value,'configName');">
 									<option value="">Select Provider</option>
 								</select>
 							</li>
 							<li>
 								<label><span class="ch">*</span>Connection Name</label>
-								<select class="selectbox white pline sel_4" name="connectionName">
+								<select class="selectbox white pline sel_4" name="connectionName" id="configName" onchange="changeConnectionInfo(this.value);">
 									<option value="1">Select Connection</option>
 								</select>
 							</li>
@@ -64,7 +64,7 @@
 							</li>
 						</ul>
 					</div>
-					<div class="ipbox ipbox4 ipbox5">
+					<!-- <div class="ipbox ipbox4 ipbox5">
 						<ul>
 							<li>
 								<label>vCPU core</label>
@@ -99,7 +99,7 @@
 								</div>
 							</li>
 						</ul>
-					</div>
+					</div> -->
 				</div>
 				
 				<div class="svc_ipbox svc_ipbox_2">
@@ -107,7 +107,7 @@
 						<ul>
 							<li>
 								<label><span class="ch">*</span>Access (ssh key)</label>
-								<select class="selectbox white pline sel_3">
+								<select class="selectbox white pline sel_3" id="sshKey">
 									<option value="1">All</option>
 								</select>
 								<span class="sbox">
@@ -132,7 +132,9 @@
 				<div class="btn_right">
 					
 					<div class="amount_add s_slider_box">
+						<a href="javascript:void(0);" class="btn_ btn_s_minus"></a>
 						<input type="text" name="" value="0" placeholder="" class="a_ip components_input" title="" disabled />
+
 						<a href="javascript:void(0);" class="btn_add btn_s_plus"></a>
 						<div class="add_box">
 							<div class="a_box">
@@ -173,6 +175,31 @@
 				
 			})
 
+			function changeProvider(provider, target){
+				var url = SpiderURL+"/connectionconfig";
+
+				var apiInfo = ApiInfo
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
+					var data = result.data.connectionconfig
+					var html = "<option value=''>Select Connection Config</option>"
+					console.log("connection data : ",data);
+					if(data){
+						data.filter(csp=> csp.ProviderName === provider ).map(item =>(
+							html += '<option value="'+item.ConfigName+'" item="'+item.ProviderName+'">'+item.ConfigName +'</option>'
+						))
+						console.log('html connection config : ',html)
+						$("#"+target).empty()
+						$("#"+target).append(html)
+					}
+
+
+				})
+			}
+
 			function getCloudOS(url, apiInfo, target){
 				var req_url = url+"/cloudos"
 				var initCSP = ""
@@ -191,6 +218,130 @@
 					$("#"+target).append(html)
 				}) 
 			}
+			function changeConnectionInfo(configName){
+		
+                getImageInfo(configName);
+                getSecurityInfo(configName);
+                getSSHKeyInfo(configName);
+                getVnetInfo(configName);
+			}
+			
+			function getImageInfo(configName){
+				console.log("1 : ",configName);
+				 var configName = configName;
+				 if(!configName){
+					 configName = $("#configName option:selected").val();
+				 }
+				 console.log("2 : ",configName);
+			 
+				 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
+				 var html = "";
+				 var apiInfo = ApiInfo
+				 axios.get(url,{
+					 headers:{
+						 'Authorization': apiInfo
+					 }
+				 }).then(result=>{
+					 console.log("Image Info : ",result.data)
+					 data = result.data.image
+					 if(!data){
+						 alert("등록된 이미지 정보가 없습니다.")
+						 location.href = "/Image/reg"
+						 return;
+					 }
+					 for(var i in data){
+						 if(data[i].connectionName == configName){
+							 html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
+						 }
+					 }
+					 $("#image").empty();
+					 $("#image").append(html);
+					 
+				 })
+			 }
+ 			function getSecurityInfo(configName){
+				 var configName = configName;
+				 if(!configName){
+					 configName = $("#configName option:selected").val();
+				 }
+				 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup";
+				 var html = "";
+				 var apiInfo = ApiInfo
+				 axios.get(url,{
+					 headers:{
+						 'Authorization': apiInfo
+					 }
+				 }).then(result=>{
+					 data = result.data.securityGroup
+					 for(var i in data){
+						 if(data[i].connectionName == configName){
+							 html += '<option value="'+data[i].id+'" >'+data[i].cspSecurityGroupName+'('+data[i].id+')</option>'; 
+						 }
+					 }
+				   
+					 $("#sg").empty();
+					 $("#sg").append(html);
+					 
+				 })
+			 }
+			function getSSHKeyInfo(configName){
+				 var configName = configName;
+				 if(!configName){
+					 configName = $("#configName option:selected").val();
+				 }
+				 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey";
+				 var html = "";
+				 var apiInfo = ApiInfo
+				 axios.get(url,{
+					 headers:{
+						 'Authorization': apiInfo
+					 }
+				 }).then(result=>{
+					 console.log("sshKeyInfo result :",result)
+					 data = result.data.sshKey
+					 for(var i in data){
+						 if(data[i].connectionName == configName){
+							 html += '<option value="'+data[i].id+'" >'+data[i].cspSshKeyName+'('+data[i].id+')</option>'; 
+						 }
+					 }
+					 $("#sshKey").empty();
+					 $("#sshKey").append(html);
+					 
+				 })
+			 }
+			function getVnetInfo(configName){
+                var configName = configName;
+                if(!configName){
+                    configName = $("#configName option:selected").val();
+                }
+                var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
+                var html = "";
+                var html2 = "";
+                var apiInfo = ApiInfo
+                axios.get(url,{
+                    headers:{
+                        'Authorization': apiInfo
+                    }
+                }).then(result=>{
+                    data = result.data.vNet
+                    console.log("vNetwork Info : ",result)
+                    for(var i in data){
+                        if(data[i].connectionName == configName){
+                            html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
+                            var subnetInfoList = data[i].subnetInfoList
+                            for(var k in subnetInfoList){
+                                html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].IPv4_CIDR+'</option>'; 
+                            }
+                        }
+                    }
+                    $("#vnet").empty();
+                    $("#vnet").append(html);
+                    $("#subnet").empty();
+                    $("#subnet").append(html2);
+                    
+                })
+            }
+			
 			function getConnectionInfo(provider, target){
                 var url = SpiderURL+"/connectionconfig";
                 console.log("provider : ",provider)
@@ -234,7 +385,7 @@
                     
                 })
             }
-			 function getConnectionInfo(provider){
+			function getConnectionInfo(provider){
                 var url = SpiderURL+"/connectionconfig";
                 console.log("provider : ",provider)
                 //var provider = $("#provider option:selected").val();
@@ -247,32 +398,20 @@
                 }).then(result=>{
                     var data = result.data.connectionconfig
                     console.log("connection data : ",data);
-                    var count = 0; 
-                    var configName = "";
-                    var confArr = new Array();
-                    for(var i in data){
-                        if(provider == data[i].ProviderName){ 
-                            count++;
-                            html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
-                            configName = data[i].ConfigName
-                            confArr.push(data[i].ConfigName)
-                            
-                        }
-                    }
-                    if(count == 0){
-                        alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
-                            html +='<option selected>Select Configname</option>';
-                    }
-                    if(confArr.length > 1){
-                        configName = confArr[0];
-                    }
-                    $("#configName_"+cnt+"").empty();
-                    $("#configName_"+cnt+"").append(html);
-                    getImageInfo(configName,cnt);
-                    getSecurityInfo(configName,cnt);
-                    getSSHKeyInfo(configName,cnt);
-                  //  getPublicIPInfo(configName,cnt);
-                    getVnetInfo(configName,cnt);
+
+					if(data){
+						data.filter(csp => csp.ProviderName === provider).map(item =>(
+							html += '<option value="'+item.ConfigName+'" item="'+item.ProviderName+'">'+item.ConfigName+'</option>'
+						))
+					}
+                   
+                    $("#configName").empty();
+					$("#configName").append(html);
+					
+                    getImageInfo(configName);
+                    getSecurityInfo(configName);
+                    getSSHKeyInfo(configName);
+                    getVnetInfo(configName);
 
                     
                 })
@@ -304,6 +443,7 @@
 					$("#cp_region").append(html);
 				})
 			}
+			
 			const Simple_Server_Config_Arr = new Array();
 			var simple_data_cnt = 0
 			function simple_btn(){
@@ -337,7 +477,7 @@
 			}
 			
 
-			function simple_config_form(cnt){
+		function simple_config_form(cnt){
 				console.log("simple_config_form cnt : ",cnt)
 				if(cnt == 0){
 					return;
@@ -501,6 +641,6 @@
 					+'</form>'
 					
 					$("#simple_server_config").append(html);
-					}
-					</script>
+		}
+</script>
 {{end}}
