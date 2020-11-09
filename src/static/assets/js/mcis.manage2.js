@@ -74,6 +74,9 @@ function show_mcis2(url){
          var html = "";
          var run_cnt = 0;
          var stop_cnt = 0;
+         var mcis_run_cnt = 0;
+         var mcis_stop_cnt = 0;
+         var mcis_terminated_cnt = 0;
          for(var i in mcis){
             count++;
            var vm_run_cnt = 0;
@@ -139,12 +142,15 @@ function show_mcis2(url){
              //MCIS name  / MCIS 상태
              if(status == "running"){
                 mcis_badge += 'state color_b'
+                mcis_run_cnt++;
              }else if(status == "include" ){
                 mcis_badge += 'state color_y'
              }else if(status == "suspended"){
                 mcis_badge += 'state color_y'
+                mcis_stop_cnt++;
              }else if(status == "terminate"){
                 mcis_badge += 'state color_r'
+                mcis_terminated_cnt;
              }else{
                 mcis_badge += 'state color_g'
              }
@@ -306,13 +312,13 @@ function short_desc(str){
             console.log("mcis Status 1: ", mcis[i].status)
             console.log("mcis Status 2: ", status)
              if(status == "running"){
-                badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+                badge += '<img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span>'
              }else if(status == "include" ){
-                badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+                badge += '<img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span>'
              }else if(status == "suspended"){
-                badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+                badge += '<img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span>'
              }else if(status == "terminate"){
-                badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+                badge += '<img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span>'
              }else{
                 badge += '<span class="badge badge-pill badge-warning">'+sta+'</span>'
              }
@@ -320,33 +326,15 @@ function short_desc(str){
              if(count == 1){
 
              }
-             html += '<tr id="tr_id_'+count+'" >'
-              +'<td class="text-center">'
-              +'<div class="form-input">'
-              +'<span class="input">'
-              +'<input type="checkbox" class="chk" id="chk_'+count+'" value="'+mcis[i].id+'" item="'+mcis[i].name+'"><i></i></span></div>'
-              +'</td>'
-              +'<td>'
-              +badge
-              +'</td>'
-              +'<td><a href="#!" onclick="show_vmList(\''+mcis[i].id+'\')">'+mcis[i].name+'</a></td>'
-              +'<td>'+vm_len+'</td>'
-              +'<td>'+vm_len+'</td>'
-              +'<td>0</td>'
-              +'<td>'+short_desc(mcis[i].description)+'</td>'
-              +'<td>'
-              +'<button type="button" class="btn btn-icon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-              +'<i class="fas fa-edit"></i>'
-              +'<div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">'
-              +'<h6 class="dropdown-header text-center" style="background-color:#F2F4F4;;cursor:default;"><i class="fas fa-recycle"></i> LifeCycle</h6>'
-                  +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'resume\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Resume</a>'
-                  +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'suspend\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Suspend</a>'
-                  +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'reboot\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Reboot</a>'
-                  +'<a class="dropdown-item text-right" href="#!" onclick="life_cycle(\'mcis\',\'terminate\',\''+mcis[i].id+'\',\''+mcis[i].name+'\')">Terminate</a>'
-              +'</div>'
-              +'</button>'
-             +'</td>'
-             +'</tr>';
+             html += '<tr>'
+                  +'<td class="overlay hidden td_left" data-th="Status">'+badge+'</td>'
+                  +'<td class="btn_mtd ovm" data-th="Name">mcis-t02 <span class="ov"></span></td>'
+                  +'<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>'
+                  +'<td class="overlay hidden" data-th="Total Infras">9</td>'
+                  +'<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>'
+                  +'<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>'
+                  +'<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch2" title="" /><label for="td_ch2"></label></td>'
+                  +'</tr>'
         }
         
         $("#table_1").empty();
@@ -367,6 +355,136 @@ function short_desc(str){
         $("#mcis_name").val(mcis[0].name)
     });
  }
+ function getConnection(){
+    var apiInfo = ApiInfo;
+    $.ajax({
+        url: SpiderURL+"/connectionconfig",
+        async:false,
+        type:'GET',
+        beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
+       
+
+    }).done( function(data2){
+        res = data2.connectionconfig
+        console.log("connection info : ",res);
+        var provider = "";
+        var aws_cnt = 0;
+        var gcp_cnt = 0;
+        var azure_cnt = 0;
+        var open_cnt = 0;
+        var cloudIt_cnt = 0;
+        var ali_cnt = 0;
+        var cp_cnt = 0;
+        var connection_cnt = 0;
+        var html = "";
+        for(var k in res){
+            provider = res[k].ProviderName 
+            connection_cnt++;
+            provider = provider.toLowerCase();
+            console.log("provider lowercase : ",provider);
+            
+            if(provider == "aws"){
+                aws_cnt++;  
+             
+            }
+            if(provider == "azure"){
+                azure_cnt++;
+                 
+            }
+            if(provider == "alibaba"){
+                ali_cnt++;
+              
+                    
+            }
+            if(provider == "gcp"){
+                gcp_cnt++;
+            
+            }
+            if(provider == "cloudit"){
+                cloudIt_cnt++;
+              
+            }
+            if(provider == "openstack"){
+                open_cnt++;
+              
+            }
+        }
+        
+        
+        if(aws_cnt > 0 ){
+           
+            html +='<li class="bg_b">'
+                 +'<a href="#!"><span>AWS('
+                 +aws_cnt
+                 +')</span></a></li>';          
+        }
+        if(azure_cnt > 0){
+            html +='<li class="bg_y">'
+                 +'<a href="#!"><span>AZ('
+                 +azure_cnt
+                 +')</span></a></li>';       
+        }
+        if(ali_cnt > 0){
+           
+            html +='<li class="bg_r">'
+                 +'<a href="#!"><span>ALI('
+                 +ali_cnt
+                 +')</span></a></li>';       
+                
+        }
+        if(gcp_cnt > 0){
+          
+            html +='<li class="bg_g">'
+            +'<a href="#!"><span>GCP('
+            +gcp_cnt
+            +')</span></a></li>';     
+        }
+        if(cloudIt_cnt > 0){
+          
+            html +='<li class="bg_n">'
+            +'<a href="#!"><span>CLIT('
+            +cloudIt_cnt
+            +')</span></a></li>';  
+        }
+        if(open_cnt > 0){
+           
+            html +='<li class="bg_b">'
+            +'<a href="#!"><span>OPS('
+            +open_cnt
+            +')</span></a></li>';  
+        }
+
+        if(aws_cnt > 1){
+            aws_cnt = 1
+        }
+        if(azure_cnt > 1){
+            azure_cnt = 1
+        }
+        if(ali_cnt > 1){
+            ali_cnt = 1
+        }
+        if(open_cnt > 1){
+            open_cnt = 1
+        }
+        if(cloudIt_cnt > 1){
+            cloudIt_cnt = 1
+        }
+        if(gcp_cnt > 1){
+            gcp_cnt = 1
+        }
+
+        cp_cnt = aws_cnt+azure_cnt+ali_cnt+open_cnt+cloudIt_cnt+gcp_cnt;
+        var str = '<strong>'+cp_cnt+'</strong><span>/</span>'+connection_cnt;
+        $("#dash_2").empty();
+        $("#dash_2").append(str);
+        $("#dash_3").empty();
+        $("#dash_3").append(html);
+    })
+    
+}
  function show_vmList(mcis_id){
    
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
