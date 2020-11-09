@@ -163,7 +163,7 @@
 						<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
 						
 					</div>
-				
+				</div>
 			</div>
 			<!-- //button -->
 		</div>
@@ -495,19 +495,40 @@
 			
 			const Simple_Server_Config_Arr = new Array();
 			var simple_data_cnt = 0
+			const cloneObj = obj=>JSON.parse(JSON.stringify(obj))
 			function simple_btn(){
 				var simple_form = $("#simple_form").serializeObject()
-				
 				var server_name = simple_form.name
-				$(".simple_servers_config").removeClass("active");
-				Simple_Server_Config_Arr.push(simple_form);
-				add_server_html ='<li onclick="view_simple(\''+simple_data_cnt+'\')">'
+				var server_cnt = parseInt(simple_form.vm_add_cnt)
+				console.log('server_cnt : ',server_cnt)
+				var add_server_html = "";
+				
+				if(server_cnt > 1){
+					for(var i = 1; i <= server_cnt; i++){
+						var new_vm_name = server_name+"-"+i;
+						var object = cloneObj(simple_form)
+						object.name = new_vm_name
+						
+						add_server_html +='<li onclick="view_simple(\''+simple_data_cnt+'\')">'
 								+'<div class="server server_on bgbox_b">'
 								+'<div class="icon"></div>'
-								+'<div class="txt">'+server_name+'</div>'
+								+'<div class="txt">'+new_vm_name+'</div>'
 								+'</div>'
-							    +'</li>';
+								+'</li>';
+						Simple_Server_Config_Arr.push(object)
+						console.log(i+"번째 Simple form data 입니다. : ",object);
+					}
+				}else{
+					Simple_Server_Config_Arr.push(simple_form)
+					add_server_html +='<li onclick="view_simple(\''+simple_data_cnt+'\')">'
+									+'<div class="server server_on bgbox_b">'
+									+'<div class="icon"></div>'
+									+'<div class="txt">'+server_name+'</div>'
+									+'</div>'
+									+'</li>';
 
+				}
+				$(".simple_servers_config").removeClass("active");
 				$("#mcis_server_list").prepend(add_server_html)
 				console.log("simple btn click and simple form data : ",simple_form)
 				console.log("simple data array : ",Simple_Server_Config_Arr);

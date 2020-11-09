@@ -171,7 +171,7 @@
 												<!-- servers -->
 												<div class="servers_box">
 													<div class="title">Servers</div>
-													<div class="switch"><span class="txt">Expert <span class="txt_c on">ON</span><span class="txt_c off d_none">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title="" checked /><span></span></label></div>
+													<div class="switch"><span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title=""  /><span></span></label></div>
 													<script>
 														$(document).ready(function(){
 															//Servers Expert on/off
@@ -184,12 +184,12 @@
 															
 															check.click(function(){
 																$(".switch span.txt_c").toggle();
-																$Servers.removeClass("active");
+																$NewServers.removeClass("active");
 															});
 														   
 														  //Expert add
 															$('.servers_box .server_add').click(function(){
-																$SimpleServers.toggleClass("active");
+																$NewServers.toggleClass("active");
 														  	if($Servers.hasClass("active")) {
 														    	$Servers.toggleClass("active");
 														    } else {
