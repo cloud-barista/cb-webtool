@@ -2,10 +2,11 @@
 <div class="servers_config simple_servers_config" id="simple_server_config">
 	<form id="simple_form">	
 		<input type="hidden" name="provider" id="" />	
-		<input type="hidden" name="installMonAgent"  value="" id="s_installMonAgent" />
-		<input type="hidden" name="specId"  value="" id="s_specId" />
+		<input type="hidden" name="installMonAgent"  value="yes" id="s_installMonAgent" />
+		<!-- <input type="hidden" name="specId"  value="" id="s_specId" /> -->
 		<input type="hidden" name="subnetId"  value="" id="s_subnetId"/>
-		<input type="hidden" name="vNetId"  value="" id="s_vNetId"/>				
+		<input type="hidden" name="vNetId"  value="" id="s_vNetId"/>	
+		<input type="hidden" name="securityGroups"  value="" id="s_vNetId"/>			
 		<div class="top_box">
 			<div class="titbox_sc">
 				<div class="tit">Simple Server Configuration</div>
@@ -18,7 +19,7 @@
 						<ul>
 							<li>
 								<label><span class="ch">*</span>Server Name</label>
-								<input type="text" name="vm_name" value="" placeholder="Input Name" class="pline ip_3" title=""  />
+								<input type="text" name="name" value="" placeholder="Input Name" class="pline ip_3" title=""  />
 							</li>
 						</ul>
 					</div>
@@ -26,7 +27,7 @@
 						<ul>
 							<li>
 								<label>Description</label>
-								<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_3" title=""  ></textarea>
+								<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_3" title=""  name="description"></textarea>
 							</li>
 						</ul>
 					</div>
@@ -111,35 +112,31 @@
 						<ul>
 							<li>
 								<label><span class="ch">*</span>Access (ssh key)</label>
-								<select class="selectbox white pline sel_3" id="sshKey">
+								<select class="selectbox white pline sel_4" id="sshKey" name="sshKeyId">
 									<option value="">Select SSH Key</option>
 								</select>
-								<span class="sbox">
+								<!-- <span class="sbox">
 									<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_4 search_ip" title="" />
 									<input type="submit" name="" class="btn_search" value="" title="" />
-								</span>
+								</span> -->
 							</li>
 						</ul>
 					</div>
-					<div class="ipbox ipbox4">
+					<!-- <div class="ipbox ipbox4">
 						<ul>
 							<li>
 								<input type="text" name="" value="" placeholder="" class="gray ip_3" title=""readonly />
 							</li>
 						</ul>
-					</div>
+					</div> -->
 				</div>
 				
 			</div>
 			<!-- button -->
 			<div class="btnbox spec_select_box">
-				<div class="btn_right">
+				<div class="svc_ipbox svc_ipbox_2">
 					
 					<div class="amount_add s_slider_box">
-						<a href="javascript:void(0);" class="btn_ btn_s_minus"></a>
-						<input type="text" name="" value="0" placeholder="" class="a_ip components_input" title="" disabled />
-
-						<a href="javascript:void(0);" class="btn_add btn_s_plus"></a>
 						<div class="add_box">
 							<div class="a_box">
 								<strong class="t font-NotoKR">추가 수량</strong>
@@ -151,16 +148,21 @@
 										</div>
 										<button type="button" class="btn_s btn_s_plus">+</button>
 									</div>
-									<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+									<input type="text" name="vm_add_cnt" value="0" placeholder="0" class="components_input txt_ipbox" title="" readonly id="vm_add_cnt"/>
 								</div>
 							</div>
 						</div>
 					</div>
 					
-					<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="simple_btn();"><span>DONE</span></button> 
-					<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
-					
 				</div>
+
+				<div class="btnbox spec_select_box">
+					<div class="btn_right">
+						
+						<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="simple_btn();"><span>DONE</span></button> 
+						<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
+						
+					</div>
 				
 			</div>
 			<!-- //button -->
@@ -307,7 +309,7 @@
 					if(data){
 						html +="<option value=''>Select SpecName</option>"
 						data.filter(csp => csp.connectionName === configName).map(item =>(
-							html += '<option value="'+item.id+'">'+item.name+'</option>'	
+							html += '<option value="'+item.id+'">'+item.name+'('+item.cspSpecName+')</option>'	
 						))
 
 					}else{
