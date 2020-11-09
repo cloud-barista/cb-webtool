@@ -134,7 +134,7 @@ function show_mcis_list(url){
 
              }
              
-             html +='<tr>'
+             html +='<tr onclick="click_view(\''+mcis[i].id+'\',\''+i+'\');" id="server_info_tr_'+i+'">'
              //MCIS name  / MCIS 상태
              if(status == "running"){
                html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span></td>'
@@ -200,11 +200,40 @@ function show_mcis_list(url){
        
         $("#th_chall").click(function() {
             if ($("#th_chall").prop("checked")) {
-              $("input[name=chk]").prop("checked", true);
+                $("input[name=chk]").prop("checked", true);
             } else {
-              $("input[name=chk]").prop("checked", false);
+                $("input[name=chk]").prop("checked", false);
             }
-          })
+        })
+
+        // $(".dashboard .status_list tbody tr").each(function(){
+        //     var $td_list = $(this),
+        //             $status = $(".server_status"),
+        //             $detail = $(".server_info");
+          
+        //     $td_list.off("click").click(function(){
+        //           $td_list.addClass("on");
+        //           $td_list.siblings().removeClass("on");
+        //           $status.addClass("view");
+        //           $status.siblings().removeClass("on");
+        //         $(".dashboard.register_cont").removeClass("active");
+        //          $td_list.off("click").click(function(){
+        //               if( $(this).hasClass("on") ) {
+        //                   console.log("1번에 걸린다.")
+        //                   $td_list.removeClass("on");
+        //                   $status.removeClass("view");
+        //                   $detail.removeClass("active");
+        //           } else {
+        //             console.log("아니다 2번에 걸린다.")
+        //                   $td_list.addClass("on");
+        //                   $td_list.siblings().removeClass("on");
+        //                   $status.addClass("view");
+        //                   $status.siblings().removeClass("view");
+        //                 $(".dashboard.register_cont").removeClass("active");
+        //           }
+        //           });
+        //       });
+        //   });
           
         $(window).on("load resize",function(){
             var vpwidth = $(window).width();
@@ -220,6 +249,20 @@ function show_mcis_list(url){
     }).catch(function(error){
      console.log("show mcis error at dashboard js: ",error);
     });
+ }
+ function click_view(id,index){
+     console.log("click view mcis id :",id)
+    
+    show_mcis(id,index);
+
+    
+     
+     
+
+    
+    
+   
+    
  }
 // MCIS Control 
 function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
@@ -269,84 +312,128 @@ function short_desc(str){
 
     return result;
  }
- function show_mcis(url){
-     console.log("Show mcis Url : ",url)
-    var html = "";
+ function show_mcis(mcis_id, index){
+    var nameSpace = NAMESPACE;
+    var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id
+    console.log("Show mcis Url : ",url)
+    
     var apiInfo = ApiInfo
     axios.get(url,{
         headers:{
             'Authorization': apiInfo
         }
     }).then(result=>{
-        var data = result.data;
-        if(!data.mcis){
-           location.href = "/MCIS/reg";
-           return;
-        }
-         console.log("showmcis Data : ",data)
-         var html = "";
-         var mcis = data.mcis;
-         var len = mcis.length;
-         var count = 0;
+        var mcis = result.data;
+         console.log("showmcis Data : ",mcis)
+         var mcis_badge = "";
          
-         
-         for(var i in mcis){
-             var sta = mcis[i].status;
+        
+             var sta = mcis.status;
              var sl = sta.split("-");
-             var badge = "";
+             
              var status = sl[0].toLowerCase()
-             var vms = mcis[i].vm
+             var vms = mcis.vm
              var vm_len = 0
-            
+             var provider = new Array();
+             var vm_badge = ""
              if(vms){
                 vm_len = vms.length
+                
+                
+                for(var o in vms){
+                   var vm_status = vms[o].status
+                   var lat = vms[o].location.latitude
+                   var long = vms[o].location.longitude
+                   provider.push(vms[o].location.cloudType)
+   
+                   if(vm_status == "Running"){
+                       vm_badge += '<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">'+vms[o].name+'</span></a></li>';
+                     
+                    }else if(vm_status == "include" ){
+                        vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">'+vms[o].name+'</span></a></li>';
+                    }else if(vm_status == "Suspended"){
+                        vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">'+vms[o].name+'</span></a></li>';
+                      
+                    }else if(vm_status == "Terminated"){
+                        vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">'+vms[o].name+'</span></a></li>';
+                      
+                    }else{
+                       vm_badge += "shot bgbox_g"
+                    }
+   
+                }
+                $("#mcis_server_info_box").empty();
+                $("#mcis_server_info_box").append(vm_badge);
              }
-             
 
-            console.log("mcis Status 1: ", mcis[i].status)
+             var csp = ""
+             if(provider){
+                 if(provider.length > 1){
+                     csp = provider.join(",")
+                 }else if(provider.length == 1){
+                     csp = provider[0]
+                 }
+             }
+             $("#mcis_info_cloud_connection").val(csp)
+
+            console.log("mcis Status 1: ", mcis.status)
             console.log("mcis Status 2: ", status)
              if(status == "running"){
-                badge += '<img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span>'
+                mcis_badge = '<img src="/assets/img/contents/icon_running_db.png" alt=""/> '
              }else if(status == "include" ){
-                badge += '<img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span>'
+                mcis_badge = '<img src="/assets/img/contents/icon_stop_db.png"  alt=""/> '
              }else if(status == "suspended"){
-                badge += '<img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span>'
+                mcis_badge = '<img src="/assets/img/contents/icon_stop_db.png" alt=""/>'
              }else if(status == "terminate"){
-                badge += '<img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span>'
+                mcis_badge = '<img src="/assets/img/contents/icon_terminate_db.png" alt=""/>'
              }else{
-                badge += '<span class="badge badge-pill badge-warning">'+sta+'</span>'
+                
              }
-             count++;
-             if(count == 1){
+            $("#service_status_icon").empty();
+            $("#service_status_icon").append(mcis_badge)
 
-             }
-             html += '<tr>'
-                  +'<td class="overlay hidden td_left" data-th="Status">'+badge+'</td>'
-                  +'<td class="btn_mtd ovm" data-th="Name">mcis-t02 <span class="ov"></span></td>'
-                  +'<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>'
-                  +'<td class="overlay hidden" data-th="Total Infras">9</td>'
-                  +'<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>'
-                  +'<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>'
-                  +'<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch2" title="" /><label for="td_ch2"></label></td>'
-                  +'</tr>'
-        }
-        
-        $("#table_1").empty();
-        $("#table_1").append(html);
-        console.log("VM LEN  :" ,vm_len);
-       // show_card(mcis[0].id);
-        
-       if(vm_len > 0){
-        show_vmList(mcis[0].id);
-       }else{
-        show_vmList("");
-       }
-        
-       
-        
-        //fnMove("table_1");
-        $("#mcis_id").val(mcis[0].id)
-        $("#mcis_name").val(mcis[0].name)
+            var mcis_name = mcis.name
+            var mcis_id = mcis.id
+            var targetStatus = mcis.targetStatus
+            var targetAction = mcis.targetAction
+            var description = mcis.description
+
+            $("#mcis_info_txt").text("[ "+mcis_name+" ]");
+            $("#mcis_server_info_status").empty();
+            $("#mcis_server_info_status").append('<strong>Server List / Status</strong>  <span class="stxt">[ '+mcis_name+' ]</span>  Server('+vm_len+')')
+
+            $("#mcis_info_name").val(mcis_name+" / "+mcis_id)
+            $("#mcis_info_description").val(description);
+            $("#mcis_info_targetStatus").val(targetStatus);
+            $("#mcis_info_targetAction").val(targetAction);
+
+            var target = "server_info_tr_"+index
+                $td_list = $("#"+target+"");
+                $status = $(".server_status");
+                console.log("click tr target : ",target)
+                $td_list.off("click").click(function(){
+                    $td_list.addClass("on");
+                    $td_list.siblings().removeClass("on");
+                    $status.addClass("view");
+                    $status.siblings().removeClass("on");
+                $(".dashboard.register_cont").removeClass("active");
+                $td_list.off("click").click(function(){
+                        if( $(this).hasClass("on") ) {
+                            
+                            $td_list.removeClass("on");
+                            $status.removeClass("view");
+                            //$detail.removeClass("active");
+                    } else {
+                    
+                            $td_list.addClass("on");
+                            $td_list.siblings().removeClass("on");
+                            $status.addClass("view");
+                            $status.siblings().removeClass("view");
+                        $(".dashboard.register_cont").removeClass("active");
+                    }
+              });
+        });
+      
     });
  }
  function getConnection(){

@@ -4,7 +4,7 @@
 	
 	<div class="d_box box_m box_w100">
 		<div class="titbox">
-			<div class="tit initial"><strong>MCIS Info</strong> <span class="stxt">[ mcis-t03 ]</span></div>
+			<div class="tit initial"><strong>MCIS Info</strong> <span class="stxt" id="mcis_info_txt">[ mcis-t03 ]</span></div>
 			<div class="top_info">
 				<ul>
 					<li>
@@ -105,17 +105,17 @@
 					<span class="txt">서비스 상태<br /> 아이콘</span>
 					<input type="file" id="file" name="file" class="file_ip_hidden" title="" />
 					<input type="button" name="" value="" class="btn_file" title="" />
-					<div class="img"></div>
+					<div class="img" id="service_status_icon"><img src="/assets/img/contents/icon_running_db.png" alt=""></div>
 				</div>
 				<div class="boxlist ipbox ip1">
 					<ul>
 						<li>
 							<label>Name</label>
-							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly />
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly  id="mcis_info_name"/>
 						</li>
 						<li>
 							<label>Description</label>
-							<input type="text" name="" value="" placeholder="description" title="" readonly />
+							<input type="text" name="" value="" placeholder="description" title="" readonly id="mcis_info_description"/>
 						</li>
 					</ul>
 				</div>
@@ -124,11 +124,11 @@
 					<ul>
 						<li>
 							<label>targetStatus</label>
-							<input type="text" name="" value="" placeholder="None" title="" readonly />
+							<input type="text" name="" value="" placeholder="None" title="" readonly id="mcis_info_targetStatus"/>
 						</li>
 						<li>
 							<label>targetAction</label>
-							<input type="text" name="" value="" placeholder="None" title="" readonly />
+							<input type="text" name="" value="" placeholder="None" title="" readonly id="mcis_info_targetAction"/>
 						</li>
 					</ul>
 				</div>
@@ -137,7 +137,7 @@
 					<ul>
 						<li>
 							<label>Cloud Connections</label>
-							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title="" readonly />
+							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title="" id="mcis_info_cloud_connection" readonly />
 						</li>
 						<li>
 							<label>Deployment <span>Algorithm</span></label>
@@ -163,7 +163,7 @@
 				<div class="box">
 					
 					<div class="titbox">
-						<div class="tit initial"><strong>Server List / Status</strong>  <span class="stxt">[ mcis-t03 ]</span>  Server(10)</div>
+						<div class="tit initial" id="mcis_server_info_status"><strong>Server List / Status</strong>  <span class="stxt">[ mcis-t03 ]</span>  Server(10)</div>
 						<div class="top_info">
 							<ul>
 								<li>
@@ -239,27 +239,8 @@
 					<!-- //popup View -->
 					
 					<div class="listbox scrollbar-inner">
-						<ul>
-							<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">Server 1</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 2</span></a></li>
-							<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 3</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 4</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 5</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 6</span></a></li>
-							<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 7</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 8</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 9</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 10</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 11</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 12</span></a></li>
-							<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 13</span></a></li>
-							<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 14</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 15</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 16</span></a></li>
-							<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 17</span></a></li>
-							<li><span class="txt">Server 18</span></li>
-							<li><span class="txt">Server 19</span></li>
-							<li><span class="txt">Server 20</span></li>
+						<ul id="mcis_server_info_box">
+							
 						</ul>
 					</div>
 					
