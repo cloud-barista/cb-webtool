@@ -1,0 +1,171 @@
+{{define "Manage_mcis_popup"}}
+	<!-- Monitoring popup -->
+	<div class="modal fade" id="monitoring_box" tabindex="-1" role="dialog" aria-hidden="true">
+		
+		<!-- <div class="modal-dialog"> -->
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				
+				<div class="modal-body">
+					<div class="pop-body">
+						
+						<div class="titbox">
+							<div class="tit">Enable Monitoring Target</div>
+						</div>
+						
+						<div class="pop-cont">
+							<div class="pop_ip ip1">
+								<ul>
+									<li>
+										<label>MCIS</label>
+								  <select class="selectbox">
+									<option value="1">Select MCIS</option>
+									<option value="2">Select MCIS2</option>
+									<option value="3" disabled> disabled Select MCIS3</option>
+									<option value="4">Select MCIS4</option>
+								  </select>
+									</li>
+									<li>
+										<label>Server</label>
+								  <select class="selectbox">
+									<option value="1">Select Server</option>
+									<option value="2">Select Server2</option>
+									<option value="3">Select Server3</option>
+									<option value="4">Select Server4</option>
+								  </select>
+									</li>
+								</ul>
+							</div>
+							
+							<div class="pop_ip ip2">
+								<ul>
+									<li>
+										<label>Cloud Provider</label>
+								  <select class="selectbox">
+									<option value="1">Select CP</option>
+									<option value="2">Select CP2</option>
+								  </select>
+									</li>
+									<li>
+										<label>Region & zone</label>
+								  <select class="selectbox">
+									<option value="1">Select Region</option>
+									<option value="2">Select Region2</option>
+									<option value="3">Select Region3</option>
+									<option value="4">Select Region4</option>
+								  </select>
+								  <select class="selectbox sel1">
+									<option value="1">Select zone</option>
+									<option value="2">Select zone2</option>
+									<option value="3">Select zone3</option>
+									<option value="4">Select zone4</option>
+								  </select>
+									</li>
+								</ul>
+							</div>
+							
+							<div class="pop_ip ip1 ip3">
+								<ul>
+									<li class="p_line">
+										<label>ID</label>
+										<input type="text" name="" value="" placeholder="input ID" title="" />
+									</li>
+								</ul>
+							</div>
+							
+							<div class="pop_ip ip2 ip4">
+								<ul>
+									<li class="p_line">
+										<label>Access SSH key</label>
+										<input type="text" name="" value="" placeholder="input SSH key" title="" /> 
+										<input type="file" id="file_key" name="file" class="file_ip_hidden" title="" />
+										<span class="sbox"><span class="stxt"><a href="javascript:void(0);" class="btn_import_key">Import key</a></span></span>
+									</li>
+									<li class="p_line">
+										<label></label>
+										<textarea  cols="" rows="" value="" placeholder="type SSH key value" title=""></textarea>
+									</li>
+								</ul>
+							</div>
+							
+						</div>
+						
+					</div>
+					
+					<div class="btnbox">
+						<div class="btn_right">
+							<button name="" value="" class="btn_apply btn_co btn_cr_g" data-toggle="modal" data-target="#Detail_Apply"><span>Apply</span></button> 
+							<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button> 
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+		
+	</div>
+	<!-- //Monitoring popup -->
+	
+	<script>
+		$(function () {
+			$('.pop_ip .btn_import_key').click(function (e) {
+				e.preventDefault();
+				$('#file_key').click();
+			});
+		});
+	</script>
+
+	<!-- popup Apply -->
+	<div class="modal fade layerpopup" id="Detail_Apply" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				
+				<div class="modal-body">
+					<div class="txt">Would you like to enable Monitoring ?</div>
+					<div class="btnbox">
+						<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+						<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- //popup Apply -->
+	<script>
+		$(function() {
+		  return $(".modal").on("show.bs.modal", function() {
+			var curModal;
+			curModal = this;
+			$(".modal").each(function() {
+			  if (this !== curModal) {
+				$(this).modal("hide");
+			  }
+			});
+		  });
+		});		
+		$(document).ready(function() {
+		  $(".switch").change(function() {
+			if ($(".switch .ch").is(":checked")) {
+				$("#monitoring_box").modal();
+			} else {
+			}
+		  });
+		  /*
+			$("#monitoring_box .btnbox .btn_cancel").click(function () {
+			  $(".switch input[type=checkbox]").prop("checked", false);
+			});	
+			*/
+			$("#monitoring_box").on("hidden.bs.modal", function() {
+			  $(".switch input[type=checkbox]").attr("checked", false);
+			});	
+			$("#Detail_Apply").on("hidden.bs.modal", function() {
+			  $(".switch input[type=checkbox]").prop("checked", false);
+			});	
+			
+			
+
+		});
+	</script>
+{{end}}

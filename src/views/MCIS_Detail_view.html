@@ -1,0 +1,145 @@
+{{define "Mcis_detail_view"}}
+<!-- Detail -->
+<div class="tab-pane fade show active" id="Detail">
+	
+	<!-- <div class="top_tit">[ Detail Info for VM ]</div> -->
+	
+	<div class="tab_ipbox">
+		<div class="t_ipbox t_ip1">
+			<ul>
+				<li>
+					<label>Server ID</label>
+					<input type="text" name="" value="D i-0038412b567aadc07" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Server Status</label>
+					<input type="text" name="" value="running" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Server Status</label>
+					<div class="txt_ip"><a href="javascript:void(0);" title="T2.micro">T2.micro</a></div>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="t_ipbox t_ip2">
+			<ul>
+				<li>
+					<label>Public DNS(IPv4)</label>
+					<input type="text" name="" value="-" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Public IP(IPv4)</label>
+					<input type="text" name="" value="xxx.xxx.xxx.xxx" placeholder="" title="" readonly />
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div class="tab_ipbox">
+		<div class="t_ipbox t_ip1">
+			<ul>
+				<li>
+					<label>Region</label>
+					<input type="text" name="" value="서울" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Zone</label>
+					<input type="text" name="" value="ne ap-northeast-2a" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Security Group</label>
+					<div class="txt_ip"><a href="javascript:void(0);" title="launch-wizard-12.">launch-wizard-12.</a>인바운드 규칙 보기. 아웃바운드 규칙 보기</div>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="t_ipbox t_ip2">
+			<ul>
+				<li>
+					<label>Private DNS</label>
+					<input type="text" name="" value="ip-10-0-0-174.ap-northeast-2.compute.internal" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Private IP</label>
+					<input type="text" name="" value="yyy.yyy.yyy.yyy" placeholder="" title="" readonly />
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div class="tab_ipbox">
+		<div class="t_ipbox t_ip1">
+			<ul>
+				<li>
+					<label>Image ID</label>
+					<div class="txt_ip"><a href="javascript:void(0);" title="mcloud-barista-poc-backup (ami-0959312d93cafb4d7)">mcloud-barista-poc-backup (ami-0959312d93cafb4d7)</a></div>
+				</li>
+				<li>
+					<label>Platform</label>
+					<input type="text" name="" value="x86_64" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Operating System</label>
+					<input type="text" name="" value="Linux 6.4" placeholder="" title="" readonly />
+				</li>
+			</ul>
+		</div>
+		
+		<div class="t_ipbox t_ip2">
+			<ul>
+				<li>
+					<label>VPC ID</label>
+					<div class="txt_ip"><a href="javascript:void(0);" title="vpc-0a48f3848d70a5c4a (mcloud-barista-poc)">vpc-0a48f3848d70a5c4a (mcloud-barista-poc)</a></div>
+				</li>
+				<li>
+					<label>subnet ID</label>
+					<div class="txt_ip"><a href="javascript:void(0);" title="subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)">subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)</a></div>
+				</li>
+				<li>
+					<label>Network Interface</label>
+					<div class="txt_ip"><a href="javascript:void(0);" title="eth0">eth0</a></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div class="tab_ipbox">
+		<div class="t_ipbox t_ip1">
+			<ul>
+				<li>
+					<label>Root Device Type</label>
+					<input type="text" name="" value="ebs" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Root Device</label>
+					<input type="text" name="" value="/dev/sda1" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Block Device</label>
+					<input type="text" name="" value="/dev/sda1" placeholder="" title="" readonly />
+				</li>
+			</ul>
+		</div>
+		
+		<div class="t_ipbox t_ip2">
+			<ul>
+				<li>
+					<label>Keypair Name</label>
+					<input type="text" name="" value="mcloud-barista-poc" placeholder="" title="" readonly />
+				</li>
+				<li>
+					<label>Access ID / Pwd</label>
+					<input type="text" name="" value="Id / password" placeholder="" title="" readonly /> <span class="sbox"><span class="stxt">( Comment )</span></span>
+				</li>
+				<li>
+					<label>User ID / Pwd</label>
+					<input type="text" name="" value="Id / password" placeholder="" title="" readonly />
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+</div>
+<!-- //Detail -->	
+{{end}}

@@ -26,7 +26,7 @@ func McisListForm(c echo.Context) error {
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
 		if namespace != "" {
-			return c.Render(http.StatusOK, "MCISlist.html", map[string]interface{}{
+			return c.Render(http.StatusOK, "Manage_Mcis.html", map[string]interface{}{
 				"LoginInfo": loginInfo,
 				"NameSpace": namespace,
 				"comURL":    comURL,
