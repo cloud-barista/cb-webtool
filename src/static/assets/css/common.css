@@ -211,8 +211,8 @@ html, body { height:100%; }
 .bgbox_g { background-color:#5e636c; }
 
 
-/* select */
-.nice-select { background-color:#fff; border-radius:5px; border:none; background-color:#e7ebee; box-sizing:border-box; cursor:pointer; display:inline-block; vertical-align:middle; color:#5e636c; font-weight:300; font-size:15px; height:38px; line-height:38px; outline:none; padding:0 28px 0 15px; position:relative; text-align:left !important; -webkit-transition:all 0.2s ease-in-out; transition:all 0.2s ease-in-out; white-space:nowrap; }
+/* select 
+.nice-select { border-radius:5px; border:none; background-color:#e7ebee; box-sizing:border-box; cursor:pointer; display:inline-block; vertical-align:middle; color:#5e636c; font-weight:300; font-size:15px; height:38px; line-height:38px; outline:none; padding:0 28px 0 15px; position:relative; text-align:left !important; -webkit-transition:all 0.2s ease-in-out; transition:all 0.2s ease-in-out; white-space:nowrap; }
 .nice-select .current { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; width:100%; }
 .nice-select.white { border:1px solid #e1e1e1; background-color:#fff; }
 .nice-select.pline { border:1px dashed #ccc; }
@@ -238,7 +238,13 @@ html, body { height:100%; }
 .nice-select .option.disabled { background-color:transparent; color:#999; cursor:default; }
 .no-csspointerevents .nice-select .list { display:none; }
 .no-csspointerevents .nice-select.open .list { display:block; }
+*/
 
+/* add 20.11.06 s */
+select {  border-radius:5px; border:none; background-color:#e7ebee; box-sizing:border-box; cursor:pointer; display:inline-block; vertical-align:middle; color:#5e636c; font-weight:300; font-size:15px; height:38px; line-height:38px; outline:none; padding:0 28px 0 15px; }
+select.white { border:1px solid #e1e1e1; background-color:#fff; }
+select.pline { border:1px dashed #ccc;  background-color:#fff; }
+/* add e */
 
 #footer { position:relative; border-top:1px solid #d8dde1; text-align:center; height:77px; }
 #footer .txt { color:#5e636c;font-size:14px; line-height:14px; font-weight:200; position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); }

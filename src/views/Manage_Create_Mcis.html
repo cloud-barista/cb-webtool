@@ -23,7 +23,7 @@
 						<li  id="Dashboard">
 							<a href="javascript:void(0);">Dashboard</a>
 							<ul>
-								<li class="on" id="NS"><a href="/Dashboard/NS">NS</a></li>
+								<li  id="NS"><a href="/Dashboard/NS">NS</a></li>
 								<li id="Global"><a href="/Dashboard/Global">Global</a></li>
 							</ul>
 						</li>
@@ -105,9 +105,12 @@
 </div>
 {{template "Header" .}}
 {{template "Modal" .}}
-				
+				<script>
+			
+				</script>
 				<!-- contents -->
 				<div class="contbox">
+					<input type="hidden" name="installMonAgent"  value="yes" id="installMonAgent" />
 					
 					<div class="titlebox">
 						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Manage / <strong>MCIS</strong></div>
@@ -146,11 +149,11 @@
 														<ul>
 															<li>
 																<label>Name</label>
-																<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" />
+																<input type="text" name="mcis_name" value="" id="mcis_name" placeholder="Input Name" class="pline ip_1" title="" />
 															</li>
 															<li>
 																<label>Description</label>
-																<textarea  cols="" rows="" placeholder="type Description" class="pline ta_1" title="" ></textarea>
+																<textarea  cols="" rows="" id="mcis_desc" placeholder="type Description" name="mcis_desc" class="pline ta_1" title="" ></textarea>
 															</li>
 														</ul>
 													</div>
@@ -158,8 +161,8 @@
 														<ul>
 															<li>
 																<label>Deployment Algorithm</label>
-																<select class="selectbox white pline sel_1">
-																	<option value="1">Select Algorithm Name / (ID)</option>
+																<select class="selectbox white pline sel_1" name="placement_algo" id="placement_algo">
+																	<option value="">Select Algorithm Name / (ID)</option>
 																</select>
 															</li>
 														</ul>
@@ -169,7 +172,7 @@
 												<!-- servers -->
 												<div class="servers_box">
 													<div class="title">Servers</div>
-													<div class="switch"><span class="txt">Expert <span class="txt_c on">ON</span><span class="txt_c off d_none">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title="" checked /><span></span></label></div>
+													<div class="switch"><span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title=""  /><span></span></label></div>
 													<script>
 														$(document).ready(function(){
 															//Servers Expert on/off
@@ -177,14 +180,17 @@
 															var $Servers = $(".servers_config");
 															var $NewServers = $(".new_servers_config");
 															var $SimpleServers = $(".simple_servers_config");
+															var simple_config_cnt = 0;
+															var expert_config_cnt = 0;
+															
 															check.click(function(){
 																$(".switch span.txt_c").toggle();
-																$Servers.removeClass("active");
+																$NewServers.removeClass("active");
 															});
 														   
 														  //Expert add
 															$('.servers_box .server_add').click(function(){
-																$SimpleServers.toggleClass("active");
+																$NewServers.toggleClass("active");
 														  	if($Servers.hasClass("active")) {
 														    	$Servers.toggleClass("active");
 														    } else {
@@ -194,21 +200,25 @@
 															// Simple add
 														  $(".servers_box .switch").change(function() {
 														    if ($(".switch .ch").is(":checked")) {	
-																	$('.servers_box .server_add').click(function(){
+																	$('.servers_box .server_add').click(function(){	
+																		
 																		$NewServers.addClass("active");
 																		$SimpleServers.removeClass("active");		
 																	});
 														    } else {
 																	$('.servers_box .server_add').click(function(){
+																	
 																		$NewServers.removeClass("active");
 																		$SimpleServers.addClass("active");
+																	
+																	
 																	});		
 														    }
 														  });
 														});
 													</script>													
 													<div class="list">
-														<ul>
+														<ul id="mcis_server_list">
 															<!-- <li>
 																<div class="server server_on bgbox_b">
 																	<div class="icon"></div>
@@ -240,10 +250,40 @@
 												
 												<div class="btnbox">
 													<div class="btn_right">
-														<button name="" value="" class="btn_co btn_cr_g w95 btn_apply"><span>DEPLOY</span></button> 
+														<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="btn_deploy();"><span>DEPLOY</span></button> 
 													</div>
 												</div>
-						
+						<script>
+							function btn_deploy(){
+								var mcis_name = $("#mcis_name").val();
+								if(!mcis_name){
+									alert("Please Input MCIS Name!!!!!")
+									return;
+								}
+								var mcis_desc = $("#mcis_desc").val();
+								var placement_algo = $("#placement_algo").val();
+								var installMonAgent = $("#installMonAgent").val();
+								console.log(Simple_Server_Config_Arr)
+								var new_obj = {}
+								new_obj['name'] = mcis_name
+								new_obj['description'] = mcis_desc
+								new_obj['installMonAgent'] = installMonAgent
+
+								if(Simple_Server_Config_Arr){
+									vm_len = Simple_Server_Config_Arr.length;			
+									console.log("Simple_Server_Config_Arr length: ",vm_len);
+									new_obj['vm'] = Simple_Server_Config_Arr;
+									console.log("new obj is : ",new_obj);
+
+								}else{
+									alert("Please Input Servers");
+									$(".simple_servers_config").addClass("active");
+									$("#s_name").focus();
+								}
+							}
+
+
+						</script>
 
 												<!-- Simple Server Configuration -->
 												{{template "Mcis_simple_configure" .}}
