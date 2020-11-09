@@ -82,52 +82,8 @@
 												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 											</tr>
 										</thead>
-										<tbody>
-											<tr>
-												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">mcis-t01 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
-												<td class="overlay hidden" data-th="Total Infras">9</td>
-												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
-												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch1" title="" /><label for="td_ch1"></label></td>
-											</tr>
-											<tr>
-												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Stop <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">mcis-t02 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
-												<td class="overlay hidden" data-th="Total Infras">9</td>
-												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
-												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch2" title="" /><label for="td_ch2"></label></td>
-											</tr>
-											<tr>
-												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">mcis-t03 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
-												<td class="overlay hidden" data-th="Total Infras">9</td>
-												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
-												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch3" title="" /><label for="td_ch3"></label></td>
-											</tr>
-											<tr>
-												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">mcis-t04 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
-												<td class="overlay hidden" data-th="Total Infras">9</td>
-												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
-												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch4" title="" /><label for="td_ch4"></label></td>
-											</tr>
-											<tr>
-												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">mcis-t05 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
-												<td class="overlay hidden" data-th="Total Infras">9</td>
-												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
-												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch5" title="" /><label for="td_ch5"></label></td>
-											</tr>
+										<tbody id="table_1">
+											
 										</tbody>
 									</table>
 								</div>
@@ -135,28 +91,11 @@
 								<script>
 									/* scroll */
 									$(document).ready(function(){
-										getConnection();
-										var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
+										var url = CommonURL+"/ns/"+NAMESPACE+"/mcis?option=status";
 										show_mcis_list(url);
 
 
-								    $("#th_chall").click(function() {
-								      if ($("#th_chall").prop("checked")) {
-								        $("input[name=chk]").prop("checked", true);
-								      } else {
-								        $("input[name=chk]").prop("checked", false);
-								      }
-								    })
 								    
-										$(window).on("load resize",function(){
-											var vpwidth = $(window).width();
-										  if (vpwidth > 768 && vpwidth < 1800) {
-										    $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-										 		$(".dataTable.scrollbar-inner").scrollbar();
-										  } else {
-										    $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-										  }
-										});
 									});
 								</script>
 								

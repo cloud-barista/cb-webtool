@@ -32,7 +32,7 @@ function life_cycle2(type){
     })
 }
 
-function show_mcis2(url){
+function show_mcis_list(url){
     console.log("Show mcis Url : ",url)
     $("#vm_detail").hide();
     checkNS();
@@ -62,7 +62,8 @@ function show_mcis2(url){
          var html = "";
          var mcis = data.mcis;
          var len = 0
-         var mcis_cnt = 0 
+         var mcis_cnt = 0
+         
          if(mcis){
             len = mcis.length;
          }
@@ -77,18 +78,23 @@ function show_mcis2(url){
          var mcis_run_cnt = 0;
          var mcis_stop_cnt = 0;
          var mcis_terminated_cnt = 0;
+
+         var run_vm_cnt = 0;
+         var stop_vm_cnt = 0;
+         var terminated_vm_cnt = 0;
+         
          for(var i in mcis){
             count++;
-           var vm_run_cnt = 0;
-           var vm_stop_cnt = 0;
+            var vm_run_cnt = 0;
+            var vm_stop_cnt = 0;
             var terminate_cnt = 0;
-             var vm_len = 0
-             var sta = mcis[i].status;
-             var sl = sta.split("-");
-             var mcis_badge = "";
-             var vm_badge = "";
-             var status = sl[0].toLowerCase()
-             var vms = mcis[i].vm
+            var vm_len = 0
+            var sta = mcis[i].status;
+            var sl = sta.split("-");
+            var mcis_badge = "";
+            var vm_badge = "";
+            var status = sl[0].toLowerCase()
+            var vms = mcis[i].vm
             console.log("mcis status : ",status)
             var vm_status = "";
              if(vms){
@@ -98,130 +104,118 @@ function show_mcis2(url){
              //VM  상태 및 기타 생성하기
              var vm_cnt = 0
              var vm_html = "";
-         
+             var provider = new Array();
              for(var o in vms){
                  vm_cnt++;
                 var vm_status = vms[o].status
-                var lat = vms[0].location.latitude
-                var long = vms[0].location.longitude
-                var provider = vms[0].location.cloudType
-
-  
-
-
-
-                 
-                 if(vms[o].status == "Suspended"){
-                     stop_cnt++;
-                     vm_stop_cnt++;
-                 }
-                 if(vms[o].status == "Running"){
-                     run_cnt++;
-                     vm_run_cnt++;
-                 }
-                 if(vms[o].status == "Terminated"){
-                    terminate_cnt++;
-                }
+                var lat = vms[o].location.latitude
+                var long = vms[o].location.longitude
+                provider.push(vms[o].location.cloudType)
 
                 if(vm_status == "Running"){
-                    vm_badge += "shot bgbox_b"
+                    vm_badge += "shot bgbox_b";
+                    run_cnt++;
+                    vm_run_cnt++;
+                    run_vm_cnt++;
                  }else if(vm_status == "include" ){
                     vm_badge += "shot bgbox_y"
                  }else if(vm_status == "Suspended"){
-                    vm_badge += "shot bgbox_y"
+                    vm_badge += "shot bgbox_y";
+                    stop_cnt++;
+                    vm_stop_cnt++;
+                    stop_vm_cnt++;
                  }else if(vm_status == "Terminated"){
                     vm_badge += "shot bgbox_r"
+                    terminate_cnt++;
+                    terminated_vm_cnt++;
                  }else{
                     vm_badge += "shot bgbox_g"
                  }
 
-                 vm_html +='<div class="'+vm_badge+'"><a href="javascript:void(0);"><span>'+vm_cnt+'</span></a></div>'
              }
              
-
+             html +='<tr>'
              //MCIS name  / MCIS 상태
              if(status == "running"){
-                mcis_badge += 'state color_b'
+               html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span></td>'
                 mcis_run_cnt++;
              }else if(status == "include" ){
-                mcis_badge += 'state color_y'
+              
              }else if(status == "suspended"){
-                mcis_badge += 'state color_y'
+               html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
                 mcis_stop_cnt++;
              }else if(status == "terminate"){
-                mcis_badge += 'state color_r'
+                html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span></td>'
                 mcis_terminated_cnt;
              }else{
-                mcis_badge += 'state color_g'
+                
              }
-             var cursor = ""
-            //  if(i == mcis_cnt-1){
-            //      cursor = "active"
-            //  }
+           
 
-             html +='<div class="areabox dbinfo cursor '+cursor+'" onclick="change_mcis(\''+mcis[i].id+'\',\''+mcis[i].name+'\')">'
-                  +'<div class="box">';
-             html += '<div class="top">'
-                  +'<div class="txtbox">'
-                  +'<div class="tit">'+mcis[i].name+'</div>'
-                  +'<div class="txt"><span class="bgbox_b"></span>Available 01</div>'
-                  +'</div>'
-                  +'<div class="'+mcis_badge+'"></div>'
-                  +'</div>';
-             // 전체 인프라 갯수 및 각각의 상태에 따른 VM 갯수
-             html +='<div class="numbox">infra <strong class="color_b">'+vm_cnt+'</strong>' 
-                   +'<span class="line">(</span> <span class="num color_b">'+vm_run_cnt+'</span>' 
-                   +'<span class="line">/</span> <span class="num color_y">'+vm_stop_cnt+'</span>' 
-                   +'<span class="line">/</span> <span class="num color_r">'+terminate_cnt+'</span>'
-                   +'<span class="line">)</span></div>';
+            html +='<td class="btn_mtd ovm" data-th="Name">'+mcis[i].name+'<span class="ov"></span></td>'
+            var csp = ""
+            if(provider){
+                if(provider.length > 1){
+                    csp = provider.join(",")
+                }else if(provider.length == 1){
+                    csp = provider[0]
+                }
+            }
+            html += '<td class="overlay hidden" data-th="Cloud Connection">'+csp+'</td>'
+            html +='<td class="overlay hidden" data-th="Total Infras">'+vm_cnt+'</td>'
+            html +='<td class="overlay hidden" data-th="# of Servers">'+vm_cnt+' <span class="bar">/</span> '+vm_run_cnt+' <span class="bar">/</span> '+vm_stop_cnt+' <span class="bar">/</span> '+terminate_cnt+'</td>'
+            html +='<td class="overlay hidden" data-th="Description">'+mcis[i].description+'</td>'
+            html +='<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="'+mcis[i].id+'" id="td_ch_'+i+'" title="" /><label for="td_ch_'+i+'"></label></td>'
+            html +='</tr>'
 
-             // 서버 갯수
-             html += '<div class="numinfo">'
-             html += '<div class="num">server'+vm_cnt+'</div>'
-             html += '</div>'
-             // 각각의 VM 항목들
-             html +='<div class="shotbox">'
-             html += vm_html;
-             html +='</div></div></div>'
 
- 
-            console.log("mcis Status 1: ", mcis[i].status)
-            console.log("mcis Status 2: ", status)
              
-             
-             if(count == 1){
- 
-             }
             
         }
-        html +='<div class="areabox">'
-             +'<div class="box">'
-             +'<a href="/Manage/MCIS/reg" class="btn_add"><span>+</span></a>'
-             +'</div></div>';
-        console.log("server_cnt:",server_cnt)
-        console.log("mcis_cnt:",mcis_cnt)
-        var new_str = mcis_cnt+'<small class="text-muted ml-2 mb-0"> / '+server_cnt+'</small>';
-        //새로운 퍼블리싱에 들어가는 텍스트
-        var new_str = '<strong>'+mcis_cnt+'</strong><span>/</span> '+server_cnt;
-        $("#dash_1").append(new_str);
-        $("#run_cnt").text(run_cnt);
-        $("#stop_cnt").text(stop_cnt);
- 
+        // 새로운 퍼블리싱에 넣을 값
+        $("#total_mcis").text(mcis_cnt);
+        // 각각의  MCIS의 상태 별 갯수
+        var mcis_numbox = '<div class="num bgbox_b"><span>'+mcis_run_cnt+'</span></div>'
+                         +'<div class="num bgbox_r"><span>'+mcis_stop_cnt+'</span></div>'
+                         +'<div class="num bgbox_g"><span>'+mcis_terminated_cnt+'</span></div>';
+        
+        //  서버 갯수 및 상태 값 붙여 넣기
+        $("#mcis_numbox").empty();
+        $("#mcis_numbox").append(mcis_numbox);
+        
+        // vm cnt server_cnt
+        $("#total_vm").text(server_cnt);
+        var vm_numbox = '<div class="num bgbox_b boxrd cursor" onclick="location.href=\'../operation/Manage_Mcis.html\'"><span>'+run_vm_cnt+'</span></div>'
+        +'<div class="num bgbox_r boxrd cursor" onclick="location.href=\'../operation/Manage_Mcis.html\'"><span>'+stop_vm_cnt+'</span></div>'
+        +'<div class="num bgbox_g boxrd cursor" onclick="location.href=\'../operation/Manage_Mcis.html\'"><span>'+terminated_vm_cnt+'</span></div>';
+        $("#vm_numbox").empty();
+        $("#vm_numbox").append(vm_numbox);
+        // mcis list add
         $("#table_1").empty();
         $("#table_1").append(html);
+
+
    
         //event 속성
-        $(".dashboard.dashboard_cont .ds_cont .dbinfo").each(function(){
-            var $list = $(this);
-            $list.on('click', function(){
-                  if( $(this).hasClass("active") ) {
-                      $list.removeClass("active");
-              } else {
-                      $list.addClass("active");
-                      $list.siblings().removeClass("active");
-              }
-              });
-          });
+       
+        $("#th_chall").click(function() {
+            if ($("#th_chall").prop("checked")) {
+              $("input[name=chk]").prop("checked", true);
+            } else {
+              $("input[name=chk]").prop("checked", false);
+            }
+          })
+          
+        $(window).on("load resize",function(){
+            var vpwidth = $(window).width();
+            if (vpwidth > 768 && vpwidth < 1800) {
+                $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
+                    $(".dataTable.scrollbar-inner").scrollbar();
+            } else {
+                $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
+            }
+        });
+    
 
     }).catch(function(error){
      console.log("show mcis error at dashboard js: ",error);
