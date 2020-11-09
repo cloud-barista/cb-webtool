@@ -6,7 +6,7 @@
 		<!-- <input type="hidden" name="specId"  value="" id="s_specId" /> -->
 		<input type="hidden" name="subnetId"  value="" id="s_subnetId"/>
 		<input type="hidden" name="vNetId"  value="" id="s_vNetId"/>	
-		<input type="hidden" name="securityGroups"  value="" id="s_vNetId"/>			
+		<input type="hidden" name="securityGroupIds"  value="" id="securityGroupIds"/>			
 		<div class="top_box">
 			<div class="titbox_sc">
 				<div class="tit">Simple Server Configuration</div>
@@ -288,6 +288,7 @@
 				   
 					 $("#sg").empty();
 					 $("#sg").append(html);
+					 $("#securityGroupIds").val()
 					 
 				 })
 			 }
@@ -497,7 +498,7 @@
 			function simple_btn(){
 				var simple_form = $("#simple_form").serializeObject()
 				
-				var server_name = simple_form.vm_name
+				var server_name = simple_form.name
 				$(".simple_servers_config").removeClass("active");
 				Simple_Server_Config_Arr.push(simple_form);
 				add_server_html ='<li onclick="view_simple(\''+simple_data_cnt+'\')">'
