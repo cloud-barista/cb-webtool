@@ -1,0 +1,180 @@
+{{define "Mcis_list"}}
+	<!-- list -->
+					<div class="dashboard dashboard_cont">
+						
+						<div class="d_box box_m box_w100">
+							<div class="titbox">
+								<div class="tit initial"><strong>List of MCIS</strong></div>
+								<div class="top_info">
+									<ul>
+										<li>
+											<a href="javascript:void(0);">Filter</a>
+											<div class="infobox">
+												<div class="box">
+													<p>NS name</p>
+													<ul>
+														<li><a href="javascript:void(0);">name</a></li>
+														<li><a href="javascript:void(0);">status</a></li>
+														<li><a href="javascript:void(0);">Description</a></li>
+														<li><a href="javascript:void(0);">Server name</a></li>
+													</ul>
+												</div>
+											</div>
+										</li>
+										<li>
+											<a href="javascript:void(0);">Sort</a>
+											<div class="infobox">
+												<div class="box">
+													<ul>
+														<li><a href="javascript:void(0);">name</a></li>
+														<li><a href="javascript:void(0);">status</a></li>
+													</ul>
+												</div>
+											</div>
+										</li>
+										<li>
+											<a href="javascript:void(0);">Action</a>
+											<div class="infobox">
+												<div class="box">
+													<ul>
+														<li>
+															<strong>Life Cycle</strong>
+															<ul>
+																<!-- <li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Start">Start</a></li> -->
+																<li><a href="javascript:void(0);"
+																	data-toggle="modal" data-target="#Life_Reboot">Reboot</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Suspend">Suspend</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Resume">Resume</a></li>								
+																<li><a href="javascript:void(0);"
+																data-toggle="modal" data-target="#Life_Terminate">Terminate</a></li>
+															</ul>
+														</li>
+														<li>
+															<strong>Manage</strong>
+															<ul>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#n_New">New / Extend</a></li>
+															</ul>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</li>
+										<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt=""/></a></li>
+									</ul>
+								</div>
+							</div>
+	
+						
+							
+							<div class="ds_cont">
+								
+								<div class="dataTable status_list">
+									<table cellpadding="0" cellspacing="0" border="1" summary="">
+										<colgroup><col width=""><col width=""><col width="15%"><col width="15%"><col width="17%"><col width="18%"><col width="50px"></colgroup>
+										<thead>
+											<tr>
+												<th>Status</th>
+												<th>Name</th>
+												<th>Cloud Connection</th>
+												<th>Total Infras <span>Count of Total Servers</span></th>
+												<th># of Servers <span>Count of Run / Stop / Pause / etc</span></th>
+												<th>Description</th>
+												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span></td>
+												<td class="btn_mtd ovm" data-th="Name">mcis-t01 <span class="ov"></span></td>
+												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
+												<td class="overlay hidden" data-th="Total Infras">9</td>
+												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
+												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
+												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch1" title="" /><label for="td_ch1"></label></td>
+											</tr>
+											<tr>
+												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Stop <span class="ov off"></span></td>
+												<td class="btn_mtd ovm" data-th="Name">mcis-t02 <span class="ov"></span></td>
+												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
+												<td class="overlay hidden" data-th="Total Infras">9</td>
+												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
+												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
+												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch2" title="" /><label for="td_ch2"></label></td>
+											</tr>
+											<tr>
+												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running <span class="ov off"></span></td>
+												<td class="btn_mtd ovm" data-th="Name">mcis-t03 <span class="ov"></span></td>
+												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
+												<td class="overlay hidden" data-th="Total Infras">9</td>
+												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
+												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
+												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch3" title="" /><label for="td_ch3"></label></td>
+											</tr>
+											<tr>
+												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span></td>
+												<td class="btn_mtd ovm" data-th="Name">mcis-t04 <span class="ov"></span></td>
+												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
+												<td class="overlay hidden" data-th="Total Infras">9</td>
+												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
+												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
+												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch4" title="" /><label for="td_ch4"></label></td>
+											</tr>
+											<tr>
+												<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running <span class="ov off"></span></td>
+												<td class="btn_mtd ovm" data-th="Name">mcis-t05 <span class="ov"></span></td>
+												<td class="overlay hidden" data-th="Cloud Connection">AWS, AZ</td>
+												<td class="overlay hidden" data-th="Total Infras">9</td>
+												<td class="overlay hidden" data-th="# of Servers">9 <span class="bar">/</span> 8 <span class="bar">/</span> 1 <span class="bar">/</span> 0</td>
+												<td class="overlay hidden" data-th="Description">가동중인 서비스 01</td>
+												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch5" title="" /><label for="td_ch5"></label></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								
+								<script>
+									/* scroll */
+									$(document).ready(function(){
+										getConnection();
+										var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
+										show_mcis_list(url);
+
+
+								    $("#th_chall").click(function() {
+								      if ($("#th_chall").prop("checked")) {
+								        $("input[name=chk]").prop("checked", true);
+								      } else {
+								        $("input[name=chk]").prop("checked", false);
+								      }
+								    })
+								    
+										$(window).on("load resize",function(){
+											var vpwidth = $(window).width();
+										  if (vpwidth > 768 && vpwidth < 1800) {
+										    $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
+										 		$(".dataTable.scrollbar-inner").scrollbar();
+										  } else {
+										    $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
+										  }
+										});
+									});
+								</script>
+								
+								
+								<!-- <div class="pageing">
+									<a href="#" class="btn_prev"><span>이전</span></a>
+									<a href="#" class="active">1</a>
+									<a href="#">2</a>
+									<a href="#">3</a>
+									<a href="#">4</a>
+									<a href="#">5</a>
+									<a href="#" class="btn_next"><span>다음</span></a>
+								</div> -->
+								
+							</div>
+							
+						</div>
+						
+					</div>
+					<!-- //list -->
+{{end}}
