@@ -2,11 +2,12 @@
 <div class="servers_config simple_servers_config" id="simple_server_config">
 	<form id="simple_form">	
 		<input type="hidden" name="provider" id="" />	
-		<input type="hidden" name="installMonAgent"  value="yes" id="s_installMonAgent" />
+		
 		<!-- <input type="hidden" name="specId"  value="" id="s_specId" /> -->
 		<input type="hidden" name="subnetId"  value="" id="s_subnetId"/>
 		<input type="hidden" name="vNetId"  value="" id="s_vNetId"/>	
-		<input type="hidden" name="securityGroupIds"  value="" id="securityGroupIds"/>			
+		<input type="hidden" name="securityGroupIds[]"  value="" id="securityGroupIds"/>	
+		<input type="hidden" name="vm_cnt" value="" id="vm_cnt" />		
 		<div class="top_box">
 			<div class="titbox_sc">
 				<div class="tit">Simple Server Configuration</div>
@@ -19,7 +20,7 @@
 						<ul>
 							<li>
 								<label><span class="ch">*</span>Server Name</label>
-								<input type="text" name="name" value="" placeholder="Input Name" class="pline ip_3" title=""  />
+								<input type="text" name="name" value="" placeholder="Input Name" class="pline ip_3" title="" id="s_name" />
 							</li>
 						</ul>
 					</div>
@@ -274,6 +275,7 @@
 				 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup";
 				 var html = "";
 				 var apiInfo = ApiInfo
+				 var default_sg = "";
 				 axios.get(url,{
 					 headers:{
 						 'Authorization': apiInfo
@@ -283,12 +285,15 @@
 					 for(var i in data){
 						 if(data[i].connectionName == configName){
 							 html += '<option value="'+data[i].id+'" >'+data[i].cspSecurityGroupName+'('+data[i].id+')</option>'; 
-						 }
+							if(i == 0){
+								default_sg = data[i].id
+							}
+						}
 					 }
 				   
 					 $("#sg").empty();
 					 $("#sg").append(html);
-					 $("#securityGroupIds").val()
+					 $("#securityGroupIds").val(default_sg)
 					 
 				 })
 			 }
