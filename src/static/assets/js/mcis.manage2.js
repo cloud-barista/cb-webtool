@@ -1,6 +1,16 @@
 function life_cycle2(type){
     var mcis_id = $("#mcis_id").val();
     var mcis_name = $("#mcis_name").val();
+    var checked =""
+    $("[id^='td_ch_'").each(function(){
+        if($(this).is(":checked")){
+            var checked_value = $(this).val();
+            console.log("checked value : ",checked_value)
+        }else{
+            console.log("체크된게 없어!!")
+        }
+    })
+    return;
     if(!mcis_id){
         alert("Please Select MCIS!!")
         return;
@@ -9,6 +19,99 @@ function life_cycle2(type){
     console.log("Start LifeCycle method!!!")
   
     var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
+    var message = mcis_name+" "+type+ " complete!."
+  
+
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+        var status = result.status
+        
+        console.log("life cycle result : ",result)
+        var data = result.data
+        console.log("result Message : ",data.message)
+        if(status == 200 || status == 201){
+            
+            alert(message);
+            location.reload();
+            //show_mcis(mcis_url,"");
+        }
+    })
+}
+
+function vm_life_cycle(type){
+    var mcis_id = $("#mcis_id").val();
+    var vm_id = $("#vm_id").val();
+    var vm_name = $("#vm_name").val();
+    
+    // var checked =""
+    // $("[id^='td_ch_'").each(function(){
+    //     if($(this).is(":checked")){
+    //         var checked_value = $(this).val();
+    //         console.log("checked value : ",checked_value)
+    //     }else{
+    //         console.log("체크된게 없어!!")
+    //     }
+    // })
+    // return;
+    if(!mcis_id){
+        alert("Please Select MCIS!!")
+        return;
+    }
+    if(!vm_id){
+        alert("Please Select VM!!")
+        return;
+    }
+    
+    var nameSpace = NAMESPACE;
+    console.log("Start LifeCycle method!!!")
+    var url ="";
+    if(vm_id){
+        
+        url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type 
+       
+    }
+    console.log("life cycle3 url : ",url);
+   
+    var message = vm_name+" "+type+ " complete!."
+  
+
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+        var status = result.status
+        
+        console.log("life cycle result : ",result)
+        var data = result.data
+        console.log("result Message : ",data.message)
+        if(status == 200 || status == 201){
+            
+            alert(message);
+            location.reload();
+            //show_mcis(mcis_url,"");
+        }
+    })
+}
+function mcis_life_cycle(type){
+    var mcis_id = $("#mcis_id").val();
+    var mcis_name = $("#mcis_name").val();
+    
+    if(!mcis_id){
+        alert("Please Select MCIS!!")
+        return;
+    }
+    
+    var nameSpace = NAMESPACE;
+    console.log("Start LifeCycle method!!!")
+    var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
+    
+    console.log("life cycle3 url : ",url);
     var message = mcis_name+" "+type+ " complete!."
   
 
@@ -422,39 +525,18 @@ function show_mcis_list(url){
         $("#th_chall").click(function() {
             if ($("#th_chall").prop("checked")) {
                 $("input[name=chk]").prop("checked", true);
+                $("[id^='td_ch_']").each(function(){
+                    $(this).prop("checked",true)
+                })
             } else {
                 $("input[name=chk]").prop("checked", false);
+                $("[id^='td_ch_']").each(function(){
+                    $(this).prop("checked",false)
+                })
             }
         })
 
-        $(".dashboard .status_list tbody tr").each(function(){
-            var $td_list = $(this),
-                    $status = $(".server_status"),
-                    $detail = $(".server_info");
-          
-            $td_list.off("click").click(function(){
-                  $td_list.addClass("on");
-                  $td_list.siblings().removeClass("on");
-                  $status.addClass("view");
-                  $status.siblings().removeClass("on");
-                $(".dashboard.register_cont").removeClass("active");
-                 $td_list.off("click").click(function(){
-                      if( $(this).hasClass("on") ) {
-                          console.log("1번에 걸린다.")
-                          $td_list.removeClass("on");
-                          $status.removeClass("view");
-                          $detail.removeClass("active");
-                  } else {
-                    console.log("아니다 2번에 걸린다.")
-                          $td_list.addClass("on");
-                          $td_list.siblings().removeClass("on");
-                          $status.addClass("view");
-                          $status.siblings().removeClass("view");
-                        $(".dashboard.register_cont").removeClass("active");
-                  }
-                  });
-              });
-          });
+        
           
         $(window).on("load resize",function(){
             var vpwidth = $(window).width();
@@ -491,7 +573,9 @@ function show_mcis_list(url){
  function click_view(id,index){
      console.log("click view mcis id :",id)
     console.log("test_arr : ",test_arr);
-    $(".server_status").addClass("view")
+    $(".server_status").addClass("view");
+    $("#mcis_id").val(id);
+    $("#dashboard_detailBox").removeClass("active")
     $("[id^='server_info_tr_']").each(function(){
         var item = $(this).attr("item").split("|")
         
@@ -530,12 +614,12 @@ function show_mcis_list(url){
                 vm_badge += '<li class="sel_cr bgbox_b" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><a href="javascript:void(0);" ><span class="txt">'+vms[o].name+'</span></a></li>';
                 
             }else if(vm_status == "include" ){
-                vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
+                vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\',\''+vms[o].name+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
             }else if(vm_status == "Suspended"){
-                vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
+                vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\',\''+vms[o].name+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
                 
             }else if(vm_status == "Terminated"){
-                vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
+                vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\',\''+vms[o].name+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
                 
             }else{
                 vm_badge += "shot bgbox_g"
@@ -636,7 +720,10 @@ function show_mcis_list(url){
       }); 
  }
 
- function click_view_vm(mcis_id,vm_id){
+ function click_view_vm(mcis_id,vm_id,vm_name){
+     $("#vm_id").val(vm_id);
+     $("#vm_name").val(vm_name);
+
     var select_mcis = test_arr.filter(mcis => mcis.id === mcis_id);
     console.log("click_view_vm arr : ",select_mcis);
     
