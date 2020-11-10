@@ -254,17 +254,211 @@ function show_mcis_list(url){
  function click_view(id,index){
      console.log("click view mcis id :",id)
     console.log("test_arr : ",test_arr);
-    show_mcis(id,index);
+    $(".server_status").addClass("view")
+    show_mcis2(id,index);
     
+ }
+ function show_mcis2(mcis_id, index){
+    var mcis_arr = test_arr.filter(item => item.id === mcis_id)
+    var mcis = mcis_arr[0];
+    console.log("showmcis2 Data : ",mcis)
+    var mcis_badge = "";
+    var sta = mcis.status;
+    var sl = sta.split("-");
+    var status = sl[0].toLowerCase()
+    var vms = mcis.vm
+    var vm_len = 0
+    var provider = new Array();
+    var vm_badge = ""
+    if(vms){
+         vm_len = vms.length
+        for(var o in vms){
+            var vm_status = vms[o].status
+            var lat = vms[o].location.latitude
+            var long = vms[o].location.longitude
+            provider.push(vms[o].location.cloudType)
+
+            if(vm_status == "Running"){
+                vm_badge += '<li class="sel_cr bgbox_b" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><a href="javascript:void(0);" ><span class="txt">'+vms[o].name+'</span></a></li>';
+                
+            }else if(vm_status == "include" ){
+                vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
+            }else if(vm_status == "Suspended"){
+                vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
+                
+            }else if(vm_status == "Terminated"){
+                vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
+                
+            }else{
+                vm_badge += "shot bgbox_g"
+            }
+
+        }
+        $("#mcis_server_info_box").empty();
+        $("#mcis_server_info_box").append(vm_badge);
+    }
+
+    var csp = ""
+    if(provider){
+        if(provider.length > 1){
+            csp = provider.join(",")
+        }else if(provider.length == 1){
+            csp = provider[0]
+        }
+    }
+    $("#mcis_info_cloud_connection").val(csp)
+
+    console.log("mcis Status 1: ", mcis.status)
+    console.log("mcis Status 2: ", status)
+    if(status == "running"){
+        mcis_badge = '<img src="/assets/img/contents/icon_running_db.png" alt=""/> '
+    }else if(status == "include" ){
+        mcis_badge = '<img src="/assets/img/contents/icon_stop_db.png"  alt=""/> '
+    }else if(status == "suspended"){
+        mcis_badge = '<img src="/assets/img/contents/icon_stop_db.png" alt=""/>'
+    }else if(status == "terminate"){
+        mcis_badge = '<img src="/assets/img/contents/icon_terminate_db.png" alt=""/>'
+    }else{
+    }
+    $("#service_status_icon").empty();
+    $("#service_status_icon").append(mcis_badge)
+
+    var mcis_name = mcis.name
+    var mcis_id = mcis.id
+    var targetStatus = mcis.targetStatus
+    var targetAction = mcis.targetAction
+    var description = mcis.description
+
+    $("#mcis_info_txt").text("[ "+mcis_name+" ]");
+    $("#mcis_server_info_status").empty();
+    $("#mcis_server_info_status").append('<strong>Server List / Status</strong>  <span class="stxt">[ '+mcis_name+' ]</span>  Server('+vm_len+')')
+
+    $("#mcis_info_name").val(mcis_name+" / "+mcis_id)
+    $("#mcis_info_description").val(description);
+    $("#mcis_info_targetStatus").val(targetStatus);
+    $("#mcis_info_targetAction").val(targetAction);
+
+    var target = "server_info_tr_"+index
+    $td_list = $("#"+target+"");
+    $status = $(".server_status");
+    console.log("click tr target : ",target)
+    $td_list.off("click").click(function(){
+        $td_list.addClass("on");
+        $td_list.siblings().removeClass("on");
+        $status.addClass("view");
+        $status.siblings().removeClass("on");
+        $(".dashboard.register_cont").removeClass("active");
+        $td_list.off("click").click(function(){
+                if( $(this).hasClass("on") ) {
+                    
+                    $td_list.removeClass("on");
+                    $status.removeClass("view");
+                    //$detail.removeClass("active");
+            } else {
+            
+                    $td_list.addClass("on");
+                    $td_list.siblings().removeClass("on");
+                    $status.addClass("view");
+                    $status.siblings().removeClass("view");
+                $(".dashboard.register_cont").removeClass("active");
+            }
+        });
+    });
+        //Manage MCIS Server List on/off
+	$(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function(){
+        var $sel_list = $(this),
+                $detail = $(".server_info");
+        $sel_list.off("click").click(function(){
+              $sel_list.addClass("active");
+              $sel_list.siblings().removeClass("active");
+              $detail.addClass("active");
+              $detail.siblings().removeClass("active");
+             $sel_list.off("click").click(function(){
+                  if( $(this).hasClass("active") ) {
+                      $sel_list.removeClass("active");
+                      $detail.removeClass("active");
+              } else {
+                      $sel_list.addClass("active");
+                      $sel_list.siblings().removeClass("active");
+                      $detail.addClass("active");
+                      $detail.siblings().removeClass("active");
+              }
+              });
+          });
+      }); 
  }
 
  function click_view_vm(mcis_id,vm_id){
     var select_mcis = test_arr.filter(mcis => mcis.id === mcis_id);
     console.log("click_view_vm arr : ",select_mcis);
+    
     var vm_arr = select_mcis[0].vm
     console.log("vm_arr : ",vm_arr);
     vm_arr = vm_arr.filter(item => item.id === vm_id)
     console.log("click_view_vm arr : ",vm_arr)
+    var mcis_name = select_mcis[0].name
+    var select_vm = vm_arr[0];
+    var vm_detail = select_vm.cspViewVmDetail
+    var vm_name = select_vm.name
+    $("#server_info_text").text('['+vm_name+'/'+mcis_name+']')
+    var vm_status = select_vm.status
+    var vm_badge =""
+    if(vm_status == "Running"){
+        vm_badge = '<img src="/assets/img/contents/icon_running_db.png" alt=""/> '
+    }else if(vm_status == "include" ){
+        vm_badge = '<img src="/assets/img/contents/icon_stop_db.png"  alt=""/> ';
+    }else if(vm_status == "Suspended"){
+        vm_badge = '<img src="/assets/img/contents/icon_stop_db.png" alt=""/>'
+        
+    }else if(vm_status == "Terminated"){
+        vm_badge = '<img src="/assets/img/contents/icon_terminate_db.png" alt=""/>'
+        
+    }else{
+        vm_badge = '<img src="/assets/img/contents/icon_stop_db.png" alt=""/>'
+    
+    }
+    $("#server_info_status_img").empty()
+    $("#server_info_status_img").append(vm_badge)
+
+    $("#server_info_name").val(vm_name +"/"+ select_vm.id)
+    $("#server_info_desc").val(select_vm.description)
+
+    $("#server_info_public_ip").val(select_vm.publicIP)
+    $("#server_info_public_dns").val(select_vm.publicDNS)
+    $("#server_info_private_ip").val(select_vm.privateIP)
+    $("#server_info_private_dns").val(select_vm.privateDNS)
+
+    var vm_detail_keyValue = vm_detail.KeyValueList
+    var architecture = vm_detail_keyValue.filter(item => item.Key === "Architecture")[0].Value
+    $("#server_info_archi").val(architecture)
+
+    var vm_spec_name = vm_detail.VMSpecName
+    $("#server_info_vmspec_name").val(vm_spec_name)
+
+    var start_time = vm_detail.StartTime
+    $("#server_info_start_time").val(start_time)
+
+    var csp = select_vm.location.cloudType
+    var csp_icon = ""
+    if(csp == "aws"){
+        csp_icon = '<img src="/assets/img/contents/img_logo_a.png" alt=""/>'
+    }
+
+    $("#server_info_csp_icon").empty()
+    $("#server_info_csp_icon").append(csp_icon)
+
+    var locate = select_vm.location.briefAddr
+    var region = select_vm.region.Region
+    var zone = select_vm.region.Zone
+
+    $("#server_info_region").val(locate +":"+region)
+    $("#server_info_zone").val(zone)
+    $("#server_info_cspVMID").val("cspVMID : "+vm_detail.IId.NameId)
+    $("#server_info_connection_name").val(select_vm.connectionName)
+
+
+
+
  
  }
 // MCIS Control 
@@ -716,6 +910,7 @@ function short_desc(str){
             
     
  }
+ 
  
  function show_card(mcis_id){
     $("#vm_detail").hide();
