@@ -31,7 +31,7 @@ function life_cycle2(type){
         }
     })
 }
-
+const test_arr = new Array()
 function show_mcis_list(url){
     console.log("Show mcis Url : ",url)
     $("#vm_detail").hide();
@@ -84,6 +84,7 @@ function show_mcis_list(url){
          var terminated_vm_cnt = 0;
          
          for(var i in mcis){
+            test_arr.push(mcis[i])
             count++;
             var vm_run_cnt = 0;
             var vm_stop_cnt = 0;
@@ -206,34 +207,34 @@ function show_mcis_list(url){
             }
         })
 
-        // $(".dashboard .status_list tbody tr").each(function(){
-        //     var $td_list = $(this),
-        //             $status = $(".server_status"),
-        //             $detail = $(".server_info");
+        $(".dashboard .status_list tbody tr").each(function(){
+            var $td_list = $(this),
+                    $status = $(".server_status"),
+                    $detail = $(".server_info");
           
-        //     $td_list.off("click").click(function(){
-        //           $td_list.addClass("on");
-        //           $td_list.siblings().removeClass("on");
-        //           $status.addClass("view");
-        //           $status.siblings().removeClass("on");
-        //         $(".dashboard.register_cont").removeClass("active");
-        //          $td_list.off("click").click(function(){
-        //               if( $(this).hasClass("on") ) {
-        //                   console.log("1번에 걸린다.")
-        //                   $td_list.removeClass("on");
-        //                   $status.removeClass("view");
-        //                   $detail.removeClass("active");
-        //           } else {
-        //             console.log("아니다 2번에 걸린다.")
-        //                   $td_list.addClass("on");
-        //                   $td_list.siblings().removeClass("on");
-        //                   $status.addClass("view");
-        //                   $status.siblings().removeClass("view");
-        //                 $(".dashboard.register_cont").removeClass("active");
-        //           }
-        //           });
-        //       });
-        //   });
+            $td_list.off("click").click(function(){
+                  $td_list.addClass("on");
+                  $td_list.siblings().removeClass("on");
+                  $status.addClass("view");
+                  $status.siblings().removeClass("on");
+                $(".dashboard.register_cont").removeClass("active");
+                 $td_list.off("click").click(function(){
+                      if( $(this).hasClass("on") ) {
+                          console.log("1번에 걸린다.")
+                          $td_list.removeClass("on");
+                          $status.removeClass("view");
+                          $detail.removeClass("active");
+                  } else {
+                    console.log("아니다 2번에 걸린다.")
+                          $td_list.addClass("on");
+                          $td_list.siblings().removeClass("on");
+                          $status.addClass("view");
+                          $status.siblings().removeClass("view");
+                        $(".dashboard.register_cont").removeClass("active");
+                  }
+                  });
+              });
+          });
           
         $(window).on("load resize",function(){
             var vpwidth = $(window).width();
@@ -252,17 +253,19 @@ function show_mcis_list(url){
  }
  function click_view(id,index){
      console.log("click view mcis id :",id)
-    
+    console.log("test_arr : ",test_arr);
     show_mcis(id,index);
+    
+ }
 
-    
-     
-     
-
-    
-    
-   
-    
+ function click_view_vm(mcis_id,vm_id){
+    var select_mcis = test_arr.filter(mcis => mcis.id === mcis_id);
+    console.log("click_view_vm arr : ",select_mcis);
+    var vm_arr = select_mcis[0].vm
+    console.log("vm_arr : ",vm_arr);
+    vm_arr = vm_arr.filter(item => item.id === vm_id)
+    console.log("click_view_vm arr : ",vm_arr)
+ 
  }
 // MCIS Control 
 function life_cycle(tag,type,mcis_id,mcis_name,vm_id,vm_name){
@@ -347,15 +350,15 @@ function short_desc(str){
                    provider.push(vms[o].location.cloudType)
    
                    if(vm_status == "Running"){
-                       vm_badge += '<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">'+vms[o].name+'</span></a></li>';
+                       vm_badge += '<li class="sel_cr bgbox_b" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><a href="javascript:void(0);" ><span class="txt">'+vms[o].name+'</span></a></li>';
                      
                     }else if(vm_status == "include" ){
-                        vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">'+vms[o].name+'</span></a></li>';
+                        vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
                     }else if(vm_status == "Suspended"){
-                        vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">'+vms[o].name+'</span></a></li>';
+                        vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
                       
                     }else if(vm_status == "Terminated"){
-                        vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">'+vms[o].name+'</span></a></li>';
+                        vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
                       
                     }else{
                        vm_badge += "shot bgbox_g"
@@ -433,6 +436,29 @@ function short_desc(str){
                     }
               });
         });
+        //Manage MCIS Server List on/off
+	$(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function(){
+        var $sel_list = $(this),
+                $detail = $(".server_info");
+        $sel_list.off("click").click(function(){
+              $sel_list.addClass("active");
+              $sel_list.siblings().removeClass("active");
+              $detail.addClass("active");
+              $detail.siblings().removeClass("active");
+             $sel_list.off("click").click(function(){
+                  if( $(this).hasClass("active") ) {
+                      $sel_list.removeClass("active");
+                      $detail.removeClass("active");
+              } else {
+                      $sel_list.addClass("active");
+                      $sel_list.siblings().removeClass("active");
+                      $detail.addClass("active");
+                      $detail.siblings().removeClass("active");
+              }
+              });
+          });
+      });
+        
       
     });
  }
@@ -757,48 +783,7 @@ function short_desc(str){
     show_images(image_id);
     $("#vm_detail").show();
  }
-//  function sel_table(targetNo,mcid){
-//      var $target = $("#card_"+targetNo+"");
-//      var html = "";
-//      url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcid
-//      var apiInfo = ApiInfo
-    // axios.get(url,{
-    //     headers:{
-    //         'Authorization': apiInfo
-    //     }
-    // })then(result=>{
-//          var data = result.data.vm
-//          for(var i in data){
 
-//          }
-//      })
-//      html += '<tr>'
-//              +'<td class="text-center">'
-//              +'<div class="form-input">'
-//              +'<span class="input">'
-//              +'<input type="checkbox" id=""><i></i>'
-//              +'</span></div>'
-//              +'</td>'
-//              +'<td>1</td>'
-//              +'<td><a href="">Baristar1</a></td>'
-//              +'<td>aws driver 1aws driver ver0.1</td>'
-//              +'<td>aws key 1</td>'
-//              +'<td>ap-northest-1</td>'
-//              +'<td>'
-//              +'<div class="custom-control custom-switch">'
-//              +'<input type="checkbox" class="custom-control-input" id="customSwitch1">'
-//              +'<label class="custom-control-label" for="customSwitch1"></label></div>'
-//              +'</td>'
-//              +'<td>'
-//              +'<span class="badge badge-pill badge-warning">stop</span>'
-//              +'</td>'
-//              +'<td>2019-05-05</td>'
-//              +'</tr>';
-             
-//     $target.empty();         
-//     $target.append(html);
-
-//  }
 
  function deleteHandler(cl,target,){
     var url = SpiderURL+"/connectionconfig"
@@ -1048,102 +1033,7 @@ function short_desc(str){
 
  }
 
-//  function show_vmDetailInfo(mcis_id, vm_id){
-//     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
-//     var apiInfo = ApiInfo
-    // axios.get(url,{
-    //     headers:{
-    //         'Authorization': apiInfo
-    //     }
-    // })then(result=>{
-//         var data = result.data
-//         console.log("show vmDetailInfo data : ",data)
-//         var html = ""
-//         $.ajax({
-//            url:SpiderURL+"/connectionconfig",
-//            async:false,
-//            type:'GET',
-//            success : function(data2){
-//             res = data2.connectionconfig
-//                var provider = "";
-//                for(var k in res){
-//                    if(res[k].ConfigName == data.connectionName){
-//                        provider = res[k].ProviderName
-//                        console.log("Inner Provider : ",provider)
-//                    }
-//                }
-//                html += '<tr>'
-//                     +'<th scope="colgroup"rowspan="8">Infra - Server</th>'
-//                     +'<th scope="colgroup">Cloud Provider</th>'
-//                     +'<td colspan="3">'+provider+'</td>'
-//                     +'</tr>'
-//                     +'<tr>'
 
-//                     +'<th scope="colgroup">Server ID</th>'
-//                     +'<td  colspan="3">'+data.id+'</td>'
-//                     +'</tr>'
-
-//                     +'<th scope="colgroup">CP VMID</th>'
-//                     +'<td  colspan="3">'+data.id+'</td>'
-//                     +'</tr>'
-
-//                     +'<tr>'
-//                     +'<th scope="colgroup">Region</th>'
-//                     +'<td  colspan="3">'+data.region.Region+'</td>'
-//                     +'</tr>'
-
-                    
-//                     +'<tr>'
-//                     +'<th scope="colgroup">Public IP</th>'
-//                     +'<td  colspan="3">'+data.publicIP+'</td>'
-//                     +'</tr>'
-
-//                     +'<tr>'
-//                     +'<th scope="colgroup">Public DNS</th>'
-//                     +'<td  colspan="3">'+data.publicDNS+'</td>'
-//                     +'</tr>'
-
-//                     +'<tr>'
-//                     +'<th scope="colgroup">Private IP</th>'
-//                     +'<td colspan="3">'+data.privateIP+'</td>'
-//                     +'</tr>';
-//                     +'<tr>'
-//                     +'<th scope="colgroup">Private DNS</th>'
-//                     +'<td colspan="3">'+data.privateDNS+'</td>'
-//                     +'</tr>';
-//                     +'<tr>'
-//                     +'<th scope="colgroup">Server Status</th>'
-//                     +'<td colspan="3">'+data.status+'</td>'
-//                     +'</tr>';
-               
-//                    +'</tbody>'
-//                    +'<tbody>'
-//                    +'<tr>'
-//                    +'<th scope="colgroup" rowspan="3">VM Meta</th>'
-//                    +'<th scope="colgroup">VM ID</th>'
-//                    +'<td colspan="3">'+data.cspViewVmDetail.Id+'</td>'
-//                    +'</tr>'
-//                    +'<tr>'
-//                    +'<th scope="colgroup">VM NAME</th>'
-//                    +'<td  colspan="3">'+data.cspViewVmDetail.Name+'</td>'
-//                    +'</tr>'
-                   
-
-                 
-//                $("#vm").empty();
-//                $("#vm").append(html);
-//                fnMove("vm_detail");
-
-
-//            }
-
-//        })
-      
-           
-        
-//     })
-
-// }
 
 function show_vmSpecInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
