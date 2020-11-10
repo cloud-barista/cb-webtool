@@ -400,7 +400,10 @@ function show_mcis_list(url){
     var select_vm = vm_arr[0];
     var vm_detail = select_vm.cspViewVmDetail
     var vm_name = select_vm.name
+
     $("#server_info_text").text('['+vm_name+'/'+mcis_name+']')
+    $("#server_detail_info_text").text('['+vm_name+'/'+mcis_name+']')
+
     var vm_status = select_vm.status
     var vm_badge =""
     if(vm_status == "Running"){
@@ -417,27 +420,42 @@ function show_mcis_list(url){
         vm_badge = '<img src="/assets/img/contents/icon_stop_db.png" alt=""/>'
     
     }
+    $("#server_detail_view_server_status").val(vm_status);
     $("#server_info_status_img").empty()
     $("#server_info_status_img").append(vm_badge)
 
     $("#server_info_name").val(vm_name +"/"+ select_vm.id)
     $("#server_info_desc").val(select_vm.description)
 
+    // ip information
     $("#server_info_public_ip").val(select_vm.publicIP)
+    $("#server_detail_info_public_ip_text").text("Public IP : "+select_vm.publicIP)
     $("#server_info_public_dns").val(select_vm.publicDNS)
     $("#server_info_private_ip").val(select_vm.privateIP)
     $("#server_info_private_dns").val(select_vm.privateDNS)
 
+
+    $("#server_detail_view_public_ip").val(select_vm.publicIP)
+    $("#server_detail_view_public_dns").val(select_vm.publicDNS)
+    $("#server_detail_view_private_ip").val(select_vm.privateIP)
+    $("#server_detail_view_private_dns").val(select_vm.privateDNS)
+
+    //cspvmdetail
     var vm_detail_keyValue = vm_detail.KeyValueList
     var architecture = vm_detail_keyValue.filter(item => item.Key === "Architecture")[0].Value
     $("#server_info_archi").val(architecture)
+    $("#server_detail_view_archi").val(architecture)
 
+    // server spec
     var vm_spec_name = vm_detail.VMSpecName
     $("#server_info_vmspec_name").val(vm_spec_name)
+    $("#server_detail_view_server_spec_text").text(vm_spec_name)
 
+    // start time
     var start_time = vm_detail.StartTime
     $("#server_info_start_time").val(start_time)
 
+    // cloud type
     var csp = select_vm.location.cloudType
     var csp_icon = ""
     if(csp == "aws"){
@@ -446,7 +464,10 @@ function show_mcis_list(url){
 
     $("#server_info_csp_icon").empty()
     $("#server_info_csp_icon").append(csp_icon)
+    $("#server_connection_view_csp").val(csp)
 
+
+    // region zone locate
     var locate = select_vm.location.briefAddr
     var region = select_vm.region.Region
     var zone = select_vm.region.Zone
@@ -454,11 +475,83 @@ function show_mcis_list(url){
     $("#server_info_region").val(locate +":"+region)
     $("#server_info_zone").val(zone)
     $("#server_info_cspVMID").val("cspVMID : "+vm_detail.IId.NameId)
-    $("#server_info_connection_name").val(select_vm.connectionName)
 
+    $("#server_detail_view_region").val(locate +":"+region)
+    $("#server_detail_view_zone").val(zone)
 
+    $("#server_connection_view_region").val(locate +"("+region+")")
+    $("#server_connection_view_zone").val(zone)
 
+    // connection name
+    var connection_name = select_vm.connectionName;
+    $("#server_info_connection_name").val(connection_name)
+    $("#server_connection_view_connection_name").val(connection_name)
 
+    // credential and driver info
+    console.log("config arr2 : ",config_arr)
+    console.log("connection_name :",connection_name)
+    var arr_config = config_arr
+    console.log("arr_config : ",arr_config);
+    if(arr_config){
+        var config_info = arr_config.filter(cred => cred.ConfigName === connection_name)[0]
+        console.log("inner config info : ",config_info)
+        console.log("config_info : ",config_info)
+        var credentialName = config_info.CredentialName
+        var driverName = config_info.DriverName
+        $("#server_connection_view_credential_name").val(credentialName)
+        $("#server_connection_view_driver_name").val(driverName)
+    }
+   
+
+    
+    
+    // server id / system id
+    $("#server_detail_view_server_id").val(select_vm.id)
+    // systemid 를 사용할 경우 아래 꺼 사용
+    //$("#server_detail_view_server_id").val(vm_detail.IId.SystemId)
+   
+    // image id
+    var imageIId = vm_detail.ImageIId.NameId
+    var imageId = select_vm.imageId
+    $("#server_detail_view_image_id_text").text(imageId+"("+imageIId+")")
+
+    //vpc subnet
+    var vpcId = vm_detail.VpcIID.NameId
+    var vpcSystemId = vm_detail.VpcIID.SystemId
+    var subnetId = vm_detail.SubnetIID.NameId
+    var subnetSystemId = vm_detail.SubnetIID.SystemId
+    var eth = vm_detail.NetworkInterface
+    $("#server_detail_view_vpc_id_text").text(vpcId+"("+vpcSystemId+")")
+    $("#server_detail_view_subnet_id_text").text(subnetId+"("+subnetSystemId+")")
+    $("#server_detail_view_eth_text").text(eth)
+
+    // device info
+    var root_device_type = vm_detail.VMBootDisk
+    var root_device = vm_detail.VMBootDisk
+    var block_device = vm_detail.VMBlockDisk
+    $("#server_detail_view_root_device_type").val(root_device_type)
+    $("#server_detail_view_root_device").val(root_device)
+    $("#server_detail_view_block_device").val(block_device)
+
+     // key pair info
+    
+     $("#server_detail_view_keypair_name").val(vm_detail.KeyPairIId.NameId)
+     $("#server_detail_view_access_id_pass").val(vm_detail.VMUserId +"/"+vm_detail.VMUserPasswd)
+     $("#server_detail_view_user_id_pass").val(select_vm.vmUserAccount +"/"+select_vm.vmUserPassword)
+
+     // security Gorup
+    var append_sg = ''
+    var sg_arr = vm_detail.SecurityGroupIIds
+    if(sg_arr){
+        sg_arr.map((item,index)=>(
+            append_sg +='<a href="javascript:void(0);" title="'+item.NameId+'" >'+item.NameId+'</a>'
+        ))
+    }
+    append_sg +='인바운드 규칙 보기. 아웃바운드 규칙 보기'
+    console.log("append sg : ",append_sg)
+    
+    $("#server_detail_view_security_group").empty()
+    $("#server_detail_view_security_group").append(append_sg);
  
  }
 // MCIS Control 
@@ -656,6 +749,7 @@ function short_desc(str){
       
     });
  }
+ const config_arr = new Array();
  function getConnection(){
     var apiInfo = ApiInfo;
     $.ajax({
@@ -670,6 +764,7 @@ function short_desc(str){
 
     }).done( function(data2){
         res = data2.connectionconfig
+        
         console.log("connection info : ",res);
         var provider = "";
         var aws_cnt = 0;
@@ -682,6 +777,7 @@ function short_desc(str){
         var connection_cnt = 0;
         var html = "";
         for(var k in res){
+            config_arr.push(res[k])
             provider = res[k].ProviderName 
             connection_cnt++;
             provider = provider.toLowerCase();
@@ -912,63 +1008,7 @@ function short_desc(str){
  }
  
  
- function show_card(mcis_id){
-    $("#vm_detail").hide();
-     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
-     var html = "";
-     var apiInfo = ApiInfo
-     axios.get(url,{
-         headers:{
-             'Authorization': apiInfo
-         }
-     }).then(result=>{
-        var data = result.data
-        console.log("show card data : ",result)
-        var vm_cnt = data.vm
-        var mcis_name = data.name
-        if(vm_cnt){
-            vm_cnt = vm_cnt.length
-        }else{
-            vm_cnt = 0
-        }
-        
-        
-            html += '<div class="col-xl-12 col-lg-12">'
-                    +'<div class="card card-stats mb-12 mb-xl-0">'
-                    +'<div class="card-body">'
-                    +'<div class="row">'
-                    +'<div class="col">'
-                    +'<h5 class="card-title text-uppercase text-muted mb-0">'+data.name+'</h5>'
-                    +'<span class="h2 font-weight-bold mb-0">350,897</span>'
-                    +'</div>'
-                    +'<div class="col-auto">'
-                    +'<div class="icon icon-shape bg-danger text-white rounded-circle shadow">'
-                    //+'<i class="fas fa-chart-bar"></i>'
-                    +vm_cnt
-                    +'</div>'
-                    +'</div>'
-                    +'</div>'
-                    +'<p class="mt-3 mb-0 text-muted text-sm">'
-                    +'<span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>'
-                    +'<span class="text-nowrap">Since last month</span>'
-                    +'</p>'
-                    +'</div>'
-                    +'</div>'
-                    +'</div>';
-        
-        $("#card").empty()
-        $("#card").append(html)
-        if(vm_cnt > 0){
-            show_vmList(mcis_id)
-        }else{
-            show_vmList("")
-        }
-       
-        $("#mcis_id").val(mcis_id)
-        $("#mcis_name").val(mcis_name)
-       
-    })
- }
+ 
  function show_vm(mcis_id,vm_id,image_id){
     show_vmDetailList(mcis_id, vm_id);
     show_vmSpecInfo(mcis_id, vm_id);
