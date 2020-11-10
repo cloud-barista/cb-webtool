@@ -94,7 +94,7 @@ func main() {
 	e.GET("/Manage/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	e.POST("/Manage/MCIS/reg/proc", controller.McisRegController)
 	e.GET("/Manage/MCIS/list", controller.McisListForm)
-	e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListForm)
+	e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	// Resource
 	e.GET("/Resource/board", controller.ResourceBoard)
