@@ -7,12 +7,14 @@
 			<div class="box">
 				
 				<div class="titbox">
-					<div class="tit initial"><strong>Server Detail Info</strong>  <span class="stxt">[ Server 2 / mcis-t03 ]</span></div>
-					<div class="txt_ip">Public IP : xxx.xxx.xxx.xxx</div>
+					<div class="tit initial"><strong>Server Detail Info</strong>  <span class="stxt" id="server_detail_info_text">[ Server 2 / mcis-t03 ]</span></div>
+					<div class="txt_ip" id="server_detail_info_public_ip_text">Public IP : xxx.xxx.xxx.xxx</div>
 					<div class="top_info">
-						<div class="switch"><span class="txt">Monitoring</span> <label><input type="checkbox" name="consent" value="" class="ch" title="" /><span></span></label></div>
+						<div class="switch"><span class="txt">Monitoring</span> <label><input type="checkbox" name="consent" value="" class="ch" title="" id="mcis_detail_info_check_monitoring" /><span></span></label></div>
 					</div>
-					
+					<script>
+						
+					</script>
 					<!-- Monitoring popup -->
 					{{template "Manage_mcis_popup"}}
 					
@@ -25,9 +27,9 @@
 				
 				<div class="tabbox">
 					<ul class="nav">
-						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Detail">Detail</a></li>
-						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Connection">Connection</a></li>
-						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Monitoring">Monitoring</a></li>
+						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Detail" >Detail</a></li>
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Mcis_Connection" >Connection</a></li>
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Mcis_Monitoring">Monitoring</a></li>
 					</ul>
 					
 					<div class="tab-content">

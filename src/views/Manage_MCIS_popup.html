@@ -12,84 +12,63 @@
 						<div class="titbox">
 							<div class="tit">Enable Monitoring Target</div>
 						</div>
-						
-						<div class="pop-cont">
-							<div class="pop_ip ip1">
-								<ul>
-									<li>
-										<label>MCIS</label>
-								  <select class="selectbox">
-									<option value="1">Select MCIS</option>
-									<option value="2">Select MCIS2</option>
-									<option value="3" disabled> disabled Select MCIS3</option>
-									<option value="4">Select MCIS4</option>
-								  </select>
-									</li>
-									<li>
-										<label>Server</label>
-								  <select class="selectbox">
-									<option value="1">Select Server</option>
-									<option value="2">Select Server2</option>
-									<option value="3">Select Server3</option>
-									<option value="4">Select Server4</option>
-								  </select>
-									</li>
-								</ul>
+						<form id="manage_mcis_popup_form">
+							<div class="pop-cont">
+								<div class="pop_ip ip1">
+									<ul>
+										<li>
+											<label>MCIS</label>
+												<input type="text" name="mcis_id" value="" placeholder="input ID" title="" id="manage_mcis_popup_mcis_id" readonly/>
+									
+										</li>
+										<li>
+											<label>Server</label>
+												<input type="text" name="vm_id" value="" placeholder="input ID" title="" id="manage_mcis_popup_vm_id" readonly/>
+										</li>
+									</ul>
+								</div>
+								
+								<div class="pop_ip ip2">
+									<ul>
+										<li>
+											<label>Cloud Provider & NameSpace</label>
+												<input type="text" name="cspType" value="" placeholder="input ID" title="" id="manage_mcis_popup_csp" readonly/>
+												<input type="text" name="ns_id" value="" placeholder="input ID" title="" id="manage_mcis_popup_ns_id" readonly/>
+										</li>
+										<li>
+											<label>Public IP </label>
+												<input type="text" name="public_ip" value="" placeholder="input ID" title="" id="manage_mcis_popup_public_ip" readonly/>
+												
+										</li>
+									</ul>
+								</div>
+								
+								<div class="pop_ip ip1 ip3">
+									<ul>
+										<li class="p_line">
+											<label>USER NAME</label>
+											<input type="text" name="user_name" value="" placeholder="input ID" title="" id="manage_mcis_popup_user_name"/>
+										</li>
+									</ul>
+								</div>
+								
+								<div class="pop_ip ip2 ip4">
+									<ul>
+										<li class="p_line">
+											<label>Access SSH key</label>
+											<input type="text" name="" value="" placeholder="input SSH key" title="" id="manage_mcis_popup_sshkey_name" readonly/> 
+											<input type="file" id="file_key" name="file" class="file_ip_hidden" title="" />
+											<span class="sbox"><span class="stxt"><a href="javascript:void(0);" class="btn_import_key">Import key</a></span></span>
+										</li>
+										<li class="p_line">
+											<label></label>
+											<textarea  cols="" rows="" value="" placeholder="type SSH key value" title="" id="manage_mcis_popup_sshkey" readonly></textarea>
+										</li>
+									</ul>
+								</div>
+								
 							</div>
-							
-							<div class="pop_ip ip2">
-								<ul>
-									<li>
-										<label>Cloud Provider</label>
-								  <select class="selectbox">
-									<option value="1">Select CP</option>
-									<option value="2">Select CP2</option>
-								  </select>
-									</li>
-									<li>
-										<label>Region & zone</label>
-								  <select class="selectbox">
-									<option value="1">Select Region</option>
-									<option value="2">Select Region2</option>
-									<option value="3">Select Region3</option>
-									<option value="4">Select Region4</option>
-								  </select>
-								  <select class="selectbox sel1">
-									<option value="1">Select zone</option>
-									<option value="2">Select zone2</option>
-									<option value="3">Select zone3</option>
-									<option value="4">Select zone4</option>
-								  </select>
-									</li>
-								</ul>
-							</div>
-							
-							<div class="pop_ip ip1 ip3">
-								<ul>
-									<li class="p_line">
-										<label>ID</label>
-										<input type="text" name="" value="" placeholder="input ID" title="" />
-									</li>
-								</ul>
-							</div>
-							
-							<div class="pop_ip ip2 ip4">
-								<ul>
-									<li class="p_line">
-										<label>Access SSH key</label>
-										<input type="text" name="" value="" placeholder="input SSH key" title="" /> 
-										<input type="file" id="file_key" name="file" class="file_ip_hidden" title="" />
-										<span class="sbox"><span class="stxt"><a href="javascript:void(0);" class="btn_import_key">Import key</a></span></span>
-									</li>
-									<li class="p_line">
-										<label></label>
-										<textarea  cols="" rows="" value="" placeholder="type SSH key value" title=""></textarea>
-									</li>
-								</ul>
-							</div>
-							
-						</div>
-						
+						</form>
 					</div>
 					
 					<div class="btnbox">
@@ -114,6 +93,7 @@
 				$('#file_key').click();
 			});
 		});
+
 	</script>
 
 	<!-- popup Apply -->
@@ -125,7 +105,7 @@
 					<div class="txt">Would you like to enable Monitoring ?</div>
 					<div class="btnbox">
 						<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-						<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+						<button type="button" class="btn_ok" onclick="install_agent();" data-dismiss="modal">OK</button>
 					</div>
 				</div>
 				
@@ -134,6 +114,53 @@
 	</div>
 	<!-- //popup Apply -->
 	<script>
+		function install_agent(){
+			console.log("reg btn click : ","{{ .comURL.DragonFlyURL}}") 
+			var url = DragonFlyURL+"/agent/install";
+			console.log("Monitoring Service Activation URI : ", url)
+
+			//폼의 필수 필드를 검증 함.
+			if (!chkFormValidate($("#manage_mcis_popup_form"))) return false;
+			
+			var obj = $("#manage_mcis_popup_form").serializeObject()
+			var formData = new FormData(document.getElementById("form"));
+			axios.post(url,formData,{
+				headers :{
+					'Content-type': 'multipart/form-data',
+					'Authorization': ApiInfo,
+					},
+			}).then(result=>{
+                console.log(result.data)
+                var data = result.data
+                //alert(result);
+                if(result.status == 200 || result.status == 201){
+                    alert("Monitoring Service Activation is complete.");
+                    $("#Detail_Apply").modal('hide');
+					
+                }else{
+                    alert("Monitoring Service Activation failed : " + result.status);
+                }
+            }).catch(function (error) {
+                console.log(error)
+                if (error.response) {
+                    // 서버가 2xx 외의 상태 코드를 리턴한 경우
+                //error.response.headers / error.response.status / error.response.data
+                    alert("Monitoring Service Activation failed\nMonitoring Service Activation Status : " + error.response.status);
+                }
+                else if (error.request) {
+                    // 응답을 못 받음
+                    alert("No response was received from the Monitoring Server.\n" + error.request);
+                }
+                else {
+                    alert("Error communicating with Monitoring Server.\n" + error.message);
+                }
+                console.log(error.config);
+            })
+            ;  
+        //}finally{
+            //AjaxLoadingShow(false);
+        //}
+    }
 		$(function() {
 		  return $(".modal").on("show.bs.modal", function() {
 			var curModal;

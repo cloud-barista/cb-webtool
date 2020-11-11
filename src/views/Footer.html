@@ -33,7 +33,7 @@
             }).then(result=>{
                 var data = result.data
                 console.log(data);
-                location.reload(true);
+                location.href = "/Dashboard/NS";
              })
         }else{
             alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
@@ -132,6 +132,8 @@
    function select_namespace(ns_id){
        console.log("select namespace : ",ns_id)
        $("#select_namespace").val(ns_id)
+      
+       //location.reload();
    }
 </script>
 {{end}}
