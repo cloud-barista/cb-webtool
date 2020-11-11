@@ -99,41 +99,52 @@ function vm_life_cycle(type){
     })
 }
 function mcis_life_cycle(type){
-    var mcis_id = $("#mcis_id").val();
-    var mcis_name = $("#mcis_name").val();
-    
-    if(!mcis_id){
+    var checked_nothing = 0;
+    $("[id^='td_ch_']").each(function(){
+       
+        if($(this).is(":checked")){
+            checked_nothing++;
+            console.log("checked")
+            var mcis_id = $(this).val()
+            console.log("check td value : ",mid);
+            var nameSpace = NAMESPACE;
+            console.log("Start LifeCycle method!!!")
+            var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
+            
+            console.log("life cycle3 url : ",url);
+            var message = "MCIS "+type+ " complete!."
+            var apiInfo = ApiInfo
+            axios.get(url,{
+                headers:{
+                    'Authorization': apiInfo
+                }
+            }).then(result=>{
+                var status = result.status
+                
+                console.log("life cycle result : ",result)
+                var data = result.data
+                console.log("result Message : ",data.message)
+                if(status == 200 || status == 201){
+                    
+                    alert(message);
+                    location.reload();
+                    //show_mcis(mcis_url,"");
+                }else{
+                    alert(status)
+                    return;
+                }
+            })
+        }else{
+            console.log("checked nothing")
+           
+        }
+    })
+    if(checked_nothing == 0){
         alert("Please Select MCIS!!")
         return;
     }
-    
-    var nameSpace = NAMESPACE;
-    console.log("Start LifeCycle method!!!")
-    var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
-    
-    console.log("life cycle3 url : ",url);
-    var message = mcis_name+" "+type+ " complete!."
-  
-
-    var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
-        var status = result.status
-        
-        console.log("life cycle result : ",result)
-        var data = result.data
-        console.log("result Message : ",data.message)
-        if(status == 200 || status == 201){
-            
-            alert(message);
-            location.reload();
-            //show_mcis(mcis_url,"");
-        }
-    })
 }
+
 const test_arr = new Array()
 function show_mcis_list(url){
     console.log("Show mcis Url : ",url)
@@ -459,6 +470,7 @@ function show_mcis_list(url){
              }
              
              html +='<tr onclick="click_view(\''+mcis[i].id+'\',\''+i+'\');" id="server_info_tr_'+i+'" item="'+mcis[i].id+'|'+i+'">'
+             
              //MCIS name  / MCIS 상태
              if(status == "running"){
                html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span></td>'
@@ -578,7 +590,7 @@ function show_mcis_list(url){
     $("#dashboard_detailBox").removeClass("active")
     $("[id^='server_info_tr_']").each(function(){
         var item = $(this).attr("item").split("|")
-        
+        console.log()
         if(id == item[0]){
             
             $(this).addClass("on")
@@ -722,7 +734,12 @@ function show_mcis_list(url){
 
  function click_view_vm(mcis_id,vm_id,vm_name){
      $("#vm_id").val(vm_id);
+    
      $("#vm_name").val(vm_name);
+
+     // Popup install monitoring agent set value
+     $("#manage_mcis_popup_vm_id").val(vm_id)
+     $("#manage_mcis_popup_mcis_id").val(mcis_id)
 
     var select_mcis = test_arr.filter(mcis => mcis.id === mcis_id);
     console.log("click_view_vm arr : ",select_mcis);
@@ -775,6 +792,8 @@ function show_mcis_list(url){
     $("#server_detail_view_private_ip").val(select_vm.privateIP)
     $("#server_detail_view_private_dns").val(select_vm.privateDNS)
 
+    $("#manage_mcis_popup_public_ip").val(select_vm.publicIP)
+
     //cspvmdetail
     var vm_detail_keyValue = vm_detail.KeyValueList
     var architecture = vm_detail_keyValue.filter(item => item.Key === "Architecture")[0].Value
@@ -794,12 +813,28 @@ function show_mcis_list(url){
     var csp = select_vm.location.cloudType
     var csp_icon = ""
     if(csp == "aws"){
-        csp_icon = '<img src="/assets/img/contents/img_logo_a.png" alt=""/>'
+        csp_icon = '<img src="/assets/img/contents/img_logo1.png" alt=""/>'
+    }
+    if(csp == "azure"){
+        csp_icon = '<img src="/assets/img/contents/img_logo5.png" alt=""/>'
+    }
+    if(csp == "gcp"){
+        csp_icon = '<img src="/assets/img/contents/img_logo7.png" alt=""/>'
+    }
+    if(csp == "cloudit"){
+        csp_icon = '<img src="/assets/img/contents/img_logo6.png" alt=""/>'
+    }
+    if(csp == "openstack"){
+        csp_icon = '<img src="/assets/img/contents/img_logo9.png" alt=""/>'
+    }
+    if(csp == "ali"){
+        csp_icon = '<img src="/assets/img/contents/img_logo4.png" alt=""/>'
     }
 
     $("#server_info_csp_icon").empty()
     $("#server_info_csp_icon").append(csp_icon)
     $("#server_connection_view_csp").val(csp)
+    $("#manage_mcis_popup_csp").val(csp)
 
 
     // region zone locate
@@ -860,6 +895,15 @@ function show_mcis_list(url){
     $("#server_detail_view_subnet_id_text").text(subnetId+"("+subnetSystemId+")")
     $("#server_detail_view_eth_text").text(eth)
 
+    // install Mon agent
+    var installMonAgent = select_vm.monAgentStatus
+    if(installMonAgent == "installed"){
+        console.log("install mon agent : ",installMonAgent)
+        $("#mcis_detail_info_check_monitoring").prop("checked",true)
+    }else{
+        $("#mcis_detail_info_check_monitoring").prop("checked",false)
+    }
+
     // device info
     var root_device_type = vm_detail.VMBootDisk
     var root_device = vm_detail.VMBootDisk
@@ -871,8 +915,17 @@ function show_mcis_list(url){
      // key pair info
     
      $("#server_detail_view_keypair_name").val(vm_detail.KeyPairIId.NameId)
+     var sshkey = vm_detail.KeyPairIId.NameId
+     if(sshkey){
+        set_vmSSHInfo(sshkey)
+     }
+     // user account
      $("#server_detail_view_access_id_pass").val(vm_detail.VMUserId +"/"+vm_detail.VMUserPasswd)
      $("#server_detail_view_user_id_pass").val(select_vm.vmUserAccount +"/"+select_vm.vmUserPassword)
+     $("#manage_mcis_popup_user_name").val(select_vm.vmUserAccount)
+     
+
+     
 
      // security Gorup
     var append_sg = ''
@@ -1084,6 +1137,71 @@ function short_desc(str){
       
     });
  }
+ function show_vmSSHInfo(){
+    var mcis_id =  $("#mcis_id").val();
+    var vm_id = $("#vm_id").val();
+    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+
+        var data = result.data
+        var html = ""
+        var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
+        var spec_id = data.sshKeyId
+       
+        $.ajax({
+           url: url2,
+           async:false,
+           type:'GET',
+           beforeSend : function(xhr){
+            xhr.setRequestHeader("Authorization", apiInfo);
+            xhr.setRequestHeader("Content-type","application/json");
+        },
+          
+
+       }).done(function(result){
+        var res = result.sshKey
+        var pv_key = "";
+       console.log("sshKey info :",res);
+        for(var k in res){
+            if(res[k].id == spec_id){
+                pv_key  = res[k].privateKey;                   
+            }
+        } 
+        if(pv_key){
+            $("#ssh_key").val(pv_key);
+            $("#ssh_key").attr('readonly',true);
+        }
+
+    })
+      
+           
+        
+    })
+
+}
+function set_vmSSHInfo(sshId){
+    
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey/"+sshId
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+
+        var data = result.data
+        var {privateKey, id, name, cspSShKeyName} = data 
+        $("#manage_mcis_popup_sshkey").val(privateKey)
+        $("#manage_mcis_popup_sshkey_name").val(name)
+        
+    })
+
+}
  const config_arr = new Array();
  function getConnection(){
     var apiInfo = ApiInfo;
