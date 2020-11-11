@@ -147,9 +147,12 @@ func ConnectionListForm(c echo.Context) error {
 	apiInfo := AuthenticationHandler()
 	loginInfo := CallLoginInfo(c)
 	if loginInfo.Username != "" {
-		//cList := service.GetConnectionList()
-		return c.Render(http.StatusOK, "ConnectionList.html", map[string]interface{}{
+		cList := service.GetConnectionList()
+		fmt.Println("=============info GetConnectionList =============", cList)
+		return c.Render(http.StatusOK, "CloudConnection.html", map[string]interface{}{
+			// return c.Render(http.StatusOK, "ConnectionList.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
+			"cList":     cList,
 			"comURL":    comURL,
 			"apiInfo":   apiInfo,
 		})
