@@ -924,7 +924,9 @@ function show_mcis_list(url){
      $("#server_detail_view_user_id_pass").val(select_vm.vmUserAccount +"/"+select_vm.vmUserPassword)
      $("#manage_mcis_popup_user_name").val(select_vm.vmUserAccount)
      
-
+     // namespace 
+     var ns_id = NAMESPACE
+     $("#manage_mcis_popup_ns_id").val(ns_id)
      
 
      // security Gorup
