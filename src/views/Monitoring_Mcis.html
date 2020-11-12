@@ -1,0 +1,784 @@
+{{ template "Top" .}}
+<div id="lnb">
+			
+	<div class="bg"></div>
+		
+	<div class="m_box">
+		
+		{{template "Top_box" .}}
+
+		{{template "LNB_popup" .}}
+		
+		<!-- menu -->
+		<div class="leftmenu">
+			
+			<ul class="nav">
+				<li class="nav-item"><a class="nav-link " data-toggle="tab" href="#Operation">Operation</a></li>
+				<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Setting">Setting</a></li>
+			</ul>
+			
+			<div class="tab-content">
+				<div class="tab-pane fade show active" id="Operation">
+					<ul class="menu">
+						<li  id="Dashboard">
+							<a href="javascript:void(0);">Dashboard</a>
+							<ul>
+								<li id="NS"><a href="/Dashboard/NS">NS</a></li>
+								<li id="Global"><a href="/Dashboard/Global">Global</a></li>
+							</ul>
+						</li>
+						<li  id="Manage">
+							<a href="javascript:void(0);">Manage</a>
+							<ul>
+								<li  id="MCIS"><a href="/Manage/MCIS/list">MCIS</a></li>
+								<li id="MC-App"><a href="!#">MC-App</a></li>
+							</ul>
+						</li>
+						<li class="active" id="Monitoring">
+							<a href="javascript:void(0);">Monitoring</a>
+							<ul>
+								<li class="on" id=""><a href="/Monitoring/MCIS/list">MCIS</a></li>
+								<li><a href="/operation/Monitoring_McApp.html">MC-App</a></li>
+							</ul>
+						</li>
+						<li id="Policy">
+							<a href="javascript:void(0);">Policy</a>
+							<ul>
+								<li><a href="../operation/Policy_Monitoring.html">Monitoring</a></li>
+								<li><a href="../operation/Policy_Threshold.html">Threshold</a></li>
+								<li><a href="../operation/Policy_Placement.html">Placement</a></li>
+							</ul>
+						</li>
+						<li id="About">
+							<a href="javascript:void(0);">About</a>
+							<ul>
+								<li><a href="../operation/About.html">About</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="tab-pane fade" id="Setting">
+					<ul class="menu">
+						<li id="Resources">
+							<a href="javascript:void(0);">Resources</a>
+							<ul>
+								<li id="net"><a href="/Vpc/list">Network</a></li>
+								<li id="sg"><a href="/SecurityGroup/list">Security</a></li>
+								<li id="ssh"><a href="/SSH/list">SSH key</a></li>
+								<li id="image"><a href="/Image/list">(Server) Image</a></li>
+								<li id="spec"><a href="/Spec/list">(Server) Spec</a></li>
+							</ul>
+						</li>
+						<li id="AppRes">
+							<a href="javascript:void(0);">App Resource</a>
+							<ul>
+								<li><a href="!#">(Server) Image</a></li>
+								<li><a href="!#">Pod</a></li>
+							</ul>
+						</li>
+						<li id="Cloud">
+							<a href="javascript:void(0);">Cloud Connections</a>
+							<ul>
+								<li id="Connection"><a href="/Cloud/Connection/list">Cloud Connections</a></li>
+							</ul>
+						</li>
+						<li id="NameSpace">
+							<a href="javascript:void(0);">NameSpace</a>
+							<ul>
+								<li id="NS"><a href="/NameSpace/NS/list">NameSpace</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		<!-- //menu -->
+		
+	</div>
+	
+	
+	<div class="bottom"></div>
+	<a href="javascript:;" id="m_close"></a>
+	
+</div>
+{{template "Header" .}}
+{{template "Modal" .}}
+
+				<!-- contents -->
+				<div class="contbox">
+					
+					<div class="titlebox">
+						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Monitoring / <strong>MCIS</strong></div>
+						<div class="location">Home  <span>></span>  Operation  <span>></span>  Monitoring  <span>></span>  <strong>MCIS</strong></div>
+					</div>
+
+
+					
+					<!-- Server -->
+					<div class="dashboard dashboard_cont">
+						
+						<div class="d_box box_m box_w100">
+							<div class="titbox">
+								<div class="tit initial"><strong>Monitoring for MCIS</strong></div>
+							</div>
+							
+							<div class="ds_cont">
+
+								<div class="monitoring_ipbox">
+												
+									<div class="monitoring-cont">
+										<div class="monitoring_ip">
+											<div class="mipbox m_ip1">
+									      <select class="selectbox white">
+									        <option value="1">Target MCIS for Monitoring</option>
+									      </select>
+											</div>
+											<div class="mipbox m_ip2">
+												<ul>
+													<li class="mt_1">
+														<label>Type</label>
+														<span class="sbox_m2">
+												      <select class="selectbox white">
+												        <option value="1">Select Type(Live, History)</option>
+												        <option value="2">Live</option>
+												        <option value="3">History</option>
+												      </select>
+													  	<button name="" value="" class="btn_view">View</button> 
+												    </span>
+												  </li>
+													<li class="mt_2" id="hidden_div">
+											      <span class="sbox">
+															<label>Duration</label>
+															<span class="sel_w1">
+																<input type="text" name="" value="" placeholder="" title="" />
+													      <select class="selectbox white">
+													        <option value="1">Month</option>
+													        <option value="2">Day</option>
+													        <option value="3">Hour</option>
+													        <option value="4">Minute</option>
+													      </select>
+													    </span>
+												    </span>
+											      <span class="sbox">
+															<label>Period</label>
+												      <select class="selectbox white">
+												        <option value="1">minutely</option>
+												      </select>
+												    </span>
+													</li>
+												</ul>
+											</div>
+										</div>
+										
+									</div>
+									
+								</div>
+
+								<script>
+									$(document).ready(function() {
+										//Type selectbox Select Type(Live, History)
+									  $('.monitoring_ip .mt_1 .selectbox').change(function(){
+									    if (this.value == '2') {
+									      $("#hidden_div").hide();
+									    } else {
+									      $("#hidden_div").show();
+									    }
+									  });
+									});
+								</script>
+
+								
+								<div class="ds_cont_mbox">
+									<div class="m_title">Selected MCIS <span class="stxt">[MCIS Name (MCIS ID)]</span></div>
+									
+									<div class="mtbox">
+										<div class="txtbox">
+											<div class="icon_box">
+												<div class="img"><img src="/assets/img/contents/icon_running_db.png" alt=""/></div>
+												<!-- 
+												<div class="img"><img src="/assets/img/contents/icon_stop_db.png" alt=""/></div>
+												<div class="img"><img src="/assets/img/contents/icon_terminate_db.png" alt=""/></div>
+												 -->
+												<div class="txt color_b">Running</div>
+											</div>
+										</div>
+										
+										<div class="g_list">
+											
+											<div class="gbox">
+												<div class="sel">
+													<label>CPUs</label>
+										      <select class="selectbox white">
+										        <option value="1">Select CPU Item</option>
+										      </select>
+												</div>
+												<div class="graph">
+													<img src="/assets/img/contents/img_graph_1.jpg" alt="">
+												</div>
+											</div>
+											
+											<div class="gbox">
+												<div class="sel">
+													<label>Memory</label>
+										      <select class="selectbox white">
+										        <option value="1">Select Memory Item</option>
+										      </select>
+												</div>
+												<div class="graph">
+													<img src="/assets/img/contents/img_graph_2.jpg" alt="">
+												</div>
+											</div>
+											
+											<div class="gbox">
+												<div class="sel">
+													<label>DiskIO</label>
+										      <select class="selectbox white">
+										        <option value="1">Select DiskIO Item</option>
+										      </select>
+												</div>
+												<div class="graph">
+													<img src="/assets/img/contents/img_graph_3.jpg" alt="">
+												</div>
+											</div>
+											
+											<div class="gbox">
+												<div class="sel">
+													<label>Network</label>
+										      <select class="selectbox white">
+										        <option value="1">Select Network Item</option>
+										      </select>
+												</div>
+												<div class="graph">
+													<img src="/assets/img/contents/img_graph_4.jpg" alt="">
+												</div>
+											</div>
+											
+										</div>
+									</div>
+									<script>
+										$(document).ready(function() {
+											resizeContent();
+										});
+										$(window).resize(function() {
+											resizeContent();
+										});
+										//Selected MCIS selectbox(CPUs,Memory,DiskIO,Network) width 반응형 적용
+										function resizeContent() {
+											$(".g_list .gbox .sel").each(function(){
+												var $list =  $(this),
+														$label =  $list.find('label'),
+														$labelWidth = $label.width(),
+														$gboxWidth = $list.width(),
+														$selectbox =  $list.find('.selectbox');
+												$list.each(function(){
+													$selectbox.css({'width':($gboxWidth-$labelWidth-20)+'px'});
+												});
+											});
+										}
+									</script>
+									
+									<div class="mtbox">
+										<div class="txtbox">
+											<div class="tit">Server List</div>
+										</div>
+										
+										<div class="g_list">
+											<!-- Server List scrollbar / common.js -->
+											<div class="listbox scrollbar-inner">
+												<ul>
+													<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">Server 1</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 2</span></a></li>
+													<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 3</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 4</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 5</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 6</span></a></li>
+													<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 7</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 8</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 9</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 10</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 11</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 12</span></a></li>
+													<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 13</span></a></li>
+													<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 14</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 15</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 16</span></a></li>
+													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 17</span></a></li>
+													<li><span class="txt">Server 18</span></li>
+													<li><span class="txt">Server 19</span></li>
+													<li><span class="txt">Server 20</span></li>
+												</ul>
+											</div>
+											<!-- //Server List scrollbar -->
+										</div>
+									</div>
+								</div>
+						
+								
+								<!-- Monitoring view -->
+								<div class="ds_cont_mbox g_detail_view monitoring_view" id="monitoring_viewbox">
+									
+									<div class="view_ipbox">
+													
+										<div class="view-cont">
+											<div class="view_ip">
+												
+												<div class="mvbox v_ip1">
+													<label>Monitoring Details</label>
+										      <select class="selectbox white">
+										        <option value="1">Target Servers for Monitoring</option>
+										        <option value="2">Target Servers for Monitoring 2</option>
+										      </select>
+												</div>
+												<div class="mvbox v_ip2">
+													<ul>
+														<li class="mt_1">
+															<label>Type</label>
+															<span class="sbox_m2">
+													      <select class="selectbox white">
+													        <option value="1">Select Type(Live, History)</option>
+													        <option value="2">Live</option>
+													        <option value="3">History</option>
+													      </select>
+														  	<button name="" value="" class="btn_view">View</button> 
+													    </span>
+													  </li>
+														<li class="mt_2" id="m_hidden_div">
+												      <span class="sbox">
+																<label>Duration</label>
+																<span class="sel_w1">
+																	<input type="text" name="" value="" placeholder="" title="" />
+														      <select class="selectbox white">
+														        <option value="1">Month</option>
+														        <option value="2">Day</option>
+														        <option value="3">Hour</option>
+														        <option value="4">Minute</option>
+														      </select>
+														    </span>
+													    </span>
+												      <span class="sbox">
+																<label>Period</label>
+													      <select class="selectbox white">
+													        <option value="1">minutely</option>
+													      </select>
+													    </span>
+														</li>
+													</ul>
+													
+												</div>
+												<!--
+												<ul>
+													<li class="m1">
+														<label>Monitoring Details</label>
+											      <select class="selectbox white">
+											        <option value="1">Target Servers for Monitoring</option>
+											        <option value="2">Target Servers for Monitoring 2</option>
+											      </select>
+													</li>
+													<li class="m2">
+														<label>Type</label>
+											      <select class="selectbox white">
+											        <option value="1">Select Type(Live, Hist)</option>
+											      </select>
+													</li>
+													<li class="m3">
+											      <span class="sbox">
+															<label>Duration</label>
+															<span class="sel_w1">
+																<input type="text" name="" value="" placeholder="" title="" />
+													      <select class="selectbox white">
+													        <option value="1">minute</option>
+													      </select>
+													    </span>
+												    </span>
+											      <span class="sbox">
+															<label>Period</label>
+												      <select class="selectbox white">
+												        <option value="1">minutely</option>
+												      </select>
+												    </span>
+													</li>
+												</ul>
+												-->
+											</div>
+											
+											<div class="view_ip">
+												<ul>
+													<li class="m4">
+														<label>Servers</label>
+														<input type="text" name="" value="" placeholder="" title="" />
+													</li>
+													<li class="m5 m5_n">
+														<label>Items</label>
+											      <select class="selectbox white">
+											        <option value="1">Select Region</option>
+											        <option value="2">Select Region2</option>
+											        <option value="3">Select Region3</option>
+											        <option value="4">Select Region4</option>
+											      </select>
+													</li>
+												</ul>
+											</div>
+										</div>
+								
+										<script>
+											$(document).ready(function() {
+												//Type selectbox Select Type(Live, History)
+											  $('.view_ipbox .mt_1 .selectbox').change(function(){
+											    if (this.value == '2') {
+											      $("#m_hidden_div").hide();
+											    } else {
+											      $("#m_hidden_div").show();
+											    }
+											  });
+											});
+										</script>
+										
+										<div class="graphbox">
+											<img src="/assets/img/contents/img_graphbox_1.jpg" alt="">
+										</div>
+										
+									</div>
+								</div>
+								<!-- //Monitoring view -->
+							
+								
+							</div>
+							
+						</div>
+						
+					</div>
+					<!-- //Server -->
+					
+
+				</div>
+                <!-- //contents -->
+<script>
+	$(document).ready(function(){
+		order_type = "ConfigName"
+		getCloudConnectionList(order_type);
+	})
+
+
+function fnMove(target){
+	var offset = $("#" + target).offset();
+	console.log("fn move offset : ",offset)
+	$('html, body').animate({scrollTop : offset.top}, 400);
+}
+
+
+function getCloudConnectionList(sort_type){
+    var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig";
+    axios.get(url,{
+        headers:{
+            'Authorization': "{{ .apiInfo}}",
+            'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get CloudConnection Data : ",result.data);
+        var data = result.data.connectionconfig;
+        var html = ""
+        if(data.length){ 
+			if(sort_type){
+				
+				data.filter(list=> list.ConfigName !=="" ).sort((a,b) => ( a[sort_type] < b[sort_type] ? -1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item,index)=>(
+					html +='<tr onclick="showInfo(\'cc_info_'+index+'\');">'
+						 +'<td class="overlay hidden" data-th="">'
+						 +'<input type="hidden" id="cc_info_'+index+'" value="'+item.ConfigName+'|'+item.ProviderName+'|'+item.RegionName+'|'+item.CredentialName+'|'+item.DriverName+'"/>'
+						 +'<input type="checkbox" name="chk" value="'+item.ConfigName+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
+						 +'<td class="btn_mtd ovm td_left" data-th="Name">'+item.ConfigName+'<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+						 +'<td class="overlay hidden" data-th="Cloud Provider">'+item.ProviderName+'</td>'
+						 +'<td class="overlay hidden" data-th="Region">'+item.RegionName+'</td>'
+						 +'<td class="overlay hidden" data-th="Zone">'+item.RegionName+'</td>'
+						 +'<td class="overlay hidden" data-th="Credential">'+item.CredentialName+'</td>'
+						 +'<td class="overlay hidden" data-th="Driver">'+item.DriverName+'</td>'
+						 +'<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+						 +'</tr>' 
+				))
+			}else{
+				data.filter((list)=> list.ConfigName !== "" ).map((item,index)=>(
+					html +='<tr onclick="showInfo(\'cc_info_'+index+'\');">'
+						 +'<td class="overlay hidden" data-th="">'
+						 +'<input type="hidden" id="cc_info_'+index+'" value="'+item.ConfigName+'|'+item.ProviderName+'|'+item.RegionName+'|'+item.CredentialName+'|'+item.DriverName+'"/>'
+						 +'<input type="checkbox" name="chk" value="'+item.ConfigName+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
+						 +'<td class="btn_mtd ovm td_left" data-th="Name">'+item.ConfigName+'<span class="ov"></span></td>'
+						 +'<td class="overlay hidden" data-th="Cloud Provider">'+item.ProviderName+'</td>'
+						 +'<td class="overlay hidden" data-th="Region">'+item.RegionName+'</td>'
+						 +'<td class="overlay hidden" data-th="Zone">'+item.RegionName+'</td>'
+						 +'<td class="overlay hidden" data-th="Credential">'+item.CredentialName+'</td>'
+						 +'<td class="overlay hidden" data-th="Driver">'+item.DriverName+'</td>'
+						 +'<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+						 +'</tr>'        
+				))
+
+			}		
+			
+            $("#cList").empty();
+            $("#cList").append(html);
+		  //  nsModal()
+		  ModalDetail()
+           
+    }}
+)}
+function goFocus(target){
+
+	console.log(event)
+	event.preventDefault()
+	
+	$("#"+target).focus();
+	fnMove(target)
+	
+}
+function getRegionInfo(type, target){
+	console.log("target : ",target);
+	var infos = $("#"+target).val()
+	infos = infos.split("|")
+    console.log("name : ",infos[0]);
+	$("#reg_region").val(infos[0]);
+}
+function getCredentialInfo(type, target){
+	console.log("target : ",target);
+	var infos = $("#"+target).val()
+	infos = infos.split("|")
+    console.log("name : ",infos[0]);
+	$("#reg_credential").val(infos[0]);
+}
+function getDriverInfo(type, target){
+	console.log("target : ",target);
+	var infos = $("#"+target).val()
+	infos = infos.split("|")
+    console.log("name : ",infos[0]);
+	$("#reg_driver").val(infos[0]);
+}
+function showInfo(target){
+	console.log("target : ",target);
+	var infos = $("#"+target).val()
+	infos = infos.split("|")
+	$("#info_name").val(infos[0])
+	$("#info_provider").val(infos[1])
+	$("#info_region").val(infos[2])
+	$("#info_credential").val(infos[3])
+	$("#info_driver").val(infos[4])
+
+	$("#info_name_prs").text(infos[0])
+	$("#info_provider_prs").text(infos[1])
+	$("#info_region_prs").text(infos[2])
+	$("#info_credential_prs").text(infos[3])
+	$("#info_driver_prs").text(infos[4])
+
+    getRegionDetail(infos[2]);
+
+	$("#info_name").focus();
+	
+
+}
+ function createCloudConnection(){
+        var configname = $("#reg_ConfigName").val()
+		var providername = $("#reg_Provider").val()
+		var regionname = $("#reg_region").val()
+		var credentialname = $("#reg_credential").val()
+		var drivername = $("#reg_driver").val()
+
+        console.log("info param configname : ",configname);
+        console.log("info param providername : ",providername);
+        console.log("info param regionname : ",regionname);
+        console.log("info param credentialname : ",credentialname);
+        console.log("info param drivername : ",drivername);
+
+		if(!configname){
+			alert("Input New Cloud Connection Name")
+			$("#reg_ConfigName").focus()
+			return;
+		}
+		if(!providername){
+			alert("Input Provider Name")
+			$("#reg_Provider").focus()
+			return;
+		}
+		
+        var apiInfo = "{{ .apiInfo}}";
+        var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig";
+        var obj = {
+            ConfigName: configname,
+            ProviderName: providername,
+            RegionName: regionname,
+            CredentialName: credentialname,
+            DriverName : drivername
+        }
+        console.log("info connectionconfig obj Data : ",obj);
+        if(configname){
+            axios.post(url,obj,{
+                headers: { 
+                    'Content-type': 'application/json',
+                    'Authorization': apiInfo, 
+                }
+            }).then(result =>{
+                console.log(result);
+                if(result.status == 200 || result.status == 201){
+                    alert("Success Create Cloud Connection")
+					//등록하고 나서 화면을 그냥 고칠 것인가?
+					getCloudConnectionList();
+					//아니면 화면을 리로딩 시킬것인가?
+					location.reload();
+                    // $("#btn_add2").click()
+                    // $("#namespace").val('')
+                    // $("#nsDesc").val('')
+                }else{
+                    alert("Fail Create Cloud Connection")
+                }
+            });
+        }else{
+            alert("Input Cloud Connection Name")
+            $("#reg_ConfigName").focus()
+            return;
+        }
+    }
+
+function getRegionDetail(target){
+    var url = "{{ .comURL.SpiderURL}}"+"/region";
+    url += ("/" + target ) ;
+    console.log("info urls : ", url);
+    axios.get(url,{
+        headers:{
+            'Authorization': "{{ .apiInfo}}",
+            'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get Region Data : ",result.data);
+        var data = result.data;
+        if(data.RegionName){ 
+            console.log("info Region Detail, regionName : ",target,", region : ",data.KeyValueInfoList[0].Value, ", zone : ",data.KeyValueInfoList[1].Value)
+            setRegionDispInfo(data.KeyValueInfoList[0].Value, data.KeyValueInfoList[1].Value)
+        }
+    }
+)}
+function setRegionDispInfo(var_region, var_zone){
+    var region_and_zone = ""
+    var region_and_zone_code = ""
+    region_and_zone = "" + var_region + " (" + var_zone + ")";
+    region_and_zone_code = "" + var_region + " (" + var_zone + ")";
+	$("#info_region").val(region_and_zone)
+	$("#info_region_prs").text(region_and_zone_code)
+
+    console.log("info region_and_zone : ", region_and_zone);
+}
+
+function getRegionList(){
+    var url = "{{ .comURL.SpiderURL}}"+"/region";
+    axios.get(url,{
+        headers:{
+            'Authorization': "{{ .apiInfo}}",
+            'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get Region Data : ",result.data);
+        var data = result.data.region;
+        var html = ""
+        if(data.length){ 
+				data.filter((list)=> list.RegionName !== "" ).map((item,index)=>(
+					html +='<tr onclick="getRegionInfo(\'region\', \'region_info_'+index+'\');">'
+						 +'<td class="btn_mtd ovm" data-th="Name">'+item.RegionName+'<span class="ov"></span></td>'
+						 +'<input type="hidden" id="region_info_'+index+'" value="'+item.RegionName+'"/>'
+						 +'<td class="overlay hidden" data-th="region ID">'+item.KeyValueInfoList[0].Value+'</td>'
+						 +'<td class="overlay hidden" data-th="Zone">'+item.KeyValueInfoList[1].Value+'</td>'
+						 +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
+						 +'</tr>'        
+				))
+			
+            $("#regionList").empty();
+            $("#regionList").append(html);
+		  //  nsModal()
+		  ModalDetail()
+    }}
+)}
+function getCredentialList(){
+    var url = "{{ .comURL.SpiderURL}}"+"/credential";
+    axios.get(url,{
+        headers:{
+            'Authorization': "{{ .apiInfo}}",
+            'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get Credential Data : ",result.data);
+        var data = result.data.credential;
+        var html = ""
+        if(data.length){ 
+                data.filter((list)=> list.CredentialName !== "" ).map((item,index)=>(
+					html +='<tr onclick="getCredentialInfo(\'credential\', \'credential_info_'+index+'\');">'
+						 +'<td class="btn_mtd ovm" data-th="Name">'+item.CredentialName+'<span class="ov"></span>'
+						 +'<input type="hidden" id="credential_info_'+index+'" value="'+item.CredentialName+'"/>'
+						 +'<td class="overlay hidden" data-th="accesskey">'+item.KeyValueInfoList[1].Value+'</td>'
+						 +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
+						 +'</tr>'        
+				))
+			
+            $("#credentialList").empty();
+            $("#credentialList").append(html);
+		  //  nsModal()
+		  ModalDetail()
+    }}
+)}
+function getDriverList(){
+    var url = "{{ .comURL.SpiderURL}}"+"/driver";
+    axios.get(url,{
+        headers:{
+            'Authorization': "{{ .apiInfo}}",
+            'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get Driver Data : ",result.data);
+        var data = result.data.driver;
+        var html = ""
+        if(data.length){ 
+                data.filter((list)=> list.DriverName !== "" ).map((item,index)=>(
+					html +='<tr onclick="getDriverInfo(\'driver\', \'driver_info_'+index+'\');">'
+						 +'<td class="btn_mtd ovm" data-th="Name">'+item.DriverName+'<span class="ov"></span></td>'
+						 +'<input type="hidden" id="driver_info_'+index+'" value="'+item.DriverName+'|'+item.ProviderName+'|'+item.DriverLibFileName+'"/>'
+						 +'<td class="overlay hidden" data-th="Driver SDK">'+item.DriverLibFileName+'</td>'
+						 +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
+						 +'</tr>'        
+				))
+			
+            $("#driverList").empty();
+            $("#driverList").append(html);
+		  //  nsModal()
+		  ModalDetail()
+    }}
+)}
+
+function getCloudConnection(){
+
+}
+function ModalDetail(){
+	$(".dashboard .status_list tbody tr").each(function(){
+  	var $td_list = $(this),
+  			$status = $(".server_status"),
+  			$detail = $(".server_info");
+  	$td_list.off("click").click(function(){
+			$td_list.addClass("on");
+			$td_list.siblings().removeClass("on");
+			$status.addClass("view");
+			$status.siblings().removeClass("on");
+  			$(".dashboard.register_cont").removeClass("active");
+	   	$td_list.off("click").click(function(){
+				if( $(this).hasClass("on") ) {
+					console.log("reg ok button click")
+					$td_list.removeClass("on");
+					$status.removeClass("view");
+					$detail.removeClass("active");
+		    } else {
+					$td_list.addClass("on");
+					$td_list.siblings().removeClass("on");
+					$status.addClass("view");
+					
+					$status.siblings().removeClass("view");
+  					$(".dashboard.register_cont").removeClass("active");
+		    }
+			});
+		});
+	});
+}
+
+</script>
+{{template "Footer" .}}

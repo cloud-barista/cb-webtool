@@ -160,8 +160,8 @@ func GetConnectionList() []CloudConnectionInfo {
 
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
-	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
-	return nsInfo["ns"]
+	//fmt.Println("nsInfo : ", nsInfo["connectionconfig"][0].ID)
+	return nsInfo["connectionconfig"]
 
 }
 
@@ -173,7 +173,7 @@ func GetDriverReg() []CloudConnectionInfo {
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
 
-	return nsInfo["ns"]
+	return nsInfo["driver"]
 
 }
 
@@ -189,8 +189,8 @@ func GetCredentialList() []CloudConnectionInfo {
 	defer body.Close()
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
-	// fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
-	return nsInfo["ns"]
+	// fmt.Println("nsInfo : ", nsInfo["credential"][0].ID)
+	return nsInfo["credential"]
 
 }
 func GetRegionList() []RegionInfo {
@@ -226,8 +226,8 @@ func GetCredentialReg() []CloudConnectionInfo {
 
 	nsInfo := map[string][]CloudConnectionInfo{}
 	json.NewDecoder(body).Decode(&nsInfo)
-	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
-	return nsInfo["ns"]
+	fmt.Println("nsInfo : ", nsInfo["credential"][0].ID)
+	return nsInfo["credential"]
 
 }
 
