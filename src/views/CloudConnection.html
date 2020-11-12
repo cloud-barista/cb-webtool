@@ -185,6 +185,24 @@
 								</div>
 							</div>
 							<!-- //popup Regist -->
+
+                            <!-- popup Delete -->
+							<div class="modal fade layerpopup" id="UnRegist" tabindex="-1" role="dialog" aria-hidden="true" id="modal_del">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										
+										<div class="modal-body">
+											<div class="txt">Would you like to delete <br />Cloud Connection?</div>
+											<div class="btnbox">
+												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+												<button type="button" class="btn_ok delete" data-dismiss="modal">OK</button>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+							</div>
+							<!-- //popup Regist -->
 							
 							<script>
 								$(document).ready(function(){
@@ -201,6 +219,10 @@
                                             getCredentialList()
                                             getDriverList()
 										})
+									});
+									$('#UnRegist .btn_ok.delete').click(function(){
+                                        console.log("do click delete ok")
+										cloudConnection_delete()
 									});
 								});
 							</script>
@@ -810,6 +832,53 @@ function showInfo(target){
             return;
         }
     }
+
+function cloudConnection_delete(){
+
+    var cnt = 0;
+    var mcc_id = "";
+    var apiInfo = ApiInfo;
+    console.log("start cloudConnection_delete ")
+    console.log("info chk : ", $(".chk"))
+    $(".chk").each(function(){
+        if($(this).is(":checked")){
+            //alert("chk");
+            cnt++;
+            mcc_id = $(this).val();        
+        }
+        if(cnt < 1 ){
+            alert("삭제할 대상을 선택해 주세요.");
+            return;
+        }
+
+        if(cnt == 1){
+           console.log("mcc_id ; ",mcc_id)
+            //var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcc_id
+            var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig/"+mcc_id;
+            
+            if(confirm("삭제하시겠습니까?")){
+             axios.delete(url,{
+                headers :{
+                    'Content-type': 'application/json',
+                    'Authorization': apiInfo,
+                    }
+             }).then(result=>{
+                 var data = result.data
+                 if(result.status == 200){
+                     alert(data.message)
+                     location.reload(true)
+                 }
+             })
+            }
+        }
+
+        if(cnt >1){
+            alert("한개씩만 삭제 가능합니다.")
+            return;
+        }
+
+    })
+}
 
 function getRegionDetail(target){
     var url = "{{ .comURL.SpiderURL}}"+"/region";
