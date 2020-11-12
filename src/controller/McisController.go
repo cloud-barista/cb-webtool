@@ -78,7 +78,7 @@ func VMAddForm(c echo.Context) error {
 	}
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
-		return c.Render(http.StatusOK, "VMAdd.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Manage_Create_VM.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
 			"McisID":    mcis_id,
