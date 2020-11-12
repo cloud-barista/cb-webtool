@@ -817,7 +817,9 @@ function show_mcis_list(url){
     var vm_spec_name = vm_detail.VMSpecName
     $("#server_info_vmspec_name").val(vm_spec_name)
     $("#server_detail_view_server_spec_text").text(vm_spec_name)
-
+    var spec_id = select_vm.specId
+    set_vmSpecInfo(spec_id);
+    
     // start time
     var start_time = vm_detail.StartTime
     $("#server_info_start_time").val(start_time)
@@ -896,6 +898,7 @@ function show_mcis_list(url){
     // image id
     var imageIId = vm_detail.ImageIId.NameId
     var imageId = select_vm.imageId
+    set_vmImageInfo(imageId)
     $("#server_detail_view_image_id_text").text(imageId+"("+imageIId+")")
 
     //vpc subnet
@@ -905,8 +908,10 @@ function show_mcis_list(url){
     var subnetSystemId = vm_detail.SubnetIID.SystemId
     var eth = vm_detail.NetworkInterface
     $("#server_detail_view_vpc_id_text").text(vpcId+"("+vpcSystemId+")")
+    set_vmVPCInfo(vpcId);
+
     $("#server_detail_view_subnet_id_text").text(subnetId+"("+subnetSystemId+")")
-    $("#server_detail_view_eth_text").text(eth)
+    $("#server_detail_view_eth_text").val(eth)
 
     // install Mon agent
     var installMonAgent = select_vm.monAgentStatus
@@ -946,11 +951,18 @@ function show_mcis_list(url){
 
      // security Gorup
     var append_sg = ''
+
     var sg_arr = vm_detail.SecurityGroupIIds
     if(sg_arr){
-        sg_arr.map((item,index)=>(
+        //여기서 호출해서 세부 값을 가져 오자
+        for(var s in sg_arr){
+            var get_sg = sg_arr[s].NameId
+            set_vmSecurityGroupInfo(get_sg)
+        }
+        sg_arr.map((item,index)=>{
+            
             append_sg +='<a href="javascript:void(0);" title="'+item.NameId+'" >'+item.NameId+'</a>'
-        ))
+        })
     }
     append_sg +='인바운드 규칙 보기. 아웃바운드 규칙 보기'
     console.log("append sg : ",append_sg)
@@ -1007,6 +1019,7 @@ function short_desc(str){
 
     return result;
  }
+
  function show_mcis(mcis_id, index){
     var nameSpace = NAMESPACE;
     var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id
@@ -1202,6 +1215,40 @@ function short_desc(str){
     })
 
 }
+
+function set_vmImageInfo(imageId){
+    
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+imageId
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+
+        var data = result.data
+       console.log("spec info : ",data)
+        
+    })
+
+}
+
+function set_vmSpecInfo(specId){
+    
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/spec/"+specId
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+
+        var data = result.data
+       console.log("spec info : ",data)
+        
+    })
+
+}
 function set_vmSSHInfo(sshId){
     
     var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey/"+sshId
@@ -1220,6 +1267,24 @@ function set_vmSSHInfo(sshId){
     })
 
 }
+
+function set_vmVPCInfo(vnetId){
+    
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet/"+vnetId
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+
+        var data = result.data
+        console.log("vnetInfo : ",data)
+        
+    })
+
+}
+
  const config_arr = new Array();
  function getConnection(){
     var apiInfo = ApiInfo;
@@ -1739,7 +1804,27 @@ function set_vmSSHInfo(sshId){
 
  }
 
+ function set_vmSecurityGroupInfo(sg_id){
+    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup/"+sg_id
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+        var data = result.data
+        var html = ""
+        var firewallRules = data.firewallRules
+        console.log("firewallRules : ",firewallRules);
+        
 
+     
+
+                
+        
+    })
+
+}
 
 function show_vmSpecInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
