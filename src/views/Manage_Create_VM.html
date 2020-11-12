@@ -310,27 +310,27 @@
 											var new_obj = Simple_Server_Config_Arr[i]
 											console.log("new Obj : ",new_obj);
 											
-											// try{
-											// 	AjaxLoadingShow(true);
-											// 		axios.post(url,new_obj,{
-											// 			headers :{
-											// 				'Content-type': 'application/json',
-											// 				'Authorization': apiInfo,
-											// 				},
-											// 		}).then(result=>{
-											// 			console.log("MCIR Register data : ",result);
-											// 			console.log("Result Status : ",result.status); 
-											// 			if(result.status == 201 || result.status == 200){
-											// 				alert("Register Success")
-											// 				location.href = "/Manage/MCIS/list/"+mcis_id+"/"mcis_name;
-											// 			}else{
-											// 				alert("Register Fail")
-											// 				//location.reload(true);
-											// 			}
-											// 	})
-											// }finally{
-											// 	AjaxLoadingShow(false);
-											// }  
+											try{
+												AjaxLoadingShow(true);
+													axios.post(url,new_obj,{
+														headers :{
+															'Content-type': 'application/json',
+															'Authorization': apiInfo,
+															},
+													}).then(result=>{
+														console.log("MCIR Register data : ",result);
+														console.log("Result Status : ",result.status); 
+														if(result.status == 201 || result.status == 200){
+															alert("Register Success")
+															location.href = "/Manage/MCIS/list/"+mcis_id+"/"+mcis_name;
+														}else{
+															alert("Register Fail")
+															//location.reload(true);
+														}
+												})
+											}finally{
+												AjaxLoadingShow(false);
+											}  
 										}
 
 									

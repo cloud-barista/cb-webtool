@@ -908,7 +908,7 @@ function show_mcis_list(url){
     var subnetSystemId = vm_detail.SubnetIID.SystemId
     var eth = vm_detail.NetworkInterface
     $("#server_detail_view_vpc_id_text").text(vpcId+"("+vpcSystemId+")")
-    set_vmVPCInfo(vpcId);
+    set_vmVPCInfo(vpcId, subnetId);
 
     $("#server_detail_view_subnet_id_text").text(subnetId+"("+subnetSystemId+")")
     $("#server_detail_view_eth_text").val(eth)
@@ -1226,9 +1226,16 @@ function set_vmImageInfo(imageId){
         }
     }).then(result=>{
 
-        var data = result.data
-       console.log("spec info : ",data)
-        
+        var imageInfo = result.data
+        var html = ""
+        console.log("image info : ",imageInfo)
+        html +='<a href="javascript:void(0);" title="'+imageInfo.cspImageName+'">'+imageInfo.id+'</a>'
+              +'<div class="bb_info">Image Name : '+imageInfo.name+', GuestOS:'+imageInfo.guestOS+'</div>'
+       
+        $("#server_detail_view_image_id").empty()
+        $("#server_detail_view_image_id").append(html)
+        $("#server_info_os").val(imageInfo.guestOS)
+        bubble_box();
     })
 
 }
@@ -1243,8 +1250,15 @@ function set_vmSpecInfo(specId){
         }
     }).then(result=>{
 
-        var data = result.data
-       console.log("spec info : ",data)
+        var spec = result.data
+        var html = ""
+        console.log("spec info : ",spec)
+        html +='<a href="javascript:void(0);" title="'+spec.cspSpecName+'">'+spec.cspSpecName+'</a>'
+              +'<div class="bb_info">MEM : '+spec.mem_GiB+'GiB, vCPU:'+spec.num_vCPU+'</div>'
+       
+        $("#server_detail_view_server_spec").empty()
+        $("#server_detail_view_server_spec").append(html)
+        bubble_box();
         
     })
 
@@ -1263,12 +1277,12 @@ function set_vmSSHInfo(sshId){
         var {privateKey, id, name, cspSShKeyName} = data 
         $("#manage_mcis_popup_sshkey").val(privateKey)
         $("#manage_mcis_popup_sshkey_name").val(name)
-        
+       
     })
 
 }
 
-function set_vmVPCInfo(vnetId){
+function set_vmVPCInfo(vnetId, subnetId){
     
     var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet/"+vnetId
     var apiInfo = ApiInfo
@@ -1278,12 +1292,36 @@ function set_vmVPCInfo(vnetId){
         }
     }).then(result=>{
 
-        var data = result.data
-        console.log("vnetInfo : ",data)
+        
+        var vnet = result.data
+        var subnet_arr = vnet.subnetInfoList
+        var subnet_html = ""
+        var select_subnet = subnet_arr.filter(item => item.Iid.NameId === subnetId)[0]
+        var subnet_cidr = select_subnet.IPv4_CIDR
+        var sub_kv = select_subnet.KeyValueList
+        var AvailabilityZone = sub_kv.filter(item => item.Key === "AvailabilityZone")[0].Value
+        var AvailableIpAddressCount = sub_kv.filter(item => item.Key === "AvailableIpAddressCount")[0].Value
+        var Status = sub_kv.filter(item => item.Key === "Status")[0].Value
+        subnet_html += '<a href="javascript:void(0);" title="'+select_subnet.IId.NameId+'">'+select_subnet.IId.NameId+'('+select_subnet.IId.SystemId+')</a>'
+        +'<div class="bb_info">IPv4_CIDR : '+subnet_cidr+',AvailabilityZone : '+AvailabilityZone+',AvailableIpAddressCount : '+AvailableIpAddressCount+',Status : '+Status+'</div>'
+
+        var html = ""
+        console.log("vnet info : ",vnet)
+        html +='<a href="javascript:void(0);" title="'+vnet.cspVNetId+'">'+vnet.name+'('+vnet.cspVNetId+')</a>'
+              +'<div class="bb_info">cidrBlock : '+vnet.cidrBlock+'</div>'
+       
+        $("#server_detail_view_vpc_id").empty()
+        $("#server_detail_view_vpc_id").append(html)   
+        $("#server_detail_view_subnet_id").empty()
+        $("#server_detail_view_subnet_id").append(subnet_html)     
+
+        bubble_box();
         
     })
 
 }
+
+
 
  const config_arr = new Array();
  function getConnection(){
@@ -1818,6 +1856,9 @@ function set_vmVPCInfo(vnetId){
         console.log("firewallRules : ",firewallRules);
         
 
+        // $("#server_detail_view_security_group").empty()
+        // $("#server_detail_view_security_group").append();
+
      
 
                 
@@ -1825,7 +1866,23 @@ function set_vmVPCInfo(vnetId){
     })
 
 }
-
+function bubble_box(){
+    $(".bubble_box .box").each(function(){
+		var $list = $(this);
+		var bubble =  $list.find('.bb_info');
+		var menuTime;
+		$list.mouseenter(function(){
+			bubble.fadeIn(300);
+			clearTimeout(menuTime);
+		}).mouseleave(function(){
+			clearTimeout(menuTime);
+    	menuTime = setTimeout(mTime, 100);
+		});
+		function mTime() {
+	    bubble.stop().fadeOut(100);
+	  }
+	});
+}
 function show_vmSpecInfo(mcis_id, vm_id){
     var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id
     var apiInfo = ApiInfo
