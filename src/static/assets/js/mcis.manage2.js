@@ -255,11 +255,15 @@ function show_mcis_list(url){
                html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span></td>'
                 mcis_run_cnt++;
              }else if(status == "include" ){
-              
+                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
+                mcis_stop_cnt++;
              }else if(status == "suspended"){
                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
                 mcis_stop_cnt++;
-             }else if(status == "terminate"){
+             }else if(status == "partial"){
+                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
+                 mcis_stop_cnt++;
+              }else if(status == "terminate"){
                 html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span></td>'
                 mcis_terminated_cnt;
              }else{
@@ -650,11 +654,12 @@ function show_mcis_list(url){
     }
 
     var csp = ""
-    if(provider){
-        if(provider.length > 1){
-            csp = provider.join(",")
-        }else if(provider.length == 1){
-            csp = provider[0]
+    var new_provider  = provider.filter((item,index, arr)=>(arr.indexOf(item) === index))
+    if(new_provider){
+        if(new_provider.length > 1){
+            csp = new_provider.join(",")
+        }else if(new_provider.length == 1){
+            csp = new_provider[0]
         }
     }
     $("#mcis_info_cloud_connection").val(csp)
@@ -670,6 +675,7 @@ function show_mcis_list(url){
     }else if(status == "terminate"){
         mcis_badge = '<img src="/assets/img/contents/icon_terminate_db.png" alt=""/>'
     }else{
+        mcis_badge = '<img src="/assets/img/contents/icon_stop_db.png" alt=""/>'
     }
     $("#service_status_icon").empty();
     $("#service_status_icon").append(mcis_badge)
