@@ -1,4 +1,11 @@
 {{ template "Top" .}}
+
+<!-- MCIS Control methods -->
+<script type="text/javascript" src="/assets/js/monitoring.manage.js"></script>
+<script type="text/javascript" src="/assets/js/mcis.chart.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<!-- MCIS Control methods -->
+
 <div id="lnb">
 			
 	<div class="bg"></div>
@@ -131,7 +138,7 @@
 									<div class="monitoring-cont">
 										<div class="monitoring_ip">
 											<div class="mipbox m_ip1">
-									      <select class="selectbox white">
+									      <select class="selectbox white" id="mcisList">
 									        <option value="1">Target MCIS for Monitoring</option>
 									      </select>
 											</div>
@@ -456,10 +463,67 @@
                 <!-- //contents -->
 <script>
 	$(document).ready(function(){
-		order_type = "ConfigName"
-		getCloudConnectionList(order_type);
+		var nsid = "{{ .NameSpace}}";
+		getMcisList(nsid);
 	})
 
+function getMcisList(nsid){
+    var url = "{{ .comURL.TumbleBugURL}}"+"/ns/"+nsid+"/mcis?option=status";
+	console.log("url :",url);
+    axios.get(url,{
+        headers:{
+            'Authorization': "{{ .apiInfo}}",
+            'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get Mcis List Data : ",result.data);
+        var data = result.data.mcis;
+        var html = ""
+
+		if(data.length){
+			var count = 0;
+
+			for(var i in data){
+				var sta = data[i].status;
+				var badge = "";
+				var status = sta.toLowerCase()
+				var vms = data[i].vm
+				var vm_len = 0
+			
+				if(vms){
+					vm_len = vms.length
+				}
+				
+				console.log("mcis Status 1: ", data[i].status)
+           		console.log("mcis Status 2: ", status)
+
+				if(status == "running"){
+					badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+				}else if(status == "include-notdefinedstatus" ){
+					badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+				}else if(status == "suspended"){
+					badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+				}else if(status == "terminate"){
+					badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+				}else{
+					badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
+				}
+				count++;
+				if(count == 1){
+
+				}
+				<option value="1">Target MCIS for Monitoring</option>
+				
+				html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
+			}
+			
+            $("#mcisList").empty();
+            $("#mcisList").append(html);
+		  //  nsModal()
+		  ModalDetail()
+           
+    }}
+)}
 
 function fnMove(target){
 	var offset = $("#" + target).offset();
