@@ -255,11 +255,15 @@ function show_mcis_list(url){
                html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span></td>'
                 mcis_run_cnt++;
              }else if(status == "include" ){
-              
+                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
+                mcis_stop_cnt++;
              }else if(status == "suspended"){
                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
                 mcis_stop_cnt++;
-             }else if(status == "terminate"){
+             }else if(status == "partial"){
+                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
+                 mcis_stop_cnt++;
+              }else if(status == "terminate"){
                 html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span></td>'
                 mcis_terminated_cnt;
              }else{
@@ -476,11 +480,15 @@ function show_mcis_list(url){
                html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_running.png" class="icon" alt=""/> Running  <span class="ov off"></span></td>'
                 mcis_run_cnt++;
              }else if(status == "include" ){
-              
-             }else if(status == "suspended"){
+                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
+                mcis_stop_cnt++;
+             }else if(status == "partial"){
                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
                 mcis_stop_cnt++;
-             }else if(status == "terminate"){
+              } else if(status == "suspended"){
+                    html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
+                     mcis_stop_cnt++;
+            }else if(status == "terminate"){
                 html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span></td>'
                 mcis_terminated_cnt;
              }else{
@@ -489,12 +497,14 @@ function show_mcis_list(url){
            
 
             html +='<td class="btn_mtd ovm" data-th="Name">'+mcis[i].name+'<span class="ov"></span></td>'
+            
             var csp = ""
-            if(provider){
-                if(provider.length > 1){
-                    csp = provider.join(",")
-                }else if(provider.length == 1){
-                    csp = provider[0]
+            var new_provider = provider.filter((item, index, arr)=>(arr.indexOf(item) === index))
+            if(new_provider){
+                if(new_provider.length > 1){
+                    csp = new_provider.join(",")
+                }else if(new_provider.length == 1){
+                    csp = new_provider[0]
                 }
             }
             html += '<td class="overlay hidden" data-th="Cloud Connection">'+csp+'</td>'
@@ -634,8 +644,9 @@ function show_mcis_list(url){
                 vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\',\''+vms[o].name+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
                 
             }else{
-                vm_badge += "shot bgbox_g"
+                vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcis.id+'\',\''+vms[o].id+'\',\''+vms[o].name+'\')"><span class="txt">'+vms[o].name+'</span></a></li>';
             }
+            console.log("vm_status : ", vm_status)
 
         }
         $("#mcis_server_info_box").empty();
@@ -643,11 +654,12 @@ function show_mcis_list(url){
     }
 
     var csp = ""
-    if(provider){
-        if(provider.length > 1){
-            csp = provider.join(",")
-        }else if(provider.length == 1){
-            csp = provider[0]
+    var new_provider  = provider.filter((item,index, arr)=>(arr.indexOf(item) === index))
+    if(new_provider){
+        if(new_provider.length > 1){
+            csp = new_provider.join(",")
+        }else if(new_provider.length == 1){
+            csp = new_provider[0]
         }
     }
     $("#mcis_info_cloud_connection").val(csp)
@@ -663,6 +675,7 @@ function show_mcis_list(url){
     }else if(status == "terminate"){
         mcis_badge = '<img src="/assets/img/contents/icon_terminate_db.png" alt=""/>'
     }else{
+        mcis_badge = '<img src="/assets/img/contents/icon_stop_db.png" alt=""/>'
     }
     $("#service_status_icon").empty();
     $("#service_status_icon").append(mcis_badge)
@@ -900,8 +913,10 @@ function show_mcis_list(url){
     if(installMonAgent == "installed"){
         console.log("install mon agent : ",installMonAgent)
         $("#mcis_detail_info_check_monitoring").prop("checked",true)
+        $("#mcis_detail_info_check_monitoring").attr("disabled",true)
     }else{
         $("#mcis_detail_info_check_monitoring").prop("checked",false)
+        $("#mcis_detail_info_check_monitoring").attr("disabled",false)
     }
 
     // device info
@@ -1047,11 +1062,12 @@ function short_desc(str){
              }
 
              var csp = ""
-             if(provider){
-                 if(provider.length > 1){
-                     csp = provider.join(",")
-                 }else if(provider.length == 1){
-                     csp = provider[0]
+             var new_provider  = provider.filter((item,index, arr)=>(arr.indexOf(item) === index))
+             if(new_provider){
+                 if(new_provider.length > 1){
+                     csp = new_provider.join(",")
+                 }else if(new_provider.length == 1){
+                     csp = new_provider[0]
                  }
              }
              $("#mcis_info_cloud_connection").val(csp)
