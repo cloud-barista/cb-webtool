@@ -489,12 +489,14 @@ function show_mcis_list(url){
            
 
             html +='<td class="btn_mtd ovm" data-th="Name">'+mcis[i].name+'<span class="ov"></span></td>'
+            
             var csp = ""
-            if(provider){
-                if(provider.length > 1){
-                    csp = provider.join(",")
-                }else if(provider.length == 1){
-                    csp = provider[0]
+            var new_provider = provider.filter((item, index, arr)=>(arr.indexOf(item) === index))
+            if(new_provider){
+                if(new_provider.length > 1){
+                    csp = new_provider.join(",")
+                }else if(new_provider.length == 1){
+                    csp = new_provider[0]
                 }
             }
             html += '<td class="overlay hidden" data-th="Cloud Connection">'+csp+'</td>'
