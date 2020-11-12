@@ -86,6 +86,7 @@ func main() {
 	e.GET("/logout/proc", controller.LoginController)
 
 	// Monitoring Control
+	e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)
 	e.GET("/Monitoring/mcis", controller.MornitoringListForm)
 	e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 
