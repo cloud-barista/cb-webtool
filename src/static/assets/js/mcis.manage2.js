@@ -1296,7 +1296,7 @@ function set_vmVPCInfo(vnetId, subnetId){
         var vnet = result.data
         var subnet_arr = vnet.subnetInfoList
         var subnet_html = ""
-        var select_subnet = subnet_arr.filter(item => item.Iid.NameId === subnetId)[0]
+        var select_subnet = subnet_arr.filter(item => item.IId.NameId === subnetId)[0]
         var subnet_cidr = select_subnet.IPv4_CIDR
         var sub_kv = select_subnet.KeyValueList
         var AvailabilityZone = sub_kv.filter(item => item.Key === "AvailabilityZone")[0].Value
