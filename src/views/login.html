@@ -422,6 +422,20 @@ $(document).ready(function(){
                 }else{
                     alert("Fail Create NameSpace")
                 }
+            }).catch(function (error) {
+                if (error.response) {
+                    // 서버가 2xx 외의 상태 코드를 리턴한 경우
+                //error.response.headers / error.response.status / error.response.data
+                    alert("There is a problem communicating with cb-tumblebug server\nCheck the cb-tumblebug server\nCall Url : " + url + "\nStatus Code : " + error.response.status);
+                }
+                else if (error.request) {
+                    // 응답을 못 받음
+                    alert("No response was received from the cb-tumblebug server.\nCheck the cb-tumblebug server\nCall Url : " + url);
+                }
+                else {
+                    alert("Error communicating with cb-tumblebug server.\n" + error.message);
+                }
+                //console.log(error.config);
             });
         }else{
             alert("Input NameSpace")
@@ -672,7 +686,22 @@ function getNameSpace(){
             nsModal()
            
     }}
-)}
+) .catch(function (error) {
+        if (error.response) {
+            // 서버가 2xx 외의 상태 코드를 리턴한 경우
+        //error.response.headers / error.response.status / error.response.data
+            alert("There is a problem communicating with cb-tumblebug server\nCheck the cb-tumblebug server\nCall Url : " + url + "\nStatus Code : " + error.response.status);
+        }
+        else if (error.request) {
+            // 응답을 못 받음
+            alert("No response was received from the cb-tumblebug server.\nCheck the cb-tumblebug server\nCall Url : " + url);
+        }
+        else {
+            alert("Error communicating with cb-tumblebug server.\n" + error.message);
+        }
+        //console.log(error.config);
+    })
+}
 function changeProvider(spiderURL, csp){
     getCloudRegion(spiderURL,csp,'RegionName')
     getCloudCredential(spiderURL,csp,'CredentialName')
