@@ -20,35 +20,35 @@
 		<div class="leftmenu">
 			
 			<ul class="nav">
-				<li class="nav-item"><a class="nav-link " data-toggle="tab" href="#Operation">Operation</a></li>
-				<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Setting">Setting</a></li>
+				<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Operation">Operation</a></li>
+				<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Setting">Setting</a></li>
 			</ul>
 			
 			<div class="tab-content">
 				<div class="tab-pane fade show active" id="Operation">
 					<ul class="menu">
-						<li  id="">
+						<li  id="Dashboard">
 							<a href="javascript:void(0);">Dashboard</a>
 							<ul>
-								<li id=""><a href="/Dashboard/NS">NS</a></li>
-								<li id=""><a href="/Dashboard/Global">Global</a></li>
+								<li id="NS"><a href="/Dashboard/NS">NS</a></li>
+								<li id="Global"><a href="/Dashboard/Global">Global</a></li>
 							</ul>
 						</li>
-						<li  id="">
+						<li  id="Manage">
 							<a href="javascript:void(0);">Manage</a>
 							<ul>
-								<li  id=""><a href="/Manage/MCIS/list">MCIS</a></li>
-								<li id=""><a href="!#">MC-App</a></li>
+								<li  id="MCIS"><a href="/Manage/MCIS/list">MCIS</a></li>
+								<li id="MC-App"><a href="!#">MC-App</a></li>
 							</ul>
 						</li>
-						<li class="active" id="">
+						<li class="active" id="Monitoring">
 							<a href="javascript:void(0);">Monitoring</a>
 							<ul>
-								<li class="on" id=""><a href="/Monitoring/MCIS/list">MCIS</a></li>
-								<li><a href="/operation/Monitoring_McApp.html">MC-App</a></li>
+								<li class="on" id="monMCIS"><a href="/Monitoring/MCIS/list">MCIS</a></li>
+								<li id="monMCApp"><a href="/operation/Monitoring_McApp.html">MC-App</a></li>
 							</ul>
 						</li>
-						<li id="">
+						<li id="Policy">
 							<a href="javascript:void(0);">Policy</a>
 							<ul>
 								<li><a href="../operation/Policy_Monitoring.html">Monitoring</a></li>
@@ -56,7 +56,7 @@
 								<li><a href="../operation/Policy_Placement.html">Placement</a></li>
 							</ul>
 						</li>
-						<li id="">
+						<li id="About">
 							<a href="javascript:void(0);">About</a>
 							<ul>
 								<li><a href="../operation/About.html">About</a></li>
@@ -67,33 +67,33 @@
 				
 				<div class="tab-pane fade" id="Setting">
 					<ul class="menu">
-						<li id="">
+						<li id="Resources">
 							<a href="javascript:void(0);">Resources</a>
 							<ul>
-								<li id=""><a href="/Vpc/list">Network</a></li>
-								<li id=""><a href="/SecurityGroup/list">Security</a></li>
-								<li id=""><a href="/SSH/list">SSH key</a></li>
-								<li id=""><a href="/Image/list">(Server) Image</a></li>
-								<li id=""><a href="/Spec/list">(Server) Spec</a></li>
+								<li id="net"><a href="/Vpc/list">Network</a></li>
+								<li id="sg"><a href="/SecurityGroup/list">Security</a></li>
+								<li id="ssh"><a href="/SSH/list">SSH key</a></li>
+								<li id="image"><a href="/Image/list">(Server) Image</a></li>
+								<li id="spec"><a href="/Spec/list">(Server) Spec</a></li>
 							</ul>
 						</li>
-						<li id="">
+						<li id="AppRes">
 							<a href="javascript:void(0);">App Resource</a>
 							<ul>
 								<li><a href="!#">(Server) Image</a></li>
 								<li><a href="!#">Pod</a></li>
 							</ul>
 						</li>
-						<li id="">
+						<li id="Cloud">
 							<a href="javascript:void(0);">Cloud Connections</a>
 							<ul>
 								<li id="Connection"><a href="/Cloud/Connection/list">Cloud Connections</a></li>
 							</ul>
 						</li>
-						<li id="">
+						<li id="NameSpace">
 							<a href="javascript:void(0);">NameSpace</a>
 							<ul>
-								<li id=""><a href="/NameSpace/NS/list">NameSpace</a></li>
+								<li id="NS"><a href="/NameSpace/NS/list">NameSpace</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -477,7 +477,13 @@ function getMcisList(nsid){
     }).then(result=>{
 		var data = result.data.mcis;
 		console.log("getMCISList data: ",data);
-		var init_mcis = data[0].id
+		var init_mcis = '';
+		if (data.length == 0) {
+			console.warn("data is empty, response data : ", data);
+
+		} else {
+			init_mcis = data[0].id
+		}
 		console.log("init mcis : ", init_mcis);
 		var s_mcis_list = "<option value=''>Choose a Target MCIS for Monitoring</option>"
 		for(var i in data){
@@ -491,7 +497,7 @@ function getMcisList(nsid){
 
 		$("#mcisList").empty()
 		$("#mcisList").append(s_mcis_list)
-		getMcisChange(init_mcis)
+		if (init_mcis != '') getMcisChange(init_mcis)
 
 
 	})

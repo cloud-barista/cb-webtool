@@ -20,78 +20,78 @@
             <div class="tab-content">
                 <div class="tab-pane fade" id="Operation">
                     <ul class="menu">
-                        <li>
-                            <a href="javascript:void(0);">Dashboard</a>
-                            <ul>
-                                <li><a href="/Dashboard/Ns">NS</a></li>
-                                <li><a href="/Dashboard/Global">Global</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">Manage</a>
-                            <ul>
-                                <li class="" id=""><a href="/Manage/MCIS/list">MCIS</a></li>
-								<li id=""><a href="!#">MC-App</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">Monitoring</a>
-                            <ul>
-                                <li id=""><a href="/Monitoring/MCIS/list">MCIS</a></li>
-								<li><a href="/operation/Monitoring_McApp.html">MC-App</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">Policy</a>
-                            <ul>
-                                <li><a href="/Policy/Monitoring">Monitoring</a></li>
-								<li><a href="/Policy/Threshold">Threshold</a></li>
-								<li><a href="/Policy/Placement">Placement</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">About</a>
-                            <ul>
-                                <li><a href="/assets/operation/About.html">About</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="tab-pane fade show active" id="Setting">
-                    <ul class="menu">
-                        <li class="active" id="">
-                            <a href="javascript:void(0);">Resources</a>
-                            <ul>
-                                <li id=""><a href="/Vpc/list">Network</a></li>
-                                <li id=""><a href="/SecurityGroup/list">Security</a></li>
-                                <li id=""><a href="/SSH/list">SSH key</a></li>
-                                <li id=""><a href="/Image/list">(Server) Image</a></li>
-                                <li id="" class="on"><a href="/Spec/list">(Server) Spec</a></li>
-                            </ul>
-                        </li>
-                        <li id="">
+                        <li  id="Dashboard">
+							<a href="javascript:void(0);">Dashboard</a>
+							<ul>
+								<li id="NS"><a href="/Dashboard/NS">NS</a></li>
+								<li id="Global"><a href="/Dashboard/Global">Global</a></li>
+							</ul>
+						</li>
+						<li  id="Manage">
+							<a href="javascript:void(0);">Manage</a>
+							<ul>
+								<li  id="MCIS"><a href="/Manage/MCIS/list">MCIS</a></li>
+								<li id="MC-App"><a href="!#">MC-App</a></li>
+							</ul>
+						</li>
+						<li id="Monitoring">
+							<a href="javascript:void(0);">Monitoring</a>
+							<ul>
+								<li id="MCIS"><a href="/Monitoring/MCIS/list">MCIS</a></li>
+								<li id="MC-App"><a href="/operation/Monitoring_McApp.html">MC-App</a></li>
+							</ul>
+						</li>
+						<li id="Policy">
+							<a href="javascript:void(0);">Policy</a>
+							<ul>
+								<li><a href="../operation/Policy_Monitoring.html">Monitoring</a></li>
+								<li><a href="../operation/Policy_Threshold.html">Threshold</a></li>
+								<li><a href="../operation/Policy_Placement.html">Placement</a></li>
+							</ul>
+						</li>
+						<li id="About">
+							<a href="javascript:void(0);">About</a>
+							<ul>
+								<li><a href="../operation/About.html">About</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="tab-pane fade show active" id="Setting">
+					<ul class="menu">
+						<li class="active" id="Resources">
+							<a href="javascript:void(0);">Resources</a>
+							<ul>
+								<li id="net"><a href="/Vpc/list">Network</a></li>
+								<li id="sg"><a href="/SecurityGroup/list">Security</a></li>
+								<li id="ssh"><a href="/SSH/list">SSH key</a></li>
+								<li id="image"><a href="/Image/list">(Server) Image</a></li>
+								<li id="spec" class="on"><a href="/Spec/list">(Server) Spec</a></li>
+							</ul>
+						</li>
+						<li id="AppRes">
 							<a href="javascript:void(0);">App Resource</a>
 							<ul>
 								<li><a href="!#">(Server) Image</a></li>
 								<li><a href="!#">Pod</a></li>
 							</ul>
 						</li>
-						<li id="">
+						<li id="Cloud">
 							<a href="javascript:void(0);">Cloud Connections</a>
 							<ul>
-								<li id=""><a href="/Cloud/Connection/list">Cloud Connections</a></li>
+								<li id="Connection"><a href="/Cloud/Connection/list">Cloud Connections</a></li>
 							</ul>
 						</li>
-						<li id="">
+						<li id="NameSpace">
 							<a href="javascript:void(0);">NameSpace</a>
 							<ul>
-								<li id=""><a href="/NameSpace/NS/list">NameSpace</a></li>
+								<li id="NS"><a href="/NameSpace/NS/list">NameSpace</a></li>
 							</ul>
 						</li>
-                    </ul>
-                </div>
-            </div>
+					</ul>
+				</div>
+			</div>
 
         </div>
         <!-- //menu -->
