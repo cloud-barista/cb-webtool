@@ -295,9 +295,11 @@
 .dataTable table { width:100%; border-collapse:collapse; background-color:#fff; }
 .dataTable thead th { padding:14px 5px; color:#fff; font-size:18px; font-weight:300; text-align:center; border-right:1px solid #ccc; background-color:#5e636c; }
 .dataTable thead th:last-child { border-right:none; }
+/*
 .dataTable thead th input[type="checkbox"] { display:none }
 .dataTable thead th input[type="checkbox"] + label { cursor:pointer; display:inline-block; margin:0; width:26px; height:26px; vertical-align:middle; background:url(../img/contents/btn_chtd1_off.png)center center no-repeat; }
 .dataTable thead th input[type="checkbox"]:checked + label { background:url(../img/contents/btn_chtd1_on.png) center center no-repeat; }
+*/
 .dataTable thead th span { color:rgba(255,255,255,0.4); font-size:14px; line-height:14px; display:block; margin:6px 0 0 0; }
 .dataTable tbody td { position:relative;  padding:16px 5px; color:#5e636c; font-size:16px; font-weight:300; text-align:center; letter-spacing:-0.5px; border:1px solid #ccc; border-width:1px 1px 1px 0; }
 .dataTable tbody td:last-child { border-right:none; }
@@ -308,9 +310,11 @@
 .dataTable tbody td img.icon { display:inline-block; margin:0 5px 0 0; }
 .dataTable tbody tr:hover td,
 .dataTable tbody tr.on td { background:rgba(94,99,108,.05); cursor:pointer; }
+/*
 .dataTable tbody td input[type="checkbox"] { display:none }
 .dataTable tbody td input[type="checkbox"] + label { cursor:pointer; display:inline-block; margin:0; width:26px; height:26px; vertical-align:middle; background:url(../img/contents/btn_chtd2_off.png)center center no-repeat; }
 .dataTable tbody td input[type="checkbox"]:checked + label { background:url(../img/contents/btn_chtd2_on.png) center center no-repeat; }
+*/
 .dataTable tbody td .bubble_box {}
 .dataTable tbody td .bubble_box .box { display:inline-block; position:relative; }
 .dataTable tbody td .bubble_box .box .s_txt { text-decoration:underline;}
@@ -618,7 +622,7 @@
 #monitoring_box .modal-body .pop-body .pop-cont .pop_ip { float:left; }
 #monitoring_box .modal-body .pop-body .pop-cont .pop_ip li { margin:3px 0 0 0;  }
 #monitoring_box .modal-body .pop-body .pop-cont .pop_ip li label { text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
-#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li .nice-select { width:150px; }
+#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li .selectbox{ width:150px; }
 #monitoring_box .modal-body .pop-body .pop-cont .pop_ip li input[type="text"],
 #monitoring_box .modal-body .pop-body .pop-cont .pop_ip li input[type="password"] { display:inline-block; vertical-align:middle; width:150px; height:38px; padding:15px 12px; border:1px dashed #ccc; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
 #monitoring_box .modal-body .pop-body .pop-cont .pop_ip li textarea { resize:none; display:inline-block; vertical-align:middle; width:304px; height:100px; padding:8px 12px; border:1px dashed #ccc; border-radius:5px; line-height:20px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
@@ -643,7 +647,7 @@
 	#monitoring_box .modal-body .pop-body .pop-cont .ip2,
 	#monitoring_box .modal-body .pop-body .pop-cont .ip4 { float:left; }
 	#monitoring_box .modal-body .pop-body .pop-cont .sel1 { margin:3px 0 0 0; }
-	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li .nice-select,
+	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li .selectbox,
 	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li input[type="text"],
 	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li input[type="password"],
 	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li textarea { width:68%; }
@@ -661,7 +665,7 @@
 	#monitoring_box .modal-body .pop-body .pop-cont .ip4 { margin:3px 0 0 0; }
 	#monitoring_box .modal-body .pop-body .pop-cont .ip2,
 	#monitoring_box .modal-body .pop-body .pop-cont .ip4 { float:left; }
-	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li .nice-select { width:100%; margin:3px 0 0 0; }
+	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li .selectbox { width:100%; margin:3px 0 0 0; }
 	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li input[type="text"],
 	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li input[type="password"],
 	#monitoring_box .modal-body .pop-body .pop-cont .pop_ip li textarea { width:100%; }
@@ -684,11 +688,14 @@
 .dashboard .tabbox .tab-content .tab_ipbox .t_ipbox { float:left; }
 .dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li { margin:3px 0 0 0;  }
 .dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li label { text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
-.dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li .nice-select { width:150px; }
+.dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li .selectbox { width:150px; }
 .dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li input[type="text"],
 .dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li input[type="password"] { display:inline-block; vertical-align:middle; height:38px; padding:15px 12px; border:none; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
-.dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li .txt_ip { display:inline-block; vertical-align:middle; height:38px; padding:10px 12px; border:none; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li .txt_ip { position:relative; display:inline-block; vertical-align:middle; padding:4px 12px 10px 12px; border:none; border-radius:5px; font-size:16px; font-weight:300; line-height:22px; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
 .dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li .txt_ip a { color:#2635ff; font-size:15px; font-weight:200; text-decoration:underline; }
+.dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li .txt_ip .box { display:inline-block; position:relative; padding:0; margin:0; }
+.dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li .txt_ip .bb_info { display:none;  text-align:center; position:absolute; z-index:999; top:24px; left:50%; transform:translateX(-50%); padding:12px 15px; word-break: break-all; width:100%; max-width:320px; min-width:150px; font-size:13px; background-color:#5e636c; color:#fff; border-radius:3px; }
+.dashboard .tabbox .tab-content .tab_ipbox .t_ipbox li .txt_ip .bb_info:after { content:''; display:block; position:absolute; top:-7px; left:50%; transform:translateX(-50%); border-bottom:7px solid #5e636c; border-right:5px solid transparent;  border-left:5px solid transparent; }
 .dashboard .tabbox .tab-content .tab_ipbox .t_ip1 input[type="text"],
 .dashboard .tabbox .tab-content .tab_ipbox .t_ip1 input[type="password"],
 .dashboard .tabbox .tab-content .tab_ipbox .t_ip1 .txt_ip { width:55%; }
@@ -737,18 +744,18 @@
 .dashboard .g_detail_view .view_ip li label { text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .dashboard .g_detail_view .view_ip li.m1 label { width:135px; }
 .dashboard .g_detail_view .view_ip li.m3 label { width:110px; }
-.dashboard .g_detail_view .view_ip li .nice-select { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
+.dashboard .g_detail_view .view_ip li .selectbox { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
 .dashboard .g_detail_view .view_ip li input[type="text"],
 .dashboard .g_detail_view .view_ip li input[type="password"] { display:inline-block; vertical-align:middle; height:38px; padding:15px 12px; border:1px solid #e1e1e1; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
-.dashboard .g_detail_view .view_ip li.m1 .nice-select,
-.dashboard .g_detail_view .view_ip li.m2 .nice-select { width:65%; }
-.dashboard .g_detail_view .view_ip li.m3 .nice-select { width:120px; }
-.dashboard .g_detail_view .view_ip li.m3 span.sbox:nth-child(2) .nice-select { width:193px; }
+.dashboard .g_detail_view .view_ip li.m1 .selectbox,
+.dashboard .g_detail_view .view_ip li.m2 .selectbox { width:65%; }
+.dashboard .g_detail_view .view_ip li.m3 .selectbox { width:120px; }
+.dashboard .g_detail_view .view_ip li.m3 span.sbox:nth-child(2) .selectbox { width:193px; }
 .dashboard .g_detail_view .view_ip li.m3 input[type="text"],
 .dashboard .g_detail_view .view_ip li.m3 input[type="password"] { width:70px; }
 .dashboard .g_detail_view .view_ip li.m4 input[type="text"],
 .dashboard .g_detail_view .view_ip li.m4 input[type="password"] { width:75%; }
-.dashboard .g_detail_view .view_ip li.m5 .nice-select { width:60%; }
+.dashboard .g_detail_view .view_ip li.m5 .selectbox { width:60%; }
 .dashboard .g_detail_view .view_ip li span.sbox { margin:3px 0 0 0; display:block; text-align:right; }
 .dashboard .g_detail_view .view_ip li .btn_view { position:relative; display:inline-block; vertical-align:middle; cursor:pointer; padding:0 12px; min-width:50px; height:37px; line-height:37px; border:none; color:#fff; font-size:12px; font-weight:500; outline:none; border-radius:5px; background-color:#999ea7; } 
 .dashboard .g_detail_view .view_ipbox .graphbox { margin:30px 0 0 0; background-color:#f8f9fa; border-radius:10px; }
@@ -756,10 +763,10 @@
 .dashboard .g_detail_view .view_ip .mvbox { float:left; width:50%; }
 .dashboard .g_detail_view .view_ip .mvbox label { text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .dashboard .g_detail_view .view_ip .mvbox.v_ip2 { text-align:right; }
-.dashboard .g_detail_view .view_ip .mvbox .nice-select { width:60%; }
-.dashboard .g_detail_view .view_ip .mvbox.v_ip2 .nice-select { width:50%; }
-.dashboard .g_detail_view .view_ip .mvbox .mt_2 .nice-select { width:120px; }
-.dashboard .g_detail_view .view_ip .mvbox .mt_2 span.sbox:nth-child(2) .nice-select { width:193px; }
+.dashboard .g_detail_view .view_ip .mvbox .selectbox { width:60%; }
+.dashboard .g_detail_view .view_ip .mvbox.v_ip2 .selectbox { width:50%; }
+.dashboard .g_detail_view .view_ip .mvbox .mt_2 .selectbox { width:120px; }
+.dashboard .g_detail_view .view_ip .mvbox .mt_2 span.sbox:nth-child(2) .selectbox { width:193px; }
 .dashboard .g_detail_view .view_ip .mvbox .mt_2 input[type="text"],
 .dashboard .g_detail_view .view_ip .mvbox .mt_2 input[type="password"] { width:70px; }
 
@@ -767,11 +774,11 @@
 	.dashboard .g_detail_view .view_ip li.m1 { width:100%; }
 	.dashboard .g_detail_view .view_ip li.m2 { width:55%; margin:3px 0 0 0; }
 	.dashboard .g_detail_view .view_ip li.m3 { width:45%; margin:3px 0 0 0; }
-	.dashboard .g_detail_view .view_ip li.m1 .nice-select,
-	.dashboard .g_detail_view .view_ip li.m2 .nice-select { width:75%; }
+	.dashboard .g_detail_view .view_ip li.m1 .selectbox,
+	.dashboard .g_detail_view .view_ip li.m2 .selectbox { width:75%; }
 	.dashboard .g_detail_view .view_ip li.m4 input[type="text"],
 	.dashboard .g_detail_view .view_ip li.m4 input[type="password"] { width:60%; }
-	.dashboard .g_detail_view .view_ip li.m5 .nice-select { width:60%; }
+	.dashboard .g_detail_view .view_ip li.m5 .selectbox { width:60%; }
 }
 @media screen and (max-width:1550px){
 	.dashboard .tabbox .tab-content { padding:30px 40px; }
@@ -810,13 +817,13 @@
 	.dashboard .g_detail_view .view_ip li.m3,
 	.dashboard .g_detail_view .view_ip li.m4,
 	.dashboard .g_detail_view .view_ip li.m5 { width:100%; margin:3px 0 0 0; }
-	.dashboard .g_detail_view .view_ip li.m1 .nice-select,
-	.dashboard .g_detail_view .view_ip li.m2 .nice-select,
+	.dashboard .g_detail_view .view_ip li.m1 .selectbox,
+	.dashboard .g_detail_view .view_ip li.m2 .selectbox,
 	.dashboard .g_detail_view .view_ip li.m4 input[type="text"],
 	.dashboard .g_detail_view .view_ip li.m4 input[type="password"] { width:70%; }
 	.dashboard .g_detail_view .view_ip li.m5 .sel_w2 { display:inline-block; width:70%; }
-	.dashboard .g_detail_view .view_ip li.m5 .nice-select  { width:calc(100% - 54px) !important;}
-	.dashboard .g_detail_view .view_ip li.m5.m5_n .nice-select  { width:70% !important;}
+	.dashboard .g_detail_view .view_ip li.m5 .selectbox  { width:calc(100% - 54px) !important;}
+	.dashboard .g_detail_view .view_ip li.m5.m5_n .selectbox  { width:70% !important;}
 }
 @media screen and (max-width:1290px){
 	.dashboard .g_detail_view .view_ip .mvbox { float:left; width:100%; text-align:right; }
@@ -837,12 +844,12 @@
 	.dashboard .tabbox .tab-content .tab_ipbox .t_ip4 input[type="text"],
 	.dashboard .tabbox .tab-content .tab_ipbox .t_ip4 input[type="password"],
 	.dashboard .tabbox .tab-content .tab_ipbox .t_ip4 .txt_ip { width:60%; }
-	.dashboard .g_detail_view .view_ip li.m1 .nice-select,
-	.dashboard .g_detail_view .view_ip li.m2 .nice-select,
+	.dashboard .g_detail_view .view_ip li.m1 .selectbox,
+	.dashboard .g_detail_view .view_ip li.m2 .selectbox,
 	.dashboard .g_detail_view .view_ip li.m4 input[type="text"],
 	.dashboard .g_detail_view .view_ip li.m4 input[type="password"],
 	.dashboard .g_detail_view .view_ip li.m5 .sel_btn { width:60%; }
-	.dashboard .g_detail_view .view_ip li.m5.m5_n .nice-select  { width:60% !important;}
+	.dashboard .g_detail_view .view_ip li.m5.m5_n .selectbox  { width:60% !important;}
 }
 @media screen and (max-width:1110px){
 	.dashboard .tabbox .tab-content .tab_ipbox .t_ip1 input[type="text"],
@@ -868,8 +875,8 @@
 	.dashboard .tabbox .tab-content .tab_ipbox .t_ip4 input[type="password"],
 	.dashboard .tabbox .tab-content .tab_ipbox .t_ip4 .txt_ip { width:70%; }
 	.dashboard .tabbox .tab-content .graph_list .glist { margin:10px 0 0 0; width:50%; }
-	.dashboard .g_detail_view .view_ip li.m1 .nice-select,
-	.dashboard .g_detail_view .view_ip li.m2 .nice-select,
+	.dashboard .g_detail_view .view_ip li.m1 .selectbox,
+	.dashboard .g_detail_view .view_ip li.m2 .selectbox,
 	.dashboard .g_detail_view .view_ip li.m4 input[type="text"],
 	.dashboard .g_detail_view .view_ip li.m4 input[type="password"],
 	.dashboard .g_detail_view .view_ip li.m5 .sel_btn { width:70%; }
@@ -883,8 +890,8 @@
 	.dashboard .tabbox .tab-content .tab_ipbox .t_ip2 input[type="password"],
 	.dashboard .tabbox .tab-content .tab_ipbox .t_ip2 .txt_ip { width:55%; }
 	.dashboard .tabbox .tab-content .graph_list .glist { width:100%; }
-	.dashboard .g_detail_view .view_ip li.m1 .nice-select,
-	.dashboard .g_detail_view .view_ip li.m2 .nice-select,
+	.dashboard .g_detail_view .view_ip li.m1 .selectbox,
+	.dashboard .g_detail_view .view_ip li.m2 .selectbox,
 	.dashboard .g_detail_view .view_ip li.m4 input[type="text"],
 	.dashboard .g_detail_view .view_ip li.m4 input[type="password"],
 	.dashboard .g_detail_view .view_ip li.m5 .sel_btn { width:60%; }
@@ -934,28 +941,28 @@
 	.dashboard .g_detail_view .view_ip li.m3 label,
 	.dashboard .g_detail_view .view_ip li.m4 label,
 	.dashboard .g_detail_view .view_ip li.m5 label { width:100%; display:block; margin:8px 0 5px 0; text-align:left;  }
-	.dashboard .g_detail_view .view_ip li.m1 .nice-select,
-	.dashboard .g_detail_view .view_ip li.m2 .nice-select,
-	.dashboard .g_detail_view .view_ip li.m3 .nice-select,
+	.dashboard .g_detail_view .view_ip li.m1 .selectbox,
+	.dashboard .g_detail_view .view_ip li.m2 .selectbox,
+	.dashboard .g_detail_view .view_ip li.m3 .selectbox,
 	.dashboard .g_detail_view .view_ip li.m4 input[type="text"],
 	.dashboard .g_detail_view .view_ip li.m4 input[type="password"],
 	.dashboard .g_detail_view .view_ip li.m5 .sel_btn { width:100%; }
-	.dashboard .g_detail_view .view_ip li.m3 .nice-select { margin:3px 0 0 0; }
+	.dashboard .g_detail_view .view_ip li.m3 .selectbox { margin:3px 0 0 0; }
 	.dashboard .g_detail_view .view_ip li.m3 .sel_w1 { display:inline-block; width:100%; }
 	.dashboard .g_detail_view .view_ip li.m3 input { vertical-align:bottom; }
-	.dashboard .g_detail_view .view_ip li.m3 .nice-select  { width:calc(100% - 74px) !important; vertical-align:bottom; }
-	.dashboard .g_detail_view .view_ip li.m3 span.sbox:nth-child(2) .nice-select { width:100% !important; }
+	.dashboard .g_detail_view .view_ip li.m3 .selectbox  { width:calc(100% - 74px) !important; vertical-align:bottom; }
+	.dashboard .g_detail_view .view_ip li.m3 span.sbox:nth-child(2) .selectbox { width:100% !important; }
 	.dashboard .g_detail_view .view_ip li.m5 .sel_w2 { display:inline-block; width:100%; }
-	.dashboard .g_detail_view .view_ip li.m5 .nice-select  { width:calc(100% - 54px) !important;}
-	.dashboard .g_detail_view .view_ip li.m5.m5_n .nice-select { width:100% !important; }
+	.dashboard .g_detail_view .view_ip li.m5 .selectbox  { width:calc(100% - 54px) !important;}
+	.dashboard .g_detail_view .view_ip li.m5.m5_n .selectbox { width:100% !important; }
 	.dashboard .g_detail_view .view_ip .mvbox { float:left; width:100%; }
 	.dashboard .g_detail_view .view_ip .mvbox label { width:100%; display:block; margin:8px 0 5px 0; text-align:left;  }
 	.dashboard .g_detail_view .view_ip .mvbox.v_ip2 { text-align:left; }
-	.dashboard .g_detail_view .view_ip .mvbox .nice-select { width:100%; }
-	.dashboard .g_detail_view .view_ip .mvbox span.sbox_m2 .nice-select { width:calc(100% - 54px) !important;  }
-	.dashboard .g_detail_view .view_ip .mvbox.v_ip2 .nice-select { width:50%; }
-	.dashboard .g_detail_view .view_ip .mvbox .mt_2 .nice-select { width:calc(100% - 74px) !important; vertical-align:bottom; }
-	.dashboard .g_detail_view .view_ip .mvbox .mt_2 span.sbox:nth-child(2) .nice-select { width:100% !important; }
+	.dashboard .g_detail_view .view_ip .mvbox .selectbox { width:100%; }
+	.dashboard .g_detail_view .view_ip .mvbox span.sbox_m2 .selectbox { width:calc(100% - 54px) !important;  }
+	.dashboard .g_detail_view .view_ip .mvbox.v_ip2 .selectbox { width:50%; }
+	.dashboard .g_detail_view .view_ip .mvbox .mt_2 .selectbox { width:calc(100% - 74px) !important; vertical-align:bottom; }
+	.dashboard .g_detail_view .view_ip .mvbox .mt_2 span.sbox:nth-child(2) .selectbox { width:100% !important; }
 }
 @media screen and (max-width:480px){
 	.dashboard .tabbox .tab-content { padding:20px 15px; }
@@ -967,7 +974,7 @@
 .monitoring_ipbox { }
 .monitoring_ipbox li { margin:3px 0 0 0; }
 .monitoring_ipbox li label { text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
-.monitoring_ipbox li .nice-select { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
+.monitoring_ipbox li .selectbox { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
 .monitoring_ipbox li input[type="text"],
 .monitoring_ipbox li input[type="password"] { display:inline-block; vertical-align:middle; height:38px; padding:15px 12px; border:1px solid #e1e1e1; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
 .monitoring_ipbox li .btn_view { position:relative; display:inline-block; vertical-align:middle; cursor:pointer; padding:0 12px; min-width:50px; height:37px; line-height:37px; border:none; color:#fff; font-size:12px; font-weight:500; outline:none; border-radius:5px; background-color:#999ea7; } 
@@ -978,39 +985,39 @@
 .monitoring_ipbox .monitoring_ip li.m1 { width:48%; }
 .monitoring_ipbox .monitoring_ip li.m2 { width:26%; text-align:right; }
 .monitoring_ipbox .monitoring_ip li.m3 { width:26%; }
-.monitoring_ipbox .monitoring_ip li.m1 .nice-select { width:42%; }
-.monitoring_ipbox .monitoring_ip li.m1.l_m1 .nice-select { width:70%; }
-.monitoring_ipbox .monitoring_ip li.m2 .nice-select { width:60%; }
-.monitoring_ipbox .monitoring_ip li.m3 .nice-select { width:120px; }
-.monitoring_ipbox .monitoring_ip li.m3 span.sbox:nth-child(2) .nice-select { width:193px; }
+.monitoring_ipbox .monitoring_ip li.m1 .selectbox { width:42%; }
+.monitoring_ipbox .monitoring_ip li.m1.l_m1 .selectbox { width:70%; }
+.monitoring_ipbox .monitoring_ip li.m2 .selectbox { width:60%; }
+.monitoring_ipbox .monitoring_ip li.m3 .selectbox { width:120px; }
+.monitoring_ipbox .monitoring_ip li.m3 span.sbox:nth-child(2) .selectbox { width:193px; }
 .monitoring_ipbox .monitoring_ip li.m3 input[type="text"],
 .monitoring_ipbox .monitoring_ip li.m3 input[type="password"] { width:70px; }
 .monitoring_ipbox .monitoring_ip .mipbox { float:left; width:50%; }
 .monitoring_ipbox .monitoring_ip .mipbox label { text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .monitoring_ipbox .monitoring_ip .mipbox.m_ip2 { text-align:right; }
-.monitoring_ipbox .monitoring_ip .mipbox .nice-select { width:90%; }
-.monitoring_ipbox .monitoring_ip .mipbox.m_ip2 .nice-select { width:50%; }
-.monitoring_ipbox .monitoring_ip .mipbox .mt_2 .nice-select { width:120px; }
-.monitoring_ipbox .monitoring_ip .mipbox .mt_2 span.sbox:nth-child(2) .nice-select { width:193px; }
+.monitoring_ipbox .monitoring_ip .mipbox .selectbox { width:90%; }
+.monitoring_ipbox .monitoring_ip .mipbox.m_ip2 .selectbox { width:50%; }
+.monitoring_ipbox .monitoring_ip .mipbox .mt_2 .selectbox { width:120px; }
+.monitoring_ipbox .monitoring_ip .mipbox .mt_2 span.sbox:nth-child(2) .selectbox { width:193px; }
 .monitoring_ipbox .monitoring_ip .mipbox .mt_2 input[type="text"],
 .monitoring_ipbox .monitoring_ip .mipbox .mt_2 input[type="password"] { width:70px; }
 @media screen and (max-width:1830px){
 	.monitoring_ipbox .monitoring_ip li.m1 { width:100%; text-align:right; }
 	.monitoring_ipbox .monitoring_ip li.m2 { width:55%; margin:3px 0 0 0; }
 	.monitoring_ipbox .monitoring_ip li.m3 { width:45%; margin:3px 0 0 0; }
-	.monitoring_ipbox .monitoring_ip li.m1 .nice-select { width:35%; }
-	.monitoring_ipbox .monitoring_ip li.m2 .nice-select { width:75%; }
+	.monitoring_ipbox .monitoring_ip li.m1 .selectbox { width:35%; }
+	.monitoring_ipbox .monitoring_ip li.m2 .selectbox { width:75%; }
 }
 @media screen and (max-width:1400px) {
 	.monitoring_ipbox .monitoring_ip li.m2 { width:100%; margin:3px 0 0 0; }
 	.monitoring_ipbox .monitoring_ip li.m3 { width:100%; margin:3px 0 0 0; }
-	.monitoring_ipbox .monitoring_ip li.m2 .nice-select { width:70%; }
+	.monitoring_ipbox .monitoring_ip li.m2 .selectbox { width:70%; }
 }
 @media screen and (max-width:1200px){
-	.monitoring_ipbox .monitoring_ip li.m2 .nice-select { width:60%; }
+	.monitoring_ipbox .monitoring_ip li.m2 .selectbox { width:60%; }
 }
 @media screen and (max-width:1024px){
-	.monitoring_ipbox .monitoring_ip li.m2 .nice-select { width:70%; }
+	.monitoring_ipbox .monitoring_ip li.m2 .selectbox { width:70%; }
 }
 @media screen and (max-width:640px){
 	.monitoring_ipbox .monitoring_ip li.m1,
@@ -1020,25 +1027,25 @@
 	.monitoring_ipbox .monitoring_ip li.m2 label,
 	.monitoring_ipbox .monitoring_ip li.m3 label { width:100%; display:block; margin:8px 0 5px 0; text-align:left;  }
 	.monitoring_ipbox .monitoring_ip li.m1 span.sbox_m1_1 .or { text-align:left; width:50px; margin:0; }
-	.monitoring_ipbox .monitoring_ip li.m1 span.sbox_m1_1 .nice-select { width:calc(100% - 54px) !important;  }
+	.monitoring_ipbox .monitoring_ip li.m1 span.sbox_m1_1 .selectbox { width:calc(100% - 54px) !important;  }
 	.monitoring_ipbox .monitoring_ip li.m1 span.sbox_m1_2 { margin:3px 0 0 0; display:block; }
-	.monitoring_ipbox .monitoring_ip li.m1 span.sbox_m1_2 .nice-select { width:calc(100% - 54px) !important;  }
-	.monitoring_ipbox .monitoring_ip li.m2 .nice-select { width:100%; }
-	.monitoring_ipbox .monitoring_ip li.m3 .nice-select { margin:3px 0 0 0; }
+	.monitoring_ipbox .monitoring_ip li.m1 span.sbox_m1_2 .selectbox { width:calc(100% - 54px) !important;  }
+	.monitoring_ipbox .monitoring_ip li.m2 .selectbox { width:100%; }
+	.monitoring_ipbox .monitoring_ip li.m3 .selectbox { margin:3px 0 0 0; }
 	.monitoring_ipbox .monitoring_ip li.m3 .sel_w1 { display:inline-block; width:100%; }
 	.monitoring_ipbox .monitoring_ip li.m3 input { vertical-align:bottom; }
-	.monitoring_ipbox .monitoring_ip li.m3 .nice-select { width:calc(100% - 74px) !important; vertical-align:bottom; }
-	.monitoring_ipbox .monitoring_ip li.m3 span.sbox:nth-child(2) .nice-select { width:100% !important; }
+	.monitoring_ipbox .monitoring_ip li.m3 .selectbox { width:calc(100% - 74px) !important; vertical-align:bottom; }
+	.monitoring_ipbox .monitoring_ip li.m3 span.sbox:nth-child(2) .selectbox { width:100% !important; }
 	.monitoring_ipbox .monitoring_ip .mipbox { float:left; width:100%; }
 	.monitoring_ipbox .monitoring_ip .mipbox label { width:100%; display:block; margin:8px 0 5px 0; text-align:left;  }
 	.monitoring_ipbox .monitoring_ip .mipbox.m_ip2 { text-align:left; }
-	.monitoring_ipbox .monitoring_ip .mipbox .nice-select { width:100%; }
-	.monitoring_ipbox .monitoring_ip .mipbox span.sbox_m2 .nice-select { width:calc(100% - 54px) !important;  }
-	.monitoring_ipbox .monitoring_ip .mipbox.m_ip2 .nice-select { width:50%; }
-	.monitoring_ipbox .monitoring_ip .mipbox .mt_2 .nice-select { width:calc(100% - 74px) !important; vertical-align:bottom; }
-	.monitoring_ipbox .monitoring_ip .mipbox .mt_2 span.sbox:nth-child(2) .nice-select { width:100% !important; }
+	.monitoring_ipbox .monitoring_ip .mipbox .selectbox { width:100%; }
+	.monitoring_ipbox .monitoring_ip .mipbox span.sbox_m2 .selectbox { width:calc(100% - 54px) !important;  }
+	.monitoring_ipbox .monitoring_ip .mipbox.m_ip2 .selectbox { width:50%; }
+	.monitoring_ipbox .monitoring_ip .mipbox .mt_2 .selectbox { width:calc(100% - 74px) !important; vertical-align:bottom; }
+	.monitoring_ipbox .monitoring_ip .mipbox .mt_2 span.sbox:nth-child(2) .selectbox { width:100% !important; }
 	
-	.dashboard .g_detail_view .view_ip li.m5 .nice-select  { width:calc(100% - 54px) !important;}
+	.dashboard .g_detail_view .view_ip li.m5 .selectbox  { width:calc(100% - 54px) !important;}
 	
 }
 .ds_cont_mbox { margin:30px 0 0 0; padding:40px 45px 40px 45px; background-color:#f8f9fa; border-radius:10px; transition:all 0.4s ease-in-out; }
@@ -1117,7 +1124,7 @@
 	.ds_cont_mbox .mtbox .g_list .gbox .sel { margin-left:0; }
 	.ds_cont_mbox .mtbox .g_list .gbox .graph { margin-left:0; }
 	.ds_cont_mbox .mtbox .g_list .sel label { display:block; margin:0 0 8px 0; text-align:left; }
-	.ds_cont_mbox .mtbox .g_list .nice-select { width:100% !important; }
+	.ds_cont_mbox .mtbox .g_list .selectbox { width:100% !important; }
 	.ds_cont_mbox .mtbox .g_list { float:none; width:100%;  }
 	.ds_cont_mbox .mtbox .g_list .listbox { margin:0; }
 	.ds_cont_mbox .mtbox .g_list .listbox li { width:31%; }
@@ -1148,7 +1155,7 @@
 .dashboard .register_box li label { position:relative; text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .dashboard .register_box li label span.ch { color:#ff0000; display:inline-block; margin:0 4px 0 0;}
 .dashboard .register_box li label span.txt_sb { display:block; font-size:15px; font-weight:300; }
-.dashboard .register_box li .nice-select { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
+.dashboard .register_box li .selectbox { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
 .dashboard .register_box li input[type="text"],
 .dashboard .register_box li input[type="password"] { display:inline-block; vertical-align:middle; height:38px; padding:15px 12px; border:1px solid #e1e1e1; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
 .dashboard .register_box li input.pline { border:1px dashed #ccc; }
@@ -1488,10 +1495,10 @@
 	.dashboard .register_box .top_ipbox .ipbox2 label { display:block; margin:12px 0 8px 0; text-align:left; }
 	.dashboard .register_box .top_ipbox .ipbox { text-align:left; }
 	.dashboard .register_box .top_ipbox .ipbox1 span.sbox input[type="text"]{ width:calc(100% - 30px) !important; }
-	.dashboard .register_box .top_ipbox .ipbox .nice-select,
+	.dashboard .register_box .top_ipbox .ipbox .selectbox,
 	.dashboard .register_box .top_ipbox .ipbox1 input[type="text"], 
 	.dashboard .register_box .top_ipbox .ipbox2 input[type="text"] { width:100%; }
-	.dashboard .register_box .top_ipbox .ipbox2 .nice-select.w2 { margin:3px 0 0 0; }
+	.dashboard .register_box .top_ipbox .ipbox2 .selectbox.w2 { margin:3px 0 0 0; }
 	.dashboard .register_box .top_ipbox .ipbox1.ipbox3 { text-align:left; width:100%; padding:0; }
 	.dashboard .register_box .top_ipbox .ipbox1.ipbox3 input[type="text"] { width:100%; }
 	.dashboard .register_box .top_ipbox .ipbox4 { text-align:left; padding:0; }
@@ -1621,7 +1628,7 @@
 .dashboard .create_box li label { position:relative; text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .dashboard .create_box li label span.ch { color:#ff0000; display:inline-block; margin:0 4px 0 0;}
 .dashboard .create_box li label span.txt_sb { display:block; font-size:15px; font-weight:300; }
-.dashboard .create_box li .nice-select { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
+.dashboard .create_box li .selectbox { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
 .dashboard .create_box li input[type="text"],
 .dashboard .create_box li input[type="search"],
 .dashboard .create_box li input[type="password"] { display:inline-block; vertical-align:middle; height:38px; padding:15px 12px; border:1px solid #e1e1e1; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }

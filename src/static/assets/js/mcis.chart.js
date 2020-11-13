@@ -84,8 +84,8 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
    });
    
    
-   var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
-  // url = 'http://182.252.135.42:9090/dragonfly/mcis/mzc-aws-montest-01-mcis/vm/aws-mon-test-east-01/metric/'+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+   var url = DragonFlyURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+ 
    console.log("Request URL : ",url)
    var html = "";
    var apiInfo = ApiInfo;
@@ -194,8 +194,8 @@ function checkDragonFly(mcis_id, vm_id){
    var statisticsCriteria = "last";
    var metric = "cpu" 
    var apiInfo = ApiInfo;
-   var url = DragonFlyURL+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
-   //url = 'http://182.252.135.42:9090/dragonfly/mcis/mzc-aws-montest-01-mcis/vm/aws-mon-test-east-01/metric/'+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+   var url = DragonFlyURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+   
    console.log("Request URL : ",url)
    
    $.ajax({
@@ -225,10 +225,18 @@ function time_arr(obj, title){
     //data sets
    var labels = obj.columns;
    var datasets = obj.values;
-    // 각 값의 배열 데이터들
    
+    // 각 값의 배열 데이터들
    var series_label = new Array();
    var data_set = new Array();
+   for(var i in labels){
+       var ky = labels[i]
+       console.log("key : ",ky)
+        for(var k in datasets){
+           data_set.push(datasets[k][ky])
+        }
+    }
+    console.log("data_set : ", data_set)
    // 최종 객체 data
    var new_obj = {}
    var color_arr = ['rgb(255, 99, 132)','rgb(255, 159, 64)', 'rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgb(99, 255, 243)']   
@@ -241,6 +249,7 @@ function time_arr(obj, title){
             series_label.push(datasets[k][i]) //이건 시간만 담는다.
         }else{
             dt.label = labels[i];
+
             series_data.push(datasets[k][i]) //그외 나머지 데이터만 담는다.
             dt.borderColor = color_arr[i];
             dt.backgroundColor = color_arr[i];

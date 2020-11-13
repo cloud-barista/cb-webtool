@@ -1,5 +1,5 @@
-{{define "Nav_manage_mcis"}}
-{{template "Top" .}}
+{{define "Nav_Dashboard_NS"}}
+{{ template "Top" .}}
 <div id="lnb">
 			
 	<div class="bg"></div>
@@ -21,17 +21,17 @@
 			<div class="tab-content">
 				<div class="tab-pane fade show active" id="Operation">
 					<ul class="menu">
-						<li id="">
+						<li class="active" id="">
 							<a href="javascript:void(0);">Dashboard</a>
 							<ul>
-								<li  id=""><a href="/Dashboard/NS">NS</a></li>
+								<li class="on" id=""><a href="/Dashboard/NS">NS</a></li>
 								<li id=""><a href="/Dashboard/Global">Global</a></li>
 							</ul>
 						</li>
-						<li class="active" id="">
+						<li id="">
 							<a href="javascript:void(0);">Manage</a>
 							<ul>
-								<li class="on" id=""><a href="/Manage/MCIS/list">MCIS</a></li>
+								<li id=""><a href="/Manage/MCIS/list">MCIS</a></li>
 								<li id=""><a href="!#">MC-App</a></li>
 							</ul>
 						</li>
@@ -45,15 +45,15 @@
 						<li id="">
 							<a href="javascript:void(0);">Policy</a>
 							<ul>
-								<li><a href="/Policy/Monitoring">Monitoring</a></li>
-								<li><a href="/Policy/Threshold">Threshold</a></li>
-								<li><a href="/Policy/Placement">Placement</a></li>
+								<li><a href="../operation/Policy_Monitoring.html">Monitoring</a></li>
+								<li><a href="../operation/Policy_Threshold.html">Threshold</a></li>
+								<li><a href="../operation/Policy_Placement.html">Placement</a></li>
 							</ul>
 						</li>
 						<li id="">
 							<a href="javascript:void(0);">About</a>
 							<ul>
-								<li><a href="/About/About">About</a></li>
+								<li><a href="../operation/About.html">About</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -64,11 +64,11 @@
 						<li id="">
 							<a href="javascript:void(0);">Resources</a>
 							<ul>
-								<li><a href="/Vpc/list">Network</a></li>
-								<li ><a href="/SecurityGroup/list">Security</a></li>
-								<li><a href="/SSH/list">SSH key</a></li>
-								<li><a href="/Image/list">(Server) Image</a></li>
-								<li><a href="/Spec/list">(Server) Spec</a></li>
+								<li id=""><a href="/Vpc/list">Network</a></li>
+								<li id=""><a href="/SecurityGroup/list">Security</a></li>
+								<li id=""><a href="/SSH/list">SSH key</a></li>
+								<li id=""><a href="/Image/list">(Server) Image</a></li>
+								<li id=""><a href="/Spec/list">(Server) Spec</a></li>
 							</ul>
 						</li>
 						<li id="">
@@ -98,7 +98,6 @@
 		<!-- //menu -->
 		
 	</div>
-	
 	
 	<div class="bottom"></div>
 	<a href="javascript:;" id="m_close"></a>

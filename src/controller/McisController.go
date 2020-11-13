@@ -41,6 +41,32 @@ func McisListForm(c echo.Context) error {
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
+func McisListFormWithParam(c echo.Context) error {
+	mcis_id := c.Param("mcis_id")
+	mcis_name := c.Param("mcis_name")
+	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
+	if mcis_id == "" && mcis_name == "" {
+		mcis_id = ""
+		mcis_name = ""
+	}
+	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := GetNameSpaceToString(c)
+		return c.Render(http.StatusOK, "Manage_Mcis.html", map[string]interface{}{
+			"LoginInfo": loginInfo,
+			"NameSpace": namespace,
+			"McisID":    mcis_id,
+			"McisName":  mcis_name,
+			"comURL":    comURL,
+			"apiInfo":   apiInfo,
+		})
+
+	}
+
+	//return c.Render(http.StatusOK, "MCISlist.html", nil)
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
+
 func VMAddForm(c echo.Context) error {
 	mcis_id := c.Param("mcis_id")
 	mcis_name := c.Param("mcis_name")
@@ -52,7 +78,7 @@ func VMAddForm(c echo.Context) error {
 	}
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
-		return c.Render(http.StatusOK, "VMAdd.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Manage_Create_VM.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
 			"McisID":    mcis_id,

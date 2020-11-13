@@ -8,12 +8,15 @@ import (
 
 func MornitoringListForm(c echo.Context) error {
 	comURL := GetCommonURL()
+	apiInfo := AuthenticationHandler()
 	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
 		namespace := GetNameSpaceToString(c)
-		return c.Render(http.StatusOK, "Monitoring.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Monitoring_Mcis.html", map[string]interface{}{
+			// return c.Render(http.StatusOK, "Monitoring.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
 			"comURL":    comURL,
+			"apiInfo":   apiInfo,
 		})
 
 	}

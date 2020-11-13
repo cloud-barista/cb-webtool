@@ -110,7 +110,8 @@
 				</script>
 				<!-- contents -->
 				<div class="contbox">
-					<input type="hidden" name="installMonAgent"  value="yes" id="installMonAgent" />
+					
+					<input type="hidden" name="mcis_id"  value="{{ .McisID}}" id="mcis_id" />
 					
 					<div class="titlebox">
 						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Manage / <strong>MCIS</strong></div>
@@ -123,7 +124,7 @@
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox line_none">
-								<div class="tit initial"><strong>Create MCIS</strong></div>
+								<div class="tit initial"><strong>Extend VM</strong></div>
 								
 								<div class="step_box">
 									<div class="on">STEP 1 <div class="bar"></div></div>
@@ -149,12 +150,12 @@
 														<ul>
 															<li>
 																<label>Name</label>
-																<input type="text" name="mcis_name" value="" id="mcis_name" placeholder="Input Name" class="pline ip_1" title="" />
+																<input type="text" name="mcis_name" value="{{ .McisName }}" id="mcis_name" placeholder="Input Name" class="pline ip_1" title="" readonly />
 															</li>
-															<li>
+															<!-- <li>
 																<label>Description</label>
 																<textarea  cols="" rows="" id="mcis_desc" placeholder="type Description" name="mcis_desc" class="pline ta_1" title="" ></textarea>
-															</li>
+															</li> -->
 														</ul>
 													</div>
 													<div class="ipbox ipbox2">
@@ -254,56 +255,93 @@
 													</div>
 												</div>
 						<script>
+							$(document).ready(function(){
+								var mcis_id = $("#mcis_id").val()
+								var ns_id = NAMESPACE;
+								if(mcis_id){
+									var url = CommonURL+"/ns/"+ns_id+"/mcis/"+mcis_id
+									var apiInfo = ApiInfo
+									axios.get(url,{
+										headers:{
+											'Authorization': apiInfo
+										}
+									}).then(result =>{
+											var data = result.data
+											var vm = data.vm
+											var add_server_html = "";
+											if(vm){
+												if(vm.length > 0){
+													vm.map(item =>(
+														add_server_html +='<li>'
+																		+'<div class="server server_on bgbox_g">'
+																		+'<div class="icon"></div>'
+																		+'<div class="txt">'+item.name+'</div>'
+																		+'</div>'
+																		+'</li>'
+													))
+												}
+											}
+											$("#mcis_server_list").prepend(add_server_html);
+
+										}
+									)
+								}
+							})
+
+
 							function btn_deploy(){
 								var mcis_name = $("#mcis_name").val();
+								var mcis_id = $("#mcis_id").val();
 								if(!mcis_name){
 									alert("Please Input MCIS Name!!!!!")
 									return;
 								}
-								var mcis_desc = $("#mcis_desc").val();
-								var placement_algo = $("#placement_algo").val();
-								var installMonAgent = $("#installMonAgent").val();
+								
 								console.log(Simple_Server_Config_Arr)
-								var new_obj = {}
+								var ns_id = NAMESPACE;
 								var apiInfo = ApiInfo;
-								new_obj['name'] = mcis_name
-								new_obj['description'] = mcis_desc
-								new_obj['installMonAgent'] = installMonAgent
-
+								var url = CommonURL+"/ns/"+ns_id+"/mcis/"+mcis_id+"/vm"
 								if(Simple_Server_Config_Arr){
-									vm_len = Simple_Server_Config_Arr.length;			
-									console.log("Simple_Server_Config_Arr length: ",vm_len);
-									new_obj['vm'] = Simple_Server_Config_Arr;
-									console.log("new obj is : ",new_obj);
-									var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
-									try{
-										AjaxLoadingShow(true);
-										axios.post(url,new_obj,{
-											headers :{
-												'Content-type': 'application/json',
-												'Authorization': apiInfo,
-												},
-										}).then(result=>{
-										console.log("MCIR Register data : ",result);
-										console.log("Result Status : ",result.status); 
-										if(result.status == 201 || result.status == 200){
-											alert("Register Success")
-											location.href = "/Manage/MCIS/list";
-										}else{
-											alert("Register Fail")
-											//location.reload(true);
+									if(Simple_Server_Config_Arr.length > 0){
+										var vm_len = Simple_Server_Config_Arr.length;			
+										console.log("Simple_Server_Config_Arr length: ",vm_len);
+										
+										for(var i in Simple_Server_Config_Arr){
+											var new_obj = Simple_Server_Config_Arr[i]
+											console.log("new Obj : ",new_obj);
+											
+											try{
+												AjaxLoadingShow(true);
+													axios.post(url,new_obj,{
+														headers :{
+															'Content-type': 'application/json',
+															'Authorization': apiInfo,
+															},
+													}).then(result=>{
+														console.log("MCIR Register data : ",result);
+														console.log("Result Status : ",result.status); 
+														if(result.status == 201 || result.status == 200){
+															alert("Register Success")
+															location.href = "/Manage/MCIS/list/"+mcis_id+"/"+mcis_name;
+														}else{
+															alert("Register Fail")
+															//location.reload(true);
+														}
+												})
+											}finally{
+												AjaxLoadingShow(false);
+											}  
 										}
-										})
-									}finally{
-										AjaxLoadingShow(false);
-									}  
+
+									
 
 
 
-								}else{
-									alert("Please Input Servers");
-									$(".simple_servers_config").addClass("active");
-									$("#s_name").focus();
+									}else{
+										alert("Please Input Servers");
+										$(".simple_servers_config").addClass("active");
+										$("#s_name").focus();
+									}
 								}
 							}
 

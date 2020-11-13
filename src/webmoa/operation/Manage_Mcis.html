@@ -1,13 +1,384 @@
-{{ template "Top" .}}
-{{template "LNB" .}}
-{{template "Header" .}}
-{{template "Modal" .}}
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="format-detection" content="telephone=no">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes,target-densitydpi=medium-dpi" />
+		<title>CLOUD BARISTA</title>
+		
+		<link rel="stylesheet" href="../js/bootstrap-4.5.2/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="../css/style.css"/>
+		
+		<script src="../js/jquery-1.11.0/jquery.min.js"></script>
+		<script src="../js/bootstrap-4.5.2/js/bootstrap.min.js"></script>
+		<script src="../js/jquery.scrollTo.min.js"></script><!-- 추가 팝업 ok 이동 -->
+		<script src="../js/jquery.scrollbar.js"></script>
+		<script src="../js/common.js"></script>
+		<!--[if lt IE 9]><script src="../js/html5shiv.js"></script><![endif]-->
+	</head>
+	
+	<body>
+		
+	<div id="wrap" class="wrapper scrollbar-dynamic">
+	
+		<div id="lnb">
+			
+			<div class="bg"></div>
+				
+			<div class="m_box">
+				
+				<div class="topbox">
+					<div class="info">
+						<div class="thumb"><span><img src="../img/contents/img_thumb.jpg" alt=""></span></div>
+						<div class="txt_1">Leonardo DiCaprio</div>
+						<div class="txt_2">
+							
+							<span>Name Space</span>
+							<div class="infobox">
+								<div class="box">
+									<ul>
+										<li>
+											<a href="javascript:void(0);">Select NS</a>
+											<ul>
+												<li><a href="javascript:void(0);" data-toggle="modal" data-target="#NameSpace">ns_aws_1</a></li>
+												<li><a href="javascript:void(0);" data-toggle="modal" data-target="#NameSpace">ns_global_2</a></li>
+												<li><a href="javascript:void(0);" data-toggle="modal" data-target="#NameSpace">ns_gcp_3</a></li>
+												<li><a href="javascript:void(0);" data-toggle="modal" data-target="#NameSpace">ns_demo_4</a></li>
+											</ul>	
+										</li>
+										<li>
+											<a href="javascript:void(0);">Add NS</a>
+											<ul>
+												<li><a href="javascript:void(0);" data-toggle="modal" data-target="#NewNS">new NS</a></li>
+												<li><a href="javascript:void(0);" data-toggle="modal" data-target="#ManageNS">Manage NS</a></li>
+											</ul>	
+										</li>
+									</ul>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+	
+				<!-- popup NameSpace -->
+				<div class="modal fade layerpopup" id="NameSpace" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt">Would you like to move <br />selected NS (Name Space) ?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup NameSpace -->
+	
+				<!-- popup NewNS -->
+				<div class="modal fade layerpopup" id="NewNS" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt">Would you like to new NS (Name Space) ?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup NewNS -->
+	
+				<!-- popup ManageNS -->
+				<div class="modal fade layerpopup" id="ManageNS" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt"> Would you like to manage <br />NS (Name Space) ?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup ManageNS -->
+				
+				<!-- menu -->
+				<div class="leftmenu">
+					
+					<ul class="nav">
+						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Operation">Operation</a></li>
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Setting">Setting</a></li>
+					</ul>
+					
+					<div class="tab-content">
+						<div class="tab-pane fade show active" id="Operation">
+							<ul class="menu">
+								<li>
+									<a href="javascript:void(0);">Dashboard</a>
+									<ul>
+										<li><a href="../operation/Dashboard_Ns.html">NS</a></li>
+										<li><a href="../operation/Dashboard_Global.html">Global</a></li>
+									</ul>
+								</li>
+								<li class="active">
+									<a href="javascript:void(0);">Manage</a>
+									<ul>
+										<li class="on"><a href="../operation/Manage_Mcis.html">MCIS</a></li>
+										<li><a href="../operation/Manage_McApp.html">MC-App</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Monitoring</a>
+									<ul>
+										<li><a href="../operation/Monitoring_Mcis.html">MCIS</a></li>
+										<li><a href="../operation/Monitoring_McApp.html">MC-App</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Policy</a>
+									<ul>
+										<li><a href="../operation/Policy_Monitoring.html">Monitoring</a></li>
+										<li><a href="../operation/Policy_Threshold.html">Threshold</a></li>
+										<li><a href="../operation/Policy_Placement.html">Placement</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">About</a>
+									<ul>
+										<li><a href="../operation/About.html">About</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						
+						<div class="tab-pane fade" id="Setting">
+							<ul class="menu">
+								<li>
+									<a href="javascript:void(0);">Resources</a>
+									<ul>
+										<li><a href="../setting/Resources_Network.html">Network</a></li>
+										<li><a href="../setting/Resources_Security.html">Security</a></li>
+										<li><a href="../setting/Resources_Ssh.html">SSH key</a></li>
+										<li><a href="../setting/Resources_Image.html">(Server) Image</a></li>
+										<li><a href="../setting/Resources_Spec.html">(Server) Spec</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">App Resource</a>
+									<ul>
+										<li><a href="../setting/AppResource_Image.html">(Server) Image</a></li>
+										<li><a href="../setting/AppResource_Pod.html">Pod</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Cloud Connections</a>
+									<ul>
+										<li><a href="../setting/CloudConnections.html">Cloud Connections</a></li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:void(0);">NameSpace</a>
+									<ul>
+										<li><a href="../setting/NameSpace.html">NameSpace</a></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+				</div>
+				<!-- //menu -->
+				
+			</div>
+			
+			<div class="bottom"></div>
+			<a href="javascript:;" id="m_close"></a>
+			
+		</div>
+		
+	
+		<div id="contents">
+			
+			<!-- container -->
+			<div id="container">
+				
+				<!-- header -->
+				<div class="header">
+					<div class="logo"><img src="../img/common/img_logo.png" alt="Cloud Barista"/></div>
+					
+					<a href="javascript:;" id="btn_menu"><span></span></a>
+					
+					<div class="topmenu">
+						<ul>
+							<li class="logout"><a href="javascript:void(0);" data-toggle="modal" data-target="#logout"><img src="../img/common/icon_logout.png" alt=""/> Logout</a></li>
+							<li class="add">
+								<img src="../img/common/icon_add.png" alt=""/>
+								<div class="infobox">
+									<div class="box box_txt">See you in the next release !</div>
+								</div>
+							</li>
+							<li class="notice">
+								<img src="../img/common/icon_notice.png" alt=""/>
+								<div class="infobox">
+									<div class="box box_txt">See you in the next release !</div>
+								</div>
+							</li>
+							<li class="email">
+								<img src="../img/common/icon_email.png" alt=""/><span>7</span>
+								<div class="infobox">
+									<div class="box box_txt">See you in the next release !</div>
+								</div>
+							</li>
+							<li class="setting">
+								<a href="javascript:void(0);"><img src="../img/common/icon_setting.png" alt=""/></a>
+								<div class="infobox">
+									<div class="box">
+										<p>Cloud Setting</p>
+										<ul>
+											<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Config">[Cloud] Config</a></li>
+											<li><a href="javascript:void(0);" data-toggle="modal" data-target="#SDK">[Cloud] Driver SDK</a></li>
+											<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Credential">Credential</a></li>
+											<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Region">Region</a></li>
+											<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Provider">[Cloud] Provider</a></li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li class="question"><a href="javascript:void(0);"><img src="../img/common/icon_question.png" alt=""/></a></li>
+						</ul>
+					</div>
+					
+				</div>
+				<!-- //header -->
+	
+				<!-- popup logout -->
+				<div class="modal fade layerpopup" id="logout" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt">Would you like to logout?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal" onclick="location.href='../login.html'">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup logout -->
+	
+				<!-- popup Config -->
+				<div class="modal fade layerpopup" id="Config" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt">Would you like to set Cloud config ?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup Config -->
+	
+				<!-- popup SDK -->
+				<div class="modal fade layerpopup" id="SDK" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt">Would you like to set Cloud Driver SDK ?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup SDK -->
+	
+				<!-- popup Credential -->
+				<div class="modal fade layerpopup" id="Credential" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt">Would you like to set Credential ?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup Credential -->
+	
+				<!-- popup Region -->
+				<div class="modal fade layerpopup" id="Region" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt">Would you like to set Region ?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup Region -->
+	
+				<!-- popup Provider -->
+				<div class="modal fade layerpopup" id="Provider" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt">Would you like to set Cloud Provider ?</div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+									<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- //popup Provider -->
 				
 				<!-- contents -->
 				<div class="contbox">
 					
 					<div class="titlebox">
-						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Manage / <strong>MCIS</strong></div>
+						<div class="tit"><img src="../img/common/icon_cont.png" alt=""/>Manage / <strong>MCIS</strong></div>
 						<div class="location">Home  <span>></span>  Operation  <span>></span>  Manage  <span>></span>  <strong>MCIS</strong></div>
 					</div>
 					
@@ -72,6 +443,8 @@
 								</div>
 								<div class="cbox">
 									<div class="tcbox">
+										
+										<!-- CP connection scrollbar -->
 										<div class="sc_box scrollbar-inner">
 											<ul>
 												<li class="bg_b"><a href="../operation/Manage_Mcis.html"><span>AWS(3)</span></a></li>
@@ -84,6 +457,7 @@
 												<li class="bg_n"><span></span></li>
 											</ul>
 										</div>
+										<!-- //CP connection scrollbar -->
 									</div>
 									<div class="txt">Status of Infra Service</div>
 								</div>
@@ -93,6 +467,7 @@
 						
 					</div>	
 					<script>
+						//CP connection scrollbar
 						$(function() {
 							jQuery('.sc_box.scrollbar-inner').scrollbar();
 						});
@@ -302,7 +677,7 @@
 								<script>
 									/* scroll */
 									$(document).ready(function(){
-										
+										//checkbox all
 								    $("#th_chall").click(function() {
 								      if ($("#th_chall").prop("checked")) {
 								        $("input[name=chk]").prop("checked", true);
@@ -311,6 +686,7 @@
 								      }
 								    })
 								    
+								    //table 스크롤바 제한
 										$(window).on("load resize",function(){
 											var vpwidth = $(window).width();
 										  if (vpwidth > 768 && vpwidth < 1800) {
@@ -320,24 +696,6 @@
 										    $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
 										  }
 										});
-										
-								    /*
-										if(  $(window).width() > 768) {
-											$(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-											$('.dataTable.scrollbar-inner').scrollbar();
-										} else {
-											$(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-										}
-									
-										$(window).resize(function (){
-											if( $(window).width() > 768) {
-												$(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-												$('.dataTable.scrollbar-inner').scrollbar();
-											} else {
-												$(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-											}
-										});
-										*/
 									});
 								</script>
 								
@@ -507,6 +865,8 @@
 									</div>
 								</div>
 								<script>
+									
+									//MCIS Info - 서비스 상태  아이콘 파일 첨부
 									$(function () {
 										$('.iconbox .btn_file').click(function (e) {
 											e.preventDefault();
@@ -598,6 +958,7 @@
 										</div>
 										<!-- //popup View -->
 										
+										<!-- Server List scrollbar -->
 										<div class="listbox scrollbar-inner">
 											<ul>
 												<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">Server 1</span></a></li>
@@ -622,7 +983,7 @@
 												<li><span class="txt">Server 20</span></li>
 											</ul>
 										</div>
-										
+										<!-- //Server List scrollbar -->
 										
 									</div>
 									
@@ -634,19 +995,6 @@
 						
 					</div>
 					<!-- //Info -->
-					
-					<script>
-						/*
-						$(document).ready(function(){
-							$('.listbox li').click(function(){
-								var contTop = $('.listbox').height();
-								var offset = $('#dashboard_detailBox').offset();
-								$('html,body,#wrap').animate({scrollTop : offset.top + contTop}, 400);
-								return false;
-							});
-						});	
-						*/    	
-					</script>
 		    	
 					<!-- detail -->
 					<div class="dashboard dashboard_cont dashboard_detail server_info" id="dashboard_detailBox">
@@ -746,7 +1094,17 @@
 									
 									<div class="boxlist ipbox d_ip4">
 										<div class="iconbox">
-											<div class="img"><img src="../img/contents/img_logo_a.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo1.png" alt=""/></div>
+											<!-- 
+											<div class="img"><img src="../img/contents/img_logo2.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo3.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo4.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo5.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo6.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo7.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo8.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo9.png" alt=""/></div>
+											 -->
 										</div>
 										<ul>
 											<li>
@@ -894,6 +1252,7 @@
 											<!-- //Monitoring popup -->
 											
 											<script>
+												//popup Import key 파일 첨부
 												$(function () {
 													$('.pop_ip .btn_import_key').click(function (e) {
 														e.preventDefault();
@@ -924,6 +1283,7 @@
 											
 											
 											<script>
+												//Server Detail Info - Monitoring pop
 												$(function() {
 												  return $(".modal").on("show.bs.modal", function() {
 												    var curModal;
@@ -934,7 +1294,8 @@
 												      }
 												    });
 												  });
-												});		
+												});	
+												//Monitoring pop 체크박스 
 												$(document).ready(function() {
 												  $(".switch").change(function() {
 												    if ($(".switch .ch").is(":checked")) {
@@ -942,19 +1303,12 @@
 												    } else {
 												    }
 												  });
-												  /*
-													$("#monitoring_box .btnbox .btn_cancel").click(function () {
-													  $(".switch input[type=checkbox]").prop("checked", false);
-													});	
-													*/
 													$("#monitoring_box").on("hidden.bs.modal", function() {
 													  $(".switch input[type=checkbox]").attr("checked", false);
 													});	
 													$("#Detail_Apply").on("hidden.bs.modal", function() {
 													  $(".switch input[type=checkbox]").prop("checked", false);
 													});	
-													
-													
 
 												});
 											</script>
@@ -987,7 +1341,12 @@
 																</li>
 																<li>
 																	<label>Server Status</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="T2.micro">T2.micro</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="T2.micro">T2.micro</a>
+																			<div class="bb_info">Server Status</div>
+																		</div>
+																	</div>
 																</li>
 															</ul>
 														</div>
@@ -1019,7 +1378,20 @@
 																</li>
 																<li>
 																	<label>Security Group</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="launch-wizard-12.">launch-wizard-12.</a>인바운드 규칙 보기. 아웃바운드 규칙 보기</div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="launch-wizard-12.">launch-wizard-12.</a>
+																			<div class="bb_info">test</div>
+																		</div>
+																		<div class="box">
+																			인바운드 규칙 보기.
+																			<div class="bb_info">인바운드</div>
+																		</div>
+																		<div class="box">
+																			 아웃바운드 규칙 보기
+																			<div class="bb_info">아웃바운드</div>
+																		</div>
+																	</div>
 																</li>
 															</ul>
 														</div>
@@ -1043,7 +1415,12 @@
 															<ul>
 																<li>
 																	<label>Image ID</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="mcloud-barista-poc-backup (ami-0959312d93cafb4d7)">mcloud-barista-poc-backup (ami-0959312d93cafb4d7)</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="mcloud-barista-poc-backup (ami-0959312d93cafb4d7)">mcloud-barista-poc-backup (ami-0959312d93cafb4d7)</a>
+																			<div class="bb_info">Image ID</div>
+																		</div>
+																	</div>
 																</li>
 																<li>
 																	<label>Platform</label>
@@ -1060,15 +1437,30 @@
 															<ul>
 																<li>
 																	<label>VPC ID</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="vpc-0a48f3848d70a5c4a (mcloud-barista-poc)">vpc-0a48f3848d70a5c4a (mcloud-barista-poc)</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="vpc-0a48f3848d70a5c4a (mcloud-barista-poc)">vpc-0a48f3848d70a5c4a (mcloud-barista-poc)</a>
+																			<div class="bb_info">VPC ID</div>
+																		</div>
+																	</div>
 																</li>
 																<li>
 																	<label>subnet ID</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)">subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)">subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)</a>
+																			<div class="bb_info">subnet ID</div>
+																		</div>
+																	</div>
 																</li>
 																<li>
 																	<label>Network Interface</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="eth0">eth0</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="eth0">eth0</a>
+																			<div class="bb_info">Network Interface</div>
+																		</div>
+																	</div>
 																</li>
 															</ul>
 														</div>
@@ -1436,5 +1828,20 @@
 				</div>
 				<!-- //contents -->
 
-
-{{template "Footer" .}}
+			</div>
+			<!-- //container -->
+			
+			<!-- footer -->
+			<div id="footer">
+				<div class="txt">ⓒ 2020 Cloud Barista. All Rights Reserved</div>
+				
+				<div class="btn_top"><a href="javascript:void(0);"><span>top</span></a></div>
+			</div>
+			<!-- //footer -->
+			
+		</div>
+	
+	</div>
+	
+	</body>
+</html>

@@ -86,6 +86,7 @@ func main() {
 	e.GET("/logout/proc", controller.LoginController)
 
 	// Monitoring Control
+	e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)
 	e.GET("/Monitoring/mcis", controller.MornitoringListForm)
 	e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 
@@ -94,7 +95,7 @@ func main() {
 	e.GET("/Manage/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	e.POST("/Manage/MCIS/reg/proc", controller.McisRegController)
 	e.GET("/Manage/MCIS/list", controller.McisListForm)
-	e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListForm)
+	e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	// Resource
 	e.GET("/Resource/board", controller.ResourceBoard)
