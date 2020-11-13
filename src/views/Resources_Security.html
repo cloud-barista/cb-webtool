@@ -530,10 +530,10 @@
                             }
                         }).then(result => {
                             console.log("get SG Data : ", result.data);
-                            var data = result.data.securityGroup;
+                            var data = result.data.securityGroup; // exception case : if null 
                             var html = ""
                             var cnt = 0;
-                            if (data.length) {
+                            if (data.length) { // null exception if not exist
                                 if (sort_type) {
                                     cnt++;
                                     console.log("check : ", sort_type);
