@@ -915,14 +915,16 @@ function show_mcis_list(url){
 
     // install Mon agent
     var installMonAgent = select_vm.monAgentStatus
-    if(installMonAgent == "installed"){
-        console.log("install mon agent : ",installMonAgent)
-        $("#mcis_detail_info_check_monitoring").prop("checked",true)
-        $("#mcis_detail_info_check_monitoring").attr("disabled",true)
-    }else{
-        $("#mcis_detail_info_check_monitoring").prop("checked",false)
-        $("#mcis_detail_info_check_monitoring").attr("disabled",false)
-    }
+    checkDragonFly(mcis_id,vm_id)
+   
+    // if(installMonAgent == "installed"){
+    //     console.log("install mon agent : ",installMonAgent)
+    //     $("#mcis_detail_info_check_monitoring").prop("checked",true)
+    //     $("#mcis_detail_info_check_monitoring").attr("disabled",true)
+    // }else{
+    //     $("#mcis_detail_info_check_monitoring").prop("checked",false)
+    //     $("#mcis_detail_info_check_monitoring").attr("disabled",false)
+    // }
 
     // device info
     var root_device_type = vm_detail.VMBootDisk
@@ -966,6 +968,15 @@ function show_mcis_list(url){
     
     $("#server_detail_view_security_group").empty()
     $("#server_detail_view_security_group").append(append_sg);
+
+    // monitoring
+    // var duration = "5m"
+    // var period_type = "m"
+    // var metric_arr = ["cpu","memory","disk","network"];
+    // var statisticsCriteria = "last";
+	// for(var i in metric_arr){
+	// 	getMetric("canvas_"+i,metric_arr[i],mcis_id,vm_id,metric_arr[i],period_type,statisticsCriteria,duration);
+	// }
  
  }
 // MCIS Control 

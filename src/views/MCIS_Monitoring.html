@@ -1,4 +1,5 @@
 {{define "Mcis_monitoring"}}
+
 	<!-- Monitoring -->
 	<div class="tab-pane fade" id="Mcis_Monitoring">
 													
@@ -6,178 +7,36 @@
 		
 		<div class="graph_list">
 			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server CPUs</div>
-							<div class="txt">(utilization)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_1.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
+			<div class="graphbox">
+											<canvas id="canvas_0"></canvas>
+											<!-- <img src="/assets/img/contents/img_graph_4.jpg" alt=""> -->
+										
+										</div>
 			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server CPUs</div>
-							<div class="txt">(utilization, system, idle)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_2.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
+			<div class="graphbox">
+											<canvas id="canvas_1"></canvas>
+											<!-- <img src="/assets/img/contents/img_graph_4.jpg" alt=""> -->
+										
+										</div>
 			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server CPUs</div>
-							<div class="txt">(iowait, hintr, sintr)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_3.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
+			<div class="graphbox">
+											<canvas id="canvas_2"></canvas>
+											<!-- <img src="/assets/img/contents/img_graph_4.jpg" alt=""> -->
+										
+										</div>
 			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Memory</div>
-							<div class="txt">(utilization)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_4.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
+			<div class="graphbox">
+											<canvas id="canvas_3"></canvas>
+											<!-- <img src="/assets/img/contents/img_graph_4.jpg" alt=""> -->
+										
+										</div>
 			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Memory</div>
-							<div class="txt">(total, used, free)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_5.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
-			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Memory</div>
-							<div class="txt">(shared, buffers, cached)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_3.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
-			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Disks</div>
-							<div class="txt">(utilization)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_6.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
-			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Disks</div>
-							<div class="txt">(total, used, free)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_5.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
-			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Disks</div>
-							<div class="txt">(pkts in, pkts out)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_7.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
-			
-			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Disks</div>
-							<div class="txt">(utilization)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_2.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
-			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Networks</div>
-							<div class="txt">(total, used, free)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_4.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
-			
-			<div class="glist">
-				<a href="../operation/Monitoring_Mcis.html">
-					<div class="gbox">
-						<div class="g_titbox">
-							<div class="tit">Server Networks</div>
-							<div class="txt">(pkts in, pkts out)</div>
-						</div>
-						<div class="graph">
-							<img src="/assets/img/contents/img_graph_7.jpg" alt="">
-						</div>
-					</div>
-				</a>
-			</div>
+	
 			
 		</div>
 		
 	</div>
 	
 	<!-- //Monitoring -->
+
 {{end}}
