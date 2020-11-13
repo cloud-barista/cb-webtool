@@ -20,28 +20,28 @@
 			<div class="tab-content">
 				<div class="tab-pane fade show active" id="Operation">
 					<ul class="menu">
-						<li  id="Dashboard">
+						<li  id="">
 							<a href="javascript:void(0);">Dashboard</a>
 							<ul>
-								<li  id="NS"><a href="/Dashboard/NS">NS</a></li>
-								<li id="Global"><a href="/Dashboard/Global">Global</a></li>
+								<li  id=""><a href="/Dashboard/NS">NS</a></li>
+								<li id=""><a href="/Dashboard/Global">Global</a></li>
 							</ul>
 						</li>
-						<li class="active" id="Manage">
+						<li class="active" id="">
 							<a href="javascript:void(0);">Manage</a>
 							<ul>
-								<li class="on" id="MCIS"><a href="/Manage/MCIS/list">MCIS</a></li>
-								<li id="MC-App"><a href="!#">MC-App</a></li>
+								<li class="on" id=""><a href="/Manage/MCIS/list">MCIS</a></li>
+								<li id=""><a href="!#">MC-App</a></li>
 							</ul>
 						</li>
-						<li id="Monitoring">
+						<li id="">
 							<a href="javascript:void(0);">Monitoring</a>
 							<ul>
 								<li id=""><a href="/Monitoring/MCIS/list">MCIS</a></li>
 								<li><a href="/operation/Monitoring_McApp.html">MC-App</a></li>
 							</ul>
 						</li>
-						<li id="Policy">
+						<li id="">
 							<a href="javascript:void(0);">Policy</a>
 							<ul>
 								<li><a href="../operation/Policy_Monitoring.html">Monitoring</a></li>
@@ -49,7 +49,7 @@
 								<li><a href="../operation/Policy_Placement.html">Placement</a></li>
 							</ul>
 						</li>
-						<li id="About">
+						<li id="">
 							<a href="javascript:void(0);">About</a>
 							<ul>
 								<li><a href="../operation/About.html">About</a></li>
@@ -60,7 +60,7 @@
 				
 				<div class="tab-pane fade" id="Setting">
 					<ul class="menu">
-						<li id="Resources">
+						<li id="">
 							<a href="javascript:void(0);">Resources</a>
 							<ul>
 								<li><a href="/Vpc/list">Network</a></li>
@@ -70,23 +70,23 @@
 								<li><a href="/Spec/list">(Server) Spec</a></li>
 							</ul>
 						</li>
-						<li id="AppRes">
+						<li id="">
 							<a href="javascript:void(0);">App Resource</a>
 							<ul>
 								<li><a href="!#">(Server) Image</a></li>
 								<li><a href="!#">Pod</a></li>
 							</ul>
 						</li>
-						<li id="Cloud">
+						<li id="">
 							<a href="javascript:void(0);">Cloud Connections</a>
 							<ul>
-								<li id="Connection"><a href="/Cloud/Connection/list">Cloud Connections</a></li>
+								<li id=""><a href="/Cloud/Connection/list">Cloud Connections</a></li>
 							</ul>
 						</li>
-						<li id="NameSpace">
+						<li id="">
 							<a href="javascript:void(0);">NameSpace</a>
 							<ul>
-								<li id="NS"><a href="/NameSpace/NS/list">NameSpace</a></li>
+								<li id=""><a href="/NameSpace/NS/list">NameSpace</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -291,16 +291,16 @@
 
 							function btn_deploy(){
 								var mcis_name = $("#mcis_name").val();
-								var mcis_id = $("mcis_id").val();
+								var mcis_id = $("#mcis_id").val();
 								if(!mcis_name){
 									alert("Please Input MCIS Name!!!!!")
 									return;
 								}
 								
 								console.log(Simple_Server_Config_Arr)
-
+								var ns_id = NAMESPACE;
 								var apiInfo = ApiInfo;
-							
+								var url = CommonURL+"/ns/"+ns_id+"/mcis/"+mcis_id+"/vm"
 								if(Simple_Server_Config_Arr){
 									if(Simple_Server_Config_Arr.length > 0){
 										var vm_len = Simple_Server_Config_Arr.length;			
@@ -310,27 +310,27 @@
 											var new_obj = Simple_Server_Config_Arr[i]
 											console.log("new Obj : ",new_obj);
 											
-											// try{
-											// 	AjaxLoadingShow(true);
-											// 		axios.post(url,new_obj,{
-											// 			headers :{
-											// 				'Content-type': 'application/json',
-											// 				'Authorization': apiInfo,
-											// 				},
-											// 		}).then(result=>{
-											// 			console.log("MCIR Register data : ",result);
-											// 			console.log("Result Status : ",result.status); 
-											// 			if(result.status == 201 || result.status == 200){
-											// 				alert("Register Success")
-											// 				location.href = "/Manage/MCIS/list/"+mcis_id+"/"mcis_name;
-											// 			}else{
-											// 				alert("Register Fail")
-											// 				//location.reload(true);
-											// 			}
-											// 	})
-											// }finally{
-											// 	AjaxLoadingShow(false);
-											// }  
+											try{
+												AjaxLoadingShow(true);
+													axios.post(url,new_obj,{
+														headers :{
+															'Content-type': 'application/json',
+															'Authorization': apiInfo,
+															},
+													}).then(result=>{
+														console.log("MCIR Register data : ",result);
+														console.log("Result Status : ",result.status); 
+														if(result.status == 201 || result.status == 200){
+															alert("Register Success")
+															location.href = "/Manage/MCIS/list/"+mcis_id+"/"+mcis_name;
+														}else{
+															alert("Register Fail")
+															//location.reload(true);
+														}
+												})
+											}finally{
+												AjaxLoadingShow(false);
+											}  
 										}
 
 									

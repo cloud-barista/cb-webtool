@@ -187,7 +187,7 @@ func ImageListForm(c echo.Context) error {
 		fmt.Println("REGION List : ", nsList)
 
 		//spew.Dump(nsList)
-		return c.Render(http.StatusOK, "ImageList.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Resources_Image.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
 			"NSList":    nsList,
@@ -224,7 +224,7 @@ func VpcListForm(c echo.Context) error {
 		fmt.Println("REGION List : ", nsList)
 
 		//spew.Dump(nsList)
-		return c.Render(http.StatusOK, "VpcList.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Resources_Network.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
 			"NSList":    nsList,
@@ -261,7 +261,7 @@ func SecurityGroupListForm(c echo.Context) error {
 		fmt.Println("REGION List : ", nsList)
 
 		//spew.Dump(nsList)
-		return c.Render(http.StatusOK, "SecurityGroupList.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Resources_Security.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
 			"NSList":    nsList,
@@ -298,7 +298,7 @@ func SSHListForm(c echo.Context) error {
 		fmt.Println("REGION List : ", nsList)
 
 		//spew.Dump(nsList)
-		return c.Render(http.StatusOK, "SSHList.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Resources_Ssh.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
 			"NSList":    nsList,
@@ -335,7 +335,7 @@ func SpecListForm(c echo.Context) error {
 		fmt.Println("REGION List : ", nsList)
 
 		//spew.Dump(nsList)
-		return c.Render(http.StatusOK, "SpecList.html", map[string]interface{}{
+		return c.Render(http.StatusOK, "Resources_Spec.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
 			"NSList":    nsList,
