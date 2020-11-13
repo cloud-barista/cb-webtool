@@ -955,16 +955,13 @@ function show_mcis_list(url){
     var sg_arr = vm_detail.SecurityGroupIIds
     if(sg_arr){
         //여기서 호출해서 세부 값을 가져 오자
-        for(var s in sg_arr){
-            var get_sg = sg_arr[s].NameId
-            set_vmSecurityGroupInfo(get_sg)
-        }
+        
         sg_arr.map((item,index)=>{
             
-            append_sg +='<a href="javascript:void(0);" title="'+item.NameId+'" >'+item.NameId+'</a>'
+            append_sg +='<a href="javascript:void(0);" onclick="set_vmSecurityGroupInfo(\''+item.NameId+'\');"title="'+item.NameId+'" >'+item.NameId+'</a> '
         })
     }
-    append_sg +='인바운드 규칙 보기. 아웃바운드 규칙 보기'
+   
     console.log("append sg : ",append_sg)
     
     $("#server_detail_view_security_group").empty()
@@ -1232,9 +1229,10 @@ function set_vmImageInfo(imageId){
         html +='<a href="javascript:void(0);" title="'+imageInfo.cspImageName+'">'+imageInfo.id+'</a>'
               +'<div class="bb_info">Image Name : '+imageInfo.name+', GuestOS:'+imageInfo.guestOS+'</div>'
        
-        $("#server_detail_view_image_id").empty()
-        $("#server_detail_view_image_id").append(html)
-        $("#server_info_os").val(imageInfo.guestOS)
+        $("#server_detail_view_image_id").empty();
+        $("#server_detail_view_image_id").append(html);
+        $("#server_info_os").val(imageInfo.guestOS);
+        $("#server_detail_view_os").val(imageInfo.guestOS);
         bubble_box();
     })
 
@@ -1854,7 +1852,20 @@ function set_vmVPCInfo(vnetId, subnetId){
         var html = ""
         var firewallRules = data.firewallRules
         console.log("firewallRules : ",firewallRules);
-        
+                  
+        $("#register_box").modal()
+        firewallRules.map(item=>(
+            html +='<tr>'
+                 +'<td class="btn_mtd" data-th="fromPort">'+item.fromPort+' <span class="ov off"></span></td>'
+                 +'<td class="overlay hidden" data-th="toPort">'+item.toPort+'</td>'
+                 +'<td class="overlay hidden" data-th="toProtocol">'+item.ipProtocol+'</td>'
+                 +'<td class="overlay hidden " data-th="direction">'+item.direction+'</td>'
+                 +'</tr>'
+
+        ))
+        $("#manage_mcis_popup_sg").empty()
+        $("#manage_mcis_popup_sg").append(html)
+
 
         // $("#server_detail_view_security_group").empty()
         // $("#server_detail_view_security_group").append();
