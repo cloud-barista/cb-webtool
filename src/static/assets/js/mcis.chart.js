@@ -226,7 +226,6 @@ function time_arr(obj, title){
    var labels = obj.columns;
    var datasets = obj.values;
     // 각 값의 배열 데이터들
-   
    var series_label = new Array();
    var data_set = new Array();
    // 최종 객체 data

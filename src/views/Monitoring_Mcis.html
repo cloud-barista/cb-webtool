@@ -1,4 +1,11 @@
 {{ template "Top" .}}
+
+<!-- MCIS Control methods -->
+<script type="text/javascript" src="/assets/js/monitoring.manage.js"></script>
+<script type="text/javascript" src="/assets/js/mcis.chart.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<!-- MCIS Control methods -->
+
 <div id="lnb">
 			
 	<div class="bg"></div>
@@ -131,8 +138,9 @@
 									<div class="monitoring-cont">
 										<div class="monitoring_ip">
 											<div class="mipbox m_ip1">
-									      <select class="selectbox white">
-									        <option value="1">Target MCIS for Monitoring</option>
+									      <select class="selectbox white" id="mcisList" required>
+											<!-- <option value="mcis_id" disabled selected hidden>Choose a Target MCIS for Monitoring</option> -->
+											<option value="mcis_id">Choose a Target MCIS for Monitoring</option>
 									      </select>
 											</div>
 											<div class="mipbox m_ip2">
@@ -140,10 +148,9 @@
 													<li class="mt_1">
 														<label>Type</label>
 														<span class="sbox_m2">
-												      <select class="selectbox white">
-												        <option value="1">Select Type(Live, History)</option>
-												        <option value="2">Live</option>
-												        <option value="3">History</option>
+												      <select class="selectbox white" placeholder="Select Type(Live, History)">
+												        <option value="history">Default History</option>
+												        <option value="live">OnDemend</option>
 												      </select>
 													  	<button name="" value="" class="btn_view">View</button> 
 												    </span>
@@ -152,19 +159,20 @@
 											      <span class="sbox">
 															<label>Duration</label>
 															<span class="sel_w1">
-																<input type="text" name="" value="" placeholder="" title="" />
+																<input type="text" name="" value="5" placeholder="" title="" />
 													      <select class="selectbox white">
-													        <option value="1">Month</option>
-													        <option value="2">Day</option>
-													        <option value="3">Hour</option>
-													        <option value="4">Minute</option>
+													        <option value="m">Minute</option>
+													        <option value="h">Hour</option>
+													        <option value="d">Day</option>
 													      </select>
 													    </span>
 												    </span>
 											      <span class="sbox">
 															<label>Period</label>
 												      <select class="selectbox white">
-												        <option value="1">minutely</option>
+														<option value="m">per Minutely</option>
+														<option value="h">per Hourly</option>
+														<option value="d">per Daily</option>
 												      </select>
 												    </span>
 													</li>
@@ -191,7 +199,7 @@
 
 								
 								<div class="ds_cont_mbox">
-									<div class="m_title">Selected MCIS <span class="stxt">[MCIS Name (MCIS ID)]</span></div>
+									<div class="m_title">Selected MCIS <span class="stxt" id="mcis_info_txt">[MCIS Name (MCIS ID)]</span></div>
 									
 									<div class="mtbox">
 										<div class="txtbox">
@@ -210,48 +218,56 @@
 											<div class="gbox">
 												<div class="sel">
 													<label>CPUs</label>
-										      <select class="selectbox white">
-										        <option value="1">Select CPU Item</option>
+										      <select class="selectbox white" id="cpu" required>
+												<!-- <option value="sel_cpu_item" disabled selected hidden>Select CPU Item</option> -->
+										        <option value="cpu">CPU</option>
 										      </select>
 												</div>
 												<div class="graph">
-													<img src="/assets/img/contents/img_graph_1.jpg" alt="">
+													<canvas id="canvas_0"></canvas>
+													<!-- <img src="/assets/img/contents/img_graph_1.jpg" alt=""> -->
 												</div>
 											</div>
 											
 											<div class="gbox">
 												<div class="sel">
 													<label>Memory</label>
-										      <select class="selectbox white">
-										        <option value="1">Select Memory Item</option>
+										      <select class="selectbox white" id="memory" required>
+												<!-- <option value="sel_mem_item" disabled selected hidden>Select Memory Item</option> -->
+										        <option value="memory">Memory</option>
 										      </select>
 												</div>
 												<div class="graph">
-													<img src="/assets/img/contents/img_graph_2.jpg" alt="">
+													<canvas id="canvas_1"></canvas>
+													<!-- <img src="/assets/img/contents/img_graph_2.jpg" alt=""> -->
 												</div>
 											</div>
 											
 											<div class="gbox">
 												<div class="sel">
 													<label>DiskIO</label>
-										      <select class="selectbox white">
-										        <option value="1">Select DiskIO Item</option>
+										      <select class="selectbox white" id="disk" required>
+												<!-- <option value="sel_disk_item" disabled selected hidden>Select DiskIO Item</option> -->
+										        <option value="disk">DiskIO</option>
 										      </select>
 												</div>
 												<div class="graph">
-													<img src="/assets/img/contents/img_graph_3.jpg" alt="">
+													<canvas id="canvas_2"></canvas>
+													<!-- <img src="/assets/img/contents/img_graph_3.jpg" alt=""> -->
 												</div>
 											</div>
 											
 											<div class="gbox">
 												<div class="sel">
 													<label>Network</label>
-										      <select class="selectbox white">
-										        <option value="1">Select Network Item</option>
+										      <select class="selectbox white" id="network" required>
+												<!-- <option value="sel_network_item" disabled selected hidden>Select Network Item</option> -->
+										        <option value="network">Network</option>
 										      </select>
 												</div>
 												<div class="graph">
-													<img src="/assets/img/contents/img_graph_4.jpg" alt="">
+													<canvas id="canvas_3"></canvas>
+													<!-- <img src="/assets/img/contents/img_graph_4.jpg" alt=""> -->
 												</div>
 											</div>
 											
@@ -287,7 +303,7 @@
 										<div class="g_list">
 											<!-- Server List scrollbar / common.js -->
 											<div class="listbox scrollbar-inner">
-												<ul>
+												<ul id="vmArrList"> <!-- sel_cr / bgbox_g | bgbox_b | bgbox_r -->
 													<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">Server 1</span></a></li>
 													<li class="sel_cr bgbox_b"><a href="javascript:void(0);"><span class="txt">Server 2</span></a></li>
 													<li class="sel_cr bgbox_r"><a href="javascript:void(0);"><span class="txt">Server 3</span></a></li>
@@ -326,9 +342,11 @@
 												
 												<div class="mvbox v_ip1">
 													<label>Monitoring Details</label>
-										      <select class="selectbox white">
-										        <option value="1">Target Servers for Monitoring</option>
-										        <option value="2">Target Servers for Monitoring 2</option>
+										      <select class="selectbox white" required id="vmList">
+												<!-- <option value="vm_id" disabled selected hidden>Choose a Target Servers for Monitoring</option> -->
+												<option value="vm_id">Choose a Target Servers for Monitoring</option>
+										        <option value="1">Target Servers1 for Monitoring</option>
+										        <option value="2">Target Servers2 for Monitoring</option>
 										      </select>
 												</div>
 												<div class="mvbox v_ip2">
@@ -336,11 +354,10 @@
 														<li class="mt_1">
 															<label>Type</label>
 															<span class="sbox_m2">
-													      <select class="selectbox white">
-													        <option value="1">Select Type(Live, History)</option>
-													        <option value="2">Live</option>
-													        <option value="3">History</option>
-													      </select>
+													      <select class="selectbox white" placeholder="Select Type(Live, History)">
+															<option value="history">Default History</option>
+															<option value="live">OnDemend</option>
+														  </select>
 														  	<button name="" value="" class="btn_view">View</button> 
 													    </span>
 													  </li>
@@ -348,19 +365,20 @@
 												      <span class="sbox">
 																<label>Duration</label>
 																<span class="sel_w1">
-																	<input type="text" name="" value="" placeholder="" title="" />
+																	<input type="text" name="" value="5" placeholder="" title="" />
 														      <select class="selectbox white">
-														        <option value="1">Month</option>
-														        <option value="2">Day</option>
-														        <option value="3">Hour</option>
-														        <option value="4">Minute</option>
+																<option value="m">Minute</option>
+																<option value="h">Hour</option>
+																<option value="d">Day</option>
 														      </select>
 														    </span>
 													    </span>
 												      <span class="sbox">
 																<label>Period</label>
 													      <select class="selectbox white">
-													        <option value="1">minutely</option>
+															<option value="m">per Minutely</option>
+															<option value="h">per Hourly</option>
+															<option value="d">per Daily</option>
 													      </select>
 													    </span>
 														</li>
@@ -407,15 +425,16 @@
 												<ul>
 													<li class="m4">
 														<label>Servers</label>
-														<input type="text" name="" value="" placeholder="" title="" />
+														<input type="text" name="" value="" placeholder="" class="gray" title="" id="sel_vmname" readonly/>
 													</li>
 													<li class="m5 m5_n">
 														<label>Items</label>
-											      <select class="selectbox white">
-											        <option value="1">Select Region</option>
-											        <option value="2">Select Region2</option>
-											        <option value="3">Select Region3</option>
-											        <option value="4">Select Region4</option>
+											      <select class="selectbox white" required>
+													<!-- <option value="sel_vm_item" disabled selected hidden>Select Server's Monitoring Item</option> -->
+													<option value="cpu">CPU</option>
+													<option value="memory">Memory</option>
+													<option value="disk">DiskIO</option>
+													<option value="network">Network</option>
 											      </select>
 													</li>
 												</ul>
@@ -436,6 +455,8 @@
 										</script>
 										
 										<div class="graphbox">
+											<canvas id="canvas_vm"></canvas>
+											<!-- <img src="/assets/img/contents/img_graph_4.jpg" alt=""> -->
 											<img src="/assets/img/contents/img_graphbox_1.jpg" alt="">
 										</div>
 										
@@ -456,300 +477,281 @@
                 <!-- //contents -->
 <script>
 	$(document).ready(function(){
-		order_type = "ConfigName"
-		getCloudConnectionList(order_type);
+        checkNS();
+		var nsid = "{{ .NameSpace}}";
+		// console.log("ready Monitoring Mcis, nsid :",nsid);
+		getMcisList(nsid);
+        // show_mcis(url);
+
 	})
 
-
-function fnMove(target){
-	var offset = $("#" + target).offset();
-	console.log("fn move offset : ",offset)
-	$('html, body').animate({scrollTop : offset.top}, 400);
-}
-
-
-function getCloudConnectionList(sort_type){
-    var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig";
+function getMcisList(nsid){
+    var url = "{{ .comURL.TumbleBugURL}}"+"/ns/"+nsid+"/mcis?option=status";
+	console.log("url :",url);
+	var apiInfo = "{{ .apiInfo}}";
+	// var apiInfo = ApiInfo;
+	// console.log("apiInfo :",apiInfo);
     axios.get(url,{
         headers:{
-            'Authorization': "{{ .apiInfo}}",
+            'Authorization': apiInfo,
             'Content-Type' : "application/json"
         }
     }).then(result=>{
-        console.log("get CloudConnection Data : ",result.data);
-        var data = result.data.connectionconfig;
-        var html = ""
-        if(data.length){ 
-			if(sort_type){
-				
-				data.filter(list=> list.ConfigName !=="" ).sort((a,b) => ( a[sort_type] < b[sort_type] ? -1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item,index)=>(
-					html +='<tr onclick="showInfo(\'cc_info_'+index+'\');">'
-						 +'<td class="overlay hidden" data-th="">'
-						 +'<input type="hidden" id="cc_info_'+index+'" value="'+item.ConfigName+'|'+item.ProviderName+'|'+item.RegionName+'|'+item.CredentialName+'|'+item.DriverName+'"/>'
-						 +'<input type="checkbox" name="chk" value="'+item.ConfigName+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
-						 +'<td class="btn_mtd ovm td_left" data-th="Name">'+item.ConfigName+'<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
-						 +'<td class="overlay hidden" data-th="Cloud Provider">'+item.ProviderName+'</td>'
-						 +'<td class="overlay hidden" data-th="Region">'+item.RegionName+'</td>'
-						 +'<td class="overlay hidden" data-th="Zone">'+item.RegionName+'</td>'
-						 +'<td class="overlay hidden" data-th="Credential">'+item.CredentialName+'</td>'
-						 +'<td class="overlay hidden" data-th="Driver">'+item.DriverName+'</td>'
-						 +'<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-						 +'</tr>' 
-				))
-			}else{
-				data.filter((list)=> list.ConfigName !== "" ).map((item,index)=>(
-					html +='<tr onclick="showInfo(\'cc_info_'+index+'\');">'
-						 +'<td class="overlay hidden" data-th="">'
-						 +'<input type="hidden" id="cc_info_'+index+'" value="'+item.ConfigName+'|'+item.ProviderName+'|'+item.RegionName+'|'+item.CredentialName+'|'+item.DriverName+'"/>'
-						 +'<input type="checkbox" name="chk" value="'+item.ConfigName+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
-						 +'<td class="btn_mtd ovm td_left" data-th="Name">'+item.ConfigName+'<span class="ov"></span></td>'
-						 +'<td class="overlay hidden" data-th="Cloud Provider">'+item.ProviderName+'</td>'
-						 +'<td class="overlay hidden" data-th="Region">'+item.RegionName+'</td>'
-						 +'<td class="overlay hidden" data-th="Zone">'+item.RegionName+'</td>'
-						 +'<td class="overlay hidden" data-th="Credential">'+item.CredentialName+'</td>'
-						 +'<td class="overlay hidden" data-th="Driver">'+item.DriverName+'</td>'
-						 +'<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-						 +'</tr>'        
-				))
+        console.log("get Mcis List Data : ",result.data);
+        var data = result.data.mcis;
+        var html = '<option value="mcis_id" disabled selected hidden>Choose a Target MCIS for Monitoring</option>'
 
-			}		
+		if(data.length){
+			var count = 0;
+
+			for(var i in data){
+				var sta = data[i].status;
+				var badge = "";
+				var status = sta.toLowerCase()
+				var vms = data[i].vm
+				var vm_len = 0
+
+				var vm_name = "";
+				var vm_id = "";
+
+				var mcis_name = "";
+				var mcis_id = "";
 			
-            $("#cList").empty();
-            $("#cList").append(html);
+				if(vms){
+					vm_len = vms.length
+				}
+				
+				mcis_name = data[i].name
+				mcis_id = data[i].id
+				console.log("mcis Status 1: ", data[i].status)
+           		console.log("mcis Status 2: ", status)
+
+				if(status == "running"){
+					badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+				}else if(status == "include-notdefinedstatus" ){
+					badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+				}else if(status == "suspended"){
+					badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+				}else if(status == "terminate"){
+					badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+				}else{
+					badge += '<span class="badge badge-pill badge-warning">'+status+'</span>'
+				}
+				count++;
+				if(count == 1){
+				}
+
+				// <option value="1">Target MCIS for Monitoring</option>
+				var desc = mcis_name+' | ['+data[i].status+'] | '+data[i].description;
+				html += '<option value="'+mcis_id+'">'+desc+'</option>';
+
+				if(count == 1){ // 임시
+					$("#mcis_info_txt").text("[ "+mcis_name+"("+mcis_id+")"+" ]");
+					if(vm_len){
+						var vm_count = 0;
+
+						// vms 를 이용한 서버 리스트 구성
+						var vmArr_html = '' // '<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">Server 1</span></a></li>';
+						var vm_html = ''
+						for(var ii in vms){
+							var vmArr_class = "";
+							var vmArr_code = "";
+							var vmArr_sts = vms[ii].status;
+							var vmArr_status = vmArr_sts.toLowerCase()
+
+							vm_name = vms[ii].name
+							vm_id = vms[ii].id
+
+							vmArr_code = '<a href="javascript:void(0);"><span class="txt">'+vm_name+'</span></a>';
+							// 상태 체크
+							// <!-- sel_cr / bgbox_g | bgbox_b | bgbox_r -->
+							// 상태 없으면 
+							// vm_html += '<li class=""><span class="txt">'+vms[i].name+'</span></li>';
+							if(vmArr_status == "running"){
+								vmArr_class = 'sel_cr bgbox_b'
+							}else if(vmArr_status == "include-notdefinedstatus" ){
+								vmArr_class = 'sel_cr bgbox_r'
+							}else if(vmArr_status == "suspended"){
+								vmArr_class = 'sel_cr bgbox_g'
+							}else if(vmArr_status == "terminate"){
+								vmArr_class = ''
+								vmArr_code = '<span class="txt">'+vm_name+'</span>';
+							}else{
+								vmArr_class = ''
+								vmArr_code = '<span class="txt">'+vm_name+'</span>';
+							}
+							vmArr_html += '<li class="'+vmArr_class+'">'+vmArr_code+'</li>';
+
+							var vmdesc = vm_name+' | ['+vms[ii].status+'] | '+vms[ii].description;
+							vm_html += '<option value="'+vm_id+'|'+mcis_name+'">'+vmdesc+'</option>';
+
+							vm_count++;
+							if(vm_count == 1){
+								$("#sel_vmname").val(vm_name);
+								showMonitoring("test-monitoring", "aws-mon-test1");
+								//showMonitoring(mcis_name, vm_id);
+							}
+						}
+						console.log("append vmArrList : ", vmArr_html)
+						// $("#vmArrList").empty();
+						$("#vmArrList").append(vmArr_html);
+						
+						console.log("append vmList : ", vm_html)
+						$("#vmList").empty();
+						$("#vmList").append(vm_html);
+					}
+				}
+			}
+			
+			console.log("append mcisList : ", html)
+            $("#mcisList").empty();
+            $("#mcisList").append(html);
 		  //  nsModal()
 		  ModalDetail()
            
     }}
 )}
-function goFocus(target){
 
-	console.log(event)
-	event.preventDefault()
-	
-	$("#"+target).focus();
-	fnMove(target)
-	
+function showMonitoring(mcis_id, vm_id){
+	// $("#cpu").empty()
+	// $("#memory").empty()
+	// $("#disk").empty()
+	// $("#network").empty()
+	var arr = ["cpu","memory","disk","network"];
+	var periodType = "m";
+	var duration = "10m";
+	var statisticsCriteria = "last";
+		
+	for (var i in arr){
+		var chart_target = "canvas_"+i;
+		getMetric(chart_target,arr[i],mcis_id,vm_id,arr[i],periodType,statisticsCriteria,duration);
+	}
+
+	var target_items = "cpu";
+	getMetric("canvas_vm",target_items,mcis_id,vm_id,target_items,periodType,statisticsCriteria,duration);
 }
-function getRegionInfo(type, target){
-	console.log("target : ",target);
-	var infos = $("#"+target).val()
-	infos = infos.split("|")
-    console.log("name : ",infos[0]);
-	$("#reg_region").val(infos[0]);
-}
-function getCredentialInfo(type, target){
-	console.log("target : ",target);
-	var infos = $("#"+target).val()
-	infos = infos.split("|")
-    console.log("name : ",infos[0]);
-	$("#reg_credential").val(infos[0]);
-}
-function getDriverInfo(type, target){
-	console.log("target : ",target);
-	var infos = $("#"+target).val()
-	infos = infos.split("|")
-    console.log("name : ",infos[0]);
-	$("#reg_driver").val(infos[0]);
-}
-function showInfo(target){
-	console.log("target : ",target);
-	var infos = $("#"+target).val()
-	infos = infos.split("|")
-	$("#info_name").val(infos[0])
-	$("#info_provider").val(infos[1])
-	$("#info_region").val(infos[2])
-	$("#info_credential").val(infos[3])
-	$("#info_driver").val(infos[4])
+function genChartFmt(chart_target){
 
-	$("#info_name_prs").text(infos[0])
-	$("#info_provider_prs").text(infos[1])
-	$("#info_region_prs").text(infos[2])
-	$("#info_credential_prs").text(infos[3])
-	$("#info_driver_prs").text(infos[4])
-
-    getRegionDetail(infos[2]);
-
-	$("#info_name").focus();
-	
-
-}
- function createCloudConnection(){
-        var configname = $("#reg_ConfigName").val()
-		var providername = $("#reg_Provider").val()
-		var regionname = $("#reg_region").val()
-		var credentialname = $("#reg_credential").val()
-		var drivername = $("#reg_driver").val()
-
-        console.log("info param configname : ",configname);
-        console.log("info param providername : ",providername);
-        console.log("info param regionname : ",regionname);
-        console.log("info param credentialname : ",credentialname);
-        console.log("info param drivername : ",drivername);
-
-		if(!configname){
-			alert("Input New Cloud Connection Name")
-			$("#reg_ConfigName").focus()
-			return;
+	var ctx = document.getElementById(chart_target).getContext('2d')
+	var chart = new Chart(ctx,{
+		type:"line",
+		data:{},
+		options:{
+			responsive: true,
+			title: {
+				display: true,
+				text: target
+			},
+			tooltips: {
+				mode: 'index',
+				intersect: false,
+			},
+			hover: {
+				mode: 'nearest',
+				intersect: true
+			},
+			scales: {
+				x: {
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Time'
+					}
+				},
+				y: {
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Value'
+					}
+				}
+			}
 		}
-		if(!providername){
-			alert("Input Provider Name")
-			$("#reg_Provider").focus()
-			return;
+	});	
+
+	return chart;
+}
+
+function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,statisticsCriteria, duration){
+	console.log("====== Start GetMetric ====== ")
+	var color = "";
+	var metric_size ="";
+	var ctx = document.getElementById(chart_target).getContext('2d')
+	var chart = new Chart(ctx,{
+		type:"line",
+		data:{},
+		options:{
+			responsive: true,
+			title: {
+				display: true,
+				text: target
+			},
+			tooltips: {
+				mode: 'index',
+				intersect: false,
+			},
+			hover: {
+				mode: 'nearest',
+				intersect: true
+			},
+			scales: {
+				x: {
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Time'
+					}
+				},
+				y: {
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Value'
+					}
+				}
+			}
+		}
+	});
+	
+	var nsid = "{{ .NameSpace}}";
+	var url = DragonFlyURL+"/ns/"+nsid+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+	console.log("Request URL : ",url)
+	var html = "";
+	$.ajax({
+		url: url,
+		async:false,
+		type:'GET',
+		success : function(result){
+			var data = result
+			console.log("Get Monitoring Data : ",data)
+			console.log("info items : ", target);
+			console.log("======== start mapping data ======");
+
+    //data sets
+	var labels = data.columns;
+    var datasets = data.values;
+    // 각 값의 배열 데이터들
+    console.log("info labels : ",labels);
+    console.log("info datasets : ",datasets);
+
+
+
+			var time_obj = time_arr(data,target);
+			console.log("chart_target :",chart_target);
+			console.log("info datasets : ", time_obj);
+			
+			// var myChart = new Chart(ctx, time_obj);
+			chart.data = time_obj;
+			chart.update();
+
+		},
+		error : function(request,status, error){
+			console.log(request.status, request.responseText,error)
 		}
 		
-        var apiInfo = "{{ .apiInfo}}";
-        var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig";
-        var obj = {
-            ConfigName: configname,
-            ProviderName: providername,
-            RegionName: regionname,
-            CredentialName: credentialname,
-            DriverName : drivername
-        }
-        console.log("info connectionconfig obj Data : ",obj);
-        if(configname){
-            axios.post(url,obj,{
-                headers: { 
-                    'Content-type': 'application/json',
-                    'Authorization': apiInfo, 
-                }
-            }).then(result =>{
-                console.log(result);
-                if(result.status == 200 || result.status == 201){
-                    alert("Success Create Cloud Connection")
-					//등록하고 나서 화면을 그냥 고칠 것인가?
-					getCloudConnectionList();
-					//아니면 화면을 리로딩 시킬것인가?
-					location.reload();
-                    // $("#btn_add2").click()
-                    // $("#namespace").val('')
-                    // $("#nsDesc").val('')
-                }else{
-                    alert("Fail Create Cloud Connection")
-                }
-            });
-        }else{
-            alert("Input Cloud Connection Name")
-            $("#reg_ConfigName").focus()
-            return;
-        }
-    }
-
-function getRegionDetail(target){
-    var url = "{{ .comURL.SpiderURL}}"+"/region";
-    url += ("/" + target ) ;
-    console.log("info urls : ", url);
-    axios.get(url,{
-        headers:{
-            'Authorization': "{{ .apiInfo}}",
-            'Content-Type' : "application/json"
-        }
-    }).then(result=>{
-        console.log("get Region Data : ",result.data);
-        var data = result.data;
-        if(data.RegionName){ 
-            console.log("info Region Detail, regionName : ",target,", region : ",data.KeyValueInfoList[0].Value, ", zone : ",data.KeyValueInfoList[1].Value)
-            setRegionDispInfo(data.KeyValueInfoList[0].Value, data.KeyValueInfoList[1].Value)
-        }
-    }
-)}
-function setRegionDispInfo(var_region, var_zone){
-    var region_and_zone = ""
-    var region_and_zone_code = ""
-    region_and_zone = "" + var_region + " (" + var_zone + ")";
-    region_and_zone_code = "" + var_region + " (" + var_zone + ")";
-	$("#info_region").val(region_and_zone)
-	$("#info_region_prs").text(region_and_zone_code)
-
-    console.log("info region_and_zone : ", region_and_zone);
+	})
 }
 
-function getRegionList(){
-    var url = "{{ .comURL.SpiderURL}}"+"/region";
-    axios.get(url,{
-        headers:{
-            'Authorization': "{{ .apiInfo}}",
-            'Content-Type' : "application/json"
-        }
-    }).then(result=>{
-        console.log("get Region Data : ",result.data);
-        var data = result.data.region;
-        var html = ""
-        if(data.length){ 
-				data.filter((list)=> list.RegionName !== "" ).map((item,index)=>(
-					html +='<tr onclick="getRegionInfo(\'region\', \'region_info_'+index+'\');">'
-						 +'<td class="btn_mtd ovm" data-th="Name">'+item.RegionName+'<span class="ov"></span></td>'
-						 +'<input type="hidden" id="region_info_'+index+'" value="'+item.RegionName+'"/>'
-						 +'<td class="overlay hidden" data-th="region ID">'+item.KeyValueInfoList[0].Value+'</td>'
-						 +'<td class="overlay hidden" data-th="Zone">'+item.KeyValueInfoList[1].Value+'</td>'
-						 +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
-						 +'</tr>'        
-				))
-			
-            $("#regionList").empty();
-            $("#regionList").append(html);
-		  //  nsModal()
-		  ModalDetail()
-    }}
-)}
-function getCredentialList(){
-    var url = "{{ .comURL.SpiderURL}}"+"/credential";
-    axios.get(url,{
-        headers:{
-            'Authorization': "{{ .apiInfo}}",
-            'Content-Type' : "application/json"
-        }
-    }).then(result=>{
-        console.log("get Credential Data : ",result.data);
-        var data = result.data.credential;
-        var html = ""
-        if(data.length){ 
-                data.filter((list)=> list.CredentialName !== "" ).map((item,index)=>(
-					html +='<tr onclick="getCredentialInfo(\'credential\', \'credential_info_'+index+'\');">'
-						 +'<td class="btn_mtd ovm" data-th="Name">'+item.CredentialName+'<span class="ov"></span>'
-						 +'<input type="hidden" id="credential_info_'+index+'" value="'+item.CredentialName+'"/>'
-						 +'<td class="overlay hidden" data-th="accesskey">'+item.KeyValueInfoList[1].Value+'</td>'
-						 +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
-						 +'</tr>'        
-				))
-			
-            $("#credentialList").empty();
-            $("#credentialList").append(html);
-		  //  nsModal()
-		  ModalDetail()
-    }}
-)}
-function getDriverList(){
-    var url = "{{ .comURL.SpiderURL}}"+"/driver";
-    axios.get(url,{
-        headers:{
-            'Authorization': "{{ .apiInfo}}",
-            'Content-Type' : "application/json"
-        }
-    }).then(result=>{
-        console.log("get Driver Data : ",result.data);
-        var data = result.data.driver;
-        var html = ""
-        if(data.length){ 
-                data.filter((list)=> list.DriverName !== "" ).map((item,index)=>(
-					html +='<tr onclick="getDriverInfo(\'driver\', \'driver_info_'+index+'\');">'
-						 +'<td class="btn_mtd ovm" data-th="Name">'+item.DriverName+'<span class="ov"></span></td>'
-						 +'<input type="hidden" id="driver_info_'+index+'" value="'+item.DriverName+'|'+item.ProviderName+'|'+item.DriverLibFileName+'"/>'
-						 +'<td class="overlay hidden" data-th="Driver SDK">'+item.DriverLibFileName+'</td>'
-						 +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
-						 +'</tr>'        
-				))
-			
-            $("#driverList").empty();
-            $("#driverList").append(html);
-		  //  nsModal()
-		  ModalDetail()
-    }}
-)}
-
-function getCloudConnection(){
-
-}
 function ModalDetail(){
 	$(".dashboard .status_list tbody tr").each(function(){
   	var $td_list = $(this),
