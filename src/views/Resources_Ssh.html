@@ -470,9 +470,9 @@
             }
         }).then(result => {
             console.log("get SSH Data : ", result.data);
-            var data = result.data.sshKey;
+            var data = result.data.sshKey; // exception case : if null 
             var html = ""
-            if (data.length) {
+            if (data.length) { // null exception if not exist
                 if (sort_type) {
                     console.log("check : ", sort_type);
                     data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (

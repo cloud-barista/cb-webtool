@@ -57,12 +57,12 @@
 										<li class="p_line">
 											<label>Access SSH key</label>
 											<input type="text" name="" value="" placeholder="input SSH key" title="" id="manage_mcis_popup_sshkey_name" readonly/> 
-											<input type="file" id="file_key" name="file" class="file_ip_hidden" title="" />
-											<span class="sbox"><span class="stxt"><a href="javascript:void(0);" class="btn_import_key">Import key</a></span></span>
+											<input type="file" id="file_key" name="" class="file_ip_hidden" title="" />
+											<!-- <span class="sbox"><span class="stxt"><a href="javascript:void(0);" class="btn_import_key">Import key</a></span></span> -->
 										</li>
 										<li class="p_line">
 											<label></label>
-											<textarea  cols="" rows="" value="" placeholder="type SSH key value" title="" id="manage_mcis_popup_sshkey" readonly></textarea>
+											<textarea  cols="" rows="" name="ssh_key" placeholder="type SSH key value" title="" id="manage_mcis_popup_sshkey" readonly></textarea>
 										</li>
 									</ul>
 								</div>
@@ -275,7 +275,7 @@
 			if (!chkFormValidate($("#manage_mcis_popup_form"))) return false;
 			
 			var obj = $("#manage_mcis_popup_form").serializeObject()
-			var formData = new FormData(document.getElementById("form"));
+			var formData = new FormData(document.getElementById("manage_mcis_popup_form"));
 			axios.post(url,formData,{
 				headers :{
 					'Content-type': 'multipart/form-data',
