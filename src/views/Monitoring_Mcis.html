@@ -439,7 +439,7 @@
 										<div class="graphbox">
 											<canvas id="canvas_vm"></canvas>
 											<!-- <img src="/assets/img/contents/img_graph_4.jpg" alt=""> -->
-											<img src="/assets/img/contents/img_graphbox_1.jpg" alt="">
+										
 										</div>
 										
 									</div>
@@ -497,7 +497,9 @@ function getMcisList(nsid){
 
 		$("#mcisList").empty()
 		$("#mcisList").append(s_mcis_list)
-		if (init_mcis != '') getMcisChange(init_mcis)
+		if (init_mcis != "") {
+			getMcisChange(init_mcis)
+		}
 
 
 	})
@@ -728,9 +730,12 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
 	var key =[]
 	var values = data.values[0]
 	for(var i in values){
-		key.push(i)
+		
+			key.push(i)
+	
+		
 	}
-	console.log("values:",key);
+	console.log("Key values time except:",key);
 	
 	var labels = key;
     var datasets = data.values;
@@ -738,9 +743,11 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
     //console.log("info labels : ",labels);
     console.log("info datasets : ",datasets);
 
+    var obj = {}
+	obj.columns = labels
+	obj.values = datasets
 
-
-			var time_obj = time_arr(data,target);
+			var time_obj = time_arr(obj,target);
 			console.log("chart_target :",chart_target);
 			console.log("info datasets : ", time_obj);
 			

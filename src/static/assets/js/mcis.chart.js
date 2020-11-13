@@ -223,6 +223,8 @@ function checkDragonFly(mcis_id, vm_id){
 
 function time_arr(obj, title){
     //data sets
+    console.log("labels:",obj)
+    console.log("")
    var labels = obj.columns;
    var datasets = obj.values;
    
@@ -231,40 +233,44 @@ function time_arr(obj, title){
    var data_set = new Array();
    for(var i in labels){
        var ky = labels[i]
-       console.log("key : ",ky)
+       var series_data = new Array(); 
+       if(ky == "time"){
         for(var k in datasets){
-           data_set.push(datasets[k][ky])
-        }
-    }
-    console.log("data_set : ", data_set)
-   // 최종 객체 data
-   var new_obj = {}
-   var color_arr = ['rgb(255, 99, 132)','rgb(255, 159, 64)', 'rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)','rgb(99, 255, 243)']   
+            for(var o in datasets[k]){
+                if(o == ky){
+                    series_label.push(datasets[k][o])
+                }
+            }
+          }
 
-   for(var i in labels){
-    var dt = {}  
-    var series_data = new Array();  
-    for(var k in datasets){
-        if(i == 0){
-            series_label.push(datasets[k][i]) //이건 시간만 담는다.
-        }else{
-            dt.label = labels[i];
+       }else{
+        
+        var dt = {}
+        
+        dt.label = ky
+        var color1 = Math.floor(Math.random() * 256);
+        var color2 = Math.floor(Math.random() * 256);
+        var color3 = Math.floor(Math.random() * 256);
+        var color = 'rgb('+color1+","+color2+","+color3+")"
+        dt.borderColor = color
+        dt.backgroundColor = color;
 
-            series_data.push(datasets[k][i]) //그외 나머지 데이터만 담는다.
-            dt.borderColor = color_arr[i];
-            dt.backgroundColor = color_arr[i];
-            dt.fill= false;
-           // dt.data
-        }  
+      
+      
+       dt.fill= false;
+           for(var k in datasets){
+             for(var o in datasets[k]){
+                 if(o == ky){
+                   series_data.push(datasets[k][o])
+                 }
+             }
+           }
+        dt.data = series_data
+        data_set.push(dt)
+       }
+       
     }
-    if(i > 0){
-       dt.data = series_data
-       data_set.push(dt)
-    }
-   
-    
-   
-   }
+  var new_obj = {};
    console.log("data set : ",data_set);
    console.log("time series : ",series_label);
    new_obj.labels = series_label //시간만 담김 배열
