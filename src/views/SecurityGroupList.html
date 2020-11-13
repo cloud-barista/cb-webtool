@@ -386,7 +386,7 @@
 																<div class="bb_info" id="dtlInbound"></div>
 															</div>, 
 															<div class="box">
-																<span class="s_txt">outbound</span>
+																<span class="s_txt">Outbound</span>
 																<div class="bb_info" id="dtlOutbound"></div>
 															</div>
 														</div>
@@ -480,11 +480,11 @@
 														<div class="bubble_box">
 															<div class="box">
 																<span class="s_txt">Inbound</span>
-																<div class="bb_info">TCP 21~23, UDP 222</div>
+																<div class="bb_info" id="regInbound"></div>
 															</div>, 
 															<div class="box">
-																<span class="s_txt">outbound</span>
-																<div class="bb_info">TCP 0, UDP 0</div>
+																<span class="s_txt">Outbound</span>
+																<div class="bb_info" id="regOutbound"></div>
 															</div>
 														</div>
 														
@@ -738,6 +738,7 @@
                     }
 
                     function getVnetInfo(configName){
+                        console.log("vnet : ", configName);
                         var configName = configName;
                         if(!configName){
                             configName = $("#connectionName option:selected").val();
@@ -753,14 +754,27 @@
                             data = result.data.vNet;
                             console.log("vNetwork Info : ",result);
                             console.log("vNetwork data : ",data);
+                            var count = 0; 
+                            var cspVNetName = "";
+                            var confArr = new Array();
                             for(var i in data){
                                 if(data[i].connectionName == configName){
-                                    html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
+                                    count++;
+                                    html += '<option value="'+data[i].cspVNetId+'" selected>'+data[i].cspVNetName+'</option>'; 
+                                    cspVNetName = data[i].cspVNetName;
+                                    confArr.push(data[i].cspVNetName)
                                     // var subnetInfoList = data[i].subnetInfoList
                                     // for(var k in subnetInfoList){
                                     //     html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].IPv4_CIDR+'</option>'; 
                                     // }
                                 }
+                            }
+                            if(count == 0){
+                                alert("해당 Connection에 등록된 vNet 정보가 없습니다.")
+                                    html +='<option selected>Select vNetId</option>';
+                            }
+                            if(confArr.length > 1){
+                                cspVNetName = confArr[0];
                             }
                             console.log("htmlhtml : ", html);
                             $("#reg_vNetId").empty();
@@ -769,61 +783,126 @@
                     }
 
                     $(document).ready(function() {
-						//Firewall RuleSet pop table scrollbar
+                        //Firewall RuleSet pop table scrollbar
+                        var fwrsJsonList = "";
+
 						$('.btn_register').on('click', function() {
 						    $("#register_box").modal();
 								$('.dtbox.scrollbar-inner').scrollbar();
                             });	
-                            
-                            createFirewallRS();
+
+                            var html = "";
+                            html += '<tr class="ip" name="tr_Input">' 
+                                + '<td class="btn_mtd" data-th="fromPort"><input type="text" value="" name="fromport" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>'
+                                + '<td class="overlay hidden" data-th="toPort"><input type="text" name="toport" value="" placeholder="" class="pline" title="" /></td>' 
+                                + '<td class="overlay hidden" data-th="ipProtocol">'
+                                + '<select class="selectbox white pline" name="ipprotocol">'
+                                + '<option value="TCP">TCP</option>' 
+                                + '<option value="UDP">UDP</option>' 
+                                + '</select>' 
+                                + '</td> ' 
+                                + '<td class="overlay hidden" data-th="direction">' 
+                                + '<select class="selectbox white pline" name="direction">' 
+                                + '<option value="Inbound">Inbound</option>'
+                                + '<option value="Outbound">Outbound</option>'
+                                + '</select>'
+                                + '</td>' 
+                                + '<td class="overlay hidden" data-th="">'
+                                + '<button class="btn btn_add" value="" name="btn_add">add</button>' 
+                                + '<button class="btn btn_del" name="delInput" value="">del</button>'
+                                + '</td>'
+                                + '</tr>'
+                            $("#fwrsList").empty();
+                            $("#fwrsList").append(html);
+
 							/*
 							$('.register_cont .btn_cancel').click(function(){
 								$(".dashboard.register_cont").toggleClass("active");
 							});
 							*/
                         });
-                        
-                        function createFirewallRS() {
-                            var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup";
-                            axios.get(url, {
-                                headers: {
-                                    'Authorization': "{{ .apiInfo}}",
-                                    'Content-Type': "application/json"
+
+                        function applyFWRS() {
+                            var fromPortValue = $("input[name='fromport']").length;
+                            var toPortValue = $("input[name='toport']").length;
+                            var ipprotocolValue = $("select[name='ipprotocol']").length;
+                            var directionValue = $("select[name='direction']").length;
+                            
+                            var fromPortData = new Array(fromPortValue);
+                            var toPortData = new Array(toPortValue);
+                            var ipprotocolData = new Array(ipprotocolValue);
+                            var directionData = new Array(directionValue);
+                            
+                            for(var i=0; i<fromPortValue; i++){                          
+                                fromPortData[i] = $("input[name='fromport']")[i].value;
+                                console.log("fromPortData" + [i] + " : ", fromPortData[i]);
+                            }
+                            for(var i=0; i<toPortValue; i++){                          
+                                toPortData[i] = $("input[name='toport']")[i].value;
+                                console.log("toPortData" + [i] + " : ", toPortData[i]);
+                            }
+                            for(var i=0; i<ipprotocolValue; i++){                          
+                                ipprotocolData[i] = $("select[name='ipprotocol']")[i].value;
+                                console.log("ipprotocolData" + [i] + " : ", ipprotocolData[i]);
+                            }
+                            for(var i=0; i<directionValue; i++){                          
+                                directionData[i] = $("select[name='direction']")[i].value;
+                                console.log("directionData" + [i] + " : ", directionData[i]);
+                            }
+
+                            fwrsJsonList = new Array();
+                            
+                            for(var i=0; i<fromPortValue; i++){
+                                var RSData = "RSData" + i;
+                                var RSData = new Object();
+                                RSData.fromPort = fromPortData[i];
+                                RSData.toPort = toPortData[i];
+                                RSData.ipprotocol = ipprotocolData[i];
+                                RSData.direction = directionData[i];
+
+                                fwrsJsonList.push(RSData);
+                            }
+                            
+                            var inbound = "";
+                            var outbound = "";
+                            for (var i in fwrsJsonList) {
+                                console.log(fwrsJsonList[i]);
+                                if(fwrsJsonList[i].direction == "Inbound") {
+                                    inbound += fwrsJsonList[i].ipprotocol
+                                            + ' ' + fwrsJsonList[i].fromPort + '~' + fwrsJsonList[i].toPort + ' '
+                                } else if(fwrsJsonList[i].direction == "Outbound") {
+                                    outbound += fwrsJsonList[i].ipprotocol
+                                            + ' ' + fwrsJsonList[i].fromPort + '~' + fwrsJsonList[i].toPort + ' '
                                 }
-                            }).then(result => {
-                                var html = "";
-                                html += '<tr name="tr_Input">' 
-                                    + '<td class="btn_mtd" data-th="fromPort"><input type="text" name="" value="" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>'
-                                    + '<td class="overlay hidden" data-th="toPort"><input type="text" name="" value="" placeholder="" class="pline" title="" /></td>' 
-                                    + '<td class="overlay hidden" data-th="toProtocol">'
-                                    + '<select class="selectbox white pline">'
-                                    + '<option value="1">TCP</option>' 
-                                    + '<option value="2">UDP</option>' 
-                                    + '</select>' 
-                                    + '</td> ' 
-                                    + '<td class="overlay hidden" data-th="direction">' 
-                                    + '<select class="selectbox white pline">' 
-                                    + '<option value="1">Inbound</option>'
-                                    + '<option value="2">Outbound</option>'
-                                    + '</select>'
-                                    + '</td>' 
-                                    + '<td class="overlay hidden" data-th="">'
-                                    + '<button class="btn btn_add" value="" name="btn_add">add</button>' 
-                                    + '<button class="btn btn_del" name="delInput" value="">del</button>'
-                                    + '</td>'
-                                    + '</tr>'
+                            }
+                            console.log("ininin : ", inbound);
+                            console.log("outoutout : ", outbound);
 
-                                    $("#fwrsList").empty();
-                                    $("#fwrsList").append(html);
-                            })
-
+                            $("#regInbound").empty();
+                            $("#regOutbound").empty();
+                            $("#regInbound").append(inbound);
+                            $("#regOutbound").append(outbound);
+                            
+                            $("#register_box").modal("hide");
                         }
-
+                        
                         function createSecuGroup() {
-                            var cspSecurityGroupName = $("reg_cspSecurityGroupName").val();
-                            var description = $("reg_description").val();
-                            var connectionName = $("reg_connectionName").val();
-                            var vNetId = $("reg_vNetId")
+                            var cspSecurityGroupName = $("#reg_cspSecurityGroupName").val();
+                            var description = $("#reg_description").val();
+                            var connectionName = $("#reg_connectionName").val();
+                            var vNetId = $("#reg_vNetId").val();
+                            
+                            if (!cspSecurityGroupName) {
+                                alert("Input New Security Group Name")
+                                $("#reg_cspSshKeyName").focus()
+                                return;
+                            }
+
+                            console.log("cspSecurityGroupName : ", cspSecurityGroupName);
+                            console.log("description : ", description);
+                            console.log("connectionName : ", connectionName);
+                            console.log("vNetId : ", vNetId);
+                            console.log("fwrsJsonList : ", fwrsJsonList);
                             /*
                             {
                                 "connectionName": "string",
@@ -935,7 +1014,7 @@
 															<tr>
 																<th>FromPort</th>
 																<th>ToPort</th>
-																<th>ToProtocol</th>
+																<th>IPProtocol</th>
 																<th>Direction</th>
 																<th></th>
 															</tr>
@@ -991,20 +1070,20 @@
 											<script>
 												//table row add
 												$(document).on("click","button[name=btn_add]",function(){
-													var addStaffText = 
+                                                    var addStaffText = 
 													'<tr class="ip" name="tr_Input">'+
-														'<td class="btn_mtd" data-th="fromPort"><input type="text" name="" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'+
-														'<td class="overlay" data-th="toPort"><input type="text" name="" value="" placeholder="" class="pline" title="" /></td>'+
-														'<td class="overlay" data-th="toProtocol">'+
-																'<select class="selectbox white pline">'+
-																	'<option value="1">TCP</option>'+
-																	'<option value="2">UDP</option>'+
+														'<td class="btn_mtd" data-th="fromPort"><input type="text" name="fromport" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'+
+														'<td class="overlay" data-th="toPort"><input type="text" name="toport" value="" placeholder="" class="pline" title="" /></td>'+
+														'<td class="overlay" data-th="ipProtocol">'+
+																'<select class="selectbox white pline" name="ipprotocol">'+
+																	'<option value="TCP">TCP</option>'+
+																	'<option value="UDP">UDP</option>'+
 																'</select>'+
 														'</td>'+
-														'<td class="overlay" data-th="description">'+
-																'<select class="selectbox white pline">'+
-																	'<option value="1">in</option>'+
-																	'<option value="2">out</option>'+
+														'<td class="overlay" data-th="direction">'+
+																'<select class="selectbox white pline" name="direction">'+
+																	'<option value="Inbound">Inbound</option>'+
+																	'<option value="Outbound">Outbound</option>'+
 																'</select>'+
 														'</td>'+
 														'<td class="overlay">'+
@@ -1040,7 +1119,7 @@
 									
 									<div class="btnbox">
 										<div class="btn_right">
-											<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button> 
+											<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyFWRS()"><span>Apply</span></button> 
 											<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button> 
 										</div>
 									</div>
