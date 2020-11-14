@@ -754,6 +754,12 @@
                             data = result.data.vNet;
                             console.log("vNetwork Info : ",result);
                             console.log("vNetwork data : ",data);
+							for(var i in data){
+								if(data[i].connectionName == configName){
+									html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
+								}
+							}
+							/*
                             var count = 0; 
                             var cspVNetName = "";
                             var confArr = new Array();
@@ -777,7 +783,8 @@
                                 cspVNetName = confArr[0];
                             }
                             console.log("htmlhtml : ", html);
-                            $("#reg_vNetId").empty();
+                            */
+							$("#reg_vNetId").empty();
                             $("#reg_vNetId").append(html);  
                         })
                     }
@@ -922,7 +929,7 @@
                                         'Authorization': apiInfo,
                                     }
                                 }).then(result => {
-                                    console.log(result);
+                                    console.log("result sg : ", result);
                                     if (result.status == 200 || result.status == 201) {
                                         alert("Success Create Security Group!!")
                                         //등록하고 나서 화면을 그냥 고칠 것인가?
