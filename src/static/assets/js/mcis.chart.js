@@ -135,7 +135,8 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
 		}
 	});
 	
-	var nsid = "{{ .NameSpace}}";
+    var nsid = NAMESPACE;
+    console.log("get metric namespace : ",nsid);
 	var url = DragonFlyURL+"/ns/"+nsid+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
 	console.log("Request URL : ",url)
 	
