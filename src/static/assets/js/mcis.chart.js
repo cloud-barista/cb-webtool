@@ -360,6 +360,7 @@ function checkDragonFly(mcis_id, vm_id){
           //  $("#check_dragonFly").val("200");
             $("#mcis_detail_info_check_monitoring").prop("checked",true)
             $("#mcis_detail_info_check_monitoring").attr("disabled",true)
+            $("#Monitoring_tab").show();
             var duration = "5m"
             var period_type = "m"
             var metric_arr = ["cpu","memory","disk","network"];

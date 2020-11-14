@@ -106,7 +106,7 @@ function mcis_life_cycle(type){
             checked_nothing++;
             console.log("checked")
             var mcis_id = $(this).val()
-            console.log("check td value : ",mid);
+            console.log("check td value : ",mcis_id);
             var nameSpace = NAMESPACE;
             console.log("Start LifeCycle method!!!")
             var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
@@ -623,6 +623,7 @@ function show_mcis_list(url){
     $(".server_status").addClass("view")
     var mcis_arr = test_arr.filter(item => item.id === mcis_id)
     var mcis = mcis_arr[0];
+    $("#mcis_name").val(mcis.name)
     console.log("showmcis2 Data : ",mcis)
     var mcis_badge = "";
     var sta = mcis.status;
