@@ -294,7 +294,7 @@ function drawMap(map,long,lat,info){
 
 function drawPoligon(JZMap,polygon){
   var wkt = polygon;
-  console.log(wkt)
+  console.log("polygon : ",wkt)
   var format = new ol.format.WKT();
 
   var feature = format.readFeature(wkt, {

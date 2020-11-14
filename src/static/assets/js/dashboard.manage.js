@@ -289,8 +289,11 @@ function show_mcis2(url, map){
                 var provider = vms[0].location.cloudType
 
                 var fromLonLat = long+" "+lat;
-                polyArr.push(fromLonLat)
-                drawMap(JZMap,long,lat,vms[o])
+                if(long && lat){
+                    polyArr.push(fromLonLat)
+                    drawMap(JZMap,long,lat,vms[o])
+                }
+              
 
 
 
@@ -324,6 +327,7 @@ function show_mcis2(url, map){
                  vm_html +='<div class="'+vm_badge+'"><a href="javascript:void(0);"><span>'+vm_cnt+'</span></a></div>'
              }
              var polygon = "";
+             console.log("poly arr : ",polyArr);
              if(polyArr.length > 1){
                polygon = polyArr.join(", ")
                polygon = "POLYGON(("+polygon+"))";
