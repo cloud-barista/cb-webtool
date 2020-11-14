@@ -47,7 +47,7 @@ function showMonitoring(mcis_id, vm_id, metric, periodType, duration){
 	// $("#memory").empty()
 	// $("#disk").empty()
 	// $("#network").empty()
-	
+	$("#canvas_vm").empty();
 	var statisticsCriteria = "last";
 
 	getMetric("canvas_vm",metric,mcis_id,vm_id,metric,periodType,statisticsCriteria,duration);
@@ -97,49 +97,52 @@ function genChartFmt(chart_target){
 function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,statisticsCriteria, duration){
 	console.log("====== Start GetMetric ====== ")
 	var color = "";
-	var metric_size ="";
-	var ctx = document.getElementById(chart_target).getContext('2d')
-	var chart = new Chart(ctx,{
-		type:"line",
-		data:{},
-		options:{
-			responsive: true,
-			title: {
-				display: true,
-				text: target
-			},
-			tooltips: {
-				mode: 'index',
-				intersect: false,
-			},
-			hover: {
-				mode: 'nearest',
-				intersect: true
-			},
-			scales: {
-				x: {
-					display: true,
-					scaleLabel: {
-						display: true,
-						labelString: 'Time'
-					}
-				},
-				y: {
-					display: true,
-					scaleLabel: {
-						display: true,
-						labelString: 'Value'
-					}
-				}
-			}
-		}
-	});
+    var metric_size ="";
+    
+	
 	
     var nsid = NAMESPACE;
     console.log("get metric namespace : ",nsid);
 	var url = DragonFlyURL+"/ns/"+nsid+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
-	console.log("Request URL : ",url)
-	
+    console.log("Request URL : ",url)
+    
+    var ctx = document.getElementById(chart_target).getContext('2d')
+    var chart = new Chart(ctx,{
+        type:"line",
+        data:{},
+        options:{
+            responsive: true,
+            title: {
+                display: true,
+                text: target
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                x: {
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    }
+                },
+                y: {
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    }
+                }
+            }
+        }
+    });
+	chart.clear()
 	$.ajax({
 		url: url,
 		async:false,
@@ -148,28 +151,30 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
 			var data = result
 			console.log("Get Monitoring Data : ",data)
 			console.log("info items : ", target);
-			console.log("======== start mapping data ======");
-
-	//data sets
-	var key =[]
-	var values = data.values[0]
-	for(var i in values){
-		
-			key.push(i)
+            console.log("======== start mapping data ======");
+            $("#"+chart_target).empty();
+           
+    
+            //data sets
+            var key =[]
+            var values = data.values[0]
+            for(var i in values){
+                
+                    key.push(i)
+            
+                
+            }
+            console.log("Key values time except:",key);
 	
-		
-	}
-	console.log("Key values time except:",key);
-	
-	var labels = key;
-    var datasets = data.values;
-    // 각 값의 배열 데이터들
-    //console.log("info labels : ",labels);
-    console.log("info datasets : ",datasets);
+            var labels = key;
+            var datasets = data.values;
+            // 각 값의 배열 데이터들
+            //console.log("info labels : ",labels);
+            console.log("info datasets : ",datasets);
 
-    var obj = {}
-	obj.columns = labels
-	obj.values = datasets
+            var obj = {}
+            obj.columns = labels
+	        obj.values = datasets
 
 			var time_obj = time_arr(obj,target);
 			console.log("chart_target :",chart_target);
@@ -178,7 +183,7 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
 			// var myChart = new Chart(ctx, time_obj);
 			chart.data = time_obj;
 			chart.update();
-
+            
 		},
 		error : function(request,status, error){
 			console.log(request.status, request.responseText,error)

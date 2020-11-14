@@ -226,7 +226,7 @@
 				}) 
 			}
 			function changeConnectionInfo(configName){
-		
+				console.log("config name : ",configName)
                 getImageInfo(configName);
                 getSecurityInfo(configName);
                 getSSHKeyInfo(configName);
@@ -282,12 +282,16 @@
 					 }
 				 }).then(result=>{
 					 data = result.data.securityGroup
+					 var cnt = 0
 					 for(var i in data){
 						 if(data[i].connectionName == configName){
+							 cnt ++;
 							 html += '<option value="'+data[i].id+'" >'+data[i].cspSecurityGroupName+'('+data[i].id+')</option>'; 
-							if(i == 0){
+							if(cnt ==1 ){
 								default_sg = data[i].id
 							}
+								
+						
 						}
 					 }
 				   
@@ -354,10 +358,12 @@
 				 })
 			 }
 			function getVnetInfo(configName){
-                var configName = configName;
+				var configName = configName;
+				console.log("get vnet INfo config name : ",configName)
                 if(!configName){
                     configName = $("#configName option:selected").val();
-                }
+				}
+				console.log("get vnet INfo config name : ",configName)
                 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
                 var html = "";
                 var html2 = "";
@@ -371,15 +377,23 @@
 					console.log("vNetwork Info : ",result)
 					var init_vnet = "";
 					var init_subnet = "";
+					var v_net_cnt = 0
+					var subnet_cnt = 0;
                     for(var i in data){
                         if(data[i].connectionName == configName){
                             html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
+							v_net_cnt++;
 							var subnetInfoList = data[i].subnetInfoList
-							init_vnet = data[0].id
+							if(v_net_cnt == 1){
+								init_vnet = data[i].id
+								console.log("init_vnet :",init_vnet)
+							}
+							
                             for(var k in subnetInfoList){
-								if(i == 0){
+								
 									init_subnet = subnetInfoList[0].IId.NameId
-								}
+									console.log("init_subnet :",init_subnet)
+							
                                 html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].IPv4_CIDR+'</option>'; 
                             }
                         }
