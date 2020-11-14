@@ -351,7 +351,7 @@ function checkDragonFly(mcis_id, vm_id){
             xhr.setRequestHeader("Content-type","application/json");
         },
         success : function(result){
-            
+            console.log("check dragon fly : ",result)
           //  $("#check_dragonFly").val("200");
             $("#mcis_detail_info_check_monitoring").prop("checked",true)
             $("#mcis_detail_info_check_monitoring").attr("disabled",true)
@@ -364,7 +364,7 @@ function checkDragonFly(mcis_id, vm_id){
             }
         },
         error : function(request,status, error){
-        
+            console.log("check dragon fly : ",status)
            // $("#check_dragonFly").val("400");
             $("#mcis_detail_info_check_monitoring").prop("checked",false)
             $("#mcis_detail_info_check_monitoring").attr("disabled",false)
