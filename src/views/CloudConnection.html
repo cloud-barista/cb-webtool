@@ -480,7 +480,8 @@
 											<div class="dataTable first_over">
 												<table cellpadding="0" cellspacing="0" border="1" summary="">
 													<colgroup>
-														<col width="38%"><col width="38%"><col width="">
+														<col width="28%"><col width="28%">
+														<col width="28%"><col width="%">
 													</colgroup>
 													<thead>
 														<tr>
@@ -732,6 +733,7 @@ function goFocus(target){
 	
 }
 function getRegionInfo(type, target){
+	
 	console.log("target : ",target);
 	var infos = $("#"+target).val()
 	infos = infos.split("|")
@@ -935,7 +937,21 @@ function getRegionList(){
 				))
 			
             $("#regionList").empty();
-            $("#regionList").append(html);
+			$("#regionList").append(html);
+			$("#regionList tr").each(function(){
+				$selector = $(this)
+				
+				$selector.click(function(){
+					
+					if($(this).hasClass("on")){
+						$(this).removeClass("on");
+					}else{
+						$(this).addClass("on")
+					}
+				})
+				
+	})
+			
 		  //  nsModal()
 		  ModalDetail()
     }}
@@ -966,8 +982,21 @@ function getCredentialList(){
             $("#credentialList").append(html);
 		  //  nsModal()
 		  ModalDetail()
-    }}
-)}
+		  $("#credentialList tr").each(function(){
+				$selector = $(this)
+				
+				$selector.click(function(){
+					
+					if($(this).hasClass("on")){
+						$(this).removeClass("on");
+					}else{
+						$(this).addClass("on")
+					}
+				})
+		})
+}
+	})
+}
 function getDriverList(){
     var url = "{{ .comURL.SpiderURL}}"+"/driver";
     axios.get(url,{
@@ -993,6 +1022,18 @@ function getDriverList(){
             $("#driverList").append(html);
 		  //  nsModal()
 		  ModalDetail()
+		  $("#driverList tr").each(function(){
+				$selector = $(this)
+				
+				$selector.click(function(){
+					
+					if($(this).hasClass("on")){
+						$(this).removeClass("on");
+					}else{
+						$(this).addClass("on")
+					}
+				})
+		})
     }}
 )}
 
@@ -1001,6 +1042,37 @@ function getCloudConnection(){
 }
 function ModalDetail(){
 	$(".dashboard .status_list tbody tr").each(function(){
+  	var $td_list = $(this),
+  			$status = $(".server_status"),
+  			$detail = $(".server_info");
+  	$td_list.off("click").click(function(){
+			$td_list.addClass("on");
+			$td_list.siblings().removeClass("on");
+			$status.addClass("view");
+			$status.siblings().removeClass("on");
+  			$(".dashboard.register_cont").removeClass("active");
+	   	$td_list.off("click").click(function(){
+				if( $(this).hasClass("on") ) {
+					console.log("reg ok button click")
+					$td_list.removeClass("on");
+					$status.removeClass("view");
+					$detail.removeClass("active");
+		    } else {
+					$td_list.addClass("on");
+					$td_list.siblings().removeClass("on");
+					$status.addClass("view");
+					
+					$status.siblings().removeClass("view");
+  					$(".dashboard.register_cont").removeClass("active");
+		    }
+			});
+		});
+	});
+}
+
+
+function ModalDetail2(){
+	$(".dashboard .dataTable tbody tr").each(function(){
   	var $td_list = $(this),
   			$status = $(".server_status"),
   			$detail = $(".server_info");
