@@ -245,6 +245,9 @@ function show_mcis_list(url){
                     terminated_vm_cnt++;
                  }else{
                     vm_badge += "shot bgbox_g"
+                    stop_cnt++;
+                    vm_stop_cnt++;
+                    stop_vm_cnt++;
                  }
 
              }
@@ -267,7 +270,8 @@ function show_mcis_list(url){
                 html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span></td>'
                 mcis_terminated_cnt;
              }else{
-                
+                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
+                mcis_stop_cnt++;
              }
            
 
@@ -469,6 +473,9 @@ function show_mcis_list(url){
                     terminated_vm_cnt++;
                  }else{
                     vm_badge += "shot bgbox_g"
+                    stop_cnt++;
+                    vm_stop_cnt++;
+                    stop_vm_cnt++;
                  }
 
              }
@@ -492,7 +499,8 @@ function show_mcis_list(url){
                 html +='<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_terminate.png" class="icon" alt=""/> Terminate <span class="ov off"></span></td>'
                 mcis_terminated_cnt;
              }else{
-                
+                html += '<td class="overlay hidden td_left" data-th="Status"><img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> Suspended <span class="ov off"></span></td>'
+                mcis_stop_cnt++;
              }
            
 
@@ -915,14 +923,16 @@ function show_mcis_list(url){
 
     // install Mon agent
     var installMonAgent = select_vm.monAgentStatus
-    if(installMonAgent == "installed"){
-        console.log("install mon agent : ",installMonAgent)
-        $("#mcis_detail_info_check_monitoring").prop("checked",true)
-        $("#mcis_detail_info_check_monitoring").attr("disabled",true)
-    }else{
-        $("#mcis_detail_info_check_monitoring").prop("checked",false)
-        $("#mcis_detail_info_check_monitoring").attr("disabled",false)
-    }
+    checkDragonFly(mcis_id,vm_id)
+   
+    // if(installMonAgent == "installed"){
+    //     console.log("install mon agent : ",installMonAgent)
+    //     $("#mcis_detail_info_check_monitoring").prop("checked",true)
+    //     $("#mcis_detail_info_check_monitoring").attr("disabled",true)
+    // }else{
+    //     $("#mcis_detail_info_check_monitoring").prop("checked",false)
+    //     $("#mcis_detail_info_check_monitoring").attr("disabled",false)
+    // }
 
     // device info
     var root_device_type = vm_detail.VMBootDisk
@@ -966,6 +976,15 @@ function show_mcis_list(url){
     
     $("#server_detail_view_security_group").empty()
     $("#server_detail_view_security_group").append(append_sg);
+
+    // monitoring
+    // var duration = "5m"
+    // var period_type = "m"
+    // var metric_arr = ["cpu","memory","disk","network"];
+    // var statisticsCriteria = "last";
+	// for(var i in metric_arr){
+	// 	getMetric("canvas_"+i,metric_arr[i],mcis_id,vm_id,metric_arr[i],period_type,statisticsCriteria,duration);
+	// }
  
  }
 // MCIS Control 
@@ -1093,7 +1112,7 @@ function short_desc(str){
              }else if(status == "terminate"){
                 mcis_badge = '<img src="/assets/img/contents/icon_terminate_db.png" alt=""/>'
              }else{
-                
+                mcis_badge = '<img src="/assets/img/contents/icon_stop_db.png" alt=""/>'
              }
             $("#service_status_icon").empty();
             $("#service_status_icon").append(mcis_badge)
