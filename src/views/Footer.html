@@ -1,7 +1,23 @@
 {{define "Footer"}}
-  
+</div>
+<!-- //container -->
+
+
+<!-- footer -->
+<div id="footer">
+        <div class="txt">ⓒ 2020 Cloud Barista. All Rights Reserved</div>
+        
+        <div class="btn_top"><a href="javascript:void(0);"><span>top</span></a></div>
+    </div>
+    <!-- //footer -->
+    
+</div>
+
+</div>
+
 </body>
 </html>
+
 <script>
 
     
@@ -17,7 +33,7 @@
             }).then(result=>{
                 var data = result.data
                 console.log(data);
-                location.reload(true);
+                location.href = "/Dashboard/NS";
              })
         }else{
             alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
@@ -40,6 +56,7 @@
     var nsListUrl = CommonURL+"/ns"
     var apiInfo = ApiInfo
     console.log("nsList url : ",nsListUrl)
+    $("#default_namespace").text(NAMESPACE);
    axios.get(nsListUrl,{
         headers:{
             'Authorization': apiInfo
@@ -59,10 +76,10 @@
         for(var i in res){
             if(res[i].name){
                 if(NAMESPACE == res[i].name){
-                        html += '<option value="'+res[i].id+'" selected>'+res[i].name+'</option>';
-                        ns = res[i].id;
+                      
                 }else{
-                    html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
+                   // html += '<option value="'+res[i].id+'">'+res[i].name+'</option>';
+                   html +='<li><a href="javascript:void(0);" onclick="select_namespace(\''+res[i].id+'\')" data-toggle="modal" data-target="#NameSpace">'+res[i].name+'</a></li>'
                 }   
             }
               
@@ -111,5 +128,12 @@
        }
 
    })
+
+   function select_namespace(ns_id){
+       console.log("select namespace : ",ns_id)
+       $("#select_namespace").val(ns_id)
+      
+       //location.reload();
+   }
 </script>
 {{end}}

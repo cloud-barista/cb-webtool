@@ -42,7 +42,7 @@ func NsListForm(c echo.Context) error {
 		nsList := service.GetNSList()
 		fmt.Println("=============start GetNSList =============", nsList)
 		if nsList != nil {
-			return c.Render(http.StatusOK, "NSList.html", map[string]interface{}{
+			return c.Render(http.StatusOK, "NameSpace.html", map[string]interface{}{
 				"LoginInfo": loginInfo,
 				"NSList":    nsList,
 				"comURL":    comURL,

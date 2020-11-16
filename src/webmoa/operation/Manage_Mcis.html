@@ -13,8 +13,8 @@
 		
 		<script src="../js/jquery-1.11.0/jquery.min.js"></script>
 		<script src="../js/bootstrap-4.5.2/js/bootstrap.min.js"></script>
+		<script src="../js/jquery.scrollTo.min.js"></script><!-- 추가 팝업 ok 이동 -->
 		<script src="../js/jquery.scrollbar.js"></script>
-		<script src="../js/jquery.nice-select.min.js"></script>
 		<script src="../js/common.js"></script>
 		<!--[if lt IE 9]><script src="../js/html5shiv.js"></script><![endif]-->
 	</head>
@@ -443,6 +443,8 @@
 								</div>
 								<div class="cbox">
 									<div class="tcbox">
+										
+										<!-- CP connection scrollbar -->
 										<div class="sc_box scrollbar-inner">
 											<ul>
 												<li class="bg_b"><a href="../operation/Manage_Mcis.html"><span>AWS(3)</span></a></li>
@@ -455,6 +457,7 @@
 												<li class="bg_n"><span></span></li>
 											</ul>
 										</div>
+										<!-- //CP connection scrollbar -->
 									</div>
 									<div class="txt">Status of Infra Service</div>
 								</div>
@@ -464,6 +467,7 @@
 						
 					</div>	
 					<script>
+						//CP connection scrollbar
 						$(function() {
 							jQuery('.sc_box.scrollbar-inner').scrollbar();
 						});
@@ -673,7 +677,7 @@
 								<script>
 									/* scroll */
 									$(document).ready(function(){
-										
+										//checkbox all
 								    $("#th_chall").click(function() {
 								      if ($("#th_chall").prop("checked")) {
 								        $("input[name=chk]").prop("checked", true);
@@ -682,6 +686,7 @@
 								      }
 								    })
 								    
+								    //table 스크롤바 제한
 										$(window).on("load resize",function(){
 											var vpwidth = $(window).width();
 										  if (vpwidth > 768 && vpwidth < 1800) {
@@ -691,24 +696,6 @@
 										    $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
 										  }
 										});
-										
-								    /*
-										if(  $(window).width() > 768) {
-											$(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-											$('.dataTable.scrollbar-inner').scrollbar();
-										} else {
-											$(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-										}
-									
-										$(window).resize(function (){
-											if( $(window).width() > 768) {
-												$(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-												$('.dataTable.scrollbar-inner').scrollbar();
-											} else {
-												$(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-											}
-										});
-										*/
 									});
 								</script>
 								
@@ -878,6 +865,8 @@
 									</div>
 								</div>
 								<script>
+									
+									//MCIS Info - 서비스 상태  아이콘 파일 첨부
 									$(function () {
 										$('.iconbox .btn_file').click(function (e) {
 											e.preventDefault();
@@ -969,6 +958,7 @@
 										</div>
 										<!-- //popup View -->
 										
+										<!-- Server List scrollbar -->
 										<div class="listbox scrollbar-inner">
 											<ul>
 												<li class="sel_cr bgbox_g"><a href="javascript:void(0);"><span class="txt">Server 1</span></a></li>
@@ -993,7 +983,7 @@
 												<li><span class="txt">Server 20</span></li>
 											</ul>
 										</div>
-										
+										<!-- //Server List scrollbar -->
 										
 									</div>
 									
@@ -1005,19 +995,6 @@
 						
 					</div>
 					<!-- //Info -->
-					
-					<script>
-						/*
-						$(document).ready(function(){
-							$('.listbox li').click(function(){
-								var contTop = $('.listbox').height();
-								var offset = $('#dashboard_detailBox').offset();
-								$('html,body,#wrap').animate({scrollTop : offset.top + contTop}, 400);
-								return false;
-							});
-						});	
-						*/    	
-					</script>
 		    	
 					<!-- detail -->
 					<div class="dashboard dashboard_cont dashboard_detail server_info" id="dashboard_detailBox">
@@ -1117,7 +1094,17 @@
 									
 									<div class="boxlist ipbox d_ip4">
 										<div class="iconbox">
-											<div class="img"><img src="../img/contents/img_logo_a.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo1.png" alt=""/></div>
+											<!-- 
+											<div class="img"><img src="../img/contents/img_logo2.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo3.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo4.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo5.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo6.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo7.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo8.png" alt=""/></div>
+											<div class="img"><img src="../img/contents/img_logo9.png" alt=""/></div>
+											 -->
 										</div>
 										<ul>
 											<li>
@@ -1265,6 +1252,7 @@
 											<!-- //Monitoring popup -->
 											
 											<script>
+												//popup Import key 파일 첨부
 												$(function () {
 													$('.pop_ip .btn_import_key').click(function (e) {
 														e.preventDefault();
@@ -1295,6 +1283,7 @@
 											
 											
 											<script>
+												//Server Detail Info - Monitoring pop
 												$(function() {
 												  return $(".modal").on("show.bs.modal", function() {
 												    var curModal;
@@ -1305,7 +1294,8 @@
 												      }
 												    });
 												  });
-												});		
+												});	
+												//Monitoring pop 체크박스 
 												$(document).ready(function() {
 												  $(".switch").change(function() {
 												    if ($(".switch .ch").is(":checked")) {
@@ -1313,19 +1303,12 @@
 												    } else {
 												    }
 												  });
-												  /*
-													$("#monitoring_box .btnbox .btn_cancel").click(function () {
-													  $(".switch input[type=checkbox]").prop("checked", false);
-													});	
-													*/
 													$("#monitoring_box").on("hidden.bs.modal", function() {
 													  $(".switch input[type=checkbox]").attr("checked", false);
 													});	
 													$("#Detail_Apply").on("hidden.bs.modal", function() {
 													  $(".switch input[type=checkbox]").prop("checked", false);
 													});	
-													
-													
 
 												});
 											</script>
@@ -1336,7 +1319,7 @@
 											<ul class="nav">
 												<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Detail">Detail</a></li>
 												<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Connection">Connection</a></li>
-												<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Monitoring">Monitoring</a></li>
+												<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Monitoring" id="Monitoring_tab">Monitoring</a></li>
 											</ul>
 											
 											<div class="tab-content">
@@ -1358,7 +1341,12 @@
 																</li>
 																<li>
 																	<label>Server Status</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="T2.micro">T2.micro</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="T2.micro">T2.micro</a>
+																			<div class="bb_info">Server Status</div>
+																		</div>
+																	</div>
 																</li>
 															</ul>
 														</div>
@@ -1390,7 +1378,20 @@
 																</li>
 																<li>
 																	<label>Security Group</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="launch-wizard-12.">launch-wizard-12.</a>인바운드 규칙 보기. 아웃바운드 규칙 보기</div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="launch-wizard-12.">launch-wizard-12.</a>
+																			<div class="bb_info">test</div>
+																		</div>
+																		<div class="box">
+																			인바운드 규칙 보기.
+																			<div class="bb_info">인바운드</div>
+																		</div>
+																		<div class="box">
+																			 아웃바운드 규칙 보기
+																			<div class="bb_info">아웃바운드</div>
+																		</div>
+																	</div>
 																</li>
 															</ul>
 														</div>
@@ -1414,7 +1415,12 @@
 															<ul>
 																<li>
 																	<label>Image ID</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="mcloud-barista-poc-backup (ami-0959312d93cafb4d7)">mcloud-barista-poc-backup (ami-0959312d93cafb4d7)</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="mcloud-barista-poc-backup (ami-0959312d93cafb4d7)">mcloud-barista-poc-backup (ami-0959312d93cafb4d7)</a>
+																			<div class="bb_info">Image ID</div>
+																		</div>
+																	</div>
 																</li>
 																<li>
 																	<label>Platform</label>
@@ -1431,15 +1437,30 @@
 															<ul>
 																<li>
 																	<label>VPC ID</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="vpc-0a48f3848d70a5c4a (mcloud-barista-poc)">vpc-0a48f3848d70a5c4a (mcloud-barista-poc)</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="vpc-0a48f3848d70a5c4a (mcloud-barista-poc)">vpc-0a48f3848d70a5c4a (mcloud-barista-poc)</a>
+																			<div class="bb_info">VPC ID</div>
+																		</div>
+																	</div>
 																</li>
 																<li>
 																	<label>subnet ID</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)">subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)">subnet-0e7523b6d6011fcad (mcloud-b arista-subnet)</a>
+																			<div class="bb_info">subnet ID</div>
+																		</div>
+																	</div>
 																</li>
 																<li>
 																	<label>Network Interface</label>
-																	<div class="txt_ip"><a href="javascript:void(0);" title="eth0">eth0</a></div>
+																	<div class="txt_ip bubble_box">
+																		<div class="box">
+																			<a href="javascript:void(0);" title="eth0">eth0</a>
+																			<div class="bb_info">Network Interface</div>
+																		</div>
+																	</div>
 																</li>
 															</ul>
 														</div>

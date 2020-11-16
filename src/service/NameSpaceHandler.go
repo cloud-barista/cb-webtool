@@ -62,6 +62,25 @@ func GetNSList() []NSInfo {
 
 }
 
+func GetNSCnt() int {
+	url := NameSpaceUrl + "/ns"
+	fmt.Println("============= NameSpace URL =============", url)
+
+	// defer resp.Body.Close()
+	body := HttpGetHandler(url)
+	nsInfo := map[string][]NSInfo{}
+	defer body.Close()
+	json.NewDecoder(body).Decode(&nsInfo)
+	//spew.Dump(body)
+	if nsInfo["ns"] == nil {
+		return 0
+	} else {
+		return len(nsInfo["ns"])
+
+	}
+
+}
+
 // func RegNS() error {
 
 // }
