@@ -35,18 +35,33 @@
 											<div class="pop_ipbox">
 												<ul>
 													<li class="p_ip1">
-														<label>Provider (CP)</label>
-														<input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" />
-													</li>
-													<li class="p_ip1">
 														<label><span class="ch">*</span>Name</label>
-														<input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" />
+														<input type="text" name="" value="" placeholder="input Name" class="pline w_ip1" title="" />
 													</li>
 													<li class="p_ip1">
-														<label><span class="ch">*</span>ID</label>
-														<select class="selectbox white pline w_ip1">
-															<option value="1">Selected Region</option>
+														<label><span class="ch">*</span>Provider (CP)</label>
+														<select class="selectbox white pline w_ip1" required>
+															<option value="" disabled selected hidden>Selected Provider (CP)</option>
+															<option value="aws">AWS</option>
+															<option value="gcp">GCP</option>
+															<option value="azure">AZURE</option>
+															<option value="alibaba">ALIBABA</option>
 														</select>
+														<!-- <input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" /> -->
+													</li>
+													<li class="p_ip1">
+														<label><span class="ch">*</span>Region ID</label>
+														<input type="text" name="" value="" placeholder="input Region" class="pline w_ip1" title="" />
+														<!-- <select class="selectbox white pline w_ip1">
+															<option value="1">Selected Region</option>
+														</select> -->
+													</li>
+													<li class="p_ip1">
+														<label><span class="ch">*</span>Zone ID</label>
+														<input type="text" name="" value="" placeholder="input Zone" class="pline w_ip1" title="" />
+														<!-- <select class="selectbox white pline w_ip1">
+															<option value="1">Selected Zone</option>
+														</select> -->
 													</li>
 												</ul>
 											</div>
@@ -107,18 +122,56 @@
 											<div class="pop_ipbox">
 												<ul>
 													<li class="p_ip1">
-														<label>Provider (CP)</label>
-														<input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" />
-													</li>
-													<li class="p_ip1">
 														<label><span class="ch">*</span>Name</label>
-														<input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" />
+														<input type="text" name="" value="" placeholder="input Name" class="pline w_ip1" title="" />
 													</li>
 													<li class="p_ip1">
-														<label><span class="ch">*</span>AccessKey</label>
-														<select class="selectbox white pline w_ip1">
-															<option value="1">Selected AccessKey</option>
+														<label><span class="ch">*</span>Provider (CP)</label>
+														<select class="selectbox white pline w_ip1" required>
+															<option value="" disabled selected hidden>Selected Provider (CP)</option>
+															<option value="aws">AWS</option>
+															<option value="gcp">GCP</option>
+															<option value="azure">AZURE</option>
+															<option value="alibaba">ALIBABA</option>
 														</select>
+														<!-- <input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" /> -->
+													</li>
+													<li class="p_ip1">
+														<label><span class="ch">*</span>Key[0]</label>
+														<input type="text" name="credential_keys" value="" placeholder="input Key" class="pline w_ip1" title="" />
+													</li>
+													<li class="p_ip1">
+														<label><span class="ch">*</span>Value[0]</label>
+														<input type="text" name="credential_values" value="" placeholder="input Value" class="pline w_ip1" title="" />
+													</li>
+													<li class="p_ip1">
+														<label><span class="ch">*</span>Key[1]</label>
+														<input type="text" name="credential_keys" value="" placeholder="input Key" class="pline w_ip1" title="" />
+													</li>
+													<li class="p_ip1">
+														<label><span class="ch">*</span>Value[1]</label>
+														<input type="text" name="credential_values" value="" placeholder="input Value" class="pline w_ip1" title="" />
+													</li>
+													<li class="p_ip1 hide" id="kv_gcp_key">
+														<label><span class="ch">*</span>Key[2]</label>
+														<input type="text" name="credential_keys" value="" placeholder="input Key" class="pline w_ip1" title="" />
+													</li>
+													<li class="p_ip1 hide" id="kv_gcp_value">
+														<label><span class="ch">*</span>Value[2]</label>
+														<input type="text" name="credential_values" value="" placeholder="input Value" class="pline w_ip1" title="" />
+													</li>
+													<li class="p_ip1 hide" id="kv_azure_key">
+														<label><span class="ch">*</span>Key[3]</label>
+														<input type="text" name="credential_keys" value="" placeholder="input Key" class="pline w_ip1" title="" />
+													</li>
+													<li class="p_ip1 hide" id="kv_azure_value">
+														<label><span class="ch">*</span>Value[3]</label>
+														<input type="text" name="credential_values" value="" placeholder="input Value" class="pline w_ip1" title="" />
+													</li>
+													<li class="p_ip1 hide">
+														<label><span class="ch">*</span>Key / Value</label>
+														<input type="text" name="credential_keys" id="" value="" placeholder="input Key" class="pline w_ip1" title="" />
+														<input type="text" name="credential_values" id="" value="" placeholder="input Value" class="pline w_ip1" title="" />
 													</li>
 												</ul>
 											</div>
@@ -178,18 +231,26 @@
 											<div class="pop_ipbox">
 												<ul>
 													<li class="p_ip1">
-														<label>Provider (CP)</label>
-														<input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" />
-													</li>
-													<li class="p_ip1">
 														<label><span class="ch">*</span>Name</label>
-														<input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" />
+														<input type="text" name="" value="" placeholder="input Name" class="pline w_ip1" title="" />
 													</li>
 													<li class="p_ip1">
-														<label><span class="ch">*</span>Driver</label>
-														<select class="selectbox white pline w_ip1">
-															<option value="1">Selected Driver</option>
+														<label><span class="ch">*</span>Provider (CP)</label>
+														<select class="selectbox white pline w_ip1" required>
+															<option value="" disabled selected hidden>Selected Provider (CP)</option>
+															<option value="aws">AWS</option>
+															<option value="gcp">GCP</option>
+															<option value="azure">AZURE</option>
+															<option value="alibaba">ALIBABA</option>
 														</select>
+														<!-- <input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" /> -->
+													</li>
+													<li class="p_ip1">
+														<label><span class="ch">*</span>LibFileName</label>
+														<input type="text" name="credential_keys" value="" placeholder="input Driver Lib File Name" class="pline w_ip1" title="" />
+														<!-- <select class="selectbox white pline w_ip1">
+															<option value="1">Selected Driver</option>
+														</select> -->
 													</li>
 												</ul>
 											</div>
