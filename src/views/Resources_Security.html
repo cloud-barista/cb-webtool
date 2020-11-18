@@ -192,7 +192,7 @@
 											<div class="txt">Would you like to un-register Security <br />Resource ?</div>
 											<div class="btnbox">
 												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok" onClick="goDelete('cspSecurityGroupName')" data-dismiss="modal">OK</button>
+												<button type="button" class="btn_ok" onClick="goDelete()" data-dismiss="modal">OK</button>
 											</div>
 										</div>
 										
@@ -223,7 +223,6 @@
 									<table cellpadding="0" cellspacing="0" border="1" summary="">
                                         <colgroup>
                                             <col width="50px">
-                                            <col width="50px">
                                             <col width="">
                                             <col width="">
                                             <col width="">
@@ -232,7 +231,6 @@
 										<thead>
 											<tr>
 												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
-												<th>No</th>
 												<th>SecurityGroup Name</th>
 												<th>Connection Name</th>
 												<th>Description</th>
@@ -318,7 +316,7 @@
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox_n">
-								<div class="tit initial"><strong>Security Group Info</strong> <span class="stxt">[SG ID]</span></div>
+								<div class="tit initial"><strong>Security Group Info</strong> [<span class="stxt"></span>]</div>
 							</div>
 							
 							<div class="ds_cont">
@@ -466,7 +464,7 @@
 														<option value="1">Selected ConnectionName</option>
 													</select>
 												</li>
-												<li class="reg_2">
+												<li>
                                                     <label><span class="ch">*</span>vNetId</label>
                                                     <select class="selectbox white pline w3" name="reg_vNetId" id="reg_vNetId" >
 														<option value="1">Selected vNetId</option>
@@ -532,9 +530,45 @@
                         fnMove(target)
                     }
      
-                    function goDelete(target) {
-                        console.log(target);
-                    }
+					function goDelete() {
+						var sgId = "";
+						var count = 0;
+
+						$( "input[name='chk']:checked" ).each (function (){
+							count++;
+							sgId = sgId + $(this).val()+"," ;
+						});
+						sgId = sgId.substring(0,sgId.lastIndexOf( ","));
+						
+						console.log("sgId : ", sgId);
+						console.log("count : ", count);
+
+						if(sgId == ''){
+							alert("삭제할 대상을 선택하세요.");
+							return false;
+						}
+
+						if(count != 1){
+							alert("삭제할 대상을 하나만 선택하세요.");
+							return false;
+						}
+
+						var url = CommonURL + "/ns/" + NAMESPACE + "/resources/securityGroup/" + sgId;
+						//var u = SpiderURL + "/vmimage/" + sgId;
+
+						axios.delete(url, {
+							headers: {
+								'Authorization': "{{ .apiInfo}}",
+								'Content-Type': "application/json"
+							}
+						}).then(result => {
+							var data = result.data
+							if (result.status == 200 || result.status == 201) {
+								alert("Success Delete Image.");
+								location.reload(true);
+							}
+						})
+					}          
 
                     function getSGList(sort_type) {
                         console.log(sort_type);
@@ -548,17 +582,14 @@
                             console.log("get SG Data : ", result.data);
                             var data = result.data.securityGroup; // exception case : if null 
                             var html = ""
-                            var cnt = 0;
                             if (data.length) { // null exception if not exist
                                 if (sort_type) {
-                                    cnt++;
                                     console.log("check : ", sort_type);
                                     data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
                                         html += '<tr onclick="showInfo(\'' + item.cspSecurityGroupName + '\');">' 
                                             + '<td class="overlay hidden" data-th="">' 
                                             + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
                                             + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                                            + '<td class="overlay hidden" data-th="cnt">'+cnt+'</td>'
                                             + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
                                             + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
                                             + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
@@ -572,7 +603,6 @@
                                             + '<td class="overlay hidden" data-th="">' 
                                             + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName  + '"/>'
                                             + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                                            + '<td class="overlay hidden" data-th="cnt">'+cnt+'</td>'
                                             + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
                                             + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                                             + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
@@ -623,6 +653,9 @@
                     function showInfo(target) {
                         console.log("target showInfo : ", target);
                         var sgName = target;
+						
+						$(".stxt").html(target);
+
                         var apiInfo = "{{ .apiInfo}}";
 
                         var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup/"+ sgName;
