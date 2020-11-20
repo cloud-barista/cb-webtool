@@ -142,13 +142,13 @@ function short_desc(str){
            console.log("mcis Status 1: ", mcis[i].status)
            console.log("mcis Status 2: ", status)
             if(status == "running"){
-               badge += '<span class="badge badge-pill badge-success">RUNNING</span>'
+               badge += '<span class="badge badge-pill badge-success">'+sta+'</span>'
             }else if(status == "include" ){
-               badge += '<span class="badge badge-pill badge-warning">WARNING</span>'
+               badge += '<span class="badge badge-pill badge-warning">'+sta+'</span>'
             }else if(status == "suspended"){
-               badge += '<span class="badge badge-pill badge-warning">SUSPEND</span>'
+               badge += '<span class="badge badge-pill badge-warning">'+sta+'</span>'
             }else if(status == "terminate"){
-               badge += '<span class="badge badge-pill badge-dark">TERMINATED</span>'
+               badge += '<span class="badge badge-pill badge-dark">'+sta+'</span>'
             }else{
                badge += '<span class="badge badge-pill badge-warning">'+sta+'</span>'
             }
@@ -289,8 +289,11 @@ function show_mcis2(url, map){
                 var provider = vms[0].location.cloudType
 
                 var fromLonLat = long+" "+lat;
-                polyArr.push(fromLonLat)
-                drawMap(JZMap,long,lat,vms[o])
+                if(long && lat){
+                    polyArr.push(fromLonLat)
+                    drawMap(JZMap,long,lat,vms[o])
+                }
+              
 
 
 
@@ -299,13 +302,14 @@ function show_mcis2(url, map){
                  if(vms[o].status == "Suspended"){
                      stop_cnt++;
                      vm_stop_cnt++;
-                 }
-                 if(vms[o].status == "Running"){
+                 }else if(vms[o].status == "Running"){
                      run_cnt++;
                      vm_run_cnt++;
-                 }
-                 if(vms[o].status == "Terminated"){
+                 }else if(vms[o].status == "Terminated"){
                     terminate_cnt++;
+                }else{
+                    stop_cnt++;
+                    vm_stop_cnt++;
                 }
 
                 if(vm_status == "Running"){
@@ -323,6 +327,7 @@ function show_mcis2(url, map){
                  vm_html +='<div class="'+vm_badge+'"><a href="javascript:void(0);"><span>'+vm_cnt+'</span></a></div>'
              }
              var polygon = "";
+             console.log("poly arr : ",polyArr);
              if(polyArr.length > 1){
                polygon = polyArr.join(", ")
                polygon = "POLYGON(("+polygon+"))";
