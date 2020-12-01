@@ -19,7 +19,8 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
   - [[의존성]](#의존성)
   - [[소스 설치]](#소스-설치)
   - [[환경 설정]](#환경-설정)
-  - [[서버 실행]](#서버-실행)
+  - [[cb-webtool 실행]](#cb-webtool-실행)
+  - [[cb-webtool 실행-reflex 방식]](#cb-webtool-실행-reflex-방식)
 ***
 ## [설치 환경]
 cb-webtool은 1.15 이상의 Go 버전이 설치된 다양한 환경에서 실행 가능하지만 최종 동작을 검증한 OS는 Ubuntu 18.0.4입니다.
@@ -65,8 +66,8 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly의 개방�
 <br>
 
 ## [환경 설정]
-   - conf/setup.env 파일에서 cb-tumblebug & cb-spider & cb-dragonfly의 실제 URL 정보로 수정합니다.<br>
-     **[주의사항]** cb-webtool을 비롯하여 연동되는 모든 서버가 자신의 로컬 환경에서 개발되는 경우를 제외하고는 클라이언트의 웹브라우저에서 접근하기 때문에 localhost나 127.0.0.1 주소가 아닌 실제 IP 주소를 사용해야 합니다.
+   - conf/setup.env 파일에서 cb-tumblebug & cb-spider & cb-dragonfly의 실제 URL 정보로 수정합니다.<br><br>
+     **[주의사항]**<br> cb-webtool을 비롯하여 연동되는 모든 서버가 자신의 로컬 환경에서 개발되는 경우를 제외하고는 클라이언트의 웹브라우저에서 접근하기 때문에 localhost나 127.0.0.1 주소가 아닌 실제 IP 주소를 사용해야 합니다.
 
    - 로그인 Id와 Password의 변경은 conf/setup.env 파일의 LoginEmail & LoginPassword 정보를 수정하세요.<br>
      (기본 값은 admin/admin 입니다.)
@@ -76,7 +77,19 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly의 개방�
   
 <br>
 
-## [서버 실행]
-   - `$ cd ~/go/src/github.com/cloud-barista/cb-webtool`
-   - `$ ./run.sh`
+## [cb-webtool 실행]
+  - 일반 실행 
+    - `$ cd ~/go/src/github.com/cloud-barista/cb-webtool`
+    - `$ source ./conf/setup.env`
+    - `$ go run main.go`
   
+<br>
+
+## [cb-webtool 실행-reflex 방식]
+reflex를 이용한 static 파일의 자동 변경 감지및 Reload
+  - reflex 설치
+    - `$ go get github.com/cespare/reflex`
+  - cb-webtool 실행
+    - `$ cd ~/go/src/github.com/cloud-barista/cb-webtool`
+    - `$ source ./conf/setup.env`
+    - `$ reflex -r '\.(html|go|js)' -s go run main.go`
