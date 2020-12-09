@@ -474,7 +474,7 @@ function show_vmList(mcis_id,map){
 
    
    var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id;
-   var mcis_url = CommonURL+"/ns/"+NAMESPACE+"/mcis?option=status";
+   var mcis_url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
    var apiInfo = ApiInfo;
    console.log("vmList",url)
    if(mcis_id){

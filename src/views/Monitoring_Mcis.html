@@ -467,7 +467,7 @@
 
 	})
 function getMcisList(nsid){
-	var url = "{{ .comURL.TumbleBugURL}}"+"/ns/"+nsid+"/mcis?option=status";
+	var url = "{{ .comURL.TumbleBugURL}}"+"/ns/"+nsid+"/mcis";
 	var apiInfo = "{{ .apiInfo}}";
 	axios.get(url,{
         headers:{
