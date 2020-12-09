@@ -433,7 +433,7 @@
                 if(!NAMESPACE){
                     nsid = $("#namespace1").val()
                 }
-                var url = CommonURL+"/ns/"+nsid+"/mcis?option=status";
+                var url = CommonURL+"/ns/"+nsid+"/mcis";
                 console.log("Dashboard url :",url);
                 const osmLayer = new ol.layer.Tile({
                     source: new ol.source.OSM(),
