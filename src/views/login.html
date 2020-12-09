@@ -663,6 +663,13 @@ function getCloudRegion(url, csp, target){
     }) 
 
 }
+function isEmpty(str){
+         if(typeof str == "undefined" || str == null || str == "")
+             return true;
+         else
+             return false ;
+}
+
 function getNameSpace(){
     var url = "{{ .comURL.TumbleBugURL}}"+"/ns";
     axios.get(url,{
@@ -671,10 +678,12 @@ function getNameSpace(){
             'Content-Type' : "application/json"
         }
     }).then(result=>{
-        console.log("get NameSpace Data : ",result.data);
+        console.log("get NameSpace Data : ",result.data);        
         var data = result.data.ns;
         var html = ""
-        if(data.length){        
+
+        //최초 로그인시에는 호출되지 않도록 버그 수정
+        if(!isEmpty(data) && data.length){
             data.filter((list)=> list.name !== "" ).map((item,index)=>(
                 html += '<div class="list" onclick="selectNS(\''+item.id+'\');">'
                     +'<div class="stit">'+item.name+'</div>'
