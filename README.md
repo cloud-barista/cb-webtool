@@ -29,7 +29,7 @@ cb-webtool은 1.15 이상의 Go 버전이 설치된 다양한 환경에서 실�
 
 ## [의존성]
 cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly의 개방형 API를 이용하기 때문에 각 서버의 연동이 필요합니다.<br>
-- [https://github.com/cloud-barista/cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug) README 참고하여 설치 및 실행 (검증된 버전 : cb-tumblebug v0.2.8)
+- [https://github.com/cloud-barista/cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug) README 참고하여 설치 및 실행 (검증된 버전 : cb-tumblebug v0.2.9)
 - [https://github.com/cloud-barista/cb-spider](https://github.com/cloud-barista/cb-spider) README 참고하여 설치 및 실행 (검증된 버전 : cb-spider v0.2.8)
 - [https://github.com/cloud-barista/cb-dragonfly](https://github.com/cloud-barista/cb-dragonfly) README 참고하여 설치 및 실행 (검증된 버전 : cb-dragonfly v0.2.8)
 
@@ -52,7 +52,7 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly의 개방�
   - `$ source ~/.bashrc`
   - `$ go version`
   ```
-      go version go1.15.3 linux/amd64
+      go version go1.15.4 linux/amd64
   ```
 
  - cb-webtool 설치
@@ -73,8 +73,11 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly의 개방�
      (기본 값은 admin/admin 입니다.)
 
    - 초기 Data 구축관련<br>
-     내부적으로 [cb-spider](https://github.com/cloud-barista/cb-spider)와 [cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug)의 개방형 API를 이용하기 때문에 입력되는 Key Name및 Key Value는 cb-spider 및 cb-tumblebug의 API를 참고하시기 바랍니다.
-  
+     내부적으로 [cb-spider](https://github.com/cloud-barista/cb-spider)와 [cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug)의 개방형 API를 사용하므로 입력되는 Key Name및 Key Value는 cb-spider 및 cb-tumblebug의 API 문서를 참고하시기 바랍니다.<br>
+
+     **[중요]**<br>
+     Cloud Connection 기능을 사용할 수 없으므로 cb-tumblebug의 [활용 예시](https://github.com/cloud-barista/cb-spider#%ED%99%9C%EC%9A%A9-%EC%98%88%EC%8B%9C_)를 참고해서 **[1.configureSpider](https://github.com/cloud-barista/cb-tumblebug#1-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C%EC%A0%95%EB%B3%B4-namespace-mcir-mcis-%EB%93%B1-%EA%B0%9C%EB%B3%84-%EC%A0%9C%EC%96%B4-%EC%8B%9C%ED%97%98) 쉘 스크립트를 실행** 하시기 바랍니다.
+
 <br>
 
 ## [cb-webtool 실행]
