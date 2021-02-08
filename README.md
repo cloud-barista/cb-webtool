@@ -13,6 +13,8 @@ cb-webtool
 cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-webtool에서 처리해 사용자로 하여금 간단하고 편안하게 클라우드를 접할 수 있게 해준다.
 ***
 ## [Index]
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcloud-barista%2Fcb-webtool.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcloud-barista%2Fcb-webtool?ref=badge_shield)
+
 - [cb-webtool](#cb-webtool)
   - [[Index]](#index)
   - [[설치 환경]](#설치-환경)
@@ -96,3 +98,6 @@ reflex를 이용한 static 파일의 자동 변경 감지및 Reload
     - `$ cd ~/go/src/github.com/cloud-barista/cb-webtool`
     - `$ source ./conf/setup.env`
     - `$ reflex -r '\.(html|go|js)' -s go run main.go`
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcloud-barista%2Fcb-webtool.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcloud-barista%2Fcb-webtool?ref=badge_large)
