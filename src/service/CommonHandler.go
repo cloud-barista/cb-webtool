@@ -1,5 +1,6 @@
-package controller
+package service
 
+// controller에서 service로 이동
 import (
 	"encoding/base64"
 	"fmt"
@@ -8,28 +9,35 @@ import (
 	"strconv"
 	"time"
 
+	model "github.com/dogfootman/cb-webtool/src/model"
+
+	// model "github.com/dogfootman/cb-webtool/src/model"
+	// service "github.com/dogfootman/cb-webtool/src/service"
+
 	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 )
 
-type LoginInfo struct {
-	Username  string
-	NameSpace string
-}
+// type LoginInfo struct {
+// 	Username  string
+// 	NameSpace string
+// }
 
-type CredentialInfo struct {
-	Username string
-	Password string
-}
-type CommonURL struct {
-	SpiderURL    string
-	TumbleBugURL string
-	DragonFlyURL string
-	LadyBugURL   string
-}
+// type CredentialInfo struct {
+// 	Username string
+// 	Password string
+// }
 
-func GetCommonURL() CommonURL {
-	common_url := CommonURL{
+// model package로 이동
+// type CommonURL struct {
+// 	SpiderURL    string
+// 	TumbleBugURL string
+// 	DragonFlyURL string
+// 	LadyBugURL   string
+// }
+
+func GetCommonURL() model.CommonURL {
+	common_url := model.CommonURL{
 		SpiderURL:    os.Getenv("SPIDER_URL"),
 		TumbleBugURL: os.Getenv("TUMBLE_URL"),
 		DragonFlyURL: os.Getenv("DRAGONFLY_URL"),
@@ -38,14 +46,14 @@ func GetCommonURL() CommonURL {
 	return common_url
 }
 
-func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
+func GetCredentialInfo(c echo.Context, username string) model.CredentialInfo {
 	store := echosession.FromContext(c)
 	getObj, ok := store.Get(username)
 	if !ok {
-		return CredentialInfo{}
+		return model.CredentialInfo{}
 	}
 	result := getObj.(map[string]string)
-	credentialInfo := CredentialInfo{
+	credentialInfo := model.CredentialInfo{
 		Username: result["username"],
 		Password: result["password"],
 	}
@@ -108,22 +116,22 @@ func GetNameSpaceToString(c echo.Context) string {
 	return nsId
 }
 
-func CallLoginInfo(c echo.Context) LoginInfo {
+func CallLoginInfo(c echo.Context) model.LoginInfo {
 	store := echosession.FromContext(c)
 	getUser, ok := store.Get("username")
 	if !ok {
 		fmt.Println("========= CallLoginInfo Nothing =========")
-		return LoginInfo{}
+		return model.LoginInfo{}
 	}
 	fmt.Println("GETUSER : ", getUser.(string))
 	getObj, ok := store.Get(getUser.(string))
 
 	if !ok {
-		return LoginInfo{}
+		return model.LoginInfo{}
 	}
 
 	result := getObj.(map[string]string)
-	loginInfo := LoginInfo{
+	loginInfo := model.LoginInfo{
 		Username: "admin",
 		//Username:  result["username"],
 		NameSpace: result["namespace"],
@@ -165,8 +173,9 @@ func MakeNameSpace(name string) string {
 	return result
 }
 
-func AuthenticationHandler() string {
-
+// pkg.go.dev 에 이미 있으므로 다른 이름 필요
+// func AuthenticationHandler() string {
+func AuthenticationKey() string {
 	api_username := os.Getenv("API_USERNAME")
 	api_password := os.Getenv("API_PASSWORD")
 
