@@ -9,6 +9,7 @@ If you have any difficulties in using cb-webtool, please let us know.
 ***
 
 cb-webtool
+ : client, server 로 분리
 ==========
 cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-webtool에서 처리해 사용자로 하여금 간단하고 편안하게 클라우드를 접할 수 있게 해준다.
 ***
