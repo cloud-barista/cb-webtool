@@ -6,7 +6,10 @@ import (
 	"net/http"
 	_ "net/http"
 
-	"github.com/cloud-barista/cb-webtool/src/service"
+	// "github.com/cloud-barista/cb-webtool/src/service"
+	service "github.com/dogfootman/cb-webtool/src/service"
+	
+	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 )
 
@@ -19,9 +22,9 @@ func NsRegController(c echo.Context) error {
 }
 
 func NsRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationKey()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "NSRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -34,9 +37,9 @@ func NsRegForm(c echo.Context) error {
 
 func NsListForm(c echo.Context) error {
 	fmt.Println("=============start NsListForm =============")
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	loginInfo := CallLoginInfo(c)
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationKey()
+	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		fmt.Println("=============start GetNSList =============")
 		nsList := service.GetNSList()
@@ -58,3 +61,41 @@ func NsListForm(c echo.Context) error {
 	//return c.Redirect(http.StatusPermanentRedirect, "/login")
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
+
+func SetNameSpace(c echo.Context) error {
+	fmt.Println("====== SET NAME SPACE ========")
+	store := echosession.FromContext(c)
+	ns := c.Param("nsid")
+	fmt.Println("SetNameSpaceID : ", ns)
+	store.Set("namespace", ns)
+	err := store.Save()
+	res := map[string]string{
+		"message": "success",
+	}
+	if err != nil {
+		res["message"] = "fail"
+		return c.JSON(http.StatusNotAcceptable, res)
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
+func GetNameSpace(c echo.Context) error {
+	fmt.Println("====== GET NAME SPACE ========")
+	store := echosession.FromContext(c)
+
+	getInfo, ok := store.Get("namespace")
+	if !ok {
+		return c.JSON(http.StatusNotAcceptable, map[string]string{
+			"message": "Not Exist",
+		})
+	}
+	nsId := getInfo.(string)
+
+	res := map[string]string{
+		"message": "success",
+		"nsID":    nsId,
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+

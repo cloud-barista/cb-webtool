@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	//"github.com/cloud-barista/cb-webtool/src/controller"
-	"github.com/cloud-barista/cb-webtool/src/controller"
+	"github.com/dogfootman/cb-webtool/src/controller"
 	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -74,16 +74,16 @@ func main() {
 
 	e.Renderer = renderer
 
-	e.GET("/", controller.IndexController)
+	e.GET("/", controller.Index)
 	e.GET("/Dashboard/Global", controller.GlobalDashBoard)
 	e.GET("/Dashboard/NS", controller.NSDashBoard)
 
 	//login 관련
-	e.GET("/login", controller.LoginForm)
-	e.POST("/login/proc", controller.LoginController)
-	e.POST("/regUser", controller.RegUserConrtoller)
-	e.GET("/logout", controller.LogoutForm)
-	e.GET("/logout/proc", controller.LoginController)
+	// e.GET("/login", controller.LoginForm)
+	e.POST("/login/proc", controller.LoginProc)
+	e.POST("/regUser", controller.RegUser)
+	// e.GET("/logout", controller.LogoutForm)
+	e.GET("/logout/proc", controller.LogoutProc)
 
 	// Monitoring Control
 	e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)

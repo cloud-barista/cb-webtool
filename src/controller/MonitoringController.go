@@ -3,14 +3,15 @@ package controller
 import (
 	"net/http"
 
+	service "github.com/dogfootman/cb-webtool/src/service"
 	"github.com/labstack/echo"
 )
 
 func MornitoringListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
-		namespace := GetNameSpaceToString(c)
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationKey()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := service.GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "Monitoring_Mcis.html", map[string]interface{}{
 			// return c.Render(http.StatusOK, "Monitoring.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
@@ -26,14 +27,14 @@ func MornitoringListForm(c echo.Context) error {
 }
 
 func AgentRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationKey()
 	mcis_id := c.Param("mcis_id")
 	vm_id := c.Param("vm_id")
 	public_ip := c.Param("public_ip")
 
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
-		namespace := GetNameSpaceToString(c)
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := service.GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "InstallAgent.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,

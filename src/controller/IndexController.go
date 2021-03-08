@@ -36,11 +36,21 @@ import (
 // 	return c.Render(http.StatusOK, "logout.html", nil)
 // }
 
-// Logout 처리 : 세션에서 정보 삭제
-func Logout(c echo.Context) error {
+func Index(c echo.Context) error {
 	store := echosession.FromContext(c)
-	user := os.Getenv("LoginEmail")
-	store.Set(user, nil)
+	userId := os.Getenv("LoginUserId")
+	store.Set(userId, nil)
+	return c.JSON(http.StatusNotFound, map[string]interface{}{
+		"status":  "success",
+	})
+}
+
+
+// Logout 처리 : 세션에서 정보 삭제
+func LogoutProc(c echo.Context) error {
+	store := echosession.FromContext(c)
+	userId := os.Getenv("LoginUserId")
+	store.Set(userId, nil)
 	return c.JSON(http.StatusNotFound, map[string]interface{}{
 		"message": "You have been logged out",
 		"status":  "success",
@@ -48,18 +58,19 @@ func Logout(c echo.Context) error {
 }
 
 // 사용자 등록 : 해당 사용자는 세션에 추가
-func RegUserConrtoller(c echo.Context) error {
+func RegUser(c echo.Context) error {
+// func RegUserConrtoller(c echo.Context) error {
 	//comURL := GetCommonURL()
 
-	user := os.Getenv("LoginEmail")
+	userId := os.Getenv("LoginUserId")
 	pass := os.Getenv("LoginPassword")
 
 	store := echosession.FromContext(c)
 	obj := map[string]string{
-		"username": user,
+		"userid": userId,
 		"password": pass,
 	}
-	store.Set(user, obj)
+	store.Set(userId, obj)
 	err := store.Save()
 	if err != nil {
 		return c.JSON(http.StatusServiceUnavailable, map[string]string{
@@ -68,14 +79,14 @@ func RegUserConrtoller(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]string{
 		"message": "SUCCESS",
-		"user":    user,
+		"user":    userId,
 	})
 
 }
 
-// func name이 Controller가 들어가서 Login으로 변경
+// func name이 Controller가 들어가서 LoginProc로 변경
 //func LoginController(c echo.Context) error {
-func Login(c echo.Context) error {
+func LoginProc(c echo.Context) error {
 	store := echosession.FromContext(c)
 	reqInfo := new(model.ReqInfo)
 	// comURL := GetCommonURL()
@@ -85,11 +96,11 @@ func Login(c echo.Context) error {
 			"message": "fail",
 		})
 	}
-	getUser := strings.TrimSpace(reqInfo.UserName)
+	getUserId := strings.TrimSpace(reqInfo.UserId)
 	getPass := strings.TrimSpace(reqInfo.Password)
-	fmt.Println("getUser & getPass : ", getUser, getPass)
+	fmt.Println("getUserId & getPass : ", getUserId, getPass)
 
-	get, ok := store.Get(getUser)
+	get, ok := store.Get(getUserId)
 	fmt.Println("GEt USER:", get)
 	if !ok {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -107,8 +118,8 @@ func Login(c echo.Context) error {
 	// }
 
 	fmt.Println("result : ", result["password"])
-	if result["password"] == getPass && result["username"] == getUser {
-		store.Set("username", result["username"])
+	if result["userid"] == getUserId && result["password"] == getPass {
+		store.Set("userid", result["userid"])
 		store.Save()
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "Login Success",
@@ -152,3 +163,4 @@ func Login(c echo.Context) error {
 
 // 	}
 // }
+

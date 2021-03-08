@@ -4,7 +4,7 @@ package service
 import (
 	"encoding/base64"
 	"fmt"
-	"net/http"
+	// "net/http"
 	"os"
 	"strconv"
 	"time"
@@ -66,42 +66,44 @@ func GetCredentialInfo(c echo.Context, username string) model.CredentialInfo {
 // 	store.Set("username")
 // }
 
-func SetNameSpace(c echo.Context) error {
-	fmt.Println("====== SET NAME SPACE ========")
-	store := echosession.FromContext(c)
-	ns := c.Param("nsid")
-	fmt.Println("SetNameSpaceID : ", ns)
-	store.Set("namespace", ns)
-	err := store.Save()
-	res := map[string]string{
-		"message": "success",
-	}
-	if err != nil {
-		res["message"] = "fail"
-		return c.JSON(http.StatusNotAcceptable, res)
-	}
-	return c.JSON(http.StatusOK, res)
-}
+// NamespaceController로 이동
+// func SetNameSpace(c echo.Context) error {
+// 	fmt.Println("====== SET NAME SPACE ========")
+// 	store := echosession.FromContext(c)
+// 	ns := c.Param("nsid")
+// 	fmt.Println("SetNameSpaceID : ", ns)
+// 	store.Set("namespace", ns)
+// 	err := store.Save()
+// 	res := map[string]string{
+// 		"message": "success",
+// 	}
+// 	if err != nil {
+// 		res["message"] = "fail"
+// 		return c.JSON(http.StatusNotAcceptable, res)
+// 	}
+// 	return c.JSON(http.StatusOK, res)
+// }
 
-func GetNameSpace(c echo.Context) error {
-	fmt.Println("====== GET NAME SPACE ========")
-	store := echosession.FromContext(c)
+// NamespaceController로 이동
+// func GetNameSpace(c echo.Context) error {
+// 	fmt.Println("====== GET NAME SPACE ========")
+// 	store := echosession.FromContext(c)
 
-	getInfo, ok := store.Get("namespace")
-	if !ok {
-		return c.JSON(http.StatusNotAcceptable, map[string]string{
-			"message": "Not Exist",
-		})
-	}
-	nsId := getInfo.(string)
+// 	getInfo, ok := store.Get("namespace")
+// 	if !ok {
+// 		return c.JSON(http.StatusNotAcceptable, map[string]string{
+// 			"message": "Not Exist",
+// 		})
+// 	}
+// 	nsId := getInfo.(string)
 
-	res := map[string]string{
-		"message": "success",
-		"nsID":    nsId,
-	}
+// 	res := map[string]string{
+// 		"message": "success",
+// 		"nsID":    nsId,
+// 	}
 
-	return c.JSON(http.StatusOK, res)
-}
+// 	return c.JSON(http.StatusOK, res)
+// }
 
 func GetNameSpaceToString(c echo.Context) string {
 	fmt.Println("====== GET NAME SPACE ========")
@@ -118,7 +120,8 @@ func GetNameSpaceToString(c echo.Context) string {
 
 func CallLoginInfo(c echo.Context) model.LoginInfo {
 	store := echosession.FromContext(c)
-	getUser, ok := store.Get("username")
+	// getUser, ok := store.Get("username")
+	getUser, ok := store.Get("userid")
 	if !ok {
 		fmt.Println("========= CallLoginInfo Nothing =========")
 		return model.LoginInfo{}

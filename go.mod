@@ -1,9 +1,10 @@
-module github.com/cloud-barista/cb-webtool
+module github.com/dogfootman/cb-webtool
 
 go 1.14
 
 require (
 	github.com/cespare/reflex v0.3.0 // indirect
+	github.com/cloud-barista/cb-webtool v0.2.8
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-session/echo-session v3.0.0+incompatible
 	github.com/go-session/session v3.1.2+incompatible // indirect

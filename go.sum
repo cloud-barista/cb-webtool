@@ -1,11 +1,14 @@
 github.com/cespare/reflex v0.3.0 h1:9q8ZXMh+oW4quohPBcLsT56TFl4/DeQsTjZASe4wgoY=
 github.com/cespare/reflex v0.3.0/go.mod h1:I+0Pnu2W693i7Hv6ZZG76qHTY0mgUa7uCIfCtikXojE=
+github.com/cloud-barista/cb-webtool v0.2.8 h1:s4SgpHiDnSZkOO2J7s0li5ZQBZkZZA3VWyiPDbnBaG0=
+github.com/cloud-barista/cb-webtool v0.2.8/go.mod h1:ikzW10+X4dlXf39EuHLDbvA1IQ3UPo/zEYziodpYR/A=
 github.com/creack/pty v1.1.11 h1:07n33Z8lZxZ2qwegKbObQohDhXDQxiMMz1NOUGYlesw=
 github.com/creack/pty v1.1.11/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
+github.com/dogfootman/cb-webtool v0.2.8 h1:BQvDHBjgX7hUQDnCNQXcwXPkB3pnYsTp8nQSFUZhx5o=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/go-session/echo-session v3.0.0+incompatible h1:yJejVUrmpOF+sZSRfhO2fC/5TNCa3BkgQIVhMykwY44=
