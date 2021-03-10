@@ -333,13 +333,13 @@ function show_vm(vm_cnt){
                 +'<th>Cloud Provider<strong class="text-danger">*</strong></th>'
                 +'<td>'
                 +'<select class="form-control form-control-sm" name="provider" id="provider_'+vm_cnt+'" onchange="getConnectionInfo(this.value,'+vm_cnt+');"  required>'
-                +'<option selected>Select Cloud Provider</option>'
-                +'<option value="AWS">AWS</option>'
-                +'<option value="AZURE">AZURE</option>'
-                +'<option value="ALIBABA">Alibaba</option>'
-                +'<option value="GCP">GCP</option>'
-                +'<option value="CLOUDIT">Cloudit</option>'
-                +'<option value="OPENSTACK">Openstack</option>'
+                // +'<option selected>Select Cloud Provider</option>'
+                // +'<option value="AWS">AWS</option>'
+                // +'<option value="AZURE">AZURE</option>'
+                // +'<option value="ALIBABA">Alibaba</option>'
+                // +'<option value="GCP">GCP</option>'
+                // +'<option value="CLOUDIT">Cloudit</option>'
+                // +'<option value="OPENSTACK">Openstack</option>'
                 +'</select>'
                 +'</td></tr>'
 
@@ -445,6 +445,10 @@ function show_vm(vm_cnt){
 
                 $("#target").after(html);
                // $("#main").append(html)
+
+               alert("MCISRegister.html");
+                getCloudOS(ApiInfo,'provider_' + vm_cnt);
+                console.log("MCISRegister finished");
     }   
 function show_pop2() {
    // alert("show pop")

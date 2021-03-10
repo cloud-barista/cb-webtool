@@ -407,13 +407,13 @@
                                 <label>Cloud Provider</label>
                                 <!-- <input type="text" name="" value="" placeholder="AWS, AZURE, GCP, ALIBABA / Region" class="pline" title="" /> -->
                                 <select class="selectbox white pline w3" name="ProviderName" id="provider" onchange="getConnectionInfo(this.value)">
-                                    <option selected>Select Cloud Provider</option>
+                                    <!-- <option selected>Select Cloud Provider</option>
                                     <option value="AWS">AWS</option>
                                     <option value="AZURE">AZURE</option>
                                     <option value="Alibaba">Alibaba</option>
                                     <option value="GCP">GCP</option>
                                     <option value="Cloudit">Cloudit</option>
-                                    <option value="Openstack">Openstack</option>
+                                    <option value="Openstack">Openstack</option> -->
                                 </select>    
                             </li>
                             
@@ -450,6 +450,11 @@
     $(document).ready(function () {
         order_type = "name"
         getSSHList(order_type);
+
+        alert("Resources_SSH.html");
+        var apiInfo = "{{ .apiInfo}}";
+        getCloudOS(apiInfo,'provider');
+        console.log("Resources_SSH finished");
     })
 
 

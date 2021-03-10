@@ -517,6 +517,7 @@ $(document).ready(function(){
         //csp List 미리 가져와서 붙여 놓기
         var spiderURL =  "{{ .comURL.SpiderURL}}"
         var apiInfo = "{{ .apiInfo}}";
+        //alert("login.html");
         //getCloudOS(spiderURL,apiInfo,'ProviderName')
 
         $('.scrollbar-inner').scrollbar();
@@ -552,28 +553,29 @@ $(document).ready(function(){
     });
 
 
-function getCloudOS(url, apiInfo, target){
-    var req_url = url+"/cloudos"
-    var initCSP = ""
-    axios.get(req_url,{
-    headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
-        var data = result.data.cloudos
-        var html =""
-        if(data){
-            html += "<option>Select Provider</option>"
-            data.map(csp=>(html += '<option value="'+csp+'">'+csp+'</option>'))
-        }
-        $("#"+target).empty()
-        $("#"+target).append(html)
+// function getCloudOS(url, apiInfo, target){
+//     var req_url = url+"/cloudos"
+//     var initCSP = ""
+//     axios.get(req_url,{
+//     headers:{
+//             'Authorization': apiInfo
+//         }
+//     }).then(result=>{
+//         var data = result.data.cloudos
+//         var html =""
+//         if(data){
+//             html += "<option>Select Provider</option>"
+//             data.map(csp=>(html += '<option value="'+csp+'">'+csp+'</option>'))
+//         }
 
-        initCSP = data[0]
+//         $("#"+target).empty()
+//         $("#"+target).append(html)
 
-        changeProvider(url,initCSP)
-    }) 
-}
+//         initCSP = data[0]
+
+//         changeProvider(url,initCSP)
+//     }) 
+// }
 
 function getCloudDriver(url, csp, target){
     var req_url = url+"/driver"

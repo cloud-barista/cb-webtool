@@ -41,13 +41,13 @@
                                 <th>Cloud Provider</th>
                                     <td colspan="5">
                                         <select class="form-control form-control-sm" name="ProviderName" id="provider" onchange="getConnectionInfo(this.value)">
-                                            <option selected>Select Cloud Provider</option>
+                                            <!-- <option selected>Select Cloud Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
                                             <option value="Alibaba">Alibaba</option>
                                             <option value="GCP">GCP</option>
                                             <option value="Cloudit">Cloudit</option>
-                                            <option value="Openstack">Openstack</option>
+                                            <option value="Openstack">Openstack</option> -->
                                         </select>
                                     </td>
                                 </tr>
@@ -179,6 +179,11 @@
 
 
 $(document).ready(function(){
+
+    alert("SpecRegister.html");
+    getCloudOS(ApiInfo,'provider');
+    console.log("SpecRegister finished");
+
     $("#reg_btn").click(function(){
         console.log("Name space at image : ",NAMESPACE);
         var obj = $("#form").serializeObject()

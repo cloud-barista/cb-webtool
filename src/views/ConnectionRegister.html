@@ -41,6 +41,7 @@
                                     <th>Cloud Provider<strong class="text-danger">*</strong></th>
                                     <td>
                                         <select class="form-control form-control-sm" name="pv" id="pName" onchange="getInfo(this.value)">
+                                            <!--
                                             <option selected>Select Cloud Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
@@ -48,6 +49,7 @@
                                             <option value="GCP">GCP</option>
                                             <option value="CLOUDIT">Cloudit</option>
                                             <option value="OPENSTACK">Openstack</option>
+                                            -->
                                         </select>
                                     </td>
                                 </tr>
@@ -105,6 +107,9 @@
 
 <script>
 $(document).ready(function(){
+    alert("ConnectionRegister");
+    getCloudOS(ApiInfo,'pName');
+
     $("#reg_btn").click(function(){
         
         var url = SpiderURL+"/connectionconfig";
