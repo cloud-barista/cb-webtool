@@ -7,6 +7,7 @@ import (
 
 	//"github.com/cloud-barista/cb-webtool/src/controller"
 	"github.com/cloud-barista/cb-webtool/src/controller"
+	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -71,12 +72,52 @@ func main() {
 	renderer := &TemplateRender{
 		templates: template.Must(template.ParseGlob(`./src/views/*.html`)),
 	}
-
 	e.Renderer = renderer
 
+	// namespace 매핑할 middleware 추가
+	namespaceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		Master:    "setting/namespaces/NameSpace",
+		Partials: []string{
+			"templates/Top",
+			"templates/Top_box",
+			"templates/LNB_popup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/Menu_left",
+			"templates/Footer"}, //
+		DisableCache: true,
+	})
+
+	// dashboard 매핑할 middleware 추가
+	dashboardTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:         "src/views/dashboards",
+		Extension:    ".html",
+		Master:       "src/layouts/master",
+		Partials:     []string{},
+		DisableCache: true,
+	})
+
+	// mcis 매핑할 middleware 추가
+	manageMCISTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:         "src/views/operation/manage",
+		Extension:    ".html",
+		Master:       "src/layouts/master",
+		Partials:     []string{},
+		DisableCache: true,
+	})
+	
+
+	///////////////////////// 
+	// group에 templace set
+	// 해당 그룹.GET(경로, controller의 method)
+	// 해당 그룹.POST(경로, controller의 method)
+
+
+
+
 	e.GET("/", controller.IndexController)
-	e.GET("/Dashboard/Global", controller.GlobalDashBoard)
-	e.GET("/Dashboard/NS", controller.NSDashBoard)
 
 	//login 관련
 	e.GET("/login", controller.LoginForm)
@@ -84,6 +125,11 @@ func main() {
 	e.POST("/regUser", controller.RegUserConrtoller)
 	e.GET("/logout", controller.LogoutForm)
 	e.GET("/logout/proc", controller.LoginController)
+	
+	// Dashboard
+	e.GET("/Dashboard/Global", controller.GlobalDashBoard)
+	e.GET("/Dashboard/NS", controller.NSDashBoard)
+
 
 	// Monitoring Control
 	e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)
@@ -104,10 +150,19 @@ func main() {
 	e.GET("/SET/NS/:nsid", controller.SetNameSpace)
 
 	// 웹툴에서 처리할 NameSpace
-	e.GET("/NameSpace/NS/list", controller.NsListForm)
-	e.GET("/NS/reg", controller.NsRegForm)
-	e.POST("/NS/reg/proc", controller.NsRegController)
-	e.GET("/GET/ns", controller.GetNameSpace)
+	// e.GET("/NameSpace/NS/list", controller.NsListForm)
+	// e.GET("/NS/reg", controller.NsRegForm)
+	// e.POST("/NS/reg/proc", controller.NsRegController)
+	// e.GET("/GET/ns", controller.GetNameSpace)
+	namespaceGroup := e.Group("/NameSpace", namespaceTemplate)
+	namespaceGroup.GET("/NS/list", controller.NsListForm)          // namespace 보여주는 form 표시. DashboardController로 이동?
+	namespaceGroup.GET("/GET/ns", controller.GetNameSpace)         // 선택된 namespace 정보조회. Tumblebuck 호출
+	namespaceGroup.GET("/GET/nsList", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
+
+	namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
+	namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
+	namespaceGroup.POST("/NS/reg/proc", controller.NsRegProc)    // namespace 등록 처리
+
 
 	// 웹툴에서 처리할 Connection
 	e.GET("/Cloud/Connection/list", controller.ConnectionListForm)

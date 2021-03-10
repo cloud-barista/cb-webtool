@@ -10,6 +10,11 @@ import (
 
 	"reflect"
 	//"github.com/davecgh/go-spew/spew"
+	
+	//model "github.com/cloud-barista/cb-webtool/src/model"
+	model "github.com/dogfootman/cb-webtool/src/model"
+	// model "./src/model"
+	
 )
 
 // var NameSpaceUrl = "http://15.165.16.67:1323"
@@ -129,4 +134,66 @@ func AuthenticationHandler() string {
 	//req.Header.Add("Authorization", "Basic"+encA)
 	return "Basic " + encA
 
+}
+
+
+// 사용자의 namespace 목록 조회
+func GetNameSpaceList() ([]model.NSInfo, error) {
+	fmt.Println("GetNameSpaceList start")
+	url := NameSpaceUrl + "/ns"
+
+	body, err := HttpGetHandler(url)
+
+	fmt.Println("called HttpGetHandler")
+	fmt.Println(body)
+	if err != nil {
+		// Tumblebug 접속 확인하라고
+		return nil, err
+	}
+
+	//nsInfoList := map[string][]model.NSInfo{}
+	// nsInfoList := map[string][]model.NSInfo{}
+	// nserr := json.NewDecoder(body).Decode(&nsInfoList)
+	// if nserr != nil {
+	// 	return nil, nserr
+	// }
+	// fmt.Println(nsInfoList["ns"])
+
+	nsInfoList := map[string][]model.NSInfo{}
+	defer body.Close()
+	json.NewDecoder(body).Decode(&nsInfoList)
+	//spew.Dump(body)
+	fmt.Println(nsInfoList["ns"])
+
+	// nsInfo := map[string][]model.NSInfo{}
+	// defer body.Close()
+	// json.NewDecoder(body).Decode(&nsInfo)
+	// //spew.Dump(body)
+	// fmt.Println(nsInfo["ns"])
+	// return nsInfo["ns"]
+
+	//nsInfoList := map[string][]model.NSInfo{}
+	// nsInfoMap := map[string][]model.NSInfo{}
+
+	// nsInfoList := model.NSInfoList{}
+	// keys := []string{}
+	// for key, _ := range nsInfoMap {
+	// 	fmt.Println(key)
+	// 	// keys = append(keys, key)
+	// 	nsInfoList = append(nsInfoList, key)
+	// }
+	// //nsList := model.NsInfoList{}
+	// defer body.Close()
+
+	// err := json.NewDecoder(body).Decode(&nsInfo)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// //spew.Dump(body)
+	// fmt.Println(nsInfo)
+	//return nsInfo["ns"]
+	// 접속오류인지
+	// namespace가 생성되지 않았는지
+	// return nil, nil
+	return nsInfoList["ns"], nil
 }
