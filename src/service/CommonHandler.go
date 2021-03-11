@@ -44,6 +44,27 @@ func GetCommonURL() CommonURL {
 	return common_url
 }
 
+// Get 호출하는 공통함수
+func CommonHttpGet(url string) (io.ReadCloser, error) {
+	authInfo := AuthenticationHandler()
+
+	fmt.Println("HttpGetHandler ", url)
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Add("Authorization", authInfo)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+
+	//defer resp.Body.Close()
+
+	return resp.Body, err
+}
+
+// POST 호출하는 공통함수 --> 생성할 것.
+// func CommonHttpPost()(io.ReadCloser, err) {
+// }
+
+
 func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
 	store := echosession.FromContext(c)
 	getObj, ok := store.Get(username)
@@ -61,6 +82,7 @@ func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
 func HttpGetHandler(url string) io.ReadCloser {
 	authInfo := AuthenticationHandler()
 
+	fmt.Println("HttpGetHandler ", url)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("Authorization", authInfo)
 
@@ -72,48 +94,9 @@ func HttpGetHandler(url string) io.ReadCloser {
 	return resp.Body
 }
 
-// SPIDER 호출. 결과값이 Object 일 때
-func GetSpiderObject(targetUri string) io.ReadCloser {
-	url := SpiderURL + "/" + targetUri
-	authInfo := AuthenticationHandler()
 
-	// resp, err := http.Get(url)
 
-	// if err != nil {
-	fmt.Println("request URL : ", url)
-	// }
 
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", authInfo)
-
-	client := &http.Client{}
-	resp, _ := client.Do(req)
-
-	//defer resp.Body.Close()
-
-	return resp.Body
-}
-
-func GetSpiderList(targetUri string) (io.ReadCloser, error) {
-	url := SpiderURL + targetUri // targetUrl 은 "/" 부터 시작이다. ex) targetUrl = "/ns/reg"
-	authInfo := AuthenticationHandler()
-
-	// resp, err := http.Get(url)
-
-	// if err != nil {
-	fmt.Println("request URL : ", url)
-	// }
-
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", authInfo)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-
-	//defer resp.Body.Close()
-
-	return resp.Body, err
-}
 
 // func SetLoginInfo(c echo.Context) LoginInfo {
 // 	store := echosession.FromContext(c)
@@ -229,6 +212,7 @@ func MakeNameSpace(name string) string {
 	return result
 }
 
+// ajax 호출할 때 header key 생성
 func AuthenticationHandler() string {
 
 	// conf 파일에 정의

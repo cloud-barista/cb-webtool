@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	// "io"
-	"net/http"
+	// "net/http"
 	"os"
 
-	"reflect"
+	// "reflect"
 	//"github.com/davecgh/go-spew/spew"
 	model "github.com/cloud-barista/cb-webtool/src/model"
 )
@@ -81,80 +81,38 @@ func GetNSCnt() int {
 
 }
 
-// func RegNS() error {
+// 안쓰는 function인듯.
+// func RequestGet(url string) {
+// 	resp, err := http.Get(url)
+// 	if err != nil {
+// 		fmt.Println("request URL : ", url)
+// 	}
 
+// 	defer resp.Body.Close()
+// 	nsInfo := map[string][]model.NSInfo{}
+// 	fmt.Println("nsInfo type : ", reflect.TypeOf(nsInfo))
+// 	json.NewDecoder(resp.Body).Decode(&nsInfo)
+// 	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 // }
 
-func RequestGet(url string) {
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("request URL : ", url)
-	}
 
-	defer resp.Body.Close()
-	nsInfo := map[string][]model.NSInfo{}
-	fmt.Println("nsInfo type : ", reflect.TypeOf(nsInfo))
-	json.NewDecoder(resp.Body).Decode(&nsInfo)
-	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
-
-	// data, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	fmt.Println("Get Data Error")
-	// }
-	// fmt.Println("GetData : ", string(data))
-
-}
-
-// commonHandler로 이동
-// func HttpGetHandler(url string) io.ReadCloser {
-// 	authInfo := AuthenticationHandler()
-
-// 	req, _ := http.NewRequest("GET", url, nil)
-// 	req.Header.Add("Authorization", authInfo)
-
-// 	client := &http.Client{}
-// 	resp, _ := client.Do(req)
-
-// 	//defer resp.Body.Close()
-
-// 	return resp.Body
-// }
-
-// func AuthenticationHandler() string {
-
-// 	api_username := os.Getenv("API_USERNAME")
-// 	api_password := os.Getenv("API_PASSWORD")
-
-// 	//The header "KEY: VAL" is "Authorization: Basic {base64 encoded $USERNAME:$PASSWORD}".
-// 	apiUserInfo := api_username + ":" + api_password
-// 	encA := base64.StdEncoding.EncodeToString([]byte(apiUserInfo))
-// 	//req.Header.Add("Authorization", "Basic"+encA)
-// 	return "Basic " + encA
-
-// }
 
 // 사용자의 namespace 목록 조회
 func GetNameSpaceList() ([]model.NSInfo, error) {
 	fmt.Println("GetNameSpaceList start")
 	url := NameSpaceUrl + "/ns"
 
-	// body, err := HttpGetHandler(url)
-	body := HttpGetHandler(url)
+	 body, err := CommonHttpGet(url)
+	//body := HttpGetHandler(url)
 
-	fmt.Println("called HttpGetHandler")
+	fmt.Println("called url ", url)
 	fmt.Println(body)
-	// if err != nil {
+	if err != nil {
 	// 	// Tumblebug 접속 확인하라고
-	// 	return nil, err
-	// }
+		fmt.Println(err)
+		return nil, err
+	}
 
-	//nsInfoList := map[string][]model.NSInfo{}
-	// nsInfoList := map[string][]model.NSInfo{}
-	// nserr := json.NewDecoder(body).Decode(&nsInfoList)
-	// if nserr != nil {
-	// 	return nil, nserr
-	// }
-	// fmt.Println(nsInfoList["ns"])
 
 	nsInfoList := map[string][]model.NSInfo{}
 	defer body.Close()
@@ -162,35 +120,5 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 	//spew.Dump(body)
 	fmt.Println(nsInfoList["ns"])
 
-	// nsInfo := map[string][]model.NSInfo{}
-	// defer body.Close()
-	// json.NewDecoder(body).Decode(&nsInfo)
-	// //spew.Dump(body)
-	// fmt.Println(nsInfo["ns"])
-	// return nsInfo["ns"]
-
-	//nsInfoList := map[string][]model.NSInfo{}
-	// nsInfoMap := map[string][]model.NSInfo{}
-
-	// nsInfoList := model.NSInfoList{}
-	// keys := []string{}
-	// for key, _ := range nsInfoMap {
-	// 	fmt.Println(key)
-	// 	// keys = append(keys, key)
-	// 	nsInfoList = append(nsInfoList, key)
-	// }
-	// //nsList := model.NsInfoList{}
-	// defer body.Close()
-
-	// err := json.NewDecoder(body).Decode(&nsInfo)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// //spew.Dump(body)
-	// fmt.Println(nsInfo)
-	//return nsInfo["ns"]
-	// 접속오류인지
-	// namespace가 생성되지 않았는지
-	// return nil, nil
 	return nsInfoList["ns"], nil
 }

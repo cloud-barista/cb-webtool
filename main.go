@@ -80,26 +80,27 @@ func main() {
 		Master:    "Login",
 		Partials: []string{
 			"LoginTop",
-			"LoginFooter",
+			"SelectNamespaceModal",
+			"LoginFooter",			
 		},
 		DisableCache: true,
 	})
 
 	// namespace 매핑할 middleware 추가
-	// namespaceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
-	// 	Root:      "src/views",
-	// 	Extension: ".html",
-	// 	Master:    "setting/namespaces/NameSpace",
-	// 	Partials: []string{
-	// 		"templates/Top",
-	// 		"templates/Top_box",
-	// 		"templates/LNB_popup",
-	// 		"templates/Modal",
-	// 		"templates/Header",
-	// 		"templates/Menu_left",
-	// 		"templates/Footer"}, //
-	// 	DisableCache: true,
-	// })
+	namespaceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		Master:    "setting/namespaces/NameSpace",
+		Partials: []string{
+			"templates/Top",
+			"templates/Top_box",
+			"templates/LNB_popup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/Menu_left",
+			"templates/Footer"}, //
+		DisableCache: true,
+	})
 	// -> Master에 껍데기 및 header, footer 놓고, Partials에 해당 페이지에 들어가는 파일을 넣으면 될까?
 
 	// dashboard 매핑할 middleware 추가
@@ -126,6 +127,9 @@ func main() {
 	// 해당 그룹.POST(경로, controller의 method)
 
 	e.GET("/", controller.Index)
+
+	// //connection 관련
+	e.GET("/connectionconfig", controller.GetConnectionConfigData)
 
 	loginGroup := e.Group("/login", loginTemplate)
 
@@ -168,18 +172,17 @@ func main() {
 	// // e.GET("/NS/reg", controller.NsRegForm)
 	// // e.POST("/NS/reg/proc", controller.NsRegController)
 	// // e.GET("/GET/ns", controller.GetNameSpace)
-	// namespaceGroup := e.Group("/NameSpace", namespaceTemplate)
+	namespaceGroup := e.Group("/NameSpace", namespaceTemplate)
 	// namespaceGroup.GET("/NS/list", controller.NsListForm)          // namespace 보여주는 form 표시. DashboardController로 이동?
 	// namespaceGroup.GET("/GET/ns", controller.GetNameSpace)         // 선택된 namespace 정보조회. Tumblebuck 호출
 	// namespaceGroup.GET("/GET/nsList", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 
 	// namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
 	// namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
-	// namespaceGroup.POST("/NS/reg/proc", controller.NsRegProc)    // namespace 등록 처리
+	namespaceGroup.POST("/NS/reg/proc", controller.NsRegProc)    // namespace 등록 처리
 
 	// // 웹툴에서 처리할 Connection
-	// //connection 관련
-	// e.GET("/connectionconfig", controller.GetConnectionConfigData)
+	
 
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
 	// e.GET("/Cloud/Connection/reg", controller.ConnectionRegForm)

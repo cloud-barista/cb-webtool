@@ -51,7 +51,7 @@ func Index(c echo.Context) error {
 	}
 	store.Set(user, obj)
 	store.Save() // 사용자정보를 따로 저장하지 않으므로 설정파일에 유저를 set.
-
+	fmt.Println("user : ", user)
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
@@ -123,7 +123,7 @@ func LoginProc(c echo.Context) error {
 		store.Save()
 	}
 
-	log.Println(" auth  ")
+	log.Println(" auth  ", nsList)
 	// userpass, erruser := db.GetUser(getUser)
 	// if erruser != nil {
 	// 	log.Println(erruser)

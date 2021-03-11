@@ -293,16 +293,16 @@ func GetGeoMetryInfo(wg *sync.WaitGroup, ip_address string, status string, vm_id
 func GetConnectionConfigData() []model.ConnectionConfigData {
 
 	// CloudConnectionUrl == SPIDER
-	// url := CloudConnectionUrl + "/" + targetUri
+	url := CloudConnectionUrl + "/" + "connectionconfig"
 	// fmt.Println("=========== GetConnectionConfigData : ", url)
 
-	body, err := GetSpiderList("/connectionconfig")
+	body, err := CommonHttpGet(url)
 	defer body.Close()
 
 	if err != nil {
-
+		fmt.Println(err)
 	}
-
+	fmt.Println("GetConnectionConfigData ", body)
 	connectionConfigDataList := model.ConnectionConfigDataList{}
 	json.NewDecoder(body).Decode(&connectionConfigDataList)
 

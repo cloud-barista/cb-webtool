@@ -41,7 +41,25 @@ func NsRegProc(c echo.Context) error {
 	description := c.FormValue("description")
 
 	fmt.Println("NSRegController : ", username, description)
-	return nil
+	// return nil
+
+	// Tubblebug 호출하여 namespace 생성
+
+	// 성공하면 namespace 목록 조회	
+	nsList, err := service.GetNameSpaceList()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "403",
+			"nsList":  nil,
+		})
+	}
+	// return namespace 목록
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"nsList":  nsList,
+	})
 }
 
 func NsListForm(c echo.Context) error {

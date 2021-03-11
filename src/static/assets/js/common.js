@@ -447,3 +447,10 @@ function getCloudOS(apiInfo, target){
         // changeProvider(url,initCSP)// 이게 필요한가? 바뀔때 Event가 이미 있을 텐데??
     }) 
 }
+
+function isEmpty(str){
+	if(typeof str == "undefined" || str == null || str == "")
+		return true;
+	else
+		return false ;
+}
