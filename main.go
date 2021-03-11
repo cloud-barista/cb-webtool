@@ -4,7 +4,6 @@ import (
 	"html/template"
 	"io"
 	"net/http"
-
 	//"github.com/cloud-barista/cb-webtool/src/controller"
 	"github.com/cloud-barista/cb-webtool/src/controller"
 	echotemplate "github.com/foolin/echo-template"
@@ -74,140 +73,157 @@ func main() {
 	}
 	e.Renderer = renderer
 
-	// namespace 매핑할 middleware 추가
-	namespaceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
-		Root:      "src/views",
+	// login 매핑할 middleware 추가
+	loginTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views/auth",
 		Extension: ".html",
-		Master:    "setting/namespaces/NameSpace",
+		Master:    "Login",
 		Partials: []string{
-			"templates/Top",
-			"templates/Top_box",
-			"templates/LNB_popup",
-			"templates/Modal",
-			"templates/Header",
-			"templates/Menu_left",
-			"templates/Footer"}, //
+			"LoginTop",
+			"LoginFooter",
+		},
 		DisableCache: true,
 	})
+
+	// namespace 매핑할 middleware 추가
+	// namespaceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// 	Root:      "src/views",
+	// 	Extension: ".html",
+	// 	Master:    "setting/namespaces/NameSpace",
+	// 	Partials: []string{
+	// 		"templates/Top",
+	// 		"templates/Top_box",
+	// 		"templates/LNB_popup",
+	// 		"templates/Modal",
+	// 		"templates/Header",
+	// 		"templates/Menu_left",
+	// 		"templates/Footer"}, //
+	// 	DisableCache: true,
+	// })
+	// -> Master에 껍데기 및 header, footer 놓고, Partials에 해당 페이지에 들어가는 파일을 넣으면 될까?
 
 	// dashboard 매핑할 middleware 추가
-	dashboardTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
-		Root:         "src/views/dashboards",
-		Extension:    ".html",
-		Master:       "src/layouts/master",
-		Partials:     []string{},
-		DisableCache: true,
-	})
+	// dashboardTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// 	Root:         "src/views/dashboards",
+	// 	Extension:    ".html",
+	// 	Master:       "src/layouts/master",
+	// 	Partials:     []string{},
+	// 	DisableCache: true,
+	// })
 
-	// mcis 매핑할 middleware 추가
-	manageMCISTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
-		Root:         "src/views/operation/manage",
-		Extension:    ".html",
-		Master:       "src/layouts/master",
-		Partials:     []string{},
-		DisableCache: true,
-	})
-	
+	// // mcis 매핑할 middleware 추가
+	// manageMCISTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// 	Root:         "src/views/operation/manage",
+	// 	Extension:    ".html",
+	// 	Master:       "src/layouts/master",
+	// 	Partials:     []string{},
+	// 	DisableCache: true,
+	// })
 
-	///////////////////////// 
+	/////////////////////////
 	// group에 templace set
 	// 해당 그룹.GET(경로, controller의 method)
 	// 해당 그룹.POST(경로, controller의 method)
 
+	e.GET("/", controller.Index)
 
+	loginGroup := e.Group("/login", loginTemplate)
 
-
-	e.GET("/", controller.IndexController)
+	loginGroup.GET("", controller.LoginForm)
+	loginGroup.POST("/proc", controller.LoginProc)
 
 	//login 관련
-	e.GET("/login", controller.LoginForm)
-	e.POST("/login/proc", controller.LoginController)
-	e.POST("/regUser", controller.RegUserConrtoller)
-	e.GET("/logout", controller.LogoutForm)
-	e.GET("/logout/proc", controller.LoginController)
-	
-	// Dashboard
-	e.GET("/Dashboard/Global", controller.GlobalDashBoard)
-	e.GET("/Dashboard/NS", controller.NSDashBoard)
+	// e.GET("/login", controller.LoginForm)
+	// // e.POST("/login/proc", controller.LoginController)
+	// e.POST("/login/proc", controller.LoginProc)
+	// // e.POST("/regUser", controller.RegUserConrtoller)
+	// e.POST("/regUser", controller.RegUser)
+	// e.GET("/logout", controller.LogoutForm)
+	// e.GET("/logout/proc", controller.LogoutProc)
 
+	// // Dashboard
+	// e.GET("/Dashboard/Global", controller.GlobalDashBoard)
+	// e.GET("/Dashboard/NS", controller.NSDashBoard)
 
-	// Monitoring Control
-	e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)
-	e.GET("/Monitoring/mcis", controller.MornitoringListForm)
-	e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
+	// // Monitoring Control
+	// e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)
+	// e.GET("/Monitoring/mcis", controller.MornitoringListForm)
+	// e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 
-	// MCIS
-	e.GET("/Manage/MCIS/reg", controller.McisRegForm)
-	e.GET("/Manage/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
-	e.POST("/Manage/MCIS/reg/proc", controller.McisRegController)
-	e.GET("/Manage/MCIS/list", controller.McisListForm)
-	e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
+	// // MCIS
+	// e.GET("/Manage/MCIS/reg", controller.McisRegForm)
+	// e.GET("/Manage/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
+	// e.POST("/Manage/MCIS/reg/proc", controller.McisRegController)
+	// e.GET("/Manage/MCIS/list", controller.McisListForm)
+	// e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
-	// Resource
-	e.GET("/Resource/board", controller.ResourceBoard)
+	// // Resource
+	// e.GET("/Resource/board", controller.ResourceBoard)
 
-	// 웹툴에서 사용할 rest
-	e.GET("/SET/NS/:nsid", controller.SetNameSpace)
+	// // 웹툴에서 사용할 rest
+	// e.GET("/SET/NS/:nsid", controller.SetNameSpace)
 
-	// 웹툴에서 처리할 NameSpace
-	// e.GET("/NameSpace/NS/list", controller.NsListForm)
-	// e.GET("/NS/reg", controller.NsRegForm)
-	// e.POST("/NS/reg/proc", controller.NsRegController)
-	// e.GET("/GET/ns", controller.GetNameSpace)
-	namespaceGroup := e.Group("/NameSpace", namespaceTemplate)
-	namespaceGroup.GET("/NS/list", controller.NsListForm)          // namespace 보여주는 form 표시. DashboardController로 이동?
-	namespaceGroup.GET("/GET/ns", controller.GetNameSpace)         // 선택된 namespace 정보조회. Tumblebuck 호출
-	namespaceGroup.GET("/GET/nsList", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
+	// // 웹툴에서 처리할 NameSpace
+	// // e.GET("/NameSpace/NS/list", controller.NsListForm)
+	// // e.GET("/NS/reg", controller.NsRegForm)
+	// // e.POST("/NS/reg/proc", controller.NsRegController)
+	// // e.GET("/GET/ns", controller.GetNameSpace)
+	// namespaceGroup := e.Group("/NameSpace", namespaceTemplate)
+	// namespaceGroup.GET("/NS/list", controller.NsListForm)          // namespace 보여주는 form 표시. DashboardController로 이동?
+	// namespaceGroup.GET("/GET/ns", controller.GetNameSpace)         // 선택된 namespace 정보조회. Tumblebuck 호출
+	// namespaceGroup.GET("/GET/nsList", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 
-	namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
-	namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
-	namespaceGroup.POST("/NS/reg/proc", controller.NsRegProc)    // namespace 등록 처리
+	// namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
+	// namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
+	// namespaceGroup.POST("/NS/reg/proc", controller.NsRegProc)    // namespace 등록 처리
 
+	// // 웹툴에서 처리할 Connection
+	// //connection 관련
+	// e.GET("/connectionconfig", controller.GetConnectionConfigData)
 
-	// 웹툴에서 처리할 Connection
-	e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
-	e.GET("/Cloud/Connection/reg", controller.ConnectionRegForm)
-	e.POST("/Cloud/Connection/reg/proc", controller.NsRegController)
+	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
+	// e.GET("/Cloud/Connection/reg", controller.ConnectionRegForm)
+	// e.POST("/Cloud/Connection/reg/proc", controller.NsRegController)
 
-	// 웹툴에서 처리할 Region
-	e.GET("/Region/list", controller.RegionListForm)
-	e.GET("/Region/reg", controller.RegionRegForm)
-	e.POST("/Region/reg/proc", controller.NsRegController)
+	// // 웹툴에서 처리할 Region
+	// e.GET("/Region/list", controller.RegionListForm)
+	// e.GET("/Region/reg", controller.RegionRegForm)
+	// e.POST("/Region/reg/proc", controller.NsRegController)
 
-	// 웹툴에서 처리할 Credential
-	e.GET("/Credential/list", controller.CredertialListForm)
-	e.GET("/Credential/reg", controller.CredertialRegForm)
+	// // 웹툴에서 처리할 Credential
+	// e.GET("/Credential/list", controller.CredertialListForm)
+	// e.GET("/Credential/reg", controller.CredertialRegForm)
 
-	// 웹툴에서 처리할 Image
-	e.GET("/Image/list", controller.ImageListForm)
-	e.GET("/Image/reg", controller.ImageRegForm)
+	// // 웹툴에서 처리할 Image
+	// e.GET("/Image/list", controller.ImageListForm)
+	// e.GET("/Image/reg", controller.ImageRegForm)
 
-	// 웹툴에서 처리할 VPC
-	e.GET("/Vpc/list", controller.VpcListForm)
-	e.GET("/Vpc/reg", controller.VpcRegForm)
+	// // 웹툴에서 처리할 VPC
+	// e.GET("/Vpc/list", controller.VpcListForm)
+	// e.GET("/Vpc/reg", controller.VpcRegForm)
 
-	// 웹툴에서 처리할 SecurityGroup
-	e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
-	e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)
+	// // 웹툴에서 처리할 SecurityGroup
+	// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
+	// e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)
 
-	// 웹툴에서 처리할 Driver
-	e.GET("/Driver/list", controller.DriverListForm)
-	e.GET("/Driver/reg", controller.DriverRegForm)
+	// // 웹툴에서 처리할 Driver
+	// e.GET("/Driver/list", controller.DriverListForm)
+	// e.GET("/Driver/reg", controller.DriverRegForm)
 
-	// 웹툴에서 처리할 sshkey
-	e.GET("/SSH/list", controller.SSHListForm)
-	e.GET("/SSH/reg", controller.SSHRegForm)
+	// // 웹툴에서 처리할 sshkey
+	// e.GET("/SSH/list", controller.SSHListForm)
+	// e.GET("/SSH/reg", controller.SSHRegForm)
 
-	// 웹툴에서 처리할 spec
-	e.GET("/Spec/list", controller.SpecListForm)
-	e.GET("/Spec/reg", controller.SpecRegForm)
+	// // 웹툴에서 처리할 spec
+	// e.GET("/Spec/list", controller.SpecListForm)
+	// e.GET("/Spec/reg", controller.SpecRegForm)
 
-	// 웹툴에서 Select Pop
-	e.GET("/Pop/spec", controller.PopSpec)
+	// // 웹툴에서 Select Pop
+	// e.GET("/Pop/spec", controller.PopSpec)
 
-	// MAP Test
-	e.GET("/map", controller.Map)
-	e.GET("/map/geo/:mcis_id", controller.GeoInfo)
+	// // MAP Test
+	// e.GET("/map", controller.Map)
+	// e.GET("/map/geo/:mcis_id", controller.GeoInfo)
 
 	e.Logger.Fatal(e.Start(":1234"))
 

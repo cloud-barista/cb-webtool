@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	service "github.com/cloud-barista/cb-webtool/src/service"
+
 	"github.com/labstack/echo"
 )
 
@@ -21,10 +23,10 @@ type MCISRequest struct {
 // }
 
 func McisListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
-		namespace := GetNameSpaceToString(c)
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := service.GetNameSpaceToString(c)
 		if namespace != "" {
 			return c.Render(http.StatusOK, "Manage_Mcis.html", map[string]interface{}{
 				"LoginInfo": loginInfo,
@@ -44,14 +46,14 @@ func McisListForm(c echo.Context) error {
 func McisListFormWithParam(c echo.Context) error {
 	mcis_id := c.Param("mcis_id")
 	mcis_name := c.Param("mcis_name")
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
 	if mcis_id == "" && mcis_name == "" {
 		mcis_id = ""
 		mcis_name = ""
 	}
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
-		namespace := GetNameSpaceToString(c)
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := service.GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "Manage_Mcis.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
@@ -70,14 +72,14 @@ func McisListFormWithParam(c echo.Context) error {
 func VMAddForm(c echo.Context) error {
 	mcis_id := c.Param("mcis_id")
 	mcis_name := c.Param("mcis_name")
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
 	if mcis_id == "" && mcis_name == "" {
 		mcis_id = ""
 		mcis_name = ""
 	}
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
-		namespace := GetNameSpaceToString(c)
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := service.GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "Manage_Create_VM.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,
@@ -94,10 +96,10 @@ func VMAddForm(c echo.Context) error {
 }
 
 func McisRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
-		namespace := GetNameSpaceToString(c)
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+		namespace := service.GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "Manage_Create_Mcis.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"NameSpace": namespace,

@@ -43,30 +43,10 @@
                </div>	
            </div>
        
-           <div class="login_footer">
+           <!-- Login footer area-->
+           {{template "LoginFooter" .}}       
                
-               <div class="infobox">
-                   
-                   <div class="tit">Cloud-Barista Community</div>
-                   <div class="listbox">
-                       <div class="linkbox">
-                           <p>Homepage :</p>
-                           <div class="txt"><a href="https://cloud-barista.github.io" target="_blank">https://cloud-barista.github.io</a></div>
-                       </div>
-                       <div class="linkbox">
-                           <p>GitHub :</p>
-                           <div class="txt"><a href="https://github.com/cloud-barista" target="_blank">https://github.com/cloud-barista</a></div>
-                       </div>
-                   </div>
-                   <div class="linkbox">
-                       <p>E-mail :</p>
-                       <div class="txt"><a href="mailto:contact-to-cloud-barista@googlegroups.com" target="_blank">contact-to-cloud-barista@googlegroups.com</a></div>
-                   </div>
-                   
-               </div>
-               
-           </div>
-           
+           <!-- Login footer area-->
        </div>
        
        <!-- required -->
@@ -342,15 +322,35 @@ $(document).ready(function(){
       });
     });
     function getConfig(){
-        var spiderURL =  "{{ .comURL.SpiderURL}}"
-        var connectionURL =spiderURL+"/connectionconfig"
-        var apiInfo = "{{ .apiInfo}}";
+        // var spiderURL =  "{{ .comURL.SpiderURL}}"
+        // var connectionURL =spiderURL+"/connectionconfig"
+        // var apiInfo = "{{ .apiInfo}}";
+        // axios.get(connectionURL,{
+        //     headers : {
+        //         'Authorization': apiInfo 
+        //     }
+        // }).then(result=>{
+        //     console.log("get Connection config Data : ",result.data);
+        //     var data = result.data.connectionconfig;
+        //     var html = ""
+            
+        //     if(data){
+        //         data.map(item=>(
+        //             html += '<div class="list">'
+        //                     +'<div class="stit">'+item.ConfigName+'</div>'
+        //                     +'<div class="stxt">'+item.ProviderName+' / '+item.RegionName+' </div>'
+        //                     +'</div>'
+        //         ))
+        //         $("#cloudList").empty()
+        //         $("#cloudList").append(html)
+        //        configModal()
+        //     }
+        // })
+        var connectionURL = "/connectionconfig"
         axios.get(connectionURL,{
-            headers : {
-                'Authorization': apiInfo 
-            }
         }).then(result=>{
             console.log("get Connection config Data : ",result.data);
+            // console.log("get Connection config Data : ",result);
             var data = result.data.connectionconfig;
             var html = ""
             

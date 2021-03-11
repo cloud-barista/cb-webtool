@@ -10,6 +10,7 @@ import (
 	"sync"
 	//"io/ioutil"
 	//"github.com/davecgh/go-spew/spew"
+	model "github.com/cloud-barista/cb-webtool/src/model"
 )
 
 //var CloudConnectionUrl = "http://15.165.16.67:1024"
@@ -103,7 +104,7 @@ func GetConnectionconfig(drivername string) CloudConnectionInfo {
 	// resp, err := http.Get(url)
 
 	// if err != nil {
-	// 	fmt.Println("request URL : ", url)
+	fmt.Println("request URL : ", url)
 	// }
 
 	// defer resp.Body.Close()
@@ -287,3 +288,39 @@ func GetGeoMetryInfo(wg *sync.WaitGroup, ip_address string, status string, vm_id
 // 	// fmt.Println("GetData : ", string(data))
 
 // }
+
+// func GetConnectionConfigData() []model.ConnectionConfigData {
+func GetConnectionConfigData() []model.ConnectionConfigData {
+
+	// CloudConnectionUrl == SPIDER
+	// url := CloudConnectionUrl + "/" + targetUri
+	// fmt.Println("=========== GetConnectionConfigData : ", url)
+
+	body, err := GetSpiderList("/connectionconfig")
+	defer body.Close()
+
+	if err != nil {
+
+	}
+
+	connectionConfigDataList := model.ConnectionConfigDataList{}
+	json.NewDecoder(body).Decode(&connectionConfigDataList)
+
+	// json.NewDecoder(body).Decode(&connectionConfigDataList)
+	// var connectionConfigDataList []model.ConnectionConfigData
+
+	// for _, item := range connectionList {
+
+	// 	reg := ConnectionConfigData{
+	// 		ConfigName:     item.ConfigName,
+	// 		ProviderName:   item.ProviderName,
+	// 		DriverName:     item.DriverName,
+	// 		CredentialName: item.CredentialName,
+	// 		RegionName:     item.RegionName,
+	// 	}
+	// 	connectionConfigDataList = append(info, reg)
+	// }
+	// fmt.Println("info connectionconfig list : ", info)
+	return connectionConfigDataList
+
+}

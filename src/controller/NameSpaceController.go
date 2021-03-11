@@ -6,9 +6,9 @@ import (
 	"net/http"
 	_ "net/http"
 
-	echotemplate "github.com/foolin/echo-template"
+	// echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
-	
+
 	"github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
 )
@@ -22,9 +22,9 @@ func NsRegController(c echo.Context) error {
 }
 
 func NsRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "NSRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -35,11 +35,20 @@ func NsRegForm(c echo.Context) error {
 	//return c.Render(http.StatusOK, "NSRegister.html", nil)
 }
 
+// namespace 등록 처리
+func NsRegProc(c echo.Context) error {
+	username := c.FormValue("username")
+	description := c.FormValue("description")
+
+	fmt.Println("NSRegController : ", username, description)
+	return nil
+}
+
 func NsListForm(c echo.Context) error {
 	fmt.Println("=============start NsListForm =============")
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	loginInfo := CallLoginInfo(c)
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		fmt.Println("=============start GetNSList =============")
 		nsList := service.GetNSList()
@@ -77,4 +86,43 @@ func GetNameSpaceList(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, nsInfoList)
+}
+
+// 기본 namespace set. set default Namespace
+func SetNameSpace(c echo.Context) error {
+	fmt.Println("====== SET SELECTED NAME SPACE ========")
+	store := echosession.FromContext(c)
+	ns := c.Param("nsid")
+	fmt.Println("SetNameSpaceID : ", ns)
+	store.Set("namespace", ns)
+	err := store.Save()
+	res := map[string]string{
+		"message": "success",
+	}
+	if err != nil {
+		res["message"] = "fail"
+		return c.JSON(http.StatusNotAcceptable, res)
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
+// 기본 namespace get. get default Namespace
+func GetNameSpace(c echo.Context) error {
+	fmt.Println("====== GET SELECTED NAME SPACE ========")
+	store := echosession.FromContext(c)
+
+	getInfo, ok := store.Get("namespace")
+	if !ok {
+		return c.JSON(http.StatusNotAcceptable, map[string]string{
+			"message": "Not Exist",
+		})
+	}
+	nsId := getInfo.(string)
+
+	res := map[string]string{
+		"message": "success",
+		"nsID":    nsId,
+	}
+
+	return c.JSON(http.StatusOK, res)
 }

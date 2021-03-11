@@ -5,7 +5,7 @@ import (
 
 	"net/http"
 
-	"github.com/cloud-barista/cb-webtool/src/service"
+	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
 	//"github.com/davecgh/go-spew/spew"
 )
@@ -21,9 +21,9 @@ func DriverRegController(c echo.Context) error {
 }
 
 func DriverRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "DriverRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -35,9 +35,9 @@ func DriverRegForm(c echo.Context) error {
 
 func DriverListForm(c echo.Context) error {
 	fmt.Println("=============start NsListForm =============")
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	loginInfo := CallLoginInfo(c)
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	loginInfo := service.CallLoginInfo(c)
 
 	if loginInfo.Username != "" {
 		//nsList := service.GetDriverList()
@@ -56,9 +56,9 @@ func DriverListForm(c echo.Context) error {
 
 //Credential Controller
 func CredertialRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "CredentialRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -71,9 +71,9 @@ func CredertialRegForm(c echo.Context) error {
 func CredertialListForm(c echo.Context) error {
 
 	fmt.Println("=============start CredertialRegForm =============")
-	loginInfo := CallLoginInfo(c)
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
+	loginInfo := service.CallLoginInfo(c)
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
 	if loginInfo.Username != "" {
 		//nsList := service.GetCredentialList()
 		return c.Render(http.StatusOK, "CredentialList.html", map[string]interface{}{
@@ -91,9 +91,9 @@ func CredertialListForm(c echo.Context) error {
 
 //Region Controller
 func RegionRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "RegionRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -105,9 +105,9 @@ func RegionRegForm(c echo.Context) error {
 }
 
 func RegionListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	loginInfo := CallLoginInfo(c)
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	loginInfo := service.CallLoginInfo(c)
+	apiInfo := service.AuthenticationHandler()
 	if loginInfo.Username != "" {
 		nsList := service.GetRegionList()
 		fmt.Println("REGION List : ", nsList)
@@ -128,9 +128,9 @@ func RegionListForm(c echo.Context) error {
 
 //Connection Controller
 func ConnectionRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 
 		return c.Render(http.StatusOK, "ConnectionRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
@@ -143,9 +143,9 @@ func ConnectionRegForm(c echo.Context) error {
 }
 
 func ConnectionListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	loginInfo := CallLoginInfo(c)
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.Username != "" {
 		cList := service.GetConnectionList()
 		fmt.Println("=============info GetConnectionList =============", cList)
@@ -165,9 +165,9 @@ func ConnectionListForm(c echo.Context) error {
 
 //Image Controller
 func ImageRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "ImageRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -179,9 +179,9 @@ func ImageRegForm(c echo.Context) error {
 }
 
 func ImageListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	loginInfo := CallLoginInfo(c)
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	loginInfo := service.CallLoginInfo(c)
+	apiInfo := service.AuthenticationHandler()
 	if loginInfo.Username != "" {
 		nsList := service.GetRegionList()
 		fmt.Println("REGION List : ", nsList)
@@ -202,9 +202,9 @@ func ImageListForm(c echo.Context) error {
 
 //VPC Controller
 func VpcRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "VpcRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -216,9 +216,9 @@ func VpcRegForm(c echo.Context) error {
 }
 
 func VpcListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	loginInfo := CallLoginInfo(c)
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	loginInfo := service.CallLoginInfo(c)
+	apiInfo := service.AuthenticationHandler()
 	if loginInfo.Username != "" {
 		nsList := service.GetRegionList()
 		fmt.Println("REGION List : ", nsList)
@@ -239,9 +239,9 @@ func VpcListForm(c echo.Context) error {
 
 // Controller
 func SecurityGroupRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "SecurityGroupRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -253,9 +253,9 @@ func SecurityGroupRegForm(c echo.Context) error {
 }
 
 func SecurityGroupListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	loginInfo := CallLoginInfo(c)
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	loginInfo := service.CallLoginInfo(c)
+	apiInfo := service.AuthenticationHandler()
 	if loginInfo.Username != "" {
 		nsList := service.GetRegionList()
 		fmt.Println("REGION List : ", nsList)
@@ -276,9 +276,9 @@ func SecurityGroupListForm(c echo.Context) error {
 
 // Controller
 func SSHRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "SSHRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -290,9 +290,9 @@ func SSHRegForm(c echo.Context) error {
 }
 
 func SSHListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	loginInfo := CallLoginInfo(c)
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	loginInfo := service.CallLoginInfo(c)
+	apiInfo := service.AuthenticationHandler()
 	if loginInfo.Username != "" {
 		nsList := service.GetRegionList()
 		fmt.Println("REGION List : ", nsList)
@@ -313,9 +313,9 @@ func SSHListForm(c echo.Context) error {
 
 // Controller
 func SpecRegForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	apiInfo := AuthenticationHandler()
-	if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+	comURL := service.GetCommonURL()
+	apiInfo := service.AuthenticationHandler()
+	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
 		return c.Render(http.StatusOK, "SpecRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -327,9 +327,9 @@ func SpecRegForm(c echo.Context) error {
 }
 
 func SpecListForm(c echo.Context) error {
-	comURL := GetCommonURL()
-	loginInfo := CallLoginInfo(c)
-	apiInfo := AuthenticationHandler()
+	comURL := service.GetCommonURL()
+	loginInfo := service.CallLoginInfo(c)
+	apiInfo := service.AuthenticationHandler()
 	if loginInfo.Username != "" {
 		nsList := service.GetRegionList()
 		fmt.Println("REGION List : ", nsList)
@@ -346,4 +346,14 @@ func SpecListForm(c echo.Context) error {
 	fmt.Println("LoginInfo : ", loginInfo)
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 
+}
+
+func GetConnectionConfigData(c echo.Context) error {
+
+	connectionConfigDataList := service.GetConnectionConfigData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":          "success",
+		"status":           "200",
+		"connectionconfig": connectionConfigDataList,
+	})
 }
