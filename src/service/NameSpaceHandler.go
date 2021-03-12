@@ -3,13 +3,14 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	// "io"
+	"io"
 	// "net/http"
 	"os"
-
+	// "bytes"
 	// "reflect"
 	//"github.com/davecgh/go-spew/spew"
 	model "github.com/cloud-barista/cb-webtool/src/model"
+	util "github.com/cloud-barista/cb-webtool/src/util"
 )
 
 // var NameSpaceUrl = "http://15.165.16.67:1323"
@@ -21,65 +22,65 @@ var NameSpaceUrl = os.Getenv("TUMBLE_URL")
 // 	Description string `json:"description"`
 // }
 
-func GetNS(nsID string) model.NSInfo {
-	url := NameSpaceUrl + "ns" + nsID
+// func GetNS(nsID string) model.NSInfo {
+// 	url := NameSpaceUrl + "ns" + nsID
 
-	body := HttpGetHandler(url)
-	defer body.Close()
-	nsInfo := model.NSInfo{}
-	json.NewDecoder(body).Decode(&nsInfo)
-	fmt.Println("nsInfo : ", nsInfo.ID)
-	return nsInfo
+// 	body := HttpGetHandler(url)
+// 	defer body.Close()
+// 	nsInfo := model.NSInfo{}
+// 	json.NewDecoder(body).Decode(&nsInfo)
+// 	fmt.Println("nsInfo : ", nsInfo.ID)
+// 	return nsInfo
 
-}
+// }
 
-func GetNSList() []model.NSInfo {
-	url := NameSpaceUrl + "/ns"
-	fmt.Println("============= NameSpace URL =============", url)
-	// authInfo := controller.AuthenticationHandler()
-	// req, err := http.NewRequest("GET", url, nil)
-	// if err != nil {
+// func GetNSList() []model.NSInfo {
+// 	url := NameSpaceUrl + "/ns"
+// 	fmt.Println("============= NameSpace URL =============", url)
+// 	// authInfo := controller.AuthenticationHandler()
+// 	// req, err := http.NewRequest("GET", url, nil)
+// 	// if err != nil {
 
-	// }
-	// req.Header.Add("Authorization", authInfo)
-	// client := &http.Client{}
-	// resp, err := client.Do(req)
-	// fmt.Println("=============result GetNSList =============", resp)
-	// //spew.Dump(resp)
-	// if err != nil {
-	// 	fmt.Println("========= GetNSList Error : ", err)
-	// 	fmt.Println("request URL : ", url)
-	// 	return nil
-	// }
+// 	// }
+// 	// req.Header.Add("Authorization", authInfo)
+// 	// client := &http.Client{}
+// 	// resp, err := client.Do(req)
+// 	// fmt.Println("=============result GetNSList =============", resp)
+// 	// //spew.Dump(resp)
+// 	// if err != nil {
+// 	// 	fmt.Println("========= GetNSList Error : ", err)
+// 	// 	fmt.Println("request URL : ", url)
+// 	// 	return nil
+// 	// }
 
-	// defer resp.Body.Close()
-	body := HttpGetHandler(url)
-	nsInfo := map[string][]model.NSInfo{}
-	defer body.Close()
-	json.NewDecoder(body).Decode(&nsInfo)
-	//spew.Dump(body)
-	return nsInfo["ns"]
+// 	// defer resp.Body.Close()
+// 	body := HttpGetHandler(url)
+// 	nsInfo := map[string][]model.NSInfo{}
+// 	defer body.Close()
+// 	json.NewDecoder(body).Decode(&nsInfo)
+// 	//spew.Dump(body)
+// 	return nsInfo["ns"]
 
-}
+// }
 
-func GetNSCnt() int {
-	url := NameSpaceUrl + "/ns"
-	fmt.Println("============= NameSpace URL =============", url)
+// func GetNSCnt() int {
+// 	url := NameSpaceUrl + "/ns"
+// 	fmt.Println("============= NameSpace URL =============", url)
 
-	// defer resp.Body.Close()
-	body := HttpGetHandler(url)
-	nsInfo := map[string][]model.NSInfo{}
-	defer body.Close()
-	json.NewDecoder(body).Decode(&nsInfo)
-	//spew.Dump(body)
-	if nsInfo["ns"] == nil {
-		return 0
-	} else {
-		return len(nsInfo["ns"])
+// 	// defer resp.Body.Close()
+// 	body := HttpGetHandler(url)
+// 	nsInfo := map[string][]model.NSInfo{}
+// 	defer body.Close()
+// 	json.NewDecoder(body).Decode(&nsInfo)
+// 	//spew.Dump(body)
+// 	if nsInfo["ns"] == nil {
+// 		return 0
+// 	} else {
+// 		return len(nsInfo["ns"])
 
-	}
+// 	}
 
-}
+// }
 
 // 안쓰는 function인듯.
 // func RequestGet(url string) {
@@ -102,10 +103,9 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 	fmt.Println("GetNameSpaceList start")
 	url := NameSpaceUrl + "/ns"
 
-	 body, err := CommonHttpGet(url)
+	 body, err := util.CommonHttpGet(url)
 	//body := HttpGetHandler(url)
 
-	fmt.Println("called url ", url)
 	fmt.Println(body)
 	if err != nil {
 	// 	// Tumblebug 접속 확인하라고
@@ -121,4 +121,20 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 	fmt.Println(nsInfoList["ns"])
 
 	return nsInfoList["ns"], nil
+}
+
+
+func RegNameSpace(nsInfo *model.NSInfo) (io.ReadCloser, error){
+	// buff := bytes.NewBuffer(pbytes)
+	url := NameSpaceUrl + "/ns"
+	
+	fmt.Println("nsInfo : ", nsInfo)
+
+	//body, err := util.CommonHttpPost(url, nsInfo)
+	pbytes, _ := json.Marshal(nsInfo)
+	body, err := util.CommonHttpPost(url, pbytes)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
 }

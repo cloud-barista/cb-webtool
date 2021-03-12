@@ -179,7 +179,7 @@ func main() {
 
 	// namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
 	// namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
-	namespaceGroup.POST("/NS/reg/proc", controller.NsRegProc)    // namespace 등록 처리
+	namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc)    // namespace 등록 처리
 
 	// // 웹툴에서 처리할 Connection
 	

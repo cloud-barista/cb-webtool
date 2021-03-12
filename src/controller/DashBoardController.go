@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"fmt"
 	"net/http"
-	"sync"
+	// "sync"
 
 	"github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
@@ -19,77 +19,77 @@ type RespPublicIPInfo struct {
 	} `json:"vm"`
 }
 
-func GlobalDashBoard(c echo.Context) error {
-	comURL := service.GetCommonURL()
-	apiInfo := service.AuthenticationHandler()
-	nsCnt := service.GetNSCnt()
-	fmt.Println("=========== DashBoard start ==============")
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-		nameSpace := service.GetNameSpaceToString(c)
-		if nameSpace != "" {
-			fmt.Println("Namespace : ", nameSpace)
-			return c.Render(http.StatusOK, "Dashboard_Global.html", map[string]interface{}{
-				"LoginInfo": loginInfo,
-				"NameSpace": nameSpace,
-				"comURL":    comURL,
-				"apiInfo":   apiInfo,
-				"nsCnt":     nsCnt,
-			})
-		} else {
-			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
-		}
+// func GlobalDashBoard(c echo.Context) error {
+// 	comURL := service.GetCommonURL()
+// 	apiInfo := service.AuthenticationHandler()
+// 	nsCnt := service.GetNSCnt()
+// 	fmt.Println("=========== DashBoard start ==============")
+// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+// 		nameSpace := service.GetNameSpaceToString(c)
+// 		if nameSpace != "" {
+// 			fmt.Println("Namespace : ", nameSpace)
+// 			return c.Render(http.StatusOK, "Dashboard_Global.html", map[string]interface{}{
+// 				"LoginInfo": loginInfo,
+// 				"NameSpace": nameSpace,
+// 				"comURL":    comURL,
+// 				"apiInfo":   apiInfo,
+// 				"nsCnt":     nsCnt,
+// 			})
+// 		} else {
+// 			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+// 		}
 
-	}
+// 	}
 
-	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-}
-func DashBoard(c echo.Context) error {
-	comURL := service.GetCommonURL()
-	apiInfo := service.AuthenticationHandler()
-	fmt.Println("=========== DashBoard start ==============")
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-		nameSpace := service.GetNameSpaceToString(c)
-		if nameSpace != "" {
-			fmt.Println("Namespace : ", nameSpace)
-			return c.Render(http.StatusOK, "dashboard.html", map[string]interface{}{
-				"LoginInfo": loginInfo,
-				"NameSpace": nameSpace,
-				"comURL":    comURL,
-				"apiInfo":   apiInfo,
-			})
-		} else {
-			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
-		}
+// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+// }
+// func DashBoard(c echo.Context) error {
+// 	comURL := service.GetCommonURL()
+// 	apiInfo := service.AuthenticationHandler()
+// 	fmt.Println("=========== DashBoard start ==============")
+// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+// 		nameSpace := service.GetNameSpaceToString(c)
+// 		if nameSpace != "" {
+// 			fmt.Println("Namespace : ", nameSpace)
+// 			return c.Render(http.StatusOK, "dashboard.html", map[string]interface{}{
+// 				"LoginInfo": loginInfo,
+// 				"NameSpace": nameSpace,
+// 				"comURL":    comURL,
+// 				"apiInfo":   apiInfo,
+// 			})
+// 		} else {
+// 			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+// 		}
 
-	}
+// 	}
 
-	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-}
+// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+// }
 
-func NSDashBoard(c echo.Context) error {
-	comURL := service.GetCommonURL()
-	apiInfo := service.AuthenticationHandler()
-	nsCnt := service.GetNSCnt()
-	fmt.Println("=========== DashBoard start ==============")
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-		nameSpace := service.GetNameSpaceToString(c)
-		if nameSpace != "" {
-			fmt.Println("Namespace : ", nameSpace)
-			return c.Render(http.StatusOK, "Dashboard_Ns.html", map[string]interface{}{
-				"LoginInfo": loginInfo,
-				"NameSpace": nameSpace,
-				"comURL":    comURL,
-				"apiInfo":   apiInfo,
-				"nsCnt":     nsCnt,
-			})
-		} else {
-			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
-		}
+// func NSDashBoard(c echo.Context) error {
+// 	comURL := service.GetCommonURL()
+// 	apiInfo := service.AuthenticationHandler()
+// 	nsCnt := service.GetNSCnt()
+// 	fmt.Println("=========== DashBoard start ==============")
+// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+// 		nameSpace := service.GetNameSpaceToString(c)
+// 		if nameSpace != "" {
+// 			fmt.Println("Namespace : ", nameSpace)
+// 			return c.Render(http.StatusOK, "Dashboard_Ns.html", map[string]interface{}{
+// 				"LoginInfo": loginInfo,
+// 				"NameSpace": nameSpace,
+// 				"comURL":    comURL,
+// 				"apiInfo":   apiInfo,
+// 				"nsCnt":     nsCnt,
+// 			})
+// 		} else {
+// 			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+// 		}
 
-	}
+// 	}
 
-	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-}
+// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+// }
 
 func IndexController(c echo.Context) error {
 
@@ -114,36 +114,36 @@ func Map(c echo.Context) error {
 	return c.Render(http.StatusOK, "Map.html", nil)
 }
 
-func GeoInfo(c echo.Context) error {
-	//goroutine sync wg
-	var wg sync.WaitGroup
-	nameSpace := service.GetNameSpaceToString(c)
-	comURL := service.GetCommonURL()
-	//apiInfo := service.AuthenticationHandler()
-	tumble_url := comURL.TumbleBugURL
+// func GeoInfo(c echo.Context) error {
+// 	//goroutine sync wg
+// 	var wg sync.WaitGroup
+// 	nameSpace := service.GetNameSpaceToString(c)
+// 	comURL := service.GetCommonURL()
+// 	//apiInfo := service.AuthenticationHandler()
+// 	tumble_url := comURL.TumbleBugURL
 
-	mcis_id := c.Param("mcis_id")
-	url := tumble_url + "/ns/" + nameSpace + "/mcis/" + mcis_id
-	fmt.Println("===========")
-	fmt.Println("=========== GetGeoINFO ==============")
-	fmt.Println("=========== GetGeoINFO request URL : ", url)
-	body := service.HttpGetHandler(url)
+// 	mcis_id := c.Param("mcis_id")
+// 	url := tumble_url + "/ns/" + nameSpace + "/mcis/" + mcis_id
+// 	fmt.Println("===========")
+// 	fmt.Println("=========== GetGeoINFO ==============")
+// 	fmt.Println("=========== GetGeoINFO request URL : ", url)
+// 	body := service.HttpGetHandler(url)
 
-	defer body.Close()
+// 	defer body.Close()
 
-	publicIpInfo := RespPublicIPInfo{}
-	json.NewDecoder(body).Decode(&publicIpInfo)
-	fmt.Println("================mcis ID info ===============")
-	fmt.Println("Public Info : ", publicIpInfo)
-	var ipStackInfo []service.IPStackInfo
+// 	publicIpInfo := RespPublicIPInfo{}
+// 	json.NewDecoder(body).Decode(&publicIpInfo)
+// 	fmt.Println("================mcis ID info ===============")
+// 	fmt.Println("Public Info : ", publicIpInfo)
+// 	var ipStackInfo []service.IPStackInfo
 
-	for _, item := range publicIpInfo.PublicIPInfo {
-		wg.Add(1)
+// 	for _, item := range publicIpInfo.PublicIPInfo {
+// 		wg.Add(1)
 
-		go service.GetGeoMetryInfo(&wg, item.PublicIp, item.Status, item.VMID, item.VMName, &ipStackInfo)
+// 		go service.GetGeoMetryInfo(&wg, item.PublicIp, item.Status, item.VMID, item.VMName, &ipStackInfo)
 
-	}
-	wg.Wait()
-	fmt.Println("DashBoard ipStackInfo  : ", ipStackInfo)
-	return c.JSON(http.StatusOK, ipStackInfo)
-}
+// 	}
+// 	wg.Wait()
+// 	fmt.Println("DashBoard ipStackInfo  : ", ipStackInfo)
+// 	return c.JSON(http.StatusOK, ipStackInfo)
+// }

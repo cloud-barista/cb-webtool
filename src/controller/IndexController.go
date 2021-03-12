@@ -74,13 +74,9 @@ func LoginProc(c echo.Context) error {
 	store := echosession.FromContext(c)
 
 	reqInfo := new(ReqInfo)
-	comURL := service.GetCommonURL()
-	apiInfo := service.AuthenticationHandler()
 	if err := c.Bind(reqInfo); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
-			"comURL":  comURL,
-			"apiInfo": apiInfo,
 		})
 	}
 

@@ -30,15 +30,9 @@ $(document).ready(function(){
                         alert("Login Success");
                         $("#popLogin").modal();
                         
-
-                        var namespaceList = result.data.ns;
-                        if(namespaceList == null || namespaceList == undefined){
-                            console.log("사용자의 namespace 정보가 없음")
-                        }else{
-                            showUserNamespace(namespaceList);
-                        }
+                        var namespaceList = result.data.nsList;
+                        getUserNamespace(namespaceList)
                         
-                        // getNameSpace();
                         nsModal();
                  }else{
                      alert("ID or PASSWORKD MISMATCH!!Check yourself!")
@@ -113,7 +107,12 @@ function getConfig(){
     })
 }
 
-function getUserNamespace(namespaceList){    
+function getUserNamespace(namespaceList){   
+    if(namespaceList == null || namespaceList == undefined){
+        console.log("사용자의 namespace 정보가 없음")
+        return;
+    }
+
     var html = ""
     console.log(namespaceList);
     // console.log(result);
@@ -227,15 +226,17 @@ function configModal(){
 
 // namepace 생성
 function createNS(){
-    var namespace = $("#namespace").val()
-    var desc = $("#nsDesc").val()
+    var addNamespaceValue = $("#addNamespace").val()
+    var addNamespaceDescValue = $("#addNamespaceDesc").val()
     
-    var url = "/ns";
+    //var url = "/ns";
+    var url = "/NameSpace/reg/proc";
     var obj = {
-        name: namespace,
-        description : desc
+        name: addNamespaceValue,
+        description : addNamespaceDescValue
     }
-    if(namespace){
+    console.log(obj)
+    if(addNamespaceValue){
         axios.post(url,obj,{
             headers: { 
                 'Content-type': 'application/json',
@@ -244,13 +245,9 @@ function createNS(){
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
+                var namespaceList = result.data.nsList;
+                getUserNamespace(namespaceList)
                 
-                var namespaceList = result.data.ns;
-                if(namespaceList == null || namespaceList == undefined){
-                    console.log("사용자의 namespace 정보가 없음")
-                }else{
-                    showUserNamespace(namespaceList);
-                }
                 alert("Success Create NameSpace")
 
                 // getNameSpace();
@@ -277,7 +274,37 @@ function createNS(){
         });
     }else{
         alert("Input NameSpace")
-        $("#namespace").focus()
+        $("#addNamespace").focus()
         return;
     }
 }
+
+function selectNS(ns){
+    console.log("select namespace : ",ns)
+    $("#sel_ns").val(ns);
+}
+function clickOK(){
+    var select_ns =   $("#sel_ns").val();
+    console.log("slect ns is : ",select_ns);
+    setNS(select_ns);
+   
+}
+function setNS(nsid){
+    if(nsid){
+        reqUrl = "/SET/NS/"+nsid;
+        console.log(reqUrl);
+        axios.get(reqUrl,{
+            headers:{
+                'Authorization': "{{ .apiInfo}}"
+            }
+        }).then(result=>{
+            var data = result.data
+            console.log(data);
+            location.href = "/Dashboard/NS"
+            })
+    }else{
+        alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
+        
+    }
+    
+} 

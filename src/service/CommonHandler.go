@@ -1,10 +1,10 @@
 package service
 
 import (
-	"encoding/base64"
+	// "encoding/base64"
 	"fmt"
-	"io"
-	"net/http"
+	// "io"
+	// "net/http"
 	"os"
 	"strconv"
 	"time"
@@ -44,21 +44,7 @@ func GetCommonURL() CommonURL {
 	return common_url
 }
 
-// Get 호출하는 공통함수
-func CommonHttpGet(url string) (io.ReadCloser, error) {
-	authInfo := AuthenticationHandler()
 
-	fmt.Println("HttpGetHandler ", url)
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", authInfo)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-
-	//defer resp.Body.Close()
-
-	return resp.Body, err
-}
 
 // POST 호출하는 공통함수 --> 생성할 것.
 // func CommonHttpPost()(io.ReadCloser, err) {
@@ -79,20 +65,6 @@ func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
 	return credentialInfo
 }
 
-func HttpGetHandler(url string) io.ReadCloser {
-	authInfo := AuthenticationHandler()
-
-	fmt.Println("HttpGetHandler ", url)
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", authInfo)
-
-	client := &http.Client{}
-	resp, _ := client.Do(req)
-
-	//defer resp.Body.Close()
-
-	return resp.Body
-}
 
 
 
@@ -212,19 +184,3 @@ func MakeNameSpace(name string) string {
 	return result
 }
 
-// ajax 호출할 때 header key 생성
-func AuthenticationHandler() string {
-
-	// conf 파일에 정의
-	api_username := os.Getenv("API_USERNAME")
-	api_password := os.Getenv("API_PASSWORD")
-	// api_username := "default"
-	// api_password := "default"
-
-	//The header "KEY: VAL" is "Authorization: Basic {base64 encoded $USERNAME:$PASSWORD}".
-	apiUserInfo := api_username + ":" + api_password
-	encA := base64.StdEncoding.EncodeToString([]byte(apiUserInfo))
-	//req.Header.Add("Authorization", "Basic"+encA)
-	return "Basic " + encA
-
-}
