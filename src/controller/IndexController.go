@@ -19,7 +19,7 @@ import (
 	"github.com/labstack/echo"
 
 	//db "mzc/src/databases/store"
-	"github.com/cloud-barista/cb-webtool/src/service"
+	// "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/cloud-barista/cb-webtool/src/model"
 )
 
@@ -80,7 +80,7 @@ func Test(c echo.Context) error {
 
 func LoginForm(c echo.Context) error {
 	fmt.Println("============== Login Form ===============")
-	return echotemplate.Render(c, http.StatusOK, "Login", nil)
+	return echotemplate.Render(c, http.StatusOK, "auth/Login", nil)
 	//return c.Render(http.StatusOK, "Login.html", map[string]interface{}{})
 }
 
@@ -101,7 +101,6 @@ func LoginProc(c echo.Context) error {
 	paramPass := strings.TrimSpace(reqInfo.Password)
 	fmt.Println("paramUser & getPass : ", paramUser, paramPass)
 	
-
 	// echoSession에서 가져오기
 	result, ok := store.Get(paramUser)
 	
@@ -163,53 +162,61 @@ func LoginProc(c echo.Context) error {
 	// namespace 목록조회 --> 로그인 이후로 이동할 것.
 	
 		//nsList, nsErr := service.GetNSList()
-	nsList, nsErr := service.GetNameSpaceList()
-	if nsErr != nil {
-		log.Println(" nsErr  ", nsErr)
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  "403",
-		})
-	}
+	// nsList, nsErr := service.GetNameSpaceList()
+	// if nsErr != nil {
+	// 	log.Println(" nsErr  ", nsErr)
+	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 		"message": "invalid tumblebug connection",
+	// 		"status":  "403",
+	// 	})
+	// }
 
-	if len(nsList) == 0 {
-		// create default namespace
-		nsInfo := new(model.NSInfo)
-		nsInfo.ID = "NS-01"
-		nsInfo.Name = "NS-01"	// default namespace name
-		nsInfo.Description = "default name space name"
-		respBody, nsCreateErr := service.RegNameSpace(nsInfo)
-		log.Println(" respBody  ", respBody)
-		if nsCreateErr != nil {
-			log.Println(" nsCreateErr  ", nsCreateErr)
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "invalid tumblebug connection",
-				"status":  "403",
-			})
-		}
+	// if len(nsList) == 0 {
+	// 	// create default namespace
+	// 	nsInfo := new(model.NSInfo)
+	// 	nsInfo.ID = "NS-01"
+	// 	nsInfo.Name = "NS-01"	// default namespace name
+	// 	nsInfo.Description = "default name space name"
+	// 	respBody, nsCreateErr := service.RegNameSpace(nsInfo)
+	// 	log.Println(" respBody  ", respBody)
+	// 	if nsCreateErr != nil {
+	// 		log.Println(" nsCreateErr  ", nsCreateErr)
+	// 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 			"message": "invalid tumblebug connection",
+	// 			"status":  "403",
+	// 		})
+	// 	}
 
-		storedUser["defaultnamespage"] = nsInfo.ID		
+	// 	storedUser["defaultnamespage"] = nsInfo.ID		
 		
-		// 저장 성공하면 namespace 목록 조회
-		nsList2, nsErr2 := service.GetNameSpaceList()
-		if nsErr2 != nil {
-			log.Println(" nsErr2  ", nsErr2)
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "invalid tumblebug connection",
-				"status":  "403",
-			})
-		}
-		log.Println("nsList2  ", nsList2)
-		nsList = nsList2
-	}
-	log.Println("nsList  ", nsList)
-	store.Set("namespaceList", nsList)// 이게 유효한가?? 쓸모없을 듯
+	// 	// 저장 성공하면 namespace 목록 조회
+	// 	nsList2, nsErr2 := service.GetNameSpaceList()
+	// 	if nsErr2 != nil {
+	// 		log.Println(" nsErr2  ", nsErr2)
+	// 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 			"message": "invalid tumblebug connection",
+	// 			"status":  "403",
+	// 		})
+	// 	}
+	// 	log.Println("nsList2  ", nsList2)
+	// 	nsList = nsList2
+	// }
+	// log.Println("nsList  ", nsList)
+	// store.Set("namespaceList", nsList)// 이게 유효한가?? 쓸모없을 듯
+	store.Set(paramUser, storedUser)
 	store.Save()
+
+	loginInfo := model.LoginInfo{
+		Username: paramUser,
+		//Username:  result["username"],
+		// DefaultNameSpace: result["namespace"],
+	}
 	
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  "200",
-		"nsList":  nsList,
+		"LoginInfo": loginInfo,
+		// "nsList":  nsList,
 	})
 
 	// return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -219,6 +226,7 @@ func LoginProc(c echo.Context) error {
 
 
 }
+
 
 
 // ----------- 로그인이 성공하면 Namespace가 없으면 생성 ----------/
@@ -239,7 +247,7 @@ func LoginProcess(c echo.Context) error {
 	// paramUser := strings.TrimSpace(reqInfo.UserName)
 	// // paramEmail := strings.TrimSpace(reqInfo.Email)
 	// paramPass := strings.TrimSpace(reqInfo.Password)
-	fmt.Println("paramUser & getPass : ", paramUser, paramPass)
+	fmt.Println("paramUser & paramPass : ", paramUser, paramPass)
 	
 
 	// echoSession에서 가져오기
@@ -251,66 +259,77 @@ func LoginProcess(c echo.Context) error {
 	}
 	storedUser := result.(map[string]string)
 	fmt.Println("Stored USER:", storedUser)
-	if paramUser != storedUser["username"] && paramUser != storedUser["password"] {
+	if paramUser != storedUser["username"] || paramUser != storedUser["password"] {
 		log.Println(" invalid id or pass  ")
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 	
 	newToken, createTokenErr := createToken(paramUser)
 	if createTokenErr != nil {
-		log.Println(" login proc err  ", createTokenErr)
+		log.Println(" createTokenErr  ", createTokenErr)
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")		
 	}
 
 	storedUser["accesstoken"] = newToken.AccessToken
 	storedUser["refreshtoken"] = newToken.RefreshToken
-
-
-	// namespace 조회.
-	nsList, nsErr := service.GetNameSpaceList()
-	if nsErr != nil {
-		log.Println(" nsErr  ", nsErr)
-		// return c.Render(http.StatusBadRequest, "/setting/connections/CloudConnection", map[string]interface{}{
-		
-		return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")		
-	}
-
-	if len(nsList) == 0 {
-		// create default namespace
-		nsInfo := new(model.NSInfo)
-		nsInfo.ID = "NS-01"
-		nsInfo.Name = "NS-01"	// default namespace name
-		nsInfo.Description = "default name space name"
-		respBody, nsCreateErr := service.RegNameSpace(nsInfo)
-		log.Println(" respBody  ", respBody)
-		if nsCreateErr != nil {
-			log.Println(" nsCreateErr  ", nsCreateErr)			
-			// return c.Render(http.StatusBadRequest, "/setting/connections/CloudConnection", map[string]interface{}{
-			return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
-		}
-
-		storedUser["defaultnamespage"] = nsInfo.ID		
-		
-		// 저장 성공하면 namespace 목록 조회
-		nsList2, nsErr2 := service.GetNameSpaceList()
-		if nsErr2 != nil {
-			log.Println(" nsErr2  ", nsErr2)		
-			return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
-		}
-		log.Println("nsList2  ", nsList2)
-		nsList = nsList2
-	}
-	log.Println("nsList  ", nsList)
-	store.Set("namespaceList", nsList)// 이게 유효한가?? 쓸모없을 듯
+	store.Set(paramUser, storedUser)
 	store.Save()
-
-	// mcis가 있으면 dashboard로
-
-	// mcis가 없으면 mcis 등록화면으로
-	
 	// return c.Render(http.StatusBadRequest, "/setting/connections/CloudConnection", map[string]interface{}{
-	return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
+	// return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
+
+	loginInfo := model.LoginInfo{
+		Username: storedUser["username"],
+		AccessToken: storedUser["accessToken"],
+	}
+	log.Println(" loginInfo  ", loginInfo)
+	// c.Response().Header().Set("logininfo", {"admin"})
+  	// c.Response().WriteHeader(http.StatusOK)
+	return c.Redirect(http.StatusMovedPermanently, "../setting/connections/CloudConnection")
+	// return echotemplate.Render(c, http.StatusOK, 
+	// 	"setting/connections/CloudConnection", 
+	// 	map[string]interface{}{
+	// 		"LoginInfo": loginInfo,
+	// })
+	// return echotemplate.Render(c, http.StatusOK, 
+	// 	"setting/connections/CloudConnection", nil,
+	// )
+	// return echotemplate.Render(c, http.StatusOK, 
+	// 	"Map.html", 
+	// 	map[string]interface{}{
+	// 			"LoginInfo": loginInfo,
+	// 		},
+	// )
+	// return echotemplate.Render(c, http.StatusOK, 
+	// 	"setting/connections/CloudConnection.html", 
+	// 	map[string]interface{}{
+	// 			"LoginInfo": loginInfo,
+	// 		},
+	// )
+	// return c.Render(http.StatusOK, "/setting/connections/CloudConnection.html", loginInfo)
+
+	// 	storedUser["defaultnamespage"] = nsInfo.ID		
+		
+	// 	// 저장 성공하면 namespace 목록 조회
+	// 	nsList2, nsErr2 := service.GetNameSpaceList()
+	// 	if nsErr2 != nil {
+	// 		log.Println(" nsErr2  ", nsErr2)		
+	// 		return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
+	// 	}
+	// 	log.Println("nsList2  ", nsList2)
+	// 	nsList = nsList2
+	// }
+	// log.Println("nsList  ", nsList)
+	// store.Set("namespaceList", nsList)// 이게 유효한가?? 쓸모없을 듯
+	// store.Save()
+
+	// // mcis가 있으면 dashboard로
+
+	// // mcis가 없으면 mcis 등록화면으로
+	
+	// // return c.Render(http.StatusBadRequest, "/setting/connections/CloudConnection", map[string]interface{}{
+	// return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
 }
+
 
 func createToken(username string) (*TokenDetails, error) {
 

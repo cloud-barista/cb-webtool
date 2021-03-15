@@ -2,10 +2,12 @@ package controller
 
 import (
 	"fmt"
-
+	"log"
 	"net/http"
 
 	service "github.com/cloud-barista/cb-webtool/src/service"
+	"github.com/cloud-barista/cb-webtool/src/model"
+
 	"github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
 	//"github.com/davecgh/go-spew/spew"
@@ -16,19 +18,54 @@ import (
 // Cloud 연결정보 표시(driver)
 func ConnectionList(c echo.Context) error {
 	fmt.Println("ConnectionList ************ : ")
-	return echotemplate.Render(c, http.StatusOK, "CloudConnection", nil)
-	// return c.Render(http.StatusOK, "CloudConnection.html", map[string]interface{}{
-	// 		// return c.Render(http.StatusOK, "ConnectionList.html", map[string]interface{}{
-	// 		"LoginInfo": loginInfo,
-	// 		"cList":     cList,
-	// 		"comURL":    comURL,
-	// 		"apiInfo":   apiInfo,
-	// 	})
-	// }
+	loginInfo := service.CallLoginInfo(c);
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	
+	nsList, nsErr := service.GetNameSpaceList()
+	if nsErr != nil {
+		log.Println(" nsErr  ", nsErr)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  "403",
+		})
+	}
 
-	// fmt.Println("LoginInfo : ", loginInfo)
+	// namespace 가 없으면 1개를 기본으로 생성한다.
+	if len(nsList) == 0 {
+		// create default namespace
+		nsInfo := new(model.NSInfo)		
+		nsInfo.Name = "NS-01"	// default namespace name
+		nsInfo.Description = "default name space name"
+		respBody, nsCreateErr := service.RegNameSpace(nsInfo)
+		log.Println(" respBody  ", respBody)
+		if nsCreateErr != nil {
+			log.Println(" nsCreateErr  ", nsCreateErr)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "invalid tumblebug connection",
+				"status":  "403",
+			})
+		}
 
-	// return c.Redirect(http.StatusTemporaryRedirect, "/login")
+		// 처음생성했으므로 connection부터
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}else if len(nsList) == 1 {
+		defaultNameSpace := nsList[0]
+		// for _, item := range nsList {
+		// 	fmt.Println("ID : ", item.ID)	
+		// }
+		loginInfo.DefaultNameSpaceID = defaultNameSpace.ID
+		loginInfo.DefaultNameSpaceName = defaultNameSpace.Name
+	}
+	
+	return echotemplate.Render(c, http.StatusOK, 
+		"setting/connections/CloudConnection", 
+		map[string]interface{}{
+			"LoginInfo": loginInfo,
+			"NameSpaceList": nsList,
+	})
+	// return echotemplate.Render(c, http.StatusOK, "CloudConnection", nil)// -> file not found 남. 경로 제대로 적을 것.
 }
 
 // Driver Contorller

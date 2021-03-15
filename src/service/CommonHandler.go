@@ -11,6 +11,8 @@ import (
 
 	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
+
+	"github.com/cloud-barista/cb-webtool/src/model"
 )
 
 var SpiderURL = os.Getenv("SPIDER_URL")
@@ -18,10 +20,7 @@ var TumbleBugURL = os.Getenv("TUMBLE_URL")
 var DragonFlyURL = os.Getenv("DRAGONFLY_URL")
 var LadyBugURL = os.Getenv("LADYBUG_URL")
 
-type LoginInfo struct {
-	Username  string
-	NameSpace string
-}
+
 
 type CredentialInfo struct {
 	Username string
@@ -127,31 +126,40 @@ func GetNameSpaceToString(c echo.Context) string {
 	return nsId
 }
 
-func CallLoginInfo(c echo.Context) LoginInfo {
+// 해당 유저가 유효한지만 체크. : store에 저장되어 있으면 OK.
+// TODO : token이 유효하면 시간연장, 유효하지 않으면 refresh token이 유효하면 시간연장, 둘다 expired되었으면 login으로 
+func CallLoginInfo(c echo.Context) model.LoginInfo {
 	store := echosession.FromContext(c)
-	getUser, ok := store.Get("username")
+
+	// param으로 username, token을 받아 store에서 찾는다.
+	// username := c.request.Header.Get("username")
+	username := c.Request().Header.Get("username")
+	// accessToken := c.request.Header.Get("accessToken")
+
+	result, ok := store.Get(username)
 	if !ok {
 		fmt.Println("========= CallLoginInfo Nothing =========")
-		return LoginInfo{}
+		return model.LoginInfo{}
 	}
-	fmt.Println("GETUSER : ", getUser.(string))
-	getObj, ok := store.Get(getUser.(string))
+	fmt.Println("GETUSER : ", result.(string))
+	storedUser := result.(map[string]string)
+	// getObj, ok := store.Get(storedUser.(string))
+	// if !ok {
+	// 	return LoginInfo{}
+	// }
 
-	if !ok {
-		return LoginInfo{}
+	// result := getObj.(map[string]string)
+
+	loginInfo := model.LoginInfo{
+		Username: storedUser["username"],
+		AccessToken: storedUser["accessToken"],
 	}
 
-	result := getObj.(map[string]string)
-	loginInfo := LoginInfo{
-		Username: "admin",
-		//Username:  result["username"],
-		NameSpace: result["namespace"],
-	}
-	getNs, ok := store.Get("namespace")
-	if !ok {
-		return loginInfo
-	}
-	loginInfo.NameSpace = getNs.(string)
+	// getNs, ok := store.Get("namespace")
+	// if !ok {
+	// 	return loginInfo
+	// }
+	// loginInfo.NameSpace = getNs.(string)
 
 	return loginInfo
 

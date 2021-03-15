@@ -19,7 +19,6 @@ $(document).ready(function(){
             var loginForm = document.loginForm;
             loginForm.submit();
 
-
             // var req = {
             //     username : username,
             //     password : password,
@@ -29,15 +28,18 @@ $(document).ready(function(){
             //     .then(result =>{
             //         console.log(result);
             //         if(result.status == 200){
-                                         
-            //             alert("Login Success");
-            //             $("#popLogin").modal();
+            //             alert(1);
+            //             // 로그인 성공이면 바로 이동.
+            //             //location.href = "/setting/connections/CloudConnection"
+
+            //             // alert("Login Success");
+            //             // $("#popLogin").modal();
                         
-            //             var namespaceList = result.data.nsList;
-            //             getUserNamespace(namespaceList)
+            //             // var namespaceList = result.data.nsList;
+            //             // getUserNamespace(namespaceList)
                         
-            //             nsModal();
-            //             // getConfig();//config, provider... 설정 modal
+            //             // nsModal();
+            //             // // getConfig();//config, provider... 설정 modal
             //      }else{
             //          alert("ID or PASSWORKD MISMATCH!!Check yourself!")
             //          location.reload(true); 

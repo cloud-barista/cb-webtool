@@ -1,4 +1,4 @@
-{{define "Top_box"}}
+{{define "TopBox"}}
 
 <div class="topbox">
     <div class="info">
@@ -6,21 +6,17 @@
         <div class="txt_1">Leonardo DiCaprio</div>
         <div class="txt_2">
             
-            <span id="default_namespace"></span>
+            <span id="defaultNamespace"></span>
             <div class="infobox">
                 <div class="box">
                     <ul>
                         <li>
-                            <a href="javascript:void(0);">Select NS</a>
-                            <ul id="name_select">
-                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NameSpace">ns_aws_1</a></li>
-                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NameSpace">ns_global_2</a></li>
-                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NameSpace">ns_gcp_3</a></li>
-                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NameSpace">ns_demo_4</a></li>
+                            <a href="javascript:void(0);">Change NameSpace</a>
+                            <ul id="menuNameSpaceList">                                
                             </ul>	
                         </li>
                         <li>
-                            <a href="javascript:void(0);">Add NS</a>
+                            <a href="javascript:void(0);">Manage NameSpace</a>
                             <ul>
                                 <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NewNS">new NS</a></li>
                                 <li><a href="javascript:void(0);" data-toggle="modal" data-target="#ManageNS">Manage NS</a></li>
@@ -34,6 +30,4 @@
         </div>
     </div>
 </div>
-    
-
 {{end}}

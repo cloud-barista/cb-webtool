@@ -1,17 +1,14 @@
-{{define "LNB_popup"}}
-
-
+{{define "LNBPopup"}}
 
             <!-- popup NameSpace -->
             <div class="modal fade layerpopup" id="NameSpace" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        
+                    <div class="modal-content">                        
                         <div class="modal-body">
-                            <div class="txt">Would you like to move <br />selected NS (Name Space) ?</div>
+                            <div class="txt">Would you like to move <br />selected NameSpace?</div>
                             <div class="btnbox">
                                 <button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn_ok" data-dismiss="modal" onclick="change_namespace()">OK</button>
+                                <button type="button" class="btn_ok" data-dismiss="modal" onclick="changeNamespace()">OK</button>
                             </div>
                         </div>
                         
@@ -20,13 +17,13 @@
             </div>
             <!-- //popup NameSpace -->
 
-            <!-- popup NewNS -->
+            <!-- popup NewNameSpace -->
             <div class="modal fade layerpopup" id="NewNS" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         
                         <div class="modal-body">
-                            <div class="txt">Would you like to new NS (Name Space) ?</div>
+                            <div class="txt">Would you like to new Name Space?</div>
                             <div class="btnbox">
                                 <button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
                                 <button type="button" class="btn_ok" data-dismiss="modal">OK</button>
@@ -36,15 +33,15 @@
                     </div>
                 </div>
             </div>
-            <!-- //popup NewNS -->
+            <!-- //popup New NameSpace -->
 
-            <!-- popup ManageNS -->
+            <!-- popup Manage NameSpace -->
             <div class="modal fade layerpopup" id="ManageNS" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         
                         <div class="modal-body">
-                            <div class="txt"> Would you like to manage <br />NS (Name Space) ?</div>
+                            <div class="txt"> Would you like to manage <br />Name Space?</div>
                             <div class="btnbox">
                                 <button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
                                 <button type="button" class="btn_ok" data-dismiss="modal">OK</button>
@@ -54,20 +51,40 @@
                     </div>
                 </div>
             </div>
-            <!-- //popup ManageNS -->
+            <!-- //popup Manage NameSpace -->
             
      <script>
-     function change_namespace(){
-         var select_namespace = $("#select_namespace").val();
-         console.log("select Namespace : ",select_namespace)
-         if(select_namespace){
-              setNS(select_namespace);
-              
+     function changeNamespace(){
+         var selectdNamespace = $("#select_namespace").val();
+         console.log("select Namespace : ",selectdNamespace)
+         if(selectdNamespace){
+              setNameSpace(selectdNamespace);              
          }else{
              alert("Select Namespace!!")
              return;
          }
      }
+
+     function setNameSpace(nsid){
+        var apiInfo = ApiInfo
+        if(nsid){
+            reqUrl = "/SET/NS/"+nsid;
+            console.log(reqUrl);
+            axios.get(reqUrl,{
+                headers:{
+                    'Authorization': apiInfo
+                }
+            }).then(result=>{
+                var data = result.data
+                console.log(data);
+                location.href = "/Dashboard/NS";
+             })
+        }else{
+            alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
+            location.href ="/NS/reg";
+        }
+        
+    } 
      </script>    
 
 {{end}}

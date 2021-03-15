@@ -24,13 +24,10 @@
 		<script src="/assets/js/common.js"></script>
 		<!--[if lt IE 9]><script src="../js/html5shiv.js"></script><![endif]-->
 		<script>
-			const CommonURL = "{{ .comURL.TumbleBugURL}}";
-			const SpiderURL = "{{ .comURL.SpiderURL}}";
-			const ApiInfo = "{{ .apiInfo}}"
+			
 			const NAMESPACE ="{{with .LoginInfo}}{{ .NameSpace }}{{end}}";
 			console.log("namespace : ",NAMESPACE)
 			var btn_click_cnt = 1;
-			const DragonFlyURL = "{{ .comURL.DragonFlyURL}}"
 			
 	//========== 로딩 바 시작 =========    
 	$(document).ready(function(){
@@ -87,7 +84,5 @@
 	<body>
  	
 	<div id="wrap" class="wrapper scrollbar-dynamic">
-    
-
     
 {{end}}
