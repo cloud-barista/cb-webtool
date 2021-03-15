@@ -5,12 +5,13 @@
                     <input type="hidden" id="sel_ns" />
                     <div class="loginlogo"><img src="/assets/img/common/img_login_t.png" alt="Cloud Barista"></div>
                     <div class="title"><span>C</span>loud <span>B</span>arista</div>
+                    <form @submit.prevent="submitForm" name="loginForm" action="/login/process" method="post">
                     <!-- Input -->
                     <div class="ipbox">
                         <ul>
-                            <li class="form-label-group"><label class>Account(ID)</label><input type="text" name="" id="username" value="" placeholder="Input /Account(ID)" title="" autofocus /></li>
+                            <li class="form-label-group"><label class>Account(ID)</label><input type="text" name="username" id="username" value="" placeholder="Input /Account(ID)" title="" autofocus /></li>
                             <!-- <li class="form-label-group"><label class>Email</label><input type="text" name="" id="email" value="" placeholder="Email" title="" autofocus /></li> -->
-                            <li class="form-label-group"><label>Password</label><input type="password" name="" id="password" value="" placeholder="Input /Password (*****)" title="" onkeydown="enterKeyForLogin();"/></li>
+                            <li class="form-label-group"><label>Password</label><input type="password" name="password" id="password" value="" placeholder="Input /Password (*****)" title="" onkeydown="enterKeyForLogin();"/></li>
                         </ul>
                         <div class="ch"><input type="checkbox" name="" value="" id="ip_ch" title="" /><label for="ip_ch"><span></span> Remenber me</label></div>
                         <div class="btnbox">
@@ -19,6 +20,7 @@
                         </div>
                     </div>
                     <!-- //Input -->
+                    </form>
                 </div>	
             </div>
     

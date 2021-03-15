@@ -103,7 +103,7 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 	fmt.Println("GetNameSpaceList start")
 	url := NameSpaceUrl + "/ns"
 
-	 body, err := util.CommonHttpGet(url)
+	body, err := util.CommonHttpGet(url)
 	//body := HttpGetHandler(url)
 
 	fmt.Println(body)
@@ -112,7 +112,6 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 		fmt.Println(err)
 		return nil, err
 	}
-
 
 	nsInfoList := map[string][]model.NSInfo{}
 	defer body.Close()
@@ -124,6 +123,7 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 }
 
 
+// 성공시 NsInfoList 반환
 func RegNameSpace(nsInfo *model.NSInfo) (io.ReadCloser, error){
 	// buff := bytes.NewBuffer(pbytes)
 	url := NameSpaceUrl + "/ns"

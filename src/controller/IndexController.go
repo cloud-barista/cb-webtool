@@ -6,12 +6,16 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	//"github.com/foolin/echo-template"
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
 	
 	"github.com/dgrijalva/jwt-go"
+
+	"github.com/twinj/uuid"
+	
 	"github.com/labstack/echo"
 
 	//db "mzc/src/databases/store"
@@ -56,6 +60,7 @@ func Index(c echo.Context) error {
 		"username": user,
 		"email":    email,
 		"password": pass,
+		"defaultnamespage": "",
 		"accesstoken" : "",
 		"refreshtoken" : "",
 	}
@@ -91,19 +96,15 @@ func LoginProc(c echo.Context) error {
 		})
 	}
 
-	getUser := strings.TrimSpace(reqInfo.UserName)
-	getEmail := strings.TrimSpace(reqInfo.Email)
-	getPass := strings.TrimSpace(reqInfo.Password)
-	fmt.Println("getUser & getPass : ", getUser, getPass)
-
+	paramUser := strings.TrimSpace(reqInfo.UserName)
+	// paramEmail := strings.TrimSpace(reqInfo.Email)
+	paramPass := strings.TrimSpace(reqInfo.Password)
+	fmt.Println("paramUser & getPass : ", paramUser, paramPass)
 	
 
 	// echoSession에서 가져오기
-	get, ok := store.Get(getUser)
-	fmt.Println("Stored USER:", get)
-
-
-	// jwt token 사용
+	result, ok := store.Get(paramUser)
+	
 	if !ok {
 		log.Println(" login proc err  ", ok)
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{ //401
@@ -111,8 +112,17 @@ func LoginProc(c echo.Context) error {
 			"status":  "fail",
 		})		
 	}
-
-	newToken, createTokenErr := createToken(getUser string)
+	storedUser := result.(map[string]string)
+	fmt.Println("Stored USER:", storedUser)
+	if paramUser != storedUser["username"] && paramUser != storedUser["password"] {
+		log.Println(" invalid id or pass  ")
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{ //401
+			"message": "invalid user or password",
+			"status":  "fail",
+		})
+	}
+	
+	newToken, createTokenErr := createToken(paramUser)
 	if createTokenErr != nil {
 		log.Println(" login proc err  ", createTokenErr)
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{ //401
@@ -121,42 +131,26 @@ func LoginProc(c echo.Context) error {
 		})		
 	}
 
-	get.accesstoken = newToken.AccessToken
-	get.refreshtoken = newToken.RefreshToken
-	store.Set(getUser, get)
-	store.Save()
+	// "accesstoken" : "",
+	// 	"refreshtoken" : "",
+	// td.RefreshToken
+	storedUser["accesstoken"] = newToken.AccessToken
+	storedUser["refreshtoken"] = newToken.RefreshToken
+	// store.Set(paramUser, storedUser)
+	// store.Save()
 	
+	//////// 현재구조에서는 nsList 부분을 포함해야 함. 
+	//////// TODO : post로 넘기고 login success일 때 namespace 등 설정 popup이 아닌 page로 넘기는게 좋을 듯.
 	//contentType := c.Request().Header.Get("Content-Type")
 	//AccessToken := c.Request().Header.Get("AccessToken")
 	//RefreshToken := c.Request().Header.Get("RefreshToken")
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  "200",
-		"AccessToken": newToken.AccessToken,
-		// "RefreshToken": newToken.RefreshToken,
-	})
-	//////// 현재구조에서는 nsList 부분을 포함해야 함. 
-	//////// TODO : post로 넘기고 login success일 때 namespace 등 설정 popup이 아닌 page로 넘기는게 좋을 듯.
-	///////         
-
-	// echo store 사용
-	// if !ok {
-	// 	// //return c.JSON(http.StatusNotFound, map[string]interface{}{	//404
-	// 	// //return c.JSON(http.StatusOK, map[string]interface{}{			..200
-	// 	return c.JSON(http.StatusUnauthorized, map[string]interface{}{ //401
-	// 		"message": " 정보가 없으니 다시 등록 해라",
-	// 		"status":  "fail"	
-	// 	})
-	// }
-
-	// return c.JSON(http.StatusOK, map[string]string{
-	// 	return c.JSON(http.StatusOK, map[string]interface{}{
-	// 		"message": "success",
-	// 		"status":  "200",
-	// 		"token": t,
-	// 	})
-		
+	// return c.JSON(http.StatusOK, map[string]interface{}{
+	// 	"message": "success",
+	// 	"status":  "200",
+	// 	"AccessToken": newToken.AccessToken,
+	// 	// "RefreshToken": newToken.RefreshToken,
 	// })
+	/////////----------------------------         
 
 	// // result := map[string]string{}
 	// result := get.(map[string]string)
@@ -164,44 +158,161 @@ func LoginProc(c echo.Context) error {
 	// for k, v := range get.(map[string]string) {
 	// 	fmt.Println(k, v)
 	// 	result[k] = v
-
 	// }
 
 	// namespace 목록조회 --> 로그인 이후로 이동할 것.
-	//nsList, nsErr := service.GetNSList()
+	
+		//nsList, nsErr := service.GetNSList()
 	nsList, nsErr := service.GetNameSpaceList()
 	if nsErr != nil {
+		log.Println(" nsErr  ", nsErr)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
 		})
-	} else {
-		store.Set("namespaceList", nsList)
-		store.Save()
 	}
 
-	log.Println(" auth  ", nsList)
+	if len(nsList) == 0 {
+		// create default namespace
+		nsInfo := new(model.NSInfo)
+		nsInfo.ID = "NS-01"
+		nsInfo.Name = "NS-01"	// default namespace name
+		nsInfo.Description = "default name space name"
+		respBody, nsCreateErr := service.RegNameSpace(nsInfo)
+		log.Println(" respBody  ", respBody)
+		if nsCreateErr != nil {
+			log.Println(" nsCreateErr  ", nsCreateErr)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "invalid tumblebug connection",
+				"status":  "403",
+			})
+		}
 
-
-	// if (getUser != "" && getPass != "") && db.ValidUser(getUser, getPass) {
-	if getUser != "" && getPass != "" {
-		store.Set("username", getUser) //이렇게 하면 login이 1사람만 가능.
-		store.Save()
-		fmt.Println(" userName---  ", getUser)
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success",
-			"status":  "200",
-			"nsList":  nsList,
-		})
+		storedUser["defaultnamespage"] = nsInfo.ID		
+		
+		// 저장 성공하면 namespace 목록 조회
+		nsList2, nsErr2 := service.GetNameSpaceList()
+		if nsErr2 != nil {
+			log.Println(" nsErr2  ", nsErr2)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "invalid tumblebug connection",
+				"status":  "403",
+			})
+		}
+		log.Println("nsList2  ", nsList2)
+		nsList = nsList2
 	}
-
-	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-		"message": "invalid user",
-		"status":  "403",
+	log.Println("nsList  ", nsList)
+	store.Set("namespaceList", nsList)// 이게 유효한가?? 쓸모없을 듯
+	store.Save()
+	
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"nsList":  nsList,
 	})
+
+	// return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 	"message": "invalid user",
+	// 	"status":  "403",
+	// })
+
+
 }
 
-func createToken(username string) (string, error) {
+
+// ----------- 로그인이 성공하면 Namespace가 없으면 생성 ----------/
+// ----------- Name Space가 1개 있으면 Dashboard로 이동 ----------/
+// ----------- Name Space가 1개 이상 있으면 Dashboard로 이동 및 Namespace선택 Modal 띄우기 ----------/
+// ----------- MCIS가 등록되어있지 않으면 등록화면으로 ----------/
+func LoginProcess(c echo.Context) error {
+	store := echosession.FromContext(c)
+
+	paramUser := c.FormValue("username")	
+	paramPass := c.FormValue("password")
+	
+	// reqInfo := new(model.ReqInfo)
+	// if err := c.Bind(reqInfo); err != nil {
+	// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")		
+	// }
+
+	// paramUser := strings.TrimSpace(reqInfo.UserName)
+	// // paramEmail := strings.TrimSpace(reqInfo.Email)
+	// paramPass := strings.TrimSpace(reqInfo.Password)
+	fmt.Println("paramUser & getPass : ", paramUser, paramPass)
+	
+
+	// echoSession에서 가져오기
+	result, ok := store.Get(paramUser)
+
+	if !ok {
+		log.Println(" login proc err  ", ok)
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	storedUser := result.(map[string]string)
+	fmt.Println("Stored USER:", storedUser)
+	if paramUser != storedUser["username"] && paramUser != storedUser["password"] {
+		log.Println(" invalid id or pass  ")
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	
+	newToken, createTokenErr := createToken(paramUser)
+	if createTokenErr != nil {
+		log.Println(" login proc err  ", createTokenErr)
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")		
+	}
+
+	storedUser["accesstoken"] = newToken.AccessToken
+	storedUser["refreshtoken"] = newToken.RefreshToken
+
+
+	// namespace 조회.
+	nsList, nsErr := service.GetNameSpaceList()
+	if nsErr != nil {
+		log.Println(" nsErr  ", nsErr)
+		// return c.Render(http.StatusBadRequest, "/setting/connections/CloudConnection", map[string]interface{}{
+		
+		return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")		
+	}
+
+	if len(nsList) == 0 {
+		// create default namespace
+		nsInfo := new(model.NSInfo)
+		nsInfo.ID = "NS-01"
+		nsInfo.Name = "NS-01"	// default namespace name
+		nsInfo.Description = "default name space name"
+		respBody, nsCreateErr := service.RegNameSpace(nsInfo)
+		log.Println(" respBody  ", respBody)
+		if nsCreateErr != nil {
+			log.Println(" nsCreateErr  ", nsCreateErr)			
+			// return c.Render(http.StatusBadRequest, "/setting/connections/CloudConnection", map[string]interface{}{
+			return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
+		}
+
+		storedUser["defaultnamespage"] = nsInfo.ID		
+		
+		// 저장 성공하면 namespace 목록 조회
+		nsList2, nsErr2 := service.GetNameSpaceList()
+		if nsErr2 != nil {
+			log.Println(" nsErr2  ", nsErr2)		
+			return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
+		}
+		log.Println("nsList2  ", nsList2)
+		nsList = nsList2
+	}
+	log.Println("nsList  ", nsList)
+	store.Set("namespaceList", nsList)// 이게 유효한가?? 쓸모없을 듯
+	store.Save()
+
+	// mcis가 있으면 dashboard로
+
+	// mcis가 없으면 mcis 등록화면으로
+	
+	// return c.Render(http.StatusBadRequest, "/setting/connections/CloudConnection", map[string]interface{}{
+	return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
+}
+
+func createToken(username string) (*TokenDetails, error) {
 
 	// var err error
   
@@ -237,27 +348,31 @@ func createToken(username string) (string, error) {
 	atClaims := jwt.MapClaims{}
 	atClaims["authorized"] = true
 	atClaims["access_uuid"] = td.AccessUuid
-	atClaims["user_id"] = userid
+	//atClaims["user_id"] = userid
+	atClaims["username"] = username
 	atClaims["exp"] = td.AtExpires
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
   
 	td.AccessToken, err = at.SignedString([]byte( os.Getenv("LoginAccessSecret") ))
   
 	if err != nil {  
-	   return nil, err
+		log.Println("create accessToken  ", err)
+		return nil, err
   	}
   
 	//Creating Refresh Token
  	rtClaims := jwt.MapClaims{}
  	rtClaims["refresh_uuid"] = td.RefreshUuid
- 	rtClaims["user_id"] = userid
+ 	// rtClaims["user_id"] = userid
+	rtClaims["username"] = username
  	rtClaims["exp"] = td.RtExpires
  	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
   
 	td.RefreshToken, err = rt.SignedString([]byte(os.Getenv("LoginRefreshSecret")))
   	
 	if err != nil {
- 	   return nil, err
+		log.Println("create RefreshToken  ", err)
+		return nil, err
  	}
   
 	return td, nil
@@ -318,7 +433,7 @@ func LogoutProc(c echo.Context) error {
 	fmt.Println("============== Logout proc ===============")
 	store := echosession.FromContext(c)
 
-	reqInfo := new(ReqInfo)
+	reqInfo := new(model.ReqInfo)
 
 	getUser := strings.TrimSpace(reqInfo.UserName)
 

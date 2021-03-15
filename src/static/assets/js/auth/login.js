@@ -1,7 +1,5 @@
 
 $(document).ready(function(){
-    getConfig();// 세션과 상관없으므로 바로 호출.
-    
     //  기존에 로그인을 바로 시키기 위해 /regUser를 한번 호출 함.
     //  axios.post("/regUser",{})
     //     .then(result =>{
@@ -10,46 +8,52 @@ $(document).ready(function(){
     // var nsUrl = "http://localhost:1234/"
      $("#sign_btn").on("click",function(){         
          try{
-             var username = $("#email").val();
-             var password = $("#password").val();
-             if(!password || !username){
-                 $("#required").modal()
-                 return;
-             }
+            //  var email = $("#email").val();
+            var username = $("#username").val();
+            var password = $("#password").val();
+            if(!password || !username){
+                $("#required").modal()
+                return;
+            }
 
-             var req = {
-                 username : username,
-                 password : password,
-             };
-             console.log(req)
-             axios.post("/login/proc",{headers: { },username:username,password:password })
-                .then(result =>{
-                    console.log(result);
-                    if(result.status == 200){
+            var loginForm = document.loginForm;
+            loginForm.submit();
+
+
+            // var req = {
+            //     username : username,
+            //     password : password,
+            // };
+            // console.log(req)
+            // axios.post("/login/proc",{headers: { },username:username,password:password })
+            //     .then(result =>{
+            //         console.log(result);
+            //         if(result.status == 200){
                                          
-                        alert("Login Success");
-                        $("#popLogin").modal();
+            //             alert("Login Success");
+            //             $("#popLogin").modal();
                         
-                        var namespaceList = result.data.nsList;
-                        getUserNamespace(namespaceList)
+            //             var namespaceList = result.data.nsList;
+            //             getUserNamespace(namespaceList)
                         
-                        nsModal();
-                 }else{
-                     alert("ID or PASSWORKD MISMATCH!!Check yourself!")
-                     location.reload(true);
- 
-                 }
-             }).catch(function(error){
-                 console.log("login error : ",error);
-                 alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
-                 location.reload(true);
-             })
+            //             nsModal();
+            //             // getConfig();//config, provider... 설정 modal
+            //      }else{
+            //          alert("ID or PASSWORKD MISMATCH!!Check yourself!")
+            //          location.reload(true); 
+            //      }
+            //  }).catch(function(error){
+            //      console.log("login error : ",error);
+            //      alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
+            //      location.reload(true);
+            //  })
          }catch(e){
                  alert(e);
          }
  
      })
 
+     // namespace 등록영역 보이기/숨기기
      $("#btnToggleNamespace").on("click",function(){         
         try{
             //addNamespaceForm
@@ -58,12 +62,11 @@ $(document).ready(function(){
             alert(e);
         }
     })
-     
-    
  })
  
 
- // Toggle 기능
+ // Toggle 기능 : 원래는 namespace와 connection driver에서 사용한 것 같으나 현재는 namespace만 사용. 그럼 굳이 function으로 할 필요있나?
+ // 버튼의 display를 ADD / HIDE, 대상 area를 보이고 숨기고
 function showHideByButton(origin, target){
     var originObj = $("#"+origin);
     var targetObj = $("#"+target)
@@ -171,13 +174,14 @@ function getNameSpace(){
 }
 
 
-// 뭐하는 모달이냐?
+// namespace 선택modal
 function nsModal(){
-    
+    console.log("nsModal called");
     $(".popboxNS .cloudlist .list").each(function () {
         $(this).click(function () {
             var $list = $(this);
-            var $ok = $(".btn_ok");
+            // var $ok = $(".btn_ok");// --class 말고 id로
+            var $ok = $("#select_ns_ok_btn");
                 $ok.fadeIn();
             $list.addClass('selected');
             $list.siblings().removeClass("selected");
@@ -195,8 +199,8 @@ function nsModal(){
     });
 }
 
-
 function configModal(){
+    console.log("configModal called");
     $(".popboxCO .cloudlist .list").each(function () {
         $(this).click(function () {
             var $list = $(this);
@@ -283,15 +287,17 @@ function selectNS(ns){
     console.log("select namespace : ",ns)
     $("#sel_ns").val(ns);
 }
+
+
 function clickOK(){
     var select_ns =   $("#sel_ns").val();
     console.log("slect ns is : ",select_ns);
-    setNS(select_ns);
-   
+    setNS(select_ns);   
 }
+
 function setNS(nsid){
     if(nsid){
-        reqUrl = "/SET/NS/"+nsid;
+        reqUrl = "/NameSpace/SET/NS/"+nsid;
         console.log(reqUrl);
         axios.get(reqUrl,{
             headers:{
@@ -301,7 +307,18 @@ function setNS(nsid){
             var data = result.data
             console.log(data);
             location.href = "/Dashboard/NS"
-            })
+        }).catch(function (error) {
+            if (error.response) {
+                console.log(error.response)              
+            }
+            else if (error.request) {
+                console.log(error.request)
+            }
+            else {
+                console.log(error.message)
+            }
+        })
+        
     }else{
         alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
         

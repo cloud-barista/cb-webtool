@@ -19,30 +19,31 @@ type RespPublicIPInfo struct {
 	} `json:"vm"`
 }
 
-// func GlobalDashBoard(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	nsCnt := service.GetNSCnt()
-// 	fmt.Println("=========== DashBoard start ==============")
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-// 		nameSpace := service.GetNameSpaceToString(c)
-// 		if nameSpace != "" {
-// 			fmt.Println("Namespace : ", nameSpace)
-// 			return c.Render(http.StatusOK, "Dashboard_Global.html", map[string]interface{}{
-// 				"LoginInfo": loginInfo,
-// 				"NameSpace": nameSpace,
-// 				"comURL":    comURL,
-// 				"apiInfo":   apiInfo,
-// 				"nsCnt":     nsCnt,
-// 			})
-// 		} else {
-// 			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
-// 		}
+func GlobalDashBoard(c echo.Context) error {
+	// comURL := service.GetCommonURL()
+	// apiInfo := service.AuthenticationHandler()
+	// nsCnt := service.GetNSCnt()
+	// fmt.Println("=========== DashBoard start ==============")
+	// if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	// 	nameSpace := service.GetNameSpaceToString(c)
+	// 	if nameSpace != "" {
+	// 		fmt.Println("Namespace : ", nameSpace)
+	// 		return c.Render(http.StatusOK, "Dashboard_Global.html", map[string]interface{}{
+	// 			"LoginInfo": loginInfo,
+	// 			"NameSpace": nameSpace,
+	// 			"comURL":    comURL,
+	// 			"apiInfo":   apiInfo,
+	// 			"nsCnt":     nsCnt,
+	// 		})
+	// 	} else {
+	// 		return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+	// 	}
 
-// 	}
+	// }
 
-// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-// }
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
+
 // func DashBoard(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	apiInfo := service.AuthenticationHandler()
@@ -66,30 +67,30 @@ type RespPublicIPInfo struct {
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 // }
 
-// func NSDashBoard(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	nsCnt := service.GetNSCnt()
-// 	fmt.Println("=========== DashBoard start ==============")
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-// 		nameSpace := service.GetNameSpaceToString(c)
-// 		if nameSpace != "" {
-// 			fmt.Println("Namespace : ", nameSpace)
-// 			return c.Render(http.StatusOK, "Dashboard_Ns.html", map[string]interface{}{
-// 				"LoginInfo": loginInfo,
-// 				"NameSpace": nameSpace,
-// 				"comURL":    comURL,
-// 				"apiInfo":   apiInfo,
-// 				"nsCnt":     nsCnt,
-// 			})
-// 		} else {
-// 			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
-// 		}
+func NSDashBoard(c echo.Context) error {
+	// comURL := service.GetCommonURL()
+	// apiInfo := service.AuthenticationHandler()
+	// nsCnt := service.GetNSCnt()
+	// fmt.Println("=========== DashBoard start ==============")
+	// if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	// 	nameSpace := service.GetNameSpaceToString(c)
+	// 	if nameSpace != "" {
+	// 		fmt.Println("Namespace : ", nameSpace)
+	// 		return c.Render(http.StatusOK, "Dashboard_Ns.html", map[string]interface{}{
+	// 			"LoginInfo": loginInfo,
+	// 			"NameSpace": nameSpace,
+	// 			"comURL":    comURL,
+	// 			"apiInfo":   apiInfo,
+	// 			"nsCnt":     nsCnt,
+	// 		})
+	// 	} else {
+	// 		return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+	// 	}
 
-// 	}
+	// }
 
-// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-// }
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
 
 func IndexController(c echo.Context) error {
 

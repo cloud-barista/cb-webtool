@@ -9,7 +9,27 @@ import (
 	"github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
 	//"github.com/davecgh/go-spew/spew"
+	echotemplate "github.com/foolin/echo-template"
+	// echosession "github.com/go-session/echo-session"
 )
+
+// Cloud 연결정보 표시(driver)
+func ConnectionList(c echo.Context) error {
+	fmt.Println("ConnectionList ************ : ")
+	return echotemplate.Render(c, http.StatusOK, "CloudConnection", nil)
+	// return c.Render(http.StatusOK, "CloudConnection.html", map[string]interface{}{
+	// 		// return c.Render(http.StatusOK, "ConnectionList.html", map[string]interface{}{
+	// 		"LoginInfo": loginInfo,
+	// 		"cList":     cList,
+	// 		"comURL":    comURL,
+	// 		"apiInfo":   apiInfo,
+	// 	})
+	// }
+
+	// fmt.Println("LoginInfo : ", loginInfo)
+
+	// return c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
 
 // Driver Contorller
 func DriverRegController(c echo.Context) error {

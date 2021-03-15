@@ -98,19 +98,46 @@ func main() {
 			"templates/Modal",
 			"templates/Header",
 			"templates/Menu_left",
-			"templates/Footer"}, //
+			"templates/Footer",
+		}, //
 		DisableCache: true,
 	})
 	// -> Master에 껍데기 및 header, footer 놓고, Partials에 해당 페이지에 들어가는 파일을 넣으면 될까?
 
 	// dashboard 매핑할 middleware 추가
-	// dashboardTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
-	// 	Root:         "src/views/dashboards",
-	// 	Extension:    ".html",
-	// 	Master:       "src/layouts/master",
-	// 	Partials:     []string{},
-	// 	DisableCache: true,
-	// })
+	dashboardTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:         "src/views",
+		Extension:    ".html",
+		Master:       "operation/dashboards/Dashboard",
+		Partials:     []string{
+			"templates/Top",
+			"templates/Top_box",
+			"templates/LNB_popup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/Menu_left",
+			"templates/Footer",		
+		},
+		DisableCache: true,
+	})
+
+	settingTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:         "src/views",
+		Extension:    ".html",
+		Master:       "setting/connections",
+		Partials:     []string{
+			"templates/Top",
+			"templates/Top_box",
+			"templates/LNB_popup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/Menu_left",
+			"templates/Footer",		
+		},
+		DisableCache: true,
+	})
+
+
 
 	// // mcis 매핑할 middleware 추가
 	// manageMCISTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
@@ -135,6 +162,7 @@ func main() {
 
 	loginGroup.GET("", controller.LoginForm)
 	loginGroup.POST("/proc", controller.LoginProc)
+	loginGroup.POST("/process", controller.LoginProcess)
 
 	//login 관련
 	// e.GET("/login", controller.LoginForm)
@@ -148,6 +176,9 @@ func main() {
 	// // Dashboard
 	// e.GET("/Dashboard/Global", controller.GlobalDashBoard)
 	// e.GET("/Dashboard/NS", controller.NSDashBoard)
+	dashboardGroup := e.Group("/Dashboard", dashboardTemplate)
+	dashboardGroup.GET("/NS", controller.NSDashBoard)
+	dashboardGroup.GET("/Global", controller.GlobalDashBoard)
 
 	// // Monitoring Control
 	// e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)
@@ -177,13 +208,14 @@ func main() {
 	// namespaceGroup.GET("/GET/ns", controller.GetNameSpace)         // 선택된 namespace 정보조회. Tumblebuck 호출
 	// namespaceGroup.GET("/GET/nsList", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 
-	// namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
+	namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
 	// namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
 	namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc)    // namespace 등록 처리
 
-	// // 웹툴에서 처리할 Connection
-	
 
+	settingGroup := e.Group("/setting", settingTemplate)
+	settingGroup.GET("/connections/CloudConnection", controller.ConnectionList)
+	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
 	// e.GET("/Cloud/Connection/reg", controller.ConnectionRegForm)
 	// e.POST("/Cloud/Connection/reg/proc", controller.NsRegController)

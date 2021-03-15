@@ -45,7 +45,7 @@ func CommonHttpGet(url string) (io.ReadCloser, error) {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
+	// defer resp.Body.Close()
 
 	return resp.Body, err
 }
