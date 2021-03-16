@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/cloud-barista/cb-webtool/src/model"
+	service "github.com/cloud-barista/cb-webtool/src/service"
 
 	"github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
@@ -18,11 +18,13 @@ import (
 // Cloud 연결정보 표시(driver)
 func ConnectionList(c echo.Context) error {
 	fmt.Println("ConnectionList ************ : ")
-	loginInfo := service.CallLoginInfo(c);
+
+	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.Username == "" {
+		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
-	
+
 	nsList, nsErr := service.GetNameSpaceList()
 	if nsErr != nil {
 		log.Println(" nsErr  ", nsErr)
@@ -35,8 +37,8 @@ func ConnectionList(c echo.Context) error {
 	// namespace 가 없으면 1개를 기본으로 생성한다.
 	if len(nsList) == 0 {
 		// create default namespace
-		nsInfo := new(model.NSInfo)		
-		nsInfo.Name = "NS-01"	// default namespace name
+		nsInfo := new(model.NSInfo)
+		nsInfo.Name = "NS-01" // default namespace name
 		nsInfo.Description = "default name space name"
 		respBody, nsCreateErr := service.RegNameSpace(nsInfo)
 		log.Println(" respBody  ", respBody)
@@ -50,21 +52,21 @@ func ConnectionList(c echo.Context) error {
 
 		// 처음생성했으므로 connection부터
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
-	}else if len(nsList) == 1 {
+	} else if len(nsList) == 1 {
 		defaultNameSpace := nsList[0]
 		// for _, item := range nsList {
-		// 	fmt.Println("ID : ", item.ID)	
+		// 	fmt.Println("ID : ", item.ID)
 		// }
 		loginInfo.DefaultNameSpaceID = defaultNameSpace.ID
 		loginInfo.DefaultNameSpaceName = defaultNameSpace.Name
 	}
-	
-	return echotemplate.Render(c, http.StatusOK, 
-		"setting/connections/CloudConnection", 
+
+	return echotemplate.Render(c, http.StatusOK,
+		"setting/connections/CloudConnection",
 		map[string]interface{}{
-			"LoginInfo": loginInfo,
+			"LoginInfo":     loginInfo,
 			"NameSpaceList": nsList,
-	})
+		})
 	// return echotemplate.Render(c, http.StatusOK, "CloudConnection", nil)// -> file not found 남. 경로 제대로 적을 것.
 }
 

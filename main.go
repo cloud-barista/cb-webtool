@@ -73,6 +73,7 @@ func main() {
 	}
 	e.Renderer = renderer
 
+	// TODO : navigation Template을 만들어서 공통으로 Set하면 page redirect 할 때 편하지 않을 까??
 	// login 매핑할 middleware 추가
 	loginTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
@@ -81,7 +82,7 @@ func main() {
 		Partials: []string{
 			"auth/LoginTop",
 			"auth/SelectNamespaceModal",
-			"auth/LoginFooter",			
+			"auth/LoginFooter",
 		},
 		DisableCache: true,
 	})
@@ -106,39 +107,37 @@ func main() {
 
 	// dashboard 매핑할 middleware 추가
 	dashboardTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
-		Root:         "src/views",
-		Extension:    ".html",
-		Master:       "operation/dashboards/Dashboard",
-		Partials:     []string{
+		Root:      "src/views",
+		Extension: ".html",
+		Master:    "operation/dashboards/Dashboard",
+		Partials: []string{
 			"templates/Top",
 			"templates/Top_box",
 			"templates/LNB_popup",
 			"templates/Modal",
 			"templates/Header",
 			"templates/Menu_left",
-			"templates/Footer",		
-		},
-		DisableCache: true,
-	})
-
-	settingTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
-		Root:         "src/views",
-		Extension:    ".html",
-		Master:       "setting/connections/CloudConnection",
-		Partials:     []string{
-			"templates/Top",
-			"templates/TopBox",
-			"templates/LNBPopup",		
-			"templates/MenuLeft",			
-			"templates/Header",
-			"templates/Modal",			
-			"setting/connections/CloudConnectionModal",
 			"templates/Footer",
 		},
 		DisableCache: true,
 	})
 
-
+	settingTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		Master:    "setting/connections/CloudConnection",
+		Partials: []string{
+			"templates/Top",
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/MenuLeft",
+			"templates/Header",
+			"templates/Modal",
+			"setting/connections/CloudConnectionModal",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
 
 	// // mcis 매핑할 middleware 추가
 	// manageMCISTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
@@ -163,7 +162,7 @@ func main() {
 
 	loginGroup.GET("", controller.LoginForm)
 	loginGroup.POST("/proc", controller.LoginProc)
-	loginGroup.POST("/process", controller.LoginProcess)
+	// loginGroup.POST("/process", controller.LoginProcess)
 	//login 관련
 	// e.GET("/login", controller.LoginForm)
 	// // e.POST("/login/proc", controller.LoginController)
@@ -204,14 +203,13 @@ func main() {
 	// // e.POST("/NS/reg/proc", controller.NsRegController)
 	// // e.GET("/GET/ns", controller.GetNameSpace)
 	namespaceGroup := e.Group("/NameSpace", namespaceTemplate)
-	namespaceGroup.GET("/NS/list", controller.NsListForm)          // namespace 보여주는 form 표시. DashboardController로 이동?
+	namespaceGroup.GET("/NS/list", controller.NsListForm) // namespace 보여주는 form 표시. DashboardController로 이동?
 	// namespaceGroup.GET("/GET/ns", controller.GetNameSpace)         // 선택된 namespace 정보조회. Tumblebuck 호출
 	// namespaceGroup.GET("/GET/nsList", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 
 	namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
 	// namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
-	namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc)    // namespace 등록 처리
-
+	namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
 
 	settingGroup := e.Group("/setting", settingTemplate)
 	settingGroup.GET("/connections/CloudConnection", controller.ConnectionList)

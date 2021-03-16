@@ -3,6 +3,7 @@ package service
 import (
 	// "encoding/base64"
 	"fmt"
+	// "log"
 	// "io"
 	// "net/http"
 	"os"
@@ -19,8 +20,6 @@ var SpiderURL = os.Getenv("SPIDER_URL")
 var TumbleBugURL = os.Getenv("TUMBLE_URL")
 var DragonFlyURL = os.Getenv("DRAGONFLY_URL")
 var LadyBugURL = os.Getenv("LADYBUG_URL")
-
-
 
 type CredentialInfo struct {
 	Username string
@@ -43,12 +42,9 @@ func GetCommonURL() CommonURL {
 	return common_url
 }
 
-
-
 // POST 호출하는 공통함수 --> 생성할 것.
 // func CommonHttpPost()(io.ReadCloser, err) {
 // }
-
 
 func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
 	store := echosession.FromContext(c)
@@ -63,11 +59,6 @@ func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
 	}
 	return credentialInfo
 }
-
-
-
-
-
 
 // func SetLoginInfo(c echo.Context) LoginInfo {
 // 	store := echosession.FromContext(c)
@@ -127,21 +118,44 @@ func GetNameSpaceToString(c echo.Context) string {
 }
 
 // 해당 유저가 유효한지만 체크. : store에 저장되어 있으면 OK.
-// TODO : token이 유효하면 시간연장, 유효하지 않으면 refresh token이 유효하면 시간연장, 둘다 expired되었으면 login으로 
+// TODO : token이 유효하면 시간연장, 유효하지 않으면 refresh token이 유효하면 시간연장, 둘다 expired되었으면 login으로
 func CallLoginInfo(c echo.Context) model.LoginInfo {
+	// cookie에 go_session_id 가 있는데 뭐지??
+
+	fmt.Println("step1")
+	// tk, cookeierr := c.Request().Cookie("access-token")
+	cookieUsername, cookeierr := c.Request().Cookie("Username")
+	if cookeierr != nil {
+		fmt.Println(cookieUsername)
+		// return nil
+	}
+	cookieUsernameStr := cookieUsername.Value
+	fmt.Println(cookieUsernameStr)
+
+	// TODO: token 유효성 검증 로직 필요
+	// fmt.Println("step2")
+	// cookieAccessToken, cookeierr2 := c.Request().Cookie("AccessToken")
+	// if cookeierr2 != nil {
+	// 	fmt.Println("cookieAccessToken ", cookeierr2) // -> http: named cookie not present
+	// 	// return nil
+	// }
+	// cookieAccessTokenStr := cookieAccessToken.Value
+	// fmt.Println(cookieAccessTokenStr)
+
+	fmt.Println("step3")
 	store := echosession.FromContext(c)
 
 	// param으로 username, token을 받아 store에서 찾는다.
 	// username := c.request.Header.Get("username")
-	username := c.Request().Header.Get("username")
-	// accessToken := c.request.Header.Get("accessToken")
 
-	result, ok := store.Get(username)
+	fmt.Println("========= CallLoginInfo cookieUsername =========" + cookieUsernameStr)
+	result, ok := store.Get(cookieUsernameStr)
 	if !ok {
 		fmt.Println("========= CallLoginInfo Nothing =========")
-		return model.LoginInfo{}
+		// return model.LoginInfo{}
 	}
-	fmt.Println("GETUSER : ", result.(string))
+
+	// fmt.Println("GETUSER : ", result.(string))
 	storedUser := result.(map[string]string)
 	// getObj, ok := store.Get(storedUser.(string))
 	// if !ok {
@@ -151,37 +165,29 @@ func CallLoginInfo(c echo.Context) model.LoginInfo {
 	// result := getObj.(map[string]string)
 
 	loginInfo := model.LoginInfo{
-		Username: storedUser["username"],
+		Username:    storedUser["username"],
 		AccessToken: storedUser["accessToken"],
 	}
-
-	// getNs, ok := store.Get("namespace")
-	// if !ok {
-	// 	return loginInfo
-	// }
-	// loginInfo.NameSpace = getNs.(string)
-
 	return loginInfo
-
 }
 
-func LoginCheck(c echo.Context) bool {
-	store := echosession.FromContext(c)
+// func LoginCheck(c echo.Context) bool {
+// 	store := echosession.FromContext(c)
 
-	inputName := c.FormValue("username")
-	inputPass := c.FormValue("password")
+// 	inputName := c.FormValue("username")
+// 	inputPass := c.FormValue("password")
 
-	getInfo, ok := store.Get(inputName)
-	if !ok {
-		return false
-	}
-	result := getInfo.(map[string]string)
-	if result["password"] == inputPass && result["username"] == inputName {
-		return true
-	}
+// 	getInfo, ok := store.Get(inputName)
+// 	if !ok {
+// 		return false
+// 	}
+// 	result := getInfo.(map[string]string)
+// 	if result["password"] == inputPass && result["username"] == inputName {
+// 		return true
+// 	}
 
-	return false
-}
+// 	return false
+// }
 
 func MakeNameSpace(name string) string {
 	now := time.Now()
@@ -191,4 +197,3 @@ func MakeNameSpace(name string) string {
 	fmt.Println("makeNameSpace : ", result)
 	return result
 }
-

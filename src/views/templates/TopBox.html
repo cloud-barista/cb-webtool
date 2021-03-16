@@ -1,18 +1,24 @@
 {{define "TopBox"}}
-
+<!-- 사용자정보, 현재 name space 표시 -->
 <div class="topbox">
     <div class="info">
         <div class="thumb"><span><img src="/assets/img/contents/img_thumb.jpg" alt=""></span></div>
-        <div class="txt_1">Leonardo DiCaprio</div>
+        <div class="txt_1">Leonardo DiCaprio : {{.LoginInfo.Username}}</div>
         <div class="txt_2">
             
-            <span id="defaultNamespace"></span>
+            <span id="defaultNamespace">{{.LoginInfo.DefaultNameSpaceName}}</span>
             <div class="infobox">
                 <div class="box">
                     <ul>
                         <li>
                             <a href="javascript:void(0);">Change NameSpace</a>
-                            <ul id="menuNameSpaceList">                                
+                            <ul id="menuNameSpaceList">      
+                                {{with .NameSpaceList}}
+                                    {{range .}}
+                                <li><a href="javascript:void(0);" onclick="select_namespace('{{.Name}}')" data-toggle="modal" data-target="#NameSpace">{{.Name}}</a></li>    
+                                    {{end}}
+                                {{end}}                          
+                             
                             </ul>	
                         </li>
                         <li>
@@ -25,8 +31,7 @@
                         <input type="hidden" id="select_namespace" />
                     </ul>
                 </div>
-            </div>
-            
+            </div>            
         </div>
     </div>
 </div>

@@ -574,10 +574,12 @@
 <script>
 	$(document).ready(function(){
 		order_type = "ConfigName"
-		getCloudConnectionList(order_type);
-		getCloudOS("{{ .apiInfo}}",'RegionModalProviderName');
-		getCloudOS("{{ .apiInfo}}",'CredentialModalProviderName');
-		getCloudOS("{{ .apiInfo}}",'DriverModalProviderName');
+
+		//getNameSspaceList();// 이미 가져왔음
+		// getCloudConnectionList(order_type);
+		// getCloudOS("{{ .apiInfo}}",'RegionModalProviderName');
+		// getCloudOS("{{ .apiInfo}}",'CredentialModalProviderName');
+		// getCloudOS("{{ .apiInfo}}",'DriverModalProviderName');
 	})
 
 

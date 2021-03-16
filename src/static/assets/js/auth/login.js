@@ -16,39 +16,37 @@ $(document).ready(function(){
                 return;
             }
 
-            var loginForm = document.loginForm;
-            loginForm.submit();
-
-            // var req = {
-            //     username : username,
-            //     password : password,
-            // };
-            // console.log(req)
-            // axios.post("/login/proc",{headers: { },username:username,password:password })
-            //     .then(result =>{
-            //         console.log(result);
-            //         if(result.status == 200){
-            //             alert(1);
-            //             // 로그인 성공이면 바로 이동.
-            //             //location.href = "/setting/connections/CloudConnection"
-
-            //             // alert("Login Success");
-            //             // $("#popLogin").modal();
+            var req = {
+                username : username,
+                password : password,
+            };
+            console.log(req)
+            axios.post("/login/proc",{headers: { },username:username,password:password })
+                .then(result =>{
+                    console.log(result);
+                    if(result.status == 200){
+                        console.log("get result Data : ",result.data.LoginInfo);
+                        tokenSuccess(result.data.LoginInfo)
                         
-            //             // var namespaceList = result.data.nsList;
-            //             // getUserNamespace(namespaceList)
+                        location.href = "/setting/connections/CloudConnection"
+
+                        // alert("Login Success");
+                        // $("#popLogin").modal();
                         
-            //             // nsModal();
-            //             // // getConfig();//config, provider... 설정 modal
-            //      }else{
-            //          alert("ID or PASSWORKD MISMATCH!!Check yourself!")
-            //          location.reload(true); 
-            //      }
-            //  }).catch(function(error){
-            //      console.log("login error : ",error);
-            //      alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
-            //      location.reload(true);
-            //  })
+                        // var namespaceList = result.data.nsList;
+                        // getUserNamespace(namespaceList)
+                        
+                        // nsModal();
+                        // // getConfig();//config, provider... 설정 modal
+                 }else{
+                     alert("ID or PASSWORKD MISMATCH!!Check yourself!")
+                     location.reload(true); 
+                 }
+             }).catch(function(error){
+                 console.log("login error : ",error);
+                 alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
+                 location.reload(true);
+             })
          }catch(e){
                  alert(e);
          }
@@ -66,6 +64,18 @@ $(document).ready(function(){
     })
  })
  
+ // 로그인 성공 시 Token저장
+ function tokenSuccess(loginInfo) {    
+    // console.log("username1 = " + loginInfo['Username'])
+    // console.log("username2 = " + loginInfo.Username)
+    // console.log("AccessToken = " + loginInfo['AccessToken'])
+    // localStorage.Username = loginInfo['Username'];
+    // localStorage.AccessToken = loginInfo['AccessToken'];    
+    // localStorage.LLL = "ABCD";
+    
+    document.cookie = "Username="+loginInfo['Username'] +";AccessToken="+ loginInfo['AccessToken'];
+    
+}
 
  // Toggle 기능 : 원래는 namespace와 connection driver에서 사용한 것 같으나 현재는 namespace만 사용. 그럼 굳이 function으로 할 필요있나?
  // 버튼의 display를 ADD / HIDE, 대상 area를 보이고 숨기고

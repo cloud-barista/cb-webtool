@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	// "net/http"
+	"errors"
+	"log"
 	"os"
 	// "bytes"
 	// "reflect"
@@ -21,6 +23,37 @@ var NameSpaceUrl = os.Getenv("TUMBLE_URL")
 // 	Name        string `json:"name"`
 // 	Description string `json:"description"`
 // }
+
+// 저장된 namespace가 없을 때 최초 1개 생성하고 해당 namespace 정보를 return  : 검증 필요(TODO : 이미 namespace가 있어서 확인 못함)
+func CreateDefaultNamespace() (*model.NSInfo, error) {
+	// nsInfo := new(model.NSInfo)
+	nsInfo := model.NSInfo{}
+
+	// 사용자의 namespace 목록조회
+	nsList, nsErr := GetNameSpaceList()
+	if nsErr != nil {
+		log.Println(" nsErr  ", nsErr)
+		return &nsInfo, nsErr
+	}
+
+	if len(nsList) > 0 {
+		//return &nsInfo, errors.New(101, "Namespace already exists. size="+len(nsList))
+		return &nsInfo, errors.New("aaa")
+	}
+
+	// create default namespace
+	nsInfo.Name = "NS-01" // default namespace name
+	//nsInfo.ID = "NS-01"
+	nsInfo.Description = "default name space name"
+	respBody, nsCreateErr := RegNameSpace(&nsInfo)
+	log.Println(" respBody  ", respBody) // respBody에 namespace Id가 있으면 할당해서 사용할 것
+	if nsCreateErr != nil {
+		log.Println(" nsCreateErr  ", nsCreateErr)
+		return &nsInfo, nsCreateErr
+	}
+
+	return &nsInfo, nil
+}
 
 // func GetNS(nsID string) model.NSInfo {
 // 	url := NameSpaceUrl + "ns" + nsID
@@ -96,8 +129,6 @@ var NameSpaceUrl = os.Getenv("TUMBLE_URL")
 // 	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
 // }
 
-
-
 // 사용자의 namespace 목록 조회
 func GetNameSpaceList() ([]model.NSInfo, error) {
 	fmt.Println("GetNameSpaceList start")
@@ -108,7 +139,7 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 
 	fmt.Println(body)
 	if err != nil {
-	// 	// Tumblebug 접속 확인하라고
+		// 	// Tumblebug 접속 확인하라고
 		fmt.Println(err)
 		return nil, err
 	}
@@ -122,12 +153,11 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 	return nsInfoList["ns"], nil
 }
 
-
 // 성공시 NsInfoList 반환
-func RegNameSpace(nsInfo *model.NSInfo) (io.ReadCloser, error){
+func RegNameSpace(nsInfo *model.NSInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := NameSpaceUrl + "/ns"
-	
+
 	fmt.Println("nsInfo : ", nsInfo)
 
 	//body, err := util.CommonHttpPost(url, nsInfo)

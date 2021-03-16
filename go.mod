@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/cespare/reflex v0.3.0 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/foolin/echo-template v0.0.0-20190415034849-543a88245eec
 	github.com/go-session/echo-session v3.0.0+incompatible
 	github.com/go-session/session v3.1.2+incompatible // indirect
