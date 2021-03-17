@@ -27,20 +27,20 @@ type CloudConnectionInfo struct {
 	RegionName     string `json:"RegionName"`
 	Description    string `json:"description"`
 }
-type KeyValueInfo struct {
-	Key   string `json:"Key"`
-	Value string `json:"Value"`
-}
-type RegionInfo struct {
-	RegionName       string `json:"RegionName"`
-	ProviderName     string `json:"ProviderName"`
-	KeyValueInfoList []KeyValueInfo
-}
+// type KeyValueInfo struct {
+// 	Key   string `json:"Key"`
+// 	Value string `json:"Value"`
+// }
+// type RegionInfo struct {
+// 	RegionName       string `json:"RegionName"`
+// 	ProviderName     string `json:"ProviderName"`
+// 	KeyValueInfoList []KeyValueInfo
+// }
 type RESP struct {
 	Region []struct {
 		RegionName       string         `json:"RegionName"`
 		ProviderName     string         `json:"ProviderName"`
-		KeyValueInfoList []KeyValueInfo `json:"KeyValueInfoList"`
+		KeyValueInfoList []model.KeyValueInfoList `json:"KeyValueInfoList"`
 	} `json:"region"`
 }
 
@@ -54,7 +54,7 @@ type ImageRESP struct {
 		description    string         `json:"description"`
 		guestOS        string         `json:"guestOS"`
 		status         string         `json:"status"`
-		KeyValueList   []KeyValueInfo `json:"KeyValueList"`
+		KeyValueInfoList   []model.KeyValueInfoList `json:"KeyValueList"`
 	} `json:"image"`
 }
 type Image struct {
@@ -66,7 +66,7 @@ type Image struct {
 	description    string         `json:"description"`
 	guestOS        string         `json:"guestOS"`
 	status         string         `json:"status"`
-	KeyValueList   []KeyValueInfo `json:"KeyValueList"`
+	KeyValueInfoList   []model.KeyValueInfoList `json:"KeyValueList"`
 }
 type IPStackInfo struct {
 	IP          string  `json:"ip"`
@@ -181,7 +181,7 @@ func GetRegionData(regionName string) model.RegionInfo {
 	regionInfo := model.RegionInfo{}
 	json.NewDecoder(body).Decode(&regionInfo)
 	fmt.Println(regionInfo)
-	fmt.Println(regionInfo.KeyValueInfo)
+	fmt.Println(regionInfo.KeyValueInfoList)
 	return regionInfo
 }
 

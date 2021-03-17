@@ -493,3 +493,48 @@ function ModalDetail2(){
         });
     });
 }
+
+// connection 화면에서 팝업으로 region등록.
+function saveNewRegion(){
+    // valid check
+    var regionName = $("#RegionMoalRegionName").val();
+    var providerName = $("#RegionModalProviderName").val();
+    var regionID = $("#RegionModalRegionID").val();
+    var zoneID = $("#RegionModalZoneID").val();	
+	
+    if(!regionName || !providerName || !regionID){
+        $("#required").modal()
+        return;
+    }
+    //
+    console.log("saveNewRegion popup");
+    var regionInfo = {            
+        RegionName:regionName,
+        ProviderName: providerName,
+        RegionKey: "Region",
+        RegionValue: regionID,
+        ZoneKey: "Zone",
+        ZoneValue: zoneID        
+    }
+    console.log(req)
+    axios.post(url,req,{
+
+
+    axios.post(url,regionInfo,{
+        
+    }).then(result =>{
+        console.log(result);
+        if(result.status == 200 || result.status == 201){
+            alert("Success Save Cloud Region");
+            // 성공하면 내용 초기화
+            $("#RegionMoalRegionName").val() = "";
+            $("#RegionModalProviderName option:eq(0)").attr("selecte", "selected");
+            $("#RegionModalRegionID").val() = "";
+            $("#RegionModalZoneID").val() = "";	
+            // TODO : region 목록 조회하여 Region table 갱신    
+        }else{
+            alert("Fail Create Cloud Region")
+        }
+    });
+    
+}

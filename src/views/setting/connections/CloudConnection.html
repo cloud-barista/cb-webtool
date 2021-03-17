@@ -433,8 +433,8 @@
 															<td class="btn_mtd ovm" data-th="Name">{{$item.RegionName}}<span class="ov"></span></td>
 																<input type="hidden" id="region_info_{{$index}}" value="{{$item.RegionName}}"/>
 																
-															{{ $sublength := len .KeyValueInfo }} 
-															{{ range $subIndex, $keyValue := .KeyValueInfo }}
+															{{ $sublength := len .KeyValueInfoList }} 
+															{{ range $subIndex, $keyValue := .KeyValueInfoList }}
 																{{ if eq $subIndex 0 }}
 															<td class="overlay hidden" data-th="region ID">{{ $keyValue.Value }}</td>
 																{{ end }}
@@ -584,6 +584,7 @@
 						    curModal = this;
 						    $(".modal").each(function() {
 						      if (this !== curModal) {
+								console.log(".modal on show.bs.modal" + this + " : " + curModal);
 						        $(this).modal("hide");
 						      }
 						    });

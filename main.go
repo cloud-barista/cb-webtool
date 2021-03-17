@@ -236,6 +236,7 @@ func main() {
 	// e.GET("/Region/list", controller.RegionListForm)
 	// e.GET("/Region/reg", controller.RegionRegForm)
 	// e.POST("/Region/reg/proc", controller.NsRegController)
+	settingGroup.POST("/connections/region/reg/proc", controller.RegionRegProc)
 
 	// // 웹툴에서 처리할 Credential
 	// e.GET("/Credential/list", controller.CredertialListForm)

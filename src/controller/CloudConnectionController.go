@@ -201,8 +201,30 @@ func DriverRegController(c echo.Context) error {
 	username := c.FormValue("username")
 	description := c.FormValue("description")
 
-	fmt.Println("NSRegController : ", username, description)
+	fmt.Println("DriverRegController : ", username, description)
 	return nil
+}
+
+
+func RegionRegProc(c echo.Context) error {
+	// RegionMoalRegionName
+	// RegionModalProviderName
+	// RegionModalRegionID
+	// RegionModalZoneID
+
+	regionInfo := new(model.RegionInfo)
+	regionInfo.RegionName = c.Param("RegionName")
+	regionInfo.ProviderName = c.Param("ProviderName")
+	// nsInfo.RegionName = c.Param("RegionName")
+	// nsInfo.RegionName = c.Param("RegionName")
+	// if err := c.Bind(nsInfo); err != nil {
+	// 	return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	// }
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+	})
+
 }
 
 // func DriverRegForm(c echo.Context) error {
@@ -240,7 +262,7 @@ func DriverRegController(c echo.Context) error {
 // }
 
 //Credential Controller
-func CredertialRegForm(c echo.Context) error {
+func CredentialRegForm(c echo.Context) error {
 	comURL := service.GetCommonURL()
 	apiInfo := util.AuthenticationHandler()
 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
