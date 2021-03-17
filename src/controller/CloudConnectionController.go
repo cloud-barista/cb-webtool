@@ -12,8 +12,133 @@ import (
 	"github.com/labstack/echo"
 	//"github.com/davecgh/go-spew/spew"
 	echotemplate "github.com/foolin/echo-template"
-	// echosession "github.com/go-session/echo-session"
+	echosession "github.com/go-session/echo-session"
 )
+
+// CloudOS(Provider) 목록
+func GetCloudOSList(c echo.Context) error {
+	cloudOsList := service.GetCloudOSListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"cloudos": cloudOsList,
+	})
+}
+
+// 현재 설정된 connection 목록
+func GetConnectionConfigList(c echo.Context) error {
+
+	connectionConfigDataList := service.GetConnectionConfigListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":          "success",
+		"status":           "200",
+		"connectionconfig": connectionConfigDataList,
+	})
+}
+
+// 현재 설정된 region 목록
+func GetResionList(c echo.Context) error {
+
+	regionList := service.GetRegionListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"region":  regionList,
+	})
+}
+
+// region 상세정보
+func GetResion(c echo.Context) error {
+	paramRegion := c.Param("region")
+	resionInfo := service.GetRegionData(paramRegion)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"Region":  resionInfo,
+	})
+}
+
+// 현재 설정된 region 목록
+func GetCredentialList(c echo.Context) error {
+
+	credentialList := service.GetCredentialListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"region":  credentialList,
+	})
+}
+
+// 현재 설정된 driver 목록
+func GetDriverList(c echo.Context) error {
+
+	driverList := service.GetDriverListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"region":  driverList,
+	})
+}
+
+// func ConnectionConfigList(c echo.Context) error {
+func ConnectionListForm(c echo.Context) error {
+	fmt.Println("ConnectionConfigList ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		// Login 정보가 없으므로 login화면으로
+		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		// 	"message": "invalid tumblebug connection",
+		// 	"status":  "403",
+		// })
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	store := echosession.FromContext(c)
+	// result, ok := store.Get(paramUser)
+	// storedUser := result.(map[string]string)
+
+	cloudOsList := service.GetCloudOSListData()
+	store.Set("cloudos", cloudOsList)
+	log.Println(" cloudOsList  ", cloudOsList)
+
+	// connectionconfigList 가져오기
+	connectionConfigDataList := service.GetConnectionConfigListData()
+	store.Set("connectionconfig", connectionConfigDataList)
+	log.Println(" connectionconfig  ", connectionConfigDataList)
+
+	// regionList 가져오기
+	regionList := service.GetRegionListData()
+	store.Set("region", regionList)
+	log.Println(" regionList  ", regionList)
+
+	// credentialList 가져오기
+	credentialList := service.GetCredentialListData()
+	store.Set("credential", credentialList)
+	log.Println(" credentialList  ", credentialList)
+
+	// driverList 가져오기
+	driverList := service.GetDriverListData()
+	store.Set("driver", driverList)
+	log.Println(" driverList  ", driverList)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	log.Println(" nsList  ", nsList)
+
+	return echotemplate.Render(c, http.StatusOK,
+		"setting/connections/CloudConnection",
+		map[string]interface{}{
+			"LoginInfo":            loginInfo,
+			"CloudOSList":          cloudOsList,
+			"NameSpaceList":        nsList,
+			"ConnectionConfigList": connectionConfigDataList,
+			"RegionList":           regionList,
+			"CredentialList":       credentialList,
+			"DriverList":           driverList,
+		})
+}
 
 // Cloud 연결정보 표시(driver)
 func ConnectionList(c echo.Context) error {
@@ -407,13 +532,3 @@ func SSHRegForm(c echo.Context) error {
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 
 // }
-
-func GetConnectionConfigData(c echo.Context) error {
-
-	connectionConfigDataList := service.GetConnectionConfigData()
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":          "success",
-		"status":           "200",
-		"connectionconfig": connectionConfigDataList,
-	})
-}

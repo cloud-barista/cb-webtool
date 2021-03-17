@@ -152,11 +152,15 @@ func main() {
 	// group에 templace set
 	// 해당 그룹.GET(경로, controller의 method)
 	// 해당 그룹.POST(경로, controller의 method)
+	// naming rule : json인 경우 Get 등을 앞에 붙임 ex) GetConnectionConfigData
+	// controller : 1개일 때 객체명, List일 때 객체명 + List
+	//   ex) 1개 가져오는 json : GetConnectionConfig, List 가져오는 json : GetConnectionConfigList
+	// handler : 1개일때 controller명 + Data, List일 때 controller method명 DataList
 
 	e.GET("/", controller.Index)
 
 	// //connection 관련
-	e.GET("/connectionconfig", controller.GetConnectionConfigData)
+	e.GET("/connectionconfig", controller.GetConnectionConfigList) // 현재 설정된 connection 목록 TODO : 호출 경로 일원화. 이건 로그인정보 필요없긴 함. /connections/GetConnectionConfigListData
 
 	loginGroup := e.Group("/login", loginTemplate)
 
@@ -212,7 +216,17 @@ func main() {
 	namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
 
 	settingGroup := e.Group("/setting", settingTemplate)
-	settingGroup.GET("/connections/CloudConnection", controller.ConnectionList)
+
+	// settingGroup.GET("/connections/CloudConnection", controller.ConnectionList) // Connection 관리화면
+	settingGroup.GET("/connections/CloudConnection", controller.ConnectionListForm) // Connection 관리화면
+
+	settingGroup.GET("/connections/cloudos", controller.GetCloudOSList)
+	settingGroup.GET("/connections/ConnectionConfigList", controller.GetConnectionConfigList) //connection 목록 조회 JSON. 필요없을 듯.
+	settingGroup.GET("/connections/region", controller.GetResionList)                         // Region 목록 조회
+	settingGroup.GET("/connections/region/:region", controller.GetResion)
+
+	settingGroup.GET("/connections/credential", controller.GetCredentialList)
+
 	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
 	// e.GET("/Cloud/Connection/reg", controller.ConnectionRegForm)

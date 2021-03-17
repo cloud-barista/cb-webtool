@@ -7,8 +7,8 @@ import (
 	// echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
 
-	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/cloud-barista/cb-webtool/src/model"
+	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
 )
 
@@ -44,18 +44,18 @@ func NameSpaceRegProc(c echo.Context) error {
 	// nsInfo.Description = description
 
 	nsInfo := new(model.NSInfo)
-    if err := c.Bind(nsInfo); err != nil {
+	if err := c.Bind(nsInfo); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-    }
-    // if err = c.Validate(nsInfo); err != nil {
+	}
+	// if err = c.Validate(nsInfo); err != nil {
 	// 	return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-    // }
+	// }
 	fmt.Println("nsInfo : ", nsInfo)
-	
+
 	// Tubblebug 호출하여 namespace 생성
 
 	// person := Person{"Alex", 10}
-    // pbytes, _ := json.Marshal(person)
+	// pbytes, _ := json.Marshal(person)
 	respBody, nsErr := service.RegNameSpace(nsInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if nsErr != nil {
@@ -65,7 +65,7 @@ func NameSpaceRegProc(c echo.Context) error {
 		})
 	}
 
-	// 저장 성공하면 namespace 목록 조회	
+	// 저장 성공하면 namespace 목록 조회
 	nsList, err := service.GetNameSpaceList()
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -88,22 +88,22 @@ func NsListForm(c echo.Context) error {
 	// apiInfo := service.AuthenticationHandler()
 	// loginInfo := service.CallLoginInfo(c)
 	// if loginInfo.Username != "" {
-		fmt.Println("=============start GetNSList =============")
-		// nsList := service.GetNSList()
-		nsList, _ := service.GetNameSpaceList()
-		fmt.Println("=============start GetNSList =============", nsList)
-		// if nsList != nil {
-			return c.Render(http.StatusOK, "NameSpace.html", map[string]interface{}{
-				// "LoginInfo": loginInfo,
-				"NSList":    nsList,
-				// "comURL":    comURL,
-				// "apiInfo":   apiInfo,
-			})
-		// } else {
-		// 	return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
-		// }
+	fmt.Println("=============start GetNSList =============")
+	// nsList := service.GetNSList()
+	nsList, _ := service.GetNameSpaceList()
+	fmt.Println("=============start GetNSList =============", nsList)
+	// if nsList != nil {
+	return c.Render(http.StatusOK, "NameSpace.html", map[string]interface{}{
+		// "LoginInfo": loginInfo,
+		"NSList": nsList,
+		// "comURL":    comURL,
+		// "apiInfo":   apiInfo,
+	})
+	// } else {
+	// 	return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+	// }
 
-	}
+}
 
 // 	fmt.Println("LoginInfo : ", loginInfo)
 // 	//return c.Redirect(http.StatusPermanentRedirect, "/login")

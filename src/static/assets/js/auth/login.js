@@ -28,16 +28,7 @@ $(document).ready(function(){
                         console.log("get result Data : ",result.data.LoginInfo);
                         tokenSuccess(result.data.LoginInfo)
                         
-                        location.href = "/setting/connections/CloudConnection"
-
-                        // alert("Login Success");
-                        // $("#popLogin").modal();
-                        
-                        // var namespaceList = result.data.nsList;
-                        // getUserNamespace(namespaceList)
-                        
-                        // nsModal();
-                        // // getConfig();//config, provider... 설정 modal
+                        location.href = "/setting/connections/CloudConnection" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
                  }else{
                      alert("ID or PASSWORKD MISMATCH!!Check yourself!")
                      location.reload(true); 

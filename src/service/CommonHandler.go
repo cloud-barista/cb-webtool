@@ -151,8 +151,8 @@ func CallLoginInfo(c echo.Context) model.LoginInfo {
 	fmt.Println("========= CallLoginInfo cookieUsername =========" + cookieUsernameStr)
 	result, ok := store.Get(cookieUsernameStr)
 	if !ok {
-		fmt.Println("========= CallLoginInfo Nothing =========")
-		// return model.LoginInfo{}
+		fmt.Println("========= CallLoginInfo Nothing ========= ", ok)
+		return model.LoginInfo{}
 	}
 
 	// fmt.Println("GETUSER : ", result.(string))

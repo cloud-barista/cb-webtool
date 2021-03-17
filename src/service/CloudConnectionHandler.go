@@ -99,6 +99,134 @@ func (mf myFloat64) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v)
 }
 
+// Cloud Provider 목록
+func GetCloudOSListData() []string {
+
+	// CloudConnectionUrl == SPIDER
+	url := CloudConnectionUrl + "/" + "cloudos"
+	// fmt.Println("=========== GetConnectionConfigData : ", url)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	cloudOs := map[string][]string{}
+	json.NewDecoder(body).Decode(&cloudOs)
+	fmt.Println(cloudOs["cloudos"])
+
+	return cloudOs["cloudos"]
+}
+
+// 현재 설정된 connection 목록
+func GetConnectionConfigListData() []model.ConnectionConfigData {
+
+	// CloudConnectionUrl == SPIDER
+	url := CloudConnectionUrl + "/" + "connectionconfig"
+	// fmt.Println("=========== GetConnectionConfigData : ", url)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	connectionConfigDataList := map[string][]model.ConnectionConfigData{}
+	json.NewDecoder(body).Decode(&connectionConfigDataList)
+	fmt.Println(connectionConfigDataList["connectionconfig"])
+
+	return connectionConfigDataList["connectionconfig"]
+}
+
+// 현재 설정된 region 목록
+func GetRegionListData() []model.RegionInfo {
+
+	// CloudConnectionUrl == SPIDER
+	url := CloudConnectionUrl + "/" + "region"
+	// fmt.Println("=========== GetRegionListData : ", url)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	regionList := map[string][]model.RegionInfo{}
+	json.NewDecoder(body).Decode(&regionList)
+	fmt.Println(regionList["region"])
+
+	return regionList["region"]
+}
+
+func GetRegionData(regionName string) model.RegionInfo {
+	url := CloudConnectionUrl + "/region/" + regionName
+	fmt.Println("=========== GetRegionData : ", url)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// region := map[string][]string{}
+	// // retion := map[string][]model.ConnectionConfigData{}
+	// json.NewDecoder(body).Decode(&region)
+	// fmt.Println(region)	// map[KeyValueInfoList:[] ProviderName:[] RegionName:[]]
+	// // fmt.Println(connectionConfigDataList["connectionconfig"])
+	regionInfo := model.RegionInfo{}
+	json.NewDecoder(body).Decode(&regionInfo)
+	fmt.Println(regionInfo)
+	fmt.Println(regionInfo.KeyValueInfo)
+	return regionInfo
+}
+
+// 현재 설정된 credential 목록
+func GetCredentialListData() []model.Credential {
+
+	// CloudConnectionUrl == SPIDER
+	url := CloudConnectionUrl + "/" + "credential"
+	// fmt.Println("=========== GetRegionListData : ", url)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	credentialList := map[string][]model.Credential{}
+	json.NewDecoder(body).Decode(&credentialList)
+	fmt.Println(credentialList["credential"])
+
+	return credentialList["credential"]
+}
+
+// 현재 설정된 credential 목록
+func GetDriverListData() []model.Driver {
+
+	// CloudConnectionUrl == SPIDER
+	url := CloudConnectionUrl + "/" + "driver"
+	// fmt.Println("=========== GetRegionListData : ", url)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	driverList := map[string][]model.Driver{}
+	json.NewDecoder(body).Decode(&driverList)
+	fmt.Println(driverList["driver"])
+
+	return driverList["driver"]
+}
+
 // func GetConnectionconfig(drivername string) CloudConnectionInfo {
 // 	url := NameSpaceUrl + "/driver/" + drivername
 
@@ -289,39 +417,3 @@ func (mf myFloat64) MarshalJSON() ([]byte, error) {
 // 	// fmt.Println("GetData : ", string(data))
 
 // }
-
-// func GetConnectionConfigData() []model.ConnectionConfigData {
-func GetConnectionConfigData() []model.ConnectionConfigData {
-
-	// CloudConnectionUrl == SPIDER
-	url := CloudConnectionUrl + "/" + "connectionconfig"
-	// fmt.Println("=========== GetConnectionConfigData : ", url)
-
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
-
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("GetConnectionConfigData ", body)
-	connectionConfigDataList := model.ConnectionConfigDataList{}
-	json.NewDecoder(body).Decode(&connectionConfigDataList)
-
-	// json.NewDecoder(body).Decode(&connectionConfigDataList)
-	// var connectionConfigDataList []model.ConnectionConfigData
-
-	// for _, item := range connectionList {
-
-	// 	reg := ConnectionConfigData{
-	// 		ConfigName:     item.ConfigName,
-	// 		ProviderName:   item.ProviderName,
-	// 		DriverName:     item.DriverName,
-	// 		CredentialName: item.CredentialName,
-	// 		RegionName:     item.RegionName,
-	// 	}
-	// 	connectionConfigDataList = append(info, reg)
-	// }
-	// fmt.Println("info connectionconfig list : ", info)
-	return connectionConfigDataList
-
-}

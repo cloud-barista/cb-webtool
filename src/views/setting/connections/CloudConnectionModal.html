@@ -36,31 +36,32 @@
 												<ul>
 													<li class="p_ip1">
 														<label><span class="ch">*</span>Name</label>
-														<input type="text" name="" value="" placeholder="input Name" class="pline w_ip1" title="" />
+														<input type="text" id="RegionMoalRegionName" name="" value="" placeholder="input Name" class="pline w_ip1" title="" />
 													</li>
 													<li class="p_ip1">
 														<label><span class="ch">*</span>Provider (CP)</label>
 														<select id="RegionModalProviderName" class="selectbox white pline w_ip1" required>
-															<!--
-															<option value="" disabled selected hidden>Selected Provider (CP)</option>
-															<option value="aws">AWS</option>
-															<option value="gcp">GCP</option>
-															<option value="azure">AZURE</option>
-															<option value="alibaba">ALIBABA</option>
-															-->
+															<option>Select Provider</option>
+															{{ range $item := .CloudOSList}}	
+															<option value="{{ $item }}">{{ $item }}</option>
+															{{ end }}
 														</select>
 														<!-- <input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" /> -->
 													</li>
 													<li class="p_ip1">
 														<label><span class="ch">*</span>Region ID</label>
-														<input type="text" name="" value="" placeholder="input Region" class="pline w_ip1" title="" />
+														<input type="text" id="RegionModalRegionID"name="" value="" placeholder="input Region" class="pline w_ip1" title="" />
+														<!-- Provider의 실제 region id -->
+														<!-- TODO : Region 목록을 해당 provider에서 가져오면 select로 바꿀 것.-->
 														<!-- <select class="selectbox white pline w_ip1">
 															<option value="1">Selected Region</option>
 														</select> -->
 													</li>
 													<li class="p_ip1">
 														<label><span class="ch">*</span>Zone ID</label>
-														<input type="text" name="" value="" placeholder="input Zone" class="pline w_ip1" title="" />
+														<input type="text" id="RegionModalZoneID" name="" value="" placeholder="input Zone" class="pline w_ip1" title="" />
+														<!-- Provider의 실제 region의 zone id -->
+														<!-- TODO : Zone 목록을 해당 provider에서 가져오면 select로 바꿀 것.-->
 														<!-- <select class="selectbox white pline w_ip1">
 															<option value="1">Selected Zone</option>
 														</select> -->

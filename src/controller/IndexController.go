@@ -86,7 +86,7 @@ func LoginForm(c echo.Context) error {
 
 func LoginProc(c echo.Context) error {
 	fmt.Println("============== Login proc ===============")
-	store := echosession.FromContext(c)
+	store := echosession.FromContext(c) // store내 param은 모두 소문자.
 
 	reqInfo := new(model.ReqInfo)
 	if err := c.Bind(reqInfo); err != nil {
@@ -145,7 +145,7 @@ func LoginProc(c echo.Context) error {
 		if createNameSpaceErr != nil {
 			log.Println(" default namespace create failed  ", createNameSpaceErr)
 		} else {
-			nsList = append(nsList, 0)
+			nsList = append(nsList)
 			storedUser["defaultnamespacename"] = nsInfo.Name
 			storedUser["defaultnamespaceid"] = nsInfo.Name
 			// storedUser["defaultnamespaceid"] = nsInfo.ID
@@ -159,6 +159,14 @@ func LoginProc(c echo.Context) error {
 			// defaultNameSpace = nsInfo.Name // ID로 handling 하려면 ID로
 		}
 	}
+	store.Set("namespace", nsList)
+	///////
+
+	/////// connectionconfig 목록 조회 ////////
+	connectionConfigDataList := service.GetConnectionConfigListData()
+	store.Set("connectionconfig", connectionConfigDataList)
+	/////// connectionconfig 목록 조회 끝 ////////
+
 	// // result := map[string]string{}
 	// result := get.(map[string]string)
 	// fmt.Println("result mapping : ", result)
