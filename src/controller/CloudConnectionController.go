@@ -15,6 +15,13 @@ import (
 	echosession "github.com/go-session/echo-session"
 )
 
+// 등록 form
+// GET LIST
+// GET Data
+// POST 등록
+// DELETE
+
+// func CloudOSListForm
 // CloudOS(Provider) 목록
 func GetCloudOSList(c echo.Context) error {
 	cloudOsList := service.GetCloudOSListData()
@@ -25,61 +32,11 @@ func GetCloudOSList(c echo.Context) error {
 	})
 }
 
-// 현재 설정된 connection 목록
-func GetConnectionConfigList(c echo.Context) error {
+// func GetCloudOS
+// func CloudOSRegProc
+// func CloudOSDelProc
 
-	connectionConfigDataList := service.GetConnectionConfigListData()
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":          "success",
-		"status":           "200",
-		"connectionconfig": connectionConfigDataList,
-	})
-}
-
-// 현재 설정된 region 목록
-func GetResionList(c echo.Context) error {
-
-	regionList := service.GetRegionListData()
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  "200",
-		"region":  regionList,
-	})
-}
-
-// region 상세정보
-func GetResion(c echo.Context) error {
-	paramRegion := c.Param("region")
-	resionInfo := service.GetRegionData(paramRegion)
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  "200",
-		"Region":  resionInfo,
-	})
-}
-
-// 현재 설정된 region 목록
-func GetCredentialList(c echo.Context) error {
-
-	credentialList := service.GetCredentialListData()
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  "200",
-		"region":  credentialList,
-	})
-}
-
-// 현재 설정된 driver 목록
-func GetDriverList(c echo.Context) error {
-
-	driverList := service.GetDriverListData()
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  "200",
-		"region":  driverList,
-	})
-}
-
+// func ConnectionConfigListForm  : TODO : method 명을 ConnectionConfigListForm으로 변경할 것
 // func ConnectionConfigList(c echo.Context) error {
 func ConnectionListForm(c echo.Context) error {
 	fmt.Println("ConnectionConfigList ************ : ")
@@ -138,6 +95,243 @@ func ConnectionListForm(c echo.Context) error {
 			"CredentialList":       credentialList,
 			"DriverList":           driverList,
 		})
+}
+
+// 현재 설정된 connection 목록
+func GetConnectionConfigList(c echo.Context) error {
+
+	connectionConfigDataList := service.GetConnectionConfigListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":          "success",
+		"status":           "200",
+		"connectionconfig": connectionConfigDataList,
+	})
+}
+
+// func ConnectionConfigRegProc
+// func ConnectionConfigDelProc
+
+// func RegionListForm // Region 등록 form : maing 화면에서 popup형태로 뜸
+
+// 현재 설정된 region 목록
+func GetRegionList(c echo.Context) error {
+
+	regionList := service.GetRegionListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"region":  regionList,
+	})
+}
+
+// region 상세정보
+func GetRegion(c echo.Context) error {
+	paramRegion := c.Param("region")
+	resionInfo := service.GetRegionData(paramRegion)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"Region":  resionInfo,
+	})
+}
+
+// region 등록
+func RegionRegProc(c echo.Context) error {
+	log.Println("RegionRegProc : ")
+
+	regionInfo := new(model.RegionInfo)
+	if err := c.Bind(regionInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(regionInfo)
+	respBody, reErr := service.RegRegion(regionInfo)
+	fmt.Println("=============respBody =============", respBody)
+	if reErr != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  "403",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+	})
+}
+
+// Region 삭제
+func RegionDelProc(c echo.Context) error {
+	log.Println("RegionRegProc : ")
+
+	paramRegion := c.Param("region")
+	log.Println(paramRegion)
+
+	respBody, reErr := service.DelRegion(paramRegion)
+	fmt.Println("=============respBody =============", respBody)
+	if reErr != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  "403",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+	})
+}
+
+// func CredentialListForm // Credential 등록 form : maing 화면에서 popup형태로 뜸
+
+// 현재 설정된 region 목록
+func GetCredentialList(c echo.Context) error {
+
+	credentialList := service.GetCredentialListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"region":  credentialList,
+	})
+}
+
+// Credential 상세정보
+func GetCredential(c echo.Context) error {
+	paramCredential := c.Param("credential")
+	credentialInfo := service.GetCredentialData(paramCredential)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":    "success",
+		"status":     "200",
+		"Credential": credentialInfo,
+	})
+}
+
+// Credential 등록
+func CredentialRegProc(c echo.Context) error {
+	log.Println("CredentialRegProc : ")
+
+	credentialInfo := new(model.CredentialInfo)
+	if err := c.Bind(credentialInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(credentialInfo)
+	respBody, reErr := service.RegCredential(credentialInfo)
+	fmt.Println("=============respBody =============", respBody)
+	if reErr != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  "403",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+	})
+}
+
+// Credential 삭제
+func CredentialDelProc(c echo.Context) error {
+	log.Println("CredentialDelProc : ")
+
+	paramCredential := c.Param("credential")
+	log.Println(paramCredential)
+
+	respBody, reErr := service.DelCredential(paramCredential)
+	fmt.Println("=============respBody =============", respBody)
+	if reErr != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  "403",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+	})
+}
+
+// func DriverListForm // Driver 등록 form : maing 화면에서 popup형태로 뜸
+
+// 현재 설정된 driver 목록
+func GetDriverList(c echo.Context) error {
+
+	driverList := service.GetDriverListData()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"region":  driverList,
+	})
+}
+
+// Driver 조회
+func GetDriver(c echo.Context) error {
+	paramDriver := c.Param("driver")
+	driverInfo := service.GetDriverData(paramDriver)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"Driver":  driverInfo,
+	})
+}
+
+// Driver 등록
+// func DriverRegProc
+func DriverRegProc(c echo.Context) error {
+	log.Println("DriverRegProc : ")
+
+	driverInfo := new(model.DriverInfo)
+	if err := c.Bind(driverInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(driverInfo)
+	respBody, reErr := service.RegDriver(driverInfo)
+	fmt.Println("=============respBody =============", respBody)
+	if reErr != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  "403",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+	})
+}
+
+// Driver 삭제
+func DriverDelProc(c echo.Context) error {
+	log.Println("DriverDelProc : ")
+
+	paramDriver := c.Param("driver")
+	log.Println(paramDriver)
+
+	respBody, reErr := service.DelDriver(paramDriver)
+	fmt.Println("=============respBody =============", respBody)
+	if reErr != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  "403",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+	})
 }
 
 // Cloud 연결정보 표시(driver)
@@ -205,168 +399,46 @@ func DriverRegController(c echo.Context) error {
 	return nil
 }
 
-
-func RegionRegProc(c echo.Context) error {
-	// RegionMoalRegionName
-	// RegionModalProviderName
-	// RegionModalRegionID
-	// RegionModalZoneID
-
-	regionInfo := new(model.RegionInfo)
-	regionInfo.RegionName = c.Param("RegionName")
-	regionInfo.ProviderName = c.Param("ProviderName")
-	// nsInfo.RegionName = c.Param("RegionName")
-	// nsInfo.RegionName = c.Param("RegionName")
-	// if err := c.Bind(nsInfo); err != nil {
-	// 	return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	// }
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  "200",
-	})
-
-}
-
+// deprecated
 // func DriverRegForm(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-// 		return c.Render(http.StatusOK, "DriverRegister.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"comURL":    comURL,
-// 			"apiInfo":   apiInfo,
-// 		})
-// 	}
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 // }
 
+// deprecated
 // func DriverListForm(c echo.Context) error {
-// 	fmt.Println("=============start NsListForm =============")
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	loginInfo := service.CallLoginInfo(c)
-
-// 	if loginInfo.Username != "" {
-// 		//nsList := service.GetDriverList()
-// 		return c.Render(http.StatusOK, "DriverList.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"comURL":    comURL,
-// 			"apiInfo":   apiInfo,
-// 			//"NSList": nsList,
-// 		})
-// 	}
-
-// 	fmt.Println("LoginInfo : ", loginInfo)
-
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 // }
 
+// deprecated
 //Credential Controller
-func CredentialRegForm(c echo.Context) error {
-	comURL := service.GetCommonURL()
-	apiInfo := util.AuthenticationHandler()
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-		return c.Render(http.StatusOK, "CredentialRegister.html", map[string]interface{}{
-			"LoginInfo": loginInfo,
-			"comURL":    comURL,
-			"apiInfo":   apiInfo,
-		})
-	}
-	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-}
-
-// func CredertialListForm(c echo.Context) error {
-
-// 	fmt.Println("=============start CredertialRegForm =============")
-// 	loginInfo := service.CallLoginInfo(c)
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo.Username != "" {
-// 		//nsList := service.GetCredentialList()
-// 		return c.Render(http.StatusOK, "CredentialList.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"comURL":    comURL,
-// 			"apiInfo":   apiInfo,
-// 			// "NSList": nsList,
-// 		})
-// 	}
-
-// 	fmt.Println("LoginInfo : ", loginInfo)
+// func CredentialRegForm(c echo.Context) error {
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-
 // }
 
+// deprecated
+// func CredertialListForm(c echo.Context) error {
+// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+// }
+
+// deprecated
 //Region Controller
 // func RegionRegForm(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-// 		return c.Render(http.StatusOK, "RegionRegister.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"comURL":    comURL,
-// 			"apiInfo":   apiInfo,
-// 		})
-// 	}
-// 	// return c.Redirect(http.StatusPermanentRedirect, "/login")
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 // }
 
+// deprecated
 // func RegionListForm(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	loginInfo := service.CallLoginInfo(c)
-// 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo.Username != "" {
-// 		nsList := service.GetRegionList()
-// 		fmt.Println("REGION List : ", nsList)
-
-// 		//spew.Dump(nsList)
-// 		return c.Render(http.StatusOK, "RegionList.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"comURL":    comURL,
-// 			"NSList":    nsList,
-// 			"apiInfo":   apiInfo,
-// 		})
-// 	}
-
-// 	fmt.Println("LoginInfo : ", loginInfo)
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-
 // }
 
+// deprecated
 //Connection Controller
 // func ConnectionRegForm(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-
-// 		return c.Render(http.StatusOK, "ConnectionRegister.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"comURL":    comURL,
-// 			"apiInfo":   apiInfo,
-// 		})
-// 	}
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-// 	//return c.Render(http.StatusOK, "RegionRegister.html", nil)
 // }
 
+// deprecated
 // func ConnectionListForm(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	loginInfo := service.CallLoginInfo(c)
-// 	if loginInfo.Username != "" {
-// 		cList := service.GetConnectionList()
-// 		fmt.Println("=============info GetConnectionList =============", cList)
-// 		return c.Render(http.StatusOK, "CloudConnection.html", map[string]interface{}{
-// 			// return c.Render(http.StatusOK, "ConnectionList.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"cList":     cList,
-// 			"comURL":    comURL,
-// 			"apiInfo":   apiInfo,
-// 		})
-// 	}
-
-// 	fmt.Println("LoginInfo : ", loginInfo)
-
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 // }
 
