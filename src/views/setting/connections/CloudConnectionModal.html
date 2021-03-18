@@ -44,7 +44,7 @@
 															<option>Select Provider</option>
 															{{ range $item := .CloudOSList}}	
 															<option value="{{ $item }}">{{ $item }}</option>
-															{{ end }}
+															{{ end }}															
 														</select>
 														<!-- <input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" /> -->
 													</li>
@@ -75,7 +75,7 @@
 									
 									<div class="btnbox">
 										<div class="btn_right">
-											<button name="" value="" class="btn_co btn_cr_g" onclick='saveNewRegion()''><span>OK</span></button> 
+											<button name="" value="" class="btn_co btn_cr_g" onclick='saveNewRegion()'><span>OK</span></button> 
 											<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">Cancel</button> 
 										</div>
 									</div>
@@ -280,5 +280,22 @@
 													
 					</div>
 					<!-- //popup add Driver register -->
+
+
+					<!-- id/pw required -->
+					<div class="modal fade" id="required" tabindex="-1" role="dialog" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								
+								<div class="modal-body">
+									<div class="txt">필수항목을 입력바랍니다.</div>
+									<div class="btnbox">
+										<button type="button" class="btn_ok" data-toggle="modal" data-target="#Add_Region_Register">OK</button>
+									</div>
+								</div>                    
+							</div>
+						</div>                    
+					</div>
+					<!-- //required -->
 
 {{end}}

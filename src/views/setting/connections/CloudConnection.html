@@ -192,32 +192,7 @@
 										</tbody>
 									</table>
 								</div>
-								
-								<script>
-									/* scroll */
-									$(document).ready(function(){
-										//checkbox all
-								    $("#th_chall").click(function() {
-								      if ($("#th_chall").prop("checked")) {
-								        $("input[name=chk]").prop("checked", true);
-								      } else {
-								        $("input[name=chk]").prop("checked", false);
-								      }
-								    })
-										
-										//table 스크롤바 제한
-										$(window).on("load resize",function(){
-											var vpwidth = $(window).width();
-										  if (vpwidth > 768 && vpwidth < 1800) {
-										    $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-										 		$(".dataTable.scrollbar-inner").scrollbar();
-										  } else {
-										    $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-										  }
-										});
-									});
-								</script>
-								
+
 								
 								<!-- <div class="pageing">
 									<a href="#" class="btn_prev"><span>이전</span></a>
@@ -403,7 +378,8 @@
 											<div class="tit"><span class="ch">*</span>Region</div>
 											<div class="btn_s">
 												<button class="btn_write" value="" name="" data-toggle="modal" data-target="#Add_Region">write</button>
-												<!-- <button class="btn_add" value="" name="">add</button> -->
+												<button class="btn_delete" value="" name="" onClick="deleteRegion()">delete</button>
+												<!-- <button class="btn_delete" value="" name="" data-toggle="modal" data-target="#Del_Region">delete</button> -->
 											</div>
 											<div class="dataTable first_over">
 												<table cellpadding="0" cellspacing="0" border="1" summary="">
@@ -574,28 +550,33 @@
 						
 					</div>
 					<!-- //Register Cloud Connection -->
-
-					<script>
-						
-						//Create popup - Region / Credential / Driver
-						$(function() {
-						  return $(".modal").on("show.bs.modal", function() {
-						    var curModal;
-						    curModal = this;
-						    $(".modal").each(function() {
-						      if (this !== curModal) {
-								console.log(".modal on show.bs.modal" + this + " : " + curModal);
-						        $(this).modal("hide");
-						      }
-						    });
-						  });
-						});		
-                    </script>
                     
-	{{template "CloudConnectionModal" .}}
+					<!-- Region, Credential, Driver Modal 로 쪼개짐 { {template "CloudConnectionModal" .} } -->
+
+					{{template "RegionModal" .}}
+
+					{{template "CredentialModal" .}}
+
+					{{template "DriverModal" .}}
 
 				</div>
                 <!-- //contents -->
+
+				<!-- required modal -->
+				<div class="modal fade" id="requiredCloudConnection" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							
+							<div class="modal-body">
+								<div class="txt"><span id="requireMessage"></span></div>
+								<div class="btnbox">
+									<button type="button" class="btn_cancel" data-dismiss="modal">OK</button>
+								</div>
+							</div>                    
+						</div>
+					</div>                    
+				</div>
+				<!-- //required -->
 
 <script src="/assets/js/setting/connections/cloudconnection.js"></script>
 

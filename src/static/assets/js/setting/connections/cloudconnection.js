@@ -20,6 +20,40 @@ $(document).ready(function(){
     // getCloudOS("{{ .apiInfo}}",'CredentialModalProviderName');
     // getCloudOS("{{ .apiInfo}}",'DriverModalProviderName');
 
+    /* scroll */
+    //checkbox all
+    $("#th_chall").click(function() {
+        if ($("#th_chall").prop("checked")) {
+        $("input[name=chk]").prop("checked", true);
+        } else {
+        $("input[name=chk]").prop("checked", false);
+        }
+    })
+        
+    //table 스크롤바 제한
+    $(window).on("load resize",function(){
+        var vpwidth = $(window).width();
+        if (vpwidth > 768 && vpwidth < 1800) {
+        $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
+            $(".dataTable.scrollbar-inner").scrollbar();
+        } else {
+        $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
+        }
+    });
+
+    //Create popup - Region / Credential / Driver
+    $(function() {
+        return $(".modal").on("show.bs.modal", function() {
+          var curModal;
+          curModal = this;
+          $(".modal").each(function() {
+            if (this !== curModal) {
+              console.log(".modal on show.bs.modal" + this + " : " + curModal);
+              $(this).modal("hide");
+            }
+          });
+        });
+      });
 
 })
 
@@ -101,9 +135,9 @@ function addCloudConnectionConfirm(){
         var offset = $("#CreateBox").offset();
         $("#wrap").animate({scrollTop : offset.top}, 300);
 
-        getRegionList()
-        getCredentialList()
-        getDriverList()
+        // getRegionList()
+        // getCredentialList()
+        // getDriverList()
     })
 }
 
@@ -306,50 +340,60 @@ function setRegionDispInfo(var_region, var_zone){
     console.log("info region_and_zone : ", region_and_zone);
 }
 
+// region 목록 : 저장 후 갱신용
 function getRegionList(){
-    // page load시 가져옴
-    // var url = "{{ .comURL.SpiderURL}}"+"/region";
-    // axios.get(url,{
-    //     headers:{
-    //         'Authorization': "{{ .apiInfo}}",
-    //         'Content-Type' : "application/json"
-    //     }
-    // }).then(result=>{
-    //         console.log("get Region Data : ",result.data);
-    //         var data = result.data.region;
-    //         var html = ""
-    //         if(data.length){ 
-    //                 data.filter((list)=> list.RegionName !== "" ).map((item,index)=>(
-    //                     html +='<tr onclick="getRegionInfo(\'region\', \'region_info_'+index+'\');">'
-    //                         +'<td class="btn_mtd ovm" data-th="Name">'+item.RegionName+'<span class="ov"></span></td>'
-    //                         +'<input type="hidden" id="region_info_'+index+'" value="'+item.RegionName+'"/>'
-    //                         +'<td class="overlay hidden" data-th="region ID">'+item.KeyValueInfoList[0].Value+'</td>'
-    //                         +'<td class="overlay hidden" data-th="Zone">'+item.KeyValueInfoList[1].Value+'</td>'
-    //                         +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
-    //                         +'</tr>'        
-    //                 ))
-                
-    //             $("#regionList").empty();
-    //             $("#regionList").append(html);
-    //             $("#regionList tr").each(function(){
-    //                 $selector = $(this)
+    console.log("getRegionList")
+    var url = "/setting/connections/region"
+    axios.get(url,{})
+        .then(result=>{
+            console.log("get Region Data : ",result.data);
+            var data = result.data.region;
+
+            if(data.length){
+                var html = ""
+                data.forEach(function(item, index) {
+                    var keyValueInfoList = item.KeyValueInfoList;
+                    var regionID = "-"
+                    var zoneID = "-"
+                    // console.log("found: ", item)
+                    // console.log("found id: ", item.KeyValueInfoList)
+                    // console.log("found id: ", keyValueInfoList.length)
+                    if( keyValueInfoList.length == 1 ){
+                        regionID = keyValueInfoList[0].Value;
+                    }else if ( keyValueInfoList.length == 2){
+                        regionID = keyValueInfoList[0].Value
+                        zoneID = keyValueInfoList[1].Value                    
+                    }
                     
-    //                 $selector.click(function(){
-                        
-    //                     if($(this).hasClass("on")){
-    //                         $(this).removeClass("on");
-    //                     }else{
-    //                         $(this).addClass("on")
-    //                     }
-    //                 })
+                    html +='<tr onclick="getRegionInfo(\'region\', \'region_info_'+index+'\');">'
+                        +'<td class="btn_mtd ovm" data-th="Name">'+item.RegionName+'<span class="ov"></span></td>'
+                        +'<input type="hidden" id="region_info_'+index+'" value="'+item.RegionName+'"/>'
+                        +'<td class="overlay hidden" data-th="region ID">'+regionID+'</td>'
+                        +'<td class="overlay hidden" data-th="Zone ID">'+zoneID+'</td>'
+                        +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
+                        +'</tr>'    
+                });
+            
+                $("#regionList").empty();
+                $("#regionList").append(html);
+                $("#regionList tr").each(function(){
+                    $selector = $(this)
                     
-    //             })
+                    $selector.click(function(){                        
+                        if($(this).hasClass("on")){
+                            $(this).removeClass("on");
+                        }else{
+                            $(this).addClass("on")
+                        }
+                    })
                     
-    //             //  nsModal()
-    //             ModalDetail()
-    //         }
-    //     }
-    // )
+                })
+            }// end of data.length
+        }
+    ).catch(function(error){
+        console.log("region display error : ",error);        
+    });
+
 }
 function getCredentialList(){
 // var url = "{{ .comURL.SpiderURL}}"+"/credential";
@@ -497,13 +541,13 @@ function ModalDetail2(){
 // connection 화면에서 팝업으로 region등록.
 function saveNewRegion(){
     // valid check
-    var regionName = $("#RegionMoalRegionName").val();
+    var regionName = $("#RegionModalRegionName").val();
     var providerName = $("#RegionModalProviderName").val();
     var regionID = $("#RegionModalRegionID").val();
     var zoneID = $("#RegionModalZoneID").val();	
 	
     if(!regionName || !providerName || !regionID){
-        $("#required").modal()
+        $("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
         return;
     }
     //
@@ -511,30 +555,221 @@ function saveNewRegion(){
     var regionInfo = {            
         RegionName:regionName,
         ProviderName: providerName,
-        RegionKey: "Region",
-        RegionValue: regionID,
-        ZoneKey: "Zone",
-        ZoneValue: zoneID        
+        KeyValueInfoList:[ {"Key":"Region","Value":regionID},{"Key":"Zone","Value":zoneID}]
+
+        // RegionKey: "Region",
+        // RegionValue: regionID,
+        // ZoneKey: "Zone",
+        // ZoneValue: zoneID        
     }
-    console.log(req)
-    axios.post(url,req,{
-
-
-    axios.post(url,regionInfo,{
+    console.log(regionInfo)
+    axios.post("/setting/connections/region/reg/proc",regionInfo,{
         
     }).then(result =>{
         console.log(result);
         if(result.status == 200 || result.status == 201){
             alert("Success Save Cloud Region");
             // 성공하면 내용 초기화
-            $("#RegionMoalRegionName").val() = "";
+            $("#RegionModalRegionName").val('');
             $("#RegionModalProviderName option:eq(0)").attr("selecte", "selected");
-            $("#RegionModalRegionID").val() = "";
-            $("#RegionModalZoneID").val() = "";	
-            // TODO : region 목록 조회하여 Region table 갱신    
+            $("#RegionModalRegionID").val('');
+            $("#RegionModalZoneID").val('');
+            // Region table 갱신
+            getRegionList();
         }else{
             alert("Fail Create Cloud Region")
         }
+  
+    }).catch(function(error){
+        console.log("save error : ",error);
+    
     });
     
 }
+
+// region 삭제
+function deleteRegion(){
+    var regionName = $("#reg_region").val()
+
+    if(!regionName){
+        $("#requireMessage").text("선택된 Resion이 없습니다.")
+        $("#requiredCloudConnection").modal()
+        return;
+    }
+    $("#requireMessage").text("")
+    
+    alert(regionName + " 을 삭제하겠습니까");
+    
+    var url = "/setting/connections/region/del/";
+    //axios.post("/setting/connections/region/reg/proc",regionInfo,{
+    axios.delete(url+regionName, {},{
+        }).then(result =>{
+            console.log(result);
+            if(result.status == 200 || result.status == 201){
+                alert("Deleted Cloud Region");                
+                // Region 갱신 
+                getRegionList();   
+            }else{
+                alert("Fail to delete the Cloud Region")
+            }
+        }).catch(function(error){
+            console.log("delete error : ",error);        
+        });
+}
+
+//////
+// connection 화면에서 팝업으로 Credential등록.
+function saveNewCredential(){
+    // valid check
+    var credentialName = $("#CredentialModalCredentialName").val();
+    var providerName = $("#CredentialModalProviderName").val();
+    var key0 = $("#CredentialModalKey0").val();
+    var value0 = $("#CredentialModalValue0").val();
+    var key1 = $("#CredentialModalKey1").val();
+    var value1 = $("#CredentialModalValue1").val();	
+	// CredentialName string             `json:"CredentialName"`
+	// ProviderName   string             `json:"ProviderName"`
+	// KeyValueInfoList   []KeyValueInfoList `json:"KeyValueInfoList"`
+    if(!credentialName || !providerName || !key0 || !value0){
+        $("#modalCredentialRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
+        return;
+    }
+    //
+    console.log("saveNewCredential popup");
+    // provider에 따라 사용하는 key가 불규칙적임.
+    var credentialInfo = {            
+        CredentialName:credentialName,
+        ProviderName: providerName,
+        KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+    }
+    console.log(credentialInfo)
+    axios.post("/setting/connections/credential/reg/proc",credentialInfo,{
+        
+    }).then(result =>{
+        console.log(result);
+        if(result.status == 200 || result.status == 201){
+            alert("Success Save Cloud Credential");
+            // 성공하면 내용 초기화 : provider가 같으면 key0, key1 은 그대로 사용
+            $("#CredentialModalCredentialName").val('');
+            // $("#CredentialModalProviderName option:eq(0)").attr("selecte", "selected");
+            $("#CredentialModalKey0").val('');
+            // $("#CredentialModalValue0").val('');
+            $("#CredentialModalKey1").val('');
+            // $("#CredentialModalValue1").val('');
+            
+            // Credential table 갱신
+            getCredentialList();
+        }else{
+            alert("Fail Create Cloud Credential")
+        }
+  
+    }).catch(function(error){
+        console.log("save error : ",error);
+    
+    });
+    
+}
+
+// Credential 삭제
+function deleteCredential(){
+    var credentialName = $("#reg_credential").val()
+
+    if(!regionName){
+        $("#requireMessage").text("선택된 Credential key가 없습니다.")
+        $("#requiredCloudConnection").modal()
+        return;
+    }
+    $("#requireMessage").text("")
+    
+    alert(credentialName + " 을 삭제하겠습니까");
+    
+    var url = "/setting/connections/credential/del/";
+    axios.delete(url+credentialName, {},{
+        }).then(result =>{
+            console.log(result);
+            if(result.status == 200 || result.status == 201){
+                alert("Deleted Cloud Credential");                
+                // Credential 갱신 
+                getCredentialList();   
+            }else{
+                alert("Fail to delete the Cloud Credential")
+            }
+        }).catch(function(error){
+            console.log("delete error : ",error);        
+        });
+}
+
+//////
+// Driver 등록. connection 화면에서 팝업으로 
+function saveNewDriver(){
+    // valid check
+    var driverlName = $("#DriverModalDriverName").val();
+    var providerName = $("#DriverModalProviderName").val();
+    var driverLibFilename = $("#DriverModalDriverLibFileName").val();
+	
+    if(!driverlName || !providerName || !driverLibFilename ){
+        $("#modalDriverRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
+        return;
+    }
+    //
+    console.log("saveNewCredential popup");
+    // provider에 따라 사용하는 key가 불규칙적임.
+    var driverlNameInfo = {            
+        DriverName:driverlName,
+        ProviderName: providerName,
+        DriverLibFileName:driverLibFilename
+    }
+    console.log(driverlNameInfo)
+    axios.post("/setting/connections/driver/reg/proc",driverlNameInfo,{
+        
+    }).then(result =>{
+        console.log(result);
+        if(result.status == 200 || result.status == 201){
+            alert("Success Save Cloud Credential");
+            // 성공하면 내용 초기화
+            $("#DriverModalDriverName").val('');
+            // $("#DriverModalProviderName option:eq(0)").attr("selecte", "selected");
+            $("#DriverModalDriverLibFileName").val('');
+            
+            // Driver table 갱신
+            getDriverList();
+        }else{
+            alert("Fail Create Cloud Driver")
+        }
+  
+    }).catch(function(error){
+        console.log("save error : ",error);
+    
+    });
+    
+}
+
+// Driver 삭제
+function deleteDriver(){
+    var driverName = $("#reg_driver").val()
+
+    if(!driverName){
+        $("#requireMessage").text("선택된 Driver가 없습니다.")
+        $("#requiredCloudConnection").modal()
+        return;
+    }
+    $("#requireMessage").text("")
+    
+    alert(driverName + " 을 삭제하겠습니까");
+    
+    var url = "/setting/connections/driver/del/";
+    axios.delete(url+driverName, {},{
+        }).then(result =>{
+            console.log(result);
+            if(result.status == 200 || result.status == 201){
+                alert("Deleted Cloud Driver");                
+                // Driver 갱신 
+                getDriverList();   
+            }else{
+                alert("Fail to delete the Cloud Driver")
+            }
+        }).catch(function(error){
+            console.log("delete error : ",error);        
+        });
+}
+

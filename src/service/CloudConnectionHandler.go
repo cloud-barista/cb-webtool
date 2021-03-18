@@ -3,10 +3,11 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"math"
-	// "net/http"
+	"io"
+	// "math"
+	"net/http"
 	"os"
-	"strconv"
+	// "strconv"
 	// "sync"
 	//"io/ioutil"
 	//"github.com/davecgh/go-spew/spew"
@@ -18,15 +19,6 @@ import (
 var CloudConnectionUrl = os.Getenv("SPIDER_URL")
 var TumbleUrl = os.Getenv("TUMBLE_URL")
 
-type CloudConnectionInfo struct {
-	ID             string `json:"id"`
-	ConfigName     string `json:"ConfigName"`
-	ProviderName   string `json:"ProviderName"`
-	DriverName     string `json:"DriverName"`
-	CredentialName string `json:"CredentialName"`
-	RegionName     string `json:"RegionName"`
-	Description    string `json:"description"`
-}
 // type KeyValueInfo struct {
 // 	Key   string `json:"Key"`
 // 	Value string `json:"Value"`
@@ -36,37 +28,40 @@ type CloudConnectionInfo struct {
 // 	ProviderName     string `json:"ProviderName"`
 // 	KeyValueInfoList []KeyValueInfo
 // }
+
+// 뭐에쓰는 거지?
 type RESP struct {
 	Region []struct {
-		RegionName       string         `json:"RegionName"`
-		ProviderName     string         `json:"ProviderName"`
+		RegionName       string                   `json:"RegionName"`
+		ProviderName     string                   `json:"ProviderName"`
 		KeyValueInfoList []model.KeyValueInfoList `json:"KeyValueInfoList"`
 	} `json:"region"`
 }
 
+// 뭐에쓰는 거지?
 type ImageRESP struct {
 	Image []struct {
-		id             string         `json:"id"`
-		name           string         `json:"name"`
-		connectionName string         `json:"connectionName"`
-		cspImageId     string         `json:"cspImageId"`
-		cspImageName   string         `json:"cspImageName"`
-		description    string         `json:"description"`
-		guestOS        string         `json:"guestOS"`
-		status         string         `json:"status"`
-		KeyValueInfoList   []model.KeyValueInfoList `json:"KeyValueList"`
+		id               string                   `json:"id"`
+		name             string                   `json:"name"`
+		connectionName   string                   `json:"connectionName"`
+		cspImageId       string                   `json:"cspImageId"`
+		cspImageName     string                   `json:"cspImageName"`
+		description      string                   `json:"description"`
+		guestOS          string                   `json:"guestOS"`
+		status           string                   `json:"status"`
+		KeyValueInfoList []model.KeyValueInfoList `json:"KeyValueList"`
 	} `json:"image"`
 }
 type Image struct {
-	id             string         `json:"id"`
-	name           string         `json:"name"`
-	connectionName string         `json:"connectionName"`
-	cspImageId     string         `json:"cspImageId"`
-	cspImageName   string         `json:"cspImageName"`
-	description    string         `json:"description"`
-	guestOS        string         `json:"guestOS"`
-	status         string         `json:"status"`
-	KeyValueInfoList   []model.KeyValueInfoList `json:"KeyValueList"`
+	id               string                   `json:"id"`
+	name             string                   `json:"name"`
+	connectionName   string                   `json:"connectionName"`
+	cspImageId       string                   `json:"cspImageId"`
+	cspImageName     string                   `json:"cspImageName"`
+	description      string                   `json:"description"`
+	guestOS          string                   `json:"guestOS"`
+	status           string                   `json:"status"`
+	KeyValueInfoList []model.KeyValueInfoList `json:"KeyValueList"`
 }
 type IPStackInfo struct {
 	IP          string  `json:"ip"`
@@ -78,26 +73,10 @@ type IPStackInfo struct {
 	Status      string
 }
 
-type KeepZero float64
-
-func (f KeepZero) MarshalJSON() ([]byte, error) {
-	if float64(f) == float64(int(f)) {
-		return []byte(strconv.FormatFloat(float64(f), 'f', 1, 32)), nil
-	}
-	return []byte(strconv.FormatFloat(float64(f), 'f', -1, 32)), nil
-}
-
-type myFloat64 float64
-
-func (mf myFloat64) MarshalJSON() ([]byte, error) {
-	const ε = 1e-12
-	v := float64(mf)
-	w, f := math.Modf(v)
-	if f < ε {
-		return []byte(fmt.Sprintf(`%v.0`, math.Trunc(w))), nil
-	}
-	return json.Marshal(v)
-}
+// 목록 : ListData
+// 1개 : Data
+// 등록 : Reg
+// 삭제 : Del
 
 // Cloud Provider 목록
 func GetCloudOSListData() []string {
@@ -164,7 +143,7 @@ func GetRegionListData() []model.RegionInfo {
 
 func GetRegionData(regionName string) model.RegionInfo {
 	url := CloudConnectionUrl + "/region/" + regionName
-	fmt.Println("=========== GetRegionData : ", url)
+	fmt.Println("=========== GetRegionData : ", regionName)
 
 	body, err := util.CommonHttpGet(url)
 	defer body.Close()
@@ -185,8 +164,43 @@ func GetRegionData(regionName string) model.RegionInfo {
 	return regionInfo
 }
 
+// Region 등록
+func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, error) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := CloudConnectionUrl + "/region"
+
+	fmt.Println("RegRegion : ", regionInfo)
+
+	// body, err := util.CommonHttpPost(url, regionInfo)
+	pbytes, _ := json.Marshal(regionInfo)
+	body, err := util.CommonHttpPost(url, pbytes)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+// Region 삭제
+func DelRegion(regionName string) (io.ReadCloser, error) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := CloudConnectionUrl + "/region/" + regionName
+
+	fmt.Println("DelRegion : ", regionName)
+
+	// body, err := util.CommonHttpPost(url, regionInfo)
+
+	pbytes, _ := json.Marshal(regionName)
+	// body, err := util.CommonHttpDelete(url, pbytes)
+	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
 // 현재 설정된 credential 목록
-func GetCredentialListData() []model.Credential {
+func GetCredentialListData() []model.CredentialInfo {
 
 	// CloudConnectionUrl == SPIDER
 	url := CloudConnectionUrl + "/" + "credential"
@@ -199,19 +213,17 @@ func GetCredentialListData() []model.Credential {
 		fmt.Println(err)
 	}
 
-	credentialList := map[string][]model.Credential{}
+	credentialList := map[string][]model.CredentialInfo{}
 	json.NewDecoder(body).Decode(&credentialList)
 	fmt.Println(credentialList["credential"])
 
 	return credentialList["credential"]
 }
 
-// 현재 설정된 credential 목록
-func GetDriverListData() []model.Driver {
-
-	// CloudConnectionUrl == SPIDER
-	url := CloudConnectionUrl + "/" + "driver"
-	// fmt.Println("=========== GetRegionListData : ", url)
+// Credential 상세조회
+func GetCredentialData(credentialName string) model.CredentialInfo {
+	url := CloudConnectionUrl + "/region/" + credentialName
+	fmt.Println("=========== GetCredentialData : ", credentialName)
 
 	body, err := util.CommonHttpGet(url)
 	defer body.Close()
@@ -220,11 +232,116 @@ func GetDriverListData() []model.Driver {
 		fmt.Println(err)
 	}
 
-	driverList := map[string][]model.Driver{}
+	credentialInfo := model.CredentialInfo{}
+	json.NewDecoder(body).Decode(&credentialInfo)
+	fmt.Println(credentialInfo)
+	fmt.Println(credentialInfo.KeyValueInfoList)
+	return credentialInfo
+}
+
+// Credential 등록
+func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, error) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := CloudConnectionUrl + "/credential"
+
+	fmt.Println("RegCredential : ", credentialInfo)
+
+	// body, err := util.CommonHttpPost(url, regionInfo)
+	pbytes, _ := json.Marshal(credentialInfo)
+	body, err := util.CommonHttpPost(url, pbytes)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+// Credential 삭제
+func DelCredential(credentialName string) (io.ReadCloser, error) {
+
+	// buff := bytes.NewBuffer(pbytes)
+	url := CloudConnectionUrl + "/credential/" + credentialName
+
+	fmt.Println("DelCredential : ", credentialName)
+
+	pbytes, _ := json.Marshal(credentialName)
+	// body, err := util.CommonHttpDelete(url, pbytes)
+	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+// 현재 설정된 Driver 목록
+func GetDriverListData() []model.DriverInfo {
+	url := CloudConnectionUrl + "/" + "driver"
+	fmt.Println("=========== GetDriverListData : ", url)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	driverList := map[string][]model.DriverInfo{}
 	json.NewDecoder(body).Decode(&driverList)
 	fmt.Println(driverList["driver"])
 
 	return driverList["driver"]
+}
+
+// Driver 상세조회
+func GetDriverData(driverlName string) model.DriverInfo {
+	url := CloudConnectionUrl + "/driver/" + driverlName
+	fmt.Println("=========== GetDriverData : ", url)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	driverInfo := model.DriverInfo{}
+	json.NewDecoder(body).Decode(&driverInfo)
+	fmt.Println(driverInfo)
+	return driverInfo
+}
+
+// Driver 등록
+func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, error) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := CloudConnectionUrl + "/driver"
+
+	fmt.Println("driverInfo : ", driverInfo)
+
+	// body, err := util.CommonHttpPost(url, regionInfo)
+	pbytes, _ := json.Marshal(driverInfo)
+	body, err := util.CommonHttpPost(url, pbytes)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+// Driver 삭제
+func DelDriver(driverName string) (io.ReadCloser, error) {
+
+	// buff := bytes.NewBuffer(pbytes)
+	url := CloudConnectionUrl + "/driver/" + driverName
+
+	fmt.Println("driverName : ", driverName)
+
+	pbytes, _ := json.Marshal(driverName)
+	// body, err := util.CommonHttpDelete(url, pbytes)
+	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
 }
 
 // func GetConnectionconfig(drivername string) CloudConnectionInfo {

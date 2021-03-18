@@ -133,11 +133,14 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Header",
 			"templates/Modal",
-			"setting/connections/CloudConnectionModal",
+			"setting/connections/cloud/RegionModal",
+			"setting/connections/cloud/CredentialModal",
+			"setting/connections/cloud/DriverModal",
 			"templates/Footer",
 		},
 		DisableCache: true,
 	})
+	// "setting/connections/CloudConnectionModal", --> Region, Credential, Driver modal로 쪼개짐
 
 	// // mcis 매핑할 middleware 추가
 	// manageMCISTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
@@ -222,10 +225,21 @@ func main() {
 
 	settingGroup.GET("/connections/cloudos", controller.GetCloudOSList)
 	settingGroup.GET("/connections/ConnectionConfigList", controller.GetConnectionConfigList) //connection 목록 조회 JSON. 필요없을 듯.
-	settingGroup.GET("/connections/region", controller.GetResionList)                         // Region 목록 조회
-	settingGroup.GET("/connections/region/:region", controller.GetResion)
+
+	settingGroup.GET("/connections/region", controller.GetRegionList)     // Region 목록 조회
+	settingGroup.GET("/connections/region/:region", controller.GetRegion) // Region 조회
+	settingGroup.POST("/connections/region/reg/proc", controller.RegionRegProc)
+	settingGroup.DELETE("/connections/region/del/:region", controller.RegionDelProc)
 
 	settingGroup.GET("/connections/credential", controller.GetCredentialList)
+	settingGroup.GET("/connections/credential/:credential", controller.GetCredential) // Credential 조회
+	settingGroup.POST("/connections/credential/reg/proc", controller.CredentialRegProc)
+	settingGroup.DELETE("/connections/credential/del/:credential", controller.CredentialDelProc)
+
+	settingGroup.GET("/connections/driver", controller.GetDriverList)
+	settingGroup.GET("/connections/driver/:driver", controller.GetDriver) // Credential 조회
+	settingGroup.POST("/connections/driver/reg/proc", controller.DriverRegProc)
+	settingGroup.DELETE("/connections/driver/del/:driver", controller.DriverDelProc)
 
 	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
@@ -236,7 +250,6 @@ func main() {
 	// e.GET("/Region/list", controller.RegionListForm)
 	// e.GET("/Region/reg", controller.RegionRegForm)
 	// e.POST("/Region/reg/proc", controller.NsRegController)
-	settingGroup.POST("/connections/region/reg/proc", controller.RegionRegProc)
 
 	// // 웹툴에서 처리할 Credential
 	// e.GET("/Credential/list", controller.CredertialListForm)
