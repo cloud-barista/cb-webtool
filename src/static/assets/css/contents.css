@@ -1277,6 +1277,7 @@
 .dashboard .register_box .iptable_box .table_plist .btn_s { position:absolute; right:0; top:-5px; }
 .dashboard .register_box .iptable_box .table_plist .btn_add { padding:0; margin:0 0 0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_add_s.png) center center no-repeat; }
 .dashboard .register_box .iptable_box .table_plist .btn_write { padding:0; margin:0 0 0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_write_s.png) center center no-repeat; }
+.dashboard .register_box .iptable_box .table_plist .btn_delete { padding:0; margin:0 0 0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_del_s.png) center center no-repeat; }
 @media screen and (max-width:1980px){
 	.dashboard .register_box .graybox .w_ipbox > div.w_r { right:7.7%; }
 	.dashboard .register_box .graybox .g_ipbox4 .w_ipbox > div.w_r { right:31.5%; }
