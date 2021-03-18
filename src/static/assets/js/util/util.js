@@ -46,3 +46,18 @@ function AjaxLoadingShow(isShow){
 //      //$('html').css("cursor", "auto"); //마우스 커서를 원래대로 돌린다
 //  });
 //========== 로딩 바 종료 =========
+
+
+// 문자열이 빈 경우 defaultString을 return
+function nvl(str, defaultStr){         
+    if(typeof str == "undefined" || str == null || str == "")
+        str = defaultStr ;
+     
+    return str ;
+}
+function nvlDash(str){         
+    if(typeof str == "undefined" || str == null || str == "" || str == "undefined")
+        str = '-';
+     
+    return str ;
+}
