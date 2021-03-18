@@ -6,17 +6,37 @@ import (
 	"io"
 	"net/http"
 	"os"
-	// "strconv"
+	"strconv"
 	// "time"
 	"bytes"
-    // "encoding/json"
-    // "io/ioutil"
-
+	"encoding/json"
+	"math"
+	// "io/ioutil"
 	// echosession "github.com/go-session/echo-session"
 	// "github.com/labstack/echo"
 	// "github.com/cloud-barista/cb-webtool/src/model"
 )
 
+type KeepZero float64
+
+func (f KeepZero) MarshalJSON() ([]byte, error) {
+	if float64(f) == float64(int(f)) {
+		return []byte(strconv.FormatFloat(float64(f), 'f', 1, 32)), nil
+	}
+	return []byte(strconv.FormatFloat(float64(f), 'f', -1, 32)), nil
+}
+
+type myFloat64 float64
+
+func (mf myFloat64) MarshalJSON() ([]byte, error) {
+	const ε = 1e-12
+	v := float64(mf)
+	w, f := math.Modf(v)
+	if f < ε {
+		return []byte(fmt.Sprintf(`%v.0`, math.Trunc(w))), nil
+	}
+	return json.Marshal(v)
+}
 
 // ajax 호출할 때 header key 생성
 func AuthenticationHandler() string {
@@ -35,7 +55,6 @@ func AuthenticationHandler() string {
 
 }
 
-
 func CommonHttpGet(url string) (io.ReadCloser, error) {
 	authInfo := AuthenticationHandler()
 
@@ -50,25 +69,75 @@ func CommonHttpGet(url string) (io.ReadCloser, error) {
 	return resp.Body, err
 }
 
-func CommonHttpPost(url string, json []byte ) (io.ReadCloser, error) {
+func CommonHttpPost(url string, json []byte) (io.ReadCloser, error) {
 	authInfo := AuthenticationHandler()
-	fmt.Println("CommonHttpPost ", url)
 
+	fmt.Println("CommonHttpPost ", url)
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    // set the request header Content-Type for json
-    req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	// set the request header Content-Type for json
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Add("Authorization", authInfo)
-    resp, err := client.Do(req)
-    if err != nil {
-        panic(err)
-    }
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
 
-    fmt.Println(resp.StatusCode)
+	fmt.Println(resp.StatusCode)
+	defer resp.Body.Close()
+
+	return resp.Body, err
+}
+
+// 호출 전 json.Marshal로 byte형태로 바꾸어 호출. json []byte로 받으면 공통으로 사용가능하므로
+func CommonHttpDelete(url string, json []byte) (io.ReadCloser, error) {
+	authInfo := AuthenticationHandler()
+
+	fmt.Println("CommonHttpDelete ", url)
+	client := &http.Client{}
+	req, err := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer(json))
+	if err != nil {
+		panic(err)
+	}
+
+	// set the request header Content-Type for json
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Add("Authorization", authInfo)
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(resp.StatusCode)
+	defer resp.Body.Close()
+
+	return resp.Body, err
+}
+
+// http 호출
+func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, error) {
+	authInfo := AuthenticationHandler()
+
+	fmt.Println("CommonHttp ", url)
+	client := &http.Client{}
+	req, err := http.NewRequest(httpMethod, url, bytes.NewBuffer(json))
+	if err != nil {
+		panic(err)
+	}
+
+	// set the request header Content-Type for json
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Add("Authorization", authInfo)
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(resp.StatusCode)
 	defer resp.Body.Close()
 
 	return resp.Body, err
