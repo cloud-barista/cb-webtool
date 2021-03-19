@@ -169,6 +169,24 @@ func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 	return body, err
 }
 
+
+// NameSpace 수정
+func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := NameSpaceUrl + "/ns"
+
+	fmt.Println("nameSpaceInfo : ", nameSpaceInfo)
+
+	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
+	pbytes, _ := json.Marshal(nameSpaceInfo)
+	body, err := util.CommonHttp(url, pbytes, http.MethodUpdate)
+	
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
 // NameSpace 삭제
 func DelNameSpace(nameSpaceID string) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)

@@ -219,7 +219,9 @@ func main() {
 	// namespaceGroup.GET("/namespace/reg/form", controller.NameSpaceRegForm) // namespace 등록 form 표시	--> 사용안함.
 	// namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
 	namespaceGroup.POST("/namespace/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
-	namespaceGroup.POST("/namespace/del/proc", controller.NameSpaceDelProc) // namespace 등록 처리
+	namespaceGroup.PUT("/namespace/update/proc", controller.NameSpaceUpdateProc)
+	
+	namespaceGroup.POST("/namespace/del/proc", controller.NameSpaceDelProc) // namespace 삭제 처리
 
 	settingGroup := e.Group("/setting/connections", settingTemplate)
 	// settingGroup.GET("/connections/cloudos", controller.GetCloudOSList) // TODO : 사용 안하는듯. 필요없으면 제거

@@ -97,6 +97,53 @@ func NameSpaceRegProc(c echo.Context) error {
 	})
 }
 
+// Namespace 수정
+func NameSpaceUpdateProc(c echo.Context) error {
+	log.Println("NameSpaceUpdateProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		// Login 정보가 없으므로 login화면으로
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	nameSpaceInfo := new(model.NameSpaceInfo)
+	if err := c.Bind(nameSpaceInfo); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	respBody, reErr := service.UpdateNameSpace(nameSpaceInfo)
+	fmt.Println("=============respBody =============", respBody)
+	if reErr != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  "403",
+		})
+	}
+
+	// 저장 성공하면 namespace 목록 조회
+	nameSpaceList, err := service.GetNameSpaceList()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message":       "fail",
+			"status":        "403",
+			"NameSpaceList": nil,
+		})
+	}
+	// return namespace 목록
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       "success",
+		"status":        "200",
+		"NameSpaceList": nameSpaceList,
+	})
+
+	// return c.JSON(http.StatusOK, map[string]interface{}{
+	// 	"message": "success",
+	// 	"status":  "200",
+	// })
+}
+
+
 // NameSpace 삭제
 func NameSpaceDelProc(c echo.Context) error {
 	log.Println("NameSpaceDelProc : ")
