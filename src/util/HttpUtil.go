@@ -142,3 +142,27 @@ func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, erro
 
 	return resp.Body, err
 }
+
+func CommonHttpWithoutParam(url string, httpMethod string) (io.ReadCloser, error) {
+	authInfo := AuthenticationHandler()
+
+	fmt.Println("CommonHttp ", url)
+	client := &http.Client{}
+	req, err := http.NewRequest(httpMethod, url, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	// set the request header Content-Type for json
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Add("Authorization", authInfo)
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(resp.StatusCode)
+	defer resp.Body.Close()
+
+	return resp.Body, err
+}

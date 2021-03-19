@@ -141,30 +141,30 @@ func LoginProc(c echo.Context) error {
 	//////// 현재구조에서는 nsList 부분을 포함해야 함. TODO : 이부분 호출되는 화면에서 필요할 듯 한데.. 공통으로 뺄까?
 	nsList, _ := service.GetNameSpaceList()
 	if len(nsList) == 0 {
-		nsInfo, createNameSpaceErr := service.CreateDefaultNamespace()
+		nameSpaceInfo, createNameSpaceErr := service.CreateDefaultNamespace()
 		if createNameSpaceErr != nil {
 			log.Println(" default namespace create failed  ", createNameSpaceErr)
 		} else {
 			nsList = append(nsList)
-			storedUser["defaultnamespacename"] = nsInfo.Name
-			storedUser["defaultnamespaceid"] = nsInfo.Name
-			// storedUser["defaultnamespaceid"] = nsInfo.ID
+			storedUser["defaultnamespacename"] = nameSpaceInfo.Name
+			storedUser["defaultnamespaceid"] = nameSpaceInfo.Name
+			// storedUser["defaultnamespaceid"] = nameSpaceInfo.ID
 		}
 	} else if len(nsList) == 1 {
-		for i, nsInfo := range nsList {
-			log.Println(i, nsInfo)
-			storedUser["defaultnamespacename"] = nsInfo.Name
-			storedUser["defaultnamespaceid"] = nsInfo.Name
-			// storedUser["defaultnamespaceid"] = nsInfo.ID
-			// defaultNameSpace = nsInfo.Name // ID로 handling 하려면 ID로
+		for i, nameSpaceInfo := range nsList {
+			log.Println(i, nameSpaceInfo)
+			storedUser["defaultnamespacename"] = nameSpaceInfo.Name
+			storedUser["defaultnamespaceid"] = nameSpaceInfo.Name
+			// storedUser["defaultnamespaceid"] = nameSpaceInfo.ID
+			// defaultNameSpace = nameSpaceInfo.Name // ID로 handling 하려면 ID로
 		}
 	}
 	store.Set("namespace", nsList)
 	///////
 
 	/////// connectionconfig 목록 조회 ////////
-	connectionConfigDataList := service.GetConnectionConfigListData()
-	store.Set("connectionconfig", connectionConfigDataList)
+	cloudConnectionConfigInfoList := service.GetCloudConnectionConfigList()
+	store.Set("connectionconfig", cloudConnectionConfigInfoList)
 	/////// connectionconfig 목록 조회 끝 ////////
 
 	// // result := map[string]string{}
@@ -187,10 +187,11 @@ func LoginProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       "success",
-		"status":        "200",
-		"LoginInfo":     loginInfo,
-		"NameSpaceList": nsList,
+		"message":                       "success",
+		"status":                        "200",
+		"LoginInfo":                     loginInfo,
+		"NameSpaceList":                 nsList,
+		"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
 	})
 
 	// return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -281,7 +282,7 @@ func LoginProc(c echo.Context) error {
 // 	// )
 // 	// return c.Render(http.StatusOK, "/setting/connections/CloudConnection.html", loginInfo)
 
-// 	// 	storedUser["defaultnamespage"] = nsInfo.ID
+// 	// 	storedUser["defaultnamespage"] = nameSpaceInfo.ID
 
 // 	// 	// 저장 성공하면 namespace 목록 조회
 // 	// 	nsList2, nsErr2 := service.GetNameSpaceList()

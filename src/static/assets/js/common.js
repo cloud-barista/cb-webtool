@@ -104,6 +104,13 @@ function fnMove(target){
     $('html, body').animate({scrollTop : offset.top}, 400);
 }
 
+function goFocus(target){
+	console.log(event)
+	event.preventDefault()
+	$("#"+target).focus();
+	fnMove(target)
+}
+
 function getVMStatus(vm_name, connection_name){
     var url = "/vmstatus/"+vm_name+"?connection_name="+connection_name
     var apiInfo = ApiInfo;

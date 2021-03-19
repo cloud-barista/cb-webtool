@@ -1,9 +1,9 @@
 package model
 
-type NSInfo struct {
+type NameSpaceInfo struct {
 	ID          string `json:"id"`
 	Name        string `json:"name" validate:"required`
 	Description string `json:"description"`
 }
 
-type NSInfos []NSInfo
+type NameSpaceInfos []NameSpaceInfo

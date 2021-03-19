@@ -1,4 +1,5 @@
 {{define "CloudConnectionModal"}}
+	<!-- 3개의 파일로 나누어 cloud 폴더 아래로 이동 -->
 					<!-- popup add Region -->
 					<div class="modal fade layerpopup" id="Add_Region" tabindex="-1" role="dialog" aria-hidden="true">
 						<div class="modal-dialog" role="document">

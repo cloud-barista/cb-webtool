@@ -16,9 +16,9 @@ $(document).ready(function(){
 
     // getCloudConnectionList(order_type);
 
-    // getCloudOS("{{ .apiInfo}}",'RegionModalProviderName');
-    // getCloudOS("{{ .apiInfo}}",'CredentialModalProviderName');
-    // getCloudOS("{{ .apiInfo}}",'DriverModalProviderName');
+    // getCloudOS("{{ .apiInfo}}",'RegionModalProviderName');// 이미 가져왔음
+    // getCloudOS("{{ .apiInfo}}",'CredentialModalProviderName');// 이미 가져왔음
+    // getCloudOS("{{ .apiInfo}}",'DriverModalProviderName');// 이미 가져왔음
 
     /* scroll */
     //checkbox all
@@ -57,12 +57,12 @@ $(document).ready(function(){
 
 })
 
-
-function fnMove(target){
-    var offset = $("#" + target).offset();
-    console.log("fn move offset : ",offset)
-    $('html, body').animate({scrollTop : offset.top}, 400);
-}
+// common.js에 정의 됨.
+// function fnMove(target){
+//     var offset = $("#" + target).offset();
+//     console.log("fn move offset : ",offset)
+//     $('html, body').animate({scrollTop : offset.top}, 400);
+// }
 
 // 현재생성된 connection config 목록. 
 function getCloudConnectionList(sort_type){
@@ -227,8 +227,7 @@ function createCloudConnection(){
         return;
     }
     
-    var apiInfo = "{{ .apiInfo}}";
-    var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig";
+    var url = "/setting/connections/connectionconfig" + "/reg/proc";
     var obj = {
         ConfigName: configname,
         ProviderName: providername,
@@ -241,7 +240,6 @@ function createCloudConnection(){
         axios.post(url,obj,{
             headers: { 
                 'Content-type': 'application/json',
-                'Authorization': apiInfo, 
             }
         }).then(result =>{
             console.log(result);
@@ -320,9 +318,25 @@ function getRegionDetail(target){
         .then(result=>{
             console.log("get Region Data : ",result.data);
             var data = result.data.Region;
+            // if(data.RegionName){ 
+            //     console.log("info Region Detail, regionName : ",target,", region : ",data.KeyValueInfoList[0].Value, ", zone : ",data.KeyValueInfoList[1].Value)
+            //     setRegionDispInfo(data.KeyValueInfoList[0].Value, data.KeyValueInfoList[1].Value)
+            // }
             if(data.RegionName){ 
-                console.log("info Region Detail, regionName : ",target,", region : ",data.KeyValueInfoList[0].Value, ", zone : ",data.KeyValueInfoList[1].Value)
-                setRegionDispInfo(data.KeyValueInfoList[0].Value, data.KeyValueInfoList[1].Value)
+            var keyValueInfoList = data.KeyValueInfoList;
+                var regionID = "-"
+                var zoneID = "-"
+                // console.log("found: ", item)
+                // console.log("found id: ", item.KeyValueInfoList)
+                // console.log("found id: ", keyValueInfoList.length)
+                if( keyValueInfoList.length == 1 ){
+                    regionID = keyValueInfoList[0].Value;
+                }else if ( keyValueInfoList.length == 2){
+                    regionID = keyValueInfoList[0].Value
+                    zoneID = keyValueInfoList[1].Value                    
+                }
+                console.log("info Region Detail, regionName : ",target,", region : ",regionID, ", zone : ",zoneID)
+                setRegionDispInfo(regionID, zoneID)
             }
         }
     )
@@ -347,7 +361,7 @@ function getRegionList(){
     axios.get(url,{})
         .then(result=>{
             console.log("get Region Data : ",result.data);
-            var data = result.data.region;
+            var data = result.data.Region;
 
             if(data.length){
                 var html = ""
@@ -395,86 +409,115 @@ function getRegionList(){
     });
 
 }
+
 function getCredentialList(){
-// var url = "{{ .comURL.SpiderURL}}"+"/credential";
-// axios.get(url,{
-//     headers:{
-//         'Authorization': "{{ .apiInfo}}",
-//         'Content-Type' : "application/json"
-//     }
-// }).then(result=>{
-//     console.log("get Credential Data : ",result.data);
-//     var data = result.data.credential;
-//     var html = ""
-//     if(data.length){ 
-//             data.filter((list)=> list.CredentialName !== "" ).map((item,index)=>(
-//                 html +='<tr onclick="getCredentialInfo(\'credential\', \'credential_info_'+index+'\');">'
-//                      +'<td class="btn_mtd ovm" data-th="Name">'+item.CredentialName+'<span class="ov"></span>'
-//                      +'<input type="hidden" id="credential_info_'+index+'" value="'+item.CredentialName+'"/>'
-//                      //  +'<td class="overlay hidden" data-th="accesskey">'+item.KeyValueInfoList[1].Value+'</td>'
-//                      +'<td class="overlay hidden" data-th="accesskey">...</td>'
-//                      +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
-//                      +'</tr>'        
-//             ))
-        
-//         $("#credentialList").empty();
-//         $("#credentialList").append(html);
-//       //  nsModal()
-//       ModalDetail()
-//       $("#credentialList tr").each(function(){
-//             $selector = $(this)
+    var url = "/setting/connections/credential";
+    axios.get(url,{
+    //     headers:{
+    //         'Authorization': "", // TODO : token 넣을 것
+    //         'Content-Type' : "application/json"
+    //     }
+    }).then(result=>{
+        console.log("get Credential Data : ",result.data);
+        var data = result.data.Credential;
+        if(data.length){
+            var html = ""
+            data.forEach(function(item, index) {
+                var keyValueInfoList = item.KeyValueInfoList;
+                var key1 = "-"
+                var value1 = "-"
+                var key2 = "-"
+                var value2 = "-"
+                // console.log("found: ", item)
+                // console.log("found id: ", item.KeyValueInfoList)
+                // console.log("found id: ", keyValueInfoList.length)
+                if( keyValueInfoList.length == 1 ){
+                    key1 = keyValueInfoList[0].Key;
+                    value1 = keyValueInfoList[0].Value;
+                }else if ( keyValueInfoList.length == 2){
+                    key1 = keyValueInfoList[0].Key;
+                    value1 = keyValueInfoList[0].Value;
+                    key2 = keyValueInfoList[1].Key;
+                    value2 = keyValueInfoList[1].Value;          
+                }
             
-//             $selector.click(function(){
-                
-//                 if($(this).hasClass("on")){
-//                     $(this).removeClass("on");
-//                 }else{
-//                     $(this).addClass("on")
-//                 }
-//             })
-//     })
-// }
-// })
+                html +='<tr onclick="getCredentialInfo(\'credential\', \'credential_info_'+index+'\');">'
+                    +'<td class="btn_mtd ovm" data-th="Name">'+item.CredentialName+'<span class="ov"></span></td>'
+                    +'<input type="hidden" id="credential_info_'+index+'" value="'+item.CredentialName+'"/>'
+                    // +'<td class="overlay hidden" data-th="accesskey">'+value1+'</td>'
+                    +'<td class="overlay hidden" data-th="accesskey">...</td>'
+                    +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
+                    +'</tr>'
+            });
+        // if(data.length){ 
+        //         data.filter((list)=> list.CredentialName !== "" ).map((item,index)=>(
+        //             html +='<tr onclick="getCredentialInfo(\'credential\', \'credential_info_'+index+'\');">'
+        //                 +'<td class="btn_mtd ovm" data-th="Name">'+item.CredentialName+'<span class="ov"></span>'
+        //                 +'<input type="hidden" id="credential_info_'+index+'" value="'+item.CredentialName+'"/>'
+        //                 //  +'<td class="overlay hidden" data-th="accesskey">'+item.KeyValueInfoList[1].Value+'</td>'
+        //                 +'<td class="overlay hidden" data-th="accesskey">...</td>'
+        //                 +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
+        //                 +'</tr>'        
+        //         ))
+            
+            $("#credentialList").empty();
+            $("#credentialList").append(html);
+        // ModalDetail()
+            $("#credentialList tr").each(function(){
+                    $selector = $(this)
+                    
+                    $selector.click(function(){
+                        
+                        if($(this).hasClass("on")){
+                            $(this).removeClass("on");
+                        }else{
+                            $(this).addClass("on")
+                        }
+                    })
+            })
+        }// end of data.length
+    })
 }
+
 function getDriverList(){
-// var url = "{{ .comURL.SpiderURL}}"+"/driver";
-// axios.get(url,{
-//     headers:{
-//         'Authorization': "{{ .apiInfo}}",
-//         'Content-Type' : "application/json"
-//     }
-// }).then(result=>{
-//     console.log("get Driver Data : ",result.data);
-//     var data = result.data.driver;
-//     var html = ""
-//     if(data.length){ 
-//             data.filter((list)=> list.DriverName !== "" ).map((item,index)=>(
-//                 html +='<tr onclick="getDriverInfo(\'driver\', \'driver_info_'+index+'\');">'
-//                      +'<td class="btn_mtd ovm" data-th="Name">'+item.DriverName+'<span class="ov"></span></td>'
-//                      +'<input type="hidden" id="driver_info_'+index+'" value="'+item.DriverName+'|'+item.ProviderName+'|'+item.DriverLibFileName+'"/>'
-//                      +'<td class="overlay hidden" data-th="Driver SDK">'+item.DriverLibFileName+'</td>'
-//                      +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
-//                      +'</tr>'        
-//             ))
-        
-//         $("#driverList").empty();
-//         $("#driverList").append(html);
-//       //  nsModal()
-//       ModalDetail()
-//       $("#driverList tr").each(function(){
-//             $selector = $(this)
+    var url = "/setting/connections"+"/driver";
+    axios.get(url,{
+        // headers:{
+        //     'Authorization': "{{ .apiInfo}}",
+        //     'Content-Type' : "application/json"
+        // }
+    }).then(result=>{
+        console.log("get Driver Data : ",result.data);
+        var data = result.data.Driver;
+        var html = ""
+        if(data.length){ 
+                data.filter((list)=> list.DriverName !== "" ).map((item,index)=>(
+                    html +='<tr onclick="getDriverInfo(\'driver\', \'driver_info_'+index+'\');">'
+                        +'<td class="btn_mtd ovm" data-th="Name">'+item.DriverName+'<span class="ov"></span></td>'
+                        +'<input type="hidden" id="driver_info_'+index+'" value="'+item.DriverName+'|'+item.ProviderName+'|'+item.DriverLibFileName+'"/>'
+                        +'<td class="overlay hidden" data-th="Driver SDK">'+item.DriverLibFileName+'</td>'
+                        +'<td class="overlay hidden" data-th="CP">'+item.ProviderName+'</td>'
+                        +'</tr>'        
+                ))
             
-//             $selector.click(function(){
-                
-//                 if($(this).hasClass("on")){
-//                     $(this).removeClass("on");
-//                 }else{
-//                     $(this).addClass("on")
-//                 }
-//             })
-//     })
-// }}
-// )
+            $("#driverList").empty();
+            $("#driverList").append(html);
+        
+            // ModalDetail()
+            $("#driverList tr").each(function(){
+                    $selector = $(this)
+                    
+                    $selector.click(function(){
+                        
+                        if($(this).hasClass("on")){
+                            $(this).removeClass("on");
+                        }else{
+                            $(this).addClass("on")
+                        }
+                    })
+            })
+        }
+    })
 }
 
 function ModalDetail(){
@@ -583,8 +626,7 @@ function saveNewRegion(){
     }).catch(function(error){
         console.log("save error : ",error);
     
-    });
-    
+    });    
 }
 
 // region 삭제
@@ -598,7 +640,7 @@ function deleteRegion(){
     }
     $("#requireMessage").text("")
     
-    alert(regionName + " 을 삭제하겠습니까");
+    alert(regionName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
     
     var url = "/setting/connections/region/del/";
     //axios.post("/setting/connections/region/reg/proc",regionInfo,{
@@ -630,7 +672,7 @@ function saveNewCredential(){
 	// CredentialName string             `json:"CredentialName"`
 	// ProviderName   string             `json:"ProviderName"`
 	// KeyValueInfoList   []KeyValueInfoList `json:"KeyValueInfoList"`
-    if(!credentialName || !providerName || !key0 || !value0){
+    if(!credentialName || !providerName || !key0 || !value0 || !key1 || !value1){
         $("#modalCredentialRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
         return;
     }
@@ -653,9 +695,9 @@ function saveNewCredential(){
             $("#CredentialModalCredentialName").val('');
             // $("#CredentialModalProviderName option:eq(0)").attr("selecte", "selected");
             $("#CredentialModalKey0").val('');
-            // $("#CredentialModalValue0").val('');
+            $("#CredentialModalValue0").val('');
             $("#CredentialModalKey1").val('');
-            // $("#CredentialModalValue1").val('');
+            $("#CredentialModalValue1").val('');
             
             // Credential table 갱신
             getCredentialList();
@@ -666,22 +708,21 @@ function saveNewCredential(){
     }).catch(function(error){
         console.log("save error : ",error);
     
-    });
-    
+    });    
 }
 
 // Credential 삭제
 function deleteCredential(){
     var credentialName = $("#reg_credential").val()
 
-    if(!regionName){
+    if(!credentialName){
         $("#requireMessage").text("선택된 Credential key가 없습니다.")
         $("#requiredCloudConnection").modal()
         return;
     }
     $("#requireMessage").text("")
     
-    alert(credentialName + " 을 삭제하겠습니까");
+    alert(credentialName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
     
     var url = "/setting/connections/credential/del/";
     axios.delete(url+credentialName, {},{
@@ -725,7 +766,7 @@ function saveNewDriver(){
     }).then(result =>{
         console.log(result);
         if(result.status == 200 || result.status == 201){
-            alert("Success Save Cloud Credential");
+            alert("Success Save Cloud Driver");
             // 성공하면 내용 초기화
             $("#DriverModalDriverName").val('');
             // $("#DriverModalProviderName option:eq(0)").attr("selecte", "selected");
@@ -755,7 +796,7 @@ function deleteDriver(){
     }
     $("#requireMessage").text("")
     
-    alert(driverName + " 을 삭제하겠습니까");
+    alert(driverName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
     
     var url = "/setting/connections/driver/del/";
     axios.delete(url+driverName, {},{

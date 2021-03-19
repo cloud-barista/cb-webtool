@@ -94,11 +94,12 @@ func main() {
 		Master:    "setting/namespaces/NameSpace",
 		Partials: []string{
 			"templates/Top",
-			"templates/Top_box",
-			"templates/LNB_popup",
+			"templates/TopBox",
+			"templates/LNB",
+			"templates/LNBPopup",
 			"templates/Modal",
 			"templates/Header",
-			"templates/Menu_left",
+			"templates/MenuLeft",
 			"templates/Footer",
 		}, //
 		DisableCache: true,
@@ -125,7 +126,7 @@ func main() {
 	settingTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
-		Master:    "setting/connections/CloudConnection",
+		Master:    "setting/connections/CloudConnectionConfigMng", // master를 이용할 때는 확장자 없이. 그 외에는 확장자까지
 		Partials: []string{
 			"templates/Top",
 			"templates/TopBox",
@@ -157,13 +158,10 @@ func main() {
 	// 해당 그룹.POST(경로, controller의 method)
 	// naming rule : json인 경우 Get 등을 앞에 붙임 ex) GetConnectionConfigData
 	// controller : 1개일 때 객체명, List일 때 객체명 + List
-	//   ex) 1개 가져오는 json : GetConnectionConfig, List 가져오는 json : GetConnectionConfigList
+	//   ex) 1개 가져오는 json : GetConnectionConfigData, List 가져오는 json : GetConnectionConfigList
 	// handler : 1개일때 controller명 + Data, List일 때 controller method명 DataList
 
 	e.GET("/", controller.Index)
-
-	// //connection 관련
-	e.GET("/connectionconfig", controller.GetConnectionConfigList) // 현재 설정된 connection 목록 TODO : 호출 경로 일원화. 이건 로그인정보 필요없긴 함. /connections/GetConnectionConfigListData
 
 	loginGroup := e.Group("/login", loginTemplate)
 
@@ -209,37 +207,46 @@ func main() {
 	// // e.GET("/NS/reg", controller.NsRegForm)
 	// // e.POST("/NS/reg/proc", controller.NsRegController)
 	// // e.GET("/GET/ns", controller.GetNameSpace)
-	namespaceGroup := e.Group("/NameSpace", namespaceTemplate)
-	namespaceGroup.GET("/NS/list", controller.NsListForm) // namespace 보여주는 form 표시. DashboardController로 이동?
+	namespaceGroup := e.Group("/setting/namespaces", namespaceTemplate)
+	namespaceGroup.GET("/namespace/mngform", controller.NameSpaceMngForm) // namespace 보여주는 form 표시. DashboardController로 이동?
 	// namespaceGroup.GET("/GET/ns", controller.GetNameSpace)         // 선택된 namespace 정보조회. Tumblebuck 호출
 	// namespaceGroup.GET("/GET/nsList", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
+	namespaceGroup.GET("/namespace/list", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 
-	namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
+	//namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
+	namespaceGroup.GET("/namespace/set/:nsid", controller.SetNameSpace) // default namespace set
 	// namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
-	namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
+	// namespaceGroup.GET("/namespace/reg/form", controller.NameSpaceRegForm) // namespace 등록 form 표시	--> 사용안함.
+	// namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
+	namespaceGroup.POST("/namespace/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
+	namespaceGroup.POST("/namespace/del/proc", controller.NameSpaceDelProc) // namespace 등록 처리
 
-	settingGroup := e.Group("/setting", settingTemplate)
+	settingGroup := e.Group("/setting/connections", settingTemplate)
+	// settingGroup.GET("/connections/cloudos", controller.GetCloudOSList) // TODO : 사용 안하는듯. 필요없으면 제거
+	// settingGroup.GET("/connections/CloudConnection", controller.ConnectionList) // Connection 관리화면 -> naming rule변경으로사용안함.
+	settingGroup.GET("/cloudconnectionconfig/mngform", controller.CloudConnectionConfigMngForm)     // Connection 관리화면
+	settingGroup.GET("/cloudconnectionconfig/list", controller.GetCloudConnectionConfigList)        //connection 목록 조회
+	settingGroup.GET("/cloudconnectionconfig/:configName", controller.GetCloudConnectionConfigData) //connection 정보 상세조회
+	settingGroup.POST("/cloudconnectionconfig/reg/proc", controller.CloudConnectionConfigRegProc)   // 등록
+	settingGroup.DELETE("/cloudconnectionconfig/del/proc", controller.CloudConnectionConfigDelProc) // 삭제
 
-	// settingGroup.GET("/connections/CloudConnection", controller.ConnectionList) // Connection 관리화면
-	settingGroup.GET("/connections/CloudConnection", controller.ConnectionListForm) // Connection 관리화면
+	// region form은 popup으로 대체
+	settingGroup.GET("/region", controller.GetRegionList)     // Region 목록 조회
+	settingGroup.GET("/region/:region", controller.GetRegion) // Region 조회
+	settingGroup.POST("/region/reg/proc", controller.RegionRegProc)
+	settingGroup.DELETE("/region/del/:region", controller.RegionDelProc)
 
-	settingGroup.GET("/connections/cloudos", controller.GetCloudOSList)
-	settingGroup.GET("/connections/ConnectionConfigList", controller.GetConnectionConfigList) //connection 목록 조회 JSON. 필요없을 듯.
+	// credection form은 popup으로 대체
+	settingGroup.GET("/credential", controller.GetCredentialList)
+	settingGroup.GET("/credential/:credential", controller.GetCredential) // Credential 조회
+	settingGroup.POST("/credential/reg/proc", controller.CredentialRegProc)
+	settingGroup.DELETE("/credential/del/:credential", controller.CredentialDelProc)
 
-	settingGroup.GET("/connections/region", controller.GetRegionList)     // Region 목록 조회
-	settingGroup.GET("/connections/region/:region", controller.GetRegion) // Region 조회
-	settingGroup.POST("/connections/region/reg/proc", controller.RegionRegProc)
-	settingGroup.DELETE("/connections/region/del/:region", controller.RegionDelProc)
-
-	settingGroup.GET("/connections/credential", controller.GetCredentialList)
-	settingGroup.GET("/connections/credential/:credential", controller.GetCredential) // Credential 조회
-	settingGroup.POST("/connections/credential/reg/proc", controller.CredentialRegProc)
-	settingGroup.DELETE("/connections/credential/del/:credential", controller.CredentialDelProc)
-
-	settingGroup.GET("/connections/driver", controller.GetDriverList)
-	settingGroup.GET("/connections/driver/:driver", controller.GetDriver) // Credential 조회
-	settingGroup.POST("/connections/driver/reg/proc", controller.DriverRegProc)
-	settingGroup.DELETE("/connections/driver/del/:driver", controller.DriverDelProc)
+	// driver form은 popup으로 대체
+	settingGroup.GET("/driver", controller.GetDriverList)
+	settingGroup.GET("/driver/:driver", controller.GetDriver) // Credential 조회
+	settingGroup.POST("/driver/reg/proc", controller.DriverRegProc)
+	settingGroup.DELETE("/driver/del/:driver", controller.DriverDelProc)
 
 	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)

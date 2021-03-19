@@ -161,14 +161,14 @@
 											</tr>
 										</thead>
 										<tbody id="cList">
-											{{ $length := len .ConnectionConfigList }} 
+											{{ $length := len .CloudConnectionConfigList }} 
 											{{ if eq $length 0 }}
 											<tr>
 												<td class="overlay hidden" data-th="" colspan="8">No Data</td>
 											</tr>
 											{{ end }}
 
-											{{range $index, $item := .ConnectionConfigList}}	
+											{{range $index, $item := .CloudConnectionConfigList}}	
 											<tr onclick="showConnectionConfigInfo('cc_info_{{$index}}');">
 												<td class="overlay hidden" data-th="">
 													<input type="hidden" id="cc_info_{{$index}}" value="{{$item.ConfigName}}|{{$item.ProviderName}}|{{$item.RegionName}}|{{$item.CredentialName}}|{{$item.DriverName}}"/>
@@ -442,6 +442,7 @@
 											<div class="tit"><span class="ch">*</span>Credential</div>
 											<div class="btn_s">
 												<button class="btn_write" value="" name="" data-toggle="modal" data-target="#Add_Credential">write</button>
+												<button class="btn_delete" value="" name="" onClick="deleteCredential()">delete</button>
 												<!-- <button class="btn_add" value="" name="">add</button> -->
 											</div>
 											<div class="dataTable first_over">
@@ -482,6 +483,7 @@
 											<div class="tit"><span class="ch">*</span>Driver</div>
 											<div class="btn_s">
 												<button class="btn_write" value="" name="" data-toggle="modal" data-target="#Add_Driver">write</button>
+												<button class="btn_delete" value="" name="" onClick="deleteDriver()">delete</button>
 												<!-- <button class="btn_add" value="" name="">add</button> -->
 											</div>
 											<div class="dataTable first_over">
@@ -578,6 +580,6 @@
 				</div>
 				<!-- //required -->
 
-<script src="/assets/js/setting/connections/cloudconnection.js"></script>
+<script src="/assets/js/setting/connections/cloudconnectionconfigmng.js"></script>
 
 {{template "Footer" .}}

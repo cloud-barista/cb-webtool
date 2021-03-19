@@ -107,7 +107,8 @@ $(document).ready(function(){
 
                     console.log(data)
                     $.ajax({
-                        url:"/SET/NS/"+ns,
+                        // url:"/SET/NS/"+ns,
+                        rul:"/setting/namespaces/namespace/set/"+ns,
                         type:'GET',
                         async:false,
                         success:function(res){

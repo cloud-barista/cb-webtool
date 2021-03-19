@@ -28,7 +28,7 @@ $(document).ready(function(){
                         console.log("get result Data : ",result.data.LoginInfo);
                         tokenSuccess(result.data.LoginInfo)
                         
-                        location.href = "/setting/connections/CloudConnection" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
+                        location.href = "/setting/connections/cloudconnectionconfig/mngform" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
                  }else{
                      alert("ID or PASSWORKD MISMATCH!!Check yourself!")
                      location.reload(true); 
@@ -89,9 +89,9 @@ function enterKeyForLogin() {
     }
 }
 
-// 커넥션 정보 조회
-function getConfig(){
-    var connectionURL = "/connectionconfig"
+// 커넥션 정보 조회 : getConfig() -> getCloudConnectionConfig 로 변경
+function getCloudConnectionConfig(){
+    var connectionURL = "/connections/cloudconnectionconfig/list"
     axios.get(connectionURL,{
     }).then(result=>{
         console.log("get Connection config Data : ",result.data);
@@ -232,12 +232,13 @@ function configModal(){
 }
 
 // namepace 생성
-function createNS(){
+//function createNS(){
+function createNameSpace(){
     var addNamespaceValue = $("#addNamespace").val()
     var addNamespaceDescValue = $("#addNamespaceDesc").val()
     
     //var url = "/ns";
-    var url = "/NameSpace/reg/proc";
+    var url = "/setting/namespaces/namespace/reg/proc";
     var obj = {
         name: addNamespaceValue,
         description : addNamespaceDescValue
@@ -300,7 +301,7 @@ function clickOK(){
 
 function setNS(nsid){
     if(nsid){
-        reqUrl = "/NameSpace/SET/NS/"+nsid;
+        reqUrl = "/setting/namespaces/"+nsid;
         console.log(reqUrl);
         axios.get(reqUrl,{
             headers:{

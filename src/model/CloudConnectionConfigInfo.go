@@ -1,6 +1,7 @@
 package model
 
-type ConnectionConfigData struct {
+// ConnectionConfigData -> CloudConnectionConfigInfo 로 변경
+type CloudConnectionConfigInfo struct {
 	//user(username, password, email)
 	ConfigName     string `json:"configname"`
 	ProviderName   string `json:"providername"`
@@ -8,4 +9,4 @@ type ConnectionConfigData struct {
 	CredentialName string `json:"CredentialName"`
 	RegionName     string `json:"RegionName"`
 }
-type ConnectionConfigDataList []ConnectionConfigData
+type CloudConnectionConfigInfos []CloudConnectionConfigInfo

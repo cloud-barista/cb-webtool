@@ -2,11 +2,11 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
-	// "net/http"
-	"errors"
 	"log"
+	"net/http"
 	"os"
 	// "bytes"
 	// "reflect"
@@ -25,34 +25,34 @@ var NameSpaceUrl = os.Getenv("TUMBLE_URL")
 // }
 
 // 저장된 namespace가 없을 때 최초 1개 생성하고 해당 namespace 정보를 return  : 검증 필요(TODO : 이미 namespace가 있어서 확인 못함)
-func CreateDefaultNamespace() (*model.NSInfo, error) {
+func CreateDefaultNamespace() (*model.NameSpaceInfo, error) {
 	// nsInfo := new(model.NSInfo)
-	nsInfo := model.NSInfo{}
+	nameSpaceInfo := model.NameSpaceInfo{}
 
 	// 사용자의 namespace 목록조회
 	nsList, nsErr := GetNameSpaceList()
 	if nsErr != nil {
 		log.Println(" nsErr  ", nsErr)
-		return &nsInfo, nsErr
+		return &nameSpaceInfo, nsErr
 	}
 
 	if len(nsList) > 0 {
-		//return &nsInfo, errors.New(101, "Namespace already exists. size="+len(nsList))
-		return &nsInfo, errors.New("aaa")
+		//return &nameSpaceInfo, errors.New(101, "Namespace already exists. size="+len(nsList))
+		return &nameSpaceInfo, errors.New("aaa")
 	}
 
 	// create default namespace
-	nsInfo.Name = "NS-01" // default namespace name
-	//nsInfo.ID = "NS-01"
-	nsInfo.Description = "default name space name"
-	respBody, nsCreateErr := RegNameSpace(&nsInfo)
+	nameSpaceInfo.Name = "NS-01" // default namespace name
+	//nameSpaceInfo.ID = "NS-01"
+	nameSpaceInfo.Description = "default name space name"
+	respBody, nsCreateErr := RegNameSpace(&nameSpaceInfo)
 	log.Println(" respBody  ", respBody) // respBody에 namespace Id가 있으면 할당해서 사용할 것
 	if nsCreateErr != nil {
 		log.Println(" nsCreateErr  ", nsCreateErr)
-		return &nsInfo, nsCreateErr
+		return &nameSpaceInfo, nsCreateErr
 	}
 
-	return &nsInfo, nil
+	return &nameSpaceInfo, nil
 }
 
 // func GetNS(nsID string) model.NSInfo {
@@ -123,14 +123,14 @@ func CreateDefaultNamespace() (*model.NSInfo, error) {
 // 	}
 
 // 	defer resp.Body.Close()
-// 	nsInfo := map[string][]model.NSInfo{}
-// 	fmt.Println("nsInfo type : ", reflect.TypeOf(nsInfo))
-// 	json.NewDecoder(resp.Body).Decode(&nsInfo)
-// 	fmt.Println("nsInfo : ", nsInfo["ns"][0].ID)
+// 	nameSpaceInfo := map[string][]model.NSInfo{}
+// 	fmt.Println("nameSpaceInfo type : ", reflect.TypeOf(nameSpaceInfo))
+// 	json.NewDecoder(resp.Body).Decode(&nameSpaceInfo)
+// 	fmt.Println("nameSpaceInfo : ", nameSpaceInfo["ns"][0].ID)
 // }
 
 // 사용자의 namespace 목록 조회
-func GetNameSpaceList() ([]model.NSInfo, error) {
+func GetNameSpaceList() ([]model.NameSpaceInfo, error) {
 	fmt.Println("GetNameSpaceList start")
 	url := NameSpaceUrl + "/ns"
 
@@ -144,25 +144,43 @@ func GetNameSpaceList() ([]model.NSInfo, error) {
 		return nil, err
 	}
 
-	nsInfoList := map[string][]model.NSInfo{}
+	nameSpaceInfoList := map[string][]model.NameSpaceInfo{}
 	defer body.Close()
-	json.NewDecoder(body).Decode(&nsInfoList)
+	json.NewDecoder(body).Decode(&nameSpaceInfoList)
 	//spew.Dump(body)
-	fmt.Println(nsInfoList["ns"])
+	fmt.Println(nameSpaceInfoList["ns"])
 
-	return nsInfoList["ns"], nil
+	return nameSpaceInfoList["ns"], nil
 }
 
-// 성공시 NsInfoList 반환
-func RegNameSpace(nsInfo *model.NSInfo) (io.ReadCloser, error) {
+// NameSpace 등록
+func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := NameSpaceUrl + "/ns"
 
-	fmt.Println("nsInfo : ", nsInfo)
+	fmt.Println("nameSpaceInfo : ", nameSpaceInfo)
+
+	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
+	pbytes, _ := json.Marshal(nameSpaceInfo)
+	body, err := util.CommonHttpPost(url, pbytes)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+// NameSpace 삭제
+func DelNameSpace(nameSpaceID string) (io.ReadCloser, error) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := NameSpaceUrl + "/ns/" + nameSpaceID
+
+	fmt.Println("nameSpaceID : ", nameSpaceID)
 
 	//body, err := util.CommonHttpPost(url, nsInfo)
-	pbytes, _ := json.Marshal(nsInfo)
-	body, err := util.CommonHttpPost(url, pbytes)
+
+	// 경로안에 parameter가 있어 추가 param없이 호출 함.
+	body, err := util.CommonHttpWithoutParam(url, http.MethodDelete)
+	// body, err := util.CommonHttpDelete(url, pbytes)
 	if err != nil {
 		fmt.Println(err)
 	}

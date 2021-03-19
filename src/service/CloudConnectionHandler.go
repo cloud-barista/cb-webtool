@@ -83,7 +83,7 @@ func GetCloudOSListData() []string {
 
 	// CloudConnectionUrl == SPIDER
 	url := CloudConnectionUrl + "/" + "cloudos"
-	// fmt.Println("=========== GetConnectionConfigData : ", url)
+	// fmt.Println("=========== GetCloudOSListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
 	defer body.Close()
@@ -99,12 +99,12 @@ func GetCloudOSListData() []string {
 	return cloudOs["cloudos"]
 }
 
-// 현재 설정된 connection 목록
-func GetConnectionConfigListData() []model.ConnectionConfigData {
+// 현재 설정된 connection 목록 GetConnectionConfigListData -> GetCloudConnectionConfigList로 변경
+func GetCloudConnectionConfigList() []model.CloudConnectionConfigInfo {
 
 	// CloudConnectionUrl == SPIDER
 	url := CloudConnectionUrl + "/" + "connectionconfig"
-	// fmt.Println("=========== GetConnectionConfigData : ", url)
+	// fmt.Println("=========== GetCloudConnectionConfigList : ", url)
 
 	body, err := util.CommonHttpGet(url)
 	defer body.Close()
@@ -113,11 +113,64 @@ func GetConnectionConfigListData() []model.ConnectionConfigData {
 		fmt.Println(err)
 	}
 
-	connectionConfigDataList := map[string][]model.ConnectionConfigData{}
-	json.NewDecoder(body).Decode(&connectionConfigDataList)
-	fmt.Println(connectionConfigDataList["connectionconfig"])
+	cloudConnectionConfigInfo := map[string][]model.CloudConnectionConfigInfo{}
+	json.NewDecoder(body).Decode(&cloudConnectionConfigInfo)
+	fmt.Println(cloudConnectionConfigInfo["connectionconfig"])
 
-	return connectionConfigDataList["connectionconfig"]
+	return cloudConnectionConfigInfo["connectionconfig"]
+}
+
+// Connection 상세
+func GetCloudConnectionConfigData(configName string) model.CloudConnectionConfigInfo {
+	url := CloudConnectionUrl + "/connectionconfig/" + configName
+	fmt.Println("=========== GetCloudConnectionConfigData : ", configName)
+
+	body, err := util.CommonHttpGet(url)
+	defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	cloudConnectionConfigInfo := model.CloudConnectionConfigInfo{}
+	json.NewDecoder(body).Decode(&cloudConnectionConfigInfo)
+	fmt.Println(cloudConnectionConfigInfo)
+	return cloudConnectionConfigInfo
+}
+
+// CloudConnectionConfigInfo 등록
+func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (io.ReadCloser, error) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := CloudConnectionUrl + "/connectionconfig"
+
+	fmt.Println("cloudConnectionConfigInfo : ", cloudConnectionConfigInfo)
+
+	// body, err := util.CommonHttpPost(url, regionInfo)
+	pbytes, _ := json.Marshal(cloudConnectionConfigInfo)
+	body, err := util.CommonHttpPost(url, pbytes)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+// CloudConnectionConfigInfo 삭제
+func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := CloudConnectionUrl + "/connectionconfig/" + configName
+
+	fmt.Println("DelCloudConnectionConfig : ", configName)
+
+	// body, err := util.CommonHttpPost(url, regionInfo)
+
+	pbytes, _ := json.Marshal(configName)
+	// body, err := util.CommonHttpDelete(url, pbytes)
+	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
 }
 
 // 현재 설정된 region 목록
@@ -152,11 +205,11 @@ func GetRegionData(regionName string) model.RegionInfo {
 		fmt.Println(err)
 	}
 
-	// region := map[string][]string{}
-	// // retion := map[string][]model.ConnectionConfigData{}
-	// json.NewDecoder(body).Decode(&region)
-	// fmt.Println(region)	// map[KeyValueInfoList:[] ProviderName:[] RegionName:[]]
-	// // fmt.Println(connectionConfigDataList["connectionconfig"])
+	// regionList := map[string][]string{}
+	// // regionList := map[string][]model.RegionInfo{}
+	// json.NewDecoder(body).Decode(&regionList)
+	// fmt.Println(regionList)	// map[KeyValueInfoList:[] ProviderName:[] RegionName:[]]
+	// // fmt.Println(regionList["connectionconfig"])
 	regionInfo := model.RegionInfo{}
 	json.NewDecoder(body).Decode(&regionInfo)
 	fmt.Println(regionInfo)
@@ -199,7 +252,7 @@ func DelRegion(regionName string) (io.ReadCloser, error) {
 	return body, err
 }
 
-// 현재 설정된 credential 목록
+// 현재 설정된 credential 목록 : 목록에서는 key의 value는 ...으로 표시
 func GetCredentialListData() []model.CredentialInfo {
 
 	// CloudConnectionUrl == SPIDER
@@ -216,13 +269,23 @@ func GetCredentialListData() []model.CredentialInfo {
 	credentialList := map[string][]model.CredentialInfo{}
 	json.NewDecoder(body).Decode(&credentialList)
 	fmt.Println(credentialList["credential"])
+	// TODO : key의 value에 ...표시
+	for _, credentialInfo := range credentialList["credential"] {
+		fmt.Println("credentialInfo : ", credentialInfo)
+		keyValueInfoList := credentialInfo.KeyValueInfoList
+		fmt.Println("before keyValueInfoList : ", keyValueInfoList)
+		for _, keyValueInfo := range keyValueInfoList {
+			keyValueInfo.Value = "..."
+		}
+		fmt.Println("after keyValueInfoList : ", keyValueInfoList)
+	}
 
 	return credentialList["credential"]
 }
 
 // Credential 상세조회
 func GetCredentialData(credentialName string) model.CredentialInfo {
-	url := CloudConnectionUrl + "/region/" + credentialName
+	url := CloudConnectionUrl + "/credential/" + credentialName
 	fmt.Println("=========== GetCredentialData : ", credentialName)
 
 	body, err := util.CommonHttpGet(url)
