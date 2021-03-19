@@ -97,7 +97,7 @@ function showModifyNamespaceButton(){
     //$("#txtBox").attr("readonly",true);
 }
 
-function showModifyNamespaceButton(){
+function showModifyNamespaceButton1(){
     // $("#nameSpaceDeleteBtn").hide();
     // $("#main").css("display", "none");
     $("#info_name").attr("readonly",true);
