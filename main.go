@@ -220,17 +220,17 @@ func main() {
 	// namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
 	namespaceGroup.POST("/namespace/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
 	namespaceGroup.PUT("/namespace/update/proc", controller.NameSpaceUpdateProc)
-	
+
 	namespaceGroup.POST("/namespace/del/proc", controller.NameSpaceDelProc) // namespace 삭제 처리
 
 	settingGroup := e.Group("/setting/connections", settingTemplate)
 	// settingGroup.GET("/connections/cloudos", controller.GetCloudOSList) // TODO : 사용 안하는듯. 필요없으면 제거
 	// settingGroup.GET("/connections/CloudConnection", controller.ConnectionList) // Connection 관리화면 -> naming rule변경으로사용안함.
-	settingGroup.GET("/cloudconnectionconfig/mngform", controller.CloudConnectionConfigMngForm)     // Connection 관리화면
-	settingGroup.GET("/cloudconnectionconfig/list", controller.GetCloudConnectionConfigList)        //connection 목록 조회
-	settingGroup.GET("/cloudconnectionconfig/:configName", controller.GetCloudConnectionConfigData) //connection 정보 상세조회
-	settingGroup.POST("/cloudconnectionconfig/reg/proc", controller.CloudConnectionConfigRegProc)   // 등록
-	settingGroup.DELETE("/cloudconnectionconfig/del/proc", controller.CloudConnectionConfigDelProc) // 삭제
+	settingGroup.GET("/cloudconnectionconfig/mngform", controller.CloudConnectionConfigMngForm)            // Connection 관리화면
+	settingGroup.GET("/cloudconnectionconfig/list", controller.GetCloudConnectionConfigList)               //connection 목록 조회
+	settingGroup.GET("/cloudconnectionconfig/:configName", controller.GetCloudConnectionConfigData)        //connection 정보 상세조회
+	settingGroup.POST("/cloudconnectionconfig/reg/proc", controller.CloudConnectionConfigRegProc)          // 등록
+	settingGroup.DELETE("/cloudconnectionconfig/del/:configName", controller.CloudConnectionConfigDelProc) // 삭제
 
 	// region form은 popup으로 대체
 	settingGroup.GET("/region", controller.GetRegionList)     // Region 목록 조회

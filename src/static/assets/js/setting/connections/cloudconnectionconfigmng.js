@@ -227,7 +227,7 @@ function createCloudConnection(){
         return;
     }
     
-    var url = "/setting/connections/connectionconfig" + "/reg/proc";
+    var url = "/setting/connections/cloudconnectionconfig" + "/reg/proc";
     var obj = {
         ConfigName: configname,
         ProviderName: providername,
@@ -267,47 +267,50 @@ function deleteCloudConnection(){
 
     var cnt = 0;
     var mcc_id = "";
-    var apiInfo = ApiInfo;
+    // var apiInfo = ApiInfo;
     console.log("start cloudConnection_delete ")
     console.log("info chk : ", $(".chk"))
-    $(".chk").each(function(){
+    $('input:checkbox[name="cloudconnection_chk"]').each(function(){
+    // $(".chk").each(function(){
         if($(this).is(":checked")){
             //alert("chk");
             cnt++;
             mcc_id = $(this).val();        
         }
+    })
+
         if(cnt < 1 ){
             alert("삭제할 대상을 선택해 주세요.");
             return;
         }
-
-        if(cnt == 1){
-        console.log("mcc_id ; ",mcc_id)
-            //var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcc_id
-            var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig/"+mcc_id;
-            
-            if(confirm("삭제하시겠습니까?")){
-            axios.delete(url,{
-                headers :{
-                    'Content-type': 'application/json',
-                    'Authorization': apiInfo,
-                    }
-            }).then(result=>{
-                var data = result.data
-                if(result.status == 200){
-                    alert(data.message)
-                    location.reload(true)
-                }
-            })
-            }
-        }
-
         if(cnt >1){
             alert("한개씩만 삭제 가능합니다.")
             return;
         }
 
-    })
+        if(cnt == 1){
+            console.log("mcc_id ; ",mcc_id)
+            //var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcc_id
+            //var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig/"+mcc_id;
+            var url = "/setting/connections/cloudconnectionconfig" + "/del/"+mcc_id;
+            if(confirm("삭제하시겠습니까?")){
+                axios.delete(url,{
+                    headers :{
+                        'Content-type': 'application/json',
+                        // 'Authorization': apiInfo,
+                        }
+                }).then(result=>{
+                    var data = result.data
+                    console.log(data);        
+                    if(result.status == 200){
+                        alert(data.message)
+                        location.reload(true)
+                    }
+                }).catch(function(error){
+                    console.log("connection delete error : ",error);        
+                });
+            }
+        }
 }
 
 // 선택한 resion의 상세 정보 조회
@@ -338,8 +341,9 @@ function getRegionDetail(target){
                 console.log("info Region Detail, regionName : ",target,", region : ",regionID, ", zone : ",zoneID)
                 setRegionDispInfo(regionID, zoneID)
             }
-        }
-    )
+        }).catch(function(error){
+            console.log("region detail error : ",error);        
+        });
 }
 
 // Region에서 zone 정보까지 표시
@@ -476,7 +480,9 @@ function getCredentialList(){
                     })
             })
         }// end of data.length
-    })
+    }).catch(function(error){
+        console.log("region display error : ",error);        
+    });
 }
 
 function getDriverList(){
@@ -517,7 +523,9 @@ function getDriverList(){
                     })
             })
         }
-    })
+    }).catch(function(error){
+        console.log("region display error : ",error);        
+    });
 }
 
 function ModalDetail(){
