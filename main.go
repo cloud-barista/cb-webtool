@@ -230,7 +230,7 @@ func main() {
 	namespaceGroup.GET("/namespace/list", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 
 	//namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
-	namespaceGroup.GET("/namespace/set/:nsid", controller.SetNameSpace) // default namespace set
+	namespaceGroup.GET("/namespace/set/:nameSpaceID", controller.SetNameSpace) // default namespace set
 	// namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
 	// namespaceGroup.GET("/namespace/reg/form", controller.NameSpaceRegForm) // namespace 등록 form 표시	--> 사용안함.
 	// namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리

@@ -6,7 +6,7 @@
         <div class="txt_1">Leonardo DiCaprio : {{.LoginInfo.Username}}</div>
         <div class="txt_2">
             <input type="hidden" id="defaultNameSpaceID" value="{{.LoginInfo.DefaultNameSpaceID}}" />
-            <span id="defaultNameSpace">{{.LoginInfo.DefaultNameSpaceName}}</span>
+            <span id="defaultNameSpaceName">{{.LoginInfo.DefaultNameSpaceName}}</span>
             <div class="infobox">
                 <div class="box">
                     <ul>
@@ -15,7 +15,7 @@
                             <ul id="menuNameSpaceList">      
                                 {{with .NameSpaceList}}
                                     {{range .}}
-                                <li><a href="javascript:void(0);" onclick="select_namespace('{{.Name}}')" data-toggle="modal" data-target="#NameSpace">{{.Name}}</a></li>    
+                                <li><a href="javascript:void(0);" onclick="setNameSpace('{{.ID}}')" data-toggle="modal" data-target="#NameSpace">{{.Name}}</a></li>    
                                     {{end}}
                                 {{end}}                          
                              

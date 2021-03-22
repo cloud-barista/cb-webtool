@@ -252,17 +252,43 @@ func GetNameSpaceList(c echo.Context) error {
 // 기본 namespace set. set default Namespace
 func SetNameSpace(c echo.Context) error {
 	fmt.Println("====== SET SELECTED NAME SPACE ========")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.JSON(http.StatusNotAcceptable, map[string]string{
+			"message": "Not Login",
+			"status":  "403",
+		})
+	}
 	store := echosession.FromContext(c)
-	ns := c.Param("nsid")
-	fmt.Println("SetNameSpaceID : ", ns)
-	store.Set("namespace", ns)
-	err := store.Save()
+
+	result, ok := store.Get(loginInfo.Username)
+	if !ok {
+		return c.JSON(http.StatusNotAcceptable, map[string]string{
+			"message": "Not Login",
+			"status":  "403",
+		})
+	}
+	storedUser := result.(map[string]string)
+	
+	nameSpaceID := c.Param("nameSpaceID")
+	storedUser["defaultnamespaceid"] = nameSpaceID
+	
+	fmt.Println("SetNameSpaceID : ", nameSpaceID)
+
+	store.Set(loginInfo.Username, storedUser)
+	
+	storeErr := store.Save()
+	if storeErr != nil {
+		return c.JSON(http.StatusNotAcceptable, map[string]string{
+			"message": storeErr.Error(),
+			"status":  "403",
+		})
+	}
+
 	res := map[string]string{
 		"message": "success",
-	}
-	if err != nil {
-		res["message"] = "fail"
-		return c.JSON(http.StatusNotAcceptable, res)
+		"status":  "200",
+		"DefaultNameSpaceID": nameSpaceID,
 	}
 	return c.JSON(http.StatusOK, res)
 }
