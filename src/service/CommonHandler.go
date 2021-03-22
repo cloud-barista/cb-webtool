@@ -165,8 +165,9 @@ func CallLoginInfo(c echo.Context) model.LoginInfo {
 	// result := getObj.(map[string]string)
 
 	loginInfo := model.LoginInfo{
-		Username:    storedUser["username"],
-		AccessToken: storedUser["accessToken"],
+		Username:           storedUser["username"],
+		AccessToken:        storedUser["accessToken"],
+		DefaultNameSpaceID: storedUser["defaultNameSpaceID"],
 	}
 	return loginInfo
 }

@@ -91,7 +91,7 @@ func main() {
 	namespaceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
-		Master:    "setting/namespaces/NameSpace",
+		Master:    "setting/namespaces/NameSpaceMng",
 		Partials: []string{
 			"templates/Top",
 			"templates/TopBox",
@@ -123,7 +123,7 @@ func main() {
 		DisableCache: true,
 	})
 
-	settingTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	cloudConnectionTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
 		Master:    "setting/connections/CloudConnectionConfigMng", // master를 이용할 때는 확장자 없이. 그 외에는 확장자까지
@@ -137,6 +137,22 @@ func main() {
 			"setting/connections/cloud/RegionModal",
 			"setting/connections/cloud/CredentialModal",
 			"setting/connections/cloud/DriverModal",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+
+	resourceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		Master:    "setting/resources/NetworkMng", // master를 이용할 때는 확장자 없이. 그 외에는 확장자까지
+		Partials: []string{
+			"templates/Top",
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/MenuLeft",
+			"templates/Header",
+			"templates/Modal",
 			"templates/Footer",
 		},
 		DisableCache: true,
@@ -224,32 +240,39 @@ func main() {
 	// namespaceGroup.DELETE("/namespace/del/proc", controller.NameSpaceDelProc) // namespace 삭제 처리
 	namespaceGroup.DELETE("/namespace/del/:nameSpaceID", controller.NameSpaceDelProc) // namespace 삭제 처리
 
-	settingGroup := e.Group("/setting/connections", settingTemplate)
-	// settingGroup.GET("/connections/cloudos", controller.GetCloudOSList) // TODO : 사용 안하는듯. 필요없으면 제거
-	// settingGroup.GET("/connections/CloudConnection", controller.ConnectionList) // Connection 관리화면 -> naming rule변경으로사용안함.
-	settingGroup.GET("/cloudconnectionconfig/mngform", controller.CloudConnectionConfigMngForm)            // Connection 관리화면
-	settingGroup.GET("/cloudconnectionconfig/list", controller.GetCloudConnectionConfigList)               //connection 목록 조회
-	settingGroup.GET("/cloudconnectionconfig/:configName", controller.GetCloudConnectionConfigData)        //connection 정보 상세조회
-	settingGroup.POST("/cloudconnectionconfig/reg/proc", controller.CloudConnectionConfigRegProc)          // 등록
-	settingGroup.DELETE("/cloudconnectionconfig/del/:configName", controller.CloudConnectionConfigDelProc) // 삭제
+	cloudConnectionGroup := e.Group("/setting/connections", cloudConnectionTemplate)
+	// cloudConnectionGroup.GET("/connections/cloudos", controller.GetCloudOSList) // TODO : 사용 안하는듯. 필요없으면 제거
+	// cloudConnectionGroup.GET("/connections/CloudConnection", controller.ConnectionList) // Connection 관리화면 -> naming rule변경으로사용안함.
+	cloudConnectionGroup.GET("/cloudconnectionconfig/mngform", controller.CloudConnectionConfigMngForm)            // Connection 관리화면
+	cloudConnectionGroup.GET("/cloudconnectionconfig/list", controller.GetCloudConnectionConfigList)               //connection 목록 조회
+	cloudConnectionGroup.GET("/cloudconnectionconfig/:configName", controller.GetCloudConnectionConfigData)        //connection 정보 상세조회
+	cloudConnectionGroup.POST("/cloudconnectionconfig/reg/proc", controller.CloudConnectionConfigRegProc)          // 등록
+	cloudConnectionGroup.DELETE("/cloudconnectionconfig/del/:configName", controller.CloudConnectionConfigDelProc) // 삭제
 
 	// region form은 popup으로 대체
-	settingGroup.GET("/region", controller.GetRegionList)     // Region 목록 조회
-	settingGroup.GET("/region/:region", controller.GetRegion) // Region 조회
-	settingGroup.POST("/region/reg/proc", controller.RegionRegProc)
-	settingGroup.DELETE("/region/del/:region", controller.RegionDelProc)
+	cloudConnectionGroup.GET("/region", controller.GetRegionList)     // Region 목록 조회
+	cloudConnectionGroup.GET("/region/:region", controller.GetRegion) // Region 조회
+	cloudConnectionGroup.POST("/region/reg/proc", controller.RegionRegProc)
+	cloudConnectionGroup.DELETE("/region/del/:region", controller.RegionDelProc)
 
 	// credection form은 popup으로 대체
-	settingGroup.GET("/credential", controller.GetCredentialList)
-	settingGroup.GET("/credential/:credential", controller.GetCredential) // Credential 조회
-	settingGroup.POST("/credential/reg/proc", controller.CredentialRegProc)
-	settingGroup.DELETE("/credential/del/:credential", controller.CredentialDelProc)
+	cloudConnectionGroup.GET("/credential", controller.GetCredentialList)
+	cloudConnectionGroup.GET("/credential/:credential", controller.GetCredential) // Credential 조회
+	cloudConnectionGroup.POST("/credential/reg/proc", controller.CredentialRegProc)
+	cloudConnectionGroup.DELETE("/credential/del/:credential", controller.CredentialDelProc)
 
 	// driver form은 popup으로 대체
-	settingGroup.GET("/driver", controller.GetDriverList)
-	settingGroup.GET("/driver/:driver", controller.GetDriver) // Credential 조회
-	settingGroup.POST("/driver/reg/proc", controller.DriverRegProc)
-	settingGroup.DELETE("/driver/del/:driver", controller.DriverDelProc)
+	cloudConnectionGroup.GET("/driver", controller.GetDriverList)
+	cloudConnectionGroup.GET("/driver/:driver", controller.GetDriver) // Credential 조회
+	cloudConnectionGroup.POST("/driver/reg/proc", controller.DriverRegProc)
+	cloudConnectionGroup.DELETE("/driver/del/:driver", controller.DriverDelProc)
+
+	resourcesGroup := e.Group("/setting/resources", resourceTemplate)
+	resourcesGroup.GET("/network/mngform", controller.VpcMngForm)
+	resourcesGroup.GET("/network/list", controller.GetVpcList)
+	resourcesGroup.GET("/network/:vpcID", controller.GetVpcData)
+	resourcesGroup.POST("/network/reg", controller.VpcRegProc)
+	resourcesGroup.DELETE("/network/del/:vpcID", controller.VpcDelProc)
 
 	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)

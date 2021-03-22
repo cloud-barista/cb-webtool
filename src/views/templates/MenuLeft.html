@@ -50,7 +50,7 @@
 				
 				<div class="tab-pane fade show active" id="Setting">
 					<ul class="menu">
-						<li id="Resources">
+						<!-- <li id="Resources">
 							<a href="javascript:void(0);">Resources</a>
 							<ul>
 								<li id="net"><a href="/Vpc/list">Network</a></li>
@@ -58,6 +58,16 @@
 								<li id="ssh"><a href="/SSH/list">SSH key</a></li>
 								<li id="image"><a href="/Image/list">(Server) Image</a></li>
 								<li id="spec"><a href="/Spec/list">(Server) Spec</a></li>
+							</ul>
+						</li> -->
+						<li id="menu_level2_resources">
+							<a href="javascript:void(0);">Resources</a>
+							<ul>
+								<li id="network"><a href="/setting/resources/network/mngform">Network</a></li>
+								<li id="securitygroup"><a href="/setting/resources/securitygroup/mngform">Security</a></li>
+								<li id="sshkey"><a href="/setting/resources/sshkey/mngform">SSH key</a></li>
+								<li id="serverimage"><a href="/setting/resources/serverimage/mngform">(Server) Image</a></li>
+								<li id="serverspec"><a href="/setting/resources/serverspec/mngform">(Server) Spec</a></li>
 							</ul>
 						</li>
 						<li id="AppRes">
@@ -67,16 +77,29 @@
 								<li><a href="!#">Pod</a></li>
 							</ul>
 						</li>
-						<li id="Cloud">
+						<!-- <li id="Cloud">
 							<a href="javascript:void(0);">Cloud Connections</a>
 							<ul>
 								<li id="Connection"><a href="/setting/connections/cloudconnectionconfig/mngform">Cloud Connections</a></li>
 							</ul>
 						</li>
-						<li class="active" id="NameSpace">
+						 -->
+						<li id="menu_level2_connections">
+							<a href="javascript:void(0);">Cloud Connections</a>
+							<ul>
+								<li id="menu_level3_cloudconnectionconfig"><a href="/setting/connections/cloudconnectionconfig/mngform">Cloud Connections</a></li>
+							</ul>
+						</li>
+						<!-- <li id="NameSpace">
 							<a href="javascript:void(0);">NameSpace</a>
 							<ul>
-								<li id="NS" class="on"><a href="/setting/namespaces/namespace/mngform">NameSpace</a></li>
+								<li id="NS" ><a href="/setting/namespaces/namespace/mngform">NameSpace</a></li>
+							</ul>
+						</li> -->
+						<li id="menu_level2_namespaces">
+							<a href="javascript:void(0);">NameSpace</a>
+							<ul>
+								<li id="menu_level3_namespace" ><a href="/setting/namespaces/namespace/mngform">NameSpace</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -85,4 +108,8 @@
 			
 		</div>
 		<!-- //menu -->
+		<script>
+			// 좌측메뉴 선택표시			
+			lnb_on();
+		</script>
 {{end}}

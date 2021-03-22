@@ -407,6 +407,64 @@ func DelDriver(driverName string) (io.ReadCloser, error) {
 	return body, err
 }
 
+// 해당 namespace의 vpc 목록 조회
+func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
+	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
+
+	fmt.Println("nameSpaceID : ", nameSpaceID)
+
+	pbytes, _ := json.Marshal(nameSpaceID)
+	body, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+// vpc 상세 조회
+func GetVpcData(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
+	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
+
+	fmt.Println("nameSpaceID : ", nameSpaceID)
+
+	pbytes, _ := json.Marshal(nameSpaceID)
+	body, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+func RegVpc(nameSpaceID string, vnetInfo *model.VNetInfo) (io.ReadCloser, error) {
+	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
+
+	fmt.Println("nameSpaceID : ", nameSpaceID)
+
+	pbytes, _ := json.Marshal(vnetInfo)
+	body, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
+func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
+	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet" + vNetID
+
+	fmt.Println("nameSpaceID : ", nameSpaceID)
+
+	pbytes, _ := json.Marshal(vNetID)
+	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	return body, err
+}
+
 // func GetConnectionconfig(drivername string) CloudConnectionInfo {
 // 	url := NameSpaceUrl + "/driver/" + drivername
 

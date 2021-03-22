@@ -217,7 +217,7 @@ func NameSpaceMngForm(c echo.Context) error {
 
 	// status, filepath(vies기준), return params
 	return echotemplate.Render(c, http.StatusOK,
-		"setting/namespaces/NameSpace", // 파일명
+		"setting/namespaces/NameSpaceMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":     loginInfo,
 			"NameSpaceList": nameSpaceList,

@@ -129,19 +129,38 @@ function getVMStatus(vm_name, connection_name){
     })
 }
 
+// 좌측메뉴 선택 표시
+// 경로를 split하여 첫번째 : Operation / Setting, 두번째 선택, 세번째 선택하도록 
 function lnb_on(){
 	var url = new URL(location.href)
 	var path = url.pathname
 	path = path.split("/")
 	var target1 = path[1]
 	var target2 = path[2]
-	
-	$("#"+target1).addClass("active")
-	$("#"+target1).addClass("on")
+	var target3 = path[3]
+	console.log('lnb_on path : ' + path)
+	console.log('target1=' + target1)
+	console.log('target2=' + target2)
+	console.log('target3=' + target3)
+	// $("#"+target1).addClass("active")
+	// $("#"+target1).addClass("on")
+
+	// $("#"+target1).addClass("active")
+
+	// $("#" + target1) // Setting
+	$("#menu_level2_" + target2).addClass("active")
+	$("#menu_level3_"+target3).addClass("on")
 
 	$(".leftmenu .tab-content ul > li").each(function(){
 		
 	})
+
+	// 					<li id="Cloud">
+	// 						<a href="javascript:void(0);">Cloud Connections</a>
+	// 						<ul>
+	// 							<li id="Connection"><a href="/setting/connections/cloudconnectionconfig/mngform">Cloud Connections</a></li>
+	// 						</ul>
+	// 					</li>
 }
 //webmoa common
 $(function() {
@@ -162,15 +181,19 @@ $(function() {
 			$topmenu = $contents.find('.topmenu'),
 			$btn_menu = $('#btn_menu'),
 			$btn_top = $('#btn_top');
-			
+	console.log(" $menu_li ")
+	console.log( $menu_li )		
 	//left menu upDwon
 	$menu_li.children('a').not('.link').click(function(){
+		console.log("left menu updownd clicked ")
 		if($(this).next().css('display') === 'none'){
+			console.log("left menu display none ")
 			$menu_li.removeClass('on');
 			$ul_sub.slideUp(300);
 			$(this).parent().addClass('on');
 			$(this).next().slideDown(300);
 		}else{
+			console.log("left menu display else ")
 			$(this).parent().removeClass('on');
 			$(this).next().slideUp(300);
 		}
@@ -180,6 +203,7 @@ $(function() {
 	
 	//mobile on(open)
 	$btn_menu.click(function(){
+		console.log(" $btn_menu " + btn_menu)
 		$menubg.stop(true,true).fadeIn(300);
 		$lnb.animate({right:0}, 300);
 		$lnb.addClass('on');
@@ -254,6 +278,7 @@ $(function() {
   			$status = $(".server_status"),
   			$detail = $(".server_info");
   	$td_list.off("click").click(function(){
+		console.log("common td list click add on")
 			$td_list.addClass("on");
 			$td_list.siblings().removeClass("on");
 			$status.addClass("view");
@@ -320,20 +345,23 @@ $(function() {
   	var $sel_list = $(this),
   			$detail_view = $(".monitoring_view");
   	$sel_list.off("click").click(function(){
+		  console.log("sel_list click add active")
 			$sel_list.addClass("active");
 			$sel_list.siblings().removeClass("active");
 			$detail_view.addClass("active");
 			$detail_view.siblings().removeClass("active");
 	   	$sel_list.off("click").click(function(){
 				if( $(this).hasClass("active") ) {
+					console.log("sel_list click remove active")
 					$sel_list.removeClass("active");
 					$detail_view.removeClass("active");
-		    } else {
+		    	} else {
+					console.log("sel_list click remove active, add sibling")
 					$sel_list.addClass("active");
 					$sel_list.siblings().removeClass("active");
 					$detail_view.addClass("active");
 					$detail_view.siblings().removeClass("active");
-		    }
+		    	}
 			});
 		});
 	});

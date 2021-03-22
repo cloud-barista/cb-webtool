@@ -1,7 +1,13 @@
 
 $(document).ready(function(){
     order_type = "ConfigName"
-
+    
+    var defaultNameSpaceID = $('#defaultNameSpaceID').val();
+    if( defaultNameSpaceID == '' || defaultNameSpaceID == undefined){
+        alert("작업할 namespace를 선택하시기 바랍니다.")
+        // namespace로 보냄.
+        location.href = "/setting/namespaces/namespace/mngform"
+    }
     
     // // defaultnamespace 확인 
     // defaultNamespace = '{{.LoginInfo.DefaultNameSpaceName}}'
