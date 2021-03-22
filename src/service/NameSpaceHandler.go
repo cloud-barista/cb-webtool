@@ -169,7 +169,6 @@ func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 	return body, err
 }
 
-
 // NameSpace 수정
 func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
@@ -179,8 +178,8 @@ func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) 
 
 	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
 	pbytes, _ := json.Marshal(nameSpaceInfo)
-	body, err := util.CommonHttp(url, pbytes, http.MethodUpdate)
-	
+	body, err := util.CommonHttp(url, pbytes, http.MethodPut)
+
 	if err != nil {
 		fmt.Println(err)
 	}

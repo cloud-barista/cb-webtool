@@ -13,6 +13,7 @@ $(document).ready(function(){
 
 // function getNSList(sort_type){
 function getNameSpaceList(sort_type){
+    clearNamespaceInfo();
     var url = "/setting/namespaces"+"/namespace/list";
     axios.get(url,{
         headers:{
@@ -52,7 +53,7 @@ function getNameSpaceList(sort_type){
             }		
             $("#nsList").empty();
             $("#nsList").append(html);
-
+                       
             ModalDetail()        
         }//end of data length
     })
@@ -69,7 +70,6 @@ function getNameSpaceList(sort_type){
 
 // }
 
-// TODO : 여기 개발 중.
 // function showInfo(target){
 function showNameSpaceInfo(target){
     console.log("target : ",target);
@@ -80,26 +80,13 @@ function showNameSpaceInfo(target){
     $("#info_desc").val(infos[2])
     
     $("#info_name").focus();
-
-    // $("#nameSpaceModifyBtn").show();
 }
 
-// control 버튼 보이기/숨기기
-function displayNamespaceButton(showHide){
-    if(showHide){
-        $("#info_name").removeAttr("readonly")
-        $("#info_desc").removeAttr("readonly")
-        $("#nameSpaceCancelBtn").show();
-        $("#nameSpaceSaveBtn").show();
-        $("#nameSpaceModifyBtn").hide();   
-    }else{
-        $("#info_name").attr("readonly",true);
-        $("#info_desc").attr("readonly",true);
-        $("#nameSpaceCancelBtn").hide();
-        $("#nameSpaceSaveBtn").hide();
-        $("#nameSpaceModifyBtn").show();
-    }
-    
+// 삭제 처리 후 namespace 상세정보 초기화
+function clearNamespaceInfo(){
+    $("#info_id").val('')
+    $("#info_name").val('')
+    $("#info_desc").val('')
 }
 
 //function createNS(){
@@ -132,54 +119,7 @@ function createNameSpace(){
                 getNameSpaceList();
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
-                displayNamespaceButton(false);
                 // // $("#btn_add2").click()
-                // $("#namespace").val('')
-                // $("#nsDesc").val('')
-            }else{
-                alert("Fail Create NameSpace")
-            }
-        });
-    }else{
-        alert("Input NameSpace")
-        $("#reg_desc").focus()
-        return;
-    }
-}
-
-// Namespace 변경. ID는 불가, 이름과 설명은 변경가능
-function updateNameSpace () {
-    var nameSpaceID = $("#info_id").val()
-    var nameSpaceName = $("#info_name").val()
-    var nameSpaceDescription = $("#info_desc").val()
-
-    if(!nameSpaceName){
-        alert("Input NameSpace")
-        $("#info_name").focus()
-        return;
-    }
-    
-    var url = "/setting/namespaces"+"/namespace/update/proc";
-    var obj = {
-        id : nameSpaceID,
-        name: nameSpaceName,
-        description : nameSpaceDescription
-    }
-    if(nameSpaceID && nameSpaceName){
-        axios.post(url,obj,{
-            headers: { 
-                'Content-type': 'application/json',
-                // 'Authorization': apiInfo, 
-            }
-        }).then(result =>{
-            console.log(result);
-            if(result.status == 200 || result.status == 201){
-                alert("Success update NameSpace")
-                //등록하고 나서 화면을 그냥 고칠 것인가?
-                getNameSpaceList();
-                //아니면 화면을 리로딩 시킬것인가?
-                location.reload();
-                // $("#btn_add2").click()
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             }else{
@@ -199,35 +139,37 @@ function deleteNameSpace () {
     var nameSpaceName = $("#info_name").val()
     var nameSpaceDescription = $("#info_desc").val()
 
-    if(!nameSpaceName){
-        alert("Input NameSpace")
-        $("#info_name").focus()
+    if(!nameSpaceID){
+        alert("select NameSpace")        
         return;
     }
     
-    var url = "/setting/namespaces"+"/namespace/del/proc";
-    var obj = {
-        // id : nameSpaceID,
-        // name: nameSpaceName,
-        // description : nameSpaceDescription
-        nameSpaceID : nameSpaceID
-    }
+    var url = "/setting/namespaces"+"/namespace/del/" + nameSpaceID;
+    // var obj = {
+    //     // id : nameSpaceID,
+    //     // name: nameSpaceName,
+    //     // description : nameSpaceDescription
+    //     nameSpaceID : nameSpaceID
+    // }
     if(nameSpaceID){
-        axios.post(url,obj,{
-            headers: { 
-                'Content-type': 'application/json',
-                // 'Authorization': apiInfo, 
-            }
+        // axios.post(url,obj,{
+        //     headers: { 
+        //         'Content-type': 'application/json',
+        //         // 'Authorization': apiInfo, 
+        //     }
+        axios.delete(url, {},{
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                alert("Success update NameSpace")
+                alert("Success delete NameSpace")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getNameSpaceList();
                 
             }else{
-                alert("Fail Create NameSpace")
+                alert("Fail delete NameSpace")
             }
+        }).catch(function(error){
+            console.log("namespace delete error : ",error);        
         });
     }else{
         alert("Input NameSpace")
@@ -240,31 +182,31 @@ function getNS(){
 
 }
 function ModalDetail(){
-$(".dashboard .status_list tbody tr").each(function(){
-  var $td_list = $(this),
-          $status = $(".server_status"),
-          $detail = $(".server_info");
-  $td_list.off("click").click(function(){
-        $td_list.addClass("on");
-        $td_list.siblings().removeClass("on");
-        $status.addClass("view");
-        $status.siblings().removeClass("on");
-          $(".dashboard.register_cont").removeClass("active");
-       $td_list.off("click").click(function(){
-            if( $(this).hasClass("on") ) {
-                console.log("reg ok button click")
-                $td_list.removeClass("on");
-                $status.removeClass("view");
-                $detail.removeClass("active");
-        } else {
+    $(".dashboard .status_list tbody tr").each(function(){
+        var $td_list = $(this),
+                $status = $(".server_status"),
+                $detail = $(".server_info");
+        $td_list.off("click").click(function(){
                 $td_list.addClass("on");
                 $td_list.siblings().removeClass("on");
                 $status.addClass("view");
-                
-                $status.siblings().removeClass("view");
-                  $(".dashboard.register_cont").removeClass("active");
-        }
+                $status.siblings().removeClass("on");
+                $(".dashboard.register_cont").removeClass("active");
+            $td_list.off("click").click(function(){
+                    if( $(this).hasClass("on") ) {
+                        console.log("reg ok button click")
+                        $td_list.removeClass("on");
+                        $status.removeClass("view");
+                        $detail.removeClass("active");
+                } else {
+                        $td_list.addClass("on");
+                        $td_list.siblings().removeClass("on");
+                        $status.addClass("view");
+                        
+                        $status.siblings().removeClass("view");
+                        $(".dashboard.register_cont").removeClass("active");
+                }
+            });
         });
     });
-});
 }
