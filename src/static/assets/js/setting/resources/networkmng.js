@@ -1,14 +1,36 @@
-$(document).ready(function () {
+$(document).ready(function(){
     order_type = "name"
+    //checkbox all
+    $("#th_chall").click(function() {
+        if ($("#th_chall").prop("checked")) {
+            $("input[name=chk]").prop("checked", true);
+        } else {
+            $("input[name=chk]").prop("checked", false);
+        }
+    })
+    
+    //table 스크롤바 제한
+    $(window).on("load resize",function(){
+        var vpwidth = $(window).width();
+        if (vpwidth > 768 && vpwidth < 1800) {
+        $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
+            $(".dataTable.scrollbar-inner").scrollbar();
+        } else {
+            $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
+        }
+    });
+// });
 
-    // var defaultNameSpace = "{{ .DefaultNameSpaceID }}"
-    // alert(defaultNameSpace)
-    // var nameSpaceList = "{{ .NameSpaceList }}"
-    // alert(nameSpaceList);
-    // page load시 이미 가져왔음
-    // getVpcList(order_type);
-    // getCloudOS(apiInfo,'provider');
-})                      
+// $(document).ready(function () {
+    
+//     // var defaultNameSpace = "{{ .DefaultNameSpaceID }}"
+//     // alert(defaultNameSpace)
+//     // var nameSpaceList = "{{ .NameSpaceList }}"
+//     // alert(nameSpaceList);
+//     // page load시 이미 가져왔음
+//     // getVpcList(order_type);
+//     // getCloudOS(apiInfo,'provider');
+// })                      
 
 function goFocus(target) {
     console.log(event)
@@ -277,7 +299,7 @@ function createVNet() {
     }
 }
 
-function showInfo(target) {
+function showVNetInfo(target) {
     console.log("target showInfo : ", target);
     var apiInfo = "{{ .apiInfo}}";
     var vNetId = encodeURIComponent(target);

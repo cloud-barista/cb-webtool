@@ -151,44 +151,31 @@
 											</tr>
 										</thead>
 										<tbody id="vpcList">
-											
-											<tr onclick="showInfo(\'' + item.name + '\');">
-												<td class="overlay hidden" data-th="">
-												<input type="hidden" id="sg_info_' + index + '" value="' + item.name  + '"/>
-												<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>
-												<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>
-												<td class="overlay hidden" data-th="description">' + item.description + ' {{ .VNetList}}</td>
-												<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>
+											{{ $length := len .VNetList }} 
+											{{ if eq $length 0 }}
+											<tr>
+												<td class="overlay hidden" data-th="" colspan="5">No Data</td>
 											</tr>
+											{{ end }}
+											{{range $index, $item := .VNetList}}
+											<tr onclick="showVNetInfo('{{$item.Name}}');">
+												<td class="overlay hidden" data-th="">
+													<input type="hidden" id="sg_info_{{$index}}" value="{{$item.Name}}"/>
+													<input type="checkbox" name="chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
+													<label for="td_ch1"></label> <span class="ov off"></span>
+												</td>
+												<td class="btn_mtd ovm" data-th="name">{{$item.Name}}<span class="ov"></span></td>
+												<td class="overlay hidden" data-th="cidrBlock">{{$item.cidrBlock}}</td>
+												<td class="overlay hidden" data-th="description">{{$item.description}}</td>
+												<td class="overlay hidden" data-th=""><a href="javascript:void(0);">
+													<img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
+												</td>
+											</tr>
+											{{ end }}
 										</tbody>
 									</table>
 								</div>
 								
-								<script>
-									/* scroll */
-									$(document).ready(function(){
-										//checkbox all
-										$("#th_chall").click(function() {
-											if ($("#th_chall").prop("checked")) {
-												$("input[name=chk]").prop("checked", true);
-											} else {
-												$("input[name=chk]").prop("checked", false);
-											}
-										})
-										
-										//table 스크롤바 제한
-										$(window).on("load resize",function(){
-											var vpwidth = $(window).width();
-											if (vpwidth > 768 && vpwidth < 1800) {
-											$(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-												$(".dataTable.scrollbar-inner").scrollbar();
-											} else {
-												$(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-											}
-										});
-									});
-								</script>
 								
 								<!-- 
 								<div class="pageing">

@@ -114,16 +114,14 @@ function createNameSpace(){
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                alert("Success Create NameSpace")
+                commonAlertOpen("SuccessCreateNameSpace");
+                clearNamespaceInfo();
+                
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getNameSpaceList();
-                //아니면 화면을 리로딩 시킬것인가?
-                // location.reload();
-                // // $("#btn_add2").click()
-                // $("#namespace").val('')
-                // $("#nsDesc").val('')
+
             }else{
-                alert("Fail Create NameSpace")
+                commonAlertOpen("FailCreateNameSpace");
             }
         });
     }else{
@@ -139,40 +137,34 @@ function deleteNameSpace () {
     var nameSpaceName = $("#info_name").val()
     var nameSpaceDescription = $("#info_desc").val()
 
+    // checkbox 선택되어있는지 체크할까?
     if(!nameSpaceID){
-        alert("select NameSpace")        
+        // alert("select NameSpace")
+        commonAlertOpen("ValidDeleteNameSpace");
         return;
     }
     
     var url = "/setting/namespaces"+"/namespace/del/" + nameSpaceID;
-    // var obj = {
-    //     // id : nameSpaceID,
-    //     // name: nameSpaceName,
-    //     // description : nameSpaceDescription
-    //     nameSpaceID : nameSpaceID
-    // }
     if(nameSpaceID){
-        // axios.post(url,obj,{
-        //     headers: { 
-        //         'Content-type': 'application/json',
-        //         // 'Authorization': apiInfo, 
-        //     }
         axios.delete(url, {},{
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                alert("Success delete NameSpace")
+                // alert("Success delete NameSpace")
+                commonAlertOpen("SuccessDeleteNameSpace");
+                clearNamespaceInfo()
+
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getNameSpaceList();
-                
+                getNameSpaceList();                
             }else{
-                alert("Fail delete NameSpace")
+                commonAlertOpen("FailDeleteNameSpace");
             }
         }).catch(function(error){
             console.log("namespace delete error : ",error);        
         });
     }else{
-        alert("Input NameSpace")
+        // alert("Input NameSpace")
+        commonAlertOpen("Input NameSpace");
         $("#reg_desc").focus()
         return;
     }
@@ -180,6 +172,16 @@ function deleteNameSpace () {
 
 function getNS(){
 
+}
+
+function displayNameSpaceInfo(targetAction){
+    if( targetAction == "REG"){
+        $('#ns_reg').toggleClass("active");
+        $('#info_box').removeClass("view");
+    }else if ( targetAction == "MOD"){
+        $('#ns_reg').removeClass("active");
+        $('#info_box').toggleClass("view");
+    }
 }
 function ModalDetail(){
     $(".dashboard .status_list tbody tr").each(function(){

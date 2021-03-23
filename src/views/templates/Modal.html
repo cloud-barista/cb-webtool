@@ -1,15 +1,15 @@
 {{define "Modal"}}
 	<!-- popup modal -->
-	<div class="modal fade layerpopup" id="modalArea" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal fade layerpopup" id="confirmArea" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				
 				<div class="modal-body">
-					<div class="txt"><span id="modalText"></div>
+					<div class="txt"><span id="confirmText"></div>
 					<div class="btnbox">
-						<input type="hidden" id="modalOkAction" value=""><!-- modal에서 OK버튼 클릭 시 수행할 action 지정-->
-						<button type="button" class="btn_cancel" data-dismiss="modal" onclick="commonModalClose()">Cancel</button>
-						<button type="button" class="btn_ok" data-dismiss="modal" onclick="commonModalOk()">OK</button>
+						<input type="hidden" id="confirmOkAction" value=""><!-- modal에서 OK버튼 클릭 시 수행할 action 지정-->
+						<button type="button" class="btn_cancel" data-dismiss="modal" onclick="commonConfirmClose()">Cancel</button>
+						<button type="button" class="btn_ok" data-dismiss="modal" onclick="commonConfirmOk()">OK</button>
 					</div>
 				</div>
 				
@@ -19,7 +19,7 @@
 	<!-- //popup modal -->
 
 	<!-- popup alert -->
-	<!-- <div class="modal fade layerpopup" id="alertArea" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal fade layerpopup" id="alertArea" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				
@@ -33,7 +33,7 @@
 				
 			</div>
 		</div>
-	</div> -->
+	</div>
 	<!-- //popup alert -->
 
 	<!-- popup logout -->

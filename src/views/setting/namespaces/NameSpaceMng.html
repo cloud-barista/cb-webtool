@@ -67,11 +67,11 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#AddBox">Add</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#AddBox" onClick="commonConfirmOpen('AddNewNameSpace')">Add</a></li>
 														<!-- 
 														<li><a href="javascript:void(0);">Change</a></li>
 														-->
-														<li><a href="javascript:void(0);" onClick="deleteNameSpace()">Delete</a></li>
+														<li><a href="javascript:void(0);" onClick="commonConfirmOpen('DeleteNameSpace')">Delete</a></li>
 													</ul>
 												</div>
 											</div>
@@ -82,7 +82,7 @@
 							</div>
 	
 							<!-- popup Add -->
-							<div class="modal fade layerpopup" id="AddBox" tabindex="-1" role="dialog" aria-hidden="true" id="modal_reg">
+							<!-- <div class="modal fade layerpopup" id="AddBox" tabindex="-1" role="dialog" aria-hidden="true" id="modal_reg">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										
@@ -96,17 +96,17 @@
 										
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<!-- //popup Add -->
 							
 							<script>
-								$(document).ready(function(){
-									$('#AddBox .btn_ok.register').click(function(){
-										$(".dashboard.register_cont").toggleClass("active");
-										$(".dashboard.server_status").removeClass("view");
-										$(".dashboard .status_list tbody tr").removeClass("on");
-									});
-								});
+								// $(document).ready(function(){
+									// $('#AddBox .btn_ok.register').click(function(){
+									// 	$(".dashboard.register_cont").toggleClass("active");
+									// 	$(".dashboard.server_status").removeClass("view");
+									// 	$(".dashboard .status_list tbody tr").removeClass("on");
+									// });
+								// });
 							</script>
 							
 							<div class="ds_cont">
