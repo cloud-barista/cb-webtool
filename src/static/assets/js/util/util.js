@@ -122,7 +122,12 @@ function commonModalOpen(targetAction){
     //$('#modalText').text(confirmModalTextMap.get(targetAction));
     $('#modalText').html(confirmModalTextMap.get(targetAction));
     $('#modalOkAction').val(targetAction);
-    // $('#modalArea').show(); 
+    
+    if( targetAction == "Region"){
+        // button에 target 지정
+        // data-target="#Add_Region_Register"
+        // TODO : confirm 으로 물어본 뒤 OK버튼 클릭 시 targetDIV 지정하도록
+    }
     $('#modalArea').modal(); 
     }catch(e){
         console.log(e);

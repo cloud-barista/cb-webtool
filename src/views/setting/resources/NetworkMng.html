@@ -19,8 +19,7 @@
 			<a href="javascript:;" id="m_close"></a>
 			
 		</div>
-		
-	
+			
 		{{template "Header" .}}
 	
 		{{template "Modal" .}}
@@ -32,8 +31,6 @@
 						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Resources / <strong>Network</strong></div>
 						<div class="location">Home  <span>></span>  Setting  <span>></span>  Resources  <span>></span>  <strong>Network</strong></div>
 					</div>
-
-
 
 					<!-- list -->
 					<div class="dashboard dashboard_cont">
@@ -82,7 +79,7 @@
 							</div>
 	
 							<!-- popup Regist -->
-							<div class="modal fade layerpopup" id="RegistBox" tabindex="-1" role="dialog" aria-hidden="true">
+							<!-- <div class="modal fade layerpopup" id="RegistBox" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										
@@ -96,11 +93,11 @@
 										
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<!-- //popup Regist -->
 	
 							<!-- popup Regist -->
-							<div class="modal fade layerpopup" id="UnRegist" tabindex="-1" role="dialog" aria-hidden="true">
+							<!-- <div class="modal fade layerpopup" id="UnRegist" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										
@@ -114,23 +111,23 @@
 										
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<!-- //popup Regist -->
 							
 							<script>
-								$(document).ready(function(){
-									//action register open / table view close
-									$('#RegistBox .btn_ok.register').click(function(){
-										$(".dashboard.register_cont").toggleClass("active");
-										$(".dashboard.server_status").removeClass("view");
-										$(".dashboard .status_list tbody tr").removeClass("on");
-										//ok 위치이동
-										$('#RegistBox').on('hidden.bs.modal', function () {
-											var offset = $("#CreateBox").offset();
-											$("#wrap").animate({scrollTop : offset.top}, 300);
-										})		
-									});
-								});
+								// $(document).ready(function(){
+								// 	//action register open / table view close
+								// 	$('#RegistBox .btn_ok.register').click(function(){
+								// 		$(".dashboard.register_cont").toggleClass("active");
+								// 		$(".dashboard.server_status").removeClass("view");
+								// 		$(".dashboard .status_list tbody tr").removeClass("on");
+								// 		//ok 위치이동
+								// 		$('#RegistBox').on('hidden.bs.modal', function () {
+								// 			var offset = $("#CreateBox").offset();
+								// 			$("#wrap").animate({scrollTop : offset.top}, 300);
+								// 		})		
+								// 	});
+								// });
 							</script>
 							
 							<div class="ds_cont">
@@ -161,7 +158,7 @@
 												<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>
 												<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>
 												<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>
-												<td class="overlay hidden" data-th="description">' + item.description + '</td>
+												<td class="overlay hidden" data-th="description">' + item.description + ' {{ .VNetList}}</td>
 												<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>
 											</tr>
 										</tbody>

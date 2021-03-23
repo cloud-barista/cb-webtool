@@ -7,7 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
+	// "os"
 	// "bytes"
 	// "reflect"
 	//"github.com/davecgh/go-spew/spew"
@@ -16,7 +16,7 @@ import (
 )
 
 // var NameSpaceUrl = "http://15.165.16.67:1323"
-var NameSpaceUrl = os.Getenv("TUMBLE_URL")
+// var NameSpaceUrl = os.Getenv("TUMBLE_URL")
 
 // type NSInfo struct {
 // 	ID          string `json:"id"`
@@ -132,7 +132,7 @@ func CreateDefaultNamespace() (*model.NameSpaceInfo, error) {
 // 사용자의 namespace 목록 조회
 func GetNameSpaceList() ([]model.NameSpaceInfo, error) {
 	fmt.Println("GetNameSpaceList start")
-	url := NameSpaceUrl + "/ns"
+	url := util.NameSpaceUrl + "/ns"
 
 	body, err := util.CommonHttpGet(url)
 	//body := HttpGetHandler(url)
@@ -156,7 +156,7 @@ func GetNameSpaceList() ([]model.NameSpaceInfo, error) {
 // NameSpace 등록
 func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := NameSpaceUrl + "/ns"
+	url := util.NameSpaceUrl + "/ns"
 
 	fmt.Println("nameSpaceInfo : ", nameSpaceInfo)
 
@@ -172,7 +172,7 @@ func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 // NameSpace 수정
 func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := NameSpaceUrl + "/ns"
+	url := util.NameSpaceUrl + "/ns"
 
 	fmt.Println("nameSpaceInfo : ", nameSpaceInfo)
 
@@ -189,7 +189,7 @@ func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) 
 // NameSpace 삭제
 func DelNameSpace(nameSpaceID string) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := NameSpaceUrl + "/ns/" + nameSpaceID
+	url := util.NameSpaceUrl + "/ns/" + nameSpaceID
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
 

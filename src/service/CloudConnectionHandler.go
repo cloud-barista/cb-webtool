@@ -6,7 +6,6 @@ import (
 	"io"
 	// "math"
 	"net/http"
-	"os"
 	// "strconv"
 	// "sync"
 	//"io/ioutil"
@@ -16,8 +15,8 @@ import (
 )
 
 //var CloudConnectionUrl = "http://15.165.16.67:1024"
-var CloudConnectionUrl = os.Getenv("SPIDER_URL")
-var TumbleUrl = os.Getenv("TUMBLE_URL")
+// var CloudConnectionUrl = os.Getenv("SPIDER_URL")	// Const.go로 이동
+// var TumbleUrl = os.Getenv("TUMBLE_URL") // Const.go로 이동
 
 // type KeyValueInfo struct {
 // 	Key   string `json:"Key"`
@@ -82,7 +81,7 @@ type IPStackInfo struct {
 func GetCloudOSListData() []string {
 
 	// CloudConnectionUrl == SPIDER
-	url := CloudConnectionUrl + "/" + "cloudos"
+	url := util.CloudConnectionUrl + "/" + "cloudos"
 	// fmt.Println("=========== GetCloudOSListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -103,7 +102,7 @@ func GetCloudOSListData() []string {
 func GetCloudConnectionConfigList() []model.CloudConnectionConfigInfo {
 
 	// CloudConnectionUrl == SPIDER
-	url := CloudConnectionUrl + "/" + "connectionconfig"
+	url := util.CloudConnectionUrl + "/" + "connectionconfig"
 	// fmt.Println("=========== GetCloudConnectionConfigList : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -122,7 +121,7 @@ func GetCloudConnectionConfigList() []model.CloudConnectionConfigInfo {
 
 // Connection 상세
 func GetCloudConnectionConfigData(configName string) model.CloudConnectionConfigInfo {
-	url := CloudConnectionUrl + "/connectionconfig/" + configName
+	url := util.CloudConnectionUrl + "/connectionconfig/" + configName
 	fmt.Println("=========== GetCloudConnectionConfigData : ", configName)
 
 	body, err := util.CommonHttpGet(url)
@@ -141,7 +140,7 @@ func GetCloudConnectionConfigData(configName string) model.CloudConnectionConfig
 // CloudConnectionConfigInfo 등록
 func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := CloudConnectionUrl + "/connectionconfig"
+	url := util.CloudConnectionUrl + "/connectionconfig"
 
 	fmt.Println("cloudConnectionConfigInfo : ", cloudConnectionConfigInfo)
 
@@ -157,7 +156,7 @@ func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionCo
 // CloudConnectionConfigInfo 삭제
 func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := CloudConnectionUrl + "/connectionconfig/" + configName
+	url := util.CloudConnectionUrl + "/connectionconfig/" + configName
 
 	fmt.Println("DelCloudConnectionConfig : ", configName)
 
@@ -177,7 +176,7 @@ func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
 func GetRegionListData() []model.RegionInfo {
 
 	// CloudConnectionUrl == SPIDER
-	url := CloudConnectionUrl + "/" + "region"
+	url := util.CloudConnectionUrl + "/" + "region"
 	// fmt.Println("=========== GetRegionListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -195,7 +194,7 @@ func GetRegionListData() []model.RegionInfo {
 }
 
 func GetRegionData(regionName string) model.RegionInfo {
-	url := CloudConnectionUrl + "/region/" + regionName
+	url := util.CloudConnectionUrl + "/region/" + regionName
 	fmt.Println("=========== GetRegionData : ", regionName)
 
 	body, err := util.CommonHttpGet(url)
@@ -220,7 +219,7 @@ func GetRegionData(regionName string) model.RegionInfo {
 // Region 등록
 func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := CloudConnectionUrl + "/region"
+	url := util.CloudConnectionUrl + "/region"
 
 	fmt.Println("RegRegion : ", regionInfo)
 
@@ -236,7 +235,7 @@ func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, error) {
 // Region 삭제
 func DelRegion(regionName string) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := CloudConnectionUrl + "/region/" + regionName
+	url := util.CloudConnectionUrl + "/region/" + regionName
 
 	fmt.Println("DelRegion : ", regionName)
 
@@ -256,7 +255,7 @@ func DelRegion(regionName string) (io.ReadCloser, error) {
 func GetCredentialListData() []model.CredentialInfo {
 
 	// CloudConnectionUrl == SPIDER
-	url := CloudConnectionUrl + "/" + "credential"
+	url := util.CloudConnectionUrl + "/" + "credential"
 	// fmt.Println("=========== GetRegionListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -285,7 +284,7 @@ func GetCredentialListData() []model.CredentialInfo {
 
 // Credential 상세조회
 func GetCredentialData(credentialName string) model.CredentialInfo {
-	url := CloudConnectionUrl + "/credential/" + credentialName
+	url := util.CloudConnectionUrl + "/credential/" + credentialName
 	fmt.Println("=========== GetCredentialData : ", credentialName)
 
 	body, err := util.CommonHttpGet(url)
@@ -305,7 +304,7 @@ func GetCredentialData(credentialName string) model.CredentialInfo {
 // Credential 등록
 func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := CloudConnectionUrl + "/credential"
+	url := util.CloudConnectionUrl + "/credential"
 
 	fmt.Println("RegCredential : ", credentialInfo)
 
@@ -322,7 +321,7 @@ func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, error) 
 func DelCredential(credentialName string) (io.ReadCloser, error) {
 
 	// buff := bytes.NewBuffer(pbytes)
-	url := CloudConnectionUrl + "/credential/" + credentialName
+	url := util.CloudConnectionUrl + "/credential/" + credentialName
 
 	fmt.Println("DelCredential : ", credentialName)
 
@@ -338,7 +337,7 @@ func DelCredential(credentialName string) (io.ReadCloser, error) {
 
 // 현재 설정된 Driver 목록
 func GetDriverListData() []model.DriverInfo {
-	url := CloudConnectionUrl + "/" + "driver"
+	url := util.CloudConnectionUrl + "/" + "driver"
 	fmt.Println("=========== GetDriverListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -357,7 +356,7 @@ func GetDriverListData() []model.DriverInfo {
 
 // Driver 상세조회
 func GetDriverData(driverlName string) model.DriverInfo {
-	url := CloudConnectionUrl + "/driver/" + driverlName
+	url := util.CloudConnectionUrl + "/driver/" + driverlName
 	fmt.Println("=========== GetDriverData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -376,7 +375,7 @@ func GetDriverData(driverlName string) model.DriverInfo {
 // Driver 등록
 func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := CloudConnectionUrl + "/driver"
+	url := util.CloudConnectionUrl + "/driver"
 
 	fmt.Println("driverInfo : ", driverInfo)
 
@@ -393,7 +392,7 @@ func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, error) {
 func DelDriver(driverName string) (io.ReadCloser, error) {
 
 	// buff := bytes.NewBuffer(pbytes)
-	url := CloudConnectionUrl + "/driver/" + driverName
+	url := util.CloudConnectionUrl + "/driver/" + driverName
 
 	fmt.Println("driverName : ", driverName)
 
@@ -407,63 +406,65 @@ func DelDriver(driverName string) (io.ReadCloser, error) {
 	return body, err
 }
 
-// 해당 namespace의 vpc 목록 조회
-func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
-	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
+// 해당 namespace의 vpc 목록 조회 -> ResourceHandler로 이동
+// func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
+// url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
 
-	fmt.Println("nameSpaceID : ", nameSpaceID)
+// fmt.Println("nameSpaceID : ", nameSpaceID)
 
-	pbytes, _ := json.Marshal(nameSpaceID)
-	body, err := util.CommonHttp(url, pbytes, http.MethodGet)
+// pbytes, _ := json.Marshal(nameSpaceID)
+// body, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-	return body, err
-}
+// if err != nil {
+// 	fmt.Println(err)
+// }
+// return body, err
+// }
 
-// vpc 상세 조회
-func GetVpcData(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
-	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
+// // vpc 상세 조회-> ResourceHandler로 이동
+// func GetVpcData(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
+// 	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
 
-	fmt.Println("nameSpaceID : ", nameSpaceID)
+// 	fmt.Println("nameSpaceID : ", nameSpaceID)
 
-	pbytes, _ := json.Marshal(nameSpaceID)
-	body, err := util.CommonHttp(url, pbytes, http.MethodGet)
+// 	pbytes, _ := json.Marshal(nameSpaceID)
+// 	body, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-	return body, err
-}
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	return body, err
+// }
 
-func RegVpc(nameSpaceID string, vnetInfo *model.VNetInfo) (io.ReadCloser, error) {
-	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
+// vpc 등록 -> ResourceHandler로 이동
+// func RegVpc(nameSpaceID string, vnetInfo *model.VNetInfo) (io.ReadCloser, error) {
+// 	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"
 
-	fmt.Println("nameSpaceID : ", nameSpaceID)
+// 	fmt.Println("nameSpaceID : ", nameSpaceID)
 
-	pbytes, _ := json.Marshal(vnetInfo)
-	body, err := util.CommonHttp(url, pbytes, http.MethodPost)
+// 	pbytes, _ := json.Marshal(vnetInfo)
+// 	body, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-	return body, err
-}
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	return body, err
+// }
 
-func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
-	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet" + vNetID
+// vpc 삭제 -> ResourceHandler로 이동
+// func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
+// 	url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet" + vNetID
 
-	fmt.Println("nameSpaceID : ", nameSpaceID)
+// 	fmt.Println("nameSpaceID : ", nameSpaceID)
 
-	pbytes, _ := json.Marshal(vNetID)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+// 	pbytes, _ := json.Marshal(vNetID)
+// 	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-	return body, err
-}
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	return body, err
+// }
 
 // func GetConnectionconfig(drivername string) CloudConnectionInfo {
 // 	url := NameSpaceUrl + "/driver/" + drivername

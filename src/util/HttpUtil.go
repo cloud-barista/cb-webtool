@@ -123,14 +123,18 @@ func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, erro
 	authInfo := AuthenticationHandler()
 
 	fmt.Println("CommonHttp ", url)
+	fmt.Println("authInfo ", authInfo)
 	client := &http.Client{}
 	req, err := http.NewRequest(httpMethod, url, bytes.NewBuffer(json))
 	if err != nil {
 		panic(err)
 	}
 
+	// url = "http://54.248.3.145:1323/tumblebug/ns/ns-01/resources/vNet"
+
 	// set the request header Content-Type for json
-	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	//req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("Authorization", authInfo)
 	resp, err := client.Do(req)
 	if err != nil {
@@ -138,8 +142,8 @@ func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, erro
 	}
 
 	fmt.Println(resp.StatusCode)
-	defer resp.Body.Close()
-
+	//defer resp.Body.Close()
+	// fmt.Println("resp.Body ", resp.Body)
 	return resp.Body, err
 }
 
