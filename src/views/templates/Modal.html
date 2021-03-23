@@ -1,6 +1,43 @@
 {{define "Modal"}}
-<!-- popup logout -->
-<div class="modal fade layerpopup" id="logout" tabindex="-1" role="dialog" aria-hidden="true">
+	<!-- popup modal -->
+	<div class="modal fade layerpopup" id="modalArea" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				
+				<div class="modal-body">
+					<div class="txt"><span id="modalText"></div>
+					<div class="btnbox">
+						<input type="hidden" id="modalOkAction" value=""><!-- modal에서 OK버튼 클릭 시 수행할 action 지정-->
+						<button type="button" class="btn_cancel" data-dismiss="modal" onclick="commonModalClose()">Cancel</button>
+						<button type="button" class="btn_ok" data-dismiss="modal" onclick="commonModalOk()">OK</button>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- //popup modal -->
+
+	<!-- popup alert -->
+	<!-- <div class="modal fade layerpopup" id="alertArea" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				
+				<div class="modal-body">
+					<div class="txt"><span id="alertText"></div>
+					<div class="btnbox">
+						<input type="hidden" id="alertOkAction" value="">
+						<button type="button" class="btn_ok" data-dismiss="modal" onclick="commonAlertClose()">OK</button>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div> -->
+	<!-- //popup alert -->
+
+	<!-- popup logout -->
+	<!-- <div class="modal fade layerpopup" id="logout" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				
@@ -14,11 +51,11 @@
 				
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- //popup logout -->
 
 	<!-- popup Config -->
-	<div class="modal fade layerpopup" id="Config" tabindex="-1" role="dialog" aria-hidden="true">
+	<!-- <div class="modal fade layerpopup" id="Config" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				
@@ -32,11 +69,11 @@
 				
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- //popup Config -->
 
 	<!-- popup SDK -->
-	<div class="modal fade layerpopup" id="SDK" tabindex="-1" role="dialog" aria-hidden="true">
+	<!-- <div class="modal fade layerpopup" id="SDK" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				
@@ -50,11 +87,11 @@
 				
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- //popup SDK -->
 
 	<!-- popup Credential -->
-	<div class="modal fade layerpopup" id="Credential" tabindex="-1" role="dialog" aria-hidden="true">
+	<!-- <div class="modal fade layerpopup" id="Credential" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				
@@ -68,11 +105,11 @@
 				
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- //popup Credential -->
 
 	<!-- popup Region -->
-	<div class="modal fade layerpopup" id="Region" tabindex="-1" role="dialog" aria-hidden="true">
+	<!-- <div class="modal fade layerpopup" id="Region" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				
@@ -86,11 +123,11 @@
 				
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- //popup Region -->
 
 	<!-- popup Provider -->
-	<div class="modal fade layerpopup" id="Provider" tabindex="-1" role="dialog" aria-hidden="true">
+	<!-- <div class="modal fade layerpopup" id="Provider" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				
@@ -104,6 +141,6 @@
 				
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- //popup Provider -->
 {{end}}

@@ -50,6 +50,7 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 		// })
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
+	fmt.Println("loginInfo ", loginInfo)
 
 	store := echosession.FromContext(c)
 	// result, ok := store.Get(paramUser)

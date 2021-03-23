@@ -1,15 +1,15 @@
 package controller
 
 import (
+	// "encoding/json"
 	"fmt"
-	echotemplate "github.com/foolin/echo-template"
-	echosession "github.com/go-session/echo-session"
-	"log"
-	"net/http"
-
 	"github.com/cloud-barista/cb-webtool/src/model"
 	service "github.com/cloud-barista/cb-webtool/src/service"
+	echotemplate "github.com/foolin/echo-template"
+	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
+	"log"
+	"net/http"
 )
 
 // deprecated
@@ -241,7 +241,7 @@ func GetNameSpaceList(c echo.Context) error {
 			"status":  "403",
 		})
 	} else {
-		store.Set("namespaceList", nameSpaceInfoList)
+		store.Set("namespacelist", nameSpaceInfoList)
 		store.Save()
 	}
 
@@ -269,14 +269,38 @@ func SetNameSpace(c echo.Context) error {
 		})
 	}
 	storedUser := result.(map[string]string)
-	
+
 	nameSpaceID := c.Param("nameSpaceID")
-	storedUser["defaultnamespaceid"] = nameSpaceID
-	
-	fmt.Println("SetNameSpaceID : ", nameSpaceID)
+	loginInfo.DefaultNameSpaceID = nameSpaceID
+
+	nsResult, nsOk := store.Get("namespacelist")
+	fmt.Println("nsResult : ", nsResult)
+	if !nsOk {
+		fmt.Println("nsOk : ", nsOk)
+	} else {
+		fmt.Println("______________")
+
+		//interface conversion: interface {} is []model.NameSpaceInfo
+		nsList := nsResult.([]model.NameSpaceInfo)
+		fmt.Println("nsList ", nsList)
+		for _, nsInfo := range nsList {
+			fmt.Println(nsInfo.ID + " :  " + nameSpaceID)
+			if nsInfo.ID == nameSpaceID {
+				loginInfo.DefaultNameSpaceID = nsInfo.ID
+				loginInfo.DefaultNameSpaceName = nsInfo.Name
+				fmt.Println(nsInfo.ID + " :  " + nameSpaceID + " found " + nsInfo.Name)
+				storedUser["defaultnameSpacename"] = nsInfo.ID
+				storedUser["defaultnamespaceid"] = nsInfo.Name
+				break
+			}
+		}
+	}
+
+	// storedUser["defaultnamespaceid"] = nameSpaceID
+	fmt.Println("storedUser : ", storedUser)
 
 	store.Set(loginInfo.Username, storedUser)
-	
+
 	storeErr := store.Save()
 	if storeErr != nil {
 		return c.JSON(http.StatusNotAcceptable, map[string]string{
@@ -285,12 +309,11 @@ func SetNameSpace(c echo.Context) error {
 		})
 	}
 
-	res := map[string]string{
-		"message": "success",
-		"status":  "200",
-		"DefaultNameSpaceID": nameSpaceID,
-	}
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":   "success",
+		"status":    "200",
+		"LoginInfo": loginInfo,
+	})
 }
 
 // 기본 namespace get. get default Namespace

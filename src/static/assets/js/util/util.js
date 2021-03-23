@@ -61,3 +61,127 @@ function nvlDash(str){
      
     return str ;
 }
+
+// message를 표현할 alert 창
+function commonAlertOpen(targetAction){
+    let confirmModalTextMap = new Map(
+        [
+            ["IdPassRequired", "ID/Password required !"], 
+            
+        ]
+    );
+    alertText
+    $('#alertText').text(confirmModalTextMap.get(targetAction));
+    $("#alertArea").modal();
+}
+// alert창 닫기
+function commonAlertClose(){
+    $("#alertArea").modal("hide");
+}
+
+// confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정
+function commonModalOpen(targetAction){
+    console.log("commonModalOpen : " + targetAction)
+    // var targetText = "";
+    // if( targetAction == "logout"){
+    //     targetText = "Would you like to logout?";
+    // }else if ( targetAction == "Config"){
+    //     targetText = "Would you like to set Cloud config ?";
+    // }else if ( targetAction == "SDK"){
+    //     targetText = "Would you like to set Cloud Driver SDK ?";
+    // }else if ( targetAction == "Credential"){
+    //     targetText = "Would you like to set Credential ?";
+    // }else if ( targetAction == "Region"){
+    //     targetText = "Would you like to set Region ?";
+    // }else if ( targetAction == "Provider"){
+    //     targetText = "Would you like to set Cloud Provider ?";
+    // }else if ( targetAction == "required"){//-- IdPassRequired
+    //     targetText = "ID/Password required !";
+    // }
+
+    //  [ id , 문구]
+    let confirmModalTextMap = new Map(
+        [
+            ["logout", "Would you like to logout?"],
+            ["Config", "Would you like to set Cloud config ?"],
+            ["SDK", "Would you like to set Cloud Driver SDK ?"],
+            ["Credential", "Would you like to set Credential ?"],
+            ["Region", "Would you like to set Region ?"],
+            ["Provider", "Would you like to set Cloud Provider ?"],
+            // ["IdPassRequired", "ID/Password required !"],    --. 이거는 confirm이 아니잖아
+            ["idpwLost", "Illegal account / password 다시 입력 하시겠습니까?"],
+            ["ManageNS", "Would you like to manage <br />Name Space?"],
+            ["NewNS", "Would you like to new Name Space?"],
+            ["NameSpace", "Would you like to move <br />selected NameSpace?"],
+            ["ChangeNameSpace", "Would you like to move <br />selected NameSpace?"],
+        ]
+    );
+    console.log(confirmModalTextMap.get(targetAction));
+    try{
+    // $('#modalText').text(targetText);// text아니면 html로 해볼까? 태그있는 문구가 있어서
+    //$('#modalText').text(confirmModalTextMap.get(targetAction));
+    $('#modalText').html(confirmModalTextMap.get(targetAction));
+    $('#modalOkAction').val(targetAction);
+    // $('#modalArea').show(); 
+    $('#modalArea').modal(); 
+    }catch(e){
+        console.log(e);
+        alert(e);
+    }
+}
+
+// confirm modal창에서 ok버튼 클릭시 수행할 method 지정
+function commonModalOk(){
+    //modalArea
+    var targetAction = $('#modalOkAction').val();
+    if( targetAction == "logout"){
+        // Logout처리하고 index화면으로 간다. Logout ==> cookie expire
+    }else if ( targetAction == "Config"){
+        //id="Config"
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "SDK"){
+        //id="SDK"
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "Credential"){
+        //id="Credential"
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "Region"){
+        //id="Region"
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "Provider"){
+        //id="Provider"
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "required"){//-- IdPassRequired
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "idpwLost"){//-- 
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "ManageNS"){//-- ManageNS
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "NewNS"){//-- NewNS
+        console.log("commonModalOk " + targetAction);
+    }else if ( targetAction == "ChangeNameSpace"){//-- ChangeNameSpace
+        var changeNameSpaceID = $("#tempSelectedNameSpaceID").val();
+        setDefaultNameSpace(changeNameSpaceID)
+    }
+    
+    console.log("commonModalOk " + targetAction);
+    commonModalClose();
+}
+
+//confirm modal창에서 cancel 버튼 클릭시 수행할 method 지정. 그냥 창만 듣을 경우에는 commonModalClose() 호출
+function commonModalCancel(targetAction){
+    console.log("commonModalCancel : " + targetAction)
+    //
+    if( targetAction == ''){
+        
+    }
+    commonModalClose();
+}
+// confirm modal창 닫기. setting값 초기화
+function commonModalClose(){
+    $('#modalText').text('');
+    $('#modalOkAction').val('');
+    // $('#modalArea').hide(); 
+    $("#modalArea").modal("hide");
+}
+

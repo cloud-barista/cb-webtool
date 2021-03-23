@@ -2,7 +2,7 @@
 $(document).ready(function(){
     order_type = "ConfigName"
     
-    var defaultNameSpaceID = $('#defaultNameSpaceID').val();
+    var defaultNameSpaceID = $('#topboxDefaultNameSpaceID').val();// Topbox에 기본 namespaceID를 set 함.
     if( defaultNameSpaceID == '' || defaultNameSpaceID == undefined){
         namespaceModalOkbtn();
         $("#popNameSpace").modal()

@@ -1,25 +1,25 @@
 {{define "LNBPopup"}}
     <!-- namespace 변경 -->
             <!-- popup NameSpace -->
-            <div class="modal fade layerpopup" id="NameSpace" tabindex="-1" role="dialog" aria-hidden="true">
+            <!-- <div class="modal fade layerpopup" id="NameSpace" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">                        
                         <div class="modal-body">
                             <div class="txt">Would you like to move <br />selected NameSpace?</div>
                             <div class="btnbox">
                                 <button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-                                <!-- <button type="button" class="btn_ok" data-dismiss="modal" onclick="nameSpaceSet()">OK</button> -->
+                                <button type="button" class="btn_ok" data-dismiss="modal" onclick="nameSpaceSet()">OK</button> 
                                 <button type="button" data-dismiss="modal" onclick="nameSpaceSet()">OK</button>
                             </div>
                         </div>
                         
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- //popup NameSpace -->
 
             <!-- popup NewNameSpace -->
-            <div class="modal fade layerpopup" id="NewNS" tabindex="-1" role="dialog" aria-hidden="true">
+            <!-- <div class="modal fade layerpopup" id="NewNS" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         
@@ -33,11 +33,11 @@
                         
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- //popup New NameSpace -->
 
             <!-- popup Manage NameSpace -->
-            <div class="modal fade layerpopup" id="ManageNS" tabindex="-1" role="dialog" aria-hidden="true">
+            <!-- <div class="modal fade layerpopup" id="ManageNS" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         
@@ -51,7 +51,7 @@
                         
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- //popup Manage NameSpace -->
             
 
@@ -78,14 +78,14 @@
                                             <div class="listbox scrollbar-inner" id="selectNameSpaceListPopup">
                                                 {{range $index, $item := .NameSpaceList}}
                                                     
-                                                    <div class="list" onclick="selectNameSpace('{{ $item.ID }}');">
+                                                    <div class="list" onclick="selectDefaultNameSpace( 'LNBPopup', '{{ $item.ID }}');">
                                                     <div class="stit">{{$item.Name}}</div>
                                                     <div class="stxt">{{$item.Description}} </div>
                                                     </div>
                                                     
                                                 {{end}}                 
                                                 
-                                                <input type="hidden" id="modalSelectedNameSpaceID" />
+                                                <input type="hidden" id="tempSelectedNameSpaceID" />
                                             </div>
                                         </div>
                                         <!-- //list -->
@@ -139,17 +139,19 @@
     // } 
 
     // 목록에서 namespace 선택(확정한것은 아님. OK버튼을 눌러야 확정됨)
-    function selectNameSpace(nameSpaceID){
-        console.log("select namespace : ",nameSpaceID)
-        $("#modalSelectedNameSpaceID").val(nameSpaceID);
-    }
+    // function selectNameSpace(nameSpaceID){
+    //     console.log("select namespace : ",nameSpaceID)
+    //     $("#modalSelectedNameSpaceID").val(nameSpaceID);
+    // }
 
     // namespace modal에서 OK 버튼 클릭시
     function nameSpaceSet(){
-        var nameSpaceID = $("#modalSelectedNameSpaceID").val();
-        alert("nameSpaceSet OK " + nameSpaceID)
-        setNameSpace(nameSpaceID)
+        var callerLocation = "";//호출하는 위치
+        var nameSpaceID = $("#tempSelectedNameSpaceID").val();
+        console.log("nameSpaceSet OK " + nameSpaceID)
+        setDefaultNameSpace(nameSpaceID)
     }
+
     // namespace 클릭시 ok button 표시 설정
     function namespaceModalOkbtn(){
             $(".popboxNS .cloudlist .list").each(function () {
@@ -174,8 +176,8 @@
     }
     
     // TobBox에 있는 왼쪽 메뉴의 namespaceList에서 namespace 선택시
-    function menuChangeNameSpace(nameSpaceID) {
-        setNameSpace(nameSpaceID);
+    // function menuChangeNameSpace(nameSpaceID) {
+    //     setNameSpace(nameSpaceID);
         // <input type="hidden" id="defaultNameSpaceID" value="{{.LoginInfo.DefaultNameSpaceID}}" />
         //     <span id="defaultNameSpace">{{.LoginInfo.DefaultNameSpaceName}}</span>
 
@@ -188,12 +190,29 @@
         //     alert("Select Namespace!!")
         //     return;
         // }
+    // }
+
+    // namespace 목록에서 한 개 선택. 해당값을 임시로 저장하고 confirm 창 띄우기
+    // 실제 set은  setDefaultNameSpace function에서  ajax호출로
+    // set과 select 혼돈하지 말 것.
+    function selectDefaultNameSpace(callerLocation, nameSpaceID){
+        // 변경할 namespaceId를 임시로 
+        console.log("selectDefaultNameSpace " + callerLocation + ", " + nameSpaceID)
+        if( callerLocation == "TobBox"){
+            $("#tempSelectedNameSpaceID").val(nameSpaceID);
+            commonModalOpen("ChangeNameSpace");
+        }else if ( callerLocation == "LNBPopup"){
+            console.log("selectDefaultNameSpace " + callerLocation + ", " + nameSpaceID + " set!!")
+            // Modal 내 namespace 값을 hidden으로 set
+            $("#tempSelectedNameSpaceID").val(nameSpaceID);
+            // 선택했고 OK버튼이 나타난다. OK버튼 클릭시 저장 됨
+            console.log("선택했음. Set을 해야 실제로 저장 됨")
+        }
+        
     }
 
     // store에 defaultnamespace 변경. namespace가 등록되어 있지 않으면 ns 설정 page로 이동
-    function setNameSpace(nsid){
-        //alert(nsid + "로 namespace를 변경합니다. 해당 namespace의 dashboard로 이동합니다.")
-        // var apiInfo = ApiInfo
+    function setDefaultNameSpace(nsid){
         console.log("setNameSpace : " + nsid)
         if(nsid){
             //reqUrl = "/SET/NS/"+nsid;
@@ -204,16 +223,13 @@
                 //     'Authorization': apiInfo
                 // }
             }).then(result=>{
-                var data = result.data
+                var data = result.data.LoginInfo
                 console.log(data);
                 // 성공했으면 해당 namespace 선택 또는 조회
-                var defaultNameSpaceID = data.DefaultNameSpaceID;
-                console.log(" defaultNameSpaceID : " + defaultNameSpaceID)
-                $('#defaultNameSpaceID').val(defaultNameSpaceID)
-                $('#defaultNameSpaceName').text(defaultNameSpaceID)
-                    // <input type="hidden" id="defaultNameSpaceID" value="{{.LoginInfo.DefaultNameSpaceID}}" />
-                    //     <span id="defaultNameSpace">{{.LoginInfo.DefaultNameSpaceName}}</span>
-
+                console.log(" defaultNameSpaceID : " + data.DefaultNameSpaceID)
+                $('#topboxDefaultNameSpaceID').val(data.DefaultNameSpaceID)
+                $('#topboxDefaultNameSpaceName').text(data.DefaultNameSpaceName)
+                    
              }).catch(function(error){
                     console.log("setNameSpace error : ",error);        
                 });
@@ -223,19 +239,7 @@
         }        
     }
 
-    function getNameSpace(nameSpaceList, defaultNameSpaceID){
-        data.map(item=>(
-            html += '<div class="list" onclick="selectNS(\''+item.id+'\');">'
-                    +'<div class="stit">'+item.name+'</div>'
-                    +'<div class="stxt">'+item.description+' </div>'
-                    +'</div>'     
-        ))
-            
-        $("#nsList").empty();
-        $("#nsList").append(html);
 
-        namespaceModalOkbtn()// OK버튼 보이고 안보이고
-    }
     </script>    
 
 {{end}}

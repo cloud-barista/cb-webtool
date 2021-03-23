@@ -211,7 +211,8 @@ function ModalDetail(){
     });
 }
 
-// 선택된 namespace(tartet) 를 defaultNamespace로 set
-function setDefaultNameSpace(){
-    alert("ajax로 Set하기")
-}
+// // 선택된 namespace(tartet) 를 defaultNamespace로 set
+// function setDefaultNameSpace(){
+//     alert("ajax로 Set하기")
+//     //tobboxSetNameSpace('{{.ID}}')
+// }

@@ -153,13 +153,17 @@ func LoginProc(c echo.Context) error {
 	} else if len(nsList) == 1 {
 		for i, nameSpaceInfo := range nsList {
 			log.Println(i, nameSpaceInfo)
-			storedUser["defaultnamespacename"] = nameSpaceInfo.Name
+			storedUser["defaultnameSpacename"] = nameSpaceInfo.Name
 			storedUser["defaultnamespaceid"] = nameSpaceInfo.Name
 			// storedUser["defaultnamespaceid"] = nameSpaceInfo.ID
 			// defaultNameSpace = nameSpaceInfo.Name // ID로 handling 하려면 ID로
 		}
+	} else {
+		storedUser["defaultnameSpacename"] = ""
+		storedUser["defaultnamespaceid"] = ""
 	}
-	store.Set("namespace", nsList)
+
+	store.Set("namespacelist", nsList)
 	///////
 
 	/////// connectionconfig 목록 조회 ////////
@@ -175,6 +179,11 @@ func LoginProc(c echo.Context) error {
 	// 	result[k] = v
 	// }
 
+	// Username:             storedUser["username"],
+	// 	AccessToken:          storedUser["accesstoken"],
+	// 	DefaultNameSpaceID:   storedUser["defaultnamespaceid"],
+	// 	DefaultNameSpaceName: storedUser["defaultnameSpacename"],
+
 	store.Set(paramUser, storedUser)
 	store.Save()
 
@@ -182,8 +191,8 @@ func LoginProc(c echo.Context) error {
 		Username:    paramUser,
 		AccessToken: storedUser["accesstoken"],
 		//Username:  result["username"],
-		DefaultNameSpaceName: storedUser["defaultnamespacename"],
 		DefaultNameSpaceID:   storedUser["defaultnamespaceid"],
+		DefaultNameSpaceName: storedUser["defaultnamespacename"],
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -294,7 +303,7 @@ func LoginProc(c echo.Context) error {
 // 	// 	nsList = nsList2
 // 	// }
 // 	// log.Println("nsList  ", nsList)
-// 	// store.Set("namespaceList", nsList)// 이게 유효한가?? 쓸모없을 듯
+// 	// store.Set("namespacelist", nsList)// 이게 유효한가?? 쓸모없을 듯
 // 	// store.Save()
 
 // 	// // mcis가 있으면 dashboard로
