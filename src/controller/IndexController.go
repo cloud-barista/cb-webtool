@@ -142,7 +142,7 @@ func LoginProc(c echo.Context) error {
 	nsList, _ := service.GetNameSpaceList()
 	if len(nsList) == 0 {
 		nameSpaceInfo, createNameSpaceErr := service.CreateDefaultNamespace()
-		if createNameSpaceErr != nil {
+		if createNameSpaceErr != 200 {
 			log.Println(" default namespace create failed  ", createNameSpaceErr)
 		} else {
 			nsList = append(nsList)
@@ -167,7 +167,7 @@ func LoginProc(c echo.Context) error {
 	///////
 
 	/////// connectionconfig 목록 조회 ////////
-	cloudConnectionConfigInfoList := service.GetCloudConnectionConfigList()
+	cloudConnectionConfigInfoList , _ := service.GetCloudConnectionConfigList()
 	store.Set("connectionconfig", cloudConnectionConfigInfoList)
 	/////// connectionconfig 목록 조회 끝 ////////
 

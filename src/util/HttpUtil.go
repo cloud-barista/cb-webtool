@@ -3,7 +3,7 @@ package util
 import (
 	"encoding/base64"
 	"fmt"
-	"io"
+	// "io"
 	// "io/ioutil"
 	// "log"
 	"net/http"
@@ -57,71 +57,73 @@ func AuthenticationHandler() string {
 
 }
 
-func CommonHttpGet(url string) (io.ReadCloser, error) {
-	authInfo := AuthenticationHandler()
+// func CommonHttpGet(url string) (io.ReadCloser, error) {
+// 	authInfo := AuthenticationHandler()
 
-	fmt.Println("CommonHttpGet ", url)
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("Authorization", authInfo)
+// 	fmt.Println("CommonHttpGet ", url)
+// 	req, _ := http.NewRequest("GET", url, nil)
+// 	req.Header.Add("Authorization", authInfo)
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	// defer resp.Body.Close()
+// 	client := &http.Client{}
+// 	resp, err := client.Do(req)
+// 	// defer resp.Body.Close()
 
-	return resp.Body, err
-}
+// 	return resp.Body, err
+// }
 
-func CommonHttpPost(url string, json []byte) (io.ReadCloser, error) {
-	authInfo := AuthenticationHandler()
 
-	fmt.Println("CommonHttpPost ", url)
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
-	if err != nil {
-		panic(err)
-	}
 
-	// set the request header Content-Type for json
-	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	req.Header.Add("Authorization", authInfo)
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+// func CommonHttpPost(url string, json []byte) (io.ReadCloser, error) {
+// 	authInfo := AuthenticationHandler()
 
-	fmt.Println(resp.StatusCode)
-	defer resp.Body.Close()
+// 	fmt.Println("CommonHttpPost ", url)
+// 	client := &http.Client{}
+// 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	return resp.Body, err
-}
+// 	// set the request header Content-Type for json
+// 	// req.Header.Set("Content-Type", "application/json; charset=utf-8")
+// 	req.Header.Add("Authorization", authInfo)
+// 	resp, err := client.Do(req)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	fmt.Println(resp.StatusCode)
+// 	defer resp.Body.Close()
+
+// 	return resp.Body, err
+// }
 
 // 호출 전 json.Marshal로 byte형태로 바꾸어 호출. json []byte로 받으면 공통으로 사용가능하므로
-func CommonHttpDelete(url string, json []byte) (io.ReadCloser, error) {
-	authInfo := AuthenticationHandler()
+// func CommonHttpDelete(url string, json []byte) (io.ReadCloser, error) {
+// 	authInfo := AuthenticationHandler()
 
-	fmt.Println("CommonHttpDelete ", url)
-	client := &http.Client{}
-	req, err := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer(json))
-	if err != nil {
-		panic(err)
-	}
+// 	fmt.Println("CommonHttpDelete ", url)
+// 	client := &http.Client{}
+// 	req, err := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer(json))
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	// set the request header Content-Type for json
-	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	req.Header.Add("Authorization", authInfo)
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+// 	// set the request header Content-Type for json
+// 	// req.Header.Set("Content-Type", "application/json; charset=utf-8")
+// 	req.Header.Add("Authorization", authInfo)
+// 	resp, err := client.Do(req)
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	fmt.Println(resp.StatusCode)
-	defer resp.Body.Close()
+// 	fmt.Println(resp.StatusCode)
+// 	defer resp.Body.Close()
 
-	return resp.Body, err
-}
+// 	return resp.Body, err
+// }
 
 // http 호출
-func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, error) {
+func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, error) {
 	authInfo := AuthenticationHandler()
 
 	fmt.Println("CommonHttp ", url)
@@ -136,42 +138,43 @@ func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, erro
 
 	// set the request header Content-Type for json
 	//req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	req.Header.Set("Content-Type", "application/json")
+	// req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("Authorization", authInfo)
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	// resp, err := client.Do(req)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	fmt.Println(resp.StatusCode)
-	//defer resp.Body.Close()
-	// fmt.Println("resp.Body ", resp.Body)
-	return resp.Body, err
+	// fmt.Println(resp.StatusCode)
+	// //defer resp.Body.Close()
+	// // fmt.Println("resp.Body ", resp.Body)
+	// // return resp.Body, err
+	return client.Do(req)
 }
 
-func CommonHttpWithoutParam1(url string, httpMethod string) (io.ReadCloser, error) {
-	authInfo := AuthenticationHandler()
+// func CommonHttpWithoutParam1(url string, httpMethod string) (io.ReadCloser, error) {
+// 	authInfo := AuthenticationHandler()
 
-	fmt.Println("CommonHttp ", url)
-	client := &http.Client{}
-	req, err := http.NewRequest(httpMethod, url, nil)
-	if err != nil {
-		panic(err)
-	}
+// 	fmt.Println("CommonHttp ", url)
+// 	client := &http.Client{}
+// 	req, err := http.NewRequest(httpMethod, url, nil)
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	// set the request header Content-Type for json
-	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	req.Header.Add("Authorization", authInfo)
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+// 	// set the request header Content-Type for json
+// 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+// 	req.Header.Add("Authorization", authInfo)
+// 	resp, err := client.Do(req)
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	fmt.Println(resp.StatusCode)
-	defer resp.Body.Close()
+// 	fmt.Println(resp.StatusCode)
+// 	defer resp.Body.Close()
 
-	return resp.Body, err
-}
+// 	return resp.Body, err
+// }
 
 // parameter 없이 호출하는 경우 사용.받은대로 return하면 호출하는 method에서 가공하여 사용
 // func CommonHttpWithoutParam(url string, httpMethod string) (io.ReadCloser, error) {

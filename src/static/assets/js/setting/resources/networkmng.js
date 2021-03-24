@@ -258,7 +258,8 @@ function applySubnet() {
         console.log("subnetCIDRBlockData" + [i] + " : ", subnetCIDRBlockData[i]);
     }
     
-    var subnetJsonList = new Array();
+    // var subnetJsonList = new Array();
+    subnetJsonList = new Array();
     
     for(var i=0; i<subnetNameValue; i++){
         var SNData = "SNData" + i;
@@ -290,7 +291,7 @@ function createVNet() {
 
     // var apiInfo = "{{ .apiInfo}}";
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
-    var url = "/setting/resources" + "/resources/vNet"
+    var url = "/setting/resources" + "/network/reg"
     console.log("vNet Reg URL : ",url)
     var obj = {
         CidrBlock: cidrBlock,
@@ -314,7 +315,7 @@ function createVNet() {
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getVpcList();
                 //아니면 화면을 리로딩 시킬것인가?
-                location.reload();
+                // location.reload();
                 // $("#btn_add2").click()
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')

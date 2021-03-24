@@ -2,7 +2,7 @@ package service
 
 import (
 	"encoding/json"
-	"errors"
+	// "errors"
 	"fmt"
 	"io"
 	"log"
@@ -25,34 +25,36 @@ import (
 // }
 
 // 저장된 namespace가 없을 때 최초 1개 생성하고 해당 namespace 정보를 return  : 검증 필요(TODO : 이미 namespace가 있어서 확인 못함)
-func CreateDefaultNamespace() (*model.NameSpaceInfo, error) {
+func CreateDefaultNamespace() (*model.NameSpaceInfo, int) {
 	// nsInfo := new(model.NSInfo)
 	nameSpaceInfo := model.NameSpaceInfo{}
 
 	// 사용자의 namespace 목록조회
 	nsList, nsErr := GetNameSpaceList()
-	if nsErr != nil {
+	if nsErr != 200 {
 		log.Println(" nsErr  ", nsErr)
 		return &nameSpaceInfo, nsErr
 	}
 
 	if len(nsList) > 0 {
 		//return &nameSpaceInfo, errors.New(101, "Namespace already exists. size="+len(nsList))
-		return &nameSpaceInfo, errors.New("aaa")
+		return &nameSpaceInfo, nsErr
 	}
 
 	// create default namespace
 	nameSpaceInfo.Name = "NS-01" // default namespace name
 	//nameSpaceInfo.ID = "NS-01"
 	nameSpaceInfo.Description = "default name space name"
-	respBody, nsCreateErr := RegNameSpace(&nameSpaceInfo)
+	respBody, respStatus := RegNameSpace(&nameSpaceInfo)
 	log.Println(" respBody  ", respBody) // respBody에 namespace Id가 있으면 할당해서 사용할 것
-	if nsCreateErr != nil {
-		log.Println(" nsCreateErr  ", nsCreateErr)
-		return &nameSpaceInfo, nsCreateErr
+	if respStatus != 200 {
+		log.Println(" nsCreateErr  ", respStatus)
+		return &nameSpaceInfo, respStatus
 	}
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
 
-	return &nameSpaceInfo, nil
+	return &nameSpaceInfo, respStatus
 }
 
 // func GetNS(nsID string) model.NSInfo {
@@ -130,31 +132,32 @@ func CreateDefaultNamespace() (*model.NameSpaceInfo, error) {
 // }
 
 // 사용자의 namespace 목록 조회
-func GetNameSpaceList() ([]model.NameSpaceInfo, error) {
+func GetNameSpaceList() ([]model.NameSpaceInfo, int) {
 	fmt.Println("GetNameSpaceList start")
 	url := util.TUMBLEBUG + "/ns"
 
-	body, err := util.CommonHttpGet(url)
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	//body := HttpGetHandler(url)
 
-	fmt.Println(body)
 	if err != nil {
 		// 	// Tumblebug 접속 확인하라고
-		fmt.Println(err)
-		return nil, err
+		fmt.Println(err)		
 	}
 
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
 	nameSpaceInfoList := map[string][]model.NameSpaceInfo{}
-	defer body.Close()
-	json.NewDecoder(body).Decode(&nameSpaceInfoList)
+	// defer body.Close()
+	json.NewDecoder(respBody).Decode(&nameSpaceInfoList)
 	//spew.Dump(body)
 	fmt.Println(nameSpaceInfoList["ns"])
 
-	return nameSpaceInfoList["ns"], nil
+	return nameSpaceInfoList["ns"], respStatus
 }
 
 // NameSpace 등록
-func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
+func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.TUMBLEBUG + "/ns"
 
@@ -162,15 +165,18 @@ func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 
 	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
 	pbytes, _ := json.Marshal(nameSpaceInfo)
-	body, err := util.CommonHttpPost(url, pbytes)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, respStatus
 }
 
 // NameSpace 수정
-func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
+func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.TUMBLEBUG + "/ns"
 
@@ -178,16 +184,19 @@ func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) 
 
 	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
 	pbytes, _ := json.Marshal(nameSpaceInfo)
-	body, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, respStatus
 }
 
 // NameSpace 삭제
-func DelNameSpace(nameSpaceID string) (io.ReadCloser, error) {
+func DelNameSpace(nameSpaceID string) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID
 
@@ -196,10 +205,13 @@ func DelNameSpace(nameSpaceID string) (io.ReadCloser, error) {
 	//body, err := util.CommonHttpPost(url, nsInfo)
 
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
-	body, err := util.CommonHttpDelete(url, nil)
+	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
 	// body, err := util.CommonHttpDelete(url, pbytes)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, respStatus
 }

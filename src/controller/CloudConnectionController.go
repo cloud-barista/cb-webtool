@@ -24,10 +24,10 @@ import (
 // func CloudOSListForm
 // CloudOS(Provider) 목록
 func GetCloudOSList(c echo.Context) error {
-	cloudOsList := service.GetCloudOSListData()
+	cloudOsList , respStatus:= service.GetCloudOSListData()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus,
 		"cloudos": cloudOsList,
 	})
 }
@@ -56,29 +56,29 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	// result, ok := store.Get(paramUser)
 	// storedUser := result.(map[string]string)
 
-	cloudOsList := service.GetCloudOSListData()
+	cloudOsList , _ := service.GetCloudOSListData()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
 	// connectionconfigList 가져오기
-	cloudConnectionConfigInfoList := service.GetCloudConnectionConfigList()
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
 	store.Set("cloudconnectionconfig", cloudConnectionConfigInfoList)
 	log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
 
 	// regionList 가져오기
-	regionList := service.GetRegionListData()
+	regionList , _ := service.GetRegionListData()
 	store.Set("region", regionList)
 	log.Println(" regionList  ", regionList)
 
 	// credentialList 가져오기
-	credentialList := service.GetCredentialListData()
+	credentialList , _ := service.GetCredentialListData()
 	store.Set("credential", credentialList)
 	log.Println(" credentialList  ", credentialList)
 
 	// driverList 가져오기
-	driverList := service.GetDriverListData()
+	driverList , _ := service.GetDriverListData()
 	store.Set("driver", driverList)
-	log.Println(" driverList  ", driverList)
+	log.Println(" driverList  ", driverList )
 
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
@@ -111,10 +111,10 @@ func GetCloudConnectionConfigList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	cloudConnectionConfigInfo := service.GetCloudConnectionConfigList()
+	cloudConnectionConfigInfo , respStatus := service.GetCloudConnectionConfigList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
-		"status":           "200",
+		"status":           respStatus,
 		"ConnectionConfig": cloudConnectionConfigInfo,
 	})
 }
@@ -132,10 +132,10 @@ func GetCloudConnectionConfigData(c echo.Context) error {
 	}
 
 	paramConfigName := c.Param("configName")
-	cloudConnectionConfigInfo := service.GetCloudConnectionConfigData(paramConfigName)
+	cloudConnectionConfigInfo , respStatus := service.GetCloudConnectionConfigData(paramConfigName)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
-		"status":           "200",
+		"status":           respStatus,
 		"ConnectionConfig": cloudConnectionConfigInfo,
 	})
 }
@@ -162,18 +162,18 @@ func CloudConnectionConfigRegProc(c echo.Context) error {
 		})
 	}
 	log.Println(cloudConnectionConfigInfo)
-	respBody, reErr := service.RegCloudConnectionConfig(cloudConnectionConfigInfo)
+	respBody, respStatus := service.RegCloudConnectionConfig(cloudConnectionConfigInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if respStatus != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"status":  respStatus,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus,
 	})
 }
 
@@ -196,7 +196,7 @@ func CloudConnectionConfigDelProc(c echo.Context) error {
 
 	respBody, reErr := service.DelCloudConnectionConfig(paramConfigName)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if reErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -223,10 +223,10 @@ func GetRegionList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	regionList := service.GetRegionListData()
+	regionList , respStatus:= service.GetRegionListData()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus,
 		"Region":  regionList,
 	})
 }
@@ -244,10 +244,10 @@ func GetRegion(c echo.Context) error {
 	}
 
 	paramRegion := c.Param("region")
-	resionInfo := service.GetRegionData(paramRegion)
+	resionInfo , respStatus := service.GetRegionData(paramRegion)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus,
 		"Region":  resionInfo,
 	})
 }
@@ -276,7 +276,7 @@ func RegionRegProc(c echo.Context) error {
 	log.Println(regionInfo)
 	respBody, reErr := service.RegRegion(regionInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if reErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -307,7 +307,7 @@ func RegionDelProc(c echo.Context) error {
 
 	respBody, reErr := service.DelRegion(paramRegion)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if reErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -316,7 +316,7 @@ func RegionDelProc(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  reErr,
 	})
 }
 
@@ -334,10 +334,10 @@ func GetCredentialList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	credentialList := service.GetCredentialListData()
+	credentialList , respStatus := service.GetCredentialListData()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
-		"status":     "200",
+		"status":     respStatus,
 		"Credential": credentialList,
 	})
 }
@@ -355,10 +355,10 @@ func GetCredential(c echo.Context) error {
 	}
 
 	paramCredential := c.Param("credential")
-	credentialInfo := service.GetCredentialData(paramCredential)
+	credentialInfo , respStatus := service.GetCredentialData(paramCredential)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
-		"status":     "200",
+		"status":     respStatus,
 		"Credential": credentialInfo,
 	})
 }
@@ -385,18 +385,18 @@ func CredentialRegProc(c echo.Context) error {
 		})
 	}
 	log.Println(credentialInfo)
-	respBody, reErr := service.RegCredential(credentialInfo)
+	respBody, respStatus := service.RegCredential(credentialInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if respStatus != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"status":  respStatus,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus,
 	})
 }
 
@@ -418,7 +418,7 @@ func CredentialDelProc(c echo.Context) error {
 
 	respBody, reErr := service.DelCredential(paramCredential)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if reErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -445,10 +445,10 @@ func GetDriverList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	driverList := service.GetDriverListData()
+	driverList , respStatus := service.GetDriverListData()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus,
 		"Driver":  driverList,
 	})
 }
@@ -466,10 +466,10 @@ func GetDriver(c echo.Context) error {
 	}
 
 	paramDriver := c.Param("driver")
-	driverInfo := service.GetDriverData(paramDriver)
+	driverInfo , respStatus := service.GetDriverData(paramDriver)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus,
 		"Driver":  driverInfo,
 	})
 }
@@ -499,7 +499,7 @@ func DriverRegProc(c echo.Context) error {
 	log.Println(driverInfo)
 	respBody, reErr := service.RegDriver(driverInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if reErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -526,7 +526,7 @@ func DriverDelProc(c echo.Context) error {
 
 	respBody, reErr := service.DelDriver(paramDriver)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if reErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -550,7 +550,7 @@ func ConnectionList(c echo.Context) error {
 	}
 
 	nsList, nsErr := service.GetNameSpaceList()
-	if nsErr != nil {
+	if nsErr != 200 {
 		log.Println(" nsErr  ", nsErr)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
@@ -564,10 +564,10 @@ func ConnectionList(c echo.Context) error {
 		nameSpaceInfo := new(model.NameSpaceInfo)
 		nameSpaceInfo.Name = "NS-01" // default namespace name
 		nameSpaceInfo.Description = "default name space name"
-		respBody, nsCreateErr := service.RegNameSpace(nameSpaceInfo)
+		respBody, respStatus := service.RegNameSpace(nameSpaceInfo)
 		log.Println(" respBody  ", respBody)
-		if nsCreateErr != nil {
-			log.Println(" nsCreateErr  ", nsCreateErr)
+		if respStatus != 200 {
+			log.Println(" respStatus  ", respStatus)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"message": "invalid tumblebug connection",
 				"status":  "403",

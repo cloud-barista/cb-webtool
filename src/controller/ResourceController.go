@@ -51,7 +51,7 @@ func VpcMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
-	cloudOsList := service.GetCloudOSListData()
+	cloudOsList , _ := service.GetCloudOSListData()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -61,7 +61,7 @@ func VpcMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	vNetInfoList, vNetErr := service.GetVnetList(defaultNameSpaceID)
-	if vNetErr != nil {
+	if vNetErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -100,7 +100,7 @@ func GetVpcList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	vNetInfoList, vNetErr := service.GetVnetList(defaultNameSpaceID)
-	if vNetErr != nil {
+	if vNetErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -164,7 +164,7 @@ func VpcRegProc(c echo.Context) error {
 	log.Println(vNetInfo)
 	respBody, reErr := service.RegVpc(defaultNameSpaceID, vNetInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if reErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",
@@ -193,7 +193,7 @@ func VpcDelProc(c echo.Context) error {
 
 	respBody, reErr := service.DelVpc(defaultNameSpaceID, paramVNetID)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	if reErr != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
 			"status":  "403",

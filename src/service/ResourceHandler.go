@@ -17,27 +17,30 @@ import (
 
 // 해당 namespace의 vpc 목록 조회
 //func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
-func GetVnetList(nameSpaceID string) ([]model.VNetInfo, error) {
+func GetVnetList(nameSpaceID string) ([]model.VNetInfo, int) {
 	fmt.Println("GetVnetList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
 	pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
-	body, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	log.Println(body)
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	log.Println(respBody)
 	// return body, err
 
 	vNetInfoList := map[string][]model.VNetInfo{}
-	defer body.Close()
-	json.NewDecoder(body).Decode(&vNetInfoList)
+	// defer respBody.Close()
+	json.NewDecoder(respBody).Decode(&vNetInfoList)
 	//spew.Dump(body)
 	fmt.Println(vNetInfoList["vNet"])
 
-	return vNetInfoList["vNet"], nil
+	return vNetInfoList["vNet"], respStatus
 
 }
 
@@ -53,7 +56,7 @@ func GetVpcData(nameSpaceID string, vNetID string) (model.VNetInfo, int) {
 	var respStatus int
 	if err != nil {
 		fmt.Println(err)
-		respStatus = 500
+		//respStatus = 500
 	}
 
 	respBody := resp.Body
@@ -69,31 +72,39 @@ func GetVpcData(nameSpaceID string, vNetID string) (model.VNetInfo, int) {
 }
 
 // vpc 등록
-func RegVpc(nameSpaceID string, vnetInfo *model.VNetInfo) (io.ReadCloser, error) {
+func RegVpc(nameSpaceID string, vnetInfo *model.VNetInfo) (io.ReadCloser, int) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
 
 	pbytes, _ := json.Marshal(vnetInfo)
-	body, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	
+	return respBody, respStatus
 }
 
 // vpc 삭제
-func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
+func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, int) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet" + vNetID
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
 
 	pbytes, _ := json.Marshal(vNetID)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }

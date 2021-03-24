@@ -78,67 +78,78 @@ type IPStackInfo struct {
 // 삭제 : Del
 
 // Cloud Provider 목록
-func GetCloudOSListData() []string {
+func GetCloudOSListData() ([]string, int) {
 
 	// CloudConnectionUrl == SPIDER
 	url := util.SPIDER + "/" + "cloudos"
 	// fmt.Println("=========== GetCloudOSListData : ", url)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer resp.Close()
 
+	var respStatus int
 	if err != nil {
 		fmt.Println(err)
+		//respStatus = 500
 	}
 
+	respBody := resp.Body
+	respStatus = resp.StatusCode
+
 	cloudOs := map[string][]string{}
-	json.NewDecoder(body).Decode(&cloudOs)
+	json.NewDecoder(respBody).Decode(&cloudOs)
 	fmt.Println(cloudOs["cloudos"])
 
-	return cloudOs["cloudos"]
+	return cloudOs["cloudos"], respStatus
 }
 
 // 현재 설정된 connection 목록 GetConnectionConfigListData -> GetCloudConnectionConfigList로 변경
-func GetCloudConnectionConfigList() []model.CloudConnectionConfigInfo {
+func GetCloudConnectionConfigList() ([]model.CloudConnectionConfigInfo, int ) {
 
 	// CloudConnectionUrl == SPIDER
 	url := util.SPIDER + "/" + "connectionconfig"
 	// fmt.Println("=========== GetCloudConnectionConfigList : ", url)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
+	
+	respBody := resp.Body
+	respStatus := resp.StatusCode
 
 	cloudConnectionConfigInfo := map[string][]model.CloudConnectionConfigInfo{}
-	json.NewDecoder(body).Decode(&cloudConnectionConfigInfo)
+	json.NewDecoder(respBody).Decode(&cloudConnectionConfigInfo)
 	fmt.Println(cloudConnectionConfigInfo["connectionconfig"])
 
-	return cloudConnectionConfigInfo["connectionconfig"]
+	return cloudConnectionConfigInfo["connectionconfig"], respStatus
 }
 
 // Connection 상세
-func GetCloudConnectionConfigData(configName string) model.CloudConnectionConfigInfo {
+func GetCloudConnectionConfigData(configName string) (model.CloudConnectionConfigInfo, int ) {
 	url := util.SPIDER + "/connectionconfig/" + configName
 	fmt.Println("=========== GetCloudConnectionConfigData : ", configName)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
 	cloudConnectionConfigInfo := model.CloudConnectionConfigInfo{}
-	json.NewDecoder(body).Decode(&cloudConnectionConfigInfo)
+	json.NewDecoder(respBody).Decode(&cloudConnectionConfigInfo)
 	fmt.Println(cloudConnectionConfigInfo)
-	return cloudConnectionConfigInfo
+	return cloudConnectionConfigInfo, respStatus
 }
 
 // CloudConnectionConfigInfo 등록
-func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (io.ReadCloser, error) {
+func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/connectionconfig"
 
@@ -146,15 +157,20 @@ func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionCo
 
 	// body, err := util.CommonHttpPost(url, regionInfo)
 	pbytes, _ := json.Marshal(cloudConnectionConfigInfo)
-	body, err := util.CommonHttpPost(url, pbytes)
+	// body, err := util.CommonHttpPost(url, pbytes)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }
 
 // CloudConnectionConfigInfo 삭제
-func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
+func DelCloudConnectionConfig(configName string) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/connectionconfig/" + configName
 
@@ -164,45 +180,56 @@ func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
 
 	pbytes, _ := json.Marshal(configName)
 	// body, err := util.CommonHttpDelete(url, pbytes)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }
 
 // 현재 설정된 region 목록
-func GetRegionListData() []model.RegionInfo {
+func GetRegionListData() ([]model.RegionInfo, int ) {
 
 	// SPIDER == SPIDER
 	url := util.SPIDER + "/" + "region"
 	// fmt.Println("=========== GetRegionListData : ", url)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
 	regionList := map[string][]model.RegionInfo{}
-	json.NewDecoder(body).Decode(&regionList)
+	json.NewDecoder(respBody).Decode(&regionList)
 	fmt.Println(regionList["region"])
 
-	return regionList["region"]
+	return regionList["region"], respStatus
 }
 
-func GetRegionData(regionName string) model.RegionInfo {
+func GetRegionData(regionName string) ( model.RegionInfo, int ) {
 	url := util.SPIDER + "/region/" + regionName
 	fmt.Println("=========== GetRegionData : ", regionName)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
 
 	// regionList := map[string][]string{}
 	// // regionList := map[string][]model.RegionInfo{}
@@ -210,14 +237,14 @@ func GetRegionData(regionName string) model.RegionInfo {
 	// fmt.Println(regionList)	// map[KeyValueInfoList:[] ProviderName:[] RegionName:[]]
 	// // fmt.Println(regionList["connectionconfig"])
 	regionInfo := model.RegionInfo{}
-	json.NewDecoder(body).Decode(&regionInfo)
+	json.NewDecoder(respBody).Decode(&regionInfo)
 	fmt.Println(regionInfo)
 	fmt.Println(regionInfo.KeyValueInfoList)
-	return regionInfo
+	return regionInfo, respStatus
 }
 
 // Region 등록
-func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, error) {
+func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/region"
 
@@ -225,15 +252,21 @@ func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, error) {
 
 	// body, err := util.CommonHttpPost(url, regionInfo)
 	pbytes, _ := json.Marshal(regionInfo)
-	body, err := util.CommonHttpPost(url, pbytes)
+	// body, err := util.CommonHttpPost(url, pbytes)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }
 
 // Region 삭제
-func DelRegion(regionName string) (io.ReadCloser, error) {
+func DelRegion(regionName string) (*io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/region/" + regionName
 
@@ -243,30 +276,36 @@ func DelRegion(regionName string) (io.ReadCloser, error) {
 
 	pbytes, _ := json.Marshal(regionName)
 	// body, err := util.CommonHttpDelete(url, pbytes)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	
+	return &respBody, respStatus
 }
 
 // 현재 설정된 credential 목록 : 목록에서는 key의 value는 ...으로 표시
-func GetCredentialListData() []model.CredentialInfo {
+func GetCredentialListData() ([]model.CredentialInfo, int ) {
 
 	// SPIDER == SPIDER
 	url := util.SPIDER + "/" + "credential"
 	// fmt.Println("=========== GetRegionListData : ", url)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
 	credentialList := map[string][]model.CredentialInfo{}
-	json.NewDecoder(body).Decode(&credentialList)
+	json.NewDecoder(respBody).Decode(&credentialList)
 	fmt.Println(credentialList["credential"])
 	// TODO : key의 value에 ...표시
 	for _, credentialInfo := range credentialList["credential"] {
@@ -279,30 +318,32 @@ func GetCredentialListData() []model.CredentialInfo {
 		fmt.Println("after keyValueInfoList : ", keyValueInfoList)
 	}
 
-	return credentialList["credential"]
+	return credentialList["credential"], respStatus
 }
 
 // Credential 상세조회
-func GetCredentialData(credentialName string) model.CredentialInfo {
+func GetCredentialData(credentialName string) (model.CredentialInfo, int ) {
 	url := util.SPIDER + "/credential/" + credentialName
 	fmt.Println("=========== GetCredentialData : ", credentialName)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
+	respBody := resp.Body
+	respStatus := resp.StatusCode
 
 	credentialInfo := model.CredentialInfo{}
-	json.NewDecoder(body).Decode(&credentialInfo)
+	json.NewDecoder(respBody).Decode(&credentialInfo)
 	fmt.Println(credentialInfo)
 	fmt.Println(credentialInfo.KeyValueInfoList)
-	return credentialInfo
+	return credentialInfo, respStatus
 }
 
 // Credential 등록
-func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, error) {
+func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/credential"
 
@@ -310,15 +351,18 @@ func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, error) 
 
 	// body, err := util.CommonHttpPost(url, regionInfo)
 	pbytes, _ := json.Marshal(credentialInfo)
-	body, err := util.CommonHttpPost(url, pbytes)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, respStatus
 }
 
 // Credential 삭제
-func DelCredential(credentialName string) (io.ReadCloser, error) {
+func DelCredential(credentialName string) (io.ReadCloser, int) {
 
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/credential/" + credentialName
@@ -327,53 +371,62 @@ func DelCredential(credentialName string) (io.ReadCloser, error) {
 
 	pbytes, _ := json.Marshal(credentialName)
 	// body, err := util.CommonHttpDelete(url, pbytes)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, respStatus
 }
 
 // 현재 설정된 Driver 목록
-func GetDriverListData() []model.DriverInfo {
+func GetDriverListData() ([]model.DriverInfo, int ) {
 	url := util.SPIDER + "/" + "driver"
 	fmt.Println("=========== GetDriverListData : ", url)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
 	driverList := map[string][]model.DriverInfo{}
-	json.NewDecoder(body).Decode(&driverList)
+	json.NewDecoder(respBody).Decode(&driverList)
 	fmt.Println(driverList["driver"])
 
-	return driverList["driver"]
+	return driverList["driver"], respStatus
 }
 
 // Driver 상세조회
-func GetDriverData(driverlName string) model.DriverInfo {
+func GetDriverData(driverlName string) (model.DriverInfo, int ) {
 	url := util.SPIDER + "/driver/" + driverlName
 	fmt.Println("=========== GetDriverData : ", url)
 
-	body, err := util.CommonHttpGet(url)
-	defer body.Close()
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
 	driverInfo := model.DriverInfo{}
-	json.NewDecoder(body).Decode(&driverInfo)
+	json.NewDecoder(respBody).Decode(&driverInfo)
 	fmt.Println(driverInfo)
-	return driverInfo
+	return driverInfo, respStatus
 }
 
 // Driver 등록
-func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, error) {
+func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/driver"
 
@@ -381,15 +434,18 @@ func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, error) {
 
 	// body, err := util.CommonHttpPost(url, regionInfo)
 	pbytes, _ := json.Marshal(driverInfo)
-	body, err := util.CommonHttpPost(url, pbytes)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, respStatus
 }
 
 // Driver 삭제
-func DelDriver(driverName string) (io.ReadCloser, error) {
+func DelDriver(driverName string) (io.ReadCloser, int) {
 
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/driver/" + driverName
@@ -398,12 +454,15 @@ func DelDriver(driverName string) (io.ReadCloser, error) {
 
 	pbytes, _ := json.Marshal(driverName)
 	// body, err := util.CommonHttpDelete(url, pbytes)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, respStatus
 }
 
 // 해당 namespace의 vpc 목록 조회 -> ResourceHandler로 이동
