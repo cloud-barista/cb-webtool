@@ -67,7 +67,7 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox">Add</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox" onClick="commonConfirmOpen('AddNewVpc')">Add</a></li>
 														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist">Delete</a></li>
 													</ul>
 												</div>
@@ -132,7 +132,7 @@
 							
 							<div class="ds_cont">
 								
-								<div class="dataTable status_list">
+								<div class="dataTable status_list" id="vNetListTable">
 									<table cellpadding="0" cellspacing="0" border="1" summary="">
 										<colgroup>
 											<col width="50px">
@@ -165,8 +165,8 @@
 													<label for="td_ch1"></label> <span class="ov off"></span>
 												</td>
 												<td class="btn_mtd ovm" data-th="name">{{$item.Name}}<span class="ov"></span></td>
-												<td class="overlay hidden" data-th="cidrBlock">{{$item.cidrBlock}}</td>
-												<td class="overlay hidden" data-th="description">{{$item.description}}</td>
+												<td class="overlay hidden" data-th="cidrBlock">{{$item.CidrBlock}}</td>
+												<td class="overlay hidden" data-th="description">{{$item.Description}} :: {{$item.ConnectionName}}</td>
 												<td class="overlay hidden" data-th=""><a href="javascript:void(0);">
 													<img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
 												</td>
@@ -176,18 +176,6 @@
 									</table>
 								</div>
 								
-								
-								<!-- 
-								<div class="pageing">
-									<a href="#" class="btn_prev"><span>이전</span></a>
-									<a href="#" class="active">1</a>
-									<a href="#">2</a>
-									<a href="#">3</a>
-									<a href="#">4</a>
-									<a href="#">5</a>
-									<a href="#" class="btn_next"><span>다음</span></a>
-								</div>
-								-->
 							</div>
 							
 						</div>
@@ -197,11 +185,11 @@
 					
 					
 					<!-- Modify -->
-					<div class="dashboard dashboard_cont server_status" id="info_box">
+					<div class="dashboard dashboard_cont server_status" id="vNetInfoBox">
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox_n">
-								<div class="tit initial"><strong>Network Info</strong> [ <span class="stxt"></span> ] </div>
+								<div class="tit initial"><strong>Network Info</strong> [ <span class="stxt" id="networkVpcName"></span> ] </div>
 							</div>
 							
 							<div class="ds_cont">
@@ -273,7 +261,7 @@
 					<!-- //Modify -->
 					
 					<!-- Register Network -->
-					<div class="dashboard dashboard_cont register_cont" id="CreateBox">
+					<div class="dashboard dashboard_cont register_cont" id="vnetCreateBox">
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox_n">
@@ -311,7 +299,8 @@
 														<option value="Openstack">Openstack</option> -->
 														{{ range $item := .CloudOSList}}	
 														<option value="{{ $item }}">{{ $item }}</option>
-														{{ end }}	
+														{{ end }}
+														<option value="MOCK">MOCK</option>	
 													</select>
 												</li>
 												<li>
@@ -328,7 +317,7 @@
 													<label><span class="ch">*</span>Subnet</label>
 													<span class="sbox">
 														<input type="text" id="reg_subnet" name="reg_subnet" value="" placeholder="ex) subnetname (10.0.0.0/24)" class="ip_w1 gray noline" title="" />
-														<button name="" value="" class="btn_edit btn_register">Edit</button> 
+														<button name="" value="" class="btn_edit btn_register" onClick="displaySubnetRegModal(true)">Edit</button> 
 													</span>
 												</li>
 											</ul>
@@ -351,8 +340,8 @@
 					<!-- //Register Network -->
 
 						
-					<!-- register -->
-					<div class="modal fade" id="register_box" tabindex="-1" role="dialog" aria-hidden="true">
+					<!-- register subnet -->
+					<div class="modal fade" id="subnetRegisterBox" tabindex="-1" role="dialog" aria-hidden="true">
 						
 						<div class="modal-dialog modal-dialog-centered" role="document">
 							<div class="modal-content">

@@ -1,3 +1,4 @@
+var subnetJsonList = "";//저장시 subnet목록을 담을 array 
 $(document).ready(function(){
     order_type = "name"
     //checkbox all
@@ -19,7 +20,7 @@ $(document).ready(function(){
             $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
         }
     });
-// });
+});
 
 // $(document).ready(function () {
     
@@ -32,13 +33,13 @@ $(document).ready(function(){
 //     // getCloudOS(apiInfo,'provider');
 // })                      
 
-function goFocus(target) {
-    console.log(event)
-    event.preventDefault();
+// function goFocus(target) {
+//     console.log(event)
+//     event.preventDefault();
 
-    $("#" + target).focus();
-    fnMove(target)
-}
+//     $("#" + target).focus();
+//     fnMove(target)
+// }
 
 function fnMove(target) {
     var offset = $("#" + target).offset();
@@ -86,16 +87,19 @@ function goDelete() {
             alert("Success Delete Network.");
             location.reload(true);
         }
-    })
+    }).catch(function(error){
+        console.log("Network delete error : ",error);        
+    });
 }          
 
 function getVpcList(sort_type) {
     console.log(sort_type);
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/vNet";
-    var url = "";
+    //var currentNameSpace = $('$topboxDefaultNameSpaceID').val()
+    // defaultNameSpace 기준으로 가져온다. (server단 session에서 가져오므로 변경하려면 현재 namesapce를 바꾸고 호출하면 됨)
+    var url = "/setting/resources/network/list";
     axios.get(url, {
         headers: {
-            'Authorization': "{{ .apiInfo}}",
             'Content-Type': "application/json"
         }
     }).then(result => {
@@ -108,26 +112,26 @@ function getVpcList(sort_type) {
             if (sort_type) {
                 cnt++;
                 console.log("check : ", sort_type);
-                data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                    html += '<tr onclick="showInfo(\'' + item.name + '\');">' 
+                data.filter(list => list.Name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+                    html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
                         + '<td class="overlay hidden" data-th="">' 
-                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.name + '|' + item.cidrBlock + '"/>' 
-                        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="name">' + item.name + '</td>'
-                        + '<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>' 
-                        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
+                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name + '|' + item.CidrBlock + '"/>' 
+                        + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                        + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '</td>'
+                        + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
+                        + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>'  
                         + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
             } else {
-                data.filter((list) => list.name !== "").map((item, index) => (
-                    html += '<tr onclick="showInfo(\'' + item.name + '\');">' 
+                data.filter((list) => list.Name !== "").map((item, index) => (
+                    html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
                         + '<td class="overlay hidden" data-th="">' 
-                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.name  + '"/>'
-                        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>' 
-                        + '<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>' 
-                        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
+                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name  + '"/>'
+                        + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                        + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '<span class="ov"></span></td>' 
+                        + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
+                        + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>' 
                         + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
@@ -138,7 +142,9 @@ function getVpcList(sort_type) {
             
             ModalDetail()
         }
-    })
+    }).catch(function(error){
+        console.log("Network list error : ",error);        
+    });
 }
 
 function ModalDetail() {
@@ -171,19 +177,44 @@ function ModalDetail() {
     });
 }
 
+function displayVNetInfo(targetAction){
+    if( targetAction == "REG"){
+        $('#vnetCreateBox').toggleClass("active");
+        $('#vNetInfoBox').removeClass("view");
+        $('#vNetListTable').removeClass("on");
+        var offset = $("#vnetCreateBox").offset();
+        // var offset = $("#" + target+"").offset();
+    	$("#TopWrap").animate({scrollTop : offset.top}, 300);
+    }
+
+
+    //CreateBox
+    // $('#RegistBox .btn_ok.register').click(function(){
+    // 		$(".dashboard.register_cont").toggleClass("active");
+    // 		$(".dashboard.server_status").removeClass("view");
+    // 		$(".dashboard .status_list tbody tr").removeClass("on");
+    // 		//ok 위치이동
+    // 		$('#RegistBox').on('hidden.bs.modal', function () {
+    // 			var offset = $("#CreateBox").offset();
+    // 			$("#wrap").animate({scrollTop : offset.top}, 300);
+    // 		})		
+}
+
 function getConnectionInfo(provider){
-    var url = SpiderURL+"/connectionconfig";
-    console.log("provider : ",provider)
-    //var provider = $("#provider option:selected").val();
+    // var url = SpiderURL+"/connectionconfig";
+    var url = "/setting/connections/cloudconnectionconfig/" + "list"
+    // console.log("provider : ",provider)
+    // var provider = $("#provider option:selected").val();
     var html = "";
-    var apiInfo = ApiInfo
+    // var apiInfo = ApiInfo
     axios.get(url,{
         headers:{
-            'Authorization': apiInfo
+            // 'Authorization': apiInfo
         }
     }).then(result=>{
         console.log('getConnectionConfig result: ',result)
-        var data = result.data.connectionconfig
+        // var data = result.data.connectionconfig
+        var data = result.data.ConnectionConfig
         console.log("connection data : ",data);
         var count = 0; 
         var configName = "";
@@ -193,8 +224,7 @@ function getConnectionInfo(provider){
                 count++;
                 html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
                 configName = data[i].ConfigName
-                confArr.push(data[i].ConfigName)
-                
+                confArr.push(data[i].ConfigName)                
             }
         }
         if(count == 0){
@@ -207,7 +237,9 @@ function getConnectionInfo(provider){
         $("#reg_connectionName").empty();
         $("#reg_connectionName").append(html);
 
-    })
+    }).catch(function(error){
+        console.log("Network data error : ",error);        
+    });
 }
 
 function applySubnet() {
@@ -226,7 +258,7 @@ function applySubnet() {
         console.log("subnetCIDRBlockData" + [i] + " : ", subnetCIDRBlockData[i]);
     }
     
-    subnetJsonList = new Array();
+    var subnetJsonList = new Array();
     
     for(var i=0; i<subnetNameValue; i++){
         var SNData = "SNData" + i;
@@ -240,11 +272,9 @@ function applySubnet() {
     for (var i in subnetJsonList) {
         infoshow += subnetJsonList[i].name + " (" + subnetJsonList[i].ipv4_CIDR + ") ";
     }
-    
     $("#reg_subnet").empty();
     $("#reg_subnet").val(infoshow);
-    
-    $("#register_box").modal("hide");
+    $("#subnetRegisterBox").modal("hide");
 }
 
 function createVNet() {
@@ -252,22 +282,22 @@ function createVNet() {
     var description = $("#reg_description").val();
     var connectionName = $("#reg_connectionName").val();
     var cidrBlock = $("#reg_cidrBlock").val();
-    
     if (!vpcName) {
         alert("Input New VPC Name")
         $("#reg_vpcName").focus()
         return;
     }
 
-    var apiInfo = "{{ .apiInfo}}";
-    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
+    // var apiInfo = "{{ .apiInfo}}";
+    // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
+    var url = "/setting/resources" + "/resources/vNet"
     console.log("vNet Reg URL : ",url)
     var obj = {
-        cidrBlock: cidrBlock,
-        connectionName: connectionName,
-        description: description,
-        name: vpcName,
-        subnetInfoList: subnetJsonList
+        CidrBlock: cidrBlock,
+        ConnectionName: connectionName,
+        Description: description,
+        Name: vpcName,
+        SubnetInfoList: subnetJsonList
     }
     console.log("info vNet obj Data : ", obj);
     
@@ -275,7 +305,7 @@ function createVNet() {
         axios.post(url, obj, {
             headers: {
                 'Content-type': 'application/json',
-                'Authorization': apiInfo,
+                // 'Authorization': apiInfo,
             }
         }).then(result => {
             console.log("result vNet : ", result);
@@ -291,6 +321,8 @@ function createVNet() {
             } else {
                 alert("Fail Create Network(vNet)")
             }
+        }).catch(function(error){
+            console.log("Network create error : ",error);        
         });
     } else {
         alert("Input VPC Name")
@@ -299,22 +331,26 @@ function createVNet() {
     }
 }
 
-function showVNetInfo(target) {
-    console.log("target showInfo : ", target);
-    var apiInfo = "{{ .apiInfo}}";
-    var vNetId = encodeURIComponent(target);
-    $('.stxt').html(target);
+// 선택한 vNet의 상세정보 : 이미 가져왔는데 다시 가져올 필요있나?? vNetID
+function showVNetInfo(vpcName) {
+    console.log("showVNetInfo : ", vpcName);
+    // var apiInfo = "{{ .apiInfo}}";
+    // var vNetId = encodeURIComponent(vNetName);
+    // $('.stxt').html(vpcName);
+    $('#networkVpcName').text(vpcName)
     
-    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet/"+ vNetId;
+    // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet/"+ vNetId;
+    var url = "/setting/resources" + "/network/" + encodeURIComponent(vpcName);
     console.log("vnet detail URL : ",url)
 
     return axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    
+        // headers:{
+        //     'Authorization': apiInfo
+        // }
     }).then(result=>{
-        var data = result.data
+        console.log(result);
+        console.log(result.data);
+        var data = result.data.VNetInfo
         console.log("Show Data : ",data);
         
         var dtlVpcName = data.name;
@@ -342,39 +378,58 @@ function showVNetInfo(target) {
         $("#dtlCidrBlock").val(dtlCidrBlock);
         $("#dtlSubnet").val(dtlSubnet);
 
-        getProvider(dtlConnectionName);
-    }) 
+        if(dtlConnectionName == '' || dtlConnectionName == undefined ){
+            alert("dtlConnectionName is empty")
+        }else{
+            getProvider(dtlConnectionName);
+        }
+        
+    }) .catch(function(error){
+        console.log("Network detail error : ",error);        
+    });
 }
 
-function getProvider(target) {
-    console.log("getProvidergetProvider : ",target);
-    var url = SpiderURL+"/connectionconfig/" + target;
-        
+// 특정 connection 정보에서 Privider set
+function getProvider(connectionName) {
+    console.log("getProvider  : ",connectionName);
+    // var url = SpiderURL+"/connectionconfig/" + target;
+    var url = "/setting/connections"+"/cloudconnectionconfig/" + connectionName;
     return axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    
+        // headers:{
+        //     'Authorization': apiInfo
+        // }    
     }).then(result=>{
         var data = result.data;
-        
-        var Provider = data.ProviderName;
-
-        $("#dtlProvider").val(Provider);
-    })        
+        console.log(data)
+        console.log(data.ConnectionConfig)
+        var provider = data.ConnectionConfig.ProviderName;
+        //var Provider = data.ConnectionConfig.providerName;
+        console.log(provider)
+        $("#dtlProvider").val(provider);
+    }).catch(function(error){
+        console.log("Network getProvider error : ",error);        
+    });
 }
 
-$(document).ready(function() {
-    var subnetJsonList = "";
-    //Subnet pop table scrollbar
-      $('.btn_register').on('click', function() {
-        $("#register_box").modal();
+function displaySubnetRegModal(isShow){
+    if(isShow){
+        $("#subnetRegisterBox").modal();
         $('.dtbox.scrollbar-inner').scrollbar();
-    });	
+    }else{
+        $("#vnetCreateBox").toggleClass("active");
+    }
+}
+// $(document).ready(function() {
+//     var subnetJsonList = "";
+//     //Subnet pop table scrollbar
+//       $('.btn_register').on('click', function() {
+//         $("#register_box").modal();
+//         $('.dtbox.scrollbar-inner').scrollbar();
+//     });	
     
-    /*
-    $('.register_cont .btn_cancel').click(function(){
-        $(".dashboard.register_cont").toggleClass("active");
-    });
-    */
-});
+//     /*
+//     $('.register_cont .btn_cancel').click(function(){
+//         $(".dashboard.register_cont").toggleClass("active");
+//     });
+//     */
+// });

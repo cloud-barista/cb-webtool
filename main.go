@@ -270,9 +270,9 @@ func main() {
 	resourcesGroup := e.Group("/setting/resources", resourceTemplate)
 	resourcesGroup.GET("/network/mngform", controller.VpcMngForm)
 	resourcesGroup.GET("/network/list", controller.GetVpcList)
-	resourcesGroup.GET("/network/:vpcID", controller.GetVpcData)
+	resourcesGroup.GET("/network/:vNetID", controller.GetVpcData)
 	resourcesGroup.POST("/network/reg", controller.VpcRegProc)
-	resourcesGroup.DELETE("/network/del/:vpcID", controller.VpcDelProc)
+	resourcesGroup.DELETE("/network/del/:vNetID", controller.VpcDelProc)
 
 	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)

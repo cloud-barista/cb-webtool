@@ -87,7 +87,7 @@ function commonAlertClose(){
 
 // confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정
 function commonConfirmOpen(targetAction){
-    console.log("commonModalOpen : " + targetAction)
+    console.log("commonConfirmOpen : " + targetAction)
     // var targetText = "";
     // if( targetAction == "logout"){
     //     targetText = "Would you like to logout?";
@@ -122,6 +122,8 @@ function commonConfirmOpen(targetAction){
             ["NameSpace", "Would you like to move <br />selected NameSpace?"],
             ["ChangeNameSpace", "Would you like to move <br />selected NameSpace?"],
             ["DeleteNameSpace", "Would you like to delete <br />selected NameSpace?"],
+
+            ["AddNewVpc", "Would you like to register Network <br />Resource ?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -180,7 +182,12 @@ function commonConfirmOk(){
         goFocus('reg_name');
     }else if ( targetAction == "DeleteNameSpace"){
         deleteNameSpace ()
+    }else if ( targetAction == "AddNewVpc"){
+        displayVNetInfo("REG")
+        goFocus('vnetCreateBox');
     }
+
+    
 
     
 

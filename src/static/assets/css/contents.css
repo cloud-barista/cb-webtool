@@ -1630,6 +1630,37 @@
 #register_box .modal-body .pop-body .pop-cont .dataTable .btn_add { padding:0; margin:0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_add_s.png) center center no-repeat; }
 #register_box .modal-body .pop-body .pop-cont .dataTable .btn_del { padding:0; margin:0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_del_s.png) center center no-repeat; }
 #register_box .modal-body .pop-body .pop-cont .dataTable tr.bottom_line  { overflow:hidden; text-indent:-9999em; }
+
+#subnetRegisterBox .modal-dialog { max-width:100%; width:auto; display:block; padding:0 !important; }
+#subnetRegisterBox .modal-content { max-width:728px; margin:0 auto; padding:0 !important; }
+#subnetRegisterBox .modal-body { padding:35px 30px 30px 30px !important; }
+#subnetRegisterBox .modal-body .title_box { padding:0 0 0 0; margin:0; height:auto; } 
+#subnetRegisterBox .modal-body .title_box .title { font-size:18px; color:#06a9b7; line-height:18px; font-weight:400; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont { margin:28px 0 0 0; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont input[type="text"],
+#subnetRegisterBox .modal-body .pop-body .pop-cont input[type="password"] { display:inline-block; margin:-4px 0; vertical-align:middle; height:35px; padding:15px 12px; border:1px solid #e1e1e1; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont input.gray { background-color:#e7ebee; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont input.pline { border:1px dashed #ccc; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .toptxt { padding:0 0 0 20px; color:#5e636c; font-size:16px; font-weight:500; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .toptxt.topsel { padding:0; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .toptxt .selectbox { width:150px; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .toptxt label { margin:0 10px 0 0; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .b_txt { margin:20px 0 0 0; color:#5e636c; font-size:13px; font-family:'Noto Sans KR'; text-align:center; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .b_txt span.ch { color:#ff0000; font-family:'Noto Sans KR'; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .b_txt span.txt { color:#06a9b7; font-family:'Noto Sans KR'; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont > .scrollbar-inner {  margin:8px 0 0 0; max-height:256px; overflow:auto; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable { padding:0; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable table { background-color:#f7f7f7; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable thead th { padding:10px 5px; background-color:#999ea7; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable thead th .btn_add { border:1px solid #fff; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable tbody td { padding:10px 5px; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable tbody td.td_left { padding:10px 10px; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable tbody td input,
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable tbody td .selectbox { width:100%; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable .btn_add { padding:0; margin:0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_add_s.png) center center no-repeat; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable .btn_del { padding:0; margin:0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_del_s.png) center center no-repeat; }
+#subnetRegisterBox .modal-body .pop-body .pop-cont .dataTable tr.bottom_line  { overflow:hidden; text-indent:-9999em; }
+
 @media screen and (max-width:1800px){
 	#register_box .modal-body .pop-body .pop-cont .dataTable.scrollbar-inner { max-width:100%; overflow:auto; }
 	#register_box .modal-body .pop-body .pop-cont .dataTable.scrollbar-inner table { width:auto; }

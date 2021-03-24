@@ -3,9 +3,9 @@ package model
 // ConnectionConfigData -> CloudConnectionConfigInfo 로 변경
 type CloudConnectionConfigInfo struct {
 	//user(username, password, email)
-	ConfigName     string `json:"configname"`
-	ProviderName   string `json:"providername"`
-	DriverName     string `json:"drivername"`
+	ConfigName     string `json:"ConfigName"`
+	ProviderName   string `json:"ProviderName"`
+	DriverName     string `json:"DriverName"`
 	CredentialName string `json:"CredentialName"`
 	RegionName     string `json:"RegionName"`
 }

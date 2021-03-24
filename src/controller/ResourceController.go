@@ -127,17 +127,18 @@ func GetVpcData(c echo.Context) error {
 
 	paramVNetID := c.Param("vNetID")
 
-	vNetInfo, vNetErr := service.GetVpcData(defaultNameSpaceID, paramVNetID)
-	if vNetErr != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  "403",
-		})
-	}
+	//vNetInfo, vNetErr := service.GetVpcData(defaultNameSpaceID, paramVNetID)
+	// if vNetErr != nil {
+	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 		"message": "invalid tumblebug connection",
+	// 		"status":  "403",
+	// 	})
+	// }
+	vNetInfo, vNetStatus := service.GetVpcData(defaultNameSpaceID, paramVNetID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",
-		"status":   "200",
+		"status":   vNetStatus,
 		"VNetInfo": vNetInfo,
 	})
 }

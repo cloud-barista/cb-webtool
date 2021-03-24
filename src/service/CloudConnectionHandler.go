@@ -81,7 +81,7 @@ type IPStackInfo struct {
 func GetCloudOSListData() []string {
 
 	// CloudConnectionUrl == SPIDER
-	url := util.CloudConnectionUrl + "/" + "cloudos"
+	url := util.SPIDER + "/" + "cloudos"
 	// fmt.Println("=========== GetCloudOSListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -102,7 +102,7 @@ func GetCloudOSListData() []string {
 func GetCloudConnectionConfigList() []model.CloudConnectionConfigInfo {
 
 	// CloudConnectionUrl == SPIDER
-	url := util.CloudConnectionUrl + "/" + "connectionconfig"
+	url := util.SPIDER + "/" + "connectionconfig"
 	// fmt.Println("=========== GetCloudConnectionConfigList : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -121,7 +121,7 @@ func GetCloudConnectionConfigList() []model.CloudConnectionConfigInfo {
 
 // Connection 상세
 func GetCloudConnectionConfigData(configName string) model.CloudConnectionConfigInfo {
-	url := util.CloudConnectionUrl + "/connectionconfig/" + configName
+	url := util.SPIDER + "/connectionconfig/" + configName
 	fmt.Println("=========== GetCloudConnectionConfigData : ", configName)
 
 	body, err := util.CommonHttpGet(url)
@@ -140,7 +140,7 @@ func GetCloudConnectionConfigData(configName string) model.CloudConnectionConfig
 // CloudConnectionConfigInfo 등록
 func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.CloudConnectionUrl + "/connectionconfig"
+	url := util.SPIDER + "/connectionconfig"
 
 	fmt.Println("cloudConnectionConfigInfo : ", cloudConnectionConfigInfo)
 
@@ -156,7 +156,7 @@ func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionCo
 // CloudConnectionConfigInfo 삭제
 func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.CloudConnectionUrl + "/connectionconfig/" + configName
+	url := util.SPIDER + "/connectionconfig/" + configName
 
 	fmt.Println("DelCloudConnectionConfig : ", configName)
 
@@ -175,8 +175,8 @@ func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
 // 현재 설정된 region 목록
 func GetRegionListData() []model.RegionInfo {
 
-	// CloudConnectionUrl == SPIDER
-	url := util.CloudConnectionUrl + "/" + "region"
+	// SPIDER == SPIDER
+	url := util.SPIDER + "/" + "region"
 	// fmt.Println("=========== GetRegionListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -194,7 +194,7 @@ func GetRegionListData() []model.RegionInfo {
 }
 
 func GetRegionData(regionName string) model.RegionInfo {
-	url := util.CloudConnectionUrl + "/region/" + regionName
+	url := util.SPIDER + "/region/" + regionName
 	fmt.Println("=========== GetRegionData : ", regionName)
 
 	body, err := util.CommonHttpGet(url)
@@ -219,7 +219,7 @@ func GetRegionData(regionName string) model.RegionInfo {
 // Region 등록
 func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.CloudConnectionUrl + "/region"
+	url := util.SPIDER + "/region"
 
 	fmt.Println("RegRegion : ", regionInfo)
 
@@ -235,7 +235,7 @@ func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, error) {
 // Region 삭제
 func DelRegion(regionName string) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.CloudConnectionUrl + "/region/" + regionName
+	url := util.SPIDER + "/region/" + regionName
 
 	fmt.Println("DelRegion : ", regionName)
 
@@ -254,8 +254,8 @@ func DelRegion(regionName string) (io.ReadCloser, error) {
 // 현재 설정된 credential 목록 : 목록에서는 key의 value는 ...으로 표시
 func GetCredentialListData() []model.CredentialInfo {
 
-	// CloudConnectionUrl == SPIDER
-	url := util.CloudConnectionUrl + "/" + "credential"
+	// SPIDER == SPIDER
+	url := util.SPIDER + "/" + "credential"
 	// fmt.Println("=========== GetRegionListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -284,7 +284,7 @@ func GetCredentialListData() []model.CredentialInfo {
 
 // Credential 상세조회
 func GetCredentialData(credentialName string) model.CredentialInfo {
-	url := util.CloudConnectionUrl + "/credential/" + credentialName
+	url := util.SPIDER + "/credential/" + credentialName
 	fmt.Println("=========== GetCredentialData : ", credentialName)
 
 	body, err := util.CommonHttpGet(url)
@@ -304,7 +304,7 @@ func GetCredentialData(credentialName string) model.CredentialInfo {
 // Credential 등록
 func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.CloudConnectionUrl + "/credential"
+	url := util.SPIDER + "/credential"
 
 	fmt.Println("RegCredential : ", credentialInfo)
 
@@ -321,7 +321,7 @@ func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, error) 
 func DelCredential(credentialName string) (io.ReadCloser, error) {
 
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.CloudConnectionUrl + "/credential/" + credentialName
+	url := util.SPIDER + "/credential/" + credentialName
 
 	fmt.Println("DelCredential : ", credentialName)
 
@@ -337,7 +337,7 @@ func DelCredential(credentialName string) (io.ReadCloser, error) {
 
 // 현재 설정된 Driver 목록
 func GetDriverListData() []model.DriverInfo {
-	url := util.CloudConnectionUrl + "/" + "driver"
+	url := util.SPIDER + "/" + "driver"
 	fmt.Println("=========== GetDriverListData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -356,7 +356,7 @@ func GetDriverListData() []model.DriverInfo {
 
 // Driver 상세조회
 func GetDriverData(driverlName string) model.DriverInfo {
-	url := util.CloudConnectionUrl + "/driver/" + driverlName
+	url := util.SPIDER + "/driver/" + driverlName
 	fmt.Println("=========== GetDriverData : ", url)
 
 	body, err := util.CommonHttpGet(url)
@@ -375,7 +375,7 @@ func GetDriverData(driverlName string) model.DriverInfo {
 // Driver 등록
 func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.CloudConnectionUrl + "/driver"
+	url := util.SPIDER + "/driver"
 
 	fmt.Println("driverInfo : ", driverInfo)
 
@@ -392,7 +392,7 @@ func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, error) {
 func DelDriver(driverName string) (io.ReadCloser, error) {
 
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.CloudConnectionUrl + "/driver/" + driverName
+	url := util.SPIDER + "/driver/" + driverName
 
 	fmt.Println("driverName : ", driverName)
 

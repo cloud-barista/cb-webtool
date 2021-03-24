@@ -19,7 +19,7 @@ import (
 //func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
 func GetVnetList(nameSpaceID string) ([]model.VNetInfo, error) {
 	fmt.Println("GetVnetList ************ : ")
-	url := util.TumbleUrl + "/ns/" + nameSpaceID + "/resources/vNet"
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
 	pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
@@ -42,23 +42,35 @@ func GetVnetList(nameSpaceID string) ([]model.VNetInfo, error) {
 }
 
 // vpc 상세 조회-> ResourceHandler로 이동
-func GetVpcData(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
-	url := util.TumbleUrl + "/ns/" + nameSpaceID + "/resources/vNet"
+func GetVpcData(nameSpaceID string, vNetID string) (model.VNetInfo, int) {
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet/" + vNetID
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
 
-	pbytes, _ := json.Marshal(nameSpaceID)
-	body, err := util.CommonHttp(url, pbytes, http.MethodGet)
-
+	// pbytes, _ := json.Marshal(nameSpaceID)
+	// body, err := util.CommonHttpGet(url)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	var respStatus int
 	if err != nil {
 		fmt.Println(err)
+		respStatus = 500
 	}
-	return body, err
+
+	respBody := resp.Body
+	respStatus = resp.StatusCode
+
+	vNetInfo := model.VNetInfo{}
+	// json.NewDecoder(body).Decode(&vNetInfo)
+	json.NewDecoder(respBody).Decode(&vNetInfo)
+	fmt.Println(vNetInfo)
+
+	// return vNetInfo, err
+	return vNetInfo, respStatus
 }
 
 // vpc 등록
 func RegVpc(nameSpaceID string, vnetInfo *model.VNetInfo) (io.ReadCloser, error) {
-	url := util.TumbleUrl + "/ns/" + nameSpaceID + "/resources/vNet"
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
 
@@ -73,7 +85,7 @@ func RegVpc(nameSpaceID string, vnetInfo *model.VNetInfo) (io.ReadCloser, error)
 
 // vpc 삭제
 func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, error) {
-	url := util.TumbleUrl + "/ns/" + nameSpaceID + "/resources/vNet" + vNetID
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet" + vNetID
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
 

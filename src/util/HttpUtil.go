@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	// "io/ioutil"
+	// "log"
 	"net/http"
 	"os"
 	"strconv"
@@ -147,7 +149,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, erro
 	return resp.Body, err
 }
 
-func CommonHttpWithoutParam(url string, httpMethod string) (io.ReadCloser, error) {
+func CommonHttpWithoutParam1(url string, httpMethod string) (io.ReadCloser, error) {
 	authInfo := AuthenticationHandler()
 
 	fmt.Println("CommonHttp ", url)
@@ -169,4 +171,49 @@ func CommonHttpWithoutParam(url string, httpMethod string) (io.ReadCloser, error
 	defer resp.Body.Close()
 
 	return resp.Body, err
+}
+
+// parameter 없이 호출하는 경우 사용.받은대로 return하면 호출하는 method에서 가공하여 사용
+// func CommonHttpWithoutParam(url string, httpMethod string) (io.ReadCloser, error) {
+// 	authInfo := AuthenticationHandler()
+
+// 	fmt.Println("CommonHttp ", url)
+// 	client := &http.Client{}
+// 	req, err := http.NewRequest(httpMethod, url, nil)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	// set the request header Content-Type for json
+// 	// req.Header.Set("Content-Type", "application/json; charset=utf-8")	// 사용에 주의할 것.
+// 	req.Header.Add("Authorization", authInfo)
+// 	resp, err := client.Do(req)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	// respBody := resp.Body
+// 	// robots, _ := ioutil.ReadAll(resp.Body)
+// 	// defer resp.Body.Close()
+// 	// log.Println(fmt.Print(string(robots)))
+// 	// fmt.Println(resp.StatusCode)
+
+// 	return resp.Body, err
+// }
+
+// parameter 없이 호출하는 경우 사용.받은대로 return하면 호출하는 method에서 가공하여 사용
+func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, error) {
+	authInfo := AuthenticationHandler()
+
+	fmt.Println("CommonHttp ", url)
+	client := &http.Client{}
+	req, err := http.NewRequest(httpMethod, url, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	// set the request header Content-Type for json
+	// req.Header.Set("Content-Type", "application/json; charset=utf-8")	// 사용에 주의할 것.
+	req.Header.Add("Authorization", authInfo)
+	// resp, err := client.Do(req)
+	return client.Do(req)
 }

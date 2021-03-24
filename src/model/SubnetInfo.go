@@ -1,8 +1,8 @@
 package model
 
 type SubnetInfo struct {
+	IID           IIDInfo        `json:"IId"`
 	Ipv4_CIDR     string         `json:"ipv4_CIDR"`
-	Name          string         `json:"name"`
 	KeyValueInfos []KeyValueInfo `json:"keyValueList"`
 }
 

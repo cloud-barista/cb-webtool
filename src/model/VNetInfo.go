@@ -1,11 +1,17 @@
 package model
 
 type VNetInfo struct {
-	cidrBlock      string       `json:"cidrBlock"`
-	connectionName string       `json:"connectionName"`
-	description    string       `json:"description"`
-	name           string       `json:"name"`
-	SubnetInfos    []SubnetInfo `json:"subnetInfoList"`
+	ID             string `json:"id"`
+	Name           string `json:"name"`
+	ConnectionName string `json:"connectionName"`
+	CidrBlock      string `json:"cidrBlock"`
+	CspVNetID      string `json:"cspVNetID"`
+	CspVNetName    string `json:"cspVNetName"`
+	Description    string `json:"description"`
+
+	Status        string         `json:"status"`
+	KeyValueInfos []KeyValueInfo `json:"keyValueList"`
+	SubnetInfos   []SubnetInfo   `json:"subnetInfoList"`
 }
 
 type VNetInfos []VNetInfo

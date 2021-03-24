@@ -115,7 +115,7 @@ func GetCloudConnectionConfigList(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
 		"status":           "200",
-		"connectionconfig": cloudConnectionConfigInfo,
+		"ConnectionConfig": cloudConnectionConfigInfo,
 	})
 }
 
@@ -136,7 +136,7 @@ func GetCloudConnectionConfigData(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
 		"status":           "200",
-		"connectionconfig": cloudConnectionConfigInfo,
+		"ConnectionConfig": cloudConnectionConfigInfo,
 	})
 }
 

@@ -132,7 +132,7 @@ func CreateDefaultNamespace() (*model.NameSpaceInfo, error) {
 // 사용자의 namespace 목록 조회
 func GetNameSpaceList() ([]model.NameSpaceInfo, error) {
 	fmt.Println("GetNameSpaceList start")
-	url := util.NameSpaceUrl + "/ns"
+	url := util.TUMBLEBUG + "/ns"
 
 	body, err := util.CommonHttpGet(url)
 	//body := HttpGetHandler(url)
@@ -156,7 +156,7 @@ func GetNameSpaceList() ([]model.NameSpaceInfo, error) {
 // NameSpace 등록
 func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.NameSpaceUrl + "/ns"
+	url := util.TUMBLEBUG + "/ns"
 
 	fmt.Println("nameSpaceInfo : ", nameSpaceInfo)
 
@@ -172,7 +172,7 @@ func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 // NameSpace 수정
 func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.NameSpaceUrl + "/ns"
+	url := util.TUMBLEBUG + "/ns"
 
 	fmt.Println("nameSpaceInfo : ", nameSpaceInfo)
 
@@ -189,14 +189,14 @@ func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) 
 // NameSpace 삭제
 func DelNameSpace(nameSpaceID string) (io.ReadCloser, error) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.NameSpaceUrl + "/ns/" + nameSpaceID
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
 
 	//body, err := util.CommonHttpPost(url, nsInfo)
 
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
-	body, err := util.CommonHttpWithoutParam(url, http.MethodDelete)
+	body, err := util.CommonHttpDelete(url, nil)
 	// body, err := util.CommonHttpDelete(url, pbytes)
 	if err != nil {
 		fmt.Println(err)

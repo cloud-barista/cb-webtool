@@ -200,7 +200,7 @@
         console.log("selectDefaultNameSpace " + callerLocation + ", " + nameSpaceID)
         if( callerLocation == "TobBox"){
             $("#tempSelectedNameSpaceID").val(nameSpaceID);
-            commonModalOpen("ChangeNameSpace");
+            commonConfirmOpen("ChangeNameSpace");
         }else if ( callerLocation == "LNBPopup"){
             console.log("selectDefaultNameSpace " + callerLocation + ", " + nameSpaceID + " set!!")
             // Modal 내 namespace 값을 hidden으로 set
