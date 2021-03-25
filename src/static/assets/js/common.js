@@ -131,6 +131,12 @@ function getVMStatus(vm_name, connection_name){
 
 // 좌측메뉴 선택 표시
 // 경로를 split하여 첫번째 : Operation / Setting, 두번째 선택, 세번째 선택하도록 
+// //http://localhost:1234/setting/connections/cloudconnectionconfig/mngform
+// //http://localhost:1234/setting/resources/network/mngform
+// 이 때 
+// menu 2 의 id 는 menu_level2_connections, menu_level2_resources
+// menu 3 의 id 는 menu_level3_cloudconnectionconfig, menu_level3_network
+
 function lnb_on(){
 	var url = new URL(location.href)
 	var path = url.pathname
@@ -142,6 +148,7 @@ function lnb_on(){
 	console.log('target1=' + target1)
 	console.log('target2=' + target2)
 	console.log('target3=' + target3)
+
 	// $("#"+target1).addClass("active")
 	// $("#"+target1).addClass("on")
 
@@ -170,7 +177,7 @@ $(function() {
 	jQuery('.ds_cont .listbox.scrollbar-inner').scrollbar();
 	//selectbox
 	//jQuery('.selectbox').niceSelect();
-	
+	//menu_level3_cloudconnectionconfig
 	/* lnb s */
 	var $menu_li = $('.menu > li'),
 			$ul_sub = $('.menu > li ul'),

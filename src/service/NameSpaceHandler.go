@@ -170,7 +170,7 @@ func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
 }
 
 // NameSpace 수정
-func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) {
+func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.TUMBLEBUG + "/ns"
 
@@ -178,12 +178,16 @@ func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, error) 
 
 	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
 	pbytes, _ := json.Marshal(nameSpaceInfo)
-	body, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }
 
 // NameSpace 삭제

@@ -154,7 +154,7 @@ func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionCo
 }
 
 // CloudConnectionConfigInfo 삭제
-func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
+func DelCloudConnectionConfig(configName string) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/connectionconfig/" + configName
 
@@ -164,12 +164,16 @@ func DelCloudConnectionConfig(configName string) (io.ReadCloser, error) {
 
 	pbytes, _ := json.Marshal(configName)
 	// body, err := util.CommonHttpDelete(url, pbytes)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }
 
 // 현재 설정된 region 목록
@@ -233,7 +237,7 @@ func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, error) {
 }
 
 // Region 삭제
-func DelRegion(regionName string) (io.ReadCloser, error) {
+func DelRegion(regionName string) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/region/" + regionName
 
@@ -243,12 +247,16 @@ func DelRegion(regionName string) (io.ReadCloser, error) {
 
 	pbytes, _ := json.Marshal(regionName)
 	// body, err := util.CommonHttpDelete(url, pbytes)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }
 
 // 현재 설정된 credential 목록 : 목록에서는 key의 value는 ...으로 표시
@@ -318,7 +326,7 @@ func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, error) 
 }
 
 // Credential 삭제
-func DelCredential(credentialName string) (io.ReadCloser, error) {
+func DelCredential(credentialName string) (io.ReadCloser, int) {
 
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/credential/" + credentialName
@@ -327,12 +335,16 @@ func DelCredential(credentialName string) (io.ReadCloser, error) {
 
 	pbytes, _ := json.Marshal(credentialName)
 	// body, err := util.CommonHttpDelete(url, pbytes)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }
 
 // 현재 설정된 Driver 목록
@@ -389,7 +401,7 @@ func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, error) {
 }
 
 // Driver 삭제
-func DelDriver(driverName string) (io.ReadCloser, error) {
+func DelDriver(driverName string) (io.ReadCloser, int) {
 
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/driver/" + driverName
@@ -398,12 +410,16 @@ func DelDriver(driverName string) (io.ReadCloser, error) {
 
 	pbytes, _ := json.Marshal(driverName)
 	// body, err := util.CommonHttpDelete(url, pbytes)
-	body, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	return body, err
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, respStatus
 }
 
 // 해당 namespace의 vpc 목록 조회 -> ResourceHandler로 이동

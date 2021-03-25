@@ -68,7 +68,7 @@
 												<div class="box">
 													<ul>
 														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox" onClick="commonConfirmOpen('AddNewVpc')">Add</a></li>
-														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist">Delete</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist" onClick="commonConfirmOpen('DeleteVpc')">Delete</a></li>
 													</ul>
 												</div>
 											</div>
@@ -96,7 +96,7 @@
 							</div> -->
 							<!-- //popup Regist -->
 	
-							<!-- popup Regist -->
+							<!-- popup UnRegist -->
 							<!-- <div class="modal fade layerpopup" id="UnRegist" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
@@ -244,14 +244,14 @@
 											</ul>
 										</div>
 									</div>
-									
+								<!-- TODO : tumblebug에 수정 기능 없음. 수정기능 생기면 처리
 									<div class="btnbox">
 										<div class="btn_center">
 											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
 											<button name="" value="" class="btn_co btn_cr_g w135 btn_modify">Modify</button> 
 										</div>
 									</div>
-								
+								 -->
 								</div>
 							</div>
 							
@@ -300,7 +300,7 @@
 														{{ range $item := .CloudOSList}}	
 														<option value="{{ $item }}">{{ $item }}</option>
 														{{ end }}
-														<option value="MOCK">MOCK</option>	
+														<option value="MOCK">MOCK</option>	<!-- 임시로 MOCK 추가-->
 													</select>
 												</li>
 												<li>
@@ -377,8 +377,8 @@
 																<td class="btn_mtd" data-th="subnet Name"><input type="text" id="reg_subnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>
 																<td class="overlay hidden" data-th="cidrBlock"><input type="text" id="reg_subnetCidrBlock" name="reg_subnetCidrBlock" value="ex) 10.0.0.0/24" placeholder="" class="pline" title="" /></td>
 																<td class="overlay hidden" data-th="">
-																	<button class="btn btn_add" value="" name="btn_add">add</button>
-																	<button class="btn btn_del" name="delInput" value="">del</button>
+																	<button class="btn btn_add" name="addSubnet">add</button>
+																	<!-- <button class="btn btn_del" name="delInput">del</button> 처음 한개는 놔 둘 것 -->
 																</td>
 															</tr>
 														</tbody>
@@ -387,37 +387,6 @@
 											</div>
 											<!-- //table scrollbar -->
 						
-											<script>
-												//table row add
-												$(document).on("click","button[name=btn_add]",function(){
-													var addStaffText = '<tr class="ip" name="tr_Input">'
-														+ '<td class="btn_mtd" data-th="subnet Name"><input type="text" name="" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
-														+ '<td class="overlay" data-th="cidrBlock"><input type="text" name="" value="" placeholder="" class="pline" title="" /></td>'
-														+ '<td class="overlay">'
-														+ '<button class="btn btn_add" name="btn_add" value="">add</button>'
-														+ '<button class="btn btn_del" name="delInput" value="">del</button>'
-														+ '</td>'
-														+ '</tr>';
-													var trHtml = $( "tr[name=tr_Input]:last" );
-													trHtml.after(addStaffText);
-												});
-												
-												$('.dataTable .btn.btn_add').on("click", function() {
-														trHtml.after(addStaffText);
-												});
-												
-												$(document).on("click","button[name=delInput]",function(){
-													var trHtml = $(this).parent().parent();
-													trHtml.remove();
-												});
-												
-												$(document).on("click","span[name=td_ov]",function(){
-													var trHtml = $(this).parent().parent();
-													trHtml.find(".btn_mtd").toggleClass("over");
-													trHtml.find(".overlay").toggleClass("hidden");
-												});
-											</script>		
-											
 											<div class="b_txt"><span class="ch">*</span> Define the subnet to be added to Virtual Network and add it by clicking <span class="txt">“Apply”</span></div>
 										</div>
 										

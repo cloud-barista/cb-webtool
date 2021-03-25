@@ -1,14 +1,16 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
-	"log"
-	"net/http"
-
 	"github.com/cloud-barista/cb-webtool/src/model"
 	service "github.com/cloud-barista/cb-webtool/src/service"
-	"github.com/labstack/echo"
+	util "github.com/cloud-barista/cb-webtool/src/util"
 
+	"github.com/labstack/echo"
+	// "io/ioutil"
+	"log"
+	"net/http"
 	//"github.com/davecgh/go-spew/spew"
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
@@ -60,11 +62,12 @@ func VpcMngForm(c echo.Context) error {
 	store.Set("namespace", nsList)
 	log.Println(" nsList  ", nsList)
 
-	vNetInfoList, vNetErr := service.GetVnetList(defaultNameSpaceID)
-	if vNetErr != nil {
+	vNetInfoList, vNetStatus := service.GetVnetList(defaultNameSpaceID)
+	// if vNetErr != nil {
+	if vNetStatus != util.HTTP_CALL_SUCCESS && vNetStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"status":  vNetStatus,
 		})
 	}
 	log.Println("VNetList", vNetInfoList)
@@ -99,17 +102,18 @@ func GetVpcList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	vNetInfoList, vNetErr := service.GetVnetList(defaultNameSpaceID)
-	if vNetErr != nil {
+	vNetInfoList, vNetStatus := service.GetVnetList(defaultNameSpaceID)
+	// if vNetErr != nil {
+	if vNetStatus != util.HTTP_CALL_SUCCESS && vNetStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"status":  vNetStatus,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":             "200",
+		"status":             vNetStatus,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"VNetList":           vNetInfoList,
 	})
@@ -153,27 +157,39 @@ func VpcRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vNetInfo := new(model.VNetInfo)
-	if err := c.Bind(vNetInfo); err != nil {
+	vNetRegInfo := new(model.VNetRegInfo)
+	if err := c.Bind(vNetRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
 			"status":  "fail",
 		})
 	}
-	log.Println(vNetInfo)
-	respBody, reErr := service.RegVpc(defaultNameSpaceID, vNetInfo)
-	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+	// log.Println(vNetRegInfo)
+	resultVNetInfo, respStatus := service.RegVpc(defaultNameSpaceID, vNetRegInfo)
+	// respBody, respStatus := service.RegVpc(defaultNameSpaceID, vNetRegInfo)
+	// fmt.Println("=============respStatus =============", respStatus)
+	// fmt.Println("=============respBody ===============", respBody)
+
+	// if reErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		// resultBody, err := ioutil.ReadAll(respBody)
+		// if err == nil {
+		// 	str := string(resultBody)
+		// 	println(str)
+		// }
+		// pbytes, _ := json.Marshal(respBody)
+		// fmt.Println(string(pbytes))
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"status":  respStatus,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  "200",
+		"message":  "success",
+		"status":   respStatus,
+		"VNetInfo": resultVNetInfo,
 	})
 }
 
@@ -191,17 +207,27 @@ func VpcDelProc(c echo.Context) error {
 
 	paramVNetID := c.Param("vNetID")
 
-	respBody, reErr := service.DelVpc(defaultNameSpaceID, paramVNetID)
+	respBody, respStatus := service.DelVpc(defaultNameSpaceID, paramVNetID)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != nil {
+
+	// if reErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		// resultBody, err := ioutil.ReadAll(respBody)
+		// if err == nil {
+		// 	str := string(resultBody)
+		// 	println(str)
+		// }
+		pbytes, _ := json.Marshal(respBody)
+		fmt.Println(string(pbytes))
+
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"status":  respStatus,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus,
 	})
 }

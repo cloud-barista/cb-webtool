@@ -63,21 +63,9 @@ function nvlDash(str){
 }
 
 // message를 표현할 alert 창
-function commonAlertOpen(targetAction){
-    let alertModalTextMap = new Map(
-        [
-            ["IdPassRequired", "ID/Password required !"], 
-            
-            ["FailCreateNameSpace", "Namespace creation failed"],
-            ["SuccessCreateNameSpace", "Namespace creation succeeded"],
-
-            ["ValidDeleteNameSpace", "Please select a namespace."],
-            ["SuccessDeleteNameSpace", "Namespace deletion succeeded"],
-            ["FailDeleteNameSpace", "Namespace deletion failed"],
-        ]
-    );
-    
-    $('#alertText').text(alertModalTextMap.get(targetAction));
+function commonAlertOpen(alertMessage){
+    console.log(alertMessage);
+    $('#alertText').text(alertMessage);
     $("#alertArea").modal();
 }
 // alert창 닫기
@@ -124,6 +112,7 @@ function commonConfirmOpen(targetAction){
             ["DeleteNameSpace", "Would you like to delete <br />selected NameSpace?"],
 
             ["AddNewVpc", "Would you like to register Network <br />Resource ?"],
+            ["DeleteVpc", "Are you sure to delete this Network <br />Resource ?"]
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -185,6 +174,8 @@ function commonConfirmOk(){
     }else if ( targetAction == "AddNewVpc"){
         displayVNetInfo("REG")
         goFocus('vnetCreateBox');
+    }else if ( targetAction == "DeleteVpc"){
+        deleteVPC()
     }
 
     
