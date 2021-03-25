@@ -274,6 +274,12 @@ func main() {
 	resourcesGroup.POST("/network/reg", controller.VpcRegProc)
 	resourcesGroup.DELETE("/network/del/:vNetID", controller.VpcDelProc)
 
+	resourcesGroup.GET("/securitygroup/mngform", controller.SecirityGroupMngForm)
+	resourcesGroup.GET("/securitygroup/list", controller.GetSecirityGroupList)
+	resourcesGroup.GET("/securitygroup/:vNetID", controller.GetSecirityGroupData)
+	resourcesGroup.POST("/securitygroup/reg", controller.SecirityGroupRegProc)
+	resourcesGroup.DELETE("/securitygroup/del/:vNetID", controller.SecirityGroupDelProc)
+
 	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
 	// e.GET("/Cloud/Connection/reg", controller.ConnectionRegForm)

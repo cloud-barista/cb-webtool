@@ -43,13 +43,13 @@ $(document).ready(function(){
 //     fnMove(target)
 // }
 
-function fnMove(target) {
-    var offset = $("#" + target).offset();
-    console.log("fn move offset : ", offset);
-    $('html, body').animate({
-        scrollTop: offset.top
-    }, 400);
-}
+// function fnMove(target) {
+//     var offset = $("#" + target).offset();
+//     console.log("fn move offset : ", offset);
+//     $('html, body').animate({
+//         scrollTop: offset.top
+//     }, 400);
+// }
 
 // function goDelete() {
 function deleteVPC(){

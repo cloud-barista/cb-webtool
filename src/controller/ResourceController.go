@@ -42,14 +42,6 @@ func VpcMngForm(c echo.Context) error {
 	}
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
-	// log.Println(" loginInfo  ", loginInfo)
-	// if defaultNameSpaceID == "" {
-	// 	log.Println(" loginInfo2  ", loginInfo)
-	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "select namespace",
-	// 		"status":  "403",
-	// 	})
-	// }
 
 	store := echosession.FromContext(c)
 
@@ -71,11 +63,6 @@ func VpcMngForm(c echo.Context) error {
 		})
 	}
 	log.Println("VNetList", vNetInfoList)
-	//spew.Dump(nsList)
-	// return c.Render(http.StatusOK, "NetworkMng.html", map[string]interface{}{
-	// 	"LoginInfo": loginInfo,
-	// 	"NSList":    regionList,
-	// })
 
 	return echotemplate.Render(c, http.StatusOK,
 		"setting/resources/NetworkMng", // 파일명
@@ -87,7 +74,6 @@ func VpcMngForm(c echo.Context) error {
 		})
 }
 
-//////////////////////////////
 func GetVpcList(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.Username == "" {
@@ -126,18 +112,9 @@ func GetVpcData(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	paramVNetID := c.Param("vNetID")
-
-	//vNetInfo, vNetErr := service.GetVpcData(defaultNameSpaceID, paramVNetID)
-	// if vNetErr != nil {
-	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "invalid tumblebug connection",
-	// 		"status":  "403",
-	// 	})
-	// }
 	vNetInfo, vNetStatus := service.GetVpcData(defaultNameSpaceID, paramVNetID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -208,6 +185,168 @@ func VpcDelProc(c echo.Context) error {
 	paramVNetID := c.Param("vNetID")
 
 	respBody, respStatus := service.DelVpc(defaultNameSpaceID, paramVNetID)
+	fmt.Println("=============respBody =============", respBody)
+
+	// if reErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		// resultBody, err := ioutil.ReadAll(respBody)
+		// if err == nil {
+		// 	str := string(resultBody)
+		// 	println(str)
+		// }
+		pbytes, _ := json.Marshal(respBody)
+		fmt.Println(string(pbytes))
+
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus,
+	})
+}
+
+///////////////////
+func SecirityGroupMngForm(c echo.Context) error {
+	fmt.Println("SecirityGroupMngForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	store := echosession.FromContext(c)
+
+	cloudOsList := service.GetCloudOSListData()
+	store.Set("cloudos", cloudOsList)
+	log.Println(" cloudOsList  ", cloudOsList)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	log.Println(" nsList  ", nsList)
+
+	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+	log.Println("VNetList", securityGroupInfoList)
+
+	return echotemplate.Render(c, http.StatusOK,
+		"setting/resources/SecurityGroupMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":         loginInfo,
+			"CloudOSList":       cloudOsList,
+			"NameSpaceList":     nsList,
+			"SecurityGroupList": securityGroupInfoList,
+		})
+}
+
+func GetSecirityGroupList(c echo.Context) error {
+	log.Println("GetSecirityGroupList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
+	// if vNetErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":            "success",
+		"status":             respStatus,
+		"DefaultNameSpaceID": defaultNameSpaceID,
+		"SecurityGroupList":  securityGroupInfoList,
+	})
+}
+
+// Vpc 상세정보
+func GetSecirityGroupData(c echo.Context) error {
+	log.Println("GetSecirityGroupData : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramVNetID := c.Param("vNetID")
+	securityGroupInfo, vNetStatus := service.GetSecurityGroupData(defaultNameSpaceID, paramVNetID)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       "success",
+		"status":        vNetStatus,
+		"SecurityGroup": securityGroupInfo,
+	})
+}
+
+// Vpc 등록 :
+func SecirityGroupRegProc(c echo.Context) error {
+	log.Println("SecirityGroupRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	securityGroupRegInfo := new(model.SecurityGroupRegInfo)
+	if err := c.Bind(securityGroupRegInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	resultVNetInfo, respStatus := service.RegSecurityGroup(defaultNameSpaceID, securityGroupRegInfo)
+
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "success",
+		"status":   respStatus,
+		"VNetInfo": resultVNetInfo,
+	})
+}
+
+// 삭제
+func SecirityGroupDelProc(c echo.Context) error {
+	log.Println("SecirityGroupDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramVNetID := c.Param("vNetID")
+
+	respBody, respStatus := service.DelSecurityGroup(defaultNameSpaceID, paramVNetID)
 	fmt.Println("=============respBody =============", respBody)
 
 	// if reErr != nil {
