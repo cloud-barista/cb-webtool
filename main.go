@@ -178,6 +178,7 @@ func main() {
 	// handler : 1개일때 controller명 + Data, List일 때 controller method명 DataList
 
 	e.GET("/", controller.Index)
+	e.GET("/about", controller.About)
 
 	loginGroup := e.Group("/login", loginTemplate)
 
