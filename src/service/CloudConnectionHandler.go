@@ -186,7 +186,10 @@ func DelCloudConnectionConfig(configName string) (io.ReadCloser, int) {
 		fmt.Println(err)
 	}
 	// return body, err
+<<<<<<< HEAD
 
+=======
+>>>>>>> da2c51f36fd1aeaf7d87cd88627c4756cd2adca0
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
@@ -266,7 +269,7 @@ func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, int) {
 }
 
 // Region 삭제
-func DelRegion(regionName string) (*io.ReadCloser, int) {
+func DelRegion(regionName string) (io.ReadCloser, int) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/region/" + regionName
 
@@ -281,10 +284,11 @@ func DelRegion(regionName string) (*io.ReadCloser, int) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	
-	return &respBody, respStatus
+
+	return respBody, respStatus
 }
 
 // 현재 설정된 credential 목록 : 목록에서는 key의 value는 ...으로 표시
@@ -379,6 +383,10 @@ func DelCredential(credentialName string) (io.ReadCloser, int) {
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+<<<<<<< HEAD
+=======
+
+>>>>>>> da2c51f36fd1aeaf7d87cd88627c4756cd2adca0
 	return respBody, respStatus
 }
 
@@ -462,6 +470,10 @@ func DelDriver(driverName string) (io.ReadCloser, int) {
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+<<<<<<< HEAD
+=======
+
+>>>>>>> da2c51f36fd1aeaf7d87cd88627c4756cd2adca0
 	return respBody, respStatus
 }
 

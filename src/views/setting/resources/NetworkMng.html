@@ -68,7 +68,7 @@
 												<div class="box">
 													<ul>
 														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox" onClick="commonConfirmOpen('AddNewVpc')">Add</a></li>
-														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist">Delete</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist" onClick="commonConfirmOpen('DeleteVpc')">Delete</a></li>
 													</ul>
 												</div>
 											</div>
@@ -96,7 +96,7 @@
 							</div> -->
 							<!-- //popup Regist -->
 	
-							<!-- popup Regist -->
+							<!-- popup UnRegist -->
 							<!-- <div class="modal fade layerpopup" id="UnRegist" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
@@ -238,20 +238,20 @@
 													<label>Subnet</label>
 													<span class="sbox">
 														<input type="text" id="dtlSubnet" name="dtlSubnet" value="" placeholder="" class="gray" title="" readonly />
-														<!-- <button name="" value="" class="btn_edit btn_register">Edit</button>  -->
+														<button name="" value="" class="btn_edit btn_register">Edit</button><!-- subnet 추가버튼--> 
 													</span>
 												</li>
 											</ul>
 										</div>
 									</div>
-									
+								<!-- TODO : tumblebug에 수정 기능 없음. 수정기능 생기면 처리
 									<div class="btnbox">
 										<div class="btn_center">
 											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
 											<button name="" value="" class="btn_co btn_cr_g w135 btn_modify">Modify</button> 
 										</div>
 									</div>
-								
+								 -->
 								</div>
 							</div>
 							
@@ -276,11 +276,11 @@
 											<ul>
 												<li>
 													<label><span class="ch">*</span>VPC Name</label>
-													<input type="text" id="reg_vpcName" name="reg_vpcName" value="" placeholder="Input VPC Name" class="pline" title="" />
+													<input type="text" id="regVpcName" name="reg_vpcName" value="" placeholder="Input VPC Name" class="pline" title="" />
 												</li>
 												<li class="ta_1">
 													<label>Description</label>
-													<textarea id="reg_description" name="reg_description" cols="" rows="" placeholder="Description" class="pline" title="" ></textarea>
+													<textarea id="regDescription" name="reg_description" cols="" rows="" placeholder="Description" class="pline" title="" ></textarea>
 												</li>
 											</ul>
 										</div>
@@ -288,7 +288,7 @@
 											<ul>
 												<li>
 													<label>Cloud Provider</label>
-													<select class="selectbox white pline w3" id="provider" name="ProvideName" onchange="getConnectionInfo(this.value)">
+													<select class="selectbox white pline w3" id="provider" name="ProvideName" onchange="getConnectionInfoListForSelectbox(this.value, 'regConnectionName')">
 														<option selected>Select Cloud Provider</option>
 														<!-- <option selected>Select Cloud Provider</option>
 														<option value="AWS">AWS</option>
@@ -300,23 +300,23 @@
 														{{ range $item := .CloudOSList}}	
 														<option value="{{ $item }}">{{ $item }}</option>
 														{{ end }}
-														<option value="MOCK">MOCK</option>	
+														<option value="MOCK">MOCK</option>	<!-- 임시로 MOCK 추가-->
 													</select>
 												</li>
 												<li>
 													<label><span class="ch">*</span>Connection Name</label>
-													<select class="selectbox white pline w3" id="reg_connectionName" name="reg_connectionName">
+													<select class="selectbox white pline w3" id="regConnectionName" name="reg_connectionName">
 														<option selected>Selected ConnectionName</option>
 													</select>
 												</li>
 												<li>
 													<label><span class="ch">*</span>CIDR Block</label>
-													<input type="text" id="reg_cidrBlock" name="reg_cidrBlock" value="" placeholder="ex) 10.0.0.0/24" class="pline ip_w1" title="" />
+													<input type="text" id="regCidrBlock" name="reg_cidrBlock" value="" placeholder="ex) 10.0.0.0/24" class="pline ip_w1" title="" />
 												</li>
 												<li>
 													<label><span class="ch">*</span>Subnet</label>
 													<span class="sbox">
-														<input type="text" id="reg_subnet" name="reg_subnet" value="" placeholder="ex) subnetname (10.0.0.0/24)" class="ip_w1 gray noline" title="" />
+														<input type="text" id="regSubnet" name="reg_subnet" value="" placeholder="ex) subnetname (10.0.0.0/24)" class="ip_w1 gray noline" title="" />
 														<button name="" value="" class="btn_edit btn_register" onClick="displaySubnetRegModal(true)">Edit</button> 
 													</span>
 												</li>
@@ -338,10 +338,9 @@
 						
 					</div>
 					<!-- //Register Network -->
-
 						
 					<!-- register subnet -->
-					<div class="modal fade" id="subnetRegisterBox" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="register_box modal fade" id="subnetRegisterBox" tabindex="-1" role="dialog" aria-hidden="true">
 						
 						<div class="modal-dialog modal-dialog-centered" role="document">
 							<div class="modal-content">
@@ -374,11 +373,11 @@
 														</thead>
 														<tbody id="subnetList">
 															<tr name="tr_Input">
-																<td class="btn_mtd" data-th="subnet Name"><input type="text" id="reg_subnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>
-																<td class="overlay hidden" data-th="cidrBlock"><input type="text" id="reg_subnetCidrBlock" name="reg_subnetCidrBlock" value="ex) 10.0.0.0/24" placeholder="" class="pline" title="" /></td>
+																<td class="btn_mtd" data-th="subnet Name"><input type="text" id="regSubnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>
+																<td class="overlay hidden" data-th="cidrBlock"><input type="text" id="regSubnetCidrBlock" name="reg_subnetCidrBlock" value="ex) 10.0.0.0/24" placeholder="" class="pline" title="" /></td>
 																<td class="overlay hidden" data-th="">
-																	<button class="btn btn_add" value="" name="btn_add">add</button>
-																	<button class="btn btn_del" name="delInput" value="">del</button>
+																	<button class="btn btn_add" name="addSubnet">add</button>
+																	<!-- <button class="btn btn_del" name="delInput">del</button> 처음 한개는 놔 둘 것 -->
 																</td>
 															</tr>
 														</tbody>
@@ -387,39 +386,6 @@
 											</div>
 											<!-- //table scrollbar -->
 						
-											<script>
-												var addStaffText = "";
-												//table row add
-												$(document).on("click","button[name=btn_add]",function(){
-													addStaffText = '<tr class="ip" name="tr_Input">'
-														+ '<td class="btn_mtd" data-th="subnet Name"><input type="text" name="" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
-														+ '<td class="overlay" data-th="cidrBlock"><input type="text" name="" value="" placeholder="" class="pline" title="" /></td>'
-														+ '<td class="overlay">'
-														+ '<button class="btn btn_add" name="btn_add" value="">add</button>'
-														+ '<button class="btn btn_del" name="delInput" value="">del</button>'
-														+ '</td>'
-														+ '</tr>';
-													var trHtml = $( "tr[name=tr_Input]:last" );
-													trHtml.after(addStaffText);
-												});
-												
-												$('.dataTable .btn.btn_add').on("click", function() {
-													var trHtml = $( "tr[name=tr_Input]:last" );
-													trHtml.after(addStaffText);
-												});
-												
-												$(document).on("click","button[name=delInput]",function(){
-													var trHtml = $(this).parent().parent();
-													trHtml.remove();
-												});
-												
-												$(document).on("click","span[name=td_ov]",function(){
-													var trHtml = $(this).parent().parent();
-													trHtml.find(".btn_mtd").toggleClass("over");
-													trHtml.find(".overlay").toggleClass("hidden");
-												});
-											</script>		
-											
 											<div class="b_txt"><span class="ch">*</span> Define the subnet to be added to Virtual Network and add it by clicking <span class="txt">“Apply”</span></div>
 										</div>
 										

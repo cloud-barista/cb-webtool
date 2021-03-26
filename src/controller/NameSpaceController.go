@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/cloud-barista/cb-webtool/src/model"
 	service "github.com/cloud-barista/cb-webtool/src/service"
+	util "github.com/cloud-barista/cb-webtool/src/util"
+
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
@@ -112,12 +114,13 @@ func NameSpaceUpdateProc(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	respBody, reErr := service.UpdateNameSpace(nameSpaceInfo)
+	respBody, respStatus := service.UpdateNameSpace(nameSpaceInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != 200 {
+	// if reErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"status":  respStatus,
 		})
 	}
 
@@ -126,14 +129,14 @@ func NameSpaceUpdateProc(c echo.Context) error {
 	if err != 200 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message":       "fail",
-			"status":        "403",
+			"status":        err,
 			"NameSpaceList": nil,
 		})
 	}
 	// return namespace 목록
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":       "success",
-		"status":        "200",
+		"status":        respStatus,
 		"NameSpaceList": nameSpaceList,
 	})
 

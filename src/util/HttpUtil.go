@@ -5,7 +5,7 @@ import (
 	"fmt"
 	// "io"
 	// "io/ioutil"
-	// "log"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -123,15 +123,17 @@ func AuthenticationHandler() string {
 // }
 
 // http 호출
+// func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, int) {
 func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, error) {
+
 	authInfo := AuthenticationHandler()
 
-	fmt.Println("CommonHttp ", url)
-	fmt.Println("authInfo ", authInfo)
+	log.Println("CommonHttp "+httpMethod+", ", url)
+	log.Println("authInfo ", authInfo)
 	client := &http.Client{}
-	req, err := http.NewRequest(httpMethod, url, bytes.NewBuffer(json))
-	if err != nil {
-		panic(err)
+	req, err1 := http.NewRequest(httpMethod, url, bytes.NewBuffer(json))
+	if err1 != nil {
+		panic(err1)
 	}
 
 	// url = "http://54.248.3.145:1323/tumblebug/ns/ns-01/resources/vNet"
@@ -140,16 +142,15 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	//req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	// req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("Authorization", authInfo)
-	// resp, err := client.Do(req)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
 
 	// fmt.Println(resp.StatusCode)
-	// //defer resp.Body.Close()
-	// // fmt.Println("resp.Body ", resp.Body)
-	// // return resp.Body, err
-	return client.Do(req)
+	//defer resp.Body.Close()
+	// fmt.Println("resp.Body ", resp.Body)
+	return resp, err
 }
 
 // func CommonHttpWithoutParam1(url string, httpMethod string) (io.ReadCloser, error) {

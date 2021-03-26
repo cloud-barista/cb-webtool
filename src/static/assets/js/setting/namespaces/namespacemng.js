@@ -114,14 +114,14 @@ function createNameSpace(){
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                commonAlertOpen("SuccessCreateNameSpace");
+                commonAlertOpen("Namespace creation succeeded");
                 clearNamespaceInfo();
                 
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getNameSpaceList();
 
             }else{
-                commonAlertOpen("FailCreateNameSpace");
+                commonAlertOpen("Namespace creation failed");
             }
         });
     }else{
@@ -140,7 +140,7 @@ function deleteNameSpace () {
     // checkbox 선택되어있는지 체크할까?
     if(!nameSpaceID){
         // alert("select NameSpace")
-        commonAlertOpen("ValidDeleteNameSpace");
+        commonAlertOpen("Please select a namespace.");
         return;
     }
     
@@ -151,13 +151,13 @@ function deleteNameSpace () {
             console.log(result);
             if(result.status == 200 || result.status == 201){
                 // alert("Success delete NameSpace")
-                commonAlertOpen("SuccessDeleteNameSpace");
+                commonAlertOpen("Namespace deletion succeeded");
                 clearNamespaceInfo()
 
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getNameSpaceList();                
             }else{
-                commonAlertOpen("FailDeleteNameSpace");
+                commonAlertOpen("Namespace deletion failed");
             }
         }).catch(function(error){
             console.log("namespace delete error : ",error);        

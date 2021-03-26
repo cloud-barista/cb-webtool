@@ -1,4 +1,3 @@
-var subnetJsonList = "";//저장시 subnet목록을 담을 array 
 $(document).ready(function(){
     order_type = "name"
     //checkbox all
@@ -22,6 +21,8 @@ $(document).ready(function(){
     });
 });
 
+// TODO : filter 기능, sort 기능
+
 // $(document).ready(function () {
     
 //     // var defaultNameSpace = "{{ .DefaultNameSpaceID }}"
@@ -33,6 +34,7 @@ $(document).ready(function(){
 //     // getCloudOS(apiInfo,'provider');
 // })                      
 
+
 // function goFocus(target) {
 //     console.log(event)
 //     event.preventDefault();
@@ -41,15 +43,16 @@ $(document).ready(function(){
 //     fnMove(target)
 // }
 
-function fnMove(target) {
-    var offset = $("#" + target).offset();
-    console.log("fn move offset : ", offset);
-    $('html, body').animate({
-        scrollTop: offset.top
-    }, 400);
-}
+// function fnMove(target) {
+//     var offset = $("#" + target).offset();
+//     console.log("fn move offset : ", offset);
+//     $('html, body').animate({
+//         scrollTop: offset.top
+//     }, 400);
+// }
 
-function goDelete() {
+// function goDelete() {
+function deleteVPC(){
     var vNetId = "";
     var count = 0;
 
@@ -63,29 +66,33 @@ function goDelete() {
     console.log("count : ", count);
 
     if(vNetId == ''){
-        alert("삭제할 대상을 선택하세요.");
+        commonAlertOpen("삭제할 대상을 선택하세요.");
         return false;
     }
 
     if(count != 1){
-        alert("삭제할 대상을 하나만 선택하세요.");
+        commonAlertOpen("삭제할 대상을 하나만 선택하세요.");
         return false;
     }
 
-    var url = CommonURL + "/ns/" + NAMESPACE + "/resources/vNet/" + vNetId;
+    // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/vNet/" + vNetId;
+    var url = "/setting/resources" + "/network/del/" + vNetId
     console.log("del vnet url : ", url);
 
     axios.delete(url, {
         headers: {
-            'Authorization': "{{ .apiInfo}}",
+            // 'Authorization': "{{ .apiInfo}}",
             'Content-Type': "application/json"
         }
     }).then(result => {
         var data = result.data;
         console.log(data);
         if (result.status == 200 || result.status == 201) {
-            alert("Success Delete Network.");
-            location.reload(true);
+           commonAlertOpen("Success Delete Network")
+            // location.reload(true);
+            //vNetInfoBox 안보이게
+            displayVNetInfo("DEL_SUCCESS")
+            // getVpcList("name");
         }
     }).catch(function(error){
         console.log("Network delete error : ",error);        
@@ -104,7 +111,9 @@ function getVpcList(sort_type) {
         }
     }).then(result => {
         console.log("get VPC List : ", result.data);
-        var data = result.data.vNet;
+        // var data = result.data.vNet;
+        var data = result.data.VNetList;
+        
         var html = ""
         var cnt = 0;
         
@@ -113,30 +122,32 @@ function getVpcList(sort_type) {
                 cnt++;
                 console.log("check : ", sort_type);
                 data.filter(list => list.Name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                    html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
-                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name + '|' + item.CidrBlock + '"/>' 
-                        + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '</td>'
-                        + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
-                        + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>'  
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        + '</tr>'
+                    html += addVNetRow(item, index)
+                    // html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
+                    //     + '<td class="overlay hidden" data-th="">' 
+                    //     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name + '|' + item.CidrBlock + '"/>' 
+                    //     + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                    //     + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '</td>'
+                    //     + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
+                    //     + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>'  
+                    //     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    //     + '</tr>'
                 ))
             } else {
                 data.filter((list) => list.Name !== "").map((item, index) => (
-                    html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
-                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name  + '"/>'
-                        + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '<span class="ov"></span></td>' 
-                        + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
-                        + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>' 
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        + '</tr>'
+                    html += addVNetRow(item, index)
+                    // html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
+                    //     + '<td class="overlay hidden" data-th="">' 
+                    //     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name  + '"/>'
+                    //     + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                    //     + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '<span class="ov"></span></td>' 
+                    //     + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
+                    //     + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>' 
+                    //     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    //     + '</tr>'
                 ))
             }
-
+            
             $("#vpcList").empty()
             $("#vpcList").append(html)
             
@@ -145,6 +156,23 @@ function getVpcList(sort_type) {
     }).catch(function(error){
         console.log("Network list error : ",error);        
     });
+}
+
+// VNet목록에 Item 추가
+function addVNetRow(item, index){
+    console.log("addVnetRow " + index);
+    console.log(item)
+    var html = ""
+    html += '<tr onclick="showVNetInfo(\'' + item.name + '\');">' 
+        + '<td class="overlay hidden" data-th="">' 
+        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.name  + '"/>'
+        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+        + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>' 
+        + '<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>' 
+        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
+        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+        + '</tr>'
+    return html;
 }
 
 function ModalDetail() {
@@ -185,6 +213,44 @@ function displayVNetInfo(targetAction){
         var offset = $("#vnetCreateBox").offset();
         // var offset = $("#" + target+"").offset();
     	$("#TopWrap").animate({scrollTop : offset.top}, 300);
+
+        // form 초기화
+        $("#regVpcName").val('')
+        $("#regDescription").val('')
+        $("#regCidrBlock").val('')
+        $("#regSubnet").val('')
+
+    }else if ( targetAction == "REG_SUCCESS"){
+        $('#vnetCreateBox').removeClass("active");
+        $('#vNetInfoBox').removeClass("view");
+        $('#vNetListTable').addClass("on");
+        
+        var offset = $("#vnetCreateBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
+
+        // form 초기화
+        $("#regVpcName").val('')
+        $("#regDescription").val('')
+        $("#regCidrBlock").val('')
+        $("#regSubnet").val('')
+        getVpcList("name");
+    }else if ( targetAction == "DEL"){
+        $('#vnetCreateBox').removeClass("active");
+        $('#vNetInfoBox').addClass("view");
+        $('#vNetListTable').removeClass("on");
+
+        var offset = $("#vNetInfoBox").offset();
+    	$("#TopWrap").animate({scrollTop : offset.top}, 300);
+
+    }else if ( targetAction == "DEL_SUCCESS"){
+        $('#vnetCreateBox').removeClass("active");
+        $('#vNetInfoBox').removeClass("view");
+        $('#vNetListTable').addClass("on");
+
+        var offset = $("#vNetInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
+
+        getVpcList("name");
     }
 
 
@@ -200,6 +266,7 @@ function displayVNetInfo(targetAction){
     // 		})		
 }
 
+// provider에 등록 된 connection 목록 표시
 function getConnectionInfo(provider){
     // var url = SpiderURL+"/connectionconfig";
     var url = "/setting/connections/cloudconnectionconfig/" + "list"
@@ -228,20 +295,21 @@ function getConnectionInfo(provider){
             }
         }
         if(count == 0){
-            alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
+            commonAlertOpen("해당 Provider에 등록된 Connection 정보가 없습니다.")
                 html +='<option selected>Select Configname</option>';
         }
         if(confArr.length > 1){
             configName = confArr[0];
         }
-        $("#reg_connectionName").empty();
-        $("#reg_connectionName").append(html);
+        $("#regConnectionName").empty();
+        $("#regConnectionName").append(html);
 
     }).catch(function(error){
         console.log("Network data error : ",error);        
     });
 }
 
+// 팝업의 subnet을 set
 function applySubnet() {
     var subnetNameValue = $("input[name='reg_subnetName']").length;
     var subnetCIDRBlockValue = $("input[name='reg_subnetCidrBlock']").length;
@@ -258,8 +326,7 @@ function applySubnet() {
         console.log("subnetCIDRBlockData" + [i] + " : ", subnetCIDRBlockData[i]);
     }
     
-    // var subnetJsonList = new Array();
-    subnetJsonList = new Array();
+    subnetJsonList = new Array();//subnet 저장할 array. 전역으로 선언
     
     for(var i=0; i<subnetNameValue; i++){
         var SNData = "SNData" + i;
@@ -273,21 +340,22 @@ function applySubnet() {
     for (var i in subnetJsonList) {
         infoshow += subnetJsonList[i].name + " (" + subnetJsonList[i].ipv4_CIDR + ") ";
     }
-    $("#reg_subnet").empty();
-    $("#reg_subnet").val(infoshow);
+    $("#regSubnet").empty();
+    $("#regSubnet").val(infoshow);
     $("#subnetRegisterBox").modal("hide");
 }
 
 function createVNet() {
-    var vpcName = $("#reg_vpcName").val();
-    var description = $("#reg_description").val();
-    var connectionName = $("#reg_connectionName").val();
-    var cidrBlock = $("#reg_cidrBlock").val();
+    var vpcName = $("#regVpcName").val();
+    var description = $("#regDescription").val();
+    var connectionName = $("#regConnectionName").val();
+    var cidrBlock = $("#regCidrBlock").val();
     if (!vpcName) {
-        alert("Input New VPC Name")
-        $("#reg_vpcName").focus()
+        commonAlertOpen("Input New VPC Name")
+        $("#regVpcName").focus()
         return;
     }
+    console.log(subnetJsonList);
 
     // var apiInfo = "{{ .apiInfo}}";
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet"
@@ -311,23 +379,31 @@ function createVNet() {
         }).then(result => {
             console.log("result vNet : ", result);
             if (result.status == 200 || result.status == 201) {
-                alert("Success Create Network(vNet)!!")
+                commonAlertOpen("Success Create Network(vNet)!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getVpcList();
+                // 등록 성공시 등록한 객체가 들어 옴. 일단 기존 List에 추가하는 것으로?
+                var data = result.data;
+                console.log(data);
+                // var html = addVNetRow(data)
+                // $("#vpcList").append(html)
+                
+                displayVNetInfo("REG_SUCCESS")
+                
+
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
                 // $("#btn_add2").click()
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
-                alert("Fail Create Network(vNet)")
+                commonAlertOpen("Fail Create Network(vNet)")
             }
         }).catch(function(error){
             console.log("Network create error : ",error);        
         });
     } else {
-        alert("Input VPC Name")
-        $("#reg_vpcName").focus()
+        commonAlertOpen("Input VPC Name")
+        $("#regVpcName").focus()
         return;
     }
 }
@@ -362,7 +438,7 @@ function showVNetInfo(vpcName) {
 
         var subList = data.subnetInfoList;
         for (var i in subList) {
-            dtlSubnet = subList[i].IId.NameId + " (" + subList[i].IPv4_CIDR + ")";
+            dtlSubnet = subList[i].IId.NameId + " (" + subList[i].ipv4_CIDR + ")";
         }
         console.log("dtlSubnet : ", dtlSubnet);
 
@@ -380,9 +456,11 @@ function showVNetInfo(vpcName) {
         $("#dtlSubnet").val(dtlSubnet);
 
         if(dtlConnectionName == '' || dtlConnectionName == undefined ){
-            alert("dtlConnectionName is empty")
+            commonAlertOpen("dtlConnectionName is empty")
         }else{
-            getProvider(dtlConnectionName);
+            // getProvider(dtlConnectionName);
+            var providerValue = getProvider(dtlConnectionName);
+            $("#dtlProvider").val(providerValue);
         }
         
     }) .catch(function(error){
@@ -390,27 +468,27 @@ function showVNetInfo(vpcName) {
     });
 }
 
-// 특정 connection 정보에서 Privider set
-function getProvider(connectionName) {
-    console.log("getProvider  : ",connectionName);
-    // var url = SpiderURL+"/connectionconfig/" + target;
-    var url = "/setting/connections"+"/cloudconnectionconfig/" + connectionName;
-    return axios.get(url,{
-        // headers:{
-        //     'Authorization': apiInfo
-        // }    
-    }).then(result=>{
-        var data = result.data;
-        console.log(data)
-        console.log(data.ConnectionConfig)
-        var provider = data.ConnectionConfig.ProviderName;
-        //var Provider = data.ConnectionConfig.providerName;
-        console.log(provider)
-        $("#dtlProvider").val(provider);
-    }).catch(function(error){
-        console.log("Network getProvider error : ",error);        
-    });
-}
+// // 특정 connection 정보에서 Privider set
+// function getProvider(connectionName) {
+//     console.log("getProvider  : ",connectionName);
+//     // var url = SpiderURL+"/connectionconfig/" + target;
+//     var url = "/setting/connections"+"/cloudconnectionconfig/" + connectionName;
+//     return axios.get(url,{
+//         // headers:{
+//         //     'Authorization': apiInfo
+//         // }    
+//     }).then(result=>{
+//         var data = result.data;
+//         console.log(data)
+//         console.log(data.ConnectionConfig)
+//         var provider = data.ConnectionConfig.ProviderName;
+//         //var Provider = data.ConnectionConfig.providerName;
+//         console.log(provider)
+//         $("#dtlProvider").val(provider);
+//     }).catch(function(error){
+//         console.log("Network getProvider error : ",error);        
+//     });
+// }
 
 function displaySubnetRegModal(isShow){
     if(isShow){
@@ -433,4 +511,51 @@ function displaySubnetRegModal(isShow){
 //         $(".dashboard.register_cont").toggleClass("active");
 //     });
 //     */
+// });
+
+
+// subnet popup
+ 
+// $(document).on("click","button[name=btn_add]",function(){
+//     var addStaffText = '<tr class="ip" name="tr_Input">'
+//         + '<td class="btn_mtd" data-th="subnet Name"><input type="text" name="" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
+//         + '<td class="overlay" data-th="cidrBlock"><input type="text" name="" value="" placeholder="" class="pline" title="" /></td>'
+//         + '<td class="overlay">'
+//         + '<button class="btn btn_add" name="btn_add" value="">add</button>'
+//         + '<button class="btn btn_del" name="delSubnet" value="">del</button>'
+//         + '</td>'
+//         + '</tr>';
+//     var trHtml = $( "tr[name=tr_Input]:last" );
+//     trHtml.after(addStaffText);
+// });
+
+// $('.dataTable .btn.btn_add').on("click", function() {
+//         trHtml.after(addStaffText);
+// });
+var subnetJsonList = "";//저장시 subnet목록을 담을 array 
+var addStaffText = '<tr name="tr_Input">'
+        + '<td class="btn_mtd" data-th="subnet Name"><input type="text" id="regSubnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
+        + '<td class="overlay" data-th="cidrBlock"><input type="text" id="regSubnetCidrBlock" name="reg_subnetCidrBlock" value="" placeholder="" class="pline" title="" /></td>'
+        + '<td class="overlay">'
+        + '<button class="btn btn_add" name="addSubnet" value="">add</button>'
+        + '<button class="btn btn_del" name="delSubnet" value="">del</button>'
+        + '</td>'
+        + '</tr>';
+
+$(document).on("click","button[name=addSubnet]",function(){
+    console.log("add subnet clicked")
+    var subnetNameValue = $("input[name='reg_subnetName']").length;
+    var trHtml = $( "tr[name=tr_Input]:last" );
+    trHtml.after(addStaffText);
+});
+$(document).on("click","button[name=delSubnet]",function(){
+    console.log("del subnet clicked")
+    var trHtml = $(this).parent().parent();
+    trHtml.remove();
+});
+
+// $(document).on("click","span[name=td_ov]",function(){
+//     var trHtml = $(this).parent().parent();
+//     trHtml.find(".btn_mtd").toggleClass("over");
+//     trHtml.find(".overlay").toggleClass("hidden");
 // });

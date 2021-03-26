@@ -192,6 +192,10 @@ func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, int) {
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+<<<<<<< HEAD
+=======
+
+>>>>>>> da2c51f36fd1aeaf7d87cd88627c4756cd2adca0
 	return respBody, respStatus
 }
 
