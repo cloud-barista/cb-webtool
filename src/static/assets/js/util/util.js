@@ -112,7 +112,13 @@ function commonConfirmOpen(targetAction){
             ["DeleteNameSpace", "Would you like to delete <br />selected NameSpace?"],
 
             ["AddNewVpc", "Would you like to register Network <br />Resource ?"],
-            ["DeleteVpc", "Are you sure to delete this Network <br />Resource ?"]
+            ["DeleteVpc", "Are you sure to delete this Network <br />Resource ?"],
+
+            ["AddNewSecurityGroup", "Would you like to register Security <br />Resource ?"],
+            ["DeleteSecurityGroup", "Would you like to un-register Security <br />Resource ?"],
+            ["DeleteVpc", "Are you sure to delete this Network <br />Resource ?"],
+            
+            
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -176,6 +182,11 @@ function commonConfirmOk(){
         goFocus('vnetCreateBox');
     }else if ( targetAction == "DeleteVpc"){
         deleteVPC()
+    }else if ( targetAction == "AddNewSecurityGroup"){
+        displaySecurityGroupInfo("REG")
+        goFocus('securityGroupCreateBox');
+    }else if ( targetAction == "DeleteSecurityGroup"){
+        deleteSecurityGroup()
     }
 
     
@@ -205,3 +216,83 @@ function commonConfirmClose(){
     $("#confirmArea").modal("hide");
 }
 
+// provider에 등록된 connection을 selectbox에 표시
+function getConnectionInfoListForSelectbox(provider, targetSelectBoxID){
+    
+    var data = new Array();
+    var url = "/setting/connections/cloudconnectionconfig/" + "list"
+    console.log("provider : ",provider)
+    var html = "";
+    axios.get(url,{
+        headers:{
+            // 'Authorization': apiInfo
+        }
+    }).then(result=>{
+        console.log('getConnectionConfig result: ',result)
+        data = result.data.ConnectionConfig
+        console.log("set data array " + data.length);
+        
+        console.log("connection data : ",data);
+        var count = 0; 
+        var configName = "";
+        var confArr = new Array();
+        for(var i in data){
+            if(provider == data[i].ProviderName){ 
+                count++;
+                html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
+                configName = data[i].ConfigName
+                confArr.push(data[i].ConfigName)                
+            }
+        }
+        if(count == 0){
+            commonAlertOpen("해당 Provider에 등록된 Connection 정보가 없습니다.")
+            html +='<option selected>Select Configname</option>';
+        }
+        
+        $("#" + targetSelectBoxID).empty();
+        $("#" + targetSelectBoxID).append(html);
+
+        if(confArr.length > 1){
+            configName = confArr[0];
+            console.log("chage value")
+            // 0번째 자동으로 선택하여 vNetID목록 갱신
+            // $("#" + targetSelectBoxID + " option[value=" + configName + "]").prop('selected', 'selected').change();
+            $("#" + targetSelectBoxID + " option[value=" + configName + "]").prop('selected', true).change();         
+        }
+        // getVnetInfoListForSelectbox(configName);
+    }).catch(function(error){
+        console.log("Network data error : ",error);        
+    });   
+}
+
+// connection에 등록된 vnet List를 selectbox에 표시
+function getVnetInfoListForSelectbox(configName, targetSelectBoxID){
+    console.log("vnet : ", configName);
+    
+    var url = "/setting/resources" + "/network/list"
+    var html = "";
+    axios.get(url,{
+        headers:{
+            // 'Authorization': apiInfo
+        }
+    }).then(result=>{
+        data = result.data.VNetList;
+        console.log("vNetwork Info : ",result);
+        console.log("vNetwork data : ",data);
+        var count = 0; 
+        for(var i in data){
+            count++;
+            if(data[i].connectionName == configName){
+                html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
+            }
+        }
+
+        if( count == 0){
+            commonAlertOpen("해당 Provider에 등록된 Connection 정보가 없습니다.")
+                html +='<option selected>Select Configname</option>';
+        }
+    
+        $("#" + targetSelectBoxID).empty();
+        $("#" + targetSelectBoxID).append(html);  
+    })
+}

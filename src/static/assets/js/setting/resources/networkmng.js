@@ -215,10 +215,10 @@ function displayVNetInfo(targetAction){
     	$("#TopWrap").animate({scrollTop : offset.top}, 300);
 
         // form 초기화
-        $("#reg_vpcName").val('')
-        $("#reg_description").val('')
-        $("#reg_cidrBlock").val('')
-        $("#reg_subnet").val('')
+        $("#regVpcName").val('')
+        $("#regDescription").val('')
+        $("#regCidrBlock").val('')
+        $("#regSubnet").val('')
 
     }else if ( targetAction == "REG_SUCCESS"){
         $('#vnetCreateBox').removeClass("active");
@@ -229,10 +229,10 @@ function displayVNetInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         // form 초기화
-        $("#reg_vpcName").val('')
-        $("#reg_description").val('')
-        $("#reg_cidrBlock").val('')
-        $("#reg_subnet").val('')
+        $("#regVpcName").val('')
+        $("#regDescription").val('')
+        $("#regCidrBlock").val('')
+        $("#regSubnet").val('')
         getVpcList("name");
     }else if ( targetAction == "DEL"){
         $('#vnetCreateBox').removeClass("active");
@@ -266,6 +266,7 @@ function displayVNetInfo(targetAction){
     // 		})		
 }
 
+// provider에 등록 된 connection 목록 표시
 function getConnectionInfo(provider){
     // var url = SpiderURL+"/connectionconfig";
     var url = "/setting/connections/cloudconnectionconfig/" + "list"
@@ -300,8 +301,8 @@ function getConnectionInfo(provider){
         if(confArr.length > 1){
             configName = confArr[0];
         }
-        $("#reg_connectionName").empty();
-        $("#reg_connectionName").append(html);
+        $("#regConnectionName").empty();
+        $("#regConnectionName").append(html);
 
     }).catch(function(error){
         console.log("Network data error : ",error);        
@@ -339,19 +340,19 @@ function applySubnet() {
     for (var i in subnetJsonList) {
         infoshow += subnetJsonList[i].name + " (" + subnetJsonList[i].ipv4_CIDR + ") ";
     }
-    $("#reg_subnet").empty();
-    $("#reg_subnet").val(infoshow);
+    $("#regSubnet").empty();
+    $("#regSubnet").val(infoshow);
     $("#subnetRegisterBox").modal("hide");
 }
 
 function createVNet() {
-    var vpcName = $("#reg_vpcName").val();
-    var description = $("#reg_description").val();
-    var connectionName = $("#reg_connectionName").val();
-    var cidrBlock = $("#reg_cidrBlock").val();
+    var vpcName = $("#regVpcName").val();
+    var description = $("#regDescription").val();
+    var connectionName = $("#regConnectionName").val();
+    var cidrBlock = $("#regCidrBlock").val();
     if (!vpcName) {
         commonAlertOpen("Input New VPC Name")
-        $("#reg_vpcName").focus()
+        $("#regVpcName").focus()
         return;
     }
     console.log(subnetJsonList);
@@ -402,7 +403,7 @@ function createVNet() {
         });
     } else {
         commonAlertOpen("Input VPC Name")
-        $("#reg_vpcName").focus()
+        $("#regVpcName").focus()
         return;
     }
 }
@@ -457,7 +458,9 @@ function showVNetInfo(vpcName) {
         if(dtlConnectionName == '' || dtlConnectionName == undefined ){
             commonAlertOpen("dtlConnectionName is empty")
         }else{
-            getProvider(dtlConnectionName);
+            // getProvider(dtlConnectionName);
+            var providerValue = getProvider(dtlConnectionName);
+            $("#dtlProvider").val(providerValue);
         }
         
     }) .catch(function(error){
@@ -465,27 +468,27 @@ function showVNetInfo(vpcName) {
     });
 }
 
-// 특정 connection 정보에서 Privider set
-function getProvider(connectionName) {
-    console.log("getProvider  : ",connectionName);
-    // var url = SpiderURL+"/connectionconfig/" + target;
-    var url = "/setting/connections"+"/cloudconnectionconfig/" + connectionName;
-    return axios.get(url,{
-        // headers:{
-        //     'Authorization': apiInfo
-        // }    
-    }).then(result=>{
-        var data = result.data;
-        console.log(data)
-        console.log(data.ConnectionConfig)
-        var provider = data.ConnectionConfig.ProviderName;
-        //var Provider = data.ConnectionConfig.providerName;
-        console.log(provider)
-        $("#dtlProvider").val(provider);
-    }).catch(function(error){
-        console.log("Network getProvider error : ",error);        
-    });
-}
+// // 특정 connection 정보에서 Privider set
+// function getProvider(connectionName) {
+//     console.log("getProvider  : ",connectionName);
+//     // var url = SpiderURL+"/connectionconfig/" + target;
+//     var url = "/setting/connections"+"/cloudconnectionconfig/" + connectionName;
+//     return axios.get(url,{
+//         // headers:{
+//         //     'Authorization': apiInfo
+//         // }    
+//     }).then(result=>{
+//         var data = result.data;
+//         console.log(data)
+//         console.log(data.ConnectionConfig)
+//         var provider = data.ConnectionConfig.ProviderName;
+//         //var Provider = data.ConnectionConfig.providerName;
+//         console.log(provider)
+//         $("#dtlProvider").val(provider);
+//     }).catch(function(error){
+//         console.log("Network getProvider error : ",error);        
+//     });
+// }
 
 function displaySubnetRegModal(isShow){
     if(isShow){
@@ -531,8 +534,8 @@ function displaySubnetRegModal(isShow){
 // });
 var subnetJsonList = "";//저장시 subnet목록을 담을 array 
 var addStaffText = '<tr name="tr_Input">'
-        + '<td class="btn_mtd" data-th="subnet Name"><input type="text" id="reg_subnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
-        + '<td class="overlay" data-th="cidrBlock"><input type="text" id="reg_subnetCidrBlock" name="reg_subnetCidrBlock" value="" placeholder="" class="pline" title="" /></td>'
+        + '<td class="btn_mtd" data-th="subnet Name"><input type="text" id="regSubnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
+        + '<td class="overlay" data-th="cidrBlock"><input type="text" id="regSubnetCidrBlock" name="reg_subnetCidrBlock" value="" placeholder="" class="pline" title="" /></td>'
         + '<td class="overlay">'
         + '<button class="btn btn_add" name="addSubnet" value="">add</button>'
         + '<button class="btn btn_del" name="delSubnet" value="">del</button>'

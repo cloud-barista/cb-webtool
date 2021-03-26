@@ -238,7 +238,7 @@
 													<label>Subnet</label>
 													<span class="sbox">
 														<input type="text" id="dtlSubnet" name="dtlSubnet" value="" placeholder="" class="gray" title="" readonly />
-														<!-- <button name="" value="" class="btn_edit btn_register">Edit</button>  -->
+														<button name="" value="" class="btn_edit btn_register">Edit</button><!-- subnet 추가버튼--> 
 													</span>
 												</li>
 											</ul>
@@ -276,11 +276,11 @@
 											<ul>
 												<li>
 													<label><span class="ch">*</span>VPC Name</label>
-													<input type="text" id="reg_vpcName" name="reg_vpcName" value="" placeholder="Input VPC Name" class="pline" title="" />
+													<input type="text" id="regVpcName" name="reg_vpcName" value="" placeholder="Input VPC Name" class="pline" title="" />
 												</li>
 												<li class="ta_1">
 													<label>Description</label>
-													<textarea id="reg_description" name="reg_description" cols="" rows="" placeholder="Description" class="pline" title="" ></textarea>
+													<textarea id="regDescription" name="reg_description" cols="" rows="" placeholder="Description" class="pline" title="" ></textarea>
 												</li>
 											</ul>
 										</div>
@@ -288,7 +288,7 @@
 											<ul>
 												<li>
 													<label>Cloud Provider</label>
-													<select class="selectbox white pline w3" id="provider" name="ProvideName" onchange="getConnectionInfo(this.value)">
+													<select class="selectbox white pline w3" id="provider" name="ProvideName" onchange="getConnectionInfoListForSelectbox(this.value, 'regConnectionName')">
 														<option selected>Select Cloud Provider</option>
 														<!-- <option selected>Select Cloud Provider</option>
 														<option value="AWS">AWS</option>
@@ -305,18 +305,18 @@
 												</li>
 												<li>
 													<label><span class="ch">*</span>Connection Name</label>
-													<select class="selectbox white pline w3" id="reg_connectionName" name="reg_connectionName">
+													<select class="selectbox white pline w3" id="regConnectionName" name="reg_connectionName">
 														<option selected>Selected ConnectionName</option>
 													</select>
 												</li>
 												<li>
 													<label><span class="ch">*</span>CIDR Block</label>
-													<input type="text" id="reg_cidrBlock" name="reg_cidrBlock" value="" placeholder="ex) 10.0.0.0/24" class="pline ip_w1" title="" />
+													<input type="text" id="regCidrBlock" name="reg_cidrBlock" value="" placeholder="ex) 10.0.0.0/24" class="pline ip_w1" title="" />
 												</li>
 												<li>
 													<label><span class="ch">*</span>Subnet</label>
 													<span class="sbox">
-														<input type="text" id="reg_subnet" name="reg_subnet" value="" placeholder="ex) subnetname (10.0.0.0/24)" class="ip_w1 gray noline" title="" />
+														<input type="text" id="regSubnet" name="reg_subnet" value="" placeholder="ex) subnetname (10.0.0.0/24)" class="ip_w1 gray noline" title="" />
 														<button name="" value="" class="btn_edit btn_register" onClick="displaySubnetRegModal(true)">Edit</button> 
 													</span>
 												</li>
@@ -338,10 +338,9 @@
 						
 					</div>
 					<!-- //Register Network -->
-
 						
 					<!-- register subnet -->
-					<div class="modal fade" id="subnetRegisterBox" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="register_box modal fade" id="subnetRegisterBox" tabindex="-1" role="dialog" aria-hidden="true">
 						
 						<div class="modal-dialog modal-dialog-centered" role="document">
 							<div class="modal-content">
@@ -374,8 +373,8 @@
 														</thead>
 														<tbody id="subnetList">
 															<tr name="tr_Input">
-																<td class="btn_mtd" data-th="subnet Name"><input type="text" id="reg_subnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>
-																<td class="overlay hidden" data-th="cidrBlock"><input type="text" id="reg_subnetCidrBlock" name="reg_subnetCidrBlock" value="ex) 10.0.0.0/24" placeholder="" class="pline" title="" /></td>
+																<td class="btn_mtd" data-th="subnet Name"><input type="text" id="regSubnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>
+																<td class="overlay hidden" data-th="cidrBlock"><input type="text" id="regSubnetCidrBlock" name="reg_subnetCidrBlock" value="ex) 10.0.0.0/24" placeholder="" class="pline" title="" /></td>
 																<td class="overlay hidden" data-th="">
 																	<button class="btn btn_add" name="addSubnet">add</button>
 																	<!-- <button class="btn btn_del" name="delInput">del</button> 처음 한개는 놔 둘 것 -->

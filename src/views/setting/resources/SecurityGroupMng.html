@@ -19,8 +19,7 @@
 			<div class="bottom"></div>
 			<a href="javascript:;" id="m_close"></a>
 			
-		</div>
-		
+		</div>		
 	
 		{{template "Header" .}}
 	
@@ -33,8 +32,6 @@
 						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Resources / <strong>Security</strong></div>
 						<div class="location">Home  <span>></span>  Setting  <span>></span>  Resources  <span>></span>  <strong>Security</strong></div>
 					</div>
-
-
 					
 					<!-- list -->
 					<div class="dashboard dashboard_cont">
@@ -71,8 +68,8 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox">Add</a></li>
-														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist">Delete</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox" onClick="commonConfirmOpen('AddNewSecurityGroup')">Add</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist" onClick="commonConfirmOpen('DeleteSecurityGroup')">Delete</a></li>
 													</ul>
 												</div>
 											</div>
@@ -83,7 +80,7 @@
 							</div>
 	
 							<!-- popup Regist -->
-							<div class="modal fade layerpopup" id="RegistBox" tabindex="-1" role="dialog" aria-hidden="true" id="modal_reg">
+							<!-- <div class="modal fade layerpopup" id="RegistBox" tabindex="-1" role="dialog" aria-hidden="true" id="modal_reg">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										
@@ -97,11 +94,11 @@
 										
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<!-- //popup Regist -->
 	
 							<!-- popup UnRegist -->
-							<div class="modal fade layerpopup" id="UnRegist" tabindex="-1" role="dialog" aria-hidden="true">
+							<!-- <div class="modal fade layerpopup" id="UnRegist" tabindex="-1" role="dialog" aria-hidden="true">
 								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										
@@ -115,12 +112,12 @@
 										
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<!-- //popup UnRegist -->
 							
 							<div class="ds_cont">
 								
-								<div class="dataTable status_list">
+								<div class="dataTable status_list" id="securityGroupListTable">
 									<table cellpadding="0" cellspacing="0" border="1" summary="">
                                         <colgroup>
                                             <col width="50px">
@@ -152,7 +149,7 @@
 					<!-- //list -->
 										
 					<!-- Modify -->
-					<div class="dashboard dashboard_cont server_status" id="info_box">
+					<div class="dashboard dashboard_cont server_status" id="securityGroupInfoBox">
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox_n">
@@ -230,7 +227,7 @@
 					
 					
 					<!-- Register Security -->
-					<div class="dashboard dashboard_cont register_cont" id="CreateBox">
+					<div class="dashboard dashboard_cont register_cont" id="securityGroupCreateBox">
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox_n">
@@ -245,11 +242,11 @@
 											<ul>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Security Group Name</label>
-													<input type="text" name="reg_cspSecurityGroupName" id="reg_cspSecurityGroupName" value="" placeholder="Input Name" class="pline" title="" />
+													<input type="text" name="reg_cspSecurityGroupName" id="regCspSecurityGroupName" value="" placeholder="Input Name" class="pline" title="" />
 												</li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Description</label>
-													<textarea name="reg_description" id="reg_description" cols="" rows="" placeholder="Description" class="pline" title=""></textarea>
+													<textarea name="reg_description" id="regDescription" cols="" rows="" placeholder="Description" class="pline" title=""></textarea>
 												</li>
 											</ul>
 										</div>
@@ -257,19 +254,23 @@
 											<ul>
 												<li>
 													<label>Cloud Provider</label>
-													<select class="selectbox white pline w3" name="ProviderName" id="provider" onchange="getConnectionInfo(this.value)">
-                                                        
+													<select class="selectbox white pline w3" name="ProviderName" id="regProvider" onchange="getConnectionInfoListForSelectbox(this.value, 'regConnectionName')">
+														<option selected>Select Cloud Provider</option>
+                                                        {{ range $item := .CloudOSList}}	
+														<option value="{{ $item }}">{{ $item }}</option>
+														{{ end }}
+														<option value="MOCK">MOCK</option>	<!-- 임시로 MOCK 추가-->
                                                     </select> 
 												</li>
 												<li>
 													<label><span class="ch">*</span>Connection Name</label>
-													<select class="selectbox white pline w3" name="reg_connectionName" id="reg_connectionName" onchange="getVnetInfo(this.value)" >
+													<select class="selectbox white pline w3" name="reg_connectionName" id="regConnectionName" onchange="getVnetInfoListForSelectbox(this.value, 'regVNetId')" >
 														<option value="1">Selected ConnectionName</option>
 													</select>
 												</li>
 												<li>
                                                     <label><span class="ch">*</span>vNetId</label>
-                                                    <select class="selectbox white pline w3" name="reg_vNetId" id="reg_vNetId" >
+                                                    <select class="selectbox white pline w3" name="reg_vNetId" id="regVNetId" >
 														<option value="1">Selected vNetId</option>
 													</select>
 												</li>
@@ -288,7 +289,7 @@
 															</div>
 														</div>
 														
-														<a href="javascript:void(0);" class="ma btn_register">Edit</a>
+														<a href="javascript:void(0);" class="ma btn_register" onClick="displayInOutBoundRegModal(true)">Edit</a><!-- inbound/outbound 추가버튼--> 
 													</div>
 												</li>
 											</ul>
@@ -310,8 +311,8 @@
 					</div>
 					<!-- //Register Security -->
 										
-					<!-- register -->
-					<div class="modal fade" id="register_box" tabindex="-1" role="dialog" aria-hidden="true">
+					<!-- register inbound outbound -->
+					<div class="register_box modal fade" id="firewallRegisterBox" tabindex="-1" role="dialog" aria-hidden="true">
 						
 						<div class="modal-dialog modal-dialog-centered" role="document">
 							<div class="modal-content">
@@ -340,7 +341,32 @@
 															</tr>
 														</thead>
 														<tbody id="fwrsList">
-                                                            
+                                                    
+															<tr class="ip" name="tr_Input">
+																<td class="btn_mtd" data-th="fromPort">
+																	<input type="text" value="" name="fromport" placeholder="" class="pline" title="" /> 
+																	<span class="ov off"></span>
+																</td>
+																<td class="overlay hidden" data-th="toPort">
+																	<input type="text" name="toport" value="" placeholder="" class="pline" title="" />
+																</td>
+																<td class="overlay hidden" data-th="ipProtocol">
+																	<select class="selectbox white pline" name="ipprotocol">
+																		<option value="tcp">TCP</option>
+																		<option value="udp">UDP</option>
+																	</select>
+																</td>
+																<td class="overlay hidden" data-th="direction">
+																	<select class="selectbox white pline" name="direction">
+																		<option value="inbound">Inbound</option>
+																		<option value="outbound">Outbound</option>
+																	</select>
+																</td>
+																<td class="overlay hidden" data-th="">
+																	<button class="btn btn_add" name="btn_add">add</button>
+																	<button class="btn btn_del" name="delInput">del</button>
+																</td>
+															</tr>
 														</tbody>
 													</table>
 												</div>
@@ -354,7 +380,7 @@
 									
 									<div class="btnbox">
 										<div class="btn_right">
-											<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyFWRS()"><span>Apply</span></button> 
+											<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyFirewallRuleSet()"><span>Apply</span></button> 
 											<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button> 
 										</div>
 									</div>

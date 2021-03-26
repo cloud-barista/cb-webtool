@@ -39,8 +39,64 @@ $(document).ready(function () {
     // getSGList(order_type);
     // var apiInfo = "{{ .apiInfo}}";
     // getCloudOS(apiInfo,'provider');
+
+    //firewallRegisterBox
 })
 
+// add/delete 시 area 표시
+function displaySecurityGroupInfo(targetAction){
+    if( targetAction == "REG"){
+        $('#securityGroupCreateBox').toggleClass("active");
+        $('#securityGroupInfoBox').removeClass("view");
+        $('#securityGroupListTable').removeClass("on");
+        var offset = $("#securityGroupCreateBox").offset();
+        // var offset = $("#" + target+"").offset();
+    	$("#TopWrap").animate({scrollTop : offset.top}, 300);
+
+        // form 초기화
+        $("#regVpcName").val('')
+        $("#regDescription").val('')
+        $("#regCidrBlock").val('')
+        $("#regSubnet").val('')
+
+    }else if ( targetAction == "REG_SUCCESS"){
+        $('#securityGroupCreateBox').removeClass("active");
+        $('#securityGroupInfoBox').removeClass("view");
+        $('#securityGroupListTable').addClass("on");
+        
+        var offset = $("#securityGroupCreateBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
+
+        // form 초기화
+        $("#regCspSecurityGroupName").val('')
+        $("#regDescription").val('')
+        $("#regProvider").val('')
+        $("#regConnectionName").val('')
+
+        $("#regVNetId").val('')
+        $("#regInbound").val('')
+        $("#regOutbound").val('')
+
+        getVpcList("name");
+    }else if ( targetAction == "DEL"){
+        $('#securityGroupCreateBox').removeClass("active");
+        $('#securityGroupInfoBox').addClass("view");
+        $('#securityGroupListTable').removeClass("on");
+
+        var offset = $("#securityGroupInfoBox").offset();
+    	$("#TopWrap").animate({scrollTop : offset.top}, 300);
+
+    }else if ( targetAction == "DEL_SUCCESS"){
+        $('#securityGroupCreateBox').removeClass("active");
+        $('#securityGroupInfoBox').removeClass("view");
+        $('#securityGroupListTable').addClass("on");
+
+        var offset = $("#securityGroupInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
+
+        getSecurityGroupList("name");
+    }
+}
 
 function deleteSecurityGroup() {
     var sgId = "";
@@ -219,134 +275,121 @@ function showSecurityGroupInfo(target) {
         $('#dtlInbound').append(inbound);
         $('#dtlOutbound').append(outbound);
         
-        getProvider(dtlConnectionName)
-    })
-
-}
-
-function getProvider(target) {
-    console.log("getProvidergetProvider : ",target);
-    var url2 = SpiderURL+"/connectionconfig/" + target;
-        
-    return axios.get(url2,{
-        headers:{
-            'Authorization': apiInfo
-        }
-
-    }).then(result=>{
-        var data2 = result.data;
-        console.log("adddd : ", data2);
-
-        var Provider = data2.ProviderName;
-
-        $('#dtlProvider').val(Provider);
-    })        
-}
-
-function getConnectionInfo(provider){
-    var url = SpiderURL+"/connectionconfig";
-    console.log("provider : ",provider)
-    //var provider = $("#provider option:selected").val();
-    var html = "";
-    // var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            // 'Authorization': apiInfo
-        }
-    }).then(result=>{
-        console.log('getConnectionConfig result: ',result)
-        var data = result.data.connectionconfig
-        console.log("connection data : ",data);
-        var count = 0; 
-        var configName = "";
-        var confArr = new Array();
-        for(var i in data){
-            if(provider == data[i].ProviderName){ 
-                count++;
-                html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
-                configName = data[i].ConfigName
-                confArr.push(data[i].ConfigName)
-                
-            }
-        }
-        if(count == 0){
-            alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
-                html +='<option selected>Select Configname</option>';
-        }
-        if(confArr.length > 1){
-            configName = confArr[0];
-        }
-        $("#reg_connectionName").empty();
-        $("#reg_connectionName").append(html); 
-
-        getVnetInfo(configName);
+        var providerValue = getProvider(dtlConnectionName)
+        $('#dtlProvider').val(providerValue);
     })
 }
 
-function getVnetInfo(configName){
-    console.log("vnet : ", configName);
-    var configName = configName;
-    if(!configName){
-        configName = $("#connectionName option:selected").val();
+// Inbound / Outbound Modal 표시
+function displayInOutBoundRegModal(isShow){
+    if(isShow){
+        $("#firewallRegisterBox").modal();
+        $('.dtbox.scrollbar-inner').scrollbar();
+    }else{
+        $("#securityGroupCreateBox").toggleClass("active");
     }
-    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
-    var html = "";
-    var apiInfo = ApiInfo;
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
-        data = result.data.vNet;
-        console.log("vNetwork Info : ",result);
-        console.log("vNetwork data : ",data);
-        for(var i in data){
-            if(data[i].connectionName == configName){
-                html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
-            }
-        }
-    
-        $("#reg_vNetId").empty();
-        $("#reg_vNetId").append(html);  
-    })
 }
+
+// function getProvider(target) {
+//     console.log("getProvidergetProvider : ",target);
+//     var url2 = SpiderURL+"/connectionconfig/" + target;
+        
+//     return axios.get(url2,{
+//         headers:{
+//             'Authorization': apiInfo
+//         }
+
+//     }).then(result=>{
+//         var data2 = result.data;
+//         console.log("adddd : ", data2);
+
+//         var Provider = data2.ProviderName;
+
+//         $('#dtlProvider').val(Provider);
+//     })        
+// }
+
+// function getConnectionInfo(provider){
+//     // var url = SpiderURL+"/connectionconfig";
+//     var url = ""
+//     console.log("provider : ",provider)
+//     //var provider = $("#provider option:selected").val();
+//     var html = "";
+//     // var apiInfo = ApiInfo
+//     axios.get(url,{
+//         headers:{
+//             // 'Authorization': apiInfo
+//         }
+//     }).then(result=>{
+//         console.log('getConnectionConfig result: ',result)
+//         var data = result.data.connectionconfig
+//         console.log("connection data : ",data);
+//         var count = 0; 
+//         var configName = "";
+//         var confArr = new Array();
+//         for(var i in data){
+//             if(provider == data[i].ProviderName){ 
+//                 count++;
+//                 html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
+//                 configName = data[i].ConfigName
+//                 confArr.push(data[i].ConfigName)
+                
+//             }
+//         }
+//         if(count == 0){
+//             alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
+//                 html +='<option selected>Select Configname</option>';
+//         }
+//         if(confArr.length > 1){
+//             configName = confArr[0];
+//         }
+//         $("#regConnectionName").empty();
+//         $("#regConnectionName").append(html); 
+
+//         getVnetInfo(configName);
+//     })
+// }
+
+// function getVnetInfo(configName){
+//     console.log("vnet : ", configName);
+//     var configName = configName;
+//     if(!configName){
+//         configName = $("#connectionName option:selected").val();
+//     }
+//     var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
+//     var html = "";
+//     var apiInfo = ApiInfo;
+//     axios.get(url,{
+//         headers:{
+//             'Authorization': apiInfo
+//         }
+//     }).then(result=>{
+//         data = result.data.vNet;
+//         console.log("vNetwork Info : ",result);
+//         console.log("vNetwork data : ",data);
+//         for(var i in data){
+//             if(data[i].connectionName == configName){
+//                 html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
+//             }
+//         }
+    
+//         $("#regVNetId").empty();
+//         $("#regVNetId").append(html);  
+//     })
+// }
 
 $(document).ready(function() {
     //Firewall RuleSet pop table scrollbar
-    var fwrsJsonList = "";
+    // var fwrsJsonList = "";
 
-    $('.btn_register').on('click', function() {
-        $("#register_box").modal();
-            $('.dtbox.scrollbar-inner').scrollbar();
-        });	
-
-    var html = "";
-    html += '<tr class="ip" name="tr_Input">' 
-        + '<td class="btn_mtd" data-th="fromPort"><input type="text" value="" name="fromport" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>'
-        + '<td class="overlay hidden" data-th="toPort"><input type="text" name="toport" value="" placeholder="" class="pline" title="" /></td>' 
-        + '<td class="overlay hidden" data-th="ipProtocol">'
-        + '<select class="selectbox white pline" name="ipprotocol">'
-        + '<option value="tcp">TCP</option>' 
-        + '<option value="udp">UDP</option>' 
-        + '</select>' 
-        + '</td> ' 
-        + '<td class="overlay hidden" data-th="direction">' 
-        + '<select class="selectbox white pline" name="direction">' 
-        + '<option value="inbound">Inbound</option>'
-        + '<option value="outbound">Outbound</option>'
-        + '</select>'
-        + '</td>' 
-        + '<td class="overlay hidden" data-th="">'
-        + '<button class="btn btn_add" value="" name="btn_add">add</button>' 
-        + '<button class="btn btn_del" name="delInput" value="">del</button>'
-        + '</td>'
-        + '</tr>'
-    $("#fwrsList").empty();
-    $("#fwrsList").append(html);
+    // $('.btn_register').on('click', function() {
+    //     $("#firewallRegisterBox").modal();
+    //         $('.dtbox.scrollbar-inner').scrollbar();
+    //     });	
 
 });
 
-function applyFWRS() {
+function applyFirewallRuleSet() {
     var fromPortValue = $("input[name='fromport']").length;
     var toPortValue = $("input[name='toport']").length;
     var ipprotocolValue = $("select[name='ipprotocol']").length;
@@ -407,18 +450,18 @@ function applyFWRS() {
     $("#regInbound").append(inbound);
     $("#regOutbound").append(outbound);
     
-    $("#register_box").modal("hide");
+    $("#firewallRegisterBox").modal("hide");
 }
 
 function createSecurityGroup() {
-    var cspSecurityGroupName = $("#reg_cspSecurityGroupName").val();
-    var description = $("#reg_description").val();
-    var connectionName = $("#reg_connectionName").val();
-    var vNetId = $("#reg_vNetId").val();
+    var cspSecurityGroupName = $("#regCspSecurityGroupName").val();
+    var description = $("#regDescription").val();
+    var connectionName = $("#regConnectionName").val();
+    var vNetId = $("#regVNetId").val();
     
     if (!cspSecurityGroupName) {
         alert("Input New Security Group Name")
-        $("#reg_cspSshKeyName").focus()
+        $("#regCspSshKeyName").focus()
         return;
     }
 
@@ -463,14 +506,13 @@ function createSecurityGroup() {
         });
     } else {
         alert("Input Security Group Name")
-        $("#reg_cspSecurityGroupName").focus()
+        $("#regCspSecurityGroupName").focus()
         return;
     }
 }
 
-
-//table row add
-$(document).on("click","button[name=btn_add]",function(){
+var fwrsJsonList = "";// firewallRuleSet 담을 array
+function getStaffText(){
     var addStaffText = 
     '<tr class="ip" name="tr_Input">'+
         '<td class="btn_mtd" data-th="fromPort"><input type="text" name="fromport" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'+
@@ -492,13 +534,41 @@ $(document).on("click","button[name=btn_add]",function(){
             '<button class="btn btn_del" name="delInput" value="">del</button>'+
         '</td>'+
     '</tr>';
+    return addStaffText;
+}
+
+//table row add
+$(document).on("click","button[name=btn_add]",function(){
+    // var addStaffText = 
+    // '<tr class="ip" name="tr_Input">'+
+    //     '<td class="btn_mtd" data-th="fromPort"><input type="text" name="fromport" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'+
+    //     '<td class="overlay" data-th="toPort"><input type="text" name="toport" value="" placeholder="" class="pline" title="" /></td>'+
+    //     '<td class="overlay" data-th="ipProtocol">'+
+    //             '<select class="selectbox white pline" name="ipprotocol">'+
+    //                 '<option value="tcp">TCP</option>'+
+    //                 '<option value="udp">UDP</option>'+
+    //             '</select>'+
+    //     '</td>'+
+    //     '<td class="overlay" data-th="direction">'+
+    //             '<select class="selectbox white pline" name="direction">'+
+    //                 '<option value="inbound">Inbound</option>'+
+    //                 '<option value="outbound">Outbound</option>'+
+    //             '</select>'+
+    //     '</td>'+
+    //     '<td class="overlay">'+
+    //         '<button class="btn btn_add" name="btn_add" value="">add</button>'+
+    //         '<button class="btn btn_del" name="delInput" value="">del</button>'+
+    //     '</td>'+
+    // '</tr>';
     var trHtml = $( "tr[name=tr_Input]:last" );
-    trHtml.after(addStaffText);
-    $('select').niceSelect();
+    // trHtml.after(addStaffText);
+    trHtml.after(getStaffText());   
 });
-$('.dataTable .btn.btn_add').on("click", function() {
-    trHtml.after(addStaffText);
-});
+// $('.dataTable .btn.btn_add').on("click", function() {
+//     // trHtml.after(addStaffText);
+//     var trHtml = $( "tr[name=tr_Input]:last" );
+//     trHtml.after(getStaffText());
+// });
 $(document).on("click","button[name=delInput]",function(){
     var trHtml = $(this).parent().parent();
     trHtml.remove();

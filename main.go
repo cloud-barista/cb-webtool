@@ -91,7 +91,7 @@ func main() {
 	namespaceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
-		Master:    "setting/namespaces/NameSpaceMng",
+		// Master:    "setting/namespaces/NameSpaceMng",
 		Partials: []string{
 			"templates/Top",
 			"templates/TopBox",
@@ -110,7 +110,7 @@ func main() {
 	dashboardTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
-		Master:    "operation/dashboards/Dashboard",
+		// Master:    "operation/dashboards/Dashboard",
 		Partials: []string{
 			"templates/Top",
 			"templates/TopBox",
@@ -126,7 +126,7 @@ func main() {
 	cloudConnectionTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
-		Master:    "setting/connections/CloudConnectionConfigMng", // master를 이용할 때는 확장자 없이. 그 외에는 확장자까지
+		// Master:    "setting/connections/CloudConnectionConfigMng", // master를 이용할 때는 확장자 없이. 그 외에는 확장자까지
 		Partials: []string{
 			"templates/Top",
 			"templates/TopBox",
@@ -145,7 +145,7 @@ func main() {
 	resourceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
-		Master:    "setting/resources/NetworkMng", // master를 이용할 때는 확장자 없이. 그 외에는 확장자까지
+		// Master:    "setting/resources/NetworkMng", // master를 이용할 때는 확장자 없이. 그 외에는 확장자까지, 여러화면에서 사용할 때에는 return할 때 master지정
 		Partials: []string{
 			"templates/Top",
 			"templates/TopBox",
