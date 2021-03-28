@@ -296,3 +296,21 @@ function getVnetInfoListForSelectbox(configName, targetSelectBoxID){
         $("#" + targetSelectBoxID).append(html);  
     })
 }
+
+function getProviderNameByConnection(configName, targetObjID){
+    console.log("configName : ", configName);
+    
+    var url = "/setting/connections" + "/cloudconnectionconfig/" + configName
+    axios.get(url,{
+        headers:{
+            // 'Authorization': apiInfo
+        }
+    }).then(result=>{
+        data = result.data.ConnectionConfig;
+        console.log("connection data : ",data);
+        var providerName = data.ProviderName
+        console.log("providerName : ",providerName);
+        $("#" + targetObjID).val(providerName);
+        
+    })
+}

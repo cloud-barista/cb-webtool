@@ -222,7 +222,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
-	cloudOsList := service.GetCloudOSListData()
+	cloudOsList, _ := service.GetCloudOSListData()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -238,7 +238,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 			"status":  respStatus,
 		})
 	}
-	log.Println("VNetList", securityGroupInfoList)
+	log.Println("securityGroupInfoList", securityGroupInfoList)
 
 	return echotemplate.Render(c, http.StatusOK,
 		"setting/resources/SecurityGroupMng", // 파일명

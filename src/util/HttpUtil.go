@@ -139,8 +139,9 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	// url = "http://54.248.3.145:1323/tumblebug/ns/ns-01/resources/vNet"
 
 	// set the request header Content-Type for json
-	//req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	// req.Header.Set("Content-Type", "application/json")
+	
 	req.Header.Add("Authorization", authInfo)
 	resp, err := client.Do(req)
 	if err != nil {

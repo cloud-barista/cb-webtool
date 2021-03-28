@@ -6,14 +6,8 @@ type SecurityGroupRegInfo struct {
 	Description    string `json:"description"`
 	VNetID         string `json:"vNetID"`
 
-	FirewallRules FirewallRules `json:"firewallRules"`
+	FirewallRules []FirewallRule `json:"firewallRules"`
 }
 
 type SecurityGroupRegInfos []SecurityGroupRegInfo
 
-type FirewallRules struct {
-	Direction  string `json:"direction"`
-	FromPort   string `json:"fromPort"`
-	IpProtocol string `json:"ipProtocol"`
-	ToPort     string `json:"toPort"`
-}

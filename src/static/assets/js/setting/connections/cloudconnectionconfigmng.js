@@ -177,15 +177,15 @@ function showConnectionConfigInfo(target){
     $("#info_name").focus();
 }
 
-function goFocus(target){
+// function goFocus(target){
 
-    console.log(event)
-    event.preventDefault()
+//     console.log(event)
+//     event.preventDefault()
 
-    $("#"+target).focus();
-    fnMove(target)
+//     $("#"+target).focus();
+//     fnMove(target)
 
-}
+// }
 
 function getRegionInfo(type, target){
 

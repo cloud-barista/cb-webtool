@@ -456,10 +456,11 @@ function showVNetInfo(vpcName) {
         $("#dtlSubnet").val(dtlSubnet);
 
         if(dtlConnectionName == '' || dtlConnectionName == undefined ){
-            commonAlertOpen("dtlConnectionName is empty")
+            commonAlertOpen("ConnectionName is empty")
         }else{
             // getProvider(dtlConnectionName);
-            var providerValue = getProvider(dtlConnectionName);
+            // var providerValue = getProviderNameByConnection(dtlConnectionName);
+            getProviderNameByConnection(dtlConnectionName, 'dtlProvider')// provider는 connection 정보에서 가져옴
             $("#dtlProvider").val(providerValue);
         }
         

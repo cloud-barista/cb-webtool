@@ -112,12 +112,12 @@ function deleteSecurityGroup() {
     console.log("count : ", count);
 
     if(sgId == ''){
-        alert("삭제할 대상을 선택하세요.");
+        commonAlertOpen("삭제할 대상을 선택하세요.");
         return false;
     }
 
     if(count != 1){
-        alert("삭제할 대상을 하나만 선택하세요.");
+        commonAlertOpen("삭제할 대상을 하나만 선택하세요.");
         return false;
     }
 
@@ -132,15 +132,19 @@ function deleteSecurityGroup() {
     }).then(result => {
         var data = result.data
         if (result.status == 200 || result.status == 201) {
-            alert("Success Delete Image.");
-            location.reload(true);
+            commonAlertOpen("Success Delete Image.");
+            // location.reload(true);
+            displaySecurityGroupInfo("DEL_SUCCESS")
         }
-    })
+    }).catch(function(error){
+        console.log("sg del error : ",error);        
+    });
 }          
 
-function getSGList(sort_type) {
+function getSecurityGroupList(sort_type) {
     console.log(sort_type);
-    var url = CommonURL + "/ns/" + NAMESPACE + "/resources/securityGroup";
+    // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/securityGroup";
+    var url = "/setting/resources" + "/securitygroup/list";
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -148,8 +152,9 @@ function getSGList(sort_type) {
         }
     }).then(result => {
         console.log("get SG Data : ", result.data);
-        var data = result.data.securityGroup; // exception case : if null 
+        var data = result.data.SecurityGroupList; // exception case : if null 
         var html = ""
+        console.log("Data : ", data);
         if (data.length) { // null exception if not exist
             if (sort_type) {
                 console.log("check : ", sort_type);
@@ -185,7 +190,9 @@ function getSGList(sort_type) {
             
             ModalDetail()
         }
-    })
+    }).catch(function(error){
+        console.log("get gsList error : ",error);        
+    });
 }
 
 function ModalDetail() {
@@ -218,16 +225,16 @@ function ModalDetail() {
     });
 }
 
-function showSecurityGroupInfo(target) {
-    console.log("target showSecurityGroupInfo : ", target);
-    var sgName = target;
+function showSecurityGroupInfo(sgName) {
+    console.log("sgName showSecurityGroupInfo : ", sgName);
+    //var sgName = target;
 
-    $(".stxt").html(target);
+    $(".stxt").html(sgName);
 
     // var apiInfo = "{{ .apiInfo}}";
 
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup/"+ sgName;
-    var url = "/setting/resources" + "/securitygroup/" + sgId
+    var url = "/setting/resources" + "/securitygroup/" + sgName
     console.log("security group URL : ",url)
 
     return axios.get(url,{
@@ -236,13 +243,14 @@ function showSecurityGroupInfo(target) {
         }
 
     }).then(result=>{
-        var data = result.data
+        //var data = result.data
+        var data = result.data.SecurityGroup;
         console.log("Show Data : ",data);
 
         var dtlCspSecurityGroupName = data.cspSecurityGroupName;
         var dtlDescription = data.description;
         var dtlConnectionName = data.connectionName;
-        var dtlvNetId = data.vNetId;
+        var dtlvNetId = data.vNetID;
 
         var dtlFirewall = data.firewallRules;
         console.log("firefire : ", dtlFirewall);
@@ -274,10 +282,17 @@ function showSecurityGroupInfo(target) {
         $('#dtlvNetId').val(dtlvNetId);
         $('#dtlInbound').append(inbound);
         $('#dtlOutbound').append(outbound);
+        $('#dtlvNetId').val(dtlvNetId);
         
-        var providerValue = getProvider(dtlConnectionName)
-        $('#dtlProvider').val(providerValue);
-    })
+        getProviderNameByConnection(dtlConnectionName, 'dtlProvider')// provider는 connection 정보에서 가져옴
+        // var providerValue = getProviderNameByConnection(dtlConnectionName, dtlProvider)
+        // $('#dtlProvider').val(providerValue);
+        // console.log("providerValue = " + providerValue)
+
+        goFocus('securityGroupInfoBox');// TODO : list 클릭시 상세로 scroll이 안되고 있군..
+    }).catch(function(error){
+        console.log("show sg info error : ",error);        
+    });
 }
 
 // Inbound / Outbound Modal 표시
@@ -460,7 +475,7 @@ function createSecurityGroup() {
     var vNetId = $("#regVNetId").val();
     
     if (!cspSecurityGroupName) {
-        alert("Input New Security Group Name")
+        commonAlertOpen("Input New Security Group Name")
         $("#regCspSshKeyName").focus()
         return;
     }
@@ -492,17 +507,19 @@ function createSecurityGroup() {
         }).then(result => {
             console.log("result sg : ", result);
             if (result.status == 200 || result.status == 201) {
-                alert("Success Create Security Group!!")
+                commonAlertOpen("Success Create Security Group!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getSGList();
+                getSecurityGroupList("name");
                 //아니면 화면을 리로딩 시킬것인가?
-                location.reload();
+                // location.reload();
                 // $("#btn_add2").click()
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
                 alert("Fail Create Security Group")
             }
+        }).catch(function(error){
+            console.log("sg create error : ",error);        
         });
     } else {
         alert("Input Security Group Name")

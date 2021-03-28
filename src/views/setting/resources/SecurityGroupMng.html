@@ -136,7 +136,27 @@
 											</tr>
 										</thead>
 										<tbody id="sgList">
-                                        
+											{{ $length := len .SecurityGroupList }} 
+											{{ if eq $length 0 }}
+											<tr>
+												<td class="overlay hidden" data-th="" colspan="5">No Data</td>
+											</tr>
+											{{ end }}
+
+											{{range $index, $item := .SecurityGroupList}}														
+											<tr onclick="showSecurityGroupInfo('{{$item.CspSecurityGroupName }}');">
+												<td class="overlay hidden" data-th="">
+													<input type="hidden" id="sg_info_{{$index }}" value="{{$item.CspSecurityGroupName}}"/>
+													<input type="checkbox" name="chk" value="{{$item.CspSecurityGroupName}}" id="raw_{{$index}}" title="" />
+													<label for="td_ch1"></label> <span class="ov off"></span></td>
+												<td class="btn_mtd ovm" data-th="cspSecurityGroupName">{{$item.CspSecurityGroupName }}<span class="ov"></span></td>
+												<td class="overlay hidden" data-th="connectionName">{{$item.ConnectionName }}</td>
+												<td class="overlay hidden" data-th="description">{{$item.Description }}</td>
+												<td class="overlay hidden" data-th=""><a href="javascript:void(0);">
+													<img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
+												</td>
+											</tr>
+											{{ end }}
 										</tbody>
 									</table>
 								</div>

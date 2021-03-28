@@ -10,7 +10,7 @@ type SecurityGroupInfo struct {
 	CspSecurityGroupId   string `json:"cspSecurityGroupId"`
 	CspSecurityGroupName string `json:"cspSecurityGroupName"`
 
-	FirewallRules FirewallRules `json:"firewallRules"`
+	FirewallRules []FirewallRule `json:"firewallRules"`
 
 	KeyValueInfos []KeyValueInfo `json:"keyValueList"`
 }
