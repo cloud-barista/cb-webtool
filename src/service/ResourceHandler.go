@@ -243,3 +243,113 @@ func DelSecurityGroup(nameSpaceID string, securityGroupID string) (io.ReadCloser
 	return respBody, respStatusCode
 
 }
+
+//////////////////
+// SSHKey 목록 조회 : /ns/{nsId}/resources/sshKey
+func GetSshKeyInfoList(nameSpaceID string) ([]model.SshKeyInfo, int) {
+	fmt.Println("GetSshKeyInfoList ************ : ")
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
+
+	pbytes, _ := json.Marshal(nameSpaceID)
+	// body, err := util.CommonHttpGet(url)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	sshKeyList := map[string][]model.SshKeyInfo{}
+
+	json.NewDecoder(respBody).Decode(&sshKeyList)
+	//spew.Dump(body)
+	fmt.Println(sshKeyList["sshKey"])
+
+	return sshKeyList["sshKey"], respStatus
+
+}
+
+// SecurityGroup 상세 조회
+func GetSshKeyData(nameSpaceID string, sshKeyID string) (model.SshKeyInfo, int) {
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey/" + sshKeyID
+
+	fmt.Println("nameSpaceID : ", nameSpaceID)
+
+	// pbytes, _ := json.Marshal(nameSpaceID)
+	// body, err := util.CommonHttpGet(url)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	var respStatus int
+	if err != nil {
+		fmt.Println(err)
+		respStatus = 500
+	}
+
+	respBody := resp.Body
+	respStatus = resp.StatusCode
+
+	sshKeyInfo := model.SshKeyInfo{}
+	json.NewDecoder(respBody).Decode(&sshKeyInfo)
+	fmt.Println(sshKeyInfo)
+
+	return sshKeyInfo, respStatus
+}
+	
+// sshKey 등록
+func RegSshKey(nameSpaceID string, sshKeyRegInfo *model.SshKeyRegInfo) (model.SshKeyInfo, int) {
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
+
+	// fmt.Println("vnetInfo : ", vnetInfo)
+
+	pbytes, _ := json.Marshal(sshKeyRegInfo)
+	fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	respBody := resp.Body
+	respStatusCode := resp.StatusCode
+	respStatus := resp.Status
+	log.Println("respStatusCode = ", respStatusCode)
+	log.Println("respStatus = ", respStatus)
+
+	// 응답에 생성한 객체값이 옴
+	sshKeyInfo := model.SshKeyInfo{}
+	json.NewDecoder(respBody).Decode(&sshKeyInfo)
+	fmt.Println(sshKeyInfo)
+	// return respBody, respStatusCode
+	return sshKeyInfo, respStatusCode
+}
+	
+// sshKey 삭제
+func DelSshKey(nameSpaceID string, sshKeyID string) (io.ReadCloser, int) {
+	// if ValidateString(sshKeyID) != nil {
+	if len(sshKeyID) == 0 {
+		log.Println("securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다.")
+		return nil, 4040
+	}
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey/" + sshKeyID
+
+	fmt.Println("sshKeyID : ", sshKeyID)
+
+	pbytes, _ := json.Marshal(sshKeyID)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatusCode := resp.StatusCode
+	respStatus := resp.Status
+	log.Println("respStatusCode = ", respStatusCode)
+	log.Println("respStatus = ", respStatus)
+
+	return respBody, respStatusCode
+
+}	

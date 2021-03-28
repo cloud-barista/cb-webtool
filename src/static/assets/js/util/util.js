@@ -217,7 +217,7 @@ function commonConfirmClose(){
 }
 
 // provider에 등록된 connection을 selectbox에 표시
-function getConnectionInfoListForSelectbox(provider, targetSelectBoxID){
+function getConnectionListForSelectbox(provider, targetSelectBoxID){
     
     var data = new Array();
     var url = "/setting/connections/cloudconnectionconfig/" + "list"

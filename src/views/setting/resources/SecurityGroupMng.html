@@ -274,7 +274,7 @@
 											<ul>
 												<li>
 													<label>Cloud Provider</label>
-													<select class="selectbox white pline w3" name="ProviderName" id="regProvider" onchange="getConnectionInfoListForSelectbox(this.value, 'regConnectionName')">
+													<select class="selectbox white pline w3" name="ProviderName" id="regProvider" onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
 														<option selected>Select Cloud Provider</option>
                                                         {{ range $item := .CloudOSList}}	
 														<option value="{{ $item }}">{{ $item }}</option>

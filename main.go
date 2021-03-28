@@ -277,9 +277,19 @@ func main() {
 
 	resourcesGroup.GET("/securitygroup/mngform", controller.SecirityGroupMngForm)
 	resourcesGroup.GET("/securitygroup/list", controller.GetSecirityGroupList)
-	resourcesGroup.GET("/securitygroup/:vNetID", controller.GetSecirityGroupData)
+	resourcesGroup.GET("/securitygroup/:securityGroupID", controller.GetSecirityGroupData)
 	resourcesGroup.POST("/securitygroup/reg", controller.SecirityGroupRegProc)
-	resourcesGroup.DELETE("/securitygroup/del/:vNetID", controller.SecirityGroupDelProc)
+	resourcesGroup.DELETE("/securitygroup/del/:securityGroupID", controller.SecirityGroupDelProc)
+
+	resourcesGroup.GET("/sshkey/mngform", controller.SshKeyMngForm)// Form + SshKeyMng 같이 앞으로 넘길까?
+	resourcesGroup.GET("/sshkey/list", controller.GetSshKeyList)
+	resourcesGroup.GET("/sshkey/:sshKeyID", controller.GetSshKeyData)
+	resourcesGroup.POST("/sshkey/reg", controller.SshKeyRegProc)	// RegProc _ SshKey 같이 앞으로 넘길까
+	resourcesGroup.DELETE("/sshkey/del/:sshKeyID", controller.SshKeyDelProc)// DelProc + SskKey 같이 앞으로 넘길까
+
+		// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
+	// e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)
+
 
 	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)
