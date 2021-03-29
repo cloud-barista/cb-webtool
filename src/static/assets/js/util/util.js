@@ -122,6 +122,9 @@ function commonConfirmOpen(targetAction){
             
             ["AddNewVirtualMachineImage", "Would you like to register Image <br />Resource ?"],
             ["DeleteVirtualMachineImage", "Would you like to un-register Image <br />Resource ?"],  
+
+            //Would you like to register Spec <br />Resource ?
+            //Would you like to un-register Spec <br />Resource ?
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));

@@ -766,3 +766,220 @@ func SearchVirtualMachineImageList(c echo.Context) error {
 		"VirtualMachineImageList": virtualMachineImageInfoList,
 	})
 }
+
+// InstanceSpecMng 등록 form
+func InstanceSpecMngForm(c echo.Context) error {
+	fmt.Println("InstanceSpecMngForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	store := echosession.FromContext(c)
+
+	cloudOsList, _ := service.GetCloudOSListData()
+	store.Set("cloudos", cloudOsList)
+	log.Println(" cloudOsList  ", cloudOsList)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	log.Println(" nsList  ", nsList)
+
+	instanceSpecInfoList, respStatus := service.GetInstanceSpecInfoList(defaultNameSpaceID)
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+	log.Println("instanceSpecInfoList", instanceSpecInfoList)
+
+	return echotemplate.Render(c, http.StatusOK,
+		"setting/resources/InstanceSpecMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":         loginInfo,
+			"CloudOSList":       cloudOsList,
+			"NameSpaceList":     nsList,
+			"InstanceSpecList": instanceSpecInfoList,
+		})
+}
+
+func GetInstanceSpecList(c echo.Context) error {
+	log.Println("GetInstanceSpecList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	instanceSpecInfoList, respStatus := service.GetInstanceSpecInfoList(defaultNameSpaceID)
+	// if vNetErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":            "success",
+		"status":             respStatus,
+		"DefaultNameSpaceID": defaultNameSpaceID,
+		"InstanceSpecList":  instanceSpecInfoList,
+	})
+}
+
+// InstanceSpec 상세정보
+func GetInstanceSpecData(c echo.Context) error {
+	log.Println("GetInstanceSpecData : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramInstanceSpec := c.Param("specID")
+	instanceSpecInfo, respStatus := service.GetInstanceSpecData(defaultNameSpaceID, paramInstanceSpec)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       "success",
+		"status":        respStatus,
+		"InstanceSpecInfo": instanceSpecInfo,
+	})
+}
+
+// InstanceSpec 등록 :
+func InstanceSpecRegProc(c echo.Context) error {
+	log.Println("InstanceSpecRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	instanceSpecRegInfo := new(model.InstanceSpecRegInfo)
+	if err := c.Bind(instanceSpecRegInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	resultInstanceSpecInfo, respStatus := service.RegInstanceSpec(defaultNameSpaceID, instanceSpecRegInfo)
+	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+	// respBody := resp.Body
+	// respStatusCode := resp.StatusCode
+	// respStatus := resp.Status
+	// log.Println("respStatusCode = ", respStatusCode)
+	// log.Println("respStatus = ", respStatus)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "success",
+		"status":   respStatus,
+		"InstanceSpecInfo": resultInstanceSpecInfo,
+	})
+}
+
+// 삭제
+func InstanceSpecDelProc(c echo.Context) error {
+	log.Println("InstanceSpecDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramInstanceSpecID := c.Param("specID")
+
+	respBody, respStatus := service.DelInstanceSpec(defaultNameSpaceID, paramInstanceSpecID)
+	fmt.Println("=============respBody =============", respBody)
+
+	// if reErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		// resultBody, err := ioutil.ReadAll(respBody)
+		// if err == nil {
+		// 	str := string(resultBody)
+		// 	println(str)
+		// }
+		pbytes, _ := json.Marshal(respBody)
+		fmt.Println(string(pbytes))
+
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus,
+	})
+}
+
+// lookupImage 목록
+func LookupInstanceSpecList(c echo.Context) error {
+	log.Println("GetInstanceSpecList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	instanceSpecInfoList, respStatus := service.LookupInstanceSpecList()
+	// if vNetErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":            "success",
+		"status":             respStatus,
+		"DefaultNameSpaceID": defaultNameSpaceID,
+		"InstanceSpecList":  instanceSpecInfoList,
+	})
+}
+
+// lookupImage 상세정보
+func LookupInstanceSpecData(c echo.Context) error {
+	log.Println("LookupInstanceSpecData : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	paramInstanceSpec := c.Param("specID")
+	instanceSpecInfo, respStatus := service.LookupInstanceSpecData(paramInstanceSpec)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       "success",
+		"status":        respStatus,
+		"InstanceSpecInfo": instanceSpecInfo,
+	})
+}
+
+// resourcesGroup.PUT("/instancespec/put/:specID", controller.InstanceSpecPutProc)	// RegProc _ SshKey 같이 앞으로 넘길까
+// resourcesGroup.POST("/instancespec/filterspecs", controller.FilterInstanceSpecList)
+// resourcesGroup.POST("/instancespec/filterspecsbyrange", controller.FilterInstanceSpecListByRange)

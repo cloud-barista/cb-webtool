@@ -297,6 +297,19 @@ func main() {
 	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData)// TODO : Image 상세 정보인가? 확인필요
 	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
 	
+
+	resourcesGroup.GET("/instancespec/mngform", controller.InstanceSpecMngForm)// Form + SshKeyMng 같이 앞으로 넘길까?
+	resourcesGroup.GET("/instancespec/list", controller.GetInstanceSpecList)
+	resourcesGroup.GET("/instancespec/:specID", controller.GetInstanceSpecData)
+	resourcesGroup.POST("/instancespec/reg", controller.InstanceSpecRegProc)	// RegProc _ SshKey 같이 앞으로 넘길까
+	resourcesGroup.DELETE("/instancespec/del/:specID", controller.InstanceSpecDelProc)// DelProc + SskKey 같이 앞으로 넘길까
+	// resourcesGroup.PUT("/instancespec/put/:specID", controller.InstanceSpecPutProc)	// TODO : put 만들어야 함
+
+	resourcesGroup.GET("/instancespec/lookupspec", controller.LookupInstanceSpecList)// TODO : Image 전체목록인가? 확인필요
+	resourcesGroup.GET("/instancespec/lookupspec/:specName", controller.LookupInstanceSpecData)// TODO : Image 상세 정보인가? 확인필요
+	// resourcesGroup.POST("/instancespec/filterspecs", controller.FilterInstanceSpecList)	// TODO : post방식의 filterspec 생성필요
+	// resourcesGroup.POST("/instancespec/filterspecsbyrange", controller.FilterInstanceSpecListByRange)// TODO : post방식의 filterspec 생성필요
+
 		// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
 	// e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)
 
