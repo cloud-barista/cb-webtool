@@ -54,12 +54,12 @@ func VpcMngForm(c echo.Context) error {
 	store.Set("namespace", nsList)
 	log.Println(" nsList  ", nsList)
 
-	vNetInfoList, vNetStatus := service.GetVnetList(defaultNameSpaceID)
+	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
 	// if vNetErr != nil {
-	if vNetStatus != util.HTTP_CALL_SUCCESS && vNetStatus != util.HTTP_POST_SUCCESS {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  vNetStatus,
+			"status":  respStatus,
 		})
 	}
 	log.Println("VNetList", vNetInfoList)
@@ -88,18 +88,18 @@ func GetVpcList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	vNetInfoList, vNetStatus := service.GetVnetList(defaultNameSpaceID)
+	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
 	// if vNetErr != nil {
-	if vNetStatus != util.HTTP_CALL_SUCCESS && vNetStatus != util.HTTP_POST_SUCCESS {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "invalid tumblebug connection",
-			"status":  vNetStatus,
+			"status":  respStatus,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":             vNetStatus,
+		"status":             respStatus,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"VNetList":           vNetInfoList,
 	})
@@ -115,11 +115,11 @@ func GetVpcData(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	paramVNetID := c.Param("vNetID")
-	vNetInfo, vNetStatus := service.GetVpcData(defaultNameSpaceID, paramVNetID)
+	vNetInfo, respStatus := service.GetVpcData(defaultNameSpaceID, paramVNetID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",
-		"status":   vNetStatus,
+		"status":   respStatus,
 		"VNetInfo": vNetInfo,
 	})
 }
@@ -289,11 +289,11 @@ func GetSecirityGroupData(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	paramSecurityGroupID := c.Param("securityGroupID")
-	securityGroupInfo, securityGroupStatus := service.GetSecurityGroupData(defaultNameSpaceID, paramSecurityGroupID)
+	securityGroupInfo, respStatus := service.GetSecurityGroupData(defaultNameSpaceID, paramSecurityGroupID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":       "success",
-		"status":        securityGroupStatus,
+		"status":        respStatus,
 		"SecurityGroupInfo": securityGroupInfo,
 	})
 }
@@ -372,7 +372,7 @@ func SecirityGroupDelProc(c echo.Context) error {
 	})
 }
 
-/////////////
+
 func SshKeyMngForm(c echo.Context) error {
 	fmt.Println("SshKeyMngForm ************ : ")
 
@@ -451,11 +451,11 @@ func GetSshKeyData(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	paramSshKey := c.Param("sshKeyID")
-	sshKeyInfo, vNetStatus := service.GetSshKeyData(defaultNameSpaceID, paramSshKey)
+	sshKeyInfo, respStatus := service.GetSshKeyData(defaultNameSpaceID, paramSshKey)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":       "success",
-		"status":        vNetStatus,
+		"status":        respStatus,
 		"SshKeyInfo": sshKeyInfo,
 	})
 }
@@ -531,5 +531,238 @@ func SshKeyDelProc(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,
+	})
+}
+
+// VirtualMachine Image 등록 form
+func VirtualMachineImageMngForm(c echo.Context) error {
+	fmt.Println("VirtualMachineImageMngForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	store := echosession.FromContext(c)
+
+	cloudOsList, _ := service.GetCloudOSListData()
+	store.Set("cloudos", cloudOsList)
+	log.Println(" cloudOsList  ", cloudOsList)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	log.Println(" nsList  ", nsList)
+
+	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+	log.Println("VirtualMachineImageInfoList", virtualMachineImageInfoList)
+
+	return echotemplate.Render(c, http.StatusOK,
+		"setting/resources/VirtualMachineImageMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":         loginInfo,
+			"CloudOSList":       cloudOsList,
+			"NameSpaceList":     nsList,
+			"VirtualMachineImageList": virtualMachineImageInfoList,
+		})
+}
+
+func GetVirtualMachineImageList(c echo.Context) error {
+	log.Println("GetVirtualMachineImageList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
+	// if vNetErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":            "success",
+		"status":             respStatus,
+		"DefaultNameSpaceID": defaultNameSpaceID,
+		"VirtualMachineImageList":  virtualMachineImageInfoList,
+	})
+}
+
+// VirtualMachineImage 상세정보
+func GetVirtualMachineImageData(c echo.Context) error {
+	log.Println("GetVirtualMachineImageData : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramVirtualMachineImage := c.Param("imageID")
+	virtualMachineImageInfo, respStatus := service.GetVirtualMachineImageData(defaultNameSpaceID, paramVirtualMachineImage)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       "success",
+		"status":        respStatus,
+		"VirtualMachineImageInfo": virtualMachineImageInfo,
+	})
+}
+
+// VirtualMachineImage 등록 :
+func VirtualMachineImageRegProc(c echo.Context) error {
+	log.Println("VirtualMachineImageRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	virtualMachineImageRegInfo := new(model.VirtualMachineImageRegInfo)
+	if err := c.Bind(virtualMachineImageRegInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	resultVirtualMachineImageInfo, respStatus := service.RegVirtualMachineImage(defaultNameSpaceID, virtualMachineImageRegInfo)
+	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+	// respBody := resp.Body
+	// respStatusCode := resp.StatusCode
+	// respStatus := resp.Status
+	// log.Println("respStatusCode = ", respStatusCode)
+	// log.Println("respStatus = ", respStatus)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "success",
+		"status":   respStatus,
+		"VirtualMachineImageInfo": resultVirtualMachineImageInfo,
+	})
+}
+
+// 삭제
+func VirtualMachineImageDelProc(c echo.Context) error {
+	log.Println("VirtualMachineImageDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramVirtualMachineImageID := c.Param("imageID")
+
+	respBody, respStatus := service.DelVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageID)
+	fmt.Println("=============respBody =============", respBody)
+
+	// if reErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		// resultBody, err := ioutil.ReadAll(respBody)
+		// if err == nil {
+		// 	str := string(resultBody)
+		// 	println(str)
+		// }
+		pbytes, _ := json.Marshal(respBody)
+		fmt.Println(string(pbytes))
+
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus,
+	})
+}
+
+// lookupImage 목록
+func LookupVirtualMachineImageList(c echo.Context) error {
+	log.Println("GetVirtualMachineImageList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList()
+	// if vNetErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":            "success",
+		"status":             respStatus,
+		"DefaultNameSpaceID": defaultNameSpaceID,
+		"VirtualMachineImageList":  virtualMachineImageInfoList,
+	})
+}
+
+// lookupImage 상세정보
+func LookupVirtualMachineImageData(c echo.Context) error {
+	log.Println("LookupVirtualMachineImageData : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	paramVirtualMachineImage := c.Param("imageID")
+	virtualMachineImageInfo, respStatus := service.LookupVirtualMachineImageData(paramVirtualMachineImage)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       "success",
+		"status":        respStatus,
+		"VirtualMachineImageInfo": virtualMachineImageInfo,
+	})
+}
+
+// lookupImage 상세정보
+func SearchVirtualMachineImageList(c echo.Context) error {
+	log.Println("SearchVirtualMachineImageList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramKeywords := c.Param("keywords")
+	virtualMachineImageInfoList, respStatus := service.SearchVirtualMachineImageList(defaultNameSpaceID, paramKeywords)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       "success",
+		"status":        respStatus,
+		"VirtualMachineImageList": virtualMachineImageInfoList,
 	})
 }

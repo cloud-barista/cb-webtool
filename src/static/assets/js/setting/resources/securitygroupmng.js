@@ -77,7 +77,7 @@ function displaySecurityGroupInfo(targetAction){
         $("#regInbound").val('')
         $("#regOutbound").val('')
 
-        getVpcList("name");
+        getSecurityGroupList("name");
     }else if ( targetAction == "DEL"){
         $('#securityGroupCreateBox').removeClass("active");
         $('#securityGroupInfoBox').addClass("view");
@@ -244,7 +244,8 @@ function showSecurityGroupInfo(sgName) {
 
     }).then(result=>{
         //var data = result.data
-        var data = result.data.SecurityGroup;
+        console.log(result.data);
+        var data = result.data.SecurityGroupInfo;
         console.log("Show Data : ",data);
 
         var dtlCspSecurityGroupName = data.cspSecurityGroupName;

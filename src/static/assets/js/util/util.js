@@ -116,9 +116,12 @@ function commonConfirmOpen(targetAction){
 
             ["AddNewSecurityGroup", "Would you like to register Security <br />Resource ?"],
             ["DeleteSecurityGroup", "Would you like to un-register Security <br />Resource ?"],
-            ["DeleteVpc", "Are you sure to delete this Network <br />Resource ?"],
             
+            ["AddNewSshKey", "Would you like to register SSH key <br />Resource ?"],
+            ["DeleteSshKey", "Would you like to un-register SSH key <br />Resource ?"],     
             
+            ["AddNewVirtualMachineImage", "Would you like to register Image <br />Resource ?"],
+            ["DeleteVirtualMachineImage", "Would you like to un-register Image <br />Resource ?"],  
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -187,6 +190,16 @@ function commonConfirmOk(){
         goFocus('securityGroupCreateBox');
     }else if ( targetAction == "DeleteSecurityGroup"){
         deleteSecurityGroup()
+    }else if ( targetAction == "AddNewSshKey"){
+        displaySshKeyInfo("REG")
+        goFocus('sshKeyCreateBox');
+    }else if ( targetAction == "DeleteSshKey"){
+        deleteSshKey()
+    }else if ( targetAction == "AddNewVirtualMachineImage"){
+        displayVirtualMachineImageInfo("REG")
+        goFocus('virtualMachineImageCreateBox');
+    }else if ( targetAction == "DeleteVirtualMachineImage"){
+        deleteVirtualMachineImage()
     }
 
     

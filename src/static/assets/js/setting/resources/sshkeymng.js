@@ -53,11 +53,66 @@ $(document).ready(function () {
 //     }, 400);
 // }
 
+// area 표시
+function displaySshKeyInfo(targetAction){
+    if( targetAction == "REG"){
+        $('#sshKeyCreateBox').toggleClass("active");
+        $('#sskKeyInfoBox').removeClass("view");
+        $('#sshKeyListTable').removeClass("on");
+        var offset = $("#sshKeyCreateBox").offset();
+        // var offset = $("#" + target+"").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 300);
 
-function getSSHKeyList(sort_type) {
+        // form 초기화
+        $("#regVpcName").val('')
+        $("#regDescription").val('')
+        $("#regCidrBlock").val('')
+        $("#regSubnet").val('')
+
+    }else if ( targetAction == "REG_SUCCESS"){
+        $('#sshKeyCreateBox').removeClass("active");
+        $('#sskKeyInfoBox').removeClass("view");
+        $('#sshKeyListTable').addClass("on");
+        
+        var offset = $("#sshKeyCreateBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
+
+        // form 초기화
+        $("#regCspSecurityGroupName").val('')
+        $("#regDescription").val('')
+        $("#regProvider").val('')
+        $("#regConnectionName").val('')
+
+        $("#regVNetId").val('')
+        $("#regInbound").val('')
+        $("#regOutbound").val('')
+
+        getSshKeyList("name");
+    }else if ( targetAction == "DEL"){
+        $('#sshKeyCreateBox').removeClass("active");
+        $('#sskKeyInfoBox').addClass("view");
+        $('#sshKeyListTable').removeClass("on");
+
+        var offset = $("#sskKeyInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 300);
+
+    }else if ( targetAction == "DEL_SUCCESS"){
+        $('#sshKeyCreateBox').removeClass("active");
+        $('#sskKeyInfoBox').removeClass("view");
+        $('#sshKeyListTable').addClass("on");
+
+        var offset = $("#sskKeyInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
+
+        getSshKeyList("name");
+    }
+}
+
+// SshKey 목록 조회
+function getSshKeyList(sort_type) {
     //var url = "{{ .comURL.SpiderURL}}" + "/connectionconfig";
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey";
-    var url = "/setting/connections" + "/sshkey/list"
+    var url = "/setting/resources" + "/sshkey/list"
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -103,19 +158,22 @@ function getSSHKeyList(sort_type) {
             ModalDetail()
 
         }
-    })
+    }).catch(function(error){
+        console.log("get sshKeyList error : ",error);        
+    });
 }
 
-function goFocus(target) {
+// function goFocus(target) {
 
-    console.log(event)
-    event.preventDefault()
+//     console.log(event)
+//     event.preventDefault()
 
-    $("#" + target).focus();
-    fnMove(target)
-}
+//     $("#" + target).focus();
+//     fnMove(target)
+// }
 
-function goDelete() {
+function deleteSshKey(){
+// function goDelete() {
     var selSshKeyId = "";
     var count = 0;
 
@@ -140,7 +198,7 @@ function goDelete() {
     
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/sshKey/" + selSshKeyId;
     var url = "" + "" + selSshKeyId;
-    var url = "/setting/connections" + "/sshkey/del/" + selSshKeyId;
+    var url = "/setting/resources" + "/sshkey/del/" + selSshKeyId;
     axios.delete(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -151,8 +209,11 @@ function goDelete() {
         if (result.status == 200 || result.status == 201) {
             commonAlertOpen("Success Delete SSH Key.");
             // location.reload(true);
+            getSshKeyList("name");
         }
-    })    
+    }).catch(function(error){
+        console.log("get delete error : ",error);        
+    });
 }
 
 function showSshKeyInfo(sshKeyId) {
@@ -160,8 +221,7 @@ function showSshKeyInfo(sshKeyId) {
     // var sshKeyId = target;
     // var apiInfo = "{{ .apiInfo}}";
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey/"+ sshKeyId;
-    var url = "" + "" + sshKeyId
-    var url = "/setting/connections" + "/sshkey/" + sshKeyId;
+    var url = "/setting/resources" + "/sshkey/" + sshKeyId;
     console.log("ssh key URL : ",url)
 
     return axios.get(url,{
@@ -170,7 +230,7 @@ function showSshKeyInfo(sshKeyId) {
         }
     
     }).then(result=>{
-        var data = result.data
+        var data = result.data.SshKeyInfo
         console.log("Show Data : ",data);
         
         var dtlCspSshKeyName = data.cspSshKeyName;
@@ -197,7 +257,9 @@ function showSshKeyInfo(sshKeyId) {
        $('#dtlPublicKey').val(dtlPublicKey);
        $('#dtlPrivateKey').val(dtlPrivateKey);
        $('#dtlFingerprint').val(dtlFingerprint);
-    })
+    }).catch(function(error){
+        console.log("get sshKey error : ",error);        
+    });
 
 }
 
@@ -222,7 +284,7 @@ function createSSHKey() {
     // var apiInfo = "{{ .apiInfo}}";
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
     var url = "" + "";
-    var url = "/setting/connections" + "/sshkey/reg"
+    var url = "/setting/resources" + "/sshkey/reg"
     console.log("ssh key URL : ",url)
     var obj = {
         name: cspSshKeyName,
@@ -240,7 +302,7 @@ function createSSHKey() {
             if (result.status == 200 || result.status == 201) {
                 alert("Success Create SSH Key")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getSSHKeyList("name");
+                getSshKeyList("name");
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
                 // $("#btn_add2").click()
@@ -249,6 +311,8 @@ function createSSHKey() {
             } else {
                 alert("Fail Create SSH Key")
             }
+        }).catch(function(error){
+            console.log("get create error : ",error);        
         });
     } else {
         alert("Input SSH Key Name")
@@ -287,42 +351,42 @@ function ModalDetail() {
     });
 }
 
-function getConnectionInfo(provider){
-    // var url = SpiderURL+"/connectionconfig";
-    console.log("provider : ",provider)
-    //var provider = $("#provider option:selected").val();
-    var html = "";
-    var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo
-        }
-    }).then(result=>{
-        console.log('getConnectionConfig result: ',result)
-        var data = result.data.connectionconfig
-        console.log("connection data : ",data);
-        var count = 0; 
-        var configName = "";
-        var confArr = new Array();
-        for(var i in data){
-            if(provider == data[i].ProviderName){ 
-                count++;
-                html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
-                configName = data[i].ConfigName
-                confArr.push(data[i].ConfigName)
+// function getConnectionInfo(provider){
+//     // var url = SpiderURL+"/connectionconfig";
+//     console.log("provider : ",provider)
+//     //var provider = $("#provider option:selected").val();
+//     var html = "";
+//     var apiInfo = ApiInfo
+//     axios.get(url,{
+//         headers:{
+//             'Authorization': apiInfo
+//         }
+//     }).then(result=>{
+//         console.log('getConnectionConfig result: ',result)
+//         var data = result.data.connectionconfig
+//         console.log("connection data : ",data);
+//         var count = 0; 
+//         var configName = "";
+//         var confArr = new Array();
+//         for(var i in data){
+//             if(provider == data[i].ProviderName){ 
+//                 count++;
+//                 html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
+//                 configName = data[i].ConfigName
+//                 confArr.push(data[i].ConfigName)
                 
-            }
-        }
-        if(count == 0){
-            alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
-                html +='<option selected>Select Configname</option>';
-        }
-        if(confArr.length > 1){
-            configName = confArr[0];
-        }
-        $("#regConnectionName").empty();
-        $("#regConnectionName").append(html);
+//             }
+//         }
+//         if(count == 0){
+//             alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
+//                 html +='<option selected>Select Configname</option>';
+//         }
+//         if(confArr.length > 1){
+//             configName = confArr[0];
+//         }
+//         $("#regConnectionName").empty();
+//         $("#regConnectionName").append(html);
 
         
-    })
-}
+//     })
+// }

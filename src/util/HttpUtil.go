@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	// "io"
-	// "io/ioutil"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -147,6 +147,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	if err != nil {
 		panic(err)
 	}
+	// displayResponse(resp) // return message 확인 용
 
 	// fmt.Println(resp.StatusCode)
 	//defer resp.Body.Close()
@@ -221,4 +222,13 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 	req.Header.Add("Authorization", authInfo)
 	// resp, err := client.Do(req)
 	return client.Do(req)
+}
+
+// return message 확인용
+func DisplayResponse(resp *http.Response){
+	data, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("%s\n", string(data))
 }

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	// "strconv"
 	// "sync"
-	//"io/ioutil"
+	"io/ioutil"
 	//"github.com/davecgh/go-spew/spew"
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	util "github.com/cloud-barista/cb-webtool/src/util"
@@ -244,7 +244,7 @@ func DelSecurityGroup(nameSpaceID string, securityGroupID string) (io.ReadCloser
 
 }
 
-//////////////////
+
 // SSHKey 목록 조회 : /ns/{nsId}/resources/sshKey
 func GetSshKeyInfoList(nameSpaceID string) ([]model.SshKeyInfo, int) {
 	fmt.Println("GetSshKeyInfoList ************ : ")
@@ -273,7 +273,7 @@ func GetSshKeyInfoList(nameSpaceID string) ([]model.SshKeyInfo, int) {
 
 }
 
-// SecurityGroup 상세 조회
+// sshKey 상세 조회
 func GetSshKeyData(nameSpaceID string, sshKeyID string) (model.SshKeyInfo, int) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey/" + sshKeyID
 
@@ -353,3 +353,197 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (io.ReadCloser, int) {
 	return respBody, respStatusCode
 
 }	
+
+// VirtualMachineImage 목록 조회 : /ns/{nsId}/resources/VirtualMachineImage
+func GetVirtualMachineImageInfoList(nameSpaceID string) ([]model.VirtualMachineImageInfo, int) {
+	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image"
+
+	pbytes, _ := json.Marshal(nameSpaceID)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// TODO : defer를 넣어줘야 할 듯. defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	virtualMachineImageList := map[string][]model.VirtualMachineImageInfo{}
+
+	json.NewDecoder(respBody).Decode(&virtualMachineImageList)
+	//spew.Dump(body)
+	fmt.Println(virtualMachineImageList["image"])
+
+	return virtualMachineImageList["image"], respStatus
+
+}
+
+// VirtualMachineImage 상세 조회
+func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string) (model.VirtualMachineImageInfo, int) {
+	fmt.Println("GetVirtualMachineImageData ************ : ")
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image/" + virtualMachineImageID
+
+	// fmt.Println("nameSpaceID : ", nameSpaceID)
+
+	// pbytes, _ := json.Marshal(nameSpaceID)
+	// body, err := util.CommonHttpGet(url)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	var respStatus int
+	if err != nil {
+		fmt.Println(err)
+		respStatus = 500
+	}
+
+	respBody := resp.Body
+	respStatus = resp.StatusCode
+
+	virtualMachineImageInfo := model.VirtualMachineImageInfo{}
+	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
+	fmt.Println(virtualMachineImageInfo)
+
+	return virtualMachineImageInfo, respStatus
+}
+	
+// VirtualMachineImage 등록
+func RegVirtualMachineImage(nameSpaceID string, virtualMachineImageRegInfo *model.VirtualMachineImageRegInfo) (model.VirtualMachineImageInfo, int) {
+	fmt.Println("RegVirtualMachineImage ************ : ")
+
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image?action=registerWithInfo"//
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image?action=registerWithId"//
+
+	// fmt.Println("vnetInfo : ", vnetInfo)
+
+	pbytes, _ := json.Marshal(virtualMachineImageRegInfo)
+	fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	data, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("%s\n", string(data))
+
+	respBody := resp.Body
+	respStatusCode := resp.StatusCode
+	respStatus := resp.Status
+	log.Println("respStatusCode = ", respStatusCode)
+	log.Println("respStatus = ", respStatus)
+
+	// 응답에 생성한 객체값이 옴
+	virtualMachineImageInfo := model.VirtualMachineImageInfo{}
+	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
+	fmt.Println(virtualMachineImageInfo)
+	// return respBody, respStatusCode
+	return virtualMachineImageInfo, respStatusCode
+}
+	
+// VirtualMachineImage 삭제
+func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (io.ReadCloser, int) {
+	// if ValidateString(VirtualMachineImageID) != nil {
+	if len(virtualMachineImageID) == 0 {
+		log.Println("ImageID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다.")
+		return nil, 4040
+	}
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image/" + virtualMachineImageID
+
+	fmt.Println("virtualMachineImageID : ", virtualMachineImageID)
+
+	pbytes, _ := json.Marshal(virtualMachineImageID)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatusCode := resp.StatusCode
+	respStatus := resp.Status
+	log.Println("respStatusCode = ", respStatusCode)
+	log.Println("respStatus = ", respStatus)
+
+	return respBody, respStatusCode
+
+}
+
+
+func LookupVirtualMachineImageList() ([]model.VirtualMachineImageInfo, int) {
+	fmt.Println("LookupVirtualMachineImageList ************ : ")
+	url := util.TUMBLEBUG + "/lookupImage"
+
+	// body, err := util.CommonHttpGet(url)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	virtualMachineImageList := map[string][]model.VirtualMachineImageInfo{}
+
+	json.NewDecoder(respBody).Decode(&virtualMachineImageList)
+	//spew.Dump(body)
+	fmt.Println(virtualMachineImageList["virtualMachineImage"])
+
+	return virtualMachineImageList["virtualMachineImage"], respStatus
+
+}
+
+func LookupVirtualMachineImageData(virtualMachineImageID string) (model.VirtualMachineImageInfo, int) {
+	url := util.TUMBLEBUG + "/lookupImage/" + virtualMachineImageID
+
+	fmt.Println("virtualMachineImageID : ", virtualMachineImageID)
+
+	// pbytes, _ := json.Marshal(nameSpaceID)
+	// body, err := util.CommonHttpGet(url)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	var respStatus int
+	if err != nil {
+		fmt.Println(err)
+		respStatus = 500
+	}
+
+	respBody := resp.Body
+	respStatus = resp.StatusCode
+
+	virtualMachineImageInfo := model.VirtualMachineImageInfo{}
+	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
+	fmt.Println(virtualMachineImageInfo)
+
+	return virtualMachineImageInfo, respStatus
+}
+
+// VirtualMachineImage 상세 조회
+func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID string) (model.VirtualMachineImageInfo, int) {
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/searchImage/"
+
+	fmt.Println("nameSpaceID : ", nameSpaceID)
+
+	// pbytes, _ := json.Marshal(nameSpaceID)
+	// body, err := util.CommonHttpGet(url)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	var respStatus int
+	if err != nil {
+		fmt.Println(err)
+		respStatus = 500
+	}
+
+	respBody := resp.Body
+	respStatus = resp.StatusCode
+
+	virtualMachineImageInfo := model.VirtualMachineImageInfo{}
+	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
+	fmt.Println(virtualMachineImageInfo)
+
+	return virtualMachineImageInfo, respStatus
+}

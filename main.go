@@ -287,6 +287,16 @@ func main() {
 	resourcesGroup.POST("/sshkey/reg", controller.SshKeyRegProc)	// RegProc _ SshKey 같이 앞으로 넘길까
 	resourcesGroup.DELETE("/sshkey/del/:sshKeyID", controller.SshKeyDelProc)// DelProc + SskKey 같이 앞으로 넘길까
 
+	resourcesGroup.GET("/machineimage/mngform", controller.VirtualMachineImageMngForm)// Form + SshKeyMng 같이 앞으로 넘길까?
+	resourcesGroup.GET("/machineimage/list", controller.GetVirtualMachineImageList)
+	resourcesGroup.GET("/machineimage/:imageID", controller.GetVirtualMachineImageData)
+	resourcesGroup.POST("/machineimage/reg", controller.VirtualMachineImageRegProc)	// RegProc _ SshKey 같이 앞으로 넘길까
+	resourcesGroup.DELETE("/machineimage/del/:imageID", controller.VirtualMachineImageDelProc)// DelProc + SskKey 같이 앞으로 넘길까
+
+	resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)// TODO : Image 전체목록인가? 확인필요
+	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData)// TODO : Image 상세 정보인가? 확인필요
+	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
+	
 		// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
 	// e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)
 
