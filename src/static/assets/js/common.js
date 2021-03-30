@@ -149,8 +149,13 @@ function lnb_on(){
 	console.log('target2=' + target2)
 	console.log('target3=' + target3)
 
-	// $("#"+target1).addClass("active")
-	// $("#"+target1).addClass("on")
+	$("#tab_" + target1).addClass("active")
+
+	// menu의 첫번째 단계인 operation, setting 은 common.css 에 id로 style이 적용되어있어 변경이 어려움.
+	$("#"+target1).addClass("active")
+	$("#"+target1).addClass("on")
+	$("#"+target1).addClass("show")
+	//show active
 
 	// $("#"+target1).addClass("active")
 
@@ -162,12 +167,6 @@ function lnb_on(){
 		
 	})
 
-	// 					<li id="Cloud">
-	// 						<a href="javascript:void(0);">Cloud Connections</a>
-	// 						<ul>
-	// 							<li id="Connection"><a href="/setting/connections/cloudconnectionconfig/mngform">Cloud Connections</a></li>
-	// 						</ul>
-	// 					</li>
 }
 //webmoa common
 $(function() {
@@ -490,9 +489,3 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 //     }) 
 // }
 
-function isEmpty(str){
-	if(typeof str == "undefined" || str == null || str == "")
-		return true;
-	else
-		return false ;
-}

@@ -3,12 +3,12 @@
 		<div class="leftmenu">
 			
 			<ul class="nav">
-				<li class="nav-item"><a class="nav-link " data-toggle="tab" href="#Operation">Operation</a></li>
-				<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Setting">Setting</a></li>
+				<li class="nav-item"><a class="nav-link " data-toggle="tab" href="#operation" id="tab_operation">Operation</a></li>
+				<li class="nav-item"><a class="nav-link " data-toggle="tab" href="#setting" id="tab_setting">Setting</a></li>
 			</ul>
 			
 			<div class="tab-content">
-				<div class="tab-pane fade" id="Operation">
+				<div class="tab-pane fade" id="operation">
 					<ul class="menu">
 						<li  id="Dashboard">
 							<a href="javascript:void(0);">Dashboard</a>
@@ -17,10 +17,10 @@
 								<li id="Global"><a href="/Dashboard/Global">Global</a></li>
 							</ul>
 						</li>
-						<li  id="Manage">
+						<li  id="menu_level2_manage">
 							<a href="javascript:void(0);">Manage</a>
 							<ul>
-								<li id="MCIS"><a href="/Manage/MCIS/list">MCIS</a></li>
+								<li id="menu_level3_mcis"><a href="/operation/manage/mcis/mngform">MCIS</a></li>
 								<li id="MC-App"><a href="!#">MC-App</a></li>
 							</ul>
 						</li>
@@ -48,7 +48,7 @@
 					</ul>
 				</div>
 				
-				<div class="tab-pane fade show active" id="Setting">
+				<div class="tab-pane fade" id="setting">
 					<ul class="menu">
 						<!-- <li id="Resources">
 							<a href="javascript:void(0);">Resources</a>
