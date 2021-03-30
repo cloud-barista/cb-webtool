@@ -45,7 +45,7 @@ func VpcMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
-	cloudOsList , _ := service.GetCloudOSListData()
+	cloudOsList , _ := service.GetCloudOSList()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -222,7 +222,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
-	cloudOsList, _ := service.GetCloudOSListData()
+	cloudOsList, _ := service.GetCloudOSList()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -385,7 +385,7 @@ func SshKeyMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
-	cloudOsList, _ := service.GetCloudOSListData()
+	cloudOsList, _ := service.GetCloudOSList()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -547,7 +547,7 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
-	cloudOsList, _ := service.GetCloudOSListData()
+	cloudOsList, _ := service.GetCloudOSList()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -780,7 +780,7 @@ func InstanceSpecMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
-	cloudOsList, _ := service.GetCloudOSListData()
+	cloudOsList, _ := service.GetCloudOSList()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 

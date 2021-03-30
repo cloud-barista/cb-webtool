@@ -24,7 +24,7 @@ import (
 // func CloudOSListForm
 // CloudOS(Provider) 목록
 func GetCloudOSList(c echo.Context) error {
-	cloudOsList , respStatus:= service.GetCloudOSListData()
+	cloudOsList , respStatus:= service.GetCloudOSList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,
@@ -55,7 +55,7 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	// result, ok := store.Get(paramUser)
 	// storedUser := result.(map[string]string)
 
-	cloudOsList , _ := service.GetCloudOSListData()
+	cloudOsList , _ := service.GetCloudOSList()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -65,17 +65,17 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
 
 	// regionList 가져오기
-	regionList , _ := service.GetRegionListData()
+	regionList , _ := service.GetRegionList()
 	store.Set("region", regionList)
 	log.Println(" regionList  ", regionList)
 
 	// credentialList 가져오기
-	credentialList , _ := service.GetCredentialListData()
+	credentialList , _ := service.GetCredentialList()
 	store.Set("credential", credentialList)
 	log.Println(" credentialList  ", credentialList)
 
 	// driverList 가져오기
-	driverList , _ := service.GetDriverListData()
+	driverList , _ := service.GetDriverList()
 	store.Set("driver", driverList)
 	log.Println(" driverList  ", driverList )
 
@@ -222,7 +222,7 @@ func GetRegionList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	regionList , respStatus:= service.GetRegionListData()
+	regionList , respStatus:= service.GetRegionList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,
@@ -334,7 +334,7 @@ func GetCredentialList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	credentialList , respStatus := service.GetCredentialListData()
+	credentialList , respStatus := service.GetCredentialList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
 		"status":     respStatus,
@@ -446,7 +446,7 @@ func GetDriverList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	driverList , respStatus := service.GetDriverListData()
+	driverList , respStatus := service.GetDriverList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,

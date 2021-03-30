@@ -123,6 +123,33 @@ func main() {
 		DisableCache: true,
 	})
 
+	mcisTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/mcis/mcismng",
+		Partials: []string{
+			"templates/OperationTop",
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",			
+			"templates/Footer",
+			"operation/manage/mcis/McisStatus",
+			"operation/manage/mcis/McisList",
+			"operation/manage/mcis/McisInfo",
+			"operation/manage/mcis/McisServerInfo",
+			"operation/manage/mcis/McisDetailInfo",
+			"operation/manage/mcis/McisDetailView",
+			"operation/manage/mcis/McisConnectionView",			
+			"operation/manage/mcis/McisMonitoring",
+			"operation/manage/mcis/McisMonitoringView",
+			
+			
+		},
+		DisableCache: true,
+	})
+
 	cloudConnectionTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
@@ -197,21 +224,28 @@ func main() {
 	// // Dashboard
 	// e.GET("/Dashboard/Global", controller.GlobalDashBoard)
 	// e.GET("/Dashboard/NS", controller.NSDashBoard)
-	dashboardGroup := e.Group("/Dashboard", dashboardTemplate)
-	dashboardGroup.GET("/NS", controller.NSDashBoard)
-	dashboardGroup.GET("/Global", controller.GlobalDashBoard)
+	dashboardGroup := e.Group("/operation/dashboard", dashboardTemplate)
+	dashboardGroup.GET("/namespace", controller.NSDashBoard)
+	dashboardGroup.GET("/globalnamespace", controller.GlobalDashBoard)
 
 	// // Monitoring Control
 	// e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)
 	// e.GET("/Monitoring/mcis", controller.MornitoringListForm)
 	// e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 
-	// // MCIS
+	// MCIS
 	// e.GET("/Manage/MCIS/reg", controller.McisRegForm)
 	// e.GET("/Manage/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	// e.POST("/Manage/MCIS/reg/proc", controller.McisRegController)
 	// e.GET("/Manage/MCIS/list", controller.McisListForm)
 	// e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
+	mcisGroup := e.Group("/operation/manage", mcisTemplate)
+	// e.GET("/mcis/reg", controller.McisRegForm)
+	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VMAddForm)
+	// e.POST("/mcis/reg/proc", controller.McisRegController)
+	mcisGroup.GET("/mcis/mngform", controller.McisMngForm)
+	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
+
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)

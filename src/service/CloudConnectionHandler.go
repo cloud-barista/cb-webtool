@@ -78,11 +78,11 @@ type IPStackInfo struct {
 // 삭제 : Del
 
 // Cloud Provider 목록
-func GetCloudOSListData() ([]string, int) {
+func GetCloudOSList() ([]string, int) {
 
 	// CloudConnectionUrl == SPIDER
 	url := util.SPIDER + "/" + "cloudos"
-	// fmt.Println("=========== GetCloudOSListData : ", url)
+	// fmt.Println("=========== GetCloudOSList : ", url)
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// defer resp.Close()
@@ -193,7 +193,7 @@ func DelCloudConnectionConfig(configName string) (io.ReadCloser, int) {
 }
 
 // 현재 설정된 region 목록
-func GetRegionListData() ([]model.RegionInfo, int ) {
+func GetRegionList() ([]model.RegionInfo, int ) {
 
 	// SPIDER == SPIDER
 	url := util.SPIDER + "/" + "region"
@@ -288,7 +288,7 @@ func DelRegion(regionName string) (io.ReadCloser, int) {
 }
 
 // 현재 설정된 credential 목록 : 목록에서는 key의 value는 ...으로 표시
-func GetCredentialListData() ([]model.CredentialInfo, int ) {
+func GetCredentialList() ([]model.CredentialInfo, int ) {
 
 	// SPIDER == SPIDER
 	url := util.SPIDER + "/" + "credential"
@@ -383,7 +383,7 @@ func DelCredential(credentialName string) (io.ReadCloser, int) {
 }
 
 // 현재 설정된 Driver 목록
-func GetDriverListData() ([]model.DriverInfo, int ) {
+func GetDriverList() ([]model.DriverInfo, int ) {
 	url := util.SPIDER + "/" + "driver"
 	fmt.Println("=========== GetDriverListData : ", url)
 

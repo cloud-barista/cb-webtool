@@ -3,45 +3,64 @@ package controller
 import (
 	"fmt"
 	"net/http"
-
+	"log"
 	service "github.com/cloud-barista/cb-webtool/src/service"
-	"github.com/cloud-barista/cb-webtool/src/util"
-
+	model "github.com/cloud-barista/cb-webtool/src/model"
+	
 	"github.com/labstack/echo"
+	echotemplate "github.com/foolin/echo-template"
+	// echosession "github.com/go-session/echo-session"
 )
 
-type MCISRequest struct {
-	VMSpec           []string `form:"vmspec"`
-	NameSpace        string   `form:"namespace"`
-	McisName         string   `form:"mcis_name"`
-	VMName           []string `form:"vmName"`
-	Provider         []string `form:"provider"`
-	SecurityGroupIds []string `form:"sg"`
-}
+
 
 // type SecurityGroup struct {
 // 	Id []string `form:"sg"`
 // }
 
-func McisListForm(c echo.Context) error {
-	comURL := service.GetCommonURL()
-	apiInfo := util.AuthenticationHandler()
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-		namespace := service.GetNameSpaceToString(c)
-		if namespace != "" {
-			return c.Render(http.StatusOK, "Manage_Mcis.html", map[string]interface{}{
-				"LoginInfo": loginInfo,
-				"NameSpace": namespace,
-				"comURL":    comURL,
-				"apiInfo":   apiInfo,
-			})
-		} else {
-			return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
-		}
-	}
+// MCIS 관리 화면 McisListForm 에서 이름 변경 McisMngForm으로
+// func McisListForm(c echo.Context) error {
+func McisMngForm(c echo.Context) error {
+	// comURL := service.GetCommonURL()
+	// apiInfo := util.AuthenticationHandler()
+	// if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	// 	namespace := service.GetNameSpaceToString(c)
+	// 	if namespace != "" {
+	// 		return c.Render(http.StatusOK, "Manage_Mcis.html", map[string]interface{}{
+	// 			"LoginInfo": loginInfo,
+	// 			"NameSpace": namespace,
+	// 			"comURL":    comURL,
+	// 			"apiInfo":   apiInfo,
+	// 		})
+	// 	} else {
+	// 		return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
+	// 	}
+	// }
 
-	//return c.Render(http.StatusOK, "MCISlist.html", nil)
-	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	// //return c.Render(http.StatusOK, "MCISlist.html", nil)
+	// return c.Redirect(http.StatusTemporaryRedirect, "/login")
+
+	fmt.Println("McisMngForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	
+	// store := echosession.FromContext(c)
+	
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	log.Println(" nsList  ", nsList)
+
+	// status, filepath, return params
+	return echotemplate.Render(c, http.StatusOK,
+		"operation/manage/McisMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":                 loginInfo,
+			"NameSpaceList":             nsList,			
+		})
+
 }
 
 // func McisListFormWithParam(c echo.Context) error {
@@ -114,7 +133,7 @@ func McisListForm(c echo.Context) error {
 // }
 
 func McisRegController(c echo.Context) error {
-	m := new(MCISRequest)
+	m := new(model.MCISRequest)
 
 	vmspec := c.FormValue("vmspec")
 	namespace := c.FormValue("namespace")
