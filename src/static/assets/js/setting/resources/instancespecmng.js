@@ -36,8 +36,8 @@ $(document).ready(function(){
 });
 
 $(document).ready(function () {
-    order_type = "name"
-    getInstanceSpecList(order_type);
+    // order_type = "name"
+    // getInstanceSpecList(order_type);
 
     // var apiInfo = "{{ .apiInfo}}";
     // getCloudOS(apiInfo,'provider');
@@ -108,7 +108,8 @@ function displayInstanceSpecInfo(targetAction){
 
 function getInstanceSpecList(sort_type) {
     console.log(sort_type);
-    var url = CommonURL + "/ns/" + NAMESPACE + "/resources/spec";
+    var url = "/setting/resources"+"/instancespec/list"
+    console.log("URL : ",url)
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -117,14 +118,14 @@ function getInstanceSpecList(sort_type) {
     }).then(result => {
         console.log("get Spec List : ", result.data);
         
-        var data = result.data.spec;
+        var data = result.data.InstanceSpecList;
         var html = ""
         
         if (data.length) {
             if (sort_type) {
                 console.log("check : ", sort_type);
                 data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                    html += '<tr onclick="showInfo(\'' + item.name + '\');">' 
+                    html += '<tr onclick="showInstanceSpecInfo(\'' + item.name + '\');">' 
                         + '<td class="overlay hidden" data-th="">' 
                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSpecName + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
@@ -136,7 +137,7 @@ function getInstanceSpecList(sort_type) {
                 ))
             } else {
                 data.filter((list) => list.name !== "").map((item, index) => (
-                    html += '<tr onclick="showInfo(\'' + item.name + '\');">' 
+                    html += '<tr onclick="showInstanceSpecInfo(\'' + item.name + '\');">' 
                         + '<td class="overlay hidden" data-th="">' 
                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
@@ -186,21 +187,21 @@ function ModalDetail() {
     });
 }
 
-function showInfo(target) {
-    console.log("target showInfo : ", target);
+function showInstanceSpecInfo(target) {
+    console.log("target showInstanceSpecInfo : ", target);
     // var apiInfo = "{{ .apiInfo}}";
     var specId = encodeURIComponent(target);
     
-    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/spec/"+ specId;
-    console.log("spec detail URL : ",url)
-
+    var url = "/setting/resources"+"/instancespec/" + specId;
+    console.log("URL : ",url)
+    
     return axios.get(url,{
         headers:{
             // 'Authorization': apiInfo
         }
     
     }).then(result=>{
-        var data = result.data
+        var data = result.data.InstanceSpecInfo
         console.log("Show Data : ",data);
 
         var dtlSpecName = data.name;
@@ -217,82 +218,28 @@ function showInfo(target) {
         $("#dtlConnectionName").val(dtlConnectionName);
         $("#dtlCspSpecName").val(dtlCspSpecName);
 
-        getProvider(dtlConnectionName);
+        getProviderNameByConnection(dtlConnectionName, 'dtlProvider')// provider는 connection 정보에서 가져옴
+
+        displayInstanceSpecInfo("DEL")
     }) 
 }
 
-function getProvider(target) {
-    console.log("getProvidergetProvider : ",target);
-    var url = SpiderURL+"/connectionconfig/" + target;
-        
-    return axios.get(url,{
-        headers:{
-            // 'Authorization': apiInfo
-        }
-    
-    }).then(result=>{
-        var data = result.data;
-        
-        var Provider = data.ProviderName;
-        console.log("Provider : ", Provider);
-        $("#dtlProvider").val(Provider);
-    })        
-}							
 
-function getConnectionInfo(provider){
-    var url = SpiderURL+"/connectionconfig";
-    console.log("provider : ",provider)
-    //var provider = $("#provider option:selected").val();
-    var html = "";
-    // var apiInfo = ApiInfo
-    axios.get(url,{
-        headers:{
-            // 'Authorization': apiInfo
-        }
-    }).then(result=>{
-        console.log('getConnectionConfig result: ',result)
-        var data = result.data.connectionconfig
-        console.log("connection data : ",data);
-        var count = 0; 
-        var configName = "";
-        var confArr = new Array();
-        for(var i in data){
-            if(provider == data[i].ProviderName){ 
-                count++;
-                html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
-                configName = data[i].ConfigName
-                confArr.push(data[i].ConfigName)
-                
-            }
-        }
-        if(count == 0){
-            alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
-                html +='<option selected>Select Configname</option>';
-        }
-        if(confArr.length > 1){
-            configName = confArr[0];
-        }
-        $("#reg_connectionName").empty();
-        $("#reg_connectionName").append(html);
-
-    })
-}
-
-function createSpec() {
-    var specId = $("#reg_specName").val();
-    var specName = $("#reg_specName").val();
-    var connectionName = $("#reg_connectionName").val();
-    var cspSpecName = $("#reg_cspSpecName").val();
+function createInstanceSpec() {
+    var specId = $("#regSpecName").val();
+    var specName = $("#regSpecName").val();
+    var connectionName = $("#regConnectionName").val();
+    var cspSpecName = $("#regCspSpecName").val();
     
     if (!specName) {
         alert("Input New Spec Name")
-        $("#reg_specName").focus()
+        $("#regSpecName").focus()
         return;
     }
 
     // var apiInfo = "{{ .apiInfo}}";
-    var url = CommonURL+"/ns/"+NAMESPACE+"/resources/spec"
-    console.log("Spec Reg URL : ",url)
+    var url = "/setting/resources"+"/instancespec/reg"
+    console.log("URL : ",url)
     var obj = {
         id: specId,
         name: specName,
@@ -312,7 +259,7 @@ function createSpec() {
             if (result.status == 200 || result.status == 201) {
                 alert("Success Create Image!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getInstanceSpecList();
+                getInstanceSpecList("name");
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
                 // $("#btn_add2").click()
@@ -324,12 +271,12 @@ function createSpec() {
         });
     } else {
         alert("Input Spec Name")
-        $("#reg_specName").focus()
+        $("#regSpecName").focus()
         return;
     }
 }
 
-function goDelete() {
+function deleteInstanceSpec() {
     var selSpecId = "";
     var count = 0;
 
@@ -352,8 +299,8 @@ function goDelete() {
         return false;
     }
     
-    var url = CommonURL + "/ns/" + NAMESPACE + "/resources/spec/" + selSpecId;
-    
+    var url = "/setting/resources"+"/instancespec/del/" + selSpecId;
+    console.log("URL : ",url)
     axios.delete(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -364,6 +311,9 @@ function goDelete() {
         if (result.status == 200 || result.status == 201) {
             alert("Success Delete Spec.");
             // location.reload(true);
+            getInstanceSpecList("name");
+            
+            displayInstanceSpecInfo("DEL_SUCCESS")
         }
     })
 }                                                  

@@ -160,21 +160,21 @@ function showConnectionConfigInfo(target){
     console.log("target : ",target);
     var infos = $("#"+target).val()
     infos = infos.split("|")
-    $("#info_name").val(infos[0])
-    $("#info_provider").val(infos[1])
-    $("#info_region").val(infos[2])
-    $("#info_credential").val(infos[3])
-    $("#info_driver").val(infos[4])
+    $("#infoName").val(infos[0])
+    $("#infoProvider").val(infos[1])
+    $("#infoRegion").val(infos[2])
+    $("#infoCredential").val(infos[3])
+    $("#infoDriver").val(infos[4])
 
-    $("#info_name_prs").text(infos[0])
-    $("#info_provider_prs").text(infos[1])
-    $("#info_region_prs").text(infos[2])
-    $("#info_credential_prs").text(infos[3])
-    $("#info_driver_prs").text(infos[4])
+    $("#infoNamePrs").text(infos[0])
+    $("#infoProviderPrs").text(infos[1])
+    $("#infoRegionPrs").text(infos[2])
+    $("#infoCredentialPrs").text(infos[3])
+    $("#infoDriverPrs").text(infos[4])
 
     getRegionDetail(infos[2]);
 
-    $("#info_name").focus();
+    $("#infoName").focus();
 }
 
 // function goFocus(target){
@@ -193,7 +193,7 @@ function getRegionInfo(type, target){
     var infos = $("#"+target).val()
     infos = infos.split("|")
     console.log("name : ",infos[0]);
-    $("#reg_region").val(infos[0]);
+    $("#regRegion").val(infos[0]);
 }
 
 function getCredentialInfo(type, target){
@@ -201,23 +201,23 @@ console.log("getCredentialInfo target : ",target);
 var infos = $("#"+target).val()
 infos = infos.split("|")
 console.log("name : ",infos[0]);
-$("#reg_credential").val(infos[0]);
+$("#regCredential").val(infos[0]);
 }
 function getDriverInfo(type, target){
 console.log("target : ",target);
 var infos = $("#"+target).val()
 infos = infos.split("|")
 console.log("name : ",infos[0]);
-$("#reg_driver").val(infos[0]);
+$("#regDriver").val(infos[0]);
 }
 
 // connection 정보 저장버튼 클릭
 function createCloudConnection(){
-    var configname = $("#reg_ConfigName").val()
-    var providername = $("#reg_Provider").val()
-    var regionname = $("#reg_region").val()
-    var credentialname = $("#reg_credential").val()
-    var drivername = $("#reg_driver").val()
+    var configname = $("#regConfigName").val()
+    var providername = $("#regProvider").val()
+    var regionname = $("#regRegion").val()
+    var credentialname = $("#regCredential").val()
+    var drivername = $("#regDriver").val()
 
     console.log("info param configname : ",configname);
     console.log("info param providername : ",providername);
@@ -227,12 +227,12 @@ function createCloudConnection(){
 
     if(!configname){
         alert("Input New Cloud Connection Name")
-        $("#reg_ConfigName").focus()
+        $("#regConfigName").focus()
         return;
     }
     if(!providername){
         alert("Input Provider Name")
-        $("#reg_Provider").focus()
+        $("#regProvider").focus()
         return;
     }
     
@@ -267,7 +267,7 @@ function createCloudConnection(){
         });
     }else{
         alert("Input Cloud Connection Name")
-        $("#reg_ConfigName").focus()
+        $("#regConfigName").focus()
         return;
     }
 }
@@ -361,8 +361,8 @@ function setRegionDispInfo(var_region, var_zone){
     var region_and_zone_code = ""
     region_and_zone = "" + var_region + " (" + var_zone + ")";
     region_and_zone_code = "" + var_region + " (" + var_zone + ")";
-    $("#info_region").val(region_and_zone);// 상세내역에서 Region/zone 부분 
-    $("#info_region_prs").text(region_and_zone_code);// 지도 위에 zone 표시영역 Region/zone 에서 zone
+    $("#infoRegion").val(region_and_zone);// 상세내역에서 Region/zone 부분 
+    $("#infoRegionPrs").text(region_and_zone_code);// 지도 위에 zone 표시영역 Region/zone 에서 zone
 
     console.log("info region_and_zone : ", region_and_zone);
 }
@@ -648,7 +648,7 @@ function saveNewRegion(){
 
 // region 삭제
 function deleteRegion(){
-    var regionName = $("#reg_region").val()
+    var regionName = $("#regRegion").val()
 
     if(!regionName){
         $("#requireMessage").text("선택된 Resion이 없습니다.")
@@ -730,7 +730,7 @@ function saveNewCredential(){
 
 // Credential 삭제
 function deleteCredential(){
-    var credentialName = $("#reg_credential").val()
+    var credentialName = $("#regCredential").val()
 
     if(!credentialName){
         $("#requireMessage").text("선택된 Credential key가 없습니다.")
@@ -804,7 +804,7 @@ function saveNewDriver(){
 
 // Driver 삭제
 function deleteDriver(){
-    var driverName = $("#reg_driver").val()
+    var driverName = $("#regDriver").val()
 
     if(!driverName){
         $("#requireMessage").text("선택된 Driver가 없습니다.")

@@ -36,7 +36,6 @@ func GetCloudOSList(c echo.Context) error {
 // func CloudOSRegProc
 // func CloudOSDelProc
 
-// func ConnectionConfigListForm  : TODO : method 명을 ConnectionConfigListForm으로 변경할 것
 // func ConnectionConfigList(c echo.Context) error {
 func CloudConnectionConfigMngForm(c echo.Context) error {
 	fmt.Println("ConnectionConfigList ************ : ")

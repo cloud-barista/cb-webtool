@@ -290,7 +290,7 @@ function showSecurityGroupInfo(sgName) {
         // $('#dtlProvider').val(providerValue);
         // console.log("providerValue = " + providerValue)
 
-        goFocus('securityGroupInfoBox');// TODO : list 클릭시 상세로 scroll이 안되고 있군..
+        displaySecurityGroupInfo("DEL")// 상세 area 보여주고 focus이동
     }).catch(function(error){
         console.log("show sg info error : ",error);        
     });

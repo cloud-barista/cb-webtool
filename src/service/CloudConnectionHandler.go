@@ -99,7 +99,7 @@ func GetCloudOSListData() ([]string, int) {
 	cloudOs := map[string][]string{}
 	json.NewDecoder(respBody).Decode(&cloudOs)
 	fmt.Println(cloudOs["cloudos"])
-
+	// TODO : mock을 추가할 것
 	return cloudOs["cloudos"], respStatus
 }
 

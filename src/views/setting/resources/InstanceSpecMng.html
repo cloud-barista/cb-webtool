@@ -85,7 +85,7 @@
 								
 							<div class="ds_cont">
 								
-								<div class="dataTable status_list" id="InstanceSpecListTable">
+								<div class="dataTable status_list" id="instanceSpecListTable">
 									<table cellpadding="0" cellspacing="0" border="1" summary="">
                                         <colgroup>
                                             <col width="50px">
@@ -104,7 +104,23 @@
 											</tr>
 										</thead>
 										<tbody id="specList">
-                                            
+                                            {{ $length := len .InstanceSpecList }} 
+											{{ if eq $length 0 }}
+											<tr>
+												<td class="overlay hidden" data-th="" colspan="5">No Data</td>
+											</tr>
+											{{ end }}
+											{{range $index, $item := .InstanceSpecList}}
+											<tr onclick="showInstanceSpecInfo('{{$item.Name}}');">
+												<td class="overlay hidden" data-th="">
+												<input type="hidden" id="spec_info_{{$index}}" value="{{$item.Name}}"/>
+												<input type="checkbox" name="chk" value="{{$item.Name }}" id="raw_{{$index }}" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>
+												<td class="btn_mtd ovm" data-th="name ">{{ $item.Name }}<span class="ov"></span></td>
+												<td class="overlay hidden" data-th="connectionName">{{ $item.ConnectionName }}</td>
+												<td class="overlay hidden" data-th="cspSpecName">{{ $item.CspSpecName }}</td>
+												<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>
+											</tr>
+											{{ end }}
 										</tbody>
 									</table>
 								</div>
@@ -118,7 +134,7 @@
 					
 					
 					<!-- Modify -->
-					<div class="dashboard dashboard_cont server_status" id="InstanceSpecInfoBox">
+					<div class="dashboard dashboard_cont server_status" id="instanceSpecInfoBox">
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox_n">
@@ -170,7 +186,7 @@
 					
 					
 					<!-- Register Spec -->
-					<div class="dashboard dashboard_cont register_cont" id="InstanceSpecCreateBox">
+					<div class="dashboard dashboard_cont register_cont" id="instanceSpecCreateBox">
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox_n">
@@ -228,7 +244,7 @@
 									<div class="btnbox">
 										<div class="btn_center">
 											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
-											<button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="createSpec()">Ok</button> 
+											<button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="createInstanceSpec()">Ok</button> 
 										</div>
 									</div>
 								

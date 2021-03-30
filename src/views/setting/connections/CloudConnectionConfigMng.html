@@ -90,7 +90,7 @@
 											<div class="txt">Would you like to register <br />Cloud Connection?</div>
 											<div class="btnbox">
 												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok register" onclick="goFocus('reg_ConfigName')" data-dismiss="modal">OK</button>
+												<button type="button" class="btn_ok register" onclick="goFocus('regConfigName')" data-dismiss="modal">OK</button>
 											</div>
 										</div>
 										
@@ -228,11 +228,11 @@
 											<ul>
 												<li class="reg_1 reg_1n">
 													<label>Cloud Connection Name</label>
-													<input type="text" name="" value="" placeholder="Name" class="gray" title="" readonly id="info_name"/>
+													<input type="text" name="" value="" placeholder="Name" class="gray" title="" readonly id="infoName"/>
 												</li>
 												<li class="reg_1 reg_1n">
 													<label>Credential</label>
-													<input type="text" name="" value="Credential selected Credential" placeholder="Credential" id="info_credential" class="gray" title="" readonly />
+													<input type="text" name="" value="Credential selected Credential" placeholder="Credential" id="infoCredential" class="gray" title="" readonly />
 												</li>
 											</ul>
 										</div>
@@ -240,15 +240,15 @@
 											<ul>
 												<li class="reg_3">
                                                     <label>Provider (CP)</label>
-                                                    <input type="text" name="" value="AWS, AZURE, GCP, ALIBABA / Region" placeholder="" class="gray" title="" id="info_provider" readonly />
+                                                    <input type="text" name="" value="AWS, AZURE, GCP, ALIBABA / Region" placeholder="" class="gray" title="" id="infoProvider" readonly />
 												</li>
 												<li class="reg_3">
                                                     <label>Region / zone</label>
-                                                    <input type="text" name="" value="" placeholder="" class="gray" title="" id="info_region" readonly />
+                                                    <input type="text" name="" value="" placeholder="" class="gray" title="" id="infoRegion" readonly />
 												</li>
 												<li class="reg_3">
                                                     <label>Driver</label>
-                                                    <input type="text" name="" value="" placeholder="" class="gray" title="" id="info_driver" readonly />
+                                                    <input type="text" name="" value="" placeholder="" class="gray" title="" id="infoDriver" readonly />
 												</li>
 											</ul>
 										</div>
@@ -264,7 +264,7 @@
 													
 													<div class="logic_tbox lg_1">
 														<div class="tit">Cloud Connection</div>
-														<div class="txt" id="info_name_prs">
+														<div class="txt" id="infoNamePrs">
 															Connection<br /> Name
 														</div>
 													</div>
@@ -273,7 +273,7 @@
 													
 													<div class="logic_tbox lg_2">
 														<div class="tit">Cloud Provider</div>
-														<div class="txt" style="min-height: 70px;" id="info_provider_prs">
+														<div class="txt" style="min-height: 70px;" id="infoProviderPrs">
 															Provider(CP)<br />Name & Icon
 														</div>
 													</div>
@@ -283,7 +283,7 @@
 													
 													<div class="logic_tbox lg_3">
 														<div class="tit">Cloud Region/zone</div>
-														<div class="txt" style="min-height: 70px;" id="info_region_prs">
+														<div class="txt" style="min-height: 70px;" id="infoRegionPrs">
 															Region<br />Name
 														</div>
 													</div>
@@ -293,7 +293,7 @@
 													
 													<div class="logic_tbox lg_4">
 														<div class="tit">Cloud Driver</div>
-														<div class="txt" style="min-height: 70px;" id="info_driver_prs">
+														<div class="txt" style="min-height: 70px;" id="infoDriverPrs">
 															Driver<br />Name
 														</div>
 													</div>
@@ -303,7 +303,7 @@
 													
 													<div class="logic_tbox lg_5">
 														<div class="tit">Cloud Credential</div>
-														<div class="txt" style="min-height: 70px;" id="info_credential_prs">
+														<div class="txt" style="min-height: 70px;" id="infoCredentialPrs">
 															Credential<br />Name
 														</div>
 													</div>
@@ -353,9 +353,9 @@
 												<li class="reg_1">
 													<!-- <label><span class="ch">*</span>Connection Name</label>
                                                     <input type="text" name="" value="" placeholder="input Cloud Connection Name" class="pline" title="" id="reg_ConfigName"/> -->
-                                                    <input type="hidden" id="reg_region" name="" value="" class="pline" title=""/>
-                                                    <input type="hidden" id="reg_credential" name="" value="" class="pline" title=""/>
-                                                    <input type="hidden" id="reg_driver" name="" value="" class="pline" title=""/>
+                                                    <input type="hidden" id="regRegion" name="" value="" class="pline" title=""/>
+                                                    <input type="hidden" id="regCredential" name="" value="" class="pline" title=""/>
+                                                    <input type="hidden" id="regDriver" name="" value="" class="pline" title=""/>
                                                 </li>
 											</ul>
 										</div>
@@ -363,11 +363,11 @@
 											<ul>
 												<li class="reg_3">
 													<label><span class="ch">*</span>Provider(CP/Region)</label>
-													<input type="text" name="" value="" placeholder="input Provider AWS, AZURE, GCP, ALIBABA" class="pline" title="" id="reg_Provider"/>
+													<input type="text" name="" value="" placeholder="input Provider AWS, AZURE, GCP, ALIBABA" class="pline" title="" id="regProvider"/>
 												</li>
 												<li class="reg_3">
 													<label><span class="ch">*</span>Connection Name</label>
-                                                    <input type="text" name="" value="" placeholder="input Cloud Connection Name" class="pline" title="" id="reg_ConfigName"/>
+                                                    <input type="text" name="" value="" placeholder="input Cloud Connection Name" class="pline" title="" id="regConfigName"/>
                                                 </li>
 											</ul>
 										</div>

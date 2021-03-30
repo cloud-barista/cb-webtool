@@ -123,8 +123,9 @@ function commonConfirmOpen(targetAction){
             ["AddNewVirtualMachineImage", "Would you like to register Image <br />Resource ?"],
             ["DeleteVirtualMachineImage", "Would you like to un-register Image <br />Resource ?"],  
 
-            //Would you like to register Spec <br />Resource ?
-            //Would you like to un-register Spec <br />Resource ?
+            ["AddNewInstanceSpec", "Would you like to register Spec <br />Resource ?"],
+            ["DeleteInstanceSpec", "Would you like to un-register Spec <br />Resource ?"],  
+            
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -203,13 +204,14 @@ function commonConfirmOk(){
         goFocus('virtualMachineImageCreateBox');
     }else if ( targetAction == "DeleteVirtualMachineImage"){
         deleteVirtualMachineImage()
+    }else if ( targetAction == "AddNewInstanceSpec"){
+        displayInstanceSpecInfo("REG")
+        goFocus('instanceSpecCreateBox');
+    }else if ( targetAction == "DeleteInstanceSpec"){
+        deleteInstanceSpec()
     }
 
-    
-
-    
-
-    
+       
     
     console.log("commonConfirmOk " + targetAction);
     commonConfirmClose();

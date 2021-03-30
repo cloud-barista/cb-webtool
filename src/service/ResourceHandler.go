@@ -606,8 +606,8 @@ func GetInstanceSpecData(nameSpaceID string, instanceSpecID string) (model.Insta
 func RegInstanceSpec(nameSpaceID string, instanceSpecRegInfo *model.InstanceSpecRegInfo) (model.InstanceSpecInfo, int) {
 	fmt.Println("RegInstanceSpec ************ : ")
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"//
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithId"//
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"// parameter를 모두 받지않기 때문에 param의 data type이 틀려 오류남.
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"// action 인자없이 전송
 
 	// fmt.Println("vnetInfo : ", vnetInfo)
 

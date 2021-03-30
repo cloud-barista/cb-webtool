@@ -75,27 +75,29 @@ function showNameSpaceInfo(target){
     console.log("target : ",target);
     var infos = $("#"+target).val()
     infos = infos.split("|")
-    $("#info_id").val(infos[0])
-    $("#info_name").val(infos[1])
-    $("#info_desc").val(infos[2])
+    $("#infoID").val(infos[0])
+    $("#infoName").val(infos[1])
+    $("#infoDesc").val(infos[2])
     
-    $("#info_name").focus();
+    $("#infoName").focus();
 }
 
-// 삭제 처리 후 namespace 상세정보 초기화
+// 삭제 처리 후 namespace 상세정보 초기화  TODO : display ... function으로 바꿀 것
 function clearNamespaceInfo(){
-    $("#info_id").val('')
-    $("#info_name").val('')
-    $("#info_desc").val('')
+    // $("#infoID").val('')
+    // $("#infoName").val('')
+    // $("#infoDesc").val('')
+    $("#regName").val('')
+    $("#regDesc").val('')    
 }
 
 //function createNS(){
 function createNameSpace(){
-    var namespace = $("#reg_name").val()
-    var desc = $("#reg_desc").val()
+    var namespace = $("#regName").val()
+    var desc = $("#regDesc").val()
     if(!namespace){
-        alert("Input New NameSpace")
-        $("#reg_name").focus()
+        commonAlertOpen("Input New NameSpace")
+        $("#regName").focus()
         return;
     }
     
@@ -115,27 +117,27 @@ function createNameSpace(){
             console.log(result);
             if(result.status == 200 || result.status == 201){
                 commonAlertOpen("Namespace creation succeeded");
-                clearNamespaceInfo();
                 
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getNameSpaceList();
-
+                clearNamespaceInfo();
+                
             }else{
                 commonAlertOpen("Namespace creation failed");
             }
         });
     }else{
-        alert("Input NameSpace")
-        $("#reg_desc").focus()
+        commonAlertOpen("Input NameSpace")
+        $("#regDesc").focus()
         return;
     }
 }
 
 // 삭제 : TODO : spider api 확인하여 실제 삭제, 수정작업 되는지 Test 할 것.
 function deleteNameSpace () {
-    var nameSpaceID = $("#info_id").val()
-    var nameSpaceName = $("#info_name").val()
-    var nameSpaceDescription = $("#info_desc").val()
+    var nameSpaceID = $("#infoID").val()
+    var nameSpaceName = $("#infoName").val()
+    var nameSpaceDescription = $("#infoDesc").val()
 
     // checkbox 선택되어있는지 체크할까?
     if(!nameSpaceID){
@@ -155,7 +157,9 @@ function deleteNameSpace () {
                 clearNamespaceInfo()
 
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getNameSpaceList();                
+                getNameSpaceList();
+                
+                displayNameSpaceInfo("DEL_SUCCESS")
             }else{
                 commonAlertOpen("Namespace deletion failed");
             }
@@ -165,7 +169,7 @@ function deleteNameSpace () {
     }else{
         // alert("Input NameSpace")
         commonAlertOpen("Input NameSpace");
-        $("#reg_desc").focus()
+        $("#regDesc").focus()
         return;
     }
 }
@@ -181,6 +185,9 @@ function displayNameSpaceInfo(targetAction){
     }else if ( targetAction == "MOD"){
         $('#ns_reg').removeClass("active");
         $('#info_box').toggleClass("view");
+    }else if ( targetAction == "DEL_SUCCESS"){
+        $('#ns_reg').removeClass("active");
+        $('#info_box').removeClass("view");
     }
 }
 function ModalDetail(){
