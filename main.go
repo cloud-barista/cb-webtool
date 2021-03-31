@@ -244,6 +244,7 @@ func main() {
 	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	// e.POST("/mcis/reg/proc", controller.McisRegController)
 	mcisGroup.GET("/mcis/mngform", controller.McisMngForm)
+	mcisGroup.GET("/mcis/list", controller.GetMcisList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 

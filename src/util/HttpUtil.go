@@ -226,9 +226,42 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 
 // return message 확인용
 func DisplayResponse(resp *http.Response){
-	data, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        panic(err)
-    }
-    fmt.Printf("%s\n", string(data))
+	fmt.Println("*****DisplayResponse begin****")
+	// data, err := ioutil.ReadAll(resp.Body)
+    // if err != nil {
+    //     panic(err)
+    // }
+    // fmt.Printf("%s\n", string(data))
+
+	resultStatus := resp.StatusCode
+	fmt.Println("resultStatus ",  resultStatus)
+	// fmt.Println("body ",  resp.Body)
+	resultBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		str := string(resultBody)
+		println("nil ",str)
+	}
+	fmt.Println(string(resultBody))
+	// // json.NewDecoder(respBody).Decode(&stringMap)
+	// pbytes, _ := json.Marshal(resultBody)
+	// fmt.Println(string(pbytes))
+
+	fmt.Println("*****DisplayResponse end****")
 }
+
+
+// Response 객체의 내용
+// type Response struct {
+//     Status     string // e.g. "200 OK"
+//     StatusCode int    // e.g. 200
+//     Proto      string // e.g. "HTTP/1.0"
+//     ProtoMajor int    // e.g. 1
+//     ProtoMinor int    // e.g. 0
+ 
+//     // response headers
+//     Header http.Header
+//     // response body
+//     Body io.ReadCloser
+//     // request that was sent to obtain the response
+//     Request *http.Request
+// }

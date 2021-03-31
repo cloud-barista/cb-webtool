@@ -3,7 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-
+	"log"
 	"net/http"
 	// "os"
 	util "github.com/cloud-barista/cb-webtool/src/util"
@@ -17,10 +17,11 @@ import (
 // var MCISUrl = os.Getenv("TUMBLE_URL")// util.TUMBLEBUG
 
 // MCIS 목록 조회
-func GetMCISList(nameSpaceID string)  ([]model.MCISInfo, int ) {
+func GetMcisList(nameSpaceID string)  ([]model.MCISInfo, int ) {
 // func GetMCISList(nsid string) []MCISInfo {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	var respStatus int
 	if err != nil {
@@ -30,12 +31,14 @@ func GetMCISList(nameSpaceID string)  ([]model.MCISInfo, int ) {
 
 	respBody := resp.Body
 	respStatus = resp.StatusCode
+	
+	mcisList := map[string][]model.MCISInfo{}
+	json.NewDecoder(respBody).Decode(&mcisList)
+	fmt.Println(mcisList["mcis"])
+	log.Println(respBody)
+	util.DisplayResponse(resp)// 수신내용 확인
 
-	mcisInfo := map[string][]model.MCISInfo{}
-	json.NewDecoder(respBody).Decode(&mcisInfo)
-	fmt.Println(mcisInfo["connectionconfig"])
-
-	return mcisInfo["mcis"], respStatus
+	return mcisList["mcis"], respStatus
 }
 
 func GetMCIS(nameSpaceID string, mcisID string) (model.MCISInfo, int ) {
@@ -54,12 +57,15 @@ func GetMCIS(nameSpaceID string, mcisID string) (model.MCISInfo, int ) {
 // 	fmt.Println("info : ", info["mcis"][0].ID)
 // 	return info["ns"]
 
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	
 	// defer body.Close()
 
 	if err != nil {
 		fmt.Println(err)
 	}
+	util.DisplayResponse(resp)// 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
@@ -67,6 +73,16 @@ func GetMCIS(nameSpaceID string, mcisID string) (model.MCISInfo, int ) {
 	mcisInfo := model.MCISInfo{}
 	json.NewDecoder(respBody).Decode(&mcisInfo)
 	fmt.Println(mcisInfo)
+	
+	
+	// resultBody, err := ioutil.ReadAll(respBody)
+	// if err == nil {
+	// 	str := string(resultBody)
+	// 	println(str)
+	// }
+	// pbytes, _ := json.Marshal(respBody)
+	// fmt.Println(string(pbytes))
+
 	return mcisInfo, respStatus
 }
 

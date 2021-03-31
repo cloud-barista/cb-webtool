@@ -144,10 +144,10 @@ function lnb_on(){
 	var target1 = path[1]
 	var target2 = path[2]
 	var target3 = path[3]
-	console.log('lnb_on path : ' + path)
-	console.log('target1=' + target1)
-	console.log('target2=' + target2)
-	console.log('target3=' + target3)
+	// console.log('lnb_on path : ' + path)
+	// console.log('target1=' + target1)
+	// console.log('target2=' + target2)
+	// console.log('target3=' + target3)
 
 	$("#tab_" + target1).addClass("active")
 

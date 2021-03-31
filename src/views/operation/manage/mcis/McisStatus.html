@@ -19,10 +19,25 @@
 										<div class="num bgbox_r"><span>0</span></div>
 										<div class="num bgbox_g"><span>0</span></div>
 									</div>
+									{{ .VMStatus }}
 									<div class="txt">Status of Infra Service</div>
 								</div>
 							</div>
 							
+								<!-- { { $mcisLength := len .McisList } }
+								<div class="lbox">
+									
+									<strong id="total_mcis">{ { $mcisLength } }</strong>
+									
+								</div>
+								{ {range $index, $item := .McisList} }
+									{ { $vmList := $item.VMs} }									
+									
+									{ {range $vmIndex, $vm := $item.VMs} }
+										
+									<span> { { $index } } :: { { $vmIndex } } ::: { { $vm.Status } }</span>
+									{ { end } }
+								{ { end } } -->
 						</div>
 						
 						<div class="d_box box_m box_m2 box_2m">
