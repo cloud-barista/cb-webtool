@@ -62,7 +62,8 @@ func McisMngForm(c echo.Context) error {
 	log.Println(" totoalMcisLength  ", totoalMcisLength)
 	
 	var mcisIdArr []string
-	vmStatusArr := []map[string]int{}
+	// vmStatusArr := []map[string]int{}
+	vmStatusTotalMap := make(map[string]map[string]int)
 	for mcisIndex, mcisInfo := range mcisList {
 		// log.Println(" mcisInfo  ", index, mcisInfo)
 		vmList := mcisInfo.VMs
@@ -72,6 +73,7 @@ func McisMngForm(c echo.Context) error {
 		vmStatusSuspended := 0
 		vmStatusTerminated := 0
 		vmStatusUndefined := 0
+		vmStatusPartial := 0
 		vmStatusEtc := 0		
 		for vmIndex, vmInfo := range vmList {
 			// log.Println(" vmInfo  ", vmIndex, vmInfo)
@@ -89,24 +91,35 @@ func McisMngForm(c echo.Context) error {
 				vmStatusTerminated++
 			}else if vmStatus == util.VM_STATUS_UNDEFINED {
 				vmStatusUndefined++
+			}else if vmStatus == util.VM_STATUS_PARTIAL {
+				vmStatusPartial++
 			}else {
 				vmStatusEtc++
 				log.Println("vmStatus  ", vmIndex, vmStatus)
 			}								
 		}
 		vmStatusMap := make(map[string]int)
-		vmStatusMap[util.VM_STATUS_RUNNING] = vmStatusRunning
-		vmStatusMap[util.VM_STATUS_RESUMING] = vmStatusResuming	
-		vmStatusMap[util.VM_STATUS_INCLUDE] = vmStatusInclude
-		vmStatusMap[util.VM_STATUS_SUSPENDED] = vmStatusSuspended
-		vmStatusMap[util.VM_STATUS_TERMINATED] = vmStatusTerminated
-		vmStatusMap[util.VM_STATUS_UNDEFINED] = vmStatusUndefined
-		vmStatusMap[util.VM_STATUS_ETC] = vmStatusEtc
+		// UI에서는 3가지로 통합하여 봄
+		vmStatusMap["RUNNING"] = vmStatusRunning
+		vmStatusMap["STOPPED"] = vmStatusInclude + vmStatusSuspended + vmStatusUndefined + vmStatusPartial + vmStatusEtc
+		vmStatusMap["TERMINATED"] = vmStatusTerminated
+
+		// UI에서 사칙연산이 되지 않아 controller에서 계산한 뒤 넘겨 줌.
+		// vmStatusMap[util.VM_STATUS_RUNNING] = vmStatusRunning
+		// vmStatusMap[util.VM_STATUS_RESUMING] = vmStatusResuming	
+		// vmStatusMap[util.VM_STATUS_INCLUDE] = vmStatusInclude
+		// vmStatusMap[util.VM_STATUS_SUSPENDED] = vmStatusSuspended
+		// vmStatusMap[util.VM_STATUS_TERMINATED] = vmStatusTerminated
+		// vmStatusMap[util.VM_STATUS_UNDEFINED] = vmStatusUndefined
+		// vmStatusMap[util.VM_STATUS_PARTIAL] = vmStatusPartial		
+		// vmStatusMap[util.VM_STATUS_ETC] = vmStatusEtc
 		log.Println("mcisInfo.ID  ", mcisInfo.ID)
 		// mcisIdArr[mcisIndex] = mcisInfo.ID	// 바로 넣으면 Runtime Error구만..
 		// vmStatusArr[mcisIndex] = vmStatusMap
 		mcisIdArr = append(mcisIdArr, mcisInfo.ID)
-		vmStatusArr = append(vmStatusArr, vmStatusMap)
+		// vmStatusArr = append(vmStatusArr, vmStatusMap)
+		vmStatusTotalMap[mcisInfo.ID] = vmStatusMap
+		
 		
 		log.Println("mcisIndex  ", mcisIndex)
 	}
@@ -123,7 +136,8 @@ func McisMngForm(c echo.Context) error {
 			"NameSpaceList":             nsList,
 			"McisList":  mcisList,
 			"McisIDList":  mcisIdArr,			
-			"VMStatusList":  vmStatusArr,
+			// "VMStatusList":  vmStatusArr,
+			"VMStatusTotalMap" : vmStatusTotalMap,
 		})
 
 }
