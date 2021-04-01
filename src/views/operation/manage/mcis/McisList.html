@@ -82,7 +82,30 @@
 											</tr>
 										</thead>
 										<tbody id="table_1">
-											
+											// mcis.ID, mcis.status, mcis.name
+											<tr onclick="click_view(\''+mcis[i].id+'\',\''+i+'\');" id="server_info_tr_'+i+'" item="'+mcis[i].id+'|'+i+'">
+												<td class="overlay hidden td_left" data-th="Status">
+													<img src="/assets/img/contents/icon_{{ $}}.png" class="icon" alt=""/> '+sta+'  <span class="ov off"></span>
+													
+												</td>
+												<!-- <td class="overlay hidden td_left" data-th="Status">
+													<img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> '+sta+' <span class="ov off"></span>
+												</td> -->
+												<td class="btn_mtd ovm" data-th="Name">'+mcis[i].name+'<span class="ov"></span></td>
+												<td class="overlay hidden" data-th="Cloud Connection">'+csp+'</td>'
+												<td class="overlay hidden" data-th="Total Infras">'+vm_cnt+'</td>
+												<td class="overlay hidden" data-th="# of Servers">'+vm_cnt+' 
+													<span class="bar">/</span> '+vm_run_cnt+' 
+													<span class="bar">/</span> '+vm_stop_cnt+' 
+													<span class="bar">/</span> '+terminate_cnt+' //terminated_vm_cnt
+												</td>
+												<td class="overlay hidden" data-th="Description">'+mcis[i].description+'</td>
+												<td class="overlay hidden" data-th="">
+													<input type="checkbox" name="chk" value="'+mcis[i].id+'" id="td_ch_'+i+'" title="" /><label for="td_ch_'+i+'"></label>
+												</td>
+										
+											</tr>
+
 										</tbody>
 									</table>
 								</div>

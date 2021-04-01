@@ -35,8 +35,11 @@ func GetMcisStatus(mcisStatus string) string {
 
 // VM 상태값을 소문자로
 func GetVmStatus(vmStatus string) string {
-	status := strings.ToLower(vmStatus)
-	return status
+	return strings.ToLower(vmStatus)
+}
+
+func GetVmConnection(vmConnectionName string) string {
+	return strings.ToLower(vmStatus)
 }
 
 /////////// Map Control 참고

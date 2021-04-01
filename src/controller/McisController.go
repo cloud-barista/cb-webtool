@@ -34,20 +34,91 @@ func McisMngForm(c echo.Context) error {
 	nsList, _ := service.GetNameSpaceList()
 	log.Println(" nsList  ", nsList)
 
-	// 상태별 count
-	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
-	log.Println(" mcisList  ", mcisList)
-	mcisStatusMap := service.GetMcisStatusCountMap(mcisList)
-	totoalMcisCount := len(mcisList)
-	vmStatusMap := service.GetVMStatusCountMap(mcisList)
-	totoalVmCount := vmStatusMap["RUNNING"] + vmStatusMap["STOPPED"] + vmStatusMap["TERMINATED"]
-	log.Println(" totoalMcisCount  ", totoalMcisCount)
-
-	// provider 별 연결정보 count
-
+	// provider 별 연결정보 count(MCIS 무관)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
 	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
 	totalConnectionCount := len(cloudConnectionConfigInfoList)
+
+	// 모든 MCIS 조회
+	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	log.Println(" mcisList  ", mcisList)
+
+	totalMcisCount := len(mcisList)
+	totalVmCount := 0
+
+	totalMcisCountMap := make(map[string]map[string]int)      // MCIS의 상태 Map
+	vmStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID 별 vmStatusMap
+	for mcisIndex, mcisInfo := range mcisList {
+		mcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
+		val, exists := mcisStatusCountMap[util.GetMcisStatus(connectionInfo.ProviderName)] // TODO : 작성 중
+		if !exists {
+			count = 1
+		} else {
+			count = val + 1
+		}
+		connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)] = count
+
+		vmStatusCountMap := service.GetVMStatusCountMap(mcisList)
+		totoalVmCount += vmStatusMap["TOTAL"]
+		vmStatusCountMapByMcis[mcisInfo.ID] = vmStatusCountMap
+
+		mcisConnectionMap := service.GetMcisCloudConnectionMap(mcisInfo)
+
+	}
+	log.Println(" totoalMcisCount  ", totoalMcisCount)
+	log.Println(" totoalVmCount  ", totoalVmCount)
+
+	// mcis 별 vmCnt
+	// mcisSimpleInfos = model.McisSimpleInfos{}
+	connectionCountTotal := 0
+	connectionCountByMcis := 0
+	vmCountTotal := 0
+	vmRunningCountByMcis := 0
+	vmStoppedCountByMcis := 0
+	vmTerminatedCountByMcis := 0
+	for mcisIndex, mcisInfo := range mcisList {
+		// mcis.ID, mcis.status, mcis.name, mcis.description
+		// csp : 해당 mcis의 connection cnt
+		// vm_cnt : 해당 mcis의 vm cnt
+		// vm_run_cnt, vm_stop_cnt
+		vmList := mcisInfo.VMs
+		mcisConnectionCountMap := make(map[string]int)
+		mcisVmStatusCountMap := make(map[string]int)
+		for vmIndex, vmInfo := range vmList {
+			locationInfo := vmInfo.LocationInfo
+			cloudType := locationInfo.CloudType // CloudConnection
+			providerCount := 0
+			val, exists := mcisConnectionCountMap[util.GetProviderName(locationInfo.CloudType)]
+			if !exists {
+				providerCount = 1
+			} else {
+				providerCount = val + 1
+			}
+			mcisConnectionCountMap[util.GetProviderName(locationInfo.CloudType)] = providerCount
+
+			vmStatus := vmInfo.Status
+			vnStatusCount := 0
+			val2, exists2 := mcisVmStatusCountMap[util.GetVmStatus(vmInfo.Status)]
+			if !exists2 {
+				vnStatusCount = 1
+			} else {
+				vnStatusCount = val2 + 1
+			}
+			mcisVmStatusCountMap[util.GetVmStatus(vmInfo.Status)] = vnStatusCount
+		}
+
+		mcisSimpleInfo := model.McisSimpleInfo{}
+		mcisSimpleInfo.ID = mcisInfo.ID
+		mcisSimpleInfo.Status = mcisInfo.Status
+		mcisSimpleInfo.Name = mcisInfo.Name
+		mcisSimpleInfo.Description = mcisInfo.Description
+
+		mcisSimpleInfo.VmCount = len(vmList)
+		mcisSimpleInfo.VmRunningCount = mcisVmStatusCountMap[util.VM_STATUS_RUNNING]
+		mcisSimpleInfo.VmStoppedCount = mcisVmStatusCountMap[util.VM_STATUS_RUNNING]
+		mcisSimpleInfo.VmTerminatedCount = mcisVmStatusCountMap[util.VM_STATUS_RUNNING]
+	}
+
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manage/McisMng", // 파일명
