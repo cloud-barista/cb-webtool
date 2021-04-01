@@ -39,6 +39,8 @@ type MCISSimpleInfo struct {
 	VmRunningCount    int `json:"vnRunningCount"`
 	VmStoppedCount    int `json:"vmStopped"`
 	VmTerminatedCount int `json:"vmTerminated"`
+
+	
 	// mcis.ID, mcis.status, mcis.name, mcis.description
 	// csp : 해당 mcis의 connection cnt
 	// vm_cnt : 해당 mcis의 vm cnt

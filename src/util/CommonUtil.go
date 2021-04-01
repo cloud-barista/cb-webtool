@@ -38,8 +38,8 @@ func GetVmStatus(vmStatus string) string {
 	return strings.ToLower(vmStatus)
 }
 
-func GetVmConnection(vmConnectionName string) string {
-	return strings.ToLower(vmStatus)
+func GetVmConnectionName(vmConnectionName string) string {
+	return strings.ToLower(vmConnectionName)
 }
 
 /////////// Map Control 참고

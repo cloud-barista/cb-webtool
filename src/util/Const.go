@@ -33,6 +33,9 @@ var MCIS_STATUS_TERMINATED = "terminated"
 var MCIS_STATUS_PARTIAL = "partial"
 var MCIS_STATUS_ETC = "etc"
 
+var STATUS_ARRAY = []string{"running","stopped","terminated"} 
+
+
 // VM의 상태(소문자).  (기타 상태는 UNDEFINED + ETC)
 var VM_STATUS_RUNNING = "running"
 
