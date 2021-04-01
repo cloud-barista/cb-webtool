@@ -2,18 +2,16 @@ package controller
 
 import (
 	"fmt"
-	"net/http"
-	"log"
-	service "github.com/cloud-barista/cb-webtool/src/service"
 	model "github.com/cloud-barista/cb-webtool/src/model"
+	service "github.com/cloud-barista/cb-webtool/src/service"
 	util "github.com/cloud-barista/cb-webtool/src/util"
+	"log"
+	"net/http"
 
-	"github.com/labstack/echo"
 	echotemplate "github.com/foolin/echo-template"
+	"github.com/labstack/echo"
 	// echosession "github.com/go-session/echo-session"
 )
-
-
 
 // type SecurityGroup struct {
 // 	Id []string `form:"sg"`
@@ -22,32 +20,13 @@ import (
 // MCIS 관리 화면 McisListForm 에서 이름 변경 McisMngForm으로
 // func McisListForm(c echo.Context) error {
 func McisMngForm(c echo.Context) error {
-	// comURL := service.GetCommonURL()
-	// apiInfo := util.AuthenticationHandler()
-	// if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-	// 	namespace := service.GetNameSpaceToString(c)
-	// 	if namespace != "" {
-	// 		return c.Render(http.StatusOK, "Manage_Mcis.html", map[string]interface{}{
-	// 			"LoginInfo": loginInfo,
-	// 			"NameSpace": namespace,
-	// 			"comURL":    comURL,
-	// 			"apiInfo":   apiInfo,
-	// 		})
-	// 	} else {
-	// 		return c.Redirect(http.StatusTemporaryRedirect, "/NS/reg")
-	// 	}
-	// }
-
-	// //return c.Render(http.StatusOK, "MCISlist.html", nil)
-	// return c.Redirect(http.StatusTemporaryRedirect, "/login")
-
 	fmt.Println("McisMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.Username == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
-	
+
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
@@ -55,93 +34,42 @@ func McisMngForm(c echo.Context) error {
 	nsList, _ := service.GetNameSpaceList()
 	log.Println(" nsList  ", nsList)
 
+	// 상태별 count
 	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
 	log.Println(" mcisList  ", mcisList)
-	totoalMcisLength := len(mcisList)
-	
-	log.Println(" totoalMcisLength  ", totoalMcisLength)
-	
-	var mcisIdArr []string
-	// vmStatusArr := []map[string]int{}
-	vmStatusTotalMap := make(map[string]map[string]int)
-	for mcisIndex, mcisInfo := range mcisList {
-		// log.Println(" mcisInfo  ", index, mcisInfo)
-		vmList := mcisInfo.VMs
-		vmStatusRunning := 0
-		vmStatusResuming := 0
-		vmStatusInclude := 0
-		vmStatusSuspended := 0
-		vmStatusTerminated := 0
-		vmStatusUndefined := 0
-		vmStatusPartial := 0
-		vmStatusEtc := 0		
-		for vmIndex, vmInfo := range vmList {
-			// log.Println(" vmInfo  ", vmIndex, vmInfo)
-			vmStatus := vmInfo.Status
+	mcisStatusMap := service.GetMcisStatusCountMap(mcisList)
+	totoalMcisCount := len(mcisList)
+	vmStatusMap := service.GetVMStatusCountMap(mcisList)
+	totoalVmCount := vmStatusMap["RUNNING"] + vmStatusMap["STOPPED"] + vmStatusMap["TERMINATED"]
+	log.Println(" totoalMcisCount  ", totoalMcisCount)
 
-			if vmStatus == util.VM_STATUS_RUNNING {
-				vmStatusRunning++				
-			}else if vmStatus == util.VM_STATUS_RESUMING {
-				vmStatusResuming++
-			}else if vmStatus == util.VM_STATUS_INCLUDE {
-				vmStatusInclude++
-			}else if vmStatus == util.VM_STATUS_SUSPENDED {
-				vmStatusSuspended++
-			}else if vmStatus == util.VM_STATUS_TERMINATED {
-				vmStatusTerminated++
-			}else if vmStatus == util.VM_STATUS_UNDEFINED {
-				vmStatusUndefined++
-			}else if vmStatus == util.VM_STATUS_PARTIAL {
-				vmStatusPartial++
-			}else {
-				vmStatusEtc++
-				log.Println("vmStatus  ", vmIndex, vmStatus)
-			}								
-		}
-		vmStatusMap := make(map[string]int)
-		// UI에서는 3가지로 통합하여 봄
-		vmStatusMap["RUNNING"] = vmStatusRunning
-		vmStatusMap["STOPPED"] = vmStatusInclude + vmStatusSuspended + vmStatusUndefined + vmStatusPartial + vmStatusEtc
-		vmStatusMap["TERMINATED"] = vmStatusTerminated
+	// provider 별 연결정보 count
 
-		// UI에서 사칙연산이 되지 않아 controller에서 계산한 뒤 넘겨 줌.
-		// vmStatusMap[util.VM_STATUS_RUNNING] = vmStatusRunning
-		// vmStatusMap[util.VM_STATUS_RESUMING] = vmStatusResuming	
-		// vmStatusMap[util.VM_STATUS_INCLUDE] = vmStatusInclude
-		// vmStatusMap[util.VM_STATUS_SUSPENDED] = vmStatusSuspended
-		// vmStatusMap[util.VM_STATUS_TERMINATED] = vmStatusTerminated
-		// vmStatusMap[util.VM_STATUS_UNDEFINED] = vmStatusUndefined
-		// vmStatusMap[util.VM_STATUS_PARTIAL] = vmStatusPartial		
-		// vmStatusMap[util.VM_STATUS_ETC] = vmStatusEtc
-		log.Println("mcisInfo.ID  ", mcisInfo.ID)
-		// mcisIdArr[mcisIndex] = mcisInfo.ID	// 바로 넣으면 Runtime Error구만..
-		// vmStatusArr[mcisIndex] = vmStatusMap
-		mcisIdArr = append(mcisIdArr, mcisInfo.ID)
-		// vmStatusArr = append(vmStatusArr, vmStatusMap)
-		vmStatusTotalMap[mcisInfo.ID] = vmStatusMap
-		
-		
-		log.Println("mcisIndex  ", mcisIndex)
-	}
-
-	
-
-
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
+	totalConnectionCount := len(cloudConnectionConfigInfoList)
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manage/McisMng", // 파일명
 		map[string]interface{}{
-			"LoginInfo":                 loginInfo,
+			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
-			"NameSpaceList":             nsList,
-			"McisList":  mcisList,
-			"McisIDList":  mcisIdArr,			
+			"NameSpaceList":      nsList,
+			"McisList":           mcisList,
+			// "McisIDList":         mcisIdArr,
+			// "VmIDList":           vmIdArr,
 			// "VMStatusList":  vmStatusArr,
-			"VMStatusTotalMap" : vmStatusTotalMap,
+			"MCISStatusMap":            mcisStatusMap,
+			"MCISCount":                totoalMcisCount,
+			"VMStatusMap":              vmStatusMap,
+			"VMCount":                  totoalVmCount,
+			"ConnectionConfigCountMap": connectionConfigCountMap,
+			"ConnectionCount":          totalConnectionCount,
+			"ProviderCount":            providerCount,
 		})
-
 }
 
+// MCIS 목록 조회
 func GetMcisList(c echo.Context) error {
 	log.Println("GetMcisList : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -165,9 +93,10 @@ func GetMcisList(c echo.Context) error {
 		"message":            "success",
 		"status":             respStatus,
 		"DefaultNameSpaceID": defaultNameSpaceID,
-		"McisList":  mcisList,
+		"McisList":           mcisList,
 	})
 }
+
 // func McisListFormWithParam(c echo.Context) error {
 // 	mcis_id := c.Param("mcis_id")
 // 	mcis_name := c.Param("mcis_name")

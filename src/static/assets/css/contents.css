@@ -101,6 +101,15 @@
 .dashboard .box_cont .cbox li.bg_r {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_g {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_n {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+
+.dashboard .box_cont .cbox li.bg_aws {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_azure {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_ali {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_gcp {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_clit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_ops {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_mock {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+
 .dashboard .box_cont .cbox .txt { text-align:right; color:#888;font-size:14px; line-height:14px; font-weight:200; }
 .dashboard .num_txt { text-align:center; padding:53px 0 0 0; color:#5e636c;font-size:70px; line-height:70px; font-weight:400;  }
 .dashboard.dashboard_cont { margin:2.5% 0 0 0; }

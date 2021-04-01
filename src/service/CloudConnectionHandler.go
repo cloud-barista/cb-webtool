@@ -103,8 +103,31 @@ func GetCloudOSList() ([]string, int) {
 	return cloudOs["cloudos"], respStatus
 }
 
+// provider 별 connection count, connection 있는 provider 수
+func GetCloudConnectionCountMap(cloudConnectionConfigInfoList []model.CloudConnectionConfigInfo) (map[string]int, int) {
+	connectionConfigCountMap := make(map[string]int)
+	for _, connectionInfo := range cloudConnectionConfigInfoList {
+		count := 0
+		val, exists := connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)]
+		if !exists {
+			count = 1
+		} else {
+			count = val + 1
+		}
+		connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)] = count
+	}
+
+	providerCount := 0
+	for i, _ := range connectionConfigCountMap {
+		if i == "" {
+		}
+		providerCount++
+	}
+	return connectionConfigCountMap, providerCount
+}
+
 // 현재 설정된 connection 목록 GetConnectionConfigListData -> GetCloudConnectionConfigList로 변경
-func GetCloudConnectionConfigList() ([]model.CloudConnectionConfigInfo, int ) {
+func GetCloudConnectionConfigList() ([]model.CloudConnectionConfigInfo, int) {
 
 	// CloudConnectionUrl == SPIDER
 	url := util.SPIDER + "/" + "connectionconfig"
@@ -116,7 +139,7 @@ func GetCloudConnectionConfigList() ([]model.CloudConnectionConfigInfo, int ) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
@@ -128,7 +151,7 @@ func GetCloudConnectionConfigList() ([]model.CloudConnectionConfigInfo, int ) {
 }
 
 // Connection 상세
-func GetCloudConnectionConfigData(configName string) (model.CloudConnectionConfigInfo, int ) {
+func GetCloudConnectionConfigData(configName string) (model.CloudConnectionConfigInfo, int) {
 	url := util.SPIDER + "/connectionconfig/" + configName
 	fmt.Println("=========== GetCloudConnectionConfigData : ", configName)
 
@@ -193,7 +216,7 @@ func DelCloudConnectionConfig(configName string) (io.ReadCloser, int) {
 }
 
 // 현재 설정된 region 목록
-func GetRegionList() ([]model.RegionInfo, int ) {
+func GetRegionList() ([]model.RegionInfo, int) {
 
 	// SPIDER == SPIDER
 	url := util.SPIDER + "/" + "region"
@@ -216,7 +239,7 @@ func GetRegionList() ([]model.RegionInfo, int ) {
 	return regionList["region"], respStatus
 }
 
-func GetRegionData(regionName string) ( model.RegionInfo, int ) {
+func GetRegionData(regionName string) (model.RegionInfo, int) {
 	url := util.SPIDER + "/region/" + regionName
 	fmt.Println("=========== GetRegionData : ", regionName)
 
@@ -288,7 +311,7 @@ func DelRegion(regionName string) (io.ReadCloser, int) {
 }
 
 // 현재 설정된 credential 목록 : 목록에서는 key의 value는 ...으로 표시
-func GetCredentialList() ([]model.CredentialInfo, int ) {
+func GetCredentialList() ([]model.CredentialInfo, int) {
 
 	// SPIDER == SPIDER
 	url := util.SPIDER + "/" + "credential"
@@ -322,7 +345,7 @@ func GetCredentialList() ([]model.CredentialInfo, int ) {
 }
 
 // Credential 상세조회
-func GetCredentialData(credentialName string) (model.CredentialInfo, int ) {
+func GetCredentialData(credentialName string) (model.CredentialInfo, int) {
 	url := util.SPIDER + "/credential/" + credentialName
 	fmt.Println("=========== GetCredentialData : ", credentialName)
 
@@ -383,7 +406,7 @@ func DelCredential(credentialName string) (io.ReadCloser, int) {
 }
 
 // 현재 설정된 Driver 목록
-func GetDriverList() ([]model.DriverInfo, int ) {
+func GetDriverList() ([]model.DriverInfo, int) {
 	url := util.SPIDER + "/" + "driver"
 	fmt.Println("=========== GetDriverListData : ", url)
 
@@ -405,7 +428,7 @@ func GetDriverList() ([]model.DriverInfo, int ) {
 }
 
 // Driver 상세조회
-func GetDriverData(driverlName string) (model.DriverInfo, int ) {
+func GetDriverData(driverlName string) (model.DriverInfo, int) {
 	url := util.SPIDER + "/driver/" + driverlName
 	fmt.Println("=========== GetDriverData : ", url)
 
