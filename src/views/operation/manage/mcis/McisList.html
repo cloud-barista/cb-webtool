@@ -50,7 +50,7 @@
 														<li>
 															<strong>Manage</strong>
 															<ul>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New">New / Extend</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('AddNewMCIS')">New / Extend</a></li>
 															</ul>
 														</li>
 													</ul>
@@ -81,31 +81,48 @@
 												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 											</tr>
 										</thead>
-										<tbody id="table_1">
-											// mcis.ID, mcis.status, mcis.name
-											<tr onclick="click_view(\''+mcis[i].id+'\',\''+i+'\');" id="server_info_tr_'+i+'" item="'+mcis[i].id+'|'+i+'">
+										<tbody id="mcisList">
+											<!-- //
+											// mcis.ID, mcis.status, mcis.name -->
+											{{ $length := len .MCISList }} 
+											{{ if eq $length 0 }}
+											<tr>
+												<td class="overlay hidden" data-th="" colspan="8">No Data</td>
+											</tr>
+											{{ end }}
+											{{range $index, $item := .MCISList}}
+
+											<tr onclick="displayListOfMCIS('{{$item.ID}}', '{{$index}}' );" id="server_info_tr_{{$index}}" item="{{$item.ID}}|{{$index}}">
 												<td class="overlay hidden td_left" data-th="Status">
-													<img src="/assets/img/contents/icon_{{ $}}.png" class="icon" alt=""/> '+sta+'  <span class="ov off"></span>
+													<img src="/assets/img/contents/icon_{{$item.McisStatus}}.png" class="icon" alt=""/>{{$item.Status}}<span class="ov off"></span>
 													
 												</td>
 												<!-- <td class="overlay hidden td_left" data-th="Status">
 													<img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> '+sta+' <span class="ov off"></span>
 												</td> -->
-												<td class="btn_mtd ovm" data-th="Name">'+mcis[i].name+'<span class="ov"></span></td>
-												<td class="overlay hidden" data-th="Cloud Connection">'+csp+'</td>'
-												<td class="overlay hidden" data-th="Total Infras">'+vm_cnt+'</td>
-												<td class="overlay hidden" data-th="# of Servers">'+vm_cnt+' 
-													<span class="bar">/</span> '+vm_run_cnt+' 
-													<span class="bar">/</span> '+vm_stop_cnt+' 
-													<span class="bar">/</span> '+terminate_cnt+' //terminated_vm_cnt
+												<td class="btn_mtd ovm" data-th="Name">{{$item.Name}}<span class="ov"></span></td>
+												
+												<td class="overlay hidden" data-th="Cloud Connection">
+													{{range $configKey, $configValue := $item.ConnectionConfigProviderMap}}
+														{{ $configKey }} &nbsp;
+													{{ end }}
 												</td>
-												<td class="overlay hidden" data-th="Description">'+mcis[i].description+'</td>
+												{{ $vmStatusCountMap := $item.VmStatusCountMap}}
+												<td class="overlay hidden" data-th="Total Infras">{{$vmStatusCountMap.TOTAL}}</td>
+												<td class="overlay hidden" data-th="# of Servers">
+													<span class="bar" ></span> <span title="running">{{$vmStatusCountMap.running}}</span>
+													<span class="bar" >/</span> <span title="stopped">{{$vmStatusCountMap.stopped}}</span>
+													<span class="bar" >/</span> <span title="terminated">{{$vmStatusCountMap.terminated}}</span>
+													<span class="bar" >/</span> <span title="etc">{{$vmStatusCountMap.etc}}</span>
+												</td>
+												<td class="overlay hidden" data-th="Description">{{$item.Description}}</td>
 												<td class="overlay hidden" data-th="">
-													<input type="checkbox" name="chk" value="'+mcis[i].id+'" id="td_ch_'+i+'" title="" /><label for="td_ch_'+i+'"></label>
+													<input type="checkbox" name="chk" value="{{$item.ID}}" id="td_ch_{{$index}}" title="" />
+													<label for="td_ch_{{$index}}"></label>
 												</td>
 										
 											</tr>
-
+											{{ end }}
 										</tbody>
 									</table>
 								</div>

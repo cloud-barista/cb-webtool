@@ -55,14 +55,14 @@
 								</div>
 								<div class="rbox">
 									<div class="numbox" id="vm_numbox">
-										<div class="num bgbox_b boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">
-											<span title="Running State">{{ .TotalVMStatusCountMap.RUNNING }}</span>
+										<div class="num bgbox_b boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">											
+											<span title="Running State">{{ .TotalVMStatusCountMap.running }}</span>
 										</div>
 										<div class="num bgbox_r boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">
-											<span title="Stopped State">{{ .TotalVMStatusCountMap.STOPPED }}</span>
+											<span title="Stopped State">{{ .TotalVMStatusCountMap.stopped }}</span>
 										</div>
 										<div class="num bgbox_g boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">
-											<span title="Terminated State">{{ .TotalVMStatusCountMap.TERMINATED }}</span>
+											<span title="Terminated State">{{ .TotalVMStatusCountMap.terminated }}</span>
 										</div>
 									</div>
 									<div class="txt">Status of Server</div>
@@ -78,7 +78,7 @@
 							</div>
 							
 							<div class="box_cont">
-								<div class="lbox" id="dash_2">
+								<div class="lbox" id="cpConnectionTotal">
 									<strong title="Number of Providers" id="providerCount">{{ .TotalProviderCount }}</strong>
 									<span>/</span>
 									<span title="Number connection" id="connectionCount">{{ .TotalConnectionConfigCount }}</span>
@@ -86,7 +86,7 @@
 								<div class="cbox">
 									<div class="tcbox">
 										<div class="sc_box scrollbar-inner">
-											<ul id="dash_3">
+											<ul id="cpConnectionDetail">
 												{{ range $key, $value := .ConnectionConfigCountMap }}
 												<li class="bg_{{$key}}">
 													<a href="#!"><span>{{ $key }} ( {{ $value }} )</span></a>
@@ -101,17 +101,5 @@
 							
 						</div>
 						
-					</div>	
-					<script>
-						// $(function() {
-
-						// 	jQuery('.sc_box.scrollbar-inner').scrollbar();
-						// });
-						// $(document).ready(function(){
-							
-							
-						// 	getConnection();
-	
-						// })
-					</script>
+					</div>
 {{end}}

@@ -133,7 +133,7 @@ func main() {
 			"templates/LNBPopup",
 			"templates/Modal",
 			"templates/Header",
-			"templates/MenuLeft",			
+			"templates/MenuLeft",
 			"templates/Footer",
 			"operation/manage/mcis/McisStatus",
 			"operation/manage/mcis/McisList",
@@ -141,11 +141,9 @@ func main() {
 			"operation/manage/mcis/McisServerInfo",
 			"operation/manage/mcis/McisDetailInfo",
 			"operation/manage/mcis/McisDetailView",
-			"operation/manage/mcis/McisConnectionView",			
+			"operation/manage/mcis/McisConnectionView",
 			"operation/manage/mcis/McisMonitoring",
 			"operation/manage/mcis/McisMonitoringView",
-			
-			
 		},
 		DisableCache: true,
 	})
@@ -244,9 +242,9 @@ func main() {
 	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	// e.POST("/mcis/reg/proc", controller.McisRegController)
 	mcisGroup.GET("/mcis/mngform", controller.McisMngForm)
+	mcisGroup.GET("/mcis/regform", controller.McisRegForm)
 	mcisGroup.GET("/mcis/list", controller.GetMcisList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
-
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
@@ -316,38 +314,36 @@ func main() {
 	resourcesGroup.POST("/securitygroup/reg", controller.SecirityGroupRegProc)
 	resourcesGroup.DELETE("/securitygroup/del/:securityGroupID", controller.SecirityGroupDelProc)
 
-	resourcesGroup.GET("/sshkey/mngform", controller.SshKeyMngForm)// Form + SshKeyMng 같이 앞으로 넘길까?
+	resourcesGroup.GET("/sshkey/mngform", controller.SshKeyMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
 	resourcesGroup.GET("/sshkey/list", controller.GetSshKeyList)
 	resourcesGroup.GET("/sshkey/:sshKeyID", controller.GetSshKeyData)
-	resourcesGroup.POST("/sshkey/reg", controller.SshKeyRegProc)	// RegProc _ SshKey 같이 앞으로 넘길까
-	resourcesGroup.DELETE("/sshkey/del/:sshKeyID", controller.SshKeyDelProc)// DelProc + SskKey 같이 앞으로 넘길까
+	resourcesGroup.POST("/sshkey/reg", controller.SshKeyRegProc)             // RegProc _ SshKey 같이 앞으로 넘길까
+	resourcesGroup.DELETE("/sshkey/del/:sshKeyID", controller.SshKeyDelProc) // DelProc + SskKey 같이 앞으로 넘길까
 
-	resourcesGroup.GET("/machineimage/mngform", controller.VirtualMachineImageMngForm)// Form + SshKeyMng 같이 앞으로 넘길까?
+	resourcesGroup.GET("/machineimage/mngform", controller.VirtualMachineImageMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
 	resourcesGroup.GET("/machineimage/list", controller.GetVirtualMachineImageList)
 	resourcesGroup.GET("/machineimage/:imageID", controller.GetVirtualMachineImageData)
-	resourcesGroup.POST("/machineimage/reg", controller.VirtualMachineImageRegProc)	// RegProc _ SshKey 같이 앞으로 넘길까
-	resourcesGroup.DELETE("/machineimage/del/:imageID", controller.VirtualMachineImageDelProc)// DelProc + SskKey 같이 앞으로 넘길까
+	resourcesGroup.POST("/machineimage/reg", controller.VirtualMachineImageRegProc)            // RegProc _ SshKey 같이 앞으로 넘길까
+	resourcesGroup.DELETE("/machineimage/del/:imageID", controller.VirtualMachineImageDelProc) // DelProc + SskKey 같이 앞으로 넘길까
 
-	resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)// TODO : Image 전체목록인가? 확인필요
-	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData)// TODO : Image 상세 정보인가? 확인필요
+	resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)          // TODO : Image 전체목록인가? 확인필요
+	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
 	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
-	
 
-	resourcesGroup.GET("/instancespec/mngform", controller.InstanceSpecMngForm)// Form + SshKeyMng 같이 앞으로 넘길까?
+	resourcesGroup.GET("/instancespec/mngform", controller.InstanceSpecMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
 	resourcesGroup.GET("/instancespec/list", controller.GetInstanceSpecList)
 	resourcesGroup.GET("/instancespec/:specID", controller.GetInstanceSpecData)
-	resourcesGroup.POST("/instancespec/reg", controller.InstanceSpecRegProc)	// RegProc _ SshKey 같이 앞으로 넘길까
-	resourcesGroup.DELETE("/instancespec/del/:specID", controller.InstanceSpecDelProc)// DelProc + SskKey 같이 앞으로 넘길까
+	resourcesGroup.POST("/instancespec/reg", controller.InstanceSpecRegProc)           // RegProc _ SshKey 같이 앞으로 넘길까
+	resourcesGroup.DELETE("/instancespec/del/:specID", controller.InstanceSpecDelProc) // DelProc + SskKey 같이 앞으로 넘길까
 	// resourcesGroup.PUT("/instancespec/put/:specID", controller.InstanceSpecPutProc)	// TODO : put 만들어야 함
 
-	resourcesGroup.GET("/instancespec/lookupspec", controller.LookupInstanceSpecList)// TODO : Image 전체목록인가? 확인필요
-	resourcesGroup.GET("/instancespec/lookupspec/:specName", controller.LookupInstanceSpecData)// TODO : Image 상세 정보인가? 확인필요
+	resourcesGroup.GET("/instancespec/lookupspec", controller.LookupInstanceSpecList)           // TODO : Image 전체목록인가? 확인필요
+	resourcesGroup.GET("/instancespec/lookupspec/:specName", controller.LookupInstanceSpecData) // TODO : Image 상세 정보인가? 확인필요
 	// resourcesGroup.POST("/instancespec/filterspecs", controller.FilterInstanceSpecList)	// TODO : post방식의 filterspec 생성필요
 	// resourcesGroup.POST("/instancespec/filterspecsbyrange", controller.FilterInstanceSpecListByRange)// TODO : post방식의 filterspec 생성필요
 
-		// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
+	// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
 	// e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)
-
 
 	// // 웹툴에서 처리할 Connection
 	// e.GET("/Cloud/Connection/list", controller.ConnectionListForm)

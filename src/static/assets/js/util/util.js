@@ -125,6 +125,8 @@ function commonConfirmOpen(targetAction){
 
             ["AddNewInstanceSpec", "Would you like to register Spec <br />Resource ?"],
             ["DeleteInstanceSpec", "Would you like to un-register Spec <br />Resource ?"],  
+
+            ["AddNewMCIS", "Would you like to create MCIS ?"],
             
         ]
     );
@@ -209,6 +211,8 @@ function commonConfirmOk(){
         goFocus('instanceSpecCreateBox');
     }else if ( targetAction == "DeleteInstanceSpec"){
         deleteInstanceSpec()
+    }else if ( targetAction == "AddNewMCIS"){
+        createNewMCIS()
     }
 
        

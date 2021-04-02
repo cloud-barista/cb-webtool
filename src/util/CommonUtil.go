@@ -29,13 +29,48 @@ func GetProviderName(provider string) string {
 // MCIS 상태값의 앞부분만 사용. 소문자로
 func GetMcisStatus(mcisStatus string) string {
 	statusArr := strings.Split(mcisStatus, "-")
-	status := strings.ToLower(statusArr[0])
-	return status
+	returnStatus := strings.ToLower(statusArr[0])
+
+	if returnStatus == MCIS_STATUS_RUNNING {
+		returnStatus = "running"
+	} else if returnStatus == MCIS_STATUS_INCLUDE {
+		returnStatus = "stop"
+	} else if returnStatus == MCIS_STATUS_SUSPENDED {
+		returnStatus = "stop"
+	} else if returnStatus == MCIS_STATUS_TERMINATED {
+		returnStatus = "terminate"
+	} else if returnStatus == MCIS_STATUS_PARTIAL {
+		returnStatus = "stop"
+	} else if returnStatus == MCIS_STATUS_ETC {
+		returnStatus = "stop"
+	} else {
+		returnStatus = "stop"
+	}
+	return returnStatus
 }
 
-// VM 상태값을 소문자로
+// VM 상태를 UI에서 표현하는 방식으로 변경
 func GetVmStatus(vmStatus string) string {
-	return strings.ToLower(vmStatus)
+	returnVmStatus := strings.ToLower(vmStatus) // 소문자로 변환
+
+	if returnVmStatus == VM_STATUS_RUNNING {
+		returnVmStatus = VM_STATUS_RUNNING
+		// }else if vmStatus == util.VM_STATUS_RESUMING {
+		// 	vmStatusResuming++
+	} else if returnVmStatus == VM_STATUS_INCLUDE {
+		returnVmStatus = VM_STATUS_INCLUDE
+	} else if returnVmStatus == VM_STATUS_SUSPENDED {
+		returnVmStatus = VM_STATUS_SUSPENDED
+	} else if returnVmStatus == VM_STATUS_TERMINATED {
+		returnVmStatus = VM_STATUS_TERMINATED
+		// }else if returnVmStatus == util.VM_STATUS_UNDEFINED {
+		// 	vmStatusUndefined++
+		// }else if returnVmStatus == util.VM_STATUS_PARTIAL {
+		// 	vmStatusPartial++
+	} else {
+		returnVmStatus = VM_STATUS_ETC
+	}
+	return returnVmStatus
 }
 
 func GetVmConnectionName(vmConnectionName string) string {

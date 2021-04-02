@@ -127,41 +127,30 @@ func GetMcisStatusCountMap(mcisInfo model.MCISInfo) map[string]int {
 	return mcisStatusMap
 }
 
-// MCIS 목록에서 vm 상태별 count
+// MCIS의 vm 상태별 count
 func GetVMStatusCountMap(mcisInfo model.MCISInfo) map[string]int {
-	vmStatusRunning := 0
-	// vmStatusResuming := 0
-	vmStatusInclude := 0
-	vmStatusSuspended := 0
-	vmStatusTerminated := 0
-	vmStatusUndefined := 0
-	vmStatusPartial := 0
-	vmStatusEtc := 0
-
 	// log.Println(" mcisInfo  ", index, mcisInfo)
+	vmStatusMap := make(map[string]int)
+	totalVmStatusCount := 0
 	vmList := mcisInfo.VMs
-	for vmIndex, vmInfo := range vmList {
+	for _, vmInfo := range vmList {
 		// log.Println(" vmInfo  ", vmIndex, vmInfo)
-		vmStatus := util.GetVmStatus(vmInfo.Status)
-		if vmStatus == util.VM_STATUS_RUNNING {
-			vmStatusRunning++
-			// }else if vmStatus == util.VM_STATUS_RESUMING {
-			// 	vmStatusResuming++
-		} else if vmStatus == util.VM_STATUS_INCLUDE {
-			vmStatusInclude++
-			// } else if vmStatus == util.VM_STATUS_SUSPENDED {
-			// 	vmStatusSuspended++
-		} else if vmStatus == util.VM_STATUS_TERMINATED {
-			vmStatusTerminated++
-			// }else if vmStatus == util.VM_STATUS_UNDEFINED {
-			// 	vmStatusUndefined++
-			// }else if vmStatus == util.VM_STATUS_PARTIAL {
-			// 	vmStatusPartial++
+		vmStatus := util.GetVmStatus(vmInfo.Status) // lowercase로 변환
+		log.Println("vmStatus " + vmStatus + ", Status " + vmInfo.Status)
+		vmStatusCount := 0
+		val, exists := vmStatusMap[vmStatus]
+		if exists {
+			vmStatusCount = val + 1
+			totalVmStatusCount += 1
 		} else {
-			vmStatusEtc++
-			log.Println("vmStatus  ", vmIndex, vmStatus)
+			vmStatusCount = 1
+			totalVmStatusCount += 1
 		}
+		vmStatusMap[vmStatus] = vmStatusCount
 	}
+
+	vmStatusMap["TOTAL"] = totalVmStatusCount
+	log.Println(vmStatusMap)
 	// vmStatusMap := make(map[string]int)
 	// UI에서 사칙연산이 되지 않아 controller에서 계산한 뒤 넘겨 줌.
 	// vmStatusMap[util.VM_STATUS_RUNNING] = vmStatusRunning
@@ -186,11 +175,10 @@ func GetVMStatusCountMap(mcisInfo model.MCISInfo) map[string]int {
 
 	// log.Println("mcisIndex  ", mcisIndex)
 
-	vmStatusMap := make(map[string]int)
-	vmStatusMap["RUNNING"] = vmStatusRunning
-	vmStatusMap["STOPPED"] = vmStatusInclude + vmStatusSuspended + vmStatusUndefined + vmStatusPartial + vmStatusEtc
-	vmStatusMap["TERMINATED"] = vmStatusTerminated
-	vmStatusMap["TOTAL"] = vmStatusMap["RUNNING"] + vmStatusMap["STOPPED"] + vmStatusMap["TERMINATED"]
+	// vmStatusMap["RUNNING"] = vmStatusRunning
+	// vmStatusMap["STOPPED"] = vmStatusInclude + vmStatusSuspended + vmStatusUndefined + vmStatusPartial + vmStatusEtc
+	// vmStatusMap["TERMINATED"] = vmStatusTerminated
+	// vmStatusMap["TOTAL"] = vmStatusMap["RUNNING"] + vmStatusMap["STOPPED"] + vmStatusMap["TERMINATED"]
 
 	return vmStatusMap
 
@@ -214,7 +202,7 @@ func GetVMConnectionCountMap(mcisInfo model.MCISInfo) map[string]int {
 	// for vmIndex, vmInfo := range vmList {
 	// 	// log.Println(" vmInfo  ", vmIndex, vmInfo)
 	// 	vmConnection := util.GetVmConnectionName(vmInfo.ConnectionName)
-		
+
 	// }
 	vmStatusMap := make(map[string]int)
 	// UI에서 사칙연산이 되지 않아 controller에서 계산한 뒤 넘겨 줌.
@@ -249,32 +237,29 @@ func GetVMConnectionCountMap(mcisInfo model.MCISInfo) map[string]int {
 
 }
 
-
-
 func GetVMConnectionCountByMcis(mcisInfo model.MCISInfo) map[string]int {
 	// log.Println(" mcisInfo  ", index, mcisInfo)
 	vmList := mcisInfo.VMs
 	mcisConnectionCountMap := make(map[string]int)
 	totalConnectionCount := 0
+	log.Println("GetVMConnectionCountByMcis map length ", len(mcisConnectionCountMap))
 	for _, vmInfo := range vmList {
 		// log.Println(" vmInfo  ", vmIndex, vmInfo)
 		locationInfo := vmInfo.Location
 		// cloudType := locationInfo.CloudType // CloudConnection
 		providerCount := 0
 		val, exists := mcisConnectionCountMap[util.GetProviderName(locationInfo.CloudType)]
-		if !exists {
+		if exists {
+			providerCount = val + 1
+			// totalConnectionCount += 1 // 이미 있는 경우에는 count추가필요없음
+		} else {
 			providerCount = 1
 			totalConnectionCount += 1
-		} else {
-			providerCount = val + 1
-			totalConnectionCount += 1
 		}
+		log.Println("GetProviderName ", locationInfo.CloudType)
 		mcisConnectionCountMap[util.GetProviderName(locationInfo.CloudType)] = providerCount
-		
-
 	}
-	mcisConnectionCountMap["TOTAL"] = totalConnectionCount
-
+	log.Println("GetVMConnectionCountByMcis map length ", len(mcisConnectionCountMap))
+	log.Println("GetVMConnectionCountByMcis map ", mcisConnectionCountMap)
 	return mcisConnectionCountMap
-
 }
