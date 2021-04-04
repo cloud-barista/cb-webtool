@@ -128,13 +128,14 @@ func main() {
 		Extension: ".html",
 		// Master:    "operation/mcis/mcismng",
 		Partials: []string{
-			"templates/OperationTop",
+			"templates/OperationTop",// 불러오는 css, javascript 가 setting 과 다름
 			"templates/TopBox",
 			"templates/LNBPopup",
 			"templates/Modal",
 			"templates/Header",
 			"templates/MenuLeft",
-			"templates/Footer",
+			"templates/Footer",// TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
+
 			"operation/manage/mcis/McisStatus",
 			"operation/manage/mcis/McisList",
 			"operation/manage/mcis/McisInfo",
@@ -147,6 +148,34 @@ func main() {
 		},
 		DisableCache: true,
 	})
+
+	// MCIS 등록 form Template
+	mcisRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/mcis/mcismng",
+		Partials: []string{
+			"templates/OperationTop",// 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",// TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
+			
+			"operation/manage/mcis/McisSimpleConfigure",
+			"operation/manage/mcis/McisExpertConfigure",
+			"operation/manage/mcis/McisPopup",
+
+			"operation/manage/mcis/McisOshw",
+			"operation/manage/mcis/McisNetwork",
+			"operation/manage/mcis/McisSecurity",
+			"operation/manage/mcis/McisOther",
+
+		},
+		DisableCache: true,
+	})
+	
 
 	cloudConnectionTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
@@ -237,15 +266,22 @@ func main() {
 	// e.POST("/Manage/MCIS/reg/proc", controller.McisRegController)
 	// e.GET("/Manage/MCIS/list", controller.McisListForm)
 	// e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
-	mcisGroup := e.Group("/operation/manage", mcisTemplate)
+
+	// mcis에 form이 2개가 되면서 group을 나눔. json return은 굳이 group이 필요없어서 전체경로로 작음.
+	mcisGroup := e.Group("/operation/manage/mcis/mngform", mcisTemplate)
 	// e.GET("/mcis/reg", controller.McisRegForm)
 	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	// e.POST("/mcis/reg/proc", controller.McisRegController)
-	mcisGroup.GET("/mcis/mngform", controller.McisMngForm)
-	mcisGroup.GET("/mcis/regform", controller.McisRegForm)
-	mcisGroup.GET("/mcis/list", controller.GetMcisList) // 등록된 namespace 목록 조회. Tumblebuck 호출
+	mcisGroup.GET("/", controller.McisMngForm)
+	
+	e.GET("/operation/manage/mcis/mcis/list", controller.GetMcisList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
+	mcisRegGroup := e.Group("/operation/manage/mcis/regform", mcisRegTemplate)
+	mcisRegGroup.GET("/", controller.McisRegForm)
+	
+
+	
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
 

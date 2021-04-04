@@ -31,7 +31,7 @@ func McisRegForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manage/McisRegister", // 파일명
+		"operation/manage/McisCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,

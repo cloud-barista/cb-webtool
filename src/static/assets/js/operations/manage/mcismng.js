@@ -2,7 +2,7 @@
 
 // 등록 form으로 이동
 function createNewMCIS(){// Manage_MCIS_Life_Cycle_popup.html
-    var url = "/operation/manage" + "/mcis/regform"
+    var url = "/operation/manage" + "/mcis/regform/"
     // location.href = "/Manage/MCIS/reg"
     location.href = url;
 }
