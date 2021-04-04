@@ -89,33 +89,21 @@
 												<!-- servers -->
 												<div class="servers_box">
 													<div class="title">Servers</div>
-													<div class="switch"><span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title=""  /><span></span></label></div>
-													<script>
-														
-													</script>													
+													<div class="switch">
+														<span class="txt">Expert <span class="txt_c on d_none">ON</span>
+														<span class="txt_c off ">OFF</span></span>
+														<label>
+															<input type="checkbox" name="consent" class="ch" id="isExpert" />
+															<span></span></label>
+													</div>
+													
 													<div class="list">
 														<ul id="mcis_server_list">
-															<!-- <li>
-																<div class="server server_on bgbox_b">
-																	<div class="icon"></div>
-																	<div class="txt">Server 1</div>
-																</div>
-															</li>
+															
 															<li>
-																<div class="server server_on bgbox_b">
-																	<div class="icon"></div>
-																	<div class="txt">Server 2</div>
-																</div>
-															</li>
-															<li>
-																<div class="server server_on bgbox_g">
-																	<div class="icon"></div>
-																	<div class="txt">Server 3</div>
-																</div>
-															</li> -->
-															<li>
-																<div class="server server_add">
-																	<a href="#">+</a>
+																<div class="server server_add" onClick="displayNewServerForm()">
+																	<!-- <a href="#">+</a> -->
+																	
 																</div>
 															</li>
 														</ul>
@@ -159,5 +147,5 @@
 				</div>
 				<!-- //contents -->
 
-<script src="/assets/js/operation/manage/mciscreate.js"></script>                
+<script src="/assets/js/operations/manage/mciscreate.js"></script>                
 {{template "Footer" .}}

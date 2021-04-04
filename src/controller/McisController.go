@@ -30,12 +30,22 @@ func McisRegForm(c echo.Context) error {
 	nsList, _ := service.GetNameSpaceList()
 	log.Println(" nsList  ", nsList)
 
+	// connectionconfigList 가져오기
+	cloudOsList, _ := service.GetCloudOSList()
+	log.Println(" cloudOsList  ", cloudOsList)
+	
+	// regionList 가져오기
+	regionList , _ := service.GetRegionList()
+	log.Println(" regionList  ", regionList)
+
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manage/McisCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
-			"DefaultNameSpaceID": defaultNameSpaceID,
+			"DefaultNameSpaceID": defaultNameSpaceID,			
 			"NameSpaceList":      nsList,
+			"CloudOSList":               cloudOsList,
+			"RegionList":                regionList,
 		})
 }
 
