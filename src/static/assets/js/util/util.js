@@ -258,6 +258,7 @@ function getConnectionListForSelectbox(provider, targetSelectBoxID){
         var count = 0; 
         var configName = "";
         var confArr = new Array();
+        html +='<option selected>Select Configname</option>';//onChange Event발생을 위해 0번째를 넣음.
         for(var i in data){
             if(provider == data[i].ProviderName){ 
                 count++;

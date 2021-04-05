@@ -24,31 +24,51 @@
 				 }
 				 console.log("2 : ",configName);
 			 
-				 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
-				 var html = "";
-				 var apiInfo = ApiInfo
-				 axios.get(url,{
-					 headers:{
-						 'Authorization': apiInfo
-					 }
-				 }).then(result=>{
-					 console.log("Image Info : ",result.data)
-					 data = result.data.image
-					 if(!data){
-						 alert("등록된 이미지 정보가 없습니다.")
-						 location.href = "/Image/list"
-						 return;
-					 }
-					 for(var i in data){
-						 if(data[i].connectionName == configName){
-							 html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
-						 }
-					 }
-					 $("#s_imageId").empty();
-					 $("#s_imageId").append(html);
+				 getCommonVirtualMachineImageList("mcissimpleconfigure", "name");
+
+				//  var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
+				//  var html = "";
+				//  var apiInfo = ApiInfo
+				//  axios.get(url,{
+				// 	 headers:{
+				// 		 'Authorization': apiInfo
+				// 	 }
+				//  }).then(result=>{
+				// 	 console.log("Image Info : ",result.data)
+				// 	 data = result.data.image
+				// 	 if(!data){
+				// 		 alert("등록된 이미지 정보가 없습니다.")
+				// 		 location.href = "/Image/list"
+				// 		 return;
+				// 	 }
+				// 	 for(var i in data){
+				// 		 if(data[i].connectionName == configName){
+				// 			 html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
+				// 		 }
+				// 	 }
+				// 	 $("#s_imageId").empty();
+				// 	 $("#s_imageId").append(html);
 					 
-				 })
-			 }
+				//  })
+			}
+
+			// 
+			function setVirtualMachineImageListAtSimpleConfigure(data, sortType){
+				var html = "";
+				if(!data){
+					alert("등록된 이미지 정보가 없습니다. 이미지 등록 화면으로 이동합니다.")
+					location.href = "/Image/list"
+					return;
+				}
+				for(var i in data){
+					if(data[i].connectionName == configName){
+						html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
+					}
+				}
+				$("#s_imageId").empty();
+				$("#s_imageId").append(html);
+			}
+
  			function getSecurityInfo(configName){
 				 var configName = configName;
 				 if(!configName){

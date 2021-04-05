@@ -3,12 +3,14 @@ package util
 import (
 	"encoding/base64"
 	"fmt"
+
 	// "io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+
 	// "time"
 	"bytes"
 	"encoding/json"
@@ -70,8 +72,6 @@ func AuthenticationHandler() string {
 
 // 	return resp.Body, err
 // }
-
-
 
 // func CommonHttpPost(url string, json []byte) (io.ReadCloser, error) {
 // 	authInfo := AuthenticationHandler()
@@ -141,7 +141,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	// set the request header Content-Type for json
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	// req.Header.Set("Content-Type", "application/json")
-	
+
 	req.Header.Add("Authorization", authInfo)
 	resp, err := client.Do(req)
 	if err != nil {
@@ -225,30 +225,33 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 }
 
 // return message 확인용
-func DisplayResponse(resp *http.Response){
+func DisplayResponse(resp *http.Response) {
 	fmt.Println("*****DisplayResponse begin****")
 	// data, err := ioutil.ReadAll(resp.Body)
-    // if err != nil {
-    //     panic(err)
-    // }
-    // fmt.Printf("%s\n", string(data))
+	// if err != nil {
+	//     panic(err)
+	// }
+	// fmt.Printf("%s\n", string(data))
 
-	resultStatus := resp.StatusCode
-	fmt.Println("resultStatus ",  resultStatus)
-	// fmt.Println("body ",  resp.Body)
+	// resultStatus := resp.StatusCode
+	// fmt.Println("resultStatus ", resultStatus)
+	// // fmt.Println("body ",  resp.Body)
 	resultBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		str := string(resultBody)
-		println("nil ",str)
+		println("nil ", str)
 	}
-	fmt.Println(string(resultBody))
-	// // json.NewDecoder(respBody).Decode(&stringMap)
+	// fmt.Println(string(resultBody))
+
+	str := string(resultBody)
+	fmt.Println(str)
+	// stringMap := map[string]interface{}{}
+	// json.NewDecoder(resp.Body).Decode(&stringMap)
 	// pbytes, _ := json.Marshal(resultBody)
 	// fmt.Println(string(pbytes))
 
 	fmt.Println("*****DisplayResponse end****")
 }
-
 
 // Response 객체의 내용
 // type Response struct {
@@ -257,7 +260,7 @@ func DisplayResponse(resp *http.Response){
 //     Proto      string // e.g. "HTTP/1.0"
 //     ProtoMajor int    // e.g. 1
 //     ProtoMinor int    // e.g. 0
- 
+
 //     // response headers
 //     Header http.Header
 //     // response body

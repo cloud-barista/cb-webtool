@@ -169,56 +169,94 @@ function deleteVirtualMachineImage() {
 }                                                  
 
 function getVirtualMachineImageList(sort_type) {
-    console.log(sort_type);
-    // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
-    var url = "/setting/resources" + "/machineimage/list"
-    axios.get(url, {
-        headers: {
-            // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
-        }
-    }).then(result => {
-        console.log("get Image List : ", result.data);
+    getCommonVirtualMachineImageList("virtualmachineimagemng", sort_type)
+    // console.log(sort_type);
+    // // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
+    // var url = "/setting/resources" + "/machineimage/list"
+    // axios.get(url, {
+    //     headers: {
+    //         // 'Authorization': "{{ .apiInfo}}",
+    //         'Content-Type': "application/json"
+    //     }
+    // }).then(result => {
+    //     console.log("get Image List : ", result.data);
         
-        var data = result.data.VirtualMachineImageList;
-        var html = ""
+    //     var data = result.data.VirtualMachineImageList;
+    //     var html = ""
         
-        if (data.length) {
-            if (sort_type) {
-                console.log("check : ", sort_type);
-                data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                    html += '<tr onclick="showVirtualMachinImageInfo(\'' + item.name + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
-                        + '<input type="hidden" id="img_info_' + index + '" value="' + item.name + '|' + item.cspImageId + '"/>' 
-                        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="cspImageId ">' + item.cspImageId  + '<span class="ov"></span></td>'
-                        + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
-                        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        + '</tr>'
-                ))
-            } else {
-                data.filter((list) => list.name !== "").map((item, index) => (
-                    html += '<tr onclick="showVirtualMachinImageInfo(\'' + item.name + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
-                        + '<input type="hidden" id="img_info_' + index + '" value="' + item.name  + '"/>'
-                        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="cspImageId">' + item.cspImageId + '<span class="ov"></span></td>' 
-                        + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
-                        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        + '</tr>'
-                ))
-            }
+    //     if (data.length) {
+    //         if (sort_type) {
+    //             console.log("check : ", sort_type);
+    //             data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+    //                 html += '<tr onclick="showVirtualMachinImageInfo(\'' + item.name + '\');">' 
+    //                     + '<td class="overlay hidden" data-th="">' 
+    //                     + '<input type="hidden" id="img_info_' + index + '" value="' + item.name + '|' + item.cspImageId + '"/>' 
+    //                     + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+    //                     + '<td class="btn_mtd ovm" data-th="cspImageId ">' + item.cspImageId  + '<span class="ov"></span></td>'
+    //                     + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
+    //                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
+    //                     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+    //                     + '</tr>'
+    //             ))
+    //         } else {
+    //             data.filter((list) => list.name !== "").map((item, index) => (
+    //                 html += '<tr onclick="showVirtualMachinImageInfo(\'' + item.name + '\');">' 
+    //                     + '<td class="overlay hidden" data-th="">' 
+    //                     + '<input type="hidden" id="img_info_' + index + '" value="' + item.name  + '"/>'
+    //                     + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+    //                     + '<td class="btn_mtd ovm" data-th="cspImageId">' + item.cspImageId + '<span class="ov"></span></td>' 
+    //                     + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
+    //                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
+    //                     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+    //                     + '</tr>'
+    //             ))
+    //         }
         
-            $("#imgList").empty()
-            $("#imgList").append(html)
+    //         $("#imgList").empty()
+    //         $("#imgList").append(html)
             
-            ModalDetail()
+    //         ModalDetail()
+    //     }
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+}
+
+function setVirtualMachineImageListAtServerImage(data, sortType){
+    var html = ""
+    if (data.length) {
+        if (sortType) {
+            console.log("check : ", sortType);
+            data.filter(list => list.name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
+                html += '<tr onclick="showVirtualMachinImageInfo(\'' + item.name + '\');">' 
+                    + '<td class="overlay hidden" data-th="">' 
+                    + '<input type="hidden" id="img_info_' + index + '" value="' + item.name + '|' + item.cspImageId + '"/>' 
+                    + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                    + '<td class="btn_mtd ovm" data-th="cspImageId ">' + item.cspImageId  + '<span class="ov"></span></td>'
+                    + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
+                    + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
+                    + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    + '</tr>'
+            ))
+        } else {
+            data.filter((list) => list.name !== "").map((item, index) => (
+                html += '<tr onclick="showVirtualMachinImageInfo(\'' + item.name + '\');">' 
+                    + '<td class="overlay hidden" data-th="">' 
+                    + '<input type="hidden" id="img_info_' + index + '" value="' + item.name  + '"/>'
+                    + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                    + '<td class="btn_mtd ovm" data-th="cspImageId">' + item.cspImageId + '<span class="ov"></span></td>' 
+                    + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
+                    + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
+                    + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    + '</tr>'
+            ))
         }
-    }).catch(function(error){
-        console.log("list error : ",error);        
-    });
+    
+        $("#imgList").empty()
+        $("#imgList").append(html)
+        console.log("setVirtualMachineImageListAtServerImage completed")
+        ModalDetail()
+    }
 }
 
 function ModalDetail() {

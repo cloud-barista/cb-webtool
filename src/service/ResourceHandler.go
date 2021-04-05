@@ -89,12 +89,15 @@ func RegVpc(nameSpaceID string, vnetRegInfo *model.VNetRegInfo) (model.VNetInfo,
 	respStatusCode := resp.StatusCode
 	respStatus := resp.Status
 	log.Println("respStatusCode = ", respStatusCode)
-	log.Println("respStatus = ", respStatus)
+	log.Println("Reg respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
 	vNetInfo := model.VNetInfo{}
 	json.NewDecoder(respBody).Decode(&vNetInfo)
 	fmt.Println(vNetInfo)
+
+	util.DisplayResponse(resp)
+
 	// return respBody, respStatusCode
 	return vNetInfo, respStatusCode
 }
@@ -244,7 +247,6 @@ func DelSecurityGroup(nameSpaceID string, securityGroupID string) (io.ReadCloser
 
 }
 
-
 // SSHKey 목록 조회 : /ns/{nsId}/resources/sshKey
 func GetSshKeyInfoList(nameSpaceID string) ([]model.SshKeyInfo, int) {
 	fmt.Println("GetSshKeyInfoList ************ : ")
@@ -297,7 +299,7 @@ func GetSshKeyData(nameSpaceID string, sshKeyID string) (model.SshKeyInfo, int) 
 
 	return sshKeyInfo, respStatus
 }
-	
+
 // sshKey 등록
 func RegSshKey(nameSpaceID string, sshKeyRegInfo *model.SshKeyRegInfo) (model.SshKeyInfo, int) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
@@ -325,7 +327,7 @@ func RegSshKey(nameSpaceID string, sshKeyRegInfo *model.SshKeyRegInfo) (model.Ss
 	// return respBody, respStatusCode
 	return sshKeyInfo, respStatusCode
 }
-	
+
 // sshKey 삭제
 func DelSshKey(nameSpaceID string, sshKeyID string) (io.ReadCloser, int) {
 	// if ValidateString(sshKeyID) != nil {
@@ -352,9 +354,9 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (io.ReadCloser, int) {
 
 	return respBody, respStatusCode
 
-}	
+}
 
-// VirtualMachineImage 목록 조회 
+// VirtualMachineImage 목록 조회
 func GetVirtualMachineImageInfoList(nameSpaceID string) ([]model.VirtualMachineImageInfo, int) {
 	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image"
@@ -406,12 +408,12 @@ func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string
 
 	return virtualMachineImageInfo, respStatus
 }
-	
+
 // VirtualMachineImage 등록
 func RegVirtualMachineImage(nameSpaceID string, virtualMachineImageRegInfo *model.VirtualMachineImageRegInfo) (model.VirtualMachineImageInfo, int) {
 	fmt.Println("RegVirtualMachineImage ************ : ")
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image?action=registerWithInfo"//
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image?action=registerWithInfo" //
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image?action=registerWithId"//
 
 	// fmt.Println("vnetInfo : ", vnetInfo)
@@ -425,10 +427,10 @@ func RegVirtualMachineImage(nameSpaceID string, virtualMachineImageRegInfo *mode
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        panic(err)
-    }
-    fmt.Printf("%s\n", string(data))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s\n", string(data))
 
 	respBody := resp.Body
 	respStatusCode := resp.StatusCode
@@ -443,7 +445,7 @@ func RegVirtualMachineImage(nameSpaceID string, virtualMachineImageRegInfo *mode
 	// return respBody, respStatusCode
 	return virtualMachineImageInfo, respStatusCode
 }
-	
+
 // VirtualMachineImage 삭제
 func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (io.ReadCloser, int) {
 	// if ValidateString(VirtualMachineImageID) != nil {
@@ -471,7 +473,6 @@ func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (i
 	return respBody, respStatusCode
 
 }
-
 
 func LookupVirtualMachineImageList() ([]model.VirtualMachineImageInfo, int) {
 	fmt.Println("LookupVirtualMachineImageList ************ : ")
@@ -548,8 +549,7 @@ func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID str
 	return virtualMachineImageInfo, respStatus
 }
 
-
-// InstanceSpec 목록 조회 
+// InstanceSpec 목록 조회
 func GetInstanceSpecInfoList(nameSpaceID string) ([]model.InstanceSpecInfo, int) {
 	fmt.Println("GetInstanceSpecInfoList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
@@ -601,13 +601,13 @@ func GetInstanceSpecData(nameSpaceID string, instanceSpecID string) (model.Insta
 
 	return instanceSpecInfo, respStatus
 }
-	
+
 // InstanceSpec 등록
 func RegInstanceSpec(nameSpaceID string, instanceSpecRegInfo *model.InstanceSpecRegInfo) (model.InstanceSpecInfo, int) {
 	fmt.Println("RegInstanceSpec ************ : ")
 
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"// parameter를 모두 받지않기 때문에 param의 data type이 틀려 오류남.
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"// action 인자없이 전송
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec" // action 인자없이 전송
 
 	// fmt.Println("vnetInfo : ", vnetInfo)
 
@@ -620,10 +620,10 @@ func RegInstanceSpec(nameSpaceID string, instanceSpecRegInfo *model.InstanceSpec
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        panic(err)
-    }
-    fmt.Printf("%s\n", string(data))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s\n", string(data))
 
 	respBody := resp.Body
 	respStatusCode := resp.StatusCode
@@ -638,7 +638,7 @@ func RegInstanceSpec(nameSpaceID string, instanceSpecRegInfo *model.InstanceSpec
 	// return respBody, respStatusCode
 	return instanceSpecInfo, respStatusCode
 }
-	
+
 // InstanceSpec 삭제
 func DelInstanceSpec(nameSpaceID string, instanceSpecID string) (io.ReadCloser, int) {
 	// if ValidateString(InstanceSpecID) != nil {
@@ -666,7 +666,6 @@ func DelInstanceSpec(nameSpaceID string, instanceSpecID string) (io.ReadCloser, 
 	return respBody, respStatusCode
 
 }
-
 
 func LookupInstanceSpecList() ([]model.InstanceSpecInfo, int) {
 	fmt.Println("LookupInstanceSpecList ************ : ")

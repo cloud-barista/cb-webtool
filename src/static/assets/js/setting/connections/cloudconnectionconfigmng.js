@@ -686,10 +686,12 @@ function saveNewCredential(){
     var value0 = $("#CredentialModalValue0").val();
     var key1 = $("#CredentialModalKey1").val();
     var value1 = $("#CredentialModalValue1").val();	
+    var key2 = $("#CredentialModalKey2").val();
+    var value2 = $("#CredentialModalValue2").val();	
 	// CredentialName string             `json:"CredentialName"`
 	// ProviderName   string             `json:"ProviderName"`
 	// KeyValueInfoList   []KeyValueInfoList `json:"KeyValueInfoList"`
-    if(!credentialName || !providerName || !key0 || !value0 || !key1 || !value1){
+    if(!credentialName || !providerName || !key0 || !value0 || !key1 || !value1 || !key2 || !value2){
         $("#modalCredentialRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
         return;
     }
@@ -699,11 +701,11 @@ function saveNewCredential(){
     var credentialInfo = {            
         CredentialName:credentialName,
         ProviderName: providerName,
-        KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+        KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2}]
     }
     console.log(credentialInfo)
     axios.post("/setting/connections/credential/reg/proc",credentialInfo,{
-        
+        // headers: { 'content-type': 'application/x-www-form-urlencoded' },
     }).then(result =>{
         console.log(result);
         if(result.status == 200 || result.status == 201){
@@ -715,6 +717,8 @@ function saveNewCredential(){
             $("#CredentialModalValue0").val('');
             $("#CredentialModalKey1").val('');
             $("#CredentialModalValue1").val('');
+            $("#CredentialModalKey2").val('');
+            $("#CredentialModalValue2").val('');
             
             // Credential table 갱신
             getCredentialList();

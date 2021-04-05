@@ -489,3 +489,58 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 //     }) 
 // }
 
+
+// connection 정보가 바뀔 때 해당 connection에 등록 된 vmi(virtual machine image) 목록 조회.
+// 공통으로 사용해야하므로 호출후 결과만 리턴... 그러나, ajax로 호출이라 결과 받기 전에 return되므로 해결방안 필요
+function getCommonVirtualMachineImageList(targetKey, sortType) {
+    // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
+    var url = "/setting/resources" + "/machineimage/list"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.VirtualMachineImageList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( targetKey == "virtualmachineimagemng"){
+			console.log("return get Data")
+			setVirtualMachineImageListAtServerImage(data, sortType)			
+		}else if( targetKey == "mcissimpleconfigure"){
+			console.log("return get Data")
+			setVirtualMachineImageListAtSimpleConfigure(data, sortType)			
+		}
+    }).catch(function(error){
+        console.log("list error : ",error);        
+    });
+}
+
+
+function getCommonSecurityGroupList(targetKey, sortType) {
+    console.log(sortType);
+    // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/securityGroup";
+    var url = "/setting/resources" + "/securitygroup/list";
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get SG Data : ", result.data);
+        var data = result.data.SecurityGroupList; // exception case : if null 
+        
+        console.log("Data : ", data);
+        if( targetKey == "securitygroupmng"){
+			console.log("return get Data")
+			setSecurityGroupListAtServerImage(data, sortType)			
+		}else if( targetKey == "mcissimpleconfigure"){
+			console.log("return get Data")
+			setSecurityGroupListAtSimpleConfigure(data, sortType)			
+		}
+    }).catch(function(error){
+        console.log("get gsList error : ",error);        
+    });
+}

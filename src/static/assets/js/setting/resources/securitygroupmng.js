@@ -141,58 +141,99 @@ function deleteSecurityGroup() {
     });
 }          
 
-function getSecurityGroupList(sort_type) {
-    console.log(sort_type);
-    // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/securityGroup";
-    var url = "/setting/resources" + "/securitygroup/list";
-    axios.get(url, {
-        headers: {
-            // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
-        }
-    }).then(result => {
-        console.log("get SG Data : ", result.data);
-        var data = result.data.SecurityGroupList; // exception case : if null 
-        var html = ""
-        console.log("Data : ", data);
-        if (data.length) { // null exception if not exist
-            if (sort_type) {
-                console.log("check : ", sort_type);
-                data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                    html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
-                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
-                        + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
-                        + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
-                        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
-                        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        + '</tr>'
-                ))
-            } else {
-                data.filter((list) => list.name !== "").map((item, index) => (
-                    html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
-                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName  + '"/>'
-                        + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
-                        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
-                        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        + '</tr>'
-                ))
+function getSecurityGroupList(sortType) {
+    getCommonSecurityGroupList("securitygroupmng", sortType)
+    // console.log(sort_type);
+    // // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/securityGroup";
+    // var url = "/setting/resources" + "/securitygroup/list";
+    // axios.get(url, {
+    //     headers: {
+    //         // 'Authorization': "{{ .apiInfo}}",
+    //         'Content-Type': "application/json"
+    //     }
+    // }).then(result => {
+    //     console.log("get SG Data : ", result.data);
+    //     var data = result.data.SecurityGroupList; // exception case : if null 
+    //     var html = ""
+    //     console.log("Data : ", data);
+    //     if (data.length) { // null exception if not exist
+    //         if (sort_type) {
+    //             console.log("check : ", sort_type);
+    //             data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+    //                 html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
+    //                     + '<td class="overlay hidden" data-th="">' 
+    //                     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
+    //                     + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+    //                     + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
+    //                     + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+    //                     + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+    //                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
+    //                     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+    //                     + '</tr>'
+    //             ))
+    //         } else {
+    //             data.filter((list) => list.name !== "").map((item, index) => (
+    //                 html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
+    //                     + '<td class="overlay hidden" data-th="">' 
+    //                     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName  + '"/>'
+    //                     + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+    //                     + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
+    //                     + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+    //                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
+    //                     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+    //                     + '</tr>'
+    //             ))
 
-            }
+    //         }
 
-            $("#sgList").empty();
-            $("#sgList").append(html);
+    //         $("#sgList").empty();
+    //         $("#sgList").append(html);
             
-            ModalDetail()
+    //         ModalDetail()
+    //     }
+    // }).catch(function(error){
+    //     console.log("get gsList error : ",error);        
+    // });
+}
+
+function setSecurityGroupListAtServerImage(data, sortType){
+    var html = ""
+    console.log("Data : ", data);
+    if (data.length) { // null exception if not exist
+        if (sort_type) {
+            console.log("check : ", sort_type);
+            data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+                html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
+                    + '<td class="overlay hidden" data-th="">' 
+                    + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
+                    + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                    + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
+                    + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+                    + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+                    + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
+                    + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    + '</tr>'
+            ))
+        } else {
+            data.filter((list) => list.name !== "").map((item, index) => (
+                html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
+                    + '<td class="overlay hidden" data-th="">' 
+                    + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName  + '"/>'
+                    + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                    + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
+                    + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+                    + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
+                    + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    + '</tr>'
+            ))
+
         }
-    }).catch(function(error){
-        console.log("get gsList error : ",error);        
-    });
+
+        $("#sgList").empty();
+        $("#sgList").append(html);
+        
+        ModalDetail()
+    }
 }
 
 function ModalDetail() {

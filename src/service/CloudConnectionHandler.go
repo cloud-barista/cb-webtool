@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+
 	// "math"
 	"net/http"
 	// "strconv"
@@ -381,6 +382,8 @@ func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, int) {
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+
+	util.DisplayResponse(resp)
 	return respBody, respStatus
 }
 
