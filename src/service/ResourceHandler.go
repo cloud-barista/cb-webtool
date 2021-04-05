@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+
 	// "math"
 	"net/http"
 	// "strconv"
@@ -379,6 +380,13 @@ func GetVirtualMachineImageInfoList(nameSpaceID string) ([]model.VirtualMachineI
 	//spew.Dump(body)
 	fmt.Println(virtualMachineImageList["image"])
 
+	robots, err := ioutil.ReadAll(resp.Body)
+	// resp.Body.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%s", robots)
+
 	return virtualMachineImageList["image"], respStatus
 
 }
@@ -474,30 +482,57 @@ func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (i
 
 }
 
-func LookupVirtualMachineImageList() ([]model.VirtualMachineImageInfo, int) {
-	fmt.Println("LookupVirtualMachineImageList ************ : ")
+func LookupVirtualMachineImageList(connectionName string) ([]model.VirtualMachineLookupImageInfo, int) {
+	fmt.Println("LookupVirtualMachineImageList ************ : ", connectionName)
 	url := util.TUMBLEBUG + "/lookupImage"
 
 	// body, err := util.CommonHttpGet(url)
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	pbytes, _ := json.Marshal(connectionName)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	log.Println("LookupVirtualMachineImageList called 1 ")
 	if err != nil {
 		fmt.Println(err)
 	}
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-
+	log.Println("LookupVirtualMachineImageList called 2 ", respStatus)
 	// return respBody, respStatus
-	log.Println(respBody)
-	virtualMachineImageList := map[string][]model.VirtualMachineImageInfo{}
+	// log.Println(respBody)
+	lookupImageList := map[string][]model.VirtualMachineLookupImageInfo{}
 
-	json.NewDecoder(respBody).Decode(&virtualMachineImageList)
-	//spew.Dump(body)
-	fmt.Println(virtualMachineImageList["virtualMachineImage"])
+	json.NewDecoder(respBody).Decode(&lookupImageList)
+	log.Println("LookupVirtualMachineImageList called 3 ")
+	// //spew.Dump(body)
+	// // fmt.Println(lookupImageList["image"])
 
-	return virtualMachineImageList["virtualMachineImage"], respStatus
+	util.DisplayResponse(resp)
+	// log.Println("LookupVirtualMachineImageList called 4 ")
+	outputAsBytes, err := ioutil.ReadAll(resp.Body)
+	// resp.Body.Close()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Printf("%s", robots)
+	log.Println("LookupVirtualMachineImageList called 4 ")
+	fmt.Println(string(outputAsBytes))
+	var output apiResponse
+	err = json.Unmarshal(outputAsBytes, &output)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("%s", output)
+
+	log.Println("LookupVirtualMachineImageList called 5 ")
+	return lookupImageList["image"], respStatus
+
+}
+
+type apiResponse struct {
+	Id, Kind, LongURL string
 }
 
 func LookupVirtualMachineImageData(virtualMachineImageID string) (model.VirtualMachineImageInfo, int) {

@@ -240,13 +240,15 @@ func DisplayResponse(resp *http.Response) {
 	if err != nil {
 		str := string(resultBody)
 		println("nil ", str)
+		println("err ", err)
 	}
-	// fmt.Println(string(resultBody))
+	fmt.Println(string(resultBody))
 
-	str := string(resultBody)
-	fmt.Println(str)
-	// stringMap := map[string]interface{}{}
-	// json.NewDecoder(resp.Body).Decode(&stringMap)
+	var target interface{}
+	body, _ := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(body, &target)
+	fmt.Println(fmt.Println(target))
+	// // json.NewDecoder(respBody).Decode(&stringMap)
 	// pbytes, _ := json.Marshal(resultBody)
 	// fmt.Println(string(pbytes))
 
