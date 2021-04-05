@@ -1,18 +1,14 @@
 package model
 
-type VirtualMachineImageInfo struct {
-	ConnectionName           string        `json:"connectionName"`
-	CreationDate     string         `json:"creationDate"`
-
-	CspImageId     string         `json:"cspImageId"`
-	CspImageName     string         `json:"cspImageName"`
-	Description     string         `json:"description"`
-	GuestOS     string         `json:"guestOS"`
-	ID     string         `json:"id"`
+type VirtualMachineLookupImageInfo struct {
 	Name     string         `json:"name"`
 	Status     string         `json:"status"`
+	GuestOS     string         `json:"guestOS"`
+	IID 		IIDInfo `json:"iid"`
+
 
 	KeyValueInfos []KeyValueInfo `json:"keyValueList"`
+	
 }
 
-type VirtualMachineImageInfos []VirtualMachineImageInfo
+type VirtualMachineLookupImageInfos []VirtualMachineLookupImageInfo

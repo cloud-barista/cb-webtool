@@ -701,7 +701,7 @@ func VirtualMachineImageDelProc(c echo.Context) error {
 	})
 }
 
-// lookupImage 목록
+// connection에 해당하는 machine image 목록
 func LookupVirtualMachineImageList(c echo.Context) error {
 	log.Println("GetVirtualMachineImageList : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -709,10 +709,11 @@ func LookupVirtualMachineImageList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	// store := echosession.FromContext(c)
-	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
-	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList()
+	// paramConnectionName := c.Param("connectionName")
+	paramConnectionName := c.QueryParam("connectionName")
+
+	log.Println("paramConnectionName : ", paramConnectionName)
+	virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList(paramConnectionName)
 	// if vNetErr != nil {
 	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -724,7 +725,7 @@ func LookupVirtualMachineImageList(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
 		"status":             respStatus,
-		"DefaultNameSpaceID": defaultNameSpaceID,
+		// "DefaultNameSpaceID": defaultNameSpaceID,
 		"VirtualMachineImageList":  virtualMachineImageInfoList,
 	})
 }

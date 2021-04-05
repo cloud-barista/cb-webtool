@@ -258,6 +258,7 @@ function getConnectionListForSelectbox(provider, targetSelectBoxID){
         var count = 0; 
         var configName = "";
         var confArr = new Array();
+        html +='<option selected>Select Configname</option>';
         for(var i in data){
             if(provider == data[i].ProviderName){ 
                 count++;
@@ -267,8 +268,7 @@ function getConnectionListForSelectbox(provider, targetSelectBoxID){
             }
         }
         if(count == 0){
-            commonAlertOpen("해당 Provider에 등록된 Connection 정보가 없습니다.")
-            html +='<option selected>Select Configname</option>';
+            commonAlertOpen("해당 Provider에 등록된 Connection 정보가 없습니다.")            
         }
         
         $("#" + targetSelectBoxID).empty();

@@ -16,27 +16,31 @@
 				getSpecInfo(configName);
 			}
 			
-			function getImageInfo(configName){
-				console.log("1 : ",configName);
-				 var configName = configName;
-				 if(!configName){
-					 configName = $("#regConnectionName option:selected").val();
-				 }
+			function getImageInfo(){
+				
+				 var configName = $("#regConnectionName option:selected").val();
+				 
 				 console.log("2 : ",configName);
 			 
-				 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
+				// var url = "/setting/resources" + "/machineimage/lookupimage";//TODO : 조회 오류남... why? connectionName으로 lookup
+				var url = "/setting/resources" + "/machineimage/list"
+				// var url = "http://54.248.3.145:1323/tumblebug/lookupImage";				 
+				//  var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image";
 				 var html = "";
-				 var apiInfo = ApiInfo
+				//  var apiInfo = 'Basic ZGVmYXVsdDpkZWZhdWx0'
 				 axios.get(url,{
-					 headers:{
-						 'Authorization': apiInfo
-					 }
+					// headers:{
+					// 	'Authorization': apiInfo
+					// },
+					params: {
+						connectionName: configName
+					}
 				 }).then(result=>{
 					 console.log("Image Info : ",result.data)
-					 data = result.data.image
+					 data = result.data.VirtualMachineImageList
 					 if(!data){
 						 alert("등록된 이미지 정보가 없습니다.")
-						 location.href = "/Image/list"
+				// 		 location.href = "/Image/list"
 						 return;
 					 }
 					 for(var i in data){
@@ -45,25 +49,30 @@
 						 }
 					 }
 					 $("#s_imageId").empty();
-					 $("#s_imageId").append(html);
+					 $("#s_imageId").append(html);//which OS
 					 
-				 })
-			 }
+				 }).catch(function(error){
+					console.log(error);        
+				});
+			}
+
  			function getSecurityInfo(configName){
 				 var configName = configName;
 				 if(!configName){
 					 configName = $("#regConnectionName option:selected").val();
 				 }
-				 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup";
+				//  var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup";
+				var url = "/setting/resources" + "/securitygroup/list"
 				 var html = "";
-				 var apiInfo = ApiInfo
+				//  var apiInfo = ApiInfo
 				 var default_sg = "";
 				 axios.get(url,{
-					 headers:{
-						 'Authorization': apiInfo
-					 }
+					//  headers:{
+					// 	 'Authorization': apiInfo
+					//  }
 				 }).then(result=>{
-					 data = result.data.securityGroup
+					 console.log(result)
+					 data = result.data.SecurityGroupList
 					 var cnt = 0
 					 for(var i in data){
 						 if(data[i].connectionName == configName){
@@ -78,7 +87,7 @@
 					 }
 				   
 					 $("#sg").empty();
-					 $("#sg").append(html);
+					 $("#sg").append(html);// TODO : 해당 화면에 id=sg 가 없음.
 					 $("#securityGroupIds").val(default_sg)
 					 
 				 })
@@ -88,15 +97,18 @@
 				if(!configName){
 					configName = $("#regConnectionName option:selected").val();
 				}
-				var url = CommonURL+"/ns/"+NAMESPACE+"/resources/spec";
+
+				var url = "/setting/resources" + "/instancespec/list"
+				// var url = CommonURL+"/ns/"+NAMESPACE+"/resources/spec";
 				var html = "";
-				var apiInfo = ApiInfo
+				// var apiInfo = ApiInfo
 				axios.get(url,{
-					headers:{
-						'Authorization': apiInfo
-					}
+					// headers:{
+					// 	'Authorization': apiInfo
+					// }
 				}).then(result=>{
-					var data = result.data.spec
+					// console.log(result.data)
+					var data = result.data.InstanceSpecList
 					console.log("spec result : ",data)
 					if(data){
 						html +="<option value=''>Select SpecName</option>"
@@ -115,20 +127,21 @@
 				})
 			}
 			function getSSHKeyInfo(configName){
-				 var configName = configName;
+				//  var configName = configName;
 				 if(!configName){
 					 configName = $("#regConnectionName option:selected").val();
 				 }
-				 var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey";
+				//  var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey";
+				var url = "/setting/resources" + "/sshkey/list"
 				 var html = "";
-				 var apiInfo = ApiInfo
+				//  var apiInfo = ApiInfo
 				 axios.get(url,{
-					 headers:{
-						 'Authorization': apiInfo
-					 }
+					//  headers:{
+					// 	 'Authorization': apiInfo
+					//  }
 				 }).then(result=>{
 					 console.log("sshKeyInfo result :",result)
-					 data = result.data.sshKey
+					 data = result.data.SshKeyList
 					 for(var i in data){
 						 if(data[i].connectionName == configName){
 							 html += '<option value="'+data[i].id+'" >'+data[i].cspSshKeyName+'('+data[i].id+')</option>'; 
@@ -139,6 +152,8 @@
 					 
 				 })
 			 }
+
+			 // TODO : 화면에 어디에 위치해 있는가?
 			function getVnetInfo(configName){
 				var configName = configName;
 				console.log("get vnet INfo config name : ",configName)
@@ -146,16 +161,18 @@
                     configName = $("#regConnectionName option:selected").val();
 				}
 				console.log("get vnet INfo config name : ",configName)
-                var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
+                // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
+				var url = "/setting/resources"+"/network/list";
+				
                 var html = "";
                 var html2 = "";
-                var apiInfo = ApiInfo
+                // var apiInfo = ApiInfo
                 axios.get(url,{
-                    headers:{
-                        'Authorization': apiInfo
-                    }
+                    // headers:{
+                    //     'Authorization': apiInfo
+                    // }
                 }).then(result=>{
-                    data = result.data.vNet
+                    data = result.data.VNetList
 					console.log("vNetwork Info : ",result)
 					var init_vnet = "";
 					var init_subnet = "";
