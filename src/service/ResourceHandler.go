@@ -76,7 +76,7 @@ func GetVpcData(nameSpaceID string, vNetID string) (model.VNetInfo, int) {
 func RegVpc(nameSpaceID string, vnetRegInfo *model.VNetRegInfo) (model.VNetInfo, int) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
-	// fmt.Println("vnetInfo : ", vnetInfo)
+	fmt.Println("vnetRegInfo : ", vnetRegInfo)
 
 	pbytes, _ := json.Marshal(vnetRegInfo)
 	fmt.Println(string(pbytes))

@@ -9,14 +9,14 @@
 			// Connection 정보가 바뀌면 등록에 필요한 목록들을 다시 가져온다.
 			function changeConnectionInfo(configName){
 				console.log("config name : ",configName)
-                getImageInfo(configName);
+                getVMIInfo(configName);
                 getSecurityInfo(configName);
                 getSSHKeyInfo(configName);
 				getVnetInfo(configName);
 				getSpecInfo(configName);
 			}
 			
-			function getImageInfo(){
+			function getVMIInfo(){
 				
 				 var configName = $("#regConnectionName option:selected").val();
 				 
@@ -277,7 +277,7 @@
                     $("#regConnectionName").empty();
 					$("#regConnectionName").append(html);
 					
-                    getImageInfo(configName);
+                    getVMIInfo(configName);
                     getSecurityInfo(configName);
                     getSSHKeyInfo(configName);
                     getVnetInfo(configName);

@@ -87,6 +87,23 @@ func main() {
 		DisableCache: true,
 	})
 
+	mainTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "setting/namespaces/NameSpaceMng",
+		Partials: []string{
+			"templates/Top",
+			"templates/TopBox",
+			"templates/LNB",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		}, //
+		DisableCache: true,
+	})
+
 	// namespace 매핑할 middleware 추가
 	namespaceTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
@@ -128,13 +145,13 @@ func main() {
 		Extension: ".html",
 		// Master:    "operation/mcis/mcismng",
 		Partials: []string{
-			"templates/OperationTop",// 불러오는 css, javascript 가 setting 과 다름
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
 			"templates/TopBox",
 			"templates/LNBPopup",
 			"templates/Modal",
 			"templates/Header",
 			"templates/MenuLeft",
-			"templates/Footer",// TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
+			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
 			"operation/manage/mcis/McisStatus",
 			"operation/manage/mcis/McisList",
@@ -155,14 +172,14 @@ func main() {
 		Extension: ".html",
 		// Master:    "operation/mcis/mcismng",
 		Partials: []string{
-			"templates/OperationTop",// 불러오는 css, javascript 가 setting 과 다름
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
 			"templates/TopBox",
 			"templates/LNBPopup",
 			"templates/Modal",
 			"templates/Header",
 			"templates/MenuLeft",
-			"templates/Footer",// TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
-			
+			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
+
 			"operation/manage/mcis/McisSimpleConfigure",
 			"operation/manage/mcis/McisExpertConfigure",
 			"operation/manage/mcis/McisPopup",
@@ -171,11 +188,9 @@ func main() {
 			"operation/manage/mcis/McisNetwork",
 			"operation/manage/mcis/McisSecurity",
 			"operation/manage/mcis/McisOther",
-
 		},
 		DisableCache: true,
 	})
-	
 
 	cloudConnectionTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
@@ -234,6 +249,9 @@ func main() {
 	e.GET("/", controller.Index)
 	e.GET("/about", controller.About)
 
+	mainGroup := e.Group("/main", mainTemplate)
+	mainGroup.GET("/", controller.MainForm)
+
 	loginGroup := e.Group("/login", loginTemplate)
 
 	loginGroup.GET("", controller.LoginForm)
@@ -273,7 +291,7 @@ func main() {
 	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	// e.POST("/mcis/reg/proc", controller.McisRegController)
 	mcisGroup.GET("/", controller.McisMngForm)
-	
+
 	e.GET("/operation/manage/mcis/mcis/list", controller.GetMcisList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 	e.POST("/operation/manage/mcis/reg/proc", controller.McisRegProc)
 
@@ -281,9 +299,7 @@ func main() {
 
 	mcisRegGroup := e.Group("/operation/manage/mcis/regform", mcisRegTemplate)
 	mcisRegGroup.GET("/", controller.McisRegForm)
-	
 
-	
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
 

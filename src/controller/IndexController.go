@@ -74,6 +74,10 @@ func About(c echo.Context) error {
 	return c.Render(http.StatusOK, "About.html", map[string]interface{}{})
 }
 
+func MainForm(c echo.Context) error {
+	return echotemplate.Render(c, http.StatusOK, "auth/Main", nil)
+}
+
 func Test(c echo.Context) error {
 	return c.Render(http.StatusOK, "Test.html", map[string]interface{}{})
 }
@@ -139,7 +143,8 @@ func LoginProc(c echo.Context) error {
 	// store.Save()
 
 	//////// 현재구조에서는 nsList 부분을 포함해야 함. TODO : 이부분 호출되는 화면에서 필요할 듯 한데.. 공통으로 뺄까?
-	nsList, _ := service.GetNameSpaceList()
+	nsList, err := service.GetNameSpaceList()
+	if 
 	if len(nsList) == 0 {
 		nameSpaceInfo, createNameSpaceErr := service.CreateDefaultNamespace()
 		if createNameSpaceErr != 200 {
@@ -167,7 +172,7 @@ func LoginProc(c echo.Context) error {
 	///////
 
 	/////// connectionconfig 목록 조회 ////////
-	cloudConnectionConfigInfoList , _ := service.GetCloudConnectionConfigList()
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
 	store.Set("connectionconfig", cloudConnectionConfigInfoList)
 	/////// connectionconfig 목록 조회 끝 ////////
 

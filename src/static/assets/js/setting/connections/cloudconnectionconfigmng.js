@@ -691,18 +691,30 @@ function saveNewCredential(){
 	// CredentialName string             `json:"CredentialName"`
 	// ProviderName   string             `json:"ProviderName"`
 	// KeyValueInfoList   []KeyValueInfoList `json:"KeyValueInfoList"`
-    if(!credentialName || !providerName || !key0 || !value0 || !key1 || !value1 || !key2 || !value2){
+    if(!credentialName || !providerName || !key0 || !value0 || !key1 || !value1 ){
         $("#modalCredentialRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
         return;
     }
+
+    var credentialInfo = "";
+    // provider에 따라 사용하는 key가 불규칙적임.
+    
+    if( providerName == "GCP"){// gcp는 Key가 3개
+        credentialInfo = {            
+            CredentialName:credentialName,
+            ProviderName: providerName,
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2}]
+        }
+    }else{
+        credentialInfo = {            
+            CredentialName:credentialName,
+            ProviderName: providerName,
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+        }
+    }
     //
     console.log("saveNewCredential popup");
-    // provider에 따라 사용하는 key가 불규칙적임.
-    var credentialInfo = {            
-        CredentialName:credentialName,
-        ProviderName: providerName,
-        KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2}]
-    }
+     
     console.log(credentialInfo)
     axios.post("/setting/connections/credential/reg/proc",credentialInfo,{
         // headers: { 'content-type': 'application/x-www-form-urlencoded' },
