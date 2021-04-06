@@ -72,7 +72,8 @@ function displayNewServerForm(){
 
 
 // deploy 버튼 클릭시 등록한 서버목록을 배포.
-function btn_deploy(){
+// function btn_deploy(){
+function deployMcis(){
     var mcis_name = $("#mcis_name").val();
     if(!mcis_name){
         alert("Please Input MCIS Name!!!!!")
@@ -83,7 +84,7 @@ function btn_deploy(){
     var installMonAgent = $("#installMonAgent").val();
     console.log(Simple_Server_Config_Arr)
     var new_obj = {}
-    var apiInfo = ApiInfo;
+    // var apiInfo = ApiInfo;
     new_obj['name'] = mcis_name
     new_obj['description'] = mcis_desc
     new_obj['installMonAgent'] = installMonAgent
@@ -93,24 +94,26 @@ function btn_deploy(){
         console.log("Simple_Server_Config_Arr length: ",vm_len);
         new_obj['vm'] = Simple_Server_Config_Arr;
         console.log("new obj is : ",new_obj);
-        var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
+        // var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
+        var url = "/operation/manage/mcis/reg/proc"
         try{
             AjaxLoadingShow(true);
             axios.post(url,new_obj,{
                 headers :{
                     'Content-type': 'application/json',
-                    'Authorization': apiInfo,
+                    // 'Authorization': apiInfo,
                     },
             }).then(result=>{
-            console.log("MCIR Register data : ",result);
-            console.log("Result Status : ",result.status); 
-            if(result.status == 201 || result.status == 200){
-                alert("Register Success")
-                location.href = "/Manage/MCIS/list";
-            }else{
-                alert("Register Fail")
-                //location.reload(true);
-            }
+                console.log("MCIR Register data : ",result);
+                console.log("Result Status : ",result.status); 
+                if(result.status == 201 || result.status == 200){
+                    alert("Register Success")
+                    // location.href = "/Manage/MCIS/list";
+                    location.href = "operation/manage/mcis/mngform/"
+                }else{
+                    alert("Register Fail")
+                    //location.reload(true);
+                }
             })
         }finally{
             AjaxLoadingShow(false);

@@ -271,6 +271,32 @@ func GetMcisList(c echo.Context) error {
 	})
 }
 
+// MCIS 등록
+func McisRegProc(c echo.Context) error {
+	log.Println("McisRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	mCISInfo := new(model.MCISInfo)
+	if err := c.Bind(mCISInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(mCISInfo)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+	})
+}
+
+// server instance 등록
+
+
 // func McisListFormWithParam(c echo.Context) error {
 // 	mcis_id := c.Param("mcis_id")
 // 	mcis_name := c.Param("mcis_name")
