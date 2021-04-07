@@ -1,4 +1,4 @@
-FROM golang:1.11.2-alpine
+FROM golang:1.11.2-alpine as prod
 
 WORKDIR /go/src/github.com/cloud-barista/cb-webtool 
 COPY . .
