@@ -182,10 +182,13 @@ function displayListOfMCIS(id,index){
 const mcisInfoData = new Array()// test_arr : mcisInfo 1개 전체, pageLoad될 때 조회
 // MCIS Info area 안의 Server List / Status 내용 표시
 // 해당 MCIS의 모든 VM 표시
+
 function showServerListAndStatusArea(mcis_id, index){
    $(".server_status").addClass("view")
    var mcis_arr = mcisInfoData.filter(item => item.id === mcis_id)
    var mcis = mcis_arr[0];
+   console.log("showServerListAndStatusArea " )
+   console.log(mcis_arr)
    $("#mcis_name").val(mcis.name)
    console.log("showmcis2 Data : ",mcis)
    var mcis_badge = "";
