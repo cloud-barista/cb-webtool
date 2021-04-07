@@ -8,11 +8,6 @@
 				
 				{{template "TopBox" .}}
 
-				{{template "LNBPopup" .}}
-				
-				<!-- menu -->
-				{{template "MenuLeft" .}}
-				<!-- //menu -->				
 			</div>
 			
 			<div class="bottom"></div>
@@ -46,8 +41,21 @@
                                 
                                     <!-- list -->
                                     <div class="cloudlist">
-                                        <div class="listbox scrollbar-inner" id="nsList">                                            
+                                        <div class="listbox scrollbar-inner" id="nsList">
+                                            {{range $index, $item := .NameSpaceList}}
+                                                    
+                                            <div class="list" onclick="selectDefaultNameSpace( 'Main', '{{ $item.ID }}');">
+                                            <div class="stit">{{$item.Name}}</div>
+                                            <div class="stxt">{{$item.Description}} </div>
+                                            </div>
+                                            
+                                            {{end}}
+
+                                            <input type="hidden" id="tempSelectedNameSpaceID" />
+
                                         </div>
+
+                                        <button id="select_ns_ok_btn" name="" value="" class="btn_ok" data-dismiss="modal" onclick="nameSpaceSet('Main');">OK</button> 
                                     </div>
                                     <!-- //list -->
                                 

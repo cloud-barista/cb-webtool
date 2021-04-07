@@ -22,6 +22,8 @@ type MCISInfo struct {
 	VMs []VMInfo `json:"vm"`
 }
 
+type MCISInfos []MCISInfo
+
 // MCIS의 일부정보만 추려서
 type MCISSimpleInfo struct {
 	// ID     string `json:"id"`

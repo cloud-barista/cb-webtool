@@ -1,4 +1,4 @@
-///////////// MCIS ADD
+///////////// MCIS Handling //////////////
 
 // 등록 form으로 이동
 function createNewMCIS(){// Manage_MCIS_Life_Cycle_popup.html
@@ -7,9 +7,121 @@ function createNewMCIS(){// Manage_MCIS_Life_Cycle_popup.html
     location.href = url;
 }
 
+// MCIS 제어
+function mcisLifeCycle(type){
+    var checked_nothing = 0;
+    $("[id^='td_ch_']").each(function(){
+       
+        if($(this).is(":checked")){
+            checked_nothing++;
+            console.log("checked")
+            var mcis_id = $(this).val()
+            console.log("check td value : ",mcis_id);
+            var nameSpace = NAMESPACE;
+            console.log("Start LifeCycle method!!!")
+            var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
+            
+            console.log("life cycle3 url : ",url);
+            var message = "MCIS "+type+ " complete!."
+            var apiInfo = ApiInfo
+            axios.get(url,{
+                headers:{
+                    'Authorization': apiInfo
+                }
+            }).then(result=>{
+                var status = result.status
+                
+                console.log("life cycle result : ",result)
+                var data = result.data
+                console.log("result Message : ",data.message)
+                if(status == 200 || status == 201){
+                    
+                    alert(message);
+                    location.reload();
+                    //show_mcis(mcis_url,"");
+                }else{
+                    alert(status)
+                    return;
+                }
+            })
+        }else{
+            console.log("checked nothing")
+           
+        }
+    })
+    if(checked_nothing == 0){
+        alert("Please Select MCIS!!")
+        return;
+    }
+}
+////////////// MCIS Handling end //////////////// 
 
 
-////////////// MCIS ADD 
+
+////////////// VM Handling ///////////
+function addNewVirtualMachine(){
+    var mcis_id = $("#mcis_id").val()
+    var mcis_name = $("#mcis_name").val()
+    //location.href = "/Manage/MCIS/reg/"+mcis_id+"/"+mcis_name
+}
+
+function vmLifeCycle(type){
+    var mcis_id = $("#mcis_id").val();
+    var vm_id = $("#vm_id").val();
+    var vm_name = $("#vm_name").val();
+    
+    // var checked =""
+    // $("[id^='td_ch_'").each(function(){
+    //     if($(this).is(":checked")){
+    //         var checked_value = $(this).val();
+    //         console.log("checked value : ",checked_value)
+    //     }else{
+    //         console.log("체크된게 없어!!")
+    //     }
+    // })
+    // return;
+    if(!mcis_id){
+        alert("Please Select MCIS!!")
+        return;
+    }
+    if(!vm_id){
+        alert("Please Select VM!!")
+        return;
+    }
+    
+    var nameSpace = NAMESPACE;
+    console.log("Start LifeCycle method!!!")
+    var url ="";
+    if(vm_id){
+        
+        url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type 
+       
+    }
+    console.log("life cycle3 url : ",url);
+   
+    var message = vm_name+" "+type+ " complete!."
+  
+
+    var apiInfo = ApiInfo
+    axios.get(url,{
+        headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+        var status = result.status
+        
+        console.log("life cycle result : ",result)
+        var data = result.data
+        console.log("result Message : ",data.message)
+        if(status == 200 || status == 201){
+            
+            alert(message);
+            location.reload();
+            //show_mcis(mcis_url,"");
+        }
+    })
+}
+///////////// VM Handling end ///////////
 
 
 

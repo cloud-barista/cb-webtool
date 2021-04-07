@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	// "os"
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	util "github.com/cloud-barista/cb-webtool/src/util"
@@ -83,6 +84,47 @@ func GetMCIS(nameSpaceID string, mcisID string) (model.MCISInfo, int) {
 	// fmt.Println(string(pbytes))
 
 	return mcisInfo, respStatus
+}
+
+func RegMcis(nameSpaceID string, mCISInfo *model.MCISInfo) (model.MCISInfo, int) {
+
+	// vm_len = Simple_Server_Config_Arr.length;
+	// 								console.log("Simple_Server_Config_Arr length: ",vm_len);
+	// 								new_obj['vm'] = Simple_Server_Config_Arr;
+	// 								console.log("new obj is : ",new_obj);
+	// 								var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
+	// 								try{
+	// 									AjaxLoadingShow(true);
+	// 									axios.post(url,new_obj,{
+	// 										headers :{
+	// 											'Content-type': 'application/json',
+	// 											'Authorization': apiInfo,
+	// 											},
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
+
+	pbytes, _ := json.Marshal(mCISInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	respBody := resp.Body
+	respStatusCode := resp.StatusCode
+	respStatus := resp.Status
+	log.Println("respStatusCode = ", respStatusCode)
+	log.Println("respStatus = ", respStatus)
+
+	// 응답에 생성한 객체값이 옴
+	resultMcisInfo := model.MCISInfo{}
+	json.NewDecoder(respBody).Decode(resultMcisInfo)
+	fmt.Println(resultMcisInfo)
+
+	// return body, err
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+	// return respBody, respStatus
+	return resultMcisInfo, respStatusCode
+
 }
 
 // func GetVMStatus(vm_name string, connectionConfig string) string {
@@ -237,6 +279,7 @@ func GetVMConnectionCountMap(mcisInfo model.MCISInfo) map[string]int {
 
 }
 
+// 해당 MCIS의 VM 연결 수
 func GetVMConnectionCountByMcis(mcisInfo model.MCISInfo) map[string]int {
 	// log.Println(" mcisInfo  ", index, mcisInfo)
 	vmList := mcisInfo.VMs

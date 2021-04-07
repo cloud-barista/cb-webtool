@@ -1,12 +1,14 @@
 package controller
 
 import (
+	// "encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	util "github.com/cloud-barista/cb-webtool/src/util"
-	"log"
-	"net/http"
 
 	echotemplate "github.com/foolin/echo-template"
 	"github.com/labstack/echo"
@@ -33,19 +35,19 @@ func McisRegForm(c echo.Context) error {
 	// connectionconfigList 가져오기
 	cloudOsList, _ := service.GetCloudOSList()
 	log.Println(" cloudOsList  ", cloudOsList)
-	
+
 	// regionList 가져오기
-	regionList , _ := service.GetRegionList()
+	regionList, _ := service.GetRegionList()
 	log.Println(" regionList  ", regionList)
 
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manage/McisCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
-			"DefaultNameSpaceID": defaultNameSpaceID,			
+			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
-			"CloudOSList":               cloudOsList,
-			"RegionList":                regionList,
+			"CloudOSList":        cloudOsList,
+			"RegionList":         regionList,
 		})
 }
 
@@ -279,15 +281,41 @@ func McisRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	mCISInfo := new(model.MCISInfo)
+	// json_map := make(map[string]interface{})
+	// err := json.NewDecoder(c.Request().Body).Decode(&json_map)
+	// if err != nil {
+	// 	return err
+	// } else {
+	// 	log.Println(json_map)
+	// }
+
+	// map[description:bb installMonAgent:yes name:aa vm:[map[connectionName:gcp-asia-east1 description:dd imageId:gcp-jsyoo-ubuntu name:cc provider:GCP securityGroupIds:[gcp-jsyoo-sg-01] specId:gcp-jsyoo-01 sshKeyId:gcp-jsyoo-sshkey subnetId:jsyoo-gcp-sub-01 vNetId:jsyoo-gcp-01 vm_add_cnt:0 vm_cnt:]]]
+	log.Println("get info")
+	//&[]Person{}
+	mCISInfo := &model.MCISInfo{}
 	if err := c.Bind(mCISInfo); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
 			"status":  "fail",
 		})
 	}
-	log.Println(mCISInfo)
+	log.Println(mCISInfo) // 여러개일 수 있음.
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	_, respStatus := service.RegMcis(defaultNameSpaceID, mCISInfo)
+	log.Println("service returned")
+	// if vNetErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  200,
@@ -295,7 +323,6 @@ func McisRegProc(c echo.Context) error {
 }
 
 // server instance 등록
-
 
 // func McisListFormWithParam(c echo.Context) error {
 // 	mcis_id := c.Param("mcis_id")
@@ -323,6 +350,50 @@ func McisRegProc(c echo.Context) error {
 // 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 // }
 
+// MCIS에 VM 추가
+function McisVMRegForm(c echo.Context){
+	mcisId := c.Param("mcisID")
+	mcisName := c.Param("mcisName")
+
+	log.Println("McisVMRegForm : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	log.Println(" nsList  ", nsList)
+
+	// MCIS 정보는 받은것으로
+
+	// MCIS 조회
+	resultMcisInfo, _ := service.GetMCIS(defaultNameSpaceID, mcisId) // TODO : store에 있는 것 꺼내쓰도록.  주기적으로 store 갱신.
+	log.Println(" resultMcisInfo  ", resultMcisInfo)
+
+	// vm List
+	vmList := mcisInfo.VMs
+	
+	// provider 별 연결정보 count(MCIS 무관)
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	
+	// connection , Spec, 등은 Provider 변경할 때 가져오므로 필요없음.
+
+	// status, filepath, return params
+	return echotemplate.Render(c, http.StatusOK,
+		"operation/manage/McisMng", // 파일명			TODO : VM Add form으로 지정 필요
+		map[string]interface{}{
+			"LoginInfo":          loginInfo,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"NameSpaceList":      nsList,
+			"VMList": vmList,
+			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
+
+		})
+	
+}
 // func VMAddForm(c echo.Context) error {
 // 	mcis_id := c.Param("mcis_id")
 // 	mcis_name := c.Param("mcis_name")

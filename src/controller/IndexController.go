@@ -75,7 +75,32 @@ func About(c echo.Context) error {
 }
 
 func MainForm(c echo.Context) error {
-	return echotemplate.Render(c, http.StatusOK, "auth/Main", nil)
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.Username == "" {
+		// Login 정보가 없으므로 login화면으로
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	nameSpaceInfoList, nsErr := service.GetNameSpaceList()
+	if nsErr != 200 {
+		// return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// cloudOsList , _ := service.GetCloudOSList()
+	if len(nameSpaceInfoList) == 1 { // namespace가 1개이면 mcis 체크
+		// mcis가 있으면 dashboard로 ( dashboard에서 mcis가 없으면 mcis 생성화면으로 : TODO 현재 미완성으로 MCIS관리화면으로 이동)
+
+		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manage/mcis/mngform/")
+	} else {
+		return echotemplate.Render(c, http.StatusOK,
+			"auth/Main", // 파일명
+			map[string]interface{}{
+				"LoginInfo": loginInfo,
+				// "CloudOSList":               cloudOsList,
+				"NameSpaceList": nameSpaceInfoList,
+			})
+	}
 }
 
 func Test(c echo.Context) error {
@@ -144,7 +169,7 @@ func LoginProc(c echo.Context) error {
 
 	//////// 현재구조에서는 nsList 부분을 포함해야 함. TODO : 이부분 호출되는 화면에서 필요할 듯 한데.. 공통으로 뺄까?
 	nsList, err := service.GetNameSpaceList()
-	if(err != 200){
+	if err != 200 {
 
 	}
 	if len(nsList) == 0 {

@@ -109,7 +109,7 @@ function deployMcis(){
                 if(result.status == 201 || result.status == 200){
                     alert("Register Success")
                     // location.href = "/Manage/MCIS/list";
-                    location.href = "operation/manage/mcis/mngform/"
+                    location.href = "/operation/manage/mcis/mngform/"
                 }else{
                     alert("Register Fail")
                     //location.reload(true);

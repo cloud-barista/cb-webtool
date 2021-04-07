@@ -544,3 +544,70 @@ function getCommonSecurityGroupList(targetKey, sortType) {
         console.log("get gsList error : ",error);        
     });
 }
+
+
+
+    // namespace 목록에서 한 개 선택. 해당값을 임시로 저장하고 confirm 창 띄우기
+    // 실제 set은  setDefaultNameSpace function에서  ajax호출로
+    // set과 select 혼돈하지 말 것.
+    function selectDefaultNameSpace(callerLocation, nameSpaceID){
+        // 변경할 namespaceId를 임시로 
+        console.log("selectDefaultNameSpace " + callerLocation + ", " + nameSpaceID)
+        if( callerLocation == "TobBox"){
+            $("#tempSelectedNameSpaceID").val(nameSpaceID);
+            commonConfirmOpen("ChangeNameSpace");
+        }else if ( callerLocation == "LNBPopup"){
+            console.log("selectDefaultNameSpace " + callerLocation + ", " + nameSpaceID + " set!!")
+            // Modal 내 namespace 값을 hidden으로 set
+            $("#tempSelectedNameSpaceID").val(nameSpaceID);
+            // 선택했고 OK버튼이 나타난다. OK버튼 클릭시 저장 됨
+            console.log("선택했음. Set을 해야 실제로 저장 됨")
+        }else if ( callerLocation == "Main"){
+            console.log("selectDefaultNameSpace " + callerLocation + ", " + nameSpaceID + " set!!")
+            // Modal 내 namespace 값을 hidden으로 set
+            $("#tempSelectedNameSpaceID").val(nameSpaceID);
+            console.log("선택했음. Set을 해야 실제로 저장 됨")
+        }        
+    }
+
+	// namespace 선택 후 OK 버튼 클릭시(modal, main)에서 
+	function nameSpaceSet(callerLocation){		
+		var nameSpaceID = $("#tempSelectedNameSpaceID").val();
+		console.log("nameSpaceSet OK " + nameSpaceID)
+		setDefaultNameSpace(nameSpaceID, callerLocation)
+	}
+
+    // store에 defaultnamespace 변경. namespace가 등록되어 있지 않으면 ns 설정 page로 이동
+    function setDefaultNameSpace(nsid, callerLocation){
+        console.log("setNameSpace : " + nsid)
+        if(nsid){
+            //reqUrl = "/SET/NS/"+nsid;
+            var url = "/setting/namespaces/namespace/set/"+nsid;
+            console.log(url);
+            axios.get(url,{
+                // headers:{
+                //     'Authorization': apiInfo
+                // }
+            }).then(result=>{
+                var data = result.data.LoginInfo
+                console.log(data);
+                // 성공했으면 해당 namespace 선택 또는 조회
+                console.log(" defaultNameSpaceID : " + data.DefaultNameSpaceID)
+                $('#topboxDefaultNameSpaceID').val(data.DefaultNameSpaceID)
+                $('#topboxDefaultNameSpaceName').text(data.DefaultNameSpaceName)
+
+				if( callerLocation == "Main"){
+					location.href = "/operation/manage/mcis/mngform/"
+				}else{
+					location.reload(); // TODO : 호출한 곳에서 reload를 할 것인지 redirect를 할 것인지
+				}
+                // 
+			}).catch(function(error){
+				console.log("setNameSpace error : ",error);        
+            });
+        }else{
+            alert("NameSpace가 선택되어 있지 않습니다.\n등록되어 있지 않은 경우 등록하세요.")
+            //location.href ="/NS/reg";
+        }        
+    }
+
