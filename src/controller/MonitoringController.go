@@ -11,7 +11,7 @@ import (
 func MornitoringListForm(c echo.Context) error {
 	comURL := service.GetCommonURL()
 	apiInfo := util.AuthenticationHandler()
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 		namespace := service.GetNameSpaceToString(c)
 		return c.Render(http.StatusOK, "Monitoring_Mcis.html", map[string]interface{}{
 			// return c.Render(http.StatusOK, "Monitoring.html", map[string]interface{}{

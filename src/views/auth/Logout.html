@@ -75,16 +75,16 @@ $(document).ready(function(){
    // var nsUrl = "http://localhost:1234/"
     $("#sign_btn").click(function(){
        // alert("test")
-        var username = $("#email").val();
+        var userID = $("#userID").val();
         var password = $("#password").val();
         var req = {
-            username : username,
-            password : password,
+            userID : userID,
+            userID : userID,
         };
         console.log(req)
         var apiInfo = ApiInfo
         axios.post("/login/proc",{headers: { 'Content-type': 'application/json', 'Authorization': apiInfo,}
-        ,username:username,password:password }).then(result =>{
+        ,userID:userID,password:password }).then(result =>{
             console.log(result);
             if(result.data.status == "success"){
                 alert("Login Success");

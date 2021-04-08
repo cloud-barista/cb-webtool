@@ -169,18 +169,24 @@ func GetMcisStatusCountMap(mcisInfo model.MCISInfo) map[string]int {
 	return mcisStatusMap
 }
 
-// MCIS의 vm 상태별 count
-func GetVMStatusCountMap(mcisInfo model.MCISInfo) map[string]int {
+// MCIS의 vm별 statun와 vm 상태별 count
+// key는 vmID + vmName, value는 vmStatus
+func GetVMStatusCountMap(mcisInfo model.MCISInfo) (map[string]string, map[string]int) {
 	// log.Println(" mcisInfo  ", index, mcisInfo)
-	vmStatusMap := make(map[string]int)
+	// vmStatusMap := make(map[string]int)
+	vmStatusMap := map[string]string{} // vmName : vmStatus
+	vmStatusCountMap := map[string]int{}
 	totalVmStatusCount := 0
 	vmList := mcisInfo.VMs
 	for _, vmInfo := range vmList {
 		// log.Println(" vmInfo  ", vmIndex, vmInfo)
 		vmStatus := util.GetVmStatus(vmInfo.Status) // lowercase로 변환
+
+		vmStatusMap[vmInfo.ID+"+"+vmInfo.Name] = vmStatus
+
 		log.Println("vmStatus " + vmStatus + ", Status " + vmInfo.Status)
 		vmStatusCount := 0
-		val, exists := vmStatusMap[vmStatus]
+		val, exists := vmStatusCountMap[vmStatus]
 		if exists {
 			vmStatusCount = val + 1
 			totalVmStatusCount += 1
@@ -188,41 +194,41 @@ func GetVMStatusCountMap(mcisInfo model.MCISInfo) map[string]int {
 			vmStatusCount = 1
 			totalVmStatusCount += 1
 		}
-		vmStatusMap[vmStatus] = vmStatusCount
+		vmStatusCountMap[vmStatus] = vmStatusCount
 	}
 
-	vmStatusMap["TOTAL"] = totalVmStatusCount
-	log.Println(vmStatusMap)
-	// vmStatusMap := make(map[string]int)
-	// UI에서 사칙연산이 되지 않아 controller에서 계산한 뒤 넘겨 줌.
-	// vmStatusMap[util.VM_STATUS_RUNNING] = vmStatusRunning
-	// vmStatusMap[util.VM_STATUS_RESUMING] = vmStatusResuming
-	// vmStatusMap[util.VM_STATUS_INCLUDE] = vmStatusInclude
-	// vmStatusMap[util.VM_STATUS_SUSPENDED] = vmStatusSuspended
-	// vmStatusMap[util.VM_STATUS_TERMINATED] = vmStatusTerminated
-	// vmStatusMap[util.VM_STATUS_UNDEFINED] = vmStatusUndefined
-	// vmStatusMap[util.VM_STATUS_PARTIAL] = vmStatusPartial
-	// vmStatusMap[util.VM_STATUS_ETC] = vmStatusEtc
+	vmStatusCountMap["TOTAL"] = totalVmStatusCount
+	log.Println(vmStatusCountMap)
+	// vmStatusCountMap := make(map[string]int)
+	// UI에서 사칙연산이 되지 않아 controller에서 계산한 뒤 넘겨 줌. 아나면 function을 정의해서 넘겨야 함
+	// vmStatusCountMap[util.VM_STATUS_RUNNING] = vmStatusRunning
+	// vmStatusCountMap[util.VM_STATUS_RESUMING] = vmStatusResuming
+	// vmStatusCountMap[util.VM_STATUS_INCLUDE] = vmStatusInclude
+	// vmStatusCountMap[util.VM_STATUS_SUSPENDED] = vmStatusSuspended
+	// vmStatusCountMap[util.VM_STATUS_TERMINATED] = vmStatusTerminated
+	// vmStatusCountMap[util.VM_STATUS_UNDEFINED] = vmStatusUndefined
+	// vmStatusCountMap[util.VM_STATUS_PARTIAL] = vmStatusPartial
+	// vmStatusCountMap[util.VM_STATUS_ETC] = vmStatusEtc
 	// log.Println("mcisInfo.ID  ", mcisInfo.ID)
 	// mcisIdArr[mcisIndex] = mcisInfo.ID	// 바로 넣으면 Runtime Error구만..
-	// vmStatusArr[mcisIndex] = vmStatusMap
+	// vmStatusArr[mcisIndex] = vmStatusCountMap
 
 	// UI에서는 3가지로 통합하여 봄
-	// vmStatusMap["RUNNING"] = vmStatusRunning
-	// vmStatusMap["STOPPED"] = vmStatusInclude + vmStatusSuspended + vmStatusUndefined + vmStatusPartial + vmStatusEtc
-	// vmStatusMap["TERMINATED"] = vmStatusTerminated
-	// vmStatusTotalMap[mcisInfo.ID] = vmStatusMap
+	// vmStatusCountMap["RUNNING"] = vmStatusRunning
+	// vmStatusCountMap["STOPPED"] = vmStatusInclude + vmStatusSuspended + vmStatusUndefined + vmStatusPartial + vmStatusEtc
+	// vmStatusCountMap["TERMINATED"] = vmStatusTerminated
+	// vmStatusTotalMap[mcisInfo.ID] = vmStatusCountMap
 	// vmIdArr = append(vmIdArr, vmInfo.ID)
-	// vmStatusArr = append(vmStatusArr, vmStatusMap)
+	// vmStatusArr = append(vmStatusArr, vmStatusCountMap)
 
 	// log.Println("mcisIndex  ", mcisIndex)
 
-	// vmStatusMap["RUNNING"] = vmStatusRunning
-	// vmStatusMap["STOPPED"] = vmStatusInclude + vmStatusSuspended + vmStatusUndefined + vmStatusPartial + vmStatusEtc
-	// vmStatusMap["TERMINATED"] = vmStatusTerminated
-	// vmStatusMap["TOTAL"] = vmStatusMap["RUNNING"] + vmStatusMap["STOPPED"] + vmStatusMap["TERMINATED"]
+	// vmStatusCountMap["RUNNING"] = vmStatusRunning
+	// vmStatusCountMap["STOPPED"] = vmStatusInclude + vmStatusSuspended + vmStatusUndefined + vmStatusPartial + vmStatusEtc
+	// vmStatusCountMap["TERMINATED"] = vmStatusTerminated
+	// vmStatusCountMap["TOTAL"] = vmStatusCountMap["RUNNING"] + vmStatusCountMap["STOPPED"] + vmStatusCountMap["TERMINATED"]
 
-	return vmStatusMap
+	return vmStatusMap, vmStatusCountMap
 
 }
 
@@ -283,7 +289,9 @@ func GetVMConnectionCountMap(mcisInfo model.MCISInfo) map[string]int {
 func GetVMConnectionCountByMcis(mcisInfo model.MCISInfo) map[string]int {
 	// log.Println(" mcisInfo  ", index, mcisInfo)
 	vmList := mcisInfo.VMs
-	mcisConnectionCountMap := make(map[string]int)
+	// mcisConnectionCountMap := make(map[string]int)
+	mcisConnectionCountMap := map[string]int{}
+
 	totalConnectionCount := 0
 	log.Println("GetVMConnectionCountByMcis map length ", len(mcisConnectionCountMap))
 	for _, vmInfo := range vmList {

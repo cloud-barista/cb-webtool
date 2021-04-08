@@ -24,7 +24,7 @@ func GlobalDashBoard(c echo.Context) error {
 	// apiInfo := service.AuthenticationHandler()
 	// nsCnt := service.GetNSCnt()
 	// fmt.Println("=========== DashBoard start ==============")
-	// if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	// if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 	// 	nameSpace := service.GetNameSpaceToString(c)
 	// 	if nameSpace != "" {
 	// 		fmt.Println("Namespace : ", nameSpace)
@@ -48,7 +48,7 @@ func GlobalDashBoard(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	apiInfo := service.AuthenticationHandler()
 // 	fmt.Println("=========== DashBoard start ==============")
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+// 	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 // 		nameSpace := service.GetNameSpaceToString(c)
 // 		if nameSpace != "" {
 // 			fmt.Println("Namespace : ", nameSpace)
@@ -72,7 +72,7 @@ func NSDashBoard(c echo.Context) error {
 	// apiInfo := service.AuthenticationHandler()
 	// nsCnt := service.GetNSCnt()
 	// fmt.Println("=========== DashBoard start ==============")
-	// if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	// if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 	// 	nameSpace := service.GetNameSpaceToString(c)
 	// 	if nameSpace != "" {
 	// 		fmt.Println("Namespace : ", nameSpace)
@@ -95,7 +95,7 @@ func NSDashBoard(c echo.Context) error {
 func IndexController(c echo.Context) error {
 
 	fmt.Println("=========== DashBoard start ==============")
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 
 		return c.Redirect(http.StatusTemporaryRedirect, "/dashboard")
 

@@ -40,7 +40,7 @@ type TokenDetails struct {
 // func Index(c echo.Context) error {
 
 // 	// fmt.Println("=========== DashBoard start ==============")
-// 	// if loginInfo := CallLoginInfo(c); loginInfo.Username != "" {
+// 	// if loginInfo := CallLoginInfo(c); loginInfo.UserID != "" {
 
 // 	// 	return c.Redirect(http.StatusTemporaryRedirect, "/dashboard")
 
@@ -51,22 +51,6 @@ type TokenDetails struct {
 
 func Index(c echo.Context) error {
 	fmt.Println("============== index ===============")
-	user := os.Getenv("LoginUser")
-	email := os.Getenv("LoginEmail")
-	pass := os.Getenv("LoginPassword")
-
-	store := echosession.FromContext(c)
-	obj := map[string]string{
-		"username":         user,
-		"email":            email,
-		"password":         pass,
-		"defaultnamespage": "",
-		"accesstoken":      "",
-		"refreshtoken":     "",
-	}
-	store.Set(user, obj)
-	store.Save() // 사용자정보를 따로 저장하지 않으므로 설정파일에 유저를 set.
-	fmt.Println("user : ", user)
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
@@ -77,7 +61,7 @@ func About(c echo.Context) error {
 func MainForm(c echo.Context) error {
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -109,6 +93,25 @@ func Test(c echo.Context) error {
 
 func LoginForm(c echo.Context) error {
 	fmt.Println("============== Login Form ===============")
+
+	user := os.Getenv("LoginUser")
+	email := os.Getenv("LoginEmail")
+	pass := os.Getenv("LoginPassword")
+
+	store := echosession.FromContext(c)
+	obj := map[string]string{
+		"userid":           user,
+		"username":         user,
+		"email":            email,
+		"password":         pass,
+		"defaultnamespage": "",
+		"accesstoken":      "",
+		"refreshtoken":     "",
+	}
+	store.Set(user, obj)
+	store.Save() // 사용자정보를 따로 저장하지 않으므로 설정파일에 유저를 set.
+	fmt.Println("user : ", user)
+
 	return echotemplate.Render(c, http.StatusOK, "auth/Login", nil)
 	//return c.Render(http.StatusOK, "Login.html", map[string]interface{}{})
 }
@@ -125,13 +128,13 @@ func LoginProc(c echo.Context) error {
 		})
 	}
 
-	paramUser := strings.TrimSpace(reqInfo.UserName)
+	paramUserID := strings.TrimSpace(reqInfo.UserID)
 	// paramEmail := strings.TrimSpace(reqInfo.Email)
 	paramPass := strings.TrimSpace(reqInfo.Password)
-	fmt.Println("paramUser & getPass : ", paramUser, paramPass)
+	fmt.Println("paramUser & getPass : ", paramUserID, paramPass)
 
 	// echoSession에서 가져오기
-	result, ok := store.Get(paramUser)
+	result, ok := store.Get(paramUserID)
 
 	if !ok {
 		log.Println(" login proc err  ", ok)
@@ -142,7 +145,7 @@ func LoginProc(c echo.Context) error {
 	}
 	storedUser := result.(map[string]string)
 	fmt.Println("Stored USER:", storedUser)
-	if paramUser != storedUser["username"] && paramUser != storedUser["password"] {
+	if paramUserID != storedUser["userid"] && paramUserID != storedUser["password"] {
 		log.Println(" invalid id or pass  ")
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{ //401
 			"message": "invalid user or password",
@@ -150,7 +153,7 @@ func LoginProc(c echo.Context) error {
 		})
 	}
 
-	newToken, createTokenErr := createToken(paramUser)
+	newToken, createTokenErr := createToken(paramUserID)
 	if createTokenErr != nil {
 		log.Println(" login proc err  ", createTokenErr)
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{ //401
@@ -216,11 +219,12 @@ func LoginProc(c echo.Context) error {
 	// 	DefaultNameSpaceID:   storedUser["defaultnamespaceid"],
 	// 	DefaultNameSpaceName: storedUser["defaultnameSpacename"],
 
-	store.Set(paramUser, storedUser)
+	store.Set(paramUserID, storedUser)
 	store.Save()
 
 	loginInfo := model.LoginInfo{
-		Username:    paramUser,
+		UserID:      paramUserID,
+		Username:    paramUserID,
 		AccessToken: storedUser["accesstoken"],
 		//Username:  result["username"],
 		DefaultNameSpaceID:   storedUser["defaultnamespaceid"],
@@ -346,7 +350,7 @@ func LoginProc(c echo.Context) error {
 // 	// return c.Redirect(http.StatusTemporaryRedirect, "/setting/connections/CloudConnection")
 // }
 
-func createToken(username string) (*TokenDetails, error) {
+func createToken(userID string) (*TokenDetails, error) {
 
 	// var err error
 
@@ -382,7 +386,7 @@ func createToken(username string) (*TokenDetails, error) {
 	atClaims["authorized"] = true
 	atClaims["access_uuid"] = td.AccessUuid
 	//atClaims["user_id"] = userid
-	atClaims["username"] = username
+	atClaims["userid"] = userID
 	atClaims["exp"] = td.AtExpires
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 
@@ -397,7 +401,7 @@ func createToken(username string) (*TokenDetails, error) {
 	rtClaims := jwt.MapClaims{}
 	rtClaims["refresh_uuid"] = td.RefreshUuid
 	// rtClaims["user_id"] = userid
-	rtClaims["username"] = username
+	rtClaims["userid"] = userID
 	rtClaims["exp"] = td.RtExpires
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
 
@@ -420,11 +424,11 @@ func accessible(c echo.Context) error {
 // Token이 있어야 접근가능
 // login 이 필요한 page에서 호출하여 값이 true일 때만 접근가능
 func restricted(c echo.Context) error {
-	user := c.Get("UserName").(*jwt.Token)
+	user := c.Get("UserID").(*jwt.Token)
 	// user := c.Get("email").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
-	username := claims["username"].(string)
-	return c.String(http.StatusOK, "Welcome "+username+"!")
+	userID := claims["userid"].(string)
+	return c.String(http.StatusOK, "Welcome "+userID+"!")
 }
 
 func RegUser(c echo.Context) error {
@@ -435,7 +439,7 @@ func RegUser(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 	obj := map[string]string{
-		"username": user,
+		"userid":   user,
 		"password": pass,
 	}
 	store.Set(user, obj)
@@ -464,7 +468,7 @@ func LogoutProc(c echo.Context) error {
 
 	reqInfo := new(model.ReqInfo)
 
-	getUser := strings.TrimSpace(reqInfo.UserName)
+	getUser := strings.TrimSpace(reqInfo.UserID)
 
 	store.Set(getUser, nil)
 	store.Save()

@@ -21,10 +21,10 @@ var TumbleBugURL = os.Getenv("TUMBLE_URL")
 var DragonFlyURL = os.Getenv("DRAGONFLY_URL")
 var LadyBugURL = os.Getenv("LADYBUG_URL")
 
-type CredentialInfo struct {
-	Username string
-	Password string
-}
+// type CredentialInfo struct {
+// 	Username string
+// 	Password string
+// }
 type CommonURL struct {
 	SpiderURL    string
 	TumbleBugURL string
@@ -46,19 +46,19 @@ func GetCommonURL() CommonURL {
 // func CommonHttpPost()(io.ReadCloser, err) {
 // }
 
-func GetCredentialInfo(c echo.Context, username string) CredentialInfo {
-	store := echosession.FromContext(c)
-	getObj, ok := store.Get(username)
-	if !ok {
-		return CredentialInfo{}
-	}
-	result := getObj.(map[string]string)
-	credentialInfo := CredentialInfo{
-		Username: result["username"],
-		Password: result["password"],
-	}
-	return credentialInfo
-}
+// func GetCredentialInfo(c echo.Context, userid string) CredentialInfo {
+// 	store := echosession.FromContext(c)
+// 	getObj, ok := store.Get(userid)
+// 	if !ok {
+// 		return CredentialInfo{}
+// 	}
+// 	result := getObj.(map[string]string)
+// 	credentialInfo := CredentialInfo{
+// 		UserID:   result["userid"],
+// 		Password: result["password"],
+// 	}
+// 	return credentialInfo
+// }
 
 // func SetLoginInfo(c echo.Context) LoginInfo {
 // 	store := echosession.FromContext(c)
@@ -122,15 +122,15 @@ func GetNameSpaceToString(c echo.Context) string {
 func CallLoginInfo(c echo.Context) model.LoginInfo {
 	// cookie에 go_session_id 가 있는데 뭐지??
 
-	fmt.Println("step1")
 	// tk, cookeierr := c.Request().Cookie("access-token")
-	cookieUsername, cookeierr := c.Request().Cookie("Username")
+	// cookieUsername, cookeierr := c.Request().Cookie("Username")
+	cookieUserID, cookeierr := c.Request().Cookie("UserID")
 	if cookeierr != nil {
-		fmt.Println(cookieUsername)
+		fmt.Println(cookieUserID)
 		// return nil
 	}
-	cookieUsernameStr := cookieUsername.Value
-	fmt.Println(cookieUsernameStr)
+	cookieUserIDStr := cookieUserID.Value
+	fmt.Println(cookieUserIDStr)
 
 	// TODO: token 유효성 검증 로직 필요
 	// fmt.Println("step2")
@@ -148,8 +148,8 @@ func CallLoginInfo(c echo.Context) model.LoginInfo {
 	// param으로 username, token을 받아 store에서 찾는다.
 	// username := c.request.Header.Get("username")
 
-	fmt.Println("========= CallLoginInfo cookieUsername =========" + cookieUsernameStr)
-	result, ok := store.Get(cookieUsernameStr)
+	fmt.Println("========= CallLoginInfo cookieUserID =========" + cookieUserIDStr)
+	result, ok := store.Get(cookieUserIDStr)
 	if !ok {
 		fmt.Println("========= CallLoginInfo Nothing ========= ", ok)
 		return model.LoginInfo{}
@@ -171,6 +171,7 @@ func CallLoginInfo(c echo.Context) model.LoginInfo {
 	// 	DefaultNameSpaceName: storedUser["defaultnameSpacename"],
 	// }
 	loginInfo := model.LoginInfo{
+		UserID:               storedUser["userid"],
 		Username:             storedUser["username"],
 		AccessToken:          storedUser["accesstoken"],
 		DefaultNameSpaceID:   storedUser["defaultnamespaceid"],

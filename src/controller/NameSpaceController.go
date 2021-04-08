@@ -26,7 +26,7 @@ import (
 // func NsRegForm(c echo.Context) error {
 func NameSpaceRegForm(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -48,7 +48,7 @@ func NameSpaceRegForm(c echo.Context) error {
 func NameSpaceRegProc(c echo.Context) error {
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -104,7 +104,7 @@ func NameSpaceUpdateProc(c echo.Context) error {
 	log.Println("NameSpaceUpdateProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -151,7 +151,7 @@ func NameSpaceDelProc(c echo.Context) error {
 	log.Println("NameSpaceDelProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -195,7 +195,7 @@ func NameSpaceDelProc(c echo.Context) error {
 func NameSpaceMngForm(c echo.Context) error {
 	fmt.Println("=============start NameSpaceMngForm =============")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -256,7 +256,7 @@ func GetNameSpaceList(c echo.Context) error {
 func SetNameSpace(c echo.Context) error {
 	fmt.Println("====== SET SELECTED NAME SPACE ========")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.JSON(http.StatusNotAcceptable, map[string]string{
 			"message": "Not Login",
 			"status":  "403",
@@ -264,7 +264,7 @@ func SetNameSpace(c echo.Context) error {
 	}
 	store := echosession.FromContext(c)
 
-	result, ok := store.Get(loginInfo.Username)
+	result, ok := store.Get(loginInfo.UserID)
 	if !ok {
 		return c.JSON(http.StatusNotAcceptable, map[string]string{
 			"message": "Not Login",
@@ -302,7 +302,7 @@ func SetNameSpace(c echo.Context) error {
 	// storedUser["defaultnamespaceid"] = nameSpaceID
 	fmt.Println("storedUser : ", storedUser)
 
-	store.Set(loginInfo.Username, storedUser)
+	store.Set(loginInfo.UserID, storedUser)
 
 	storeErr := store.Save()
 	if storeErr != nil {

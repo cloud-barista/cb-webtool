@@ -349,6 +349,7 @@
                             <li class="reg_1">
                                 <label>username</label>
                                 <input type="text" id="dtlUsername" name="" value="" placeholder="" class="gray" title="" readonly />
+                                <input type="hidden" id="dtlUserID" name="" />
                             </li>
                         </ul>
                     </div>
@@ -548,6 +549,7 @@
             var dtlCspSshKeyName = data.cspSshKeyName;
             var dtlDescription = data.description;
             var dtlUsername = data.username;
+            var dtlUserID = data.userID;
             var dtlConnectionName = data.connectionName;
             var dtlPublicKey = data.publicKey;
             var dtlPrivateKey = data.privateKey;
@@ -557,6 +559,7 @@
            $('#dtlCspSshKeyName').empty();
            $('#dtlDescription').empty();
            $('#dtlUsername').empty();
+           $('#dtlUserID').empty();
            $('#dtlConnectionName').empty();
            $('#dtlPublicKey').empty();
            $('#dtlPrivateKey').empty();
@@ -565,6 +568,7 @@
            $('#dtlCspSshKeyName').val(dtlCspSshKeyName);
            $('#dtlDescription').val(dtlDescription);
            $('#dtlUsername').val(dtlUsername);
+           $('#dtlUserID').val(dtlUserID);
            $('#dtlConnectionName').val(dtlConnectionName);
            $('#dtlPublicKey').val(dtlPublicKey);
            $('#dtlPrivateKey').val(dtlPrivateKey);

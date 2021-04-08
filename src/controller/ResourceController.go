@@ -19,7 +19,7 @@ import (
 func ResourceBoard(c echo.Context) error {
 	fmt.Println("=========== ResourceBoard start ==============")
 	comURL := service.GetCommonURL()
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 		nameSpace := service.GetNameSpaceToString(c)
 		fmt.Println("Namespace : ", nameSpace)
 		return c.Render(http.StatusOK, "ResourceBoard.html", map[string]interface{}{
@@ -37,7 +37,7 @@ func VpcMngForm(c echo.Context) error {
 	fmt.Println("ConnectionConfigList ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -45,7 +45,7 @@ func VpcMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
-	cloudOsList , _ := service.GetCloudOSList()
+	cloudOsList, _ := service.GetCloudOSList()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -76,7 +76,7 @@ func VpcMngForm(c echo.Context) error {
 
 func GetVpcList(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -108,7 +108,7 @@ func GetVpcList(c echo.Context) error {
 // Vpc 상세정보
 func GetVpcData(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -128,7 +128,7 @@ func GetVpcData(c echo.Context) error {
 func VpcRegProc(c echo.Context) error {
 	log.Println("VpcRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -175,7 +175,7 @@ func VpcDelProc(c echo.Context) error {
 	log.Println("ConnectionConfigDelProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -214,7 +214,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 	fmt.Println("SecirityGroupMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -254,7 +254,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 func GetSecirityGroupList(c echo.Context) error {
 	log.Println("GetSecirityGroupList : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -282,7 +282,7 @@ func GetSecirityGroupList(c echo.Context) error {
 func GetSecirityGroupData(c echo.Context) error {
 	log.Println("GetSecirityGroupData : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -292,8 +292,8 @@ func GetSecirityGroupData(c echo.Context) error {
 	securityGroupInfo, respStatus := service.GetSecurityGroupData(defaultNameSpaceID, paramSecurityGroupID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       "success",
-		"status":        respStatus,
+		"message":           "success",
+		"status":            respStatus,
 		"SecurityGroupInfo": securityGroupInfo,
 	})
 }
@@ -302,7 +302,7 @@ func GetSecirityGroupData(c echo.Context) error {
 func SecirityGroupRegProc(c echo.Context) error {
 	log.Println("SecirityGroupRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -327,8 +327,8 @@ func SecirityGroupRegProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":  "success",
-		"status":   respStatus,
+		"message":           "success",
+		"status":            respStatus,
 		"SecurityGroupInfo": resultSecurityGroupInfo,
 	})
 }
@@ -338,7 +338,7 @@ func SecirityGroupDelProc(c echo.Context) error {
 	log.Println("SecirityGroupDelProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -372,12 +372,11 @@ func SecirityGroupDelProc(c echo.Context) error {
 	})
 }
 
-
 func SshKeyMngForm(c echo.Context) error {
 	fmt.Println("SshKeyMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -406,17 +405,17 @@ func SshKeyMngForm(c echo.Context) error {
 	return echotemplate.Render(c, http.StatusOK,
 		"setting/resources/SshKeyMng", // 파일명
 		map[string]interface{}{
-			"LoginInfo":         loginInfo,
-			"CloudOSList":       cloudOsList,
-			"NameSpaceList":     nsList,
-			"SshKeyList": sshKeyInfoList,
+			"LoginInfo":     loginInfo,
+			"CloudOSList":   cloudOsList,
+			"NameSpaceList": nsList,
+			"SshKeyList":    sshKeyInfoList,
 		})
 }
 
 func GetSshKeyList(c echo.Context) error {
 	log.Println("GetSshKeyList : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -436,7 +435,7 @@ func GetSshKeyList(c echo.Context) error {
 		"message":            "success",
 		"status":             respStatus,
 		"DefaultNameSpaceID": defaultNameSpaceID,
-		"SshKeyList":  sshKeyInfoList,
+		"SshKeyList":         sshKeyInfoList,
 	})
 }
 
@@ -444,7 +443,7 @@ func GetSshKeyList(c echo.Context) error {
 func GetSshKeyData(c echo.Context) error {
 	log.Println("GetSshKeyData : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -454,8 +453,8 @@ func GetSshKeyData(c echo.Context) error {
 	sshKeyInfo, respStatus := service.GetSshKeyData(defaultNameSpaceID, paramSshKey)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       "success",
-		"status":        respStatus,
+		"message":    "success",
+		"status":     respStatus,
 		"SshKeyInfo": sshKeyInfo,
 	})
 }
@@ -464,7 +463,7 @@ func GetSshKeyData(c echo.Context) error {
 func SshKeyRegProc(c echo.Context) error {
 	log.Println("SshKeyRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -489,8 +488,8 @@ func SshKeyRegProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":  "success",
-		"status":   respStatus,
+		"message":    "success",
+		"status":     respStatus,
 		"SshKeyInfo": resultSshKeyInfo,
 	})
 }
@@ -500,7 +499,7 @@ func SshKeyDelProc(c echo.Context) error {
 	log.Println("SshKeyDelProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -539,7 +538,7 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 	fmt.Println("VirtualMachineImageMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -568,9 +567,9 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 	return echotemplate.Render(c, http.StatusOK,
 		"setting/resources/VirtualMachineImageMng", // 파일명
 		map[string]interface{}{
-			"LoginInfo":         loginInfo,
-			"CloudOSList":       cloudOsList,
-			"NameSpaceList":     nsList,
+			"LoginInfo":               loginInfo,
+			"CloudOSList":             cloudOsList,
+			"NameSpaceList":           nsList,
 			"VirtualMachineImageList": virtualMachineImageInfoList,
 		})
 }
@@ -578,7 +577,7 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 func GetVirtualMachineImageList(c echo.Context) error {
 	log.Println("GetVirtualMachineImageList : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -595,10 +594,10 @@ func GetVirtualMachineImageList(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":            "success",
-		"status":             respStatus,
-		"DefaultNameSpaceID": defaultNameSpaceID,
-		"VirtualMachineImageList":  virtualMachineImageInfoList,
+		"message":                 "success",
+		"status":                  respStatus,
+		"DefaultNameSpaceID":      defaultNameSpaceID,
+		"VirtualMachineImageList": virtualMachineImageInfoList,
 	})
 }
 
@@ -606,7 +605,7 @@ func GetVirtualMachineImageList(c echo.Context) error {
 func GetVirtualMachineImageData(c echo.Context) error {
 	log.Println("GetVirtualMachineImageData : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -616,8 +615,8 @@ func GetVirtualMachineImageData(c echo.Context) error {
 	virtualMachineImageInfo, respStatus := service.GetVirtualMachineImageData(defaultNameSpaceID, paramVirtualMachineImage)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       "success",
-		"status":        respStatus,
+		"message":                 "success",
+		"status":                  respStatus,
 		"VirtualMachineImageInfo": virtualMachineImageInfo,
 	})
 }
@@ -626,7 +625,7 @@ func GetVirtualMachineImageData(c echo.Context) error {
 func VirtualMachineImageRegProc(c echo.Context) error {
 	log.Println("VirtualMachineImageRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -656,8 +655,8 @@ func VirtualMachineImageRegProc(c echo.Context) error {
 	// log.Println("respStatus = ", respStatus)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":  "success",
-		"status":   respStatus,
+		"message":                 "success",
+		"status":                  respStatus,
 		"VirtualMachineImageInfo": resultVirtualMachineImageInfo,
 	})
 }
@@ -667,7 +666,7 @@ func VirtualMachineImageDelProc(c echo.Context) error {
 	log.Println("VirtualMachineImageDelProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -705,7 +704,7 @@ func VirtualMachineImageDelProc(c echo.Context) error {
 func LookupVirtualMachineImageList(c echo.Context) error {
 	log.Println("GetVirtualMachineImageList : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -723,10 +722,10 @@ func LookupVirtualMachineImageList(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":            "success",
-		"status":             respStatus,
+		"message": "success",
+		"status":  respStatus,
 		// "DefaultNameSpaceID": defaultNameSpaceID,
-		"VirtualMachineImageList":  virtualMachineImageInfoList,
+		"VirtualMachineImageList": virtualMachineImageInfoList,
 	})
 }
 
@@ -734,7 +733,7 @@ func LookupVirtualMachineImageList(c echo.Context) error {
 func LookupVirtualMachineImageData(c echo.Context) error {
 	log.Println("LookupVirtualMachineImageData : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -742,8 +741,8 @@ func LookupVirtualMachineImageData(c echo.Context) error {
 	virtualMachineImageInfo, respStatus := service.LookupVirtualMachineImageData(paramVirtualMachineImage)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       "success",
-		"status":        respStatus,
+		"message":                 "success",
+		"status":                  respStatus,
 		"VirtualMachineImageInfo": virtualMachineImageInfo,
 	})
 }
@@ -752,7 +751,7 @@ func LookupVirtualMachineImageData(c echo.Context) error {
 func SearchVirtualMachineImageList(c echo.Context) error {
 	log.Println("SearchVirtualMachineImageList : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -762,8 +761,8 @@ func SearchVirtualMachineImageList(c echo.Context) error {
 	virtualMachineImageInfoList, respStatus := service.SearchVirtualMachineImageList(defaultNameSpaceID, paramKeywords)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       "success",
-		"status":        respStatus,
+		"message":                 "success",
+		"status":                  respStatus,
 		"VirtualMachineImageList": virtualMachineImageInfoList,
 	})
 }
@@ -773,7 +772,7 @@ func InstanceSpecMngForm(c echo.Context) error {
 	fmt.Println("InstanceSpecMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -802,9 +801,9 @@ func InstanceSpecMngForm(c echo.Context) error {
 	return echotemplate.Render(c, http.StatusOK,
 		"setting/resources/InstanceSpecMng", // 파일명
 		map[string]interface{}{
-			"LoginInfo":         loginInfo,
-			"CloudOSList":       cloudOsList,
-			"NameSpaceList":     nsList,
+			"LoginInfo":        loginInfo,
+			"CloudOSList":      cloudOsList,
+			"NameSpaceList":    nsList,
 			"InstanceSpecList": instanceSpecInfoList,
 		})
 }
@@ -812,7 +811,7 @@ func InstanceSpecMngForm(c echo.Context) error {
 func GetInstanceSpecList(c echo.Context) error {
 	log.Println("GetInstanceSpecList : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -832,7 +831,7 @@ func GetInstanceSpecList(c echo.Context) error {
 		"message":            "success",
 		"status":             respStatus,
 		"DefaultNameSpaceID": defaultNameSpaceID,
-		"InstanceSpecList":  instanceSpecInfoList,
+		"InstanceSpecList":   instanceSpecInfoList,
 	})
 }
 
@@ -840,7 +839,7 @@ func GetInstanceSpecList(c echo.Context) error {
 func GetInstanceSpecData(c echo.Context) error {
 	log.Println("GetInstanceSpecData : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -850,8 +849,8 @@ func GetInstanceSpecData(c echo.Context) error {
 	instanceSpecInfo, respStatus := service.GetInstanceSpecData(defaultNameSpaceID, paramInstanceSpec)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       "success",
-		"status":        respStatus,
+		"message":          "success",
+		"status":           respStatus,
 		"InstanceSpecInfo": instanceSpecInfo,
 	})
 }
@@ -860,7 +859,7 @@ func GetInstanceSpecData(c echo.Context) error {
 func InstanceSpecRegProc(c echo.Context) error {
 	log.Println("InstanceSpecRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -890,8 +889,8 @@ func InstanceSpecRegProc(c echo.Context) error {
 	// log.Println("respStatus = ", respStatus)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":  "success",
-		"status":   respStatus,
+		"message":          "success",
+		"status":           respStatus,
 		"InstanceSpecInfo": resultInstanceSpecInfo,
 	})
 }
@@ -901,7 +900,7 @@ func InstanceSpecDelProc(c echo.Context) error {
 	log.Println("InstanceSpecDelProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -939,7 +938,7 @@ func InstanceSpecDelProc(c echo.Context) error {
 func LookupInstanceSpecList(c echo.Context) error {
 	log.Println("GetInstanceSpecList : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -959,7 +958,7 @@ func LookupInstanceSpecList(c echo.Context) error {
 		"message":            "success",
 		"status":             respStatus,
 		"DefaultNameSpaceID": defaultNameSpaceID,
-		"InstanceSpecList":  instanceSpecInfoList,
+		"InstanceSpecList":   instanceSpecInfoList,
 	})
 }
 
@@ -967,7 +966,7 @@ func LookupInstanceSpecList(c echo.Context) error {
 func LookupInstanceSpecData(c echo.Context) error {
 	log.Println("LookupInstanceSpecData : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -975,8 +974,8 @@ func LookupInstanceSpecData(c echo.Context) error {
 	instanceSpecInfo, respStatus := service.LookupInstanceSpecData(paramInstanceSpec)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       "success",
-		"status":        respStatus,
+		"message":          "success",
+		"status":           respStatus,
 		"InstanceSpecInfo": instanceSpecInfo,
 	})
 }

@@ -235,7 +235,7 @@ function showSshKeyInfo(sshKeyId) {
         
         var dtlCspSshKeyName = data.cspSshKeyName;
         var dtlDescription = data.description;
-        var dtlUsername = data.username;
+        var dtlUserID = data.userID;
         var dtlConnectionName = data.connectionName;
         var dtlPublicKey = data.publicKey;
         var dtlPrivateKey = data.privateKey;
@@ -244,7 +244,7 @@ function showSshKeyInfo(sshKeyId) {
 
        $('#dtlCspSshKeyName').empty();
        $('#dtlDescription').empty();
-       $('#dtlUsername').empty();
+       $('#dtlUserID').empty();
        $('#dtlConnectionName').empty();
        $('#dtlPublicKey').empty();
        $('#dtlPrivateKey').empty();
@@ -252,7 +252,7 @@ function showSshKeyInfo(sshKeyId) {
 
        $('#dtlCspSshKeyName').val(dtlCspSshKeyName);
        $('#dtlDescription').val(dtlDescription);
-       $('#dtlUsername').val(dtlUsername);
+       $('#dtlUserID').val(dtlUserID);
        $('#dtlConnectionName').val(dtlConnectionName);
        $('#dtlPublicKey').val(dtlPublicKey);
        $('#dtlPrivateKey').val(dtlPrivateKey);

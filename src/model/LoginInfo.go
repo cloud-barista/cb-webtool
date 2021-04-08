@@ -7,6 +7,7 @@ package model
 // - namespace가 1개면 default로 set
 // - namespace가 2개 이상이면 화면에서 default set 하도록
 type LoginInfo struct {
+	UserID               string `json:"UserID"`
 	Username             string `json:"Username"`
 	DefaultNameSpaceID   string `json:"DefaultNameSpaceID"`
 	DefaultNameSpaceName string `json:"DefaultNameSpaceName"`

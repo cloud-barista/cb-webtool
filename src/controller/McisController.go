@@ -11,6 +11,7 @@ import (
 	util "github.com/cloud-barista/cb-webtool/src/util"
 
 	echotemplate "github.com/foolin/echo-template"
+	// echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 	// echosession "github.com/go-session/echo-session"
 )
@@ -23,7 +24,7 @@ func McisRegForm(c echo.Context) error {
 	fmt.Println("McisRegForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
@@ -57,11 +58,10 @@ func McisMngForm(c echo.Context) error {
 	fmt.Println("McisMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	// 최신 namespacelist 가져오기
@@ -76,6 +76,34 @@ func McisMngForm(c echo.Context) error {
 	// 모든 MCIS 조회
 	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
 	log.Println(" mcisList  ", mcisList)
+
+	store := echosession.FromContext(c)
+	store.Set("MCIS_" +loginInfo.UserID, mcisList)
+	
+
+	// TODO : store에 MCIS내 VM정보를 저장했다가 상세정보 조회시 사용
+	// loginInfo.vMList
+	// store := echosession.FromContext(c)
+	// result, ok := store.Get(loginInfo.UserID)
+	// if !ok {
+	// 	// user의 mcis내 vm
+	// 	store.Set("", nsList) // 이게 유효한가?? 쓸모없을 듯
+	// 	store.Save()
+	// }
+
+	// result := getObj.(map[string]string)
+	// loginInfo := LoginInfo{
+	// 	Username: "admin",
+	// 	//Username:  result["username"],
+	// 	NameSpace: result["namespace"],
+	// }
+	// getNs, ok := store.Get("namespace")
+	// if !ok {
+	// 	return loginInfo
+	// }
+	// loginInfo.NameSpace = getNs.(string)
+
+	// vmList := result
 
 	totalMcisCount := len(mcisList) // mcis 갯수
 	totalVmCount := 0               // 모든 vm 갯수
@@ -110,7 +138,20 @@ func McisMngForm(c echo.Context) error {
 		// connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)] = count
 
 		//////////// vm status area
-		resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+		resultVmStatusMap, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+
+		resultVmStatusNames := ""
+		for vmStatusKey, vmStatusValue := range resultVmStatusMap {
+			resultVmStatusNames += vmStatusKey + "|" + vmStatusValue + "@"
+		}
+
+		log.Println("before " + resultVmStatusNames)
+		if len(resultVmStatusNames) > 0 {
+			resultVmStatusNames = resultVmStatusNames[:len(resultVmStatusNames)-1]
+		}
+		log.Println("after " + resultVmStatusNames)
+
+		// UI에서 보여 줄 STATUS로 Count. (가져온 Key중에 UI에서 보여줄 Key가 없을 수 있으므로)
 		for i, _ := range util.STATUS_ARRAY {
 			// status_array는 고정값이므로 없는 경우 default로 '0'으로 set
 			_, exists := resultVmStatusCountMap[util.STATUS_ARRAY[i]]
@@ -130,6 +171,11 @@ func McisMngForm(c echo.Context) error {
 		// Provider 별 connection count (Location 내에 있는 provider로 갯수 셀 것.)
 		mcisConnectionMap := service.GetVMConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
 		log.Println(mcisConnectionMap)
+
+		mcisConnectionNames := ""
+		for connectKey, _ := range mcisConnectionMap {
+			mcisConnectionNames += connectKey + " "
+		}
 		////////////// return value 에 set
 		mcisSimpleInfo := model.MCISSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
@@ -139,13 +185,16 @@ func McisMngForm(c echo.Context) error {
 		mcisSimpleInfo.Description = mcisInfo.Description
 
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
+
+		mcisSimpleInfo.VmStatusMap = resultVmStatusMap
+		mcisSimpleInfo.VmStatusNames = resultVmStatusNames
 		mcisSimpleInfo.VmStatusCountMap = resultVmStatusCountMap
 		// mcisSimpleInfo.VmRunningCount = vmStatusCountMap[util.STATUS_ARRAY[0]]    //running
 		// mcisSimpleInfo.VmStoppedCount = vmStatusCountMap[util.STATUS_ARRAY[1]]    //stopped
 		// mcisSimpleInfo.VmTerminatedCount = vmStatusCountMap[util.STATUS_ARRAY[2]] //terminated
 
-		mcisSimpleInfo.ConnectionConfigProviderMap = mcisConnectionMap // 해당 MCIS 등록된 connection의 provider 목록
-		// mcisSimpleInfo.ConnectionConfigProviderNames =
+		mcisSimpleInfo.ConnectionConfigProviderMap = mcisConnectionMap     // 해당 MCIS 등록된 connection의 provider 목록
+		mcisSimpleInfo.ConnectionConfigProviderNames = mcisConnectionNames // 해당 MCIS 등록된 connection의 provider 목록을 String
 		mcisSimpleInfo.ConnectionConfigProviderCount = len(mcisConnectionMap)
 		// mcisConnectionMap.ConnectionCount = mcisConnectionMap
 
@@ -249,7 +298,7 @@ func McisMngForm(c echo.Context) error {
 func GetMcisList(c echo.Context) error {
 	log.Println("GetMcisList : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -277,7 +326,7 @@ func GetMcisList(c echo.Context) error {
 func McisRegProc(c echo.Context) error {
 	log.Println("McisRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -357,7 +406,7 @@ func McisVMRegForm(c echo.Context) error {
 
 	log.Println("McisVMRegForm : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -375,22 +424,22 @@ func McisVMRegForm(c echo.Context) error {
 
 	// vm List
 	vmList := resultMcisInfo.VMs
-	
+
 	// provider 별 연결정보 count(MCIS 무관)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	
+
 	// connection , Spec, 등은 Provider 변경할 때 가져오므로 필요없음.
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manage/McisVmCreate", // 파일명
 		map[string]interface{}{
-			"LoginInfo":          loginInfo,
-			"DefaultNameSpaceID": defaultNameSpaceID,
-			"NameSpaceList":      nsList,
-			"McisID": mcisId,
-			"McisName": mcisName,						
-			"VMList": vmList,
+			"LoginInfo":                     loginInfo,
+			"DefaultNameSpaceID":            defaultNameSpaceID,
+			"NameSpaceList":                 nsList,
+			"McisID":                        mcisId,
+			"McisName":                      mcisName,
+			"VMList":                        vmList,
 			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
 		})
 
@@ -469,3 +518,29 @@ func McisVMRegForm(c echo.Context) error {
 // 	//return c.Redirect(http.StatusTemporaryRedirect, "/MCIS/list")
 // 	return nil
 // }
+
+
+// MCIS 의 특정 VM의 정보를 가져온다. 단. 텀블벅 조회가 아니라 이미 저장되어 있는 store에서 꺼낸다.
+func GetVmDetailInfo(c echo.Context) error {
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login") // 조회기능에서 바로 login화면으로 돌리지말고 return message로 하는게 낫지 않을까?
+	}
+	mcis_id,vm_id
+
+	mcisID := c.Param("mcisID")
+	mcisName := c.Param("mcisName")
+
+	store := echosession.FromContext(c)
+	mcisObj, ok := store.Get("MCIS_" +loginInfo.UserID)
+
+	vmList := mcisObj..VMs	// TODO : 작업중
+}
+// store := echosession.FromContext(c)
+	// result, ok := store.Get(loginInfo.UserID)
+	// if !ok {
+	// 	// user의 mcis내 vm
+	// 	store.Set("", nsList) // 이게 유효한가?? 쓸모없을 듯
+	// 	store.Save()
+	// }

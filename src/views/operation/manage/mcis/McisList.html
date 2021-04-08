@@ -89,7 +89,7 @@
 											{{ end }}
 											{{range $index, $item := .MCISList}}
 
-											<tr onclick="displayListOfMCIS('{{$item.ID}}', '{{$index}}' );" id="server_info_tr_{{$index}}" item="{{$item.ID}}|{{$index}}">
+											<tr onclick="clickListOfMCIS('{{$item.ID}}', '{{$index}}' );" id="server_info_tr_{{$index}}" item="{{$item.ID}}|{{$index}}">
 												<td class="overlay hidden td_left" data-th="Status">
 													<img src="/assets/img/contents/icon_{{$item.McisStatus}}.png" class="icon" alt=""/>{{$item.Status}}<span class="ov off"></span>
 													
@@ -100,9 +100,7 @@
 												<td class="btn_mtd ovm" data-th="Name">{{$item.Name}}<span class="ov"></span></td>
 												
 												<td class="overlay hidden" data-th="Cloud Connection">
-													{{range $configKey, $configValue := $item.ConnectionConfigProviderMap}}
-														{{ $configKey }} &nbsp;
-													{{ end }}
+													{{ $item.ConnectionConfigProviderNames}}
 												</td>
 												{{ $vmStatusCountMap := $item.VmStatusCountMap}}
 												<td class="overlay hidden" data-th="Total Infras">{{$vmStatusCountMap.TOTAL}}</td>
@@ -116,6 +114,17 @@
 												<td class="overlay hidden" data-th="">
 													<input type="checkbox" name="chk" value="{{$item.ID}}" id="td_ch_{{$index}}" title="" />
 													<label for="td_ch_{{$index}}"></label>
+
+													<!--MCIS 기본정보 hidden : 클릭시 보여주기 위해-->
+													<input type="hidden" name="mcisID" value="{{$item.ID}}" id="mcisID{{$index}}"/>
+													<input type="hidden" name="mcisName" value="{{$item.Name}}" id="mcisName{{$index}}"/>
+													<input type="hidden" name="mcisStatus" value="{{$item.McisStatus}}" id="mcisStatus{{$index}}"/>
+													<input type="hidden" name="mcisDescription" value="{{$item.Description}}" id="mcisDescription{{$index}}"/>
+													<input type="hidden" name="mcisCloudConnections" value="{{$item.ConnectionConfigProviderNames}}" id="mcisCloudConnections{{$index}}"/>
+													<input type="hidden" name="mcisVMStatusList" value="{{$item.VmStatusNames}}" id="mcisVMStatusList{{$index}}"/><!-- @ 와 |(파이프 라인) 을 구분자로 -->
+													<input type="hidden" name="mcisVMTotalCount" value="{{$vmStatusCountMap.TOTAL}}" id="mcisVMTotalCount{{$index}}"/>
+													
+
 												</td>
 										
 											</tr>

@@ -24,7 +24,7 @@ import (
 // func CloudOSListForm
 // CloudOS(Provider) 목록
 func GetCloudOSList(c echo.Context) error {
-	cloudOsList , respStatus:= service.GetCloudOSList()
+	cloudOsList, respStatus := service.GetCloudOSList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,
@@ -41,7 +41,7 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	fmt.Println("ConnectionConfigList ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -55,7 +55,7 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	// result, ok := store.Get(paramUser)
 	// storedUser := result.(map[string]string)
 
-	cloudOsList , _ := service.GetCloudOSList()
+	cloudOsList, _ := service.GetCloudOSList()
 	store.Set("cloudos", cloudOsList)
 	log.Println(" cloudOsList  ", cloudOsList)
 
@@ -65,19 +65,19 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
 
 	// regionList 가져오기
-	regionList , _ := service.GetRegionList()
+	regionList, _ := service.GetRegionList()
 	store.Set("region", regionList)
 	log.Println(" regionList  ", regionList)
 
 	// credentialList 가져오기
-	credentialList , _ := service.GetCredentialList()
+	credentialList, _ := service.GetCredentialList()
 	store.Set("credential", credentialList)
 	log.Println(" credentialList  ", credentialList)
 
 	// driverList 가져오기
-	driverList , _ := service.GetDriverList()
+	driverList, _ := service.GetDriverList()
 	store.Set("driver", driverList)
-	log.Println(" driverList  ", driverList )
+	log.Println(" driverList  ", driverList)
 
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
@@ -101,7 +101,7 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 // 현재 설정된 connection 목록
 func GetCloudConnectionConfigList(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -110,7 +110,7 @@ func GetCloudConnectionConfigList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	cloudConnectionConfigInfo , respStatus := service.GetCloudConnectionConfigList()
+	cloudConnectionConfigInfo, respStatus := service.GetCloudConnectionConfigList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
 		"status":           respStatus,
@@ -121,7 +121,7 @@ func GetCloudConnectionConfigList(c echo.Context) error {
 // cloud connection 상세정보
 func GetCloudConnectionConfigData(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -131,7 +131,7 @@ func GetCloudConnectionConfigData(c echo.Context) error {
 	}
 
 	paramConfigName := c.Param("configName")
-	cloudConnectionConfigInfo , respStatus := service.GetCloudConnectionConfigData(paramConfigName)
+	cloudConnectionConfigInfo, respStatus := service.GetCloudConnectionConfigData(paramConfigName)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
 		"status":           respStatus,
@@ -143,7 +143,7 @@ func GetCloudConnectionConfigData(c echo.Context) error {
 func CloudConnectionConfigRegProc(c echo.Context) error {
 	log.Println("ConnectionConfigRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -181,7 +181,7 @@ func CloudConnectionConfigDelProc(c echo.Context) error {
 	log.Println("ConnectionConfigDelProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -213,7 +213,7 @@ func CloudConnectionConfigDelProc(c echo.Context) error {
 // 현재 설정된 region 목록
 func GetRegionList(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -222,7 +222,7 @@ func GetRegionList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	regionList , respStatus:= service.GetRegionList()
+	regionList, respStatus := service.GetRegionList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,
@@ -233,7 +233,7 @@ func GetRegionList(c echo.Context) error {
 // region 상세정보
 func GetRegion(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -243,7 +243,7 @@ func GetRegion(c echo.Context) error {
 	}
 
 	paramRegion := c.Param("region")
-	resionInfo , respStatus := service.GetRegionData(paramRegion)
+	resionInfo, respStatus := service.GetRegionData(paramRegion)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,
@@ -255,7 +255,7 @@ func GetRegion(c echo.Context) error {
 func RegionRegProc(c echo.Context) error {
 	log.Println("RegionRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -292,7 +292,7 @@ func RegionRegProc(c echo.Context) error {
 func RegionDelProc(c echo.Context) error {
 	log.Println("RegionRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -325,7 +325,7 @@ func RegionDelProc(c echo.Context) error {
 // 현재 설정된 Credential 목록 : 목록에서는 key의 value는 보여주지 않는다. ... 표시 (상세정보에서는 표시)
 func GetCredentialList(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -334,7 +334,7 @@ func GetCredentialList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	credentialList , respStatus := service.GetCredentialList()
+	credentialList, respStatus := service.GetCredentialList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
 		"status":     respStatus,
@@ -345,7 +345,7 @@ func GetCredentialList(c echo.Context) error {
 // Credential 상세정보
 func GetCredential(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -355,7 +355,7 @@ func GetCredential(c echo.Context) error {
 	}
 
 	paramCredential := c.Param("credential")
-	credentialInfo , respStatus := service.GetCredentialData(paramCredential)
+	credentialInfo, respStatus := service.GetCredentialData(paramCredential)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
 		"status":     respStatus,
@@ -367,7 +367,7 @@ func GetCredential(c echo.Context) error {
 func CredentialRegProc(c echo.Context) error {
 	log.Println("CredentialRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -404,7 +404,7 @@ func CredentialRegProc(c echo.Context) error {
 func CredentialDelProc(c echo.Context) error {
 	log.Println("CredentialDelProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -437,7 +437,7 @@ func CredentialDelProc(c echo.Context) error {
 // 현재 설정된 driver 목록
 func GetDriverList(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -446,7 +446,7 @@ func GetDriverList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	driverList , respStatus := service.GetDriverList()
+	driverList, respStatus := service.GetDriverList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,
@@ -457,7 +457,7 @@ func GetDriverList(c echo.Context) error {
 // Driver 조회
 func GetDriver(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -467,7 +467,7 @@ func GetDriver(c echo.Context) error {
 	}
 
 	paramDriver := c.Param("driver")
-	driverInfo , respStatus := service.GetDriverData(paramDriver)
+	driverInfo, respStatus := service.GetDriverData(paramDriver)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus,
@@ -480,7 +480,7 @@ func GetDriver(c echo.Context) error {
 func DriverRegProc(c echo.Context) error {
 	log.Println("DriverRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
 		// 	"message": "invalid tumblebug connection",
@@ -517,7 +517,7 @@ func DriverRegProc(c echo.Context) error {
 func DriverDelProc(c echo.Context) error {
 	log.Println("DriverDelProc : ")
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -546,7 +546,7 @@ func ConnectionList(c echo.Context) error {
 	fmt.Println("ConnectionList ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
@@ -599,15 +599,15 @@ func ConnectionList(c echo.Context) error {
 // Driver Contorller
 func DriverRegController(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.Username == "" {
+	if loginInfo.UserID == "" {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	username := c.FormValue("username")
+	userID := c.FormValue("userID")
 	description := c.FormValue("description")
 
-	fmt.Println("DriverRegController : ", username, description)
+	fmt.Println("DriverRegController : ", userID, description)
 	return nil
 }
 
@@ -658,7 +658,7 @@ func DriverRegController(c echo.Context) error {
 func ImageRegForm(c echo.Context) error {
 	comURL := service.GetCommonURL()
 	apiInfo := util.AuthenticationHandler()
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 		return c.Render(http.StatusOK, "ImageRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -673,7 +673,7 @@ func ImageRegForm(c echo.Context) error {
 // func VpcRegForm(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+// 	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 // 		return c.Render(http.StatusOK, "VpcRegister.html", map[string]interface{}{
 // 			"LoginInfo": loginInfo,
 // 			"comURL":    comURL,
@@ -688,7 +688,7 @@ func ImageRegForm(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	loginInfo := service.CallLoginInfo(c)
 // 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo.Username != "" {
+// 	if loginInfo.UserID != "" {
 // 		nsList := service.GetRegionList()
 // 		fmt.Println("REGION List : ", nsList)
 
@@ -710,7 +710,7 @@ func ImageRegForm(c echo.Context) error {
 // func SecurityGroupRegForm(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+// 	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 // 		return c.Render(http.StatusOK, "SecurityGroupRegister.html", map[string]interface{}{
 // 			"LoginInfo": loginInfo,
 // 			"comURL":    comURL,
@@ -725,7 +725,7 @@ func ImageRegForm(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	loginInfo := service.CallLoginInfo(c)
 // 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo.Username != "" {
+// 	if loginInfo.UserID != "" {
 // 		nsList := service.GetRegionList()
 // 		fmt.Println("REGION List : ", nsList)
 
@@ -747,7 +747,7 @@ func ImageRegForm(c echo.Context) error {
 func SSHRegForm(c echo.Context) error {
 	comURL := service.GetCommonURL()
 	apiInfo := util.AuthenticationHandler()
-	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 		return c.Render(http.StatusOK, "SSHRegister.html", map[string]interface{}{
 			"LoginInfo": loginInfo,
 			"comURL":    comURL,
@@ -762,7 +762,7 @@ func SSHRegForm(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	loginInfo := service.CallLoginInfo(c)
 // 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo.Username != "" {
+// 	if loginInfo.UserID != "" {
 // 		nsList := service.GetRegionList()
 // 		fmt.Println("REGION List : ", nsList)
 
@@ -784,7 +784,7 @@ func SSHRegForm(c echo.Context) error {
 // func SpecRegForm(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
+// 	if loginInfo := service.CallLoginInfo(c); loginInfo.UserID != "" {
 // 		return c.Render(http.StatusOK, "SpecRegister.html", map[string]interface{}{
 // 			"LoginInfo": loginInfo,
 // 			"comURL":    comURL,
@@ -799,7 +799,7 @@ func SSHRegForm(c echo.Context) error {
 // 	comURL := service.GetCommonURL()
 // 	loginInfo := service.CallLoginInfo(c)
 // 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo.Username != "" {
+// 	if loginInfo.UserID != "" {
 // 		nsList := service.GetRegionList()
 // 		fmt.Println("REGION List : ", nsList)
 

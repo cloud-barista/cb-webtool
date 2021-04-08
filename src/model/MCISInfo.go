@@ -42,14 +42,17 @@ type MCISSimpleInfo struct {
 
 	// vm_cnt : 해당 mcis의 vm cnt
 	// vm_run_cnt, vm_stop_cnt
-	VmCount          int            `json:"vmCount"`
-	VmStatusCountMap map[string]int `json:"vmStatusCountMap"`
+	VmCount          int               `json:"vmCount"`
+	VmStatusNames    string            `json:"vmStatusNames"`
+	VmStatusMap      map[string]string `json:"vmStatusMap"`
+	VmStatusCountMap map[string]int    `json:"vmStatusCountMap"`
 	// VmRunningCount    int `json:"vnRunningCount"`
 	// VmStoppedCount    int `json:"vmStopped"`
 	// VmTerminatedCount int `json:"vmTerminated"`
 
 	// csp : 해당 mcis의 connection cnt
-	ConnectionConfigProviderMap map[string]int `json:"connectionConfigProviderMap"`
+	ConnectionConfigProviderMap   map[string]int `json:"connectionConfigProviderMap"`
+	ConnectionConfigProviderNames string         `json:"connectionConfigProviderNames"` // 해당 MCIS 등록된 connection의 provider 목록
 	// ConnectionConfigProviderNames []string       `json:"connectionConfigProviderNames"` // 해당 MCIS 등록된 connection의 provider 목록
 	ConnectionConfigProviderCount int `json:"connectionConfigProviderCount"`
 }

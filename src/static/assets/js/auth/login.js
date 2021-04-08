@@ -9,19 +9,22 @@ $(document).ready(function(){
      $("#sign_btn").on("click",function(){         
          try{
             //  var email = $("#email").val();
-            var username = $("#username").val();
+            var userID = $("#userID").val();
             var password = $("#password").val();
-            if(!password || !username){
+            if(!password || !userID){
                 $("#required").modal()
                 return;
             }
 
             var req = {
-                username : username,
+                userID : userID,
                 password : password,
             };
             console.log(req)
-            axios.post("/login/proc",{headers: { },username:username,password:password })
+            axios.post("/login/proc",{
+                headers: { },
+                userID:userID,password:password 
+                })
                 .then(result =>{
                     console.log(result);
                     if(result.status == 200){
@@ -32,12 +35,12 @@ $(document).ready(function(){
                         location.href = "/main/" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
                  }else{
                      alert("ID or PASSWORKD MISMATCH!!Check yourself!")
-                     location.reload(true); 
+                    //  location.reload(true); 
                  }
              }).catch(function(error){
                  console.log("login error : ",error);
                  alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
-                 location.reload(true);
+                //  location.reload(true);
              })
          }catch(e){
                  alert(e);
@@ -64,8 +67,9 @@ $(document).ready(function(){
     // localStorage.Username = loginInfo['Username'];
     // localStorage.AccessToken = loginInfo['AccessToken'];    
     // localStorage.LLL = "ABCD";
-    
-    document.cookie = "Username="+loginInfo['Username'] +";AccessToken="+ loginInfo['AccessToken'];
+    console.log(loginInfo)
+    // alert("tokenSuccess")
+    document.cookie = "UserID="+loginInfo['UserID'] +";AccessToken="+ loginInfo['AccessToken'];
     
 }
 
