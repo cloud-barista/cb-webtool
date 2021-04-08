@@ -298,7 +298,6 @@ func main() {
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	//http://54.248.3.145:1234/Manage/MCIS/reg/mz-azure-mcis/mz-azure-mcis
-
 	mcisRegGroup := e.Group("/operation/manage/mcis/regform", mcisRegTemplate)
 	mcisRegGroup.GET("/", controller.McisRegForm)                    // MCIS 생성 + VM생성
 	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVMRegForm) // MCIS의 VM생성

@@ -351,7 +351,7 @@ func McisRegProc(c echo.Context) error {
 // }
 
 // MCIS에 VM 추가
-function McisVMRegForm(c echo.Context){
+func McisVMRegForm(c echo.Context) error {
 	mcisId := c.Param("mcisID")
 	mcisName := c.Param("mcisName")
 
@@ -374,7 +374,7 @@ function McisVMRegForm(c echo.Context){
 	log.Println(" resultMcisInfo  ", resultMcisInfo)
 
 	// vm List
-	vmList := mcisInfo.VMs
+	vmList := resultMcisInfo.VMs
 	
 	// provider 별 연결정보 count(MCIS 무관)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
@@ -383,17 +383,19 @@ function McisVMRegForm(c echo.Context){
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manage/McisMng", // 파일명			TODO : VM Add form으로 지정 필요
+		"operation/manage/McisVmCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
+			"McisID": mcisId,
+			"McisName": mcisName,						
 			"VMList": vmList,
 			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
-
 		})
-	
+
 }
+
 // func VMAddForm(c echo.Context) error {
 // 	mcis_id := c.Param("mcis_id")
 // 	mcis_name := c.Param("mcis_name")
