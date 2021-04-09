@@ -295,6 +295,9 @@ func main() {
 	e.GET("/operation/manage/mcis/mcis/list", controller.GetMcisList) // 등록된 namespace 목록 조회. Tumblebuck 호출
 	e.POST("/operation/manage/mcis/reg/proc", controller.McisRegProc)
 
+	e.GET("/operation/manage/mcis/:mcisID/vm/:vmID", controller.GetVmInfoData)
+	
+
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	//http://54.248.3.145:1234/Manage/MCIS/reg/mz-azure-mcis/mz-azure-mcis

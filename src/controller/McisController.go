@@ -11,7 +11,7 @@ import (
 	util "github.com/cloud-barista/cb-webtool/src/util"
 
 	echotemplate "github.com/foolin/echo-template"
-	// echosession "github.com/go-session/echo-session"
+	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 	// echosession "github.com/go-session/echo-session"
 )
@@ -521,21 +521,53 @@ func McisVMRegForm(c echo.Context) error {
 
 
 // MCIS 의 특정 VM의 정보를 가져온다. 단. 텀블벅 조회가 아니라 이미 저장되어 있는 store에서 꺼낸다.
-func GetVmDetailInfo(c echo.Context) error {
-
+func GetVmInfoData(c echo.Context) error {
+	log.Println("GetVmInfoData")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login") // 조회기능에서 바로 login화면으로 돌리지말고 return message로 하는게 낫지 않을까?
 	}
-	mcis_id,vm_id
-
+	
 	mcisID := c.Param("mcisID")
-	mcisName := c.Param("mcisName")
+	vmID := c.Param("vmID")
+	log.Println("mcisID= " + mcisID + " , vmID= " + vmID)
 
 	store := echosession.FromContext(c)
 	mcisObj, ok := store.Get("MCIS_" +loginInfo.UserID)
+	if !ok {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "fail",
+			"status":  500,
+		})
+	}
 
-	vmList := mcisObj..VMs	// TODO : 작업중
+	log.Println("stored key = " + "MCIS_" + loginInfo.UserID)
+	mcisList := mcisObj.([]model.MCISInfo)
+	mcisInfo := model.MCISInfo{}
+	for _, keyMcisInfo := range mcisList {
+		if keyMcisInfo.ID == mcisID {
+			mcisInfo = keyMcisInfo
+			break;
+		}		
+	}
+	
+	vmList := mcisInfo.VMs
+	returnVmInfo := model.VMInfo{}
+	if len(vmList) > 0 {
+		for _, keyVmInfo := range vmList {
+			if keyVmInfo.ID == vmID {
+				log.Println("found vm " , keyVmInfo)
+				returnVmInfo = keyVmInfo
+				break
+			}
+		}
+	}
+	
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+		"VMInfo": returnVmInfo,
+	})
 }
 // store := echosession.FromContext(c)
 	// result, ok := store.Get(loginInfo.UserID)
