@@ -12,29 +12,17 @@ type VMMonitoringTag struct {
 }
 
 type VMMonitoringValue struct {
-	// CpuGuest       string `json:"cpu_guest"`
-	// CpuGuestNice   string `json:"cpu_guest_nice"`
-	// CpuHintr       string `json:"cpu_hintr"`
-	// CpuIdle        string `json:"cpu_idle"`
-	// CpuIowait      string `json:"cpu_iowait"`
-	// CpuNice        string `json:"cpu_nice"`
-	// CpuSintr       string `json:"cpu_sintr"`
-	// CpuSteal       string `json:"cpu_steal"`
-	// CpuSystem      string `json:"cpu_system"`
-	// CpuUser        string `json:"cpu_user"`
-	// CpuUtilization string `json:"cpu_utilization"`
-	// Time           string `json:"time"`
-
-	CpuGuest       string `json:"cpuGuest"`
-	CpuGuestNice   string `json:"cpu_guest_nice"`
-	CpuHintr       string `json:"cpuHintr"`
-	CpuIdle        string `json:"cpuIdle"`
-	CpuIowait      string `json:"cpu_iowait"`
-	CpuNice        string `json:"cpu_nice"`
-	CpuSintr       string `json:"cpuSintr"`
-	CpuSteal       string `json:"cpu_steal"`
-	CpuSystem      string `json:"cpuSystem"`
-	CpuUser        string `json:"cpu_user"`
-	CpuUtilization string `json:"cpu_utilization"`
+	CpuGuest       float64 `json:"cpu_guest"`
+	CpuGuestNice   float64 `json:"cpu_guest_nice"`
+	CpuHintr       float64 `json:"cpu_hintr"`
+	CpuIdle        float64  `json:"cpu_idle"`
+	CpuIowait      float64 `json:"cpu_iowait"`
+	CpuNice        float64 `json:"cpu_nice"`
+	CpuSintr       float64 `json:"cpu_sintr"`
+	CpuSteal       float64 `json:"cpu_steal"`
+	CpuSystem      float64  `json:"cpu_system"`
+	CpuUser        float64 `json:"cpu_user"`
+	CpuUtilization float64 `json:"cpu_utilization"`
 	Time           string `json:"time"`
+
 }
