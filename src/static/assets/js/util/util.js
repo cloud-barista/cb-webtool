@@ -134,11 +134,11 @@ function commonConfirmOpen(targetAction){
             ["GotoMonitoringUtilize", "Would you like to view utilize <br />for MCIS ?"],
 
             ["MCISLifeCycleReboot", "Would you like to reboot MCIS ?"],// mcis_life_cycle('reboot')
-            ["MCISLifeCycleSuspend", "Would you like to suspend MCIS ?"]//onclick="mcis_life_cycle('suspend')
+            ["MCISLifeCycleSuspend", "Would you like to suspend MCIS ?"],//onclick="mcis_life_cycle('suspend')
             ["MCISLifeCycleResume", "Would you like to resume MCIS ?"],//onclick="mcis_life_cycle('resume')"
             ["MCISLifeCycleTerminate", "Would you like to terminate MCIS ?"],//onclick="mcis_life_cycle('terminate')
             ["MCISManagement", "Would you like to manage MCIS ?"],// 해당 function 없음...
-            ["AddNewMCIS", "Would you like to ADD VM at MCIS ?"]
+            ["AddNewMCIS", "Would you like to ADD VM at MCIS ?"],
 
             ["VMLifeCycle", "Would you like to view Server ?"],
             ["VMLifeCycleReboot", "Would you like to reboot MCIS ?"], //onclick="vm_life_cycle('reboot')"

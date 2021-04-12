@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	// "io"
 	"log"
 	"net/http"
 
@@ -313,4 +314,94 @@ func GetVMConnectionCountByMcis(mcisInfo model.MCISInfo) map[string]int {
 	log.Println("GetVMConnectionCountByMcis map length ", len(mcisConnectionCountMap))
 	log.Println("GetVMConnectionCountByMcis map ", mcisConnectionCountMap)
 	return mcisConnectionCountMap
+}
+
+// MCIS의 VM 조회
+func GetVMofMCIS(nameSpaceID string, mcisID string, vmID string) (model.VMInfo, int) {
+	///ns/{nsId}/mcis/{mcisId}/vm/{vmId}
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
+
+	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	// defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// util.DisplayResponse(resp) // 수신내용 확인
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	vmInfo := model.VMInfo{}
+	json.NewDecoder(respBody).Decode(&vmInfo)
+	fmt.Println(vmInfo)
+
+	// resultBody, err := ioutil.ReadAll(respBody)
+	// if err == nil {
+	// 	str := string(resultBody)
+	// 	println(str)
+	// }
+	// pbytes, _ := json.Marshal(respBody)
+	// fmt.Println(string(pbytes))
+
+	return vmInfo, respStatus
+}
+
+// MCIS의 VM Status변경
+func McisVmLifeCycle(vmLifeCycle *model.VMLifeCycle) (model.VMLifeCycle, int) {
+
+	url := util.TUMBLEBUG + "/ns/" + vmLifeCycle.NameSpaceID + "/mcis/" + vmLifeCycle.McisID + "/vm/" + vmLifeCycle.VmID + "?action=" + vmLifeCycle.LifeCycleOperation
+	///url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
+	pbytes, _ := json.Marshal(vmLifeCycle)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	respBody := resp.Body
+	respStatusCode := resp.StatusCode
+	respStatus := resp.Status
+	log.Println("respStatusCode = ", respStatusCode)
+	log.Println("respStatus = ", respStatus)
+
+	// 응답에 생성한 객체값이 옴
+	resultVmLifeCycle := model.VMLifeCycle{}
+	json.NewDecoder(respBody).Decode(resultVmLifeCycle)
+	fmt.Println(resultVmLifeCycle)
+
+	// return body, err
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+	// return respBody, respStatus
+	return resultVmLifeCycle, respStatusCode
+
+}
+
+// VM monitoring
+func GetVmMonitoring(vmMonitoring *model.VMMonitoring) (model.VMMonitoringInfo, int) {
+	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
+	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+	urlParam := "periodType=" + vmMonitoring.PeriodType + "&statisticsCriteria=" + vmMonitoring.StatisticsCriteria + "&duration=" + vmMonitoring.Duration
+	url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID + "/metric/" + vmMonitoring.Metric + "/info?" + urlParam
+
+	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	// defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// util.DisplayResponse(resp) // 수신내용 확인
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	vmMonitoringInfo := model.VMMonitoringInfo{}
+	json.NewDecoder(respBody).Decode(&vmMonitoringInfo)
+	fmt.Println(vmMonitoringInfo)
+
+	return vmMonitoringInfo, respStatus
 }

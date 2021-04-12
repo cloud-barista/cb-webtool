@@ -158,11 +158,8 @@ function getMetric(chart_target,target, mcis_id, vm_id, metric, periodType,stati
             //data sets
             var key =[]
             var values = data.values[0]
-            for(var i in values){
-                
-                    key.push(i)
-            
-                
+            for(var i in values){                
+                key.push(i)
             }
             console.log("Key values time except:",key);
 	

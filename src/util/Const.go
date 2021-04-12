@@ -13,6 +13,7 @@ import (
 
 var SPIDER = os.Getenv("SPIDER_URL")
 var TUMBLEBUG = os.Getenv("TUMBLE_URL")
+var DRAGONFLY = os.Getenv("DRAGONFLY_URL")
 
 var HTTP_CALL_SUCCESS = 200
 var HTTP_POST_SUCCESS = 201

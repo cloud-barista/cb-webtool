@@ -78,8 +78,7 @@ func McisMngForm(c echo.Context) error {
 	log.Println(" mcisList  ", mcisList)
 
 	store := echosession.FromContext(c)
-	store.Set("MCIS_" +loginInfo.UserID, mcisList)
-	
+	store.Set("MCIS_"+loginInfo.UserID, mcisList)
 
 	// TODO : store에 MCIS내 VM정보를 저장했다가 상세정보 조회시 사용
 	// loginInfo.vMList
@@ -519,7 +518,6 @@ func McisVMRegForm(c echo.Context) error {
 // 	return nil
 // }
 
-
 // MCIS 의 특정 VM의 정보를 가져온다. 단. 텀블벅 조회가 아니라 이미 저장되어 있는 store에서 꺼낸다.
 func GetVmInfoData(c echo.Context) error {
 	log.Println("GetVmInfoData")
@@ -527,52 +525,124 @@ func GetVmInfoData(c echo.Context) error {
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login") // 조회기능에서 바로 login화면으로 돌리지말고 return message로 하는게 낫지 않을까?
 	}
-	
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
 	mcisID := c.Param("mcisID")
 	vmID := c.Param("vmID")
 	log.Println("mcisID= " + mcisID + " , vmID= " + vmID)
 
-	store := echosession.FromContext(c)
-	mcisObj, ok := store.Get("MCIS_" +loginInfo.UserID)
-	if !ok {
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "fail",
-			"status":  500,
-		})
-	}
+	// store := echosession.FromContext(c)
+	// mcisObj, ok := store.Get("MCIS_" +loginInfo.UserID)
+	// if !ok {
+	// 	return c.JSON(http.StatusOK, map[string]interface{}{
+	// 		"message": "fail",
+	// 		"status":  500,
+	// 	})
+	// }
 
-	log.Println("stored key = " + "MCIS_" + loginInfo.UserID)
-	mcisList := mcisObj.([]model.MCISInfo)
-	mcisInfo := model.MCISInfo{}
-	for _, keyMcisInfo := range mcisList {
-		if keyMcisInfo.ID == mcisID {
-			mcisInfo = keyMcisInfo
-			break;
-		}		
-	}
-	
-	vmList := mcisInfo.VMs
-	returnVmInfo := model.VMInfo{}
-	if len(vmList) > 0 {
-		for _, keyVmInfo := range vmList {
-			if keyVmInfo.ID == vmID {
-				log.Println("found vm " , keyVmInfo)
-				returnVmInfo = keyVmInfo
-				break
-			}
-		}
-	}
-	
+	// log.Println("stored key = " + "MCIS_" + loginInfo.UserID)
+	// mcisList := mcisObj.([]model.MCISInfo)
+	// mcisInfo := model.MCISInfo{}
+	// for _, keyMcisInfo := range mcisList {
+	// 	if keyMcisInfo.ID == mcisID {
+	// 		mcisInfo = keyMcisInfo
+	// 		break;
+	// 	}
+	// }
+
+	// vmList := mcisInfo.VMs
+	// returnVmInfo := model.VMInfo{}
+	// if len(vmList) > 0 {
+	// 	for _, keyVmInfo := range vmList {
+	// 		if keyVmInfo.ID == vmID {
+	// 			log.Println("found vm " , keyVmInfo)
+	// 			returnVmInfo = keyVmInfo
+	// 			break
+	// 		}
+	// 	}
+	// }
+	returnVmInfo, _ := service.GetVMofMCIS(defaultNameSpaceID, mcisID, vmID)
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  200,
-		"VMInfo": returnVmInfo,
+		"VMInfo":  returnVmInfo,
 	})
 }
-// store := echosession.FromContext(c)
-	// result, ok := store.Get(loginInfo.UserID)
-	// if !ok {
-	// 	// user의 mcis내 vm
-	// 	store.Set("", nsList) // 이게 유효한가?? 쓸모없을 듯
-	// 	store.Save()
-	// }
+
+func McisVmLifeCycle(c echo.Context) error {
+	log.Println("McisVmLifeCycle : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	vmLifeCycle := &model.VMLifeCycle{}
+	if err := c.Bind(vmLifeCycle); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(vmLifeCycle)
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	vmLifeCycle.NameSpaceID = defaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
+	log.Println("service returned")
+	// if vNetErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+	})
+}
+
+func GetVmMonitoring(c echo.Context) error {
+	log.Println("GetVmInfoData")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login") // 조회기능에서 바로 login화면으로 돌리지말고 return message로 하는게 낫지 않을까?
+	}
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	// mcisID := c.Param("mcisID")
+	// vmID := c.Param("vmID")
+	// metric := c.Param("metric")
+	// log.Println("mcisID= " + mcisID + " , vmID= " + vmID)
+
+	vmMonitoring := &model.VMMonitoring{}
+	if err := c.Bind(vmMonitoring); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	vmMonitoring.NameSpaceID = defaultNameSpaceID
+	// vmMonitoring.McisID = mcisID
+	// vmMonitoring.VmID = vmID
+	// vmMonitoring.Metric = metric
+
+	//e.GET("/operation/manage/mcis/:mcisID/vm/:vmID/metric/:metric/info", controller.GetVmMonitoring)
+	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
+	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+
+	returnVMMonitoringInfo, _ := service.GetVmMonitoring(vmMonitoring)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":          "success",
+		"status":           200,
+		"VMMonitoringInfo": returnVMMonitoringInfo,
+	})
+}
