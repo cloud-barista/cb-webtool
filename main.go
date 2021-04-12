@@ -299,6 +299,10 @@ func main() {
 	e.GET("/operation/manage/mcis/:mcisID/vm/:vmID", controller.GetVmInfoData)
 	e.POST("/operation/manage/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
 	e.POST("/operation/manage/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
+	e.POST("/operation/manage/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
+
+	//var url = DragonFlyURL+"/ns/"+nsid+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
+ 
 	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
 	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
 
