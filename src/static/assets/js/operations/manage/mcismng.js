@@ -587,6 +587,8 @@ function showVMMonitoring(mcisID, vmID){
     // var url = "http://54.248.3.145:9090/dragonfly"+"/ns/ns-01/mcis/"+mcisID+"/vm/"+vmID+"/metric/"+metric+"/info
     //?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
     
+    //TODO : 메트릭 정보 ( "cpu" | "memory" | "disk" | "network" ) 에 따라서 받아오는게 다른가?? 참고 : https://documenter.getpostman.com/view/10735617/TVmJizKb#2ab96d7f-e361-4255-b635-f26977981940
+ 
     var url = "/operation/manage/mcis/proc/vmmonitoring"    
     console.log("Request URL : ",url)
     axios.post(url,{
