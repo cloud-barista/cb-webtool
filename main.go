@@ -297,12 +297,14 @@ func main() {
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
 	e.GET("/operation/manage/mcis/:mcisID/vm/:vmID", controller.GetVmInfoData)
+	e.POST("/operation/manage/mcis/proc/mcislifecycle", controller.McisLifeCycle)
+	//var url = "/operation/manage" + "/mcis/" + mcisID + "/operation/" + type
 	e.POST("/operation/manage/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
 	e.POST("/operation/manage/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 	e.POST("/operation/manage/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	//var url = DragonFlyURL+"/ns/"+nsid+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
- 
+
 	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
 	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
 

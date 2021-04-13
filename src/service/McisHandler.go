@@ -349,10 +349,39 @@ func GetVMofMCIS(nameSpaceID string, mcisID string, vmID string) (model.VMInfo, 
 	return vmInfo, respStatus
 }
 
+// MCIS의 Status변경
+func McisLifeCycle(mcisLifeCycle *model.McisLifeCycle) (model.McisLifeCycle, int) {
+	url := util.TUMBLEBUG + "/ns/" + mcisLifeCycle.NameSpaceID + "/mcis/" + mcisLifeCycle.McisID + "?action=" + mcisLifeCycle.LifeCycleType
+	//// var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
+	pbytes, _ := json.Marshal(mcisLifeCycle)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	respBody := resp.Body
+	respStatusCode := resp.StatusCode
+	respStatus := resp.Status
+	log.Println("respStatusCode = ", respStatusCode)
+	log.Println("respStatus = ", respStatus)
+
+	// 응답에 생성한 객체값이 옴
+	resultMcisLifeCycle := model.McisLifeCycle{}
+	json.NewDecoder(respBody).Decode(resultMcisLifeCycle)
+	fmt.Println(resultMcisLifeCycle)
+
+	// return body, err
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+	// return respBody, respStatus
+	return resultMcisLifeCycle, respStatusCode
+
+}
+
 // MCIS의 VM Status변경
 func McisVmLifeCycle(vmLifeCycle *model.VMLifeCycle) (model.VMLifeCycle, int) {
 
-	url := util.TUMBLEBUG + "/ns/" + vmLifeCycle.NameSpaceID + "/mcis/" + vmLifeCycle.McisID + "/vm/" + vmLifeCycle.VmID + "?action=" + vmLifeCycle.LifeCycleOperation
+	url := util.TUMBLEBUG + "/ns/" + vmLifeCycle.NameSpaceID + "/mcis/" + vmLifeCycle.McisID + "/vm/" + vmLifeCycle.VmID + "?action=" + vmLifeCycle.LifeCycleType
 	///url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
 	pbytes, _ := json.Marshal(vmLifeCycle)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.

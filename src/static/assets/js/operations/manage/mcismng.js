@@ -15,20 +15,24 @@ function mcisLifeCycle(type){
         if($(this).is(":checked")){
             checked_nothing++;
             console.log("checked")
-            var mcis_id = $(this).val()
+            var mcisID = $(this).val()
             console.log("check td value : ",mcis_id);
             // var nameSpace = NAMESPACE;
             console.log("Start LifeCycle method!!!")
             // var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
-            var url = "/operation/manage" + "/mcis/" + mcis + "/operation/" + type
+            var url = "/operation/manage" + "/mcis/proc/mcislifecycle";
             
             console.log("life cycle3 url : ",url);
             var message = "MCIS "+type+ " complete!."
-            var apiInfo = ApiInfo
-            axios.get(url,{
-                headers:{
-                    'Authorization': apiInfo
-                }
+            // var apiInfo = ApiInfo
+            // axios.get(url,{
+            //     headers:{
+            //         'Authorization': apiInfo
+            //     }
+            axios.post(url,{
+                headers: { },
+                mcisID:mcisID,
+                lifeCycleType:type
             }).then(result=>{
                 var status = result.status
                 
@@ -119,7 +123,7 @@ function vmLifeCycle(type){
         headers: { },
         mcisID:mcis_id,
         vmID:vm_id,
-        lifeCycleOperation:type
+        vmLifeCycleType:type
     }).then(result=>{
         var status = result.status
         
