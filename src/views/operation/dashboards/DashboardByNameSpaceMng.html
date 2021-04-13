@@ -147,7 +147,7 @@
 																<!-- <li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Start">Start</a></li> -->
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Reboot" onClick="commonConfirmOpen('MCISLifeCycleReboot')">Reboot</a></li>
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Suspend" onClick="commonConfirmOpen('MCISLifeCycleSuspend')">Suspend</a></li>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Resume" onClick="commonConfirmOpen('MCISLifeCycleResume')">Resume>Resume</a></li>								
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Resume" onClick="commonConfirmOpen('MCISLifeCycleResume')">Resume</a></li>								
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Terminate" onClick="commonConfirmOpen('MCISLifeCycleTerminate')">Terminate</a></li>
 															</ul>
 														</li>
@@ -173,7 +173,7 @@
 							<div class="ds_cont" id="mcisList">
 								<!-- MCIS 목록 -->
 								{{range $index, $item := .MCISList}}
-								<div class="areabox dbinfo cursor " id="mcis_areabox_{{$index}}" onclick="selectMcis('{{$item.ID}}','{{$item.Name}}','mcis_areabox_{{$index}}')">
+								<div class="areabox dbinfo cursor active" id="mcis_areabox_{{$index}}" onclick="selectMcis('{{$item.ID}}','{{$item.Name}}','mcis_areabox_{{$index}}', this)">
 									<div class="box">
 							   			<div class="top">
 											<div class="txtbox">
@@ -244,7 +244,9 @@
 <script type="text/javascript" src="/assets/js/util/mcislifecycle.js"></script>
 <script type="text/javascript">
 	$( document ).ready( function() {
-		selectMcis('','','');
+		$("[id^='mcis_areabox_']").each(function(){    
+            $(this).removeClass("active");// style이 제대로 먹지 않아서 강제로 처리
+    	})
 	});
 </script>
 {{template "Footer" .}}

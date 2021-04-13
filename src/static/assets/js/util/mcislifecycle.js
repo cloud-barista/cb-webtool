@@ -1,6 +1,8 @@
 
-// MCIS 제어 : 선택한 VM의 상태 변경 
-function mcisLifeCycle(type){
+// MCIS 제어 : 선택한 MCIS내 vm들의 상태 변경 
+// Dashboard 와 MCIS Manage 에서 같이 쓰므로
+// callAAA -> mcisLifeCycle 호출 -> callBackAAA로 결과값전달
+function mcisLifeCycle(mcisID, type){
     
     var url = "/operation/manage" + "/mcis/proc/mcislifecycle";
     
@@ -36,7 +38,5 @@ function mcisLifeCycle(type){
 
         callbackMcisLifeCycle(status, data, type)
     });
-        
-    
 }
 ////////////// MCIS Handling end //////////////// 

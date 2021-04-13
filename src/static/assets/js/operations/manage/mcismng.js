@@ -17,7 +17,7 @@ function callMcisLifeCycle(type){
             checked_nothing++;
             console.log("checked")
             var mcisID = $(this).val()
-            mcisLifeCycle(mcisId, type);           
+            mcisLifeCycle(mcisID, type);           
         }else{
             console.log("checked nothing")
            
