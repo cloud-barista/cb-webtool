@@ -467,6 +467,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
 
             $("#server_detail_view_subnet_id_text").text(subnetId+"("+subnetSystemId+")")
             $("#server_detail_view_eth_text").val(eth)
+
             // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인 
             ////// vm connection tab //////
 
@@ -576,20 +577,28 @@ function vmDetailInfo(mcisID, mcisName, vmID){
 
 // 조회 성공 시 Monitoring Tab 표시
 function showVMMonitoring(mcisID, vmID){
-    console.log("====== Start Check DragonFly ====== ")
-    var periodType = "m";
-    var duration = "10m";
+    $("#mcis_detail_info_check_monitoring").prop("checked",true)
+    $("#mcis_detail_info_check_monitoring").attr("disabled",true)
+    $("#Monitoring_tab").show();
+    var duration = "5m"
+    var period_type = "m"
+    var metric_arr = ["cpu","memory","disk","network"];
     var statisticsCriteria = "last";
-    var metric = "cpu" 
-    // var apiInfo = ApiInfo;
-    // var apiInfo = "Basic ZGVmYXVsdDpkZWZhdWx0"
-    // //var url = DragonFlyURL+"/ns/"+NAMESPACE+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
-    // var url = "http://54.248.3.145:9090/dragonfly"+"/ns/ns-01/mcis/"+mcisID+"/vm/"+vmID+"/metric/"+metric+"/info
-    //?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
-    
-    //TODO : 메트릭 정보 ( "cpu" | "memory" | "disk" | "network" ) 에 따라서 받아오는게 다른가?? 참고 : https://documenter.getpostman.com/view/10735617/TVmJizKb#2ab96d7f-e361-4255-b635-f26977981940
+    for(var i in metric_arr){
+        getVMMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
+    }    
+ }
  
-    var url = "/operation/manage/mcis/proc/vmmonitoring"    
+
+ function getVMMetric(chartTarget,target, mcisID, vmID, metric, periodType,statisticsCriteria, duration){     
+	console.log("====== Start GetMetric ====== ")
+	var color = "";
+    var metric_size ="";
+
+    var vmChart = setVmChart(chartTarget,target);
+	vmChart.clear()
+    
+	var url = "/operation/manage/mcis/proc/vmmonitoring"    
     console.log("Request URL : ",url)
     axios.post(url,{
         headers: { },
@@ -600,54 +609,166 @@ function showVMMonitoring(mcisID, vmID){
         statisticsCriteria:statisticsCriteria,
         duration:duration
     }).then(result=>{
+        var data = result.data.VMMonitoringInfo
+        console.log("Get Monitoring Data : ",data)
+        console.log("info items : ", target);
+        console.log("======== start mapping data ======");
+        $("#"+chartTarget).empty();       
+
+        //data sets
+        var key =[]
+        var values = data.values[0]
+        for(var i in values){                
+            key.push(i)
+        }
+        console.log("Key values time except:",key);
+
+        var labels = key;
+        var datasets = data.values;
+        // 각 값의 배열 데이터들
+        //console.log("info labels : ",labels);
+        console.log("info datasets : ",datasets);
+
+        var obj = {}
+        obj.columns = labels
+        obj.values = datasets
+
+        var timeObj = xAxisSet(obj,target);
+        console.log("chart_target :",chartTarget);
+        console.log("info datasets : ", timeObj);			
         
-        console.log("result : ",result)
-        var data = result.data
-        console.log("result Message : ",data.message)
-        if(status == 200 || status == 201){                        
+        vmChart.data = timeObj;
+        vmChart.update();
+    });
+	
+}
+
+function setVmChart(chartTarget,target){
+    var ctx = document.getElementById(chartTarget).getContext('2d')
+    var vmChart = new Chart(ctx,{
+        type:"line",
+        data:{},
+        options:{
+            responsive: true,
+            title: {
+                display: true,
+                text: target
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                x: {
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    }
+                },
+                y: {
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    }
+                }
+            }
         }
-        var duration = "5m"
-        var period_type = "m"
-        var metric_arr = ["cpu","memory","disk","network"];
-        var statisticsCriteria = "last";
-        for(var i in metric_arr){
-            getMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
+    });
+    return vmChart;
+}
+
+// x축 설정
+function xAxisSet(obj, title){
+    //data sets
+    console.log("labels:",obj)
+    console.log("")
+    var labels = obj.columns;
+    var datasets = obj.values;
+
+    // 각 값의 배열 데이터들
+    var series_label = new Array();
+    var data_set = new Array();
+    for(var i in labels){
+        var ky = labels[i]
+        var series_data = new Array(); 
+        if(ky == "time"){
+            for(var k in datasets){
+                for(var o in datasets[k]){
+                    if(o == ky){
+                        series_label.push(datasets[k][o])
+                    }
+                }
+             }
+
+        }else{
+        
+            var dt = {}
+
+            dt.label = ky
+            var color1 = Math.floor(Math.random() * 256);
+            var color2 = Math.floor(Math.random() * 256);
+            var color3 = Math.floor(Math.random() * 256);
+            var color = 'rgb('+color1+","+color2+","+color3+")"
+            dt.borderColor = color
+            dt.backgroundColor = color;      
+      
+            dt.fill= false;
+            for(var k in datasets){
+                for(var o in datasets[k]){
+                    if(o == ky){
+                       series_data.push(datasets[k][o])
+                    }
+                }
+            }
+            dt.data = series_data
+            data_set.push(dt)
+        }       
+    }// end of for
+    
+    var newObj = {};
+    console.log("data set : ",data_set);
+    console.log("time series : ",series_label);
+    newObj.labels = series_label //시간만 담김 배열
+    newObj.datasets =  data_set//각 데이터 셋의 배열
+    console.log("Chart Object : ",newObj);
+    config.type = 'line',
+    config.data = newObj
+    config.options = {
+        responsive: true,
+        title: {
+            display: true,
+            text: title
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            x: {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Time'
+                }
+            },
+            y: {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Value'
+                }
+            }
         }
-    })
-    
-    // var apiInfo = "Basic ZGVmYXVsdDpkZWZhdWx0"
-    // var url = "http://54.248.3.145:9090/dragonfly/ns/ns-01/mcis/mz-azure-mcis/vm/mz-azure-ubuntu1804-8/metric/cpu/info?periodType=m&statisticsCriteria=last&duration=10m"
-    // $.ajax({
-    //      url: url,
-    //      async:false,
-    //      type:'GET',
-    //      beforeSend : function(xhr){
-    //          xhr.setRequestHeader("Authorization", apiInfo);
-    //          xhr.setRequestHeader("Content-type","application/json");
-    //      },
-    //      success : function(result){
-    //          console.log("check dragon fly : ",result)
-    //        //  $("#check_dragonFly").val("200");
-    //          $("#mcis_detail_info_check_monitoring").prop("checked",true)
-    //          $("#mcis_detail_info_check_monitoring").attr("disabled",true)
-    //          $("#Monitoring_tab").show();
-    //          var duration = "5m"
-    //          var period_type = "m"
-    //          var metric_arr = ["cpu","memory","disk","network"];
-    //          var statisticsCriteria = "last";
-    //          for(var i in metric_arr){
-    //              getMetric("canvas_"+i,metric_arr[i],mcis_id,vm_id,metric_arr[i],period_type,statisticsCriteria,duration);
-    //          }
-    //      },
-    //      error : function(request,status, error){
-    //          console.log("check dragon fly : ",status)
-    //         // $("#check_dragonFly").val("400");
-    //          $("#mcis_detail_info_check_monitoring").prop("checked",false)
-    //          $("#mcis_detail_info_check_monitoring").attr("disabled",false)
-    //          $("#Monitoring_tab").hide();
-             
-    //      }          
-    //  })
-    
- }
- 
+    }// end of config.options
+   return newObj;
+}
