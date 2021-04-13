@@ -137,11 +137,11 @@ func McisMngForm(c echo.Context) error {
 		// connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)] = count
 
 		//////////// vm status area
-		resultVmStatusMap, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+		resultVmStatusList, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
 
 		resultVmStatusNames := ""
-		for vmStatusKey, vmStatusValue := range resultVmStatusMap {
-			resultVmStatusNames += vmStatusKey + "|" + vmStatusValue + "@"
+		for _, vmStatusObj := range resultVmStatusList {
+			resultVmStatusNames += vmStatusObj.VmID + "|" + vmStatusObj.VmName + "@"
 		}
 
 		log.Println("before " + resultVmStatusNames)
@@ -185,7 +185,7 @@ func McisMngForm(c echo.Context) error {
 
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
 
-		mcisSimpleInfo.VmStatusMap = resultVmStatusMap
+		mcisSimpleInfo.VmStatusList = resultVmStatusList
 		mcisSimpleInfo.VmStatusNames = resultVmStatusNames
 		mcisSimpleInfo.VmStatusCountMap = resultVmStatusCountMap
 		// mcisSimpleInfo.VmRunningCount = vmStatusCountMap[util.STATUS_ARRAY[0]]    //running
@@ -570,6 +570,45 @@ func GetVmInfoData(c echo.Context) error {
 	})
 }
 
+// MCIS의 status변경
+func McisLifeCycle(c echo.Context) error {
+	log.Println("McisLifeCycle : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	mcisLifeCycle := &model.McisLifeCycle{}
+	if err := c.Bind(mcisLifeCycle); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(mcisLifeCycle)
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	mcisLifeCycle.NameSpaceID = defaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
+	log.Println("service returned")
+	// if vNetErr != nil {
+	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid tumblebug connection",
+			"status":  respStatus,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+	})
+}
+
+// VM의 LifeCycle status변경
 func McisVmLifeCycle(c echo.Context) error {
 	log.Println("McisVmLifeCycle : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -607,6 +646,7 @@ func McisVmLifeCycle(c echo.Context) error {
 	})
 }
 
+// VM 통게보기
 func GetVmMonitoring(c echo.Context) error {
 	log.Println("GetVmInfoData")
 	loginInfo := service.CallLoginInfo(c)

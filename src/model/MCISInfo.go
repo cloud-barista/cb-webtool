@@ -42,10 +42,10 @@ type MCISSimpleInfo struct {
 
 	// vm_cnt : 해당 mcis의 vm cnt
 	// vm_run_cnt, vm_stop_cnt
-	VmCount          int               `json:"vmCount"`
-	VmStatusNames    string            `json:"vmStatusNames"`
-	VmStatusMap      map[string]string `json:"vmStatusMap"`
-	VmStatusCountMap map[string]int    `json:"vmStatusCountMap"`
+	VmCount          int            `json:"vmCount"`
+	VmStatusNames    string         `json:"vmStatusNames"`
+	VmStatusList     []VMStatus     `json:"vmStatusList"`
+	VmStatusCountMap map[string]int `json:"vmStatusCountMap"`
 	// VmRunningCount    int `json:"vnRunningCount"`
 	// VmStoppedCount    int `json:"vmStopped"`
 	// VmTerminatedCount int `json:"vmTerminated"`

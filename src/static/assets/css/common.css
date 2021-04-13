@@ -935,6 +935,20 @@ body {
 .color_g {
   color: #5e636c;
 }
+
+.color_running {
+  color: #06a9b7;
+}
+.color_stopped {
+  color: #ffc800;
+}
+.color_terminated {
+  color: #fc1656;
+}
+.color_etc {
+  color: #5e636c;
+}
+
 .bgbox_b {
   background-color: #06a9b7;
 }
@@ -945,6 +959,19 @@ body {
   background-color: #fc1656;
 }
 .bgbox_g {
+  background-color: #5e636c;
+}
+
+.bgbox_running {
+  background-color: #06a9b7;
+}
+.bgbox_stopped {
+  background-color: #ffc800;
+}
+.bgbox_terminated {
+  background-color: #fc1656;
+}
+.bgbox_etc {
   background-color: #5e636c;
 }
 

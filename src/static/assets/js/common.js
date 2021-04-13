@@ -597,7 +597,8 @@ function getCommonSecurityGroupList(targetKey, sortType) {
                 $('#topboxDefaultNameSpaceName').text(data.DefaultNameSpaceName)
 
 				if( callerLocation == "Main"){
-					location.href = "/operation/manage/mcis/mngform/"
+					//location.href = "/operation/manage/mcis/mngform/"
+					location.href = "/operation/dashboard/namespace/mngform"
 				}else{
 					location.reload(); // TODO : 호출한 곳에서 reload를 할 것인지 redirect를 할 것인지
 				}
