@@ -8,7 +8,8 @@ function createNewMCIS(){// Manage_MCIS_Life_Cycle_popup.html
 }
 
 // MCIS 제어 : 선택한 VM의 상태 변경 
-function mcisLifeCycle(type){
+// callMcisLifeCycle -> util.callMcisLifeCycle -> callbackMcisLifeCycle 순으로 호출 됨
+function callMcisLifeCycle(type){
     var checked_nothing = 0;
     $("[id^='td_ch_']").each(function(){
        
@@ -16,40 +17,7 @@ function mcisLifeCycle(type){
             checked_nothing++;
             console.log("checked")
             var mcisID = $(this).val()
-            console.log("check td value : ",mcisID);
-            // var nameSpace = NAMESPACE;
-            console.log("Start LifeCycle method!!!")
-            // var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
-            var url = "/operation/manage" + "/mcis/proc/mcislifecycle";
-            
-            console.log("life cycle3 url : ",url);
-            var message = "MCIS "+type+ " complete!."
-            // var apiInfo = ApiInfo
-            // axios.get(url,{
-            //     headers:{
-            //         'Authorization': apiInfo
-            //     }
-
-            /////// TODO : util.mcislifecycle.js 를 호출하도록 변경
-            axios.post(url,{
-                headers: { },
-                mcisID:mcisID,
-                lifeCycleType:type
-            }).then(result=>{
-                var status = result.status
-                
-                console.log("life cycle result : ",result)
-                var data = result.data
-                console.log("result Message : ",data.message)
-                if(status == 200 || status == 201){
-                    
-                    alert(message);
-                    location.reload();                    
-                }else{
-                    alert(status)
-                    return;
-                }
-            })
+            mcisLifeCycle(mcisId, type);           
         }else{
             console.log("checked nothing")
            
@@ -58,6 +26,19 @@ function mcisLifeCycle(type){
     if(checked_nothing == 0){
         alert("Please Select MCIS!!")
         return;
+    }
+}
+
+// McisLifeCycle을 호출 한 뒤 return값 처리
+function callbackMcisLifeCycle(resultStatus, resultData, type){
+    var message = "MCIS "+type+ " complete!."
+    if(status == 200 || status == 201){            
+        commonAlert(message);
+        location.reload();//완료 후 페이지를 reload -> 해당 mcis만 reload
+        // 해당 mcis 조회
+        // 상태 count 재설정
+    }else{
+        commonAlert("MCIS " + type + " failed!");
     }
 }
 ////////////// MCIS Handling end //////////////// 

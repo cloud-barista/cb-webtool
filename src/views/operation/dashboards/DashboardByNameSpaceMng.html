@@ -173,7 +173,7 @@
 							<div class="ds_cont" id="mcisList">
 								<!-- MCIS 목록 -->
 								{{range $index, $item := .MCISList}}
-								<div class="areabox dbinfo cursor '+cursor+'" id="mcis_areabox_{{$index}}" onclick="selectMcis('{{$item.ID}}','{{$item.Name}}','mcis_areabox_{{$index}}')">
+								<div class="areabox dbinfo cursor " id="mcis_areabox_{{$index}}" onclick="selectMcis('{{$item.ID}}','{{$item.Name}}','mcis_areabox_{{$index}}')">
 									<div class="box">
 							   			<div class="top">
 											<div class="txtbox">
@@ -242,4 +242,9 @@
 
 <script type="text/javascript" src="/assets/js/operations/dashboard/dashboardbynamespacemng.js"></script>
 <script type="text/javascript" src="/assets/js/util/mcislifecycle.js"></script>
+<script type="text/javascript">
+	$( document ).ready( function() {
+		selectMcis('','','');
+	});
+</script>
 {{template "Footer" .}}

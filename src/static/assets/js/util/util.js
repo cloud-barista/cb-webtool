@@ -63,7 +63,7 @@ function nvlDash(str){
 }
 
 // message를 표현할 alert 창
-function commonAlertOpen(alertMessage){
+function commonAlert(alertMessage){
     console.log(alertMessage);
     $('#alertText').text(alertMessage);
     $("#alertArea").modal();
@@ -245,13 +245,13 @@ function commonConfirmOk(){
         alert("모니터링으로 이동 GotoMonitoringUtilize")
         // location.href ="";//../operation/Monitoring_Mcis.html    
     }else if ( targetAction == "MCISLifeCycleReboot"){
-        mcisLifeCycle('reboot')
+        callMcisLifeCycle('reboot')
     }else if ( targetAction == "MCISLifeCycleSuspend"){
-        mcisLifeCycle('suspend')
+        callMcisLifeCycle('suspend')
     }else if ( targetAction == "MCISLifeCycleResume"){
-        mcisLifeCycle('resume')
+        callMcisLifeCycle('resume')
     }else if ( targetAction == "MCISLifeCycleTerminate"){
-        mcisLifeCycle('terminate')
+        callMcisLifeCycle('terminate')
     }else if ( targetAction == "MCISManagement"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "AddNewMCIS"){
