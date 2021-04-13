@@ -16,7 +16,7 @@ function mcisLifeCycle(type){
             checked_nothing++;
             console.log("checked")
             var mcisID = $(this).val()
-            console.log("check td value : ",mcis_id);
+            console.log("check td value : ",mcisID);
             // var nameSpace = NAMESPACE;
             console.log("Start LifeCycle method!!!")
             // var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
@@ -29,6 +29,8 @@ function mcisLifeCycle(type){
             //     headers:{
             //         'Authorization': apiInfo
             //     }
+
+            /////// TODO : util.mcislifecycle.js 를 호출하도록 변경
             axios.post(url,{
                 headers: { },
                 mcisID:mcisID,
@@ -42,8 +44,7 @@ function mcisLifeCycle(type){
                 if(status == 200 || status == 201){
                     
                     alert(message);
-                    location.reload();
-                    //show_mcis(mcis_url,"");
+                    location.reload();                    
                 }else{
                     alert(status)
                     return;

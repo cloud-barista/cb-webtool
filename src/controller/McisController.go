@@ -137,11 +137,11 @@ func McisMngForm(c echo.Context) error {
 		// connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)] = count
 
 		//////////// vm status area
-		resultVmStatusMap, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+		resultVmStatusList, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
 
 		resultVmStatusNames := ""
-		for vmStatusKey, vmStatusValue := range resultVmStatusMap {
-			resultVmStatusNames += vmStatusKey + "|" + vmStatusValue + "@"
+		for _, vmStatusObj := range resultVmStatusList {
+			resultVmStatusNames += vmStatusObj.VmID + "|" + vmStatusObj.VmName + "@"
 		}
 
 		log.Println("before " + resultVmStatusNames)
@@ -185,7 +185,7 @@ func McisMngForm(c echo.Context) error {
 
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
 
-		mcisSimpleInfo.VmStatusMap = resultVmStatusMap
+		mcisSimpleInfo.VmStatusList = resultVmStatusList
 		mcisSimpleInfo.VmStatusNames = resultVmStatusNames
 		mcisSimpleInfo.VmStatusCountMap = resultVmStatusCountMap
 		// mcisSimpleInfo.VmRunningCount = vmStatusCountMap[util.STATUS_ARRAY[0]]    //running

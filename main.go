@@ -129,7 +129,7 @@ func main() {
 		Extension: ".html",
 		// Master:    "operation/dashboards/Dashboard",
 		Partials: []string{
-			"templates/Top",
+			"templates/OperationTop",
 			"templates/TopBox",
 			"templates/LNBPopup",
 			"templates/Modal",
@@ -270,7 +270,8 @@ func main() {
 	// e.GET("/Dashboard/Global", controller.GlobalDashBoard)
 	// e.GET("/Dashboard/NS", controller.NSDashBoard)
 	dashboardGroup := e.Group("/operation/dashboard", dashboardTemplate)
-	dashboardGroup.GET("/namespace", controller.NSDashBoard)
+
+	dashboardGroup.GET("/namespace/mngform", controller.DashBoardByNameSpaceMngForm)
 	dashboardGroup.GET("/globalnamespace", controller.GlobalDashBoard)
 
 	// // Monitoring Control

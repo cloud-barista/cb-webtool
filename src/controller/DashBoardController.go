@@ -3,11 +3,17 @@ package controller
 import (
 	// "encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	// "sync"
 
+	model "github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/service"
+	util "github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
+
+	echotemplate "github.com/foolin/echo-template"
+	echosession "github.com/go-session/echo-session"
 )
 
 type RespPublicIPInfo struct {
@@ -19,7 +25,294 @@ type RespPublicIPInfo struct {
 	} `json:"vm"`
 }
 
+// 특정 Namespace의 Dashboard -- > 모든 Namespace의 Dashboard도 있음.
+func DashBoardByNameSpaceMngForm(c echo.Context) error {
+	fmt.Println("GlobalDashBoard ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	store := echosession.FromContext(c)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	log.Println(" nsList  ", nsList)
+
+	// provider 별 연결정보 count(MCIS 무관)
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
+	totalConnectionCount := len(cloudConnectionConfigInfoList)
+
+	// 해당 Namespace의 모든 MCIS 조회
+	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	log.Println(" mcisList  ", mcisList)
+
+	totalMcisCount := len(mcisList) // mcis 갯수
+	totalVmCount := 0               // 모든 vm 갯수
+
+	totalMcisStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
+	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
+	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
+	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
+	mcisSimpleInfoList := []model.MCISSimpleInfo{}              // mics summary 정보
+
+	for _, mcisInfo := range mcisList {
+		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
+
+		for mcisStatusKey, mcisStatusCountVal := range resultMcisStatusCountMap {
+			if mcisStatusKey == "TOTAL" { // Total까지 오므로 Total은 제외
+				continue
+			}
+
+			val, exists := totalMcisStatusCountMap[mcisStatusKey]
+			if exists {
+				totalMcisStatusCountMap[mcisStatusKey] = val + mcisStatusCountVal
+			} else {
+				totalMcisStatusCountMap[mcisStatusKey] = mcisStatusCountVal
+			}
+		}
+
+		mcisStatusCountMapByMcis[mcisInfo.ID] = resultMcisStatusCountMap // 각 MCIS의 status별 cnt
+
+		//////////// vm status area
+		resultVmStatusList, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+
+		resultVmStatusNames := ""
+		for _, vmStatusObj := range resultVmStatusList {
+			resultVmStatusNames += vmStatusObj.VmID + "|" + vmStatusObj.VmStatus + "@"
+		}
+
+		log.Println("before " + resultVmStatusNames)
+		if len(resultVmStatusNames) > 0 {
+			resultVmStatusNames = resultVmStatusNames[:len(resultVmStatusNames)-1]
+		}
+		log.Println("after " + resultVmStatusNames)
+
+		// UI에서 보여 줄 STATUS로 Count. (가져온 Key중에 UI에서 보여줄 Key가 없을 수 있으므로)
+		for i, _ := range util.STATUS_ARRAY {
+			// status_array는 고정값이므로 없는 경우 default로 '0'으로 set
+			_, exists := resultVmStatusCountMap[util.STATUS_ARRAY[i]]
+			if !exists {
+				resultVmStatusCountMap[util.STATUS_ARRAY[i]] = 0
+			}
+			totalVmStatusCountMap[util.STATUS_ARRAY[i]] += resultVmStatusCountMap[util.STATUS_ARRAY[i]]
+		}
+		// UI manage mcis > server 영역에서는 run/stopped/terminated 만 있음. etc를 stopped에 추가한다.
+		totalVmStatusCountMap["stopped"] = totalVmStatusCountMap["stopped"] + resultVmStatusCountMap[util.VM_STATUS_ETC]
+
+		totalVmCount += resultVmStatusCountMap["TOTAL"] // 모든 vm의 갯수
+
+		totalVmCountByMcis := resultVmStatusCountMap["TOTAL"]        // 모든 vm의 갯수
+		vmStatusCountMapByMcis[mcisInfo.ID] = resultVmStatusCountMap // MCIS 내 vm 상태별 cnt
+
+		// Provider 별 connection count (Location 내에 있는 provider로 갯수 셀 것.)
+		mcisConnectionMap := service.GetVMConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
+		log.Println(mcisConnectionMap)
+
+		mcisConnectionNames := ""
+		for connectKey, _ := range mcisConnectionMap {
+			mcisConnectionNames += connectKey + " "
+		}
+		////////////// return value 에 set
+		mcisSimpleInfo := model.MCISSimpleInfo{}
+		mcisSimpleInfo.ID = mcisInfo.ID
+		mcisSimpleInfo.Status = mcisInfo.Status
+		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
+		mcisSimpleInfo.Name = mcisInfo.Name
+		mcisSimpleInfo.Description = mcisInfo.Description
+
+		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
+
+		mcisSimpleInfo.VmStatusList = resultVmStatusList
+		mcisSimpleInfo.VmStatusNames = resultVmStatusNames
+		mcisSimpleInfo.VmStatusCountMap = resultVmStatusCountMap
+
+		mcisSimpleInfo.ConnectionConfigProviderMap = mcisConnectionMap     // 해당 MCIS 등록된 connection의 provider 목록
+		mcisSimpleInfo.ConnectionConfigProviderNames = mcisConnectionNames // 해당 MCIS 등록된 connection의 provider 목록을 String
+		mcisSimpleInfo.ConnectionConfigProviderCount = len(mcisConnectionMap)
+
+		mcisSimpleInfoList = append(mcisSimpleInfoList, mcisSimpleInfo)
+
+	}
+
+	return echotemplate.Render(c, http.StatusOK,
+		"operation/dashboards/DashboardByNameSpaceMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":          loginInfo,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"NameSpaceList":      nsList,
+			"McisList":           mcisList,
+
+			// server count 영역
+			"TotalVmCount":          totalVmCount,
+			"TotalVMStatusCountMap": totalVmStatusCountMap, // 모든 VmStatus 별 count Map(MCIS 무관)
+
+			// cp count 영역
+			"TotalProviderCount":         providerCount,            // VM이 등록 된 provider 목록
+			"TotalConnectionConfigCount": totalConnectionCount,     // 총 connection 갯수
+			"ConnectionConfigCountMap":   connectionConfigCountMap, // provider별 connection 수
+
+			// mcis count 영역
+			"TotalMCISCount":          totalMcisCount,
+			"TotalMCISStatusCountMap": totalMcisStatusCountMap, // 모든 MCIS의 상태 Map
+
+			// mcis list
+			"MCISList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
+			"VmStatusCountMapByMCIS": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
+		})
+
+}
+
 func GlobalDashBoard(c echo.Context) error {
+	fmt.Println("GlobalDashBoard ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	store := echosession.FromContext(c)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	log.Println(" nsList  ", nsList)
+
+	// provider 별 연결정보 count(MCIS 무관)
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
+	totalConnectionCount := len(cloudConnectionConfigInfoList)
+
+	// 모든 MCIS 조회
+	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	log.Println(" mcisList  ", mcisList)
+
+	// totalMcisCount := len(mcisList) // mcis 갯수
+	totalVmCount := 0 // 모든 vm 갯수
+
+	totalMcisStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
+	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
+	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
+	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
+	mcisSimpleInfoList := []model.MCISSimpleInfo{}              // mics summary 정보
+
+	for _, mcisInfo := range mcisList {
+		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
+		// mcisStatusMap["RUNNING"] = mcisStatusRunning
+		// mcisStatusMap["STOPPED"] = mcisStatusStopped
+		// mcisStatusMap["TERMINATED"] = mcisStatusTerminated
+		// mcisStatusMap["TOTAL"] = mcisStatusRunning + mcisStatusStop
+
+		for mcisStatusKey, mcisStatusCountVal := range resultMcisStatusCountMap {
+			if mcisStatusKey == "TOTAL" { // Total까지 오므로 Total은 제외
+				continue
+			}
+
+			val, exists := totalMcisStatusCountMap[mcisStatusKey]
+			if exists {
+				totalMcisStatusCountMap[mcisStatusKey] = val + mcisStatusCountVal
+			} else {
+				totalMcisStatusCountMap[mcisStatusKey] = mcisStatusCountVal
+			}
+		}
+
+		mcisStatusCountMapByMcis[mcisInfo.ID] = resultMcisStatusCountMap // 각 MCIS의 status별 cnt
+		// connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)] = count
+
+		//////////// vm status area
+		resultVmStatusList, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+
+		resultVmStatusNames := ""
+		for _, vmStatusObj := range resultVmStatusList {
+			resultVmStatusNames += vmStatusObj.VmID + "|" + vmStatusObj.VmName + "@"
+		}
+
+		log.Println("before " + resultVmStatusNames)
+		if len(resultVmStatusNames) > 0 {
+			resultVmStatusNames = resultVmStatusNames[:len(resultVmStatusNames)-1]
+		}
+		log.Println("after " + resultVmStatusNames)
+
+		// UI에서 보여 줄 STATUS로 Count. (가져온 Key중에 UI에서 보여줄 Key가 없을 수 있으므로)
+		for i, _ := range util.STATUS_ARRAY {
+			// status_array는 고정값이므로 없는 경우 default로 '0'으로 set
+			_, exists := resultVmStatusCountMap[util.STATUS_ARRAY[i]]
+			if !exists {
+				resultVmStatusCountMap[util.STATUS_ARRAY[i]] = 0
+			}
+			totalVmStatusCountMap[util.STATUS_ARRAY[i]] += resultVmStatusCountMap[util.STATUS_ARRAY[i]]
+		}
+		// UI manage mcis > server 영역에서는 run/stopped/terminated 만 있음. etc를 stopped에 추가한다.
+		totalVmStatusCountMap["stopped"] = totalVmStatusCountMap["stopped"] + resultVmStatusCountMap[util.VM_STATUS_ETC]
+
+		totalVmCount += resultVmStatusCountMap["TOTAL"] // 모든 vm의 갯수
+
+		totalVmCountByMcis := resultVmStatusCountMap["TOTAL"]        // 모든 vm의 갯수
+		vmStatusCountMapByMcis[mcisInfo.ID] = resultVmStatusCountMap // MCIS 내 vm 상태별 cnt
+
+		// Provider 별 connection count (Location 내에 있는 provider로 갯수 셀 것.)
+		mcisConnectionMap := service.GetVMConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
+		log.Println(mcisConnectionMap)
+
+		mcisConnectionNames := ""
+		for connectKey, _ := range mcisConnectionMap {
+			mcisConnectionNames += connectKey + " "
+		}
+		////////////// return value 에 set
+		mcisSimpleInfo := model.MCISSimpleInfo{}
+		mcisSimpleInfo.ID = mcisInfo.ID
+		mcisSimpleInfo.Status = mcisInfo.Status
+		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
+		mcisSimpleInfo.Name = mcisInfo.Name
+		mcisSimpleInfo.Description = mcisInfo.Description
+
+		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
+
+		mcisSimpleInfo.VmStatusList = resultVmStatusList
+		mcisSimpleInfo.VmStatusNames = resultVmStatusNames
+		mcisSimpleInfo.VmStatusCountMap = resultVmStatusCountMap
+
+		mcisSimpleInfo.ConnectionConfigProviderMap = mcisConnectionMap     // 해당 MCIS 등록된 connection의 provider 목록
+		mcisSimpleInfo.ConnectionConfigProviderNames = mcisConnectionNames // 해당 MCIS 등록된 connection의 provider 목록을 String
+		mcisSimpleInfo.ConnectionConfigProviderCount = len(mcisConnectionMap)
+
+		mcisSimpleInfoList = append(mcisSimpleInfoList, mcisSimpleInfo)
+
+	}
+
+	return echotemplate.Render(c, http.StatusOK,
+		"operation/dashboards/DashboardByNameSpaceMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":          loginInfo,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"NameSpaceList":      nsList,
+			"McisList":           mcisList,
+
+			// server count 영역
+			"TotalVmCount":          totalVmCount,
+			"TotalVMStatusCountMap": totalVmStatusCountMap, // 모든 VmStatus 별 count Map(MCIS 무관)
+
+			// cp count 영역
+			"TotalProviderCount":         providerCount,            // VM이 등록 된 provider 목록
+			"TotalConnectionConfigCount": totalConnectionCount,     // 총 connection 갯수
+			"ConnectionConfigCountMap":   connectionConfigCountMap, // provider별 connection 수
+
+			// mcis count 영역
+			// "TotalMCISCount":          totalMcisCount,
+			// "TotalMCISStatusCountMap": totalMcisStatusCountMap, // 모든 MCIS의 상태 Map
+
+			// mcis list
+			"MCISList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
+			"VmStatusCountMapByMCIS": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
+		})
+
 	// comURL := service.GetCommonURL()
 	// apiInfo := service.AuthenticationHandler()
 	// nsCnt := service.GetNSCnt()
@@ -41,7 +334,7 @@ func GlobalDashBoard(c echo.Context) error {
 
 	// }
 
-	return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	// return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
 // func DashBoard(c echo.Context) error {
