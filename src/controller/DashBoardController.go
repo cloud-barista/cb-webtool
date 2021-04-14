@@ -27,7 +27,7 @@ type RespPublicIPInfo struct {
 
 // 특정 Namespace의 Dashboard -- > 모든 Namespace의 Dashboard도 있음.
 func DashBoardByNameSpaceMngForm(c echo.Context) error {
-	fmt.Println("GlobalDashBoard ************ : ")
+	fmt.Println("DashBoardByNameSpaceMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -43,10 +43,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 	store.Set("namespace", nsList)
 	log.Println(" nsList  ", nsList)
 
-	// provider 별 연결정보 count(MCIS 무관)
-	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
-	totalConnectionCount := len(cloudConnectionConfigInfoList)
+
 
 	// 해당 Namespace의 모든 MCIS 조회
 	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
@@ -54,6 +51,11 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 
 	totalMcisCount := len(mcisList) // mcis 갯수
 	totalVmCount := 0               // 모든 vm 갯수
+
+	// 등록된 mcis가 없으면 mcis생성화면으로 이동한다.
+	// if len(mcisList) == 0{
+	// 	// redirect
+	// }
 
 	totalMcisStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
@@ -138,6 +140,10 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 
 		mcisSimpleInfoList = append(mcisSimpleInfoList, mcisSimpleInfo)
 
+		// provider 별 연결정보 count(MCIS 무관)
+		cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+		connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
+		totalConnectionCount := len(cloudConnectionConfigInfoList)
 	}
 
 	return echotemplate.Render(c, http.StatusOK,
