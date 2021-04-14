@@ -201,9 +201,17 @@
 										<!-- // 각각의 VM 항목들 -->
 										<div class="shotbox">
 											
-											{{range $vmStatusIndex, $vmStatusObj := $item.VmStatusList}}
+											{{range $vmStatusIndex, $vmStatusObj := $item.VmSimpleList}}
 											<div class="shot bgbox_{{$vmStatusObj.VmStatus}}">
 												<a href="javascript:void(0);"><span>{{ $vmStatusObj.VmIndex}}</span></a>
+
+												<!-- Map 그리기 위한 vm 정보-->
+												<input type="hidden" name="vmID" id="vmID_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmID}}" />
+												<input type="hidden" name="vmName" id="vmName_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmName}}" />
+												<input type="hidden" name="vmStatus" id="vmStatus_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmStatus}}" />
+												<input type="hidden" name="longitude" id="longitude_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.Longitude}}" />
+												<input type="hidden" name="latitude" id="latitude_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.Latitude}}" />
+
 											</div>
 											{{ end }}
 
@@ -243,10 +251,20 @@
 <script type="text/javascript" src="/assets/js/operations/dashboard/dashboardbynamespacemng.js"></script>
 <script type="text/javascript" src="/assets/js/util/mcislifecycle.js"></script>
 <script type="text/javascript">
+	
+
 	$( document ).ready( function() {
 		$("[id^='mcis_areabox_']").each(function(){    
             $(this).removeClass("active");// style이 제대로 먹지 않아서 강제로 처리
     	})
+
+		const osmLayer = new ol.layer.Tile({
+			source: new ol.source.OSM(),
+		});	
+
+		// var JZMap = map_init()
+		// console.log("JZMAP here : ",JZMap);
+		setMap();
 	});
 </script>
 {{template "Footer" .}}

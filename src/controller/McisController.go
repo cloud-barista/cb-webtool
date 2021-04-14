@@ -137,11 +137,11 @@ func McisMngForm(c echo.Context) error {
 		// connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)] = count
 
 		//////////// vm status area
-		resultVmStatusList, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+		resultSimpleVmList, resultVmStatusCountMap := service.GetSimpleVmWithStatusCountMap(mcisInfo)
 
 		resultVmStatusNames := ""
-		for _, vmStatusObj := range resultVmStatusList {
-			resultVmStatusNames += vmStatusObj.VmID + "|" + vmStatusObj.VmName + "@"
+		for _, vmSimpleObj := range resultSimpleVmList {
+			resultVmStatusNames += vmSimpleObj.VmID + "|" + vmSimpleObj.VmName + "@"
 		}
 
 		log.Println("before " + resultVmStatusNames)
@@ -184,8 +184,7 @@ func McisMngForm(c echo.Context) error {
 		mcisSimpleInfo.Description = mcisInfo.Description
 
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
-
-		mcisSimpleInfo.VmStatusList = resultVmStatusList
+		mcisSimpleInfo.VmSimpleList = resultSimpleVmList
 		mcisSimpleInfo.VmStatusNames = resultVmStatusNames
 		mcisSimpleInfo.VmStatusCountMap = resultVmStatusCountMap
 		// mcisSimpleInfo.VmRunningCount = vmStatusCountMap[util.STATUS_ARRAY[0]]    //running
@@ -355,7 +354,7 @@ func McisRegProc(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.RegMcis(defaultNameSpaceID, mCISInfo)
-	log.Println("service returned")
+	log.Println("RegMcis service returned")
 	// if vNetErr != nil {
 	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -593,7 +592,7 @@ func McisLifeCycle(c echo.Context) error {
 	mcisLifeCycle.NameSpaceID = defaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
-	log.Println("service returned")
+	log.Println("McisLifeCycle service returned")
 	// if vNetErr != nil {
 	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -631,7 +630,7 @@ func McisVmLifeCycle(c echo.Context) error {
 	vmLifeCycle.NameSpaceID = defaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
-	log.Println("service returned")
+	log.Println("McisVmLifeCycle service returned")
 	// if vNetErr != nil {
 	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{

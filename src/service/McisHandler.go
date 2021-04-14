@@ -172,7 +172,7 @@ func GetMcisStatusCountMap(mcisInfo model.MCISInfo) map[string]int {
 
 // MCIS의 vm별 statun와 vm 상태별 count
 // key는 vmID + vmName, value는 vmStatus
-func GetVMStatusCountMap(mcisInfo model.MCISInfo) ([]model.VMStatus, map[string]int) {
+func GetSimpleVmWithStatusCountMap(mcisInfo model.MCISInfo) ([]model.VMSimpleInfo, map[string]int) {
 	// log.Println(" mcisInfo  ", index, mcisInfo)
 	// vmStatusMap := make(map[string]int)
 	// vmStatusMap := map[string]string{} // vmName : vmStatus
@@ -180,19 +180,26 @@ func GetVMStatusCountMap(mcisInfo model.MCISInfo) ([]model.VMStatus, map[string]
 	vmStatusCountMap := map[string]int{}
 	totalVmStatusCount := 0
 	vmList := mcisInfo.VMs
-	var vmStatusList []model.VMStatus
+	var vmSimpleList []model.VMSimpleInfo
 	for vmIndex, vmInfo := range vmList {
 		// log.Println(" vmInfo  ", vmIndex, vmInfo)
 		vmStatus := util.GetVmStatus(vmInfo.Status) // lowercase로 변환
 
-		// vmStatusMap[vmInfo.ID+"+"+] = vmStatus
-		vmStatusObj := model.VMStatus{
-			VmIndex:  vmIndex + 1,
-			VmID:     vmInfo.ID,
-			VmName:   vmInfo.Name,
-			VmStatus: vmStatus,
+		locationInfo := vmInfo.Location
+		vmLatitude := locationInfo.Latitude
+		vmLongitude := locationInfo.Longitude
+
+		log.Println(locationInfo)
+		//
+		vmSimpleObj := model.VMSimpleInfo{
+			VmIndex:   vmIndex + 1,
+			VmID:      vmInfo.ID,
+			VmName:    vmInfo.Name,
+			VmStatus:  vmStatus,
+			Latitude:  vmLatitude,
+			Longitude: vmLongitude,
 		}
-		vmStatusList = append(vmStatusList, vmStatusObj)
+		vmSimpleList = append(vmSimpleList, vmSimpleObj)
 
 		log.Println("vmStatus " + vmStatus + ", Status " + vmInfo.Status)
 		vmStatusCount := 0
@@ -238,7 +245,7 @@ func GetVMStatusCountMap(mcisInfo model.MCISInfo) ([]model.VMStatus, map[string]
 	// vmStatusCountMap["TERMINATED"] = vmStatusTerminated
 	// vmStatusCountMap["TOTAL"] = vmStatusCountMap["RUNNING"] + vmStatusCountMap["STOPPED"] + vmStatusCountMap["TERMINATED"]
 
-	return vmStatusList, vmStatusCountMap
+	return vmSimpleList, vmStatusCountMap
 
 }
 

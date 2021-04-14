@@ -80,11 +80,11 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 		mcisStatusCountMapByMcis[mcisInfo.ID] = resultMcisStatusCountMap // 각 MCIS의 status별 cnt
 
 		//////////// vm status area
-		resultVmStatusList, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+		resultSimpleVmList, resultVmStatusCountMap := service.GetSimpleVmWithStatusCountMap(mcisInfo)
 
 		resultVmStatusNames := ""
-		for _, vmStatusObj := range resultVmStatusList {
-			resultVmStatusNames += vmStatusObj.VmID + "|" + vmStatusObj.VmStatus + "@"
+		for _, vmSimpleObj := range resultSimpleVmList {
+			resultVmStatusNames += vmSimpleObj.VmID + "|" + vmSimpleObj.VmStatus + "@"
 		}
 
 		log.Println("before " + resultVmStatusNames)
@@ -128,7 +128,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
 
-		mcisSimpleInfo.VmStatusList = resultVmStatusList
+		mcisSimpleInfo.VmSimpleList = resultSimpleVmList
 		mcisSimpleInfo.VmStatusNames = resultVmStatusNames
 		mcisSimpleInfo.VmStatusCountMap = resultVmStatusCountMap
 
@@ -227,11 +227,11 @@ func GlobalDashBoard(c echo.Context) error {
 		// connectionConfigCountMap[util.GetProviderName(connectionInfo.ProviderName)] = count
 
 		//////////// vm status area
-		resultVmStatusList, resultVmStatusCountMap := service.GetVMStatusCountMap(mcisInfo)
+		resultVmSimpleList, resultVmStatusCountMap := service.GetSimpleVmWithStatusCountMap(mcisInfo)
 
 		resultVmStatusNames := ""
-		for _, vmStatusObj := range resultVmStatusList {
-			resultVmStatusNames += vmStatusObj.VmID + "|" + vmStatusObj.VmName + "@"
+		for _, vmSimpleObj := range resultVmSimpleList {
+			resultVmStatusNames += vmSimpleObj.VmID + "|" + vmSimpleObj.VmName + "@"
 		}
 
 		log.Println("before " + resultVmStatusNames)
@@ -275,7 +275,7 @@ func GlobalDashBoard(c echo.Context) error {
 
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
 
-		mcisSimpleInfo.VmStatusList = resultVmStatusList
+		mcisSimpleInfo.VmSimpleList = resultVmSimpleList
 		mcisSimpleInfo.VmStatusNames = resultVmStatusNames
 		mcisSimpleInfo.VmStatusCountMap = resultVmStatusCountMap
 

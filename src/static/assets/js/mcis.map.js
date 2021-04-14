@@ -192,8 +192,8 @@ function map_init(){
       var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
         return feature;
       })
-      
-      console.log("feature click info : ",feature.get("id"));
+      console.log(feature)
+      console.log("feature click info : ",feature.get("id"));//Cannot read property 'get' of undefined at e.<anonymous> (mcis.map.js:196)
       var id = feature.get("id")
       if(feature.get("id") != null){
         JZMap.removeOverlay(JZMap.getOverlayById(id));

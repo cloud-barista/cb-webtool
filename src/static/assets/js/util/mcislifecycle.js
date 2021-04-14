@@ -14,6 +14,7 @@ function mcisLifeCycle(mcisID, type){
         mcisID:mcisID,
         lifeCycleType:type
     }).then(result=>{
+        console.log("mcisLifeCycle result : ",result);
         var status = result.status
         var data = result.data
         callbackMcisLifeCycle(status, data, type)

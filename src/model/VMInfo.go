@@ -79,10 +79,12 @@ type CspViewVmDetailInfo struct {
 }
 
 type LocationInfo struct {
-	BriefAddr    string `json:"briefAddr"`
-	CloudType    string `json:"cloudType"`
-	Latitude     string `json:"latitude"`
-	Longitude    string `json:"longitude"`
+	BriefAddr string `json:"briefAddr"`
+	CloudType string `json:"cloudType"`
+	Latitude  string `json:"latitude"`
+	Longitude string `json:"longitude"`
+	// Latitude     float64 `json:"latitude"`
+	// Longitude    float64 `json:"longitude"`
 	NativeRegion string `json:"nativeRegion"`
 }
 
