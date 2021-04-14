@@ -67,7 +67,7 @@ func GetMCIS(nameSpaceID string, mcisID string) (model.MCISInfo, int) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	util.DisplayResponse(resp) // 수신내용 확인
+	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode

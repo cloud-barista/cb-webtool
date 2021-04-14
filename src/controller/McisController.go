@@ -517,6 +517,28 @@ func McisVMRegForm(c echo.Context) error {
 // 	return nil
 // }
 
+// GetMcisInfoData
+// 특정 MCIS의 상세정보를 가져온다.
+func GetMcisInfoData(c echo.Context) error {
+	log.Println("GetMcisInfoData")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login") // 조회기능에서 바로 login화면으로 돌리지말고 return message로 하는게 낫지 않을까?
+	}
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	mcisID := c.Param("mcisID")
+	log.Println("mcisID= " + mcisID)
+
+	resultMcisInfo, _ := service.GetMCIS(defaultNameSpaceID, mcisID)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "success",
+		"status":   200,
+		"MCISInfo": resultMcisInfo,
+	})
+}
+
 // MCIS 의 특정 VM의 정보를 가져온다. 단. 텀블벅 조회가 아니라 이미 저장되어 있는 store에서 꺼낸다.
 func GetVmInfoData(c echo.Context) error {
 	log.Println("GetVmInfoData")

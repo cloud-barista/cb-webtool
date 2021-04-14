@@ -146,7 +146,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
-			"McisList":           mcisList,
+			// "McisList":           mcisList,
 
 			// server count 영역
 			"TotalVmCount":          totalVmCount,
