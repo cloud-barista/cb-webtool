@@ -147,7 +147,7 @@ function lnb_on(){
 	// console.log('lnb_on path : ' + path)
 	// console.log('target1=' + target1)
 	// console.log('target2=' + target2)
-	// console.log('target3=' + target3)
+	console.log('target3=' + target3)
 
 	$("#tab_" + target1).addClass("active")
 
@@ -161,7 +161,7 @@ function lnb_on(){
 
 	// $("#" + target1) // Setting
 	$("#menu_level2_" + target2).addClass("active")
-	$("#menu_level3_"+target3).addClass("on")
+	$("#menu_level3_" + target3).addClass("on")
 
 	$(".leftmenu .tab-content ul > li").each(function(){
 		
@@ -598,7 +598,7 @@ function getCommonSecurityGroupList(targetKey, sortType) {
 
 				if( callerLocation == "Main"){
 					//location.href = "/operation/manage/mcis/mngform/"
-					location.href = "/operation/dashboard/namespace/mngform"
+					location.href = "/operation/dashboards/namespace/mngform"
 				}else{
 					location.reload(); // TODO : 호출한 곳에서 reload를 할 것인지 redirect를 할 것인지
 				}
