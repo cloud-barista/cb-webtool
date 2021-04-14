@@ -140,6 +140,22 @@ func main() {
 		DisableCache: true,
 	})
 
+	monitoringTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/dashboards/Dashboard",
+		Partials: []string{
+			"templates/OperationTop",
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+
 	mcisTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
@@ -153,15 +169,15 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manage/mcis/McisStatus",
-			"operation/manage/mcis/McisList",
-			"operation/manage/mcis/McisInfo",
-			"operation/manage/mcis/McisServerInfo",
-			"operation/manage/mcis/McisDetailInfo",
-			"operation/manage/mcis/McisDetailView",
-			"operation/manage/mcis/McisConnectionView",
-			"operation/manage/mcis/McisMonitoring",
-			"operation/manage/mcis/McisMonitoringView",
+			"operation/manages/mcis/McisStatus",
+			"operation/manages/mcis/McisList",
+			"operation/manages/mcis/McisInfo",
+			"operation/manages/mcis/McisServerInfo",
+			"operation/manages/mcis/McisDetailInfo",
+			"operation/manages/mcis/McisDetailView",
+			"operation/manages/mcis/McisConnectionView",
+			"operation/manages/mcis/McisMonitoring",
+			"operation/manages/mcis/McisMonitoringView",
 		},
 		DisableCache: true,
 	})
@@ -180,14 +196,14 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manage/mcis/McisSimpleConfigure",
-			"operation/manage/mcis/McisExpertConfigure",
-			"operation/manage/mcis/McisPopup",
+			"operation/manages/mcis/McisSimpleConfigure",
+			"operation/manages/mcis/McisExpertConfigure",
+			"operation/manages/mcis/McisPopup",
 
-			"operation/manage/mcis/McisOshw",
-			"operation/manage/mcis/McisNetwork",
-			"operation/manage/mcis/McisSecurity",
-			"operation/manage/mcis/McisOther",
+			"operation/manages/mcis/McisOshw",
+			"operation/manages/mcis/McisNetwork",
+			"operation/manages/mcis/McisSecurity",
+			"operation/manages/mcis/McisOther",
 		},
 		DisableCache: true,
 	})
@@ -269,15 +285,17 @@ func main() {
 	// // Dashboard
 	// e.GET("/Dashboard/Global", controller.GlobalDashBoard)
 	// e.GET("/Dashboard/NS", controller.NSDashBoard)
-	dashboardGroup := e.Group("/operation/dashboard", dashboardTemplate)
+	dashboardGroup := e.Group("/operation/dashboards", dashboardTemplate)
 
 	dashboardGroup.GET("/namespace/mngform", controller.DashBoardByNameSpaceMngForm)
-	dashboardGroup.GET("/globalnamespace", controller.GlobalDashBoard)
+	dashboardGroup.GET("/globalnamespace/mngform", controller.GlobalDashBoard)
 
 	// // Monitoring Control
 	// e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)
 	// e.GET("/Monitoring/mcis", controller.MornitoringListForm)
 	// e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
+	monitoringGroup := e.Group("/operation/monitorings", monitoringTemplate)
+	monitoringGroup.GET("/mcis/mngform", controller.McisMonitoringMngForm)
 
 	// MCIS
 	// e.GET("/Manage/MCIS/reg", controller.McisRegForm)
@@ -287,22 +305,22 @@ func main() {
 	// e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	// mcis에 form이 2개가 되면서 group을 나눔. json return은 굳이 group이 필요없어서 전체경로로 작음.
-	mcisGroup := e.Group("/operation/manage/mcis/mngform", mcisTemplate)
+	mcisGroup := e.Group("/operation/manages/mcis/mngform", mcisTemplate)
 	// e.GET("/mcis/reg", controller.McisRegForm)
 	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VMAddForm)
 	// e.POST("/mcis/reg/proc", controller.McisRegController)
 	mcisGroup.GET("/", controller.McisMngForm)
 
-	e.GET("/operation/manage/mcis/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
-	e.POST("/operation/manage/mcis/reg/proc", controller.McisRegProc)
+	e.GET("/operation/manages/mcis/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
+	e.POST("/operation/manages/mcis/reg/proc", controller.McisRegProc)
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
-	e.GET("/operation/manage/mcis/:mcisID/vm/:vmID", controller.GetVmInfoData)
-	e.POST("/operation/manage/mcis/proc/mcislifecycle", controller.McisLifeCycle)
+	e.GET("/operation/manages/mcis/:mcisID/vm/:vmID", controller.GetVmInfoData)
+	e.POST("/operation/manages/mcis/proc/mcislifecycle", controller.McisLifeCycle)
 	//var url = "/operation/manage" + "/mcis/" + mcisID + "/operation/" + type
-	e.POST("/operation/manage/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
-	e.POST("/operation/manage/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
-	e.POST("/operation/manage/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
+	e.POST("/operation/manages/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
+	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
+	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	//var url = DragonFlyURL+"/ns/"+nsid+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
 
@@ -312,7 +330,7 @@ func main() {
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	//http://54.248.3.145:1234/Manage/MCIS/reg/mz-azure-mcis/mz-azure-mcis
-	mcisRegGroup := e.Group("/operation/manage/mcis/regform", mcisRegTemplate)
+	mcisRegGroup := e.Group("/operation/manages/mcis/regform", mcisRegTemplate)
 	mcisRegGroup.GET("/", controller.McisRegForm)                    // MCIS 생성 + VM생성
 	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVMRegForm) // MCIS의 VM생성
 

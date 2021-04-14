@@ -95,7 +95,7 @@ function deployMcis(){
         new_obj['vm'] = Simple_Server_Config_Arr;
         console.log("new obj is : ",new_obj);
         // var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
-        var url = "/operation/manage/mcis/reg/proc"
+        var url = "/operation/manages/mcis/reg/proc"
         try{
             AjaxLoadingShow(true);
             axios.post(url,new_obj,{
@@ -109,7 +109,7 @@ function deployMcis(){
                 if(result.status == 201 || result.status == 200){
                     alert("Register Success")
                     // location.href = "/Manage/MCIS/list";
-                    location.href = "/operation/manage/mcis/mngform/"
+                    location.href = "/operation/manages/mcis/mngform/"
                 }else{
                     alert("Register Fail")
                     //location.reload(true);
