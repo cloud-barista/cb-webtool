@@ -58,7 +58,7 @@ function checkNS(){
     }).then(result =>{
         var data = result.data.ns
        if(!data){
-        alert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
+        commonAlert("NameSpace가 등록되어 있지 않습니다.\n등록페이지로 이동합니다.")
         location.href ="/NS/reg";
         return;
        }
@@ -606,7 +606,7 @@ function getCommonSecurityGroupList(targetKey, sortType) {
 				console.log("setNameSpace error : ",error);        
             });
         }else{
-            alert("NameSpace가 선택되어 있지 않습니다.\n등록되어 있지 않은 경우 등록하세요.")
+            commonAlert("NameSpace가 선택되어 있지 않습니다.\n등록되어 있지 않은 경우 등록하세요.")
             //location.href ="/NS/reg";
         }        
     }
