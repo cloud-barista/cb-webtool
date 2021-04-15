@@ -73,7 +73,7 @@
 												<th>Name</th>
 												<th>Cloud Connection</th>
 												<th>Total Infras <span>Count of Total Servers</span></th>
-												<th># of Servers <span>Count of Run / Stop / Pause / etc</span></th>
+												<th># of Servers <span>Count of Run / Stop / Terminate / etc</span></th>
 												<th>Description</th>
 												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 											</tr>
@@ -121,9 +121,14 @@
 													<input type="hidden" name="mcisStatus" value="{{$item.McisStatus}}" id="mcisStatus{{$index}}"/>
 													<input type="hidden" name="mcisDescription" value="{{$item.Description}}" id="mcisDescription{{$index}}"/>
 													<input type="hidden" name="mcisCloudConnections" value="{{$item.ConnectionConfigProviderNames}}" id="mcisCloudConnections{{$index}}"/>
-													<input type="hidden" name="mcisVMStatusList" value="{{$item.VmStatusNames}}" id="mcisVMStatusList{{$index}}"/><!-- @ 와 |(파이프 라인) 을 구분자로 -->
 													<input type="hidden" name="mcisVMTotalCount" value="{{$vmStatusCountMap.TOTAL}}" id="mcisVMTotalCount{{$index}}"/>
 													
+													<!-- MCIS의 VM들 이름, ID, 상태-->
+													{{range $vmStatusIndex, $vmStatusObj := $item.VmSimpleList}}													
+													<input type="hidden" name="vmID" id="mcisVmID_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmID}}" />
+													<input type="hidden" name="vmName" id="mcisVmName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmName}}" />
+													<input type="hidden" name="vmStatus" id="mcisVmStatus_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmStatus}}" />
+													{{ end }}
 
 												</td>
 										

@@ -112,12 +112,12 @@ function deleteSecurityGroup() {
     console.log("count : ", count);
 
     if(sgId == ''){
-        commonAlertOpen("삭제할 대상을 선택하세요.");
+        commonAlert("삭제할 대상을 선택하세요.");
         return false;
     }
 
     if(count != 1){
-        commonAlertOpen("삭제할 대상을 하나만 선택하세요.");
+        commonAlert("삭제할 대상을 하나만 선택하세요.");
         return false;
     }
 
@@ -132,7 +132,7 @@ function deleteSecurityGroup() {
     }).then(result => {
         var data = result.data
         if (result.status == 200 || result.status == 201) {
-            commonAlertOpen("Success Delete Image.");
+            commonAlert("Success Delete Image.");
             // location.reload(true);
             displaySecurityGroupInfo("DEL_SUCCESS")
         }
@@ -517,7 +517,7 @@ function createSecurityGroup() {
     var vNetId = $("#regVNetId").val();
     
     if (!cspSecurityGroupName) {
-        commonAlertOpen("Input New Security Group Name")
+        commonAlert("Input New Security Group Name")
         $("#regCspSshKeyName").focus()
         return;
     }
@@ -549,7 +549,7 @@ function createSecurityGroup() {
         }).then(result => {
             console.log("result sg : ", result);
             if (result.status == 200 || result.status == 201) {
-                commonAlertOpen("Success Create Security Group!!")
+                commonAlert("Success Create Security Group!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getSecurityGroupList("name");
                 //아니면 화면을 리로딩 시킬것인가?

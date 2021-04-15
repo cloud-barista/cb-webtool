@@ -256,7 +256,7 @@ func McisMngForm(c echo.Context) error {
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manage/McisMng", // 파일명
+		"operation/manages/McisMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,

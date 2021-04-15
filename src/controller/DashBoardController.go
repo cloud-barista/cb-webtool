@@ -43,8 +43,6 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 	store.Set("namespace", nsList)
 	log.Println(" nsList  ", nsList)
 
-
-
 	// 해당 Namespace의 모든 MCIS 조회
 	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
 	log.Println(" mcisList  ", mcisList)
@@ -139,12 +137,12 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 		mcisSimpleInfo.ConnectionConfigProviderCount = len(mcisConnectionMap)
 
 		mcisSimpleInfoList = append(mcisSimpleInfoList, mcisSimpleInfo)
-
-		// provider 별 연결정보 count(MCIS 무관)
-		cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-		connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
-		totalConnectionCount := len(cloudConnectionConfigInfoList)
 	}
+
+	// provider 별 연결정보 count(MCIS 무관)
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
+	totalConnectionCount := len(cloudConnectionConfigInfoList)
 
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/dashboards/DashboardByNameSpaceMng", // 파일명

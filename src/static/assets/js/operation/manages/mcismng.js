@@ -142,9 +142,8 @@ function clickListOfMCIS(id,index){
     // List Of MCIS에서 선택한 row 외에는 안보이게
     $("[id^='server_info_tr_']").each(function(){
         var item = $(this).attr("item").split("|")
-        console.log()
-        if(id == item[0]){
-           
+        console.log(item)
+        if(id == item[0]){           
             $(this).addClass("on")
         }else{
             $(this).removeClass("on")
@@ -202,52 +201,40 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
     $("#service_status_icon").empty();
     $("#service_status_icon").append(mcis_badge)
 
-
-    var sta = mcisStatus;
-    var sl = sta.split("-");
-    var status = sl[0].toLowerCase()
     var vm_badge = "";
-    
-    var vmList = vms.split("@") // vm목록은 @
-    console.log("vmList " + vmList);
-    // for(var x in vmList){
-    for( var x= 0; x < vmList.length; x++){
-        var vmInfo = vmList[x].split("|") // 이름과 상태는 "|"로 구분
-        console.log("x " + x);
-        console.log("vmInfo " + vmInfo);
+    $("[id^='mcisVmID_']").each(function(){		
+        var mcisVm = $(this).attr("id").split("_")
+        thisMcisIndex = mcisVm[1]
+        vmIndexOfMcis = mcisVm[2]
 
-        var vmIdAndName = vmInfo[0].split("+"); // ID와 이름은 "-"로 구분
-        vmID = vmIdAndName[0];
-        vmName = vmIdAndName[1];
+        if( thisMcisIndex == mcisIndex){
 
-        vmStatus = vmInfo[1].toLowerCase();
-
-        var vmStatusIcon ="bgbox_g";
-        
-        if(vmStatus == "running"){ 
-            vmStatusIcon ="bgbox_b"
-        }else if(vmStatus == "include" ){
-            vmStatusIcon ="bgbox_g"
-            // vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcisID+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
-        }else if(vmStatus == "suspended"){
-            vmStatusIcon ="bgbox_g"
-            // vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcisID+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
+            var vmID = $("#mcisVmID_" + mcisIndex + "_" + vmIndexOfMcis).val();
+            var vmName = $("#mcisVmName_" + mcisIndex + "_" + vmIndexOfMcis).val();
+            var vmStatus = $("#mcisVmStatus_" + mcisIndex + "_" + vmIndexOfMcis).val();
+            vmStatus = vmStatus.toLowerCase();
             
-        }else if(vmStatus == "terminated"){
-            vmStatusIcon ="bgbox_r"
-            // vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcisID+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
-            
-        }else{
-            vmStatusIcon ="bgbox_g"
-            // vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcisID+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
+            var vmStatusIcon ="bgbox_g";            
+            if(vmStatus == "running"){ 
+                vmStatusIcon ="bgbox_b"
+            }else if(vmStatus == "include" ){
+                vmStatusIcon ="bgbox_g"
+            }else if(vmStatus == "suspended"){
+                vmStatusIcon ="bgbox_g"
+            }else if(vmStatus == "terminated"){
+                vmStatusIcon ="bgbox_r"
+            }else{
+                vmStatusIcon ="bgbox_g"
+            }
+            vm_badge += '<li class="sel_cr ' + vmStatusIcon + '"><a href="javascript:void(0);" onclick="vmDetailInfo(\''+mcisID+'\',\''+mcisName+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
         }
-        vm_badge += '<li class="sel_cr ' + vmStatusIcon + '"><a href="javascript:void(0);" onclick="vmDetailInfo(\''+mcisID+'\',\''+mcisName+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
-            
-        $("#mcis_server_info_box").empty();
-        $("#mcis_server_info_box").append(vm_badge);
-    }
+    });
+    // console.log(vm_badge);
+    $("#mcis_server_info_box").empty();
+    $("#mcis_server_info_box").append(vm_badge);
 
     //Manage MCIS Server List on/off : table을 클릭하면 해당 Row 에 active style로 보여주기
+    $(".dashboard .status_list tbody tr").each(function(){
     $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function(){
         var $sel_list = $(this),
             $detail = $(".server_info");

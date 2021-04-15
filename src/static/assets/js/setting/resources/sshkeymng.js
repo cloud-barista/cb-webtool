@@ -207,7 +207,7 @@ function deleteSshKey(){
     }).then(result => {
         var data = result.data;
         if (result.status == 200 || result.status == 201) {
-            commonAlertOpen("Success Delete SSH Key.");
+            commonAlert("Success Delete SSH Key.");
             // location.reload(true);
             getSshKeyList("name");
         }

@@ -137,12 +137,12 @@ function deleteVirtualMachineImage() {
     console.log("count : ", count);
 
     if(imageId == ''){
-        commonAlertOpen("삭제할 대상을 선택하세요.");
+        commonAlert("삭제할 대상을 선택하세요.");
         return false;
     }
 
     if(count != 1){
-        commonAlertOpen("삭제할 대상을 하나만 선택하세요.");
+        commonAlert("삭제할 대상을 하나만 선택하세요.");
         return false;
     }
 
@@ -158,7 +158,7 @@ function deleteVirtualMachineImage() {
     }).then(result => {
         var data = result.data
         if (result.status == 200 || result.status == 201) {
-            commonAlertOpen("Success Delete Image.");
+            commonAlert("Success Delete Image.");
             
             displayVirtualMachineImageInfo("DEL_SUCCESS")
             // location.reload(true);
@@ -344,7 +344,7 @@ function createVirtualMachineImage() {
     console.log("check obj : " + imgId + ", " + imgName + ", " + cspImgId + ", " + cspImgName + ", " + guestOS + ", " + connectionName + ", " + description);
     
     if (!imgName) {
-        commonAlertOpen("Input New Image Name")
+        commonAlert("Input New Image Name")
         $("#regImageName").focus()
         return;
     }
@@ -373,7 +373,7 @@ function createVirtualMachineImage() {
         }).then(result => {
             console.log("result image : ", result);
             if (result.status == 200 || result.status == 201) {
-                commonAlertOpen("Success Create Image!!")
+                commonAlert("Success Create Image!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 displayVirtualMachineImageInfo("REG_SUCCESS")
                 //아니면 화면을 리로딩 시킬것인가?
@@ -382,13 +382,13 @@ function createVirtualMachineImage() {
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
-                commonAlertOpen("Fail Create Image)")
+                commonAlert("Fail Create Image)")
             }
         }).catch(function(error){
             console.log("image create error : ",error);        
         });
     } else {
-        commonAlertOpen("Input Image Name")
+        commonAlert("Input Image Name")
         $("#regImageName").focus()
         return;
     }

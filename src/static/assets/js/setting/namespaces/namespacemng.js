@@ -96,7 +96,7 @@ function createNameSpace(){
     var namespace = $("#regName").val()
     var desc = $("#regDesc").val()
     if(!namespace){
-        commonAlertOpen("Input New NameSpace")
+        commonAlert("Input New NameSpace")
         $("#regName").focus()
         return;
     }
@@ -116,18 +116,18 @@ function createNameSpace(){
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                commonAlertOpen("Namespace creation succeeded");
+                commonAlert("Namespace creation succeeded");
                 
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getNameSpaceList();
                 clearNamespaceInfo();
                 
             }else{
-                commonAlertOpen("Namespace creation failed");
+                commonAlert("Namespace creation failed");
             }
         });
     }else{
-        commonAlertOpen("Input NameSpace")
+        commonAlert("Input NameSpace")
         $("#regDesc").focus()
         return;
     }
@@ -142,7 +142,7 @@ function deleteNameSpace () {
     // checkbox 선택되어있는지 체크할까?
     if(!nameSpaceID){
         // alert("select NameSpace")
-        commonAlertOpen("Please select a namespace.");
+        commonAlert("Please select a namespace.");
         return;
     }
     
@@ -153,7 +153,7 @@ function deleteNameSpace () {
             console.log(result);
             if(result.status == 200 || result.status == 201){
                 // alert("Success delete NameSpace")
-                commonAlertOpen("Namespace deletion succeeded");
+                commonAlert("Namespace deletion succeeded");
                 clearNamespaceInfo()
 
                 //등록하고 나서 화면을 그냥 고칠 것인가?
@@ -161,14 +161,14 @@ function deleteNameSpace () {
                 
                 displayNameSpaceInfo("DEL_SUCCESS")
             }else{
-                commonAlertOpen("Namespace deletion failed");
+                commonAlert("Namespace deletion failed");
             }
         }).catch(function(error){
             console.log("namespace delete error : ",error);        
         });
     }else{
         // alert("Input NameSpace")
-        commonAlertOpen("Input NameSpace");
+        commonAlert("Input NameSpace");
         $("#regDesc").focus()
         return;
     }

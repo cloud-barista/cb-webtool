@@ -66,12 +66,12 @@ function deleteVPC(){
     console.log("count : ", count);
 
     if(vNetId == ''){
-        commonAlertOpen("삭제할 대상을 선택하세요.");
+        commonAlert("삭제할 대상을 선택하세요.");
         return false;
     }
 
     if(count != 1){
-        commonAlertOpen("삭제할 대상을 하나만 선택하세요.");
+        commonAlert("삭제할 대상을 하나만 선택하세요.");
         return false;
     }
 
@@ -88,7 +88,7 @@ function deleteVPC(){
         var data = result.data;
         console.log(data);
         if (result.status == 200 || result.status == 201) {
-           commonAlertOpen("Success Delete Network")
+           commonAlert("Success Delete Network")
             // location.reload(true);
             //vNetInfoBox 안보이게
             displayVNetInfo("DEL_SUCCESS")
@@ -295,7 +295,7 @@ function getConnectionInfo(provider){
             }
         }
         if(count == 0){
-            commonAlertOpen("해당 Provider에 등록된 Connection 정보가 없습니다.")
+            commonAlert("해당 Provider에 등록된 Connection 정보가 없습니다.")
                 html +='<option selected>Select Configname</option>';
         }
         if(confArr.length > 1){
@@ -351,7 +351,7 @@ function createVNet() {
     var connectionName = $("#regConnectionName").val();
     var cidrBlock = $("#regCidrBlock").val();
     if (!vpcName) {
-        commonAlertOpen("Input New VPC Name")
+        commonAlert("Input New VPC Name")
         $("#regVpcName").focus()
         return;
     }
@@ -379,7 +379,7 @@ function createVNet() {
         }).then(result => {
             console.log("result vNet : ", result);
             if (result.status == 200 || result.status == 201) {
-                commonAlertOpen("Success Create Network(vNet)!!")
+                commonAlert("Success Create Network(vNet)!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 // 등록 성공시 등록한 객체가 들어 옴. 일단 기존 List에 추가하는 것으로?
                 var data = result.data;
@@ -396,13 +396,13 @@ function createVNet() {
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
-                commonAlertOpen("Fail Create Network(vNet)")
+                commonAlert("Fail Create Network(vNet)")
             }
         }).catch(function(error){
             console.log("Network create error : ",error);        
         });
     } else {
-        commonAlertOpen("Input VPC Name")
+        commonAlert("Input VPC Name")
         $("#regVpcName").focus()
         return;
     }
@@ -456,7 +456,7 @@ function showVNetInfo(vpcName) {
         $("#dtlSubnet").val(dtlSubnet);
 
         if(dtlConnectionName == '' || dtlConnectionName == undefined ){
-            commonAlertOpen("ConnectionName is empty")
+            commonAlert("ConnectionName is empty")
         }else{
             // getProvider(dtlConnectionName);
             // var providerValue = getProviderNameByConnection(dtlConnectionName);
