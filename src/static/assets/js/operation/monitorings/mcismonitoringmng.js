@@ -102,7 +102,7 @@ function selectMonitoringMcis(mcisId){
                 }else{
                     vmStatusIcon = "bgbox_g";                    
                 }
-                vm_badge += '<li class="sel_cr ' + vmStatusIcon + '" ><a href="javascript:void(0);" onclick="set_vm(\''+mcis_id+'\',\''+vms[o].id+'\')" ><span class="txt">'+vms[o].name+'</span></a></li>';
+                vm_badge += '<li class="sel_cr ' + vmStatusIcon + '" ><a href="javascript:void(0);" onclick="selectVm(\''+mcis_id+'\',\''+vms[o].id+'\')" ><span class="txt">'+vms[o].name+'</span></a></li>';
                 console.log("vm_status : ", vm_status)
 
             }
@@ -162,7 +162,8 @@ function selectMonitoringMcis(mcisId){
     })
 }
 
-function set_vm(mcis_id,vm_id){
+// vm 선택시 해당 vm의 monitoring 조회
+function selectVm(mcis_id,vm_id){
     $('#vm_id').val(vm_id);
     var input_duration = $("#input_duration").val();
     var duration_type = $("#duration_type").val();

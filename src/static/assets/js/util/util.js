@@ -131,8 +131,6 @@ function commonConfirmOpen(targetAction){
             ["AddNewInstanceSpec", "Would you like to register Spec <br />Resource ?"],
             ["DeleteInstanceSpec", "Would you like to un-register Spec <br />Resource ?"],  
 
-            ["AddNewMCIS", "Would you like to create MCIS ?"],
-
             ["GotoMonitoringPerformance", "Would you like to view performance <br />for MCIS ?"],
             ["GotoMonitoringFault", "Would you like to view fault <br />for MCIS ?"],
             ["GotoMonitoringCost", "Would you like to view cost <br />for MCIS ?"],
@@ -143,7 +141,8 @@ function commonConfirmOpen(targetAction){
             ["MCISLifeCycleResume", "Would you like to resume MCIS ?"],//onclick="mcis_life_cycle('resume')"
             ["MCISLifeCycleTerminate", "Would you like to terminate MCIS ?"],//onclick="mcis_life_cycle('terminate')
             ["MCISManagement", "Would you like to manage MCIS ?"],// 해당 function 없음...
-            ["AddNewMCIS", "Would you like to ADD VM at MCIS ?"],
+            ["MoveToMCISManagement", "Would you like to manage MCIS ?"],            
+            ["AddNewMCIS", "Would you like to create MCIS ?"],
 
             ["VMLifeCycle", "Would you like to view Server ?"],
             ["VMLifeCycleReboot", "Would you like to reboot MCIS ?"], //onclick="vm_life_cycle('reboot')"
@@ -234,9 +233,7 @@ function commonConfirmOk(){
         displayInstanceSpecInfo("REG")
         goFocus('instanceSpecCreateBox');
     }else if ( targetAction == "DeleteInstanceSpec"){
-        deleteInstanceSpec()
-    }else if ( targetAction == "AddNewMCIS"){
-        createNewMCIS()
+        deleteInstanceSpec()   
     }else if ( targetAction == "GotoMonitoringPerformance"){
         alert("모니터링으로 이동 GotoMonitoringPerformance")
         // location.href ="";//../operation/Monitoring_Mcis.html
@@ -259,8 +256,10 @@ function commonConfirmOk(){
         callMcisLifeCycle('terminate')
     }else if ( targetAction == "MCISManagement"){
         alert("수행할 function 정의되지 않음");
+    }else if ( targetAction == "MoveToMCISManagement"){
+        location.href ="/operation/manages/mcis/mngform/";
     }else if ( targetAction == "AddNewMCIS"){
-        alert("수행할 function 정의되지 않음");
+        location.href ="/operation/manages/mcis/regform/";
     }else if ( targetAction == "VMLifeCycle"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "VMLifeCycleReboot"){

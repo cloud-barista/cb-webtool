@@ -233,8 +233,50 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
     $("#mcis_server_info_box").empty();
     $("#mcis_server_info_box").append(vm_badge);
 
+    // var sta = mcisStatus;
+    // var sl = sta.split("-");
+    // var status = sl[0].toLowerCase()
+    // var vm_badge = "";
+    
+    // var vmList = vms.split("@") // vm목록은 @
+    // console.log("vmList " + vmList);
+    // // for(var x in vmList){
+    // for( var x= 0; x < vmList.length; x++){
+    //     var vmInfo = vmList[x].split("|") // 이름과 상태는 "|"로 구분
+    //     console.log("x " + x);
+    //     console.log("vmInfo " + vmInfo);
+
+    //     vmID = vmInfo[0];
+    //     vmName = vmInfo[1];
+
+    //     vmStatus = vmInfo[1].toLowerCase();
+
+    //     var vmStatusIcon ="bgbox_g";
+        
+    //     if(vmStatus == "running"){ 
+    //         vmStatusIcon ="bgbox_b"
+    //     }else if(vmStatus == "include" ){
+    //         vmStatusIcon ="bgbox_g"
+    //         // vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcisID+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
+    //     }else if(vmStatus == "suspended"){
+    //         vmStatusIcon ="bgbox_g"
+    //         // vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcisID+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
+            
+    //     }else if(vmStatus == "terminated"){
+    //         vmStatusIcon ="bgbox_r"
+    //         // vm_badge += '<li class="sel_cr bgbox_r"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcisID+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
+            
+    //     }else{
+    //         vmStatusIcon ="bgbox_g"
+    //         // vm_badge += '<li class="sel_cr bgbox_g"><a href="javascript:void(0);" onclick="click_view_vm(\''+mcisID+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
+    //     }
+    //     vm_badge += '<li class="sel_cr ' + vmStatusIcon + '"><a href="javascript:void(0);" onclick="vmDetailInfo(\''+mcisID+'\',\''+mcisName+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
+    //     //console.log(vm_badge);
+    //     $("#mcis_server_info_box").empty();
+    //     $("#mcis_server_info_box").append(vm_badge);
+    // }
+
     //Manage MCIS Server List on/off : table을 클릭하면 해당 Row 에 active style로 보여주기
-    $(".dashboard .status_list tbody tr").each(function(){
     $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function(){
         var $sel_list = $(this),
             $detail = $(".server_info");
@@ -563,185 +605,4 @@ function showVMMonitoring(mcisID, vmID){
  }
  
 
- function getVMMetric(chartTarget,target, mcisID, vmID, metric, periodType,statisticsCriteria, duration){     
-	console.log("====== Start GetMetric ====== ")
-	var color = "";
-    var metric_size ="";
-
-    var vmChart = setVmChart(chartTarget,target);
-	vmChart.clear()
-    
-	var url = "/operation/manages/mcis/proc/vmmonitoring"    
-    console.log("Request URL : ",url)
-    axios.post(url,{
-        headers: { },
-        mcisID:mcisID,
-        vmID:vmID,
-        metric:metric,
-        periodType:periodType,
-        statisticsCriteria:statisticsCriteria,
-        duration:duration
-    }).then(result=>{
-        var data = result.data.VMMonitoringInfo
-        console.log("Get Monitoring Data : ",data)
-        console.log("info items : ", target);
-        console.log("======== start mapping data ======");
-        $("#"+chartTarget).empty();       
-
-        //data sets
-        var key =[]
-        var values = data.values[0]
-        for(var i in values){                
-            key.push(i)
-        }
-        console.log("Key values time except:",key);
-
-        var labels = key;
-        var datasets = data.values;
-        // 각 값의 배열 데이터들
-        //console.log("info labels : ",labels);
-        console.log("info datasets : ",datasets);
-
-        var obj = {}
-        obj.columns = labels
-        obj.values = datasets
-
-        var timeObj = xAxisSet(obj,target);
-        console.log("chart_target :",chartTarget);
-        console.log("info datasets : ", timeObj);			
-        
-        vmChart.data = timeObj;
-        vmChart.update();
-    });
-	
-}
-
-function setVmChart(chartTarget,target){
-    var ctx = document.getElementById(chartTarget).getContext('2d')
-    var vmChart = new Chart(ctx,{
-        type:"line",
-        data:{},
-        options:{
-            responsive: true,
-            title: {
-                display: true,
-                text: target
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                x: {
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Time'
-                    }
-                },
-                y: {
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Value'
-                    }
-                }
-            }
-        }
-    });
-    return vmChart;
-}
-
-// x축 설정
-function xAxisSet(obj, title){
-    //data sets
-    console.log("labels:",obj)
-    console.log("")
-    var labels = obj.columns;
-    var datasets = obj.values;
-
-    // 각 값의 배열 데이터들
-    var series_label = new Array();
-    var data_set = new Array();
-    for(var i in labels){
-        var ky = labels[i]
-        var series_data = new Array(); 
-        if(ky == "time"){
-            for(var k in datasets){
-                for(var o in datasets[k]){
-                    if(o == ky){
-                        series_label.push(datasets[k][o])
-                    }
-                }
-             }
-
-        }else{
-        
-            var dt = {}
-
-            dt.label = ky
-            var color1 = Math.floor(Math.random() * 256);
-            var color2 = Math.floor(Math.random() * 256);
-            var color3 = Math.floor(Math.random() * 256);
-            var color = 'rgb('+color1+","+color2+","+color3+")"
-            dt.borderColor = color
-            dt.backgroundColor = color;      
-      
-            dt.fill= false;
-            for(var k in datasets){
-                for(var o in datasets[k]){
-                    if(o == ky){
-                       series_data.push(datasets[k][o])
-                    }
-                }
-            }
-            dt.data = series_data
-            data_set.push(dt)
-        }       
-    }// end of for
-    
-    var newObj = {};
-    console.log("data set : ",data_set);
-    console.log("time series : ",series_label);
-    newObj.labels = series_label //시간만 담김 배열
-    newObj.datasets =  data_set//각 데이터 셋의 배열
-    console.log("Chart Object : ",newObj);
-    config.type = 'line',
-    config.data = newObj
-    config.options = {
-        responsive: true,
-        title: {
-            display: true,
-            text: title
-        },
-        tooltips: {
-            mode: 'index',
-            intersect: false,
-        },
-        hover: {
-            mode: 'nearest',
-            intersect: true
-        },
-        scales: {
-            x: {
-                display: true,
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Time'
-                }
-            },
-            y: {
-                display: true,
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Value'
-                }
-            }
-        }
-    }// end of config.options
-   return newObj;
-}
+// getVMMetric 는 mcis.chart.js로 이동 

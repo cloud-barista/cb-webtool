@@ -89,10 +89,10 @@ function setMap(){
         var vms = new Object();
         vms.id = vmIDValue;
         vms.name = vmNameValue;
-        vms.status = vmStatusValue;
-        vms.status = vmStatusValue;
-        vms.status = vmStatusValue;
-        vms.status = vmStatusValue;
+        vms.longitudeValue = longitudeValue;
+        vms.latitudeValue = latitudeValue;
+        // vms.status = vmStatusValue;
+        // vms.status = vmStatusValue;
 
         var fromLonLat = longitudeValue+" "+latitudeValue;
         console.log(longitudeValue + " : " + latitudeValue);

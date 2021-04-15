@@ -42,7 +42,7 @@ func McisRegForm(c echo.Context) error {
 	log.Println(" regionList  ", regionList)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manage/McisCreate", // 파일명
+		"operation/manages/McisCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
