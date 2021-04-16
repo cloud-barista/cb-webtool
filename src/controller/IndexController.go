@@ -186,9 +186,10 @@ func LoginProc(c echo.Context) error {
 		})
 	}
 	if len(nsList) == 0 {
-		nameSpaceInfo, createNameSpaceErr := service.CreateDefaultNamespace()
-		if createNameSpaceErr != 200 {
-			log.Println(" default namespace create failed  ", createNameSpaceErr)
+		nameSpaceInfo, createNameSpaceStatus := service.CreateDefaultNamespace()
+		if createNameSpaceStatus.StatusCode == 500 {
+			log.Println(" default namespace create failed  ", createNameSpaceStatus)
+			// login은 되었으므 main 화면까지는 보내야되지 않을까?
 		} else {
 			nsList = append(nsList)
 			storedUser["defaultnamespacename"] = nameSpaceInfo.Name

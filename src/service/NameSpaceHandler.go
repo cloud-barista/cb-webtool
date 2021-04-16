@@ -201,7 +201,7 @@ func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, int) {
 }
 
 // NameSpace 삭제
-func DelNameSpace(nameSpaceID string) (io.ReadCloser, int) {
+func DelNameSpace(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID
 
@@ -214,9 +214,10 @@ func DelNameSpace(nameSpaceID string) (io.ReadCloser, int) {
 	// body, err := util.CommonHttpDelete(url, pbytes)
 	if err != nil {
 		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	return respBody, respStatus
+	return respBody, model.WebStatus{StatusCode: respStatus}
 }

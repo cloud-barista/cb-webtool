@@ -75,19 +75,19 @@ func NameSpaceRegProc(c echo.Context) error {
 	// pbytes, _ := json.Marshal(person)
 	respBody, respStatus := service.RegNameSpace(nameSpaceInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if respStatus != 200 {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	// 저장 성공하면 namespace 목록 조회
-	nameSpaceList, err := service.GetNameSpaceList()
-	if err != 200 {
+	nameSpaceList, nsStatus := service.GetNameSpaceList()
+	if nsStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message":       "fail",
-			"status":        "403",
+			"message":       respStatus.Message,
+			"status":        respStatus.StatusCode,
 			"NameSpaceList": nil,
 		})
 	}
@@ -125,11 +125,11 @@ func NameSpaceUpdateProc(c echo.Context) error {
 	}
 
 	// 저장 성공하면 namespace 목록 조회
-	nameSpaceList, err := service.GetNameSpaceList()
-	if err != 200 {
+	nameSpaceList, nsStatus := service.GetNameSpaceList()
+	if nsStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message":       "fail",
-			"status":        err,
+			"message":       nsStatus.Message,
+			"status":        nsStatus.StatusCode,
 			"NameSpaceList": nil,
 		})
 	}
@@ -161,19 +161,19 @@ func NameSpaceDelProc(c echo.Context) error {
 
 	respBody, respStatus := service.DelNameSpace(paramNameSpaceID)
 	fmt.Println("=============respBody =============", respBody)
-	if respStatus != 200 {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	// 저장 성공하면 namespace 목록 조회
 	nameSpaceList, nsStatus := service.GetNameSpaceList()
-	if nsStatus != 200 {
+	if nsStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message":       "fail",
-			"status":        nsStatus,
+			"message":       nsStatus.Message,
+			"status":        nsStatus.StatusCode,
 			"NameSpaceList": nil,
 		})
 	}
@@ -237,11 +237,11 @@ func NameSpaceMngForm(c echo.Context) error {
 func GetNameSpaceList(c echo.Context) error {
 	fmt.Println("====== GET NAMESPACE LIST ========")
 	store := echosession.FromContext(c)
-	nameSpaceInfoList, nsErr := service.GetNameSpaceList()
-	if nsErr != 200 {
+	nameSpaceInfoList, nsStatus := service.GetNameSpaceList()
+	if nsStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"message": nsStatus.Message,
+			"status":  nsStatus.StatusCode,
 		})
 	} else {
 		store.Set("namespacelist", nameSpaceInfoList)
