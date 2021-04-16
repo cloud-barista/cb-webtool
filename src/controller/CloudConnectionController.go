@@ -163,10 +163,10 @@ func CloudConnectionConfigRegProc(c echo.Context) error {
 	log.Println(cloudConnectionConfigInfo)
 	respBody, respStatus := service.RegCloudConnectionConfig(cloudConnectionConfigInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if respStatus != 200 {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
@@ -195,10 +195,10 @@ func CloudConnectionConfigDelProc(c echo.Context) error {
 
 	respBody, respStatus := service.DelCloudConnectionConfig(paramConfigName)
 	fmt.Println("=============respBody =============", respBody)
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
@@ -273,12 +273,12 @@ func RegionRegProc(c echo.Context) error {
 		})
 	}
 	log.Println(regionInfo)
-	respBody, reErr := service.RegRegion(regionInfo)
+	respBody, respStatus := service.RegRegion(regionInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != 200 {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
@@ -307,10 +307,10 @@ func RegionDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelRegion(paramRegion)
 	fmt.Println("=============respBody =============", respBody)
 	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
@@ -387,10 +387,10 @@ func CredentialRegProc(c echo.Context) error {
 	log.Println(credentialInfo)
 	respBody, respStatus := service.RegCredential(credentialInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if respStatus != 200 {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
@@ -419,16 +419,16 @@ func CredentialDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelCredential(paramCredential)
 	fmt.Println("=============respBody =============", respBody)
 	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus,
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -498,18 +498,18 @@ func DriverRegProc(c echo.Context) error {
 		})
 	}
 	log.Println(driverInfo)
-	respBody, reErr := service.RegDriver(driverInfo)
+	respBody, respStatus := service.RegDriver(driverInfo)
 	fmt.Println("=============respBody =============", respBody)
-	if reErr != 200 {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  "200",
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -528,16 +528,16 @@ func DriverDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelDriver(paramDriver)
 	fmt.Println("=============respBody =============", respBody)
 	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus,
+		"status":  respStatus.StatusCode,
 	})
 }
 

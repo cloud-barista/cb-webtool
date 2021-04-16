@@ -19,20 +19,19 @@ import (
 // var MCISUrl = os.Getenv("TUMBLE_URL")// util.TUMBLEBUG
 
 // MCIS 목록 조회
-func GetMcisList(nameSpaceID string) ([]model.MCISInfo, int) {
+func GetMcisList(nameSpaceID string) ([]model.MCISInfo, model.WebStatus) {
 	// func GetMCISList(nsid string) []MCISInfo {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
-	var respStatus int
 	if err != nil {
 		fmt.Println(err)
-		//respStatus = 500
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
-	respStatus = resp.StatusCode
+	respStatus := resp.StatusCode
 
 	mcisList := map[string][]model.MCISInfo{}
 	json.NewDecoder(respBody).Decode(&mcisList)
@@ -40,11 +39,11 @@ func GetMcisList(nameSpaceID string) ([]model.MCISInfo, int) {
 	log.Println(respBody)
 	util.DisplayResponse(resp) // 수신내용 확인
 
-	return mcisList["mcis"], respStatus
+	return mcisList["mcis"], model.WebStatus{StatusCode: respStatus}
 }
 
 // 특정 MCIS 조회
-func GetMcisData(nameSpaceID string, mcisID string) (model.MCISInfo, int) {
+func GetMcisData(nameSpaceID string, mcisID string) (*model.MCISInfo, model.WebStatus) {
 	// func GetMCIS(nsid string, mcisId string) []MCISInfo {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
 	// 	// resp, err := http.Get(url)
@@ -64,16 +63,17 @@ func GetMcisData(nameSpaceID string, mcisID string) (model.MCISInfo, int) {
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-
+	mcisInfo := model.MCISInfo{}
 	if err != nil {
 		fmt.Println(err)
+		return &mcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	mcisInfo := model.MCISInfo{}
+	
 	json.NewDecoder(respBody).Decode(&mcisInfo)
 	fmt.Println(mcisInfo)
 
@@ -85,27 +85,30 @@ func GetMcisData(nameSpaceID string, mcisID string) (model.MCISInfo, int) {
 	// pbytes, _ := json.Marshal(respBody)
 	// fmt.Println(string(pbytes))
 
-	return mcisInfo, respStatus
+	return &mcisInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-func RegMcis(nameSpaceID string, mCISInfo *model.MCISInfo) (model.MCISInfo, int) {
+func RegMcis(nameSpaceID string, mCISInfo *model.MCISInfo) (*model.MCISInfo, model.WebStatus) {
 
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 
 	pbytes, _ := json.Marshal(mCISInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	resultMcisInfo := model.MCISInfo{}
 	if err != nil {
 		fmt.Println(err)
+		return &resultMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
-	respStatusCode := resp.StatusCode
-	respStatus := resp.Status
-	log.Println("respStatusCode = ", respStatusCode)
-	log.Println("respStatus = ", respStatus)
+	respStatus := resp.StatusCode
+	// respStatus := resp.Status
+	// log.Println("respStatusCode = ", respStatusCode)
+	// log.Println("respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
-	resultMcisInfo := model.MCISInfo{}
+	
 	json.NewDecoder(respBody).Decode(resultMcisInfo)
 	fmt.Println(resultMcisInfo)
 
@@ -113,7 +116,7 @@ func RegMcis(nameSpaceID string, mCISInfo *model.MCISInfo) (model.MCISInfo, int)
 	// respBody := resp.Body
 	// respStatus := resp.StatusCode
 	// return respBody, respStatus
-	return resultMcisInfo, respStatusCode
+	return &resultMcisInfo, model.WebStatus{StatusCode: respStatus}
 
 }
 
@@ -322,7 +325,7 @@ func GetVMConnectionCountByMcis(mcisInfo model.MCISInfo) map[string]int {
 }
 
 // MCIS의 특정 VM 조회
-func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (model.VMInfo, int) {
+func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*model.VMInfo, model.WebStatus) {
 	///ns/{nsId}/mcis/{mcisId}/vm/{vmId}
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
 
@@ -330,16 +333,17 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (model.VMIn
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-
+	vmInfo := model.VMInfo{}
 	if err != nil {
 		fmt.Println(err)
+		return &vmInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	vmInfo := model.VMInfo{}
+	
 	json.NewDecoder(respBody).Decode(&vmInfo)
 	fmt.Println(vmInfo)
 
@@ -351,27 +355,29 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (model.VMIn
 	// pbytes, _ := json.Marshal(respBody)
 	// fmt.Println(string(pbytes))
 
-	return vmInfo, respStatus
+	return &vmInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // MCIS의 Status변경
-func McisLifeCycle(mcisLifeCycle *model.McisLifeCycle) (model.McisLifeCycle, int) {
+func McisLifeCycle(mcisLifeCycle *model.McisLifeCycle) (*model.McisLifeCycle, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + mcisLifeCycle.NameSpaceID + "/mcis/" + mcisLifeCycle.McisID + "?action=" + mcisLifeCycle.LifeCycleType
 	//// var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
 	pbytes, _ := json.Marshal(mcisLifeCycle)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
+	resultMcisLifeCycle := model.McisLifeCycle{}
 	if err != nil {
 		fmt.Println(err)
+		return &resultMcisLifeCycle, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
-	respStatusCode := resp.StatusCode
-	respStatus := resp.Status
-	log.Println("respStatusCode = ", respStatusCode)
-	log.Println("respStatus = ", respStatus)
+	respStatus := resp.StatusCode
+	// respStatus := resp.Status
+	// log.Println("respStatusCode = ", respStatusCode)
+	// log.Println("respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
-	resultMcisLifeCycle := model.McisLifeCycle{}
+	
 	json.NewDecoder(respBody).Decode(resultMcisLifeCycle)
 	fmt.Println(resultMcisLifeCycle)
 
@@ -379,29 +385,31 @@ func McisLifeCycle(mcisLifeCycle *model.McisLifeCycle) (model.McisLifeCycle, int
 	// respBody := resp.Body
 	// respStatus := resp.StatusCode
 	// return respBody, respStatus
-	return resultMcisLifeCycle, respStatusCode
+	return &resultMcisLifeCycle, model.WebStatus{StatusCode: respStatus}
 
 }
 
 // MCIS의 VM Status변경
-func McisVmLifeCycle(vmLifeCycle *model.VMLifeCycle) (model.VMLifeCycle, int) {
+func McisVmLifeCycle(vmLifeCycle *model.VMLifeCycle) (*model.VMLifeCycle, model.WebStatus) {
 
 	url := util.TUMBLEBUG + "/ns/" + vmLifeCycle.NameSpaceID + "/mcis/" + vmLifeCycle.McisID + "/vm/" + vmLifeCycle.VmID + "?action=" + vmLifeCycle.LifeCycleType
 	///url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
 	pbytes, _ := json.Marshal(vmLifeCycle)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
+	resultVmLifeCycle := model.VMLifeCycle{}
 	if err != nil {
 		fmt.Println(err)
+		return &resultVmLifeCycle, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
-	respStatusCode := resp.StatusCode
-	respStatus := resp.Status
-	log.Println("respStatusCode = ", respStatusCode)
-	log.Println("respStatus = ", respStatus)
+	respStatus := resp.StatusCode
+	// respStatus := resp.Status
+	// log.Println("respStatusCode = ", respStatusCode)
+	// log.Println("respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
-	resultVmLifeCycle := model.VMLifeCycle{}
+	
 	json.NewDecoder(respBody).Decode(resultVmLifeCycle)
 	fmt.Println(resultVmLifeCycle)
 
@@ -409,12 +417,12 @@ func McisVmLifeCycle(vmLifeCycle *model.VMLifeCycle) (model.VMLifeCycle, int) {
 	// respBody := resp.Body
 	// respStatus := resp.StatusCode
 	// return respBody, respStatus
-	return resultVmLifeCycle, respStatusCode
+	return &resultVmLifeCycle, model.WebStatus{StatusCode: respStatus}
 
 }
 
 // VM monitoring
-func GetVmMonitoring(vmMonitoring *model.VMMonitoring) (model.VMMonitoringInfo, int) {
+func GetVmMonitoring(vmMonitoring *model.VMMonitoring) (*model.VMMonitoringInfo, model.WebStatus) {
 	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
 	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
 	urlParam := "periodType=" + vmMonitoring.PeriodType + "&statisticsCriteria=" + vmMonitoring.StatisticsCriteria + "&duration=" + vmMonitoring.Duration
@@ -424,18 +432,19 @@ func GetVmMonitoring(vmMonitoring *model.VMMonitoring) (model.VMMonitoringInfo, 
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-
+	vmMonitoringInfo := model.VMMonitoringInfo{}
 	if err != nil {
 		fmt.Println(err)
+		return &vmMonitoringInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	vmMonitoringInfo := model.VMMonitoringInfo{}
+	
 	json.NewDecoder(respBody).Decode(&vmMonitoringInfo)
 	fmt.Println(vmMonitoringInfo)
 
-	return vmMonitoringInfo, respStatus
+	return &vmMonitoringInfo, model.WebStatus{StatusCode: respStatus}
 }

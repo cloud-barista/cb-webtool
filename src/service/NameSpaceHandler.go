@@ -181,7 +181,7 @@ func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, model.WebS
 }
 
 // NameSpace 수정 : namespace 없데이트 기능 없음
-func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, int) {
+func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.TUMBLEBUG + "/ns"
 
@@ -193,11 +193,12 @@ func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, int) {
 
 	if err != nil {
 		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	return respBody, respStatus
+	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // NameSpace 삭제

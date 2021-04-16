@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/cloud-barista/cb-webtool/src/model"
 	service "github.com/cloud-barista/cb-webtool/src/service"
-	util "github.com/cloud-barista/cb-webtool/src/util"
+	// util "github.com/cloud-barista/cb-webtool/src/util"
 
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
@@ -117,10 +117,10 @@ func NameSpaceUpdateProc(c echo.Context) error {
 	respBody, respStatus := service.UpdateNameSpace(nameSpaceInfo)
 	fmt.Println("=============respBody =============", respBody)
 	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
@@ -136,7 +136,7 @@ func NameSpaceUpdateProc(c echo.Context) error {
 	// return namespace 목록
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":       "success",
-		"status":        respStatus,
+		"status":        respStatus.StatusCode,
 		"NameSpaceList": nameSpaceList,
 	})
 

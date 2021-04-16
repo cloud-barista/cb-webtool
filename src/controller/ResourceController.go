@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"fmt"
 	"github.com/cloud-barista/cb-webtool/src/model"
 	service "github.com/cloud-barista/cb-webtool/src/service"
-	util "github.com/cloud-barista/cb-webtool/src/util"
+	// util "github.com/cloud-barista/cb-webtool/src/util"
 
 	"github.com/labstack/echo"
 	// "io/ioutil"
@@ -56,10 +56,10 @@ func VpcMngForm(c echo.Context) error {
 
 	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 	log.Println("VNetList", vNetInfoList)
@@ -71,6 +71,7 @@ func VpcMngForm(c echo.Context) error {
 			"CloudOSList":   cloudOsList,
 			"NameSpaceList": nsList,
 			"VNetList":      vNetInfoList,
+			"status":  respStatus.StatusCode,
 		})
 }
 
@@ -90,16 +91,16 @@ func GetVpcList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":             respStatus,
+		"status":             respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"VNetList":           vNetInfoList,
 	})
@@ -148,24 +149,16 @@ func VpcRegProc(c echo.Context) error {
 	// fmt.Println("=============respStatus =============", respStatus)
 	// fmt.Println("=============respBody ===============", respBody)
 
-	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
-		// resultBody, err := ioutil.ReadAll(respBody)
-		// if err == nil {
-		// 	str := string(resultBody)
-		// 	println(str)
-		// }
-		// pbytes, _ := json.Marshal(respBody)
-		// fmt.Println(string(pbytes))
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",
-		"status":   respStatus,
+		"status":   respStatus.StatusCode,
 		"VNetInfo": resultVNetInfo,
 	})
 }
@@ -187,25 +180,16 @@ func VpcDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelVpc(defaultNameSpaceID, paramVNetID)
 	fmt.Println("=============respBody =============", respBody)
 
-	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
-		// resultBody, err := ioutil.ReadAll(respBody)
-		// if err == nil {
-		// 	str := string(resultBody)
-		// 	println(str)
-		// }
-		pbytes, _ := json.Marshal(respBody)
-		fmt.Println(string(pbytes))
-
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus,
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -232,10 +216,10 @@ func SecirityGroupMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 	log.Println("securityGroupInfoList", securityGroupInfoList)
@@ -247,6 +231,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 			"CloudOSList":       cloudOsList,
 			"NameSpaceList":     nsList,
 			"SecurityGroupList": securityGroupInfoList,
+			"status":  respStatus.StatusCode,
 		})
 }
 
@@ -263,16 +248,15 @@ func GetSecirityGroupList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
-
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":             respStatus,
+		"status":             respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"SecurityGroupList":  securityGroupInfoList,
 	})
@@ -319,16 +303,16 @@ func SecirityGroupRegProc(c echo.Context) error {
 
 	resultSecurityGroupInfo, respStatus := service.RegSecurityGroup(defaultNameSpaceID, securityGroupRegInfo)
 
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":           "success",
-		"status":            respStatus,
+		"status":            respStatus.StatusCode,
 		"SecurityGroupInfo": resultSecurityGroupInfo,
 	})
 }
@@ -350,25 +334,16 @@ func SecirityGroupDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelSecurityGroup(defaultNameSpaceID, paramSecurityGroupID)
 	fmt.Println("=============respBody =============", respBody)
 
-	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
-		// resultBody, err := ioutil.ReadAll(respBody)
-		// if err == nil {
-		// 	str := string(resultBody)
-		// 	println(str)
-		// }
-		pbytes, _ := json.Marshal(respBody)
-		fmt.Println(string(pbytes))
-
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus,
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -394,10 +369,10 @@ func SshKeyMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	sshKeyInfoList, respStatus := service.GetSshKeyInfoList(defaultNameSpaceID)
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 	log.Println("sshKeyInfoList", sshKeyInfoList)
@@ -409,6 +384,7 @@ func SshKeyMngForm(c echo.Context) error {
 			"CloudOSList":   cloudOsList,
 			"NameSpaceList": nsList,
 			"SshKeyList":    sshKeyInfoList,
+			"status":  respStatus.StatusCode,
 		})
 }
 
@@ -423,17 +399,16 @@ func GetSshKeyList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	sshKeyInfoList, respStatus := service.GetSshKeyInfoList(defaultNameSpaceID)
-	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":             respStatus,
+		"status":  respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"SshKeyList":         sshKeyInfoList,
 	})
@@ -480,16 +455,16 @@ func SshKeyRegProc(c echo.Context) error {
 
 	resultSshKeyInfo, respStatus := service.RegSshKey(defaultNameSpaceID, sshKeyRegInfo)
 
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
-		"status":     respStatus,
+		"status":     respStatus.StatusCode,
 		"SshKeyInfo": resultSshKeyInfo,
 	})
 }
@@ -511,25 +486,16 @@ func SshKeyDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelSshKey(defaultNameSpaceID, paramSshKeyID)
 	fmt.Println("=============respBody =============", respBody)
 
-	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
-		// resultBody, err := ioutil.ReadAll(respBody)
-		// if err == nil {
-		// 	str := string(resultBody)
-		// 	println(str)
-		// }
-		pbytes, _ := json.Marshal(respBody)
-		fmt.Println(string(pbytes))
-
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus,
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -556,10 +522,10 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 	log.Println("VirtualMachineImageInfoList", virtualMachineImageInfoList)
@@ -571,6 +537,7 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 			"CloudOSList":             cloudOsList,
 			"NameSpaceList":           nsList,
 			"VirtualMachineImageList": virtualMachineImageInfoList,
+			"status":  respStatus.StatusCode,
 		})
 }
 
@@ -586,16 +553,16 @@ func GetVirtualMachineImageList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":                 "success",
-		"status":                  respStatus,
+		"status":                  respStatus.StatusCode,
 		"DefaultNameSpaceID":      defaultNameSpaceID,
 		"VirtualMachineImageList": virtualMachineImageInfoList,
 	})
@@ -642,10 +609,10 @@ func VirtualMachineImageRegProc(c echo.Context) error {
 
 	resultVirtualMachineImageInfo, respStatus := service.RegVirtualMachineImage(defaultNameSpaceID, virtualMachineImageRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 	// respBody := resp.Body
@@ -656,7 +623,7 @@ func VirtualMachineImageRegProc(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":                 "success",
-		"status":                  respStatus,
+		"status":                  respStatus.StatusCode,
 		"VirtualMachineImageInfo": resultVirtualMachineImageInfo,
 	})
 }
@@ -678,25 +645,15 @@ func VirtualMachineImageDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageID)
 	fmt.Println("=============respBody =============", respBody)
 
-	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
-		// resultBody, err := ioutil.ReadAll(respBody)
-		// if err == nil {
-		// 	str := string(resultBody)
-		// 	println(str)
-		// }
-		pbytes, _ := json.Marshal(respBody)
-		fmt.Println(string(pbytes))
-
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
-
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus,
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -714,16 +671,16 @@ func LookupVirtualMachineImageList(c echo.Context) error {
 	log.Println("paramConnectionName : ", paramConnectionName)
 	virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList(paramConnectionName)
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus,
+		"status":  respStatus.StatusCode,
 		// "DefaultNameSpaceID": defaultNameSpaceID,
 		"VirtualMachineImageList": virtualMachineImageInfoList,
 	})
@@ -790,10 +747,10 @@ func InstanceSpecMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	instanceSpecInfoList, respStatus := service.GetInstanceSpecInfoList(defaultNameSpaceID)
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 	log.Println("instanceSpecInfoList", instanceSpecInfoList)
@@ -805,6 +762,7 @@ func InstanceSpecMngForm(c echo.Context) error {
 			"CloudOSList":      cloudOsList,
 			"NameSpaceList":    nsList,
 			"InstanceSpecList": instanceSpecInfoList,
+			"status":  respStatus.StatusCode,
 		})
 }
 
@@ -820,16 +778,16 @@ func GetInstanceSpecList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	instanceSpecInfoList, respStatus := service.GetInstanceSpecInfoList(defaultNameSpaceID)
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":             respStatus,
+		"status":             respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"InstanceSpecList":   instanceSpecInfoList,
 	})
@@ -876,10 +834,10 @@ func InstanceSpecRegProc(c echo.Context) error {
 
 	resultInstanceSpecInfo, respStatus := service.RegInstanceSpec(defaultNameSpaceID, instanceSpecRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 	// respBody := resp.Body
@@ -890,7 +848,7 @@ func InstanceSpecRegProc(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
-		"status":           respStatus,
+		"status":           respStatus.StatusCode,
 		"InstanceSpecInfo": resultInstanceSpecInfo,
 	})
 }
@@ -913,24 +871,17 @@ func InstanceSpecDelProc(c echo.Context) error {
 	fmt.Println("=============respBody =============", respBody)
 
 	// if reErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
-		// resultBody, err := ioutil.ReadAll(respBody)
-		// if err == nil {
-		// 	str := string(resultBody)
-		// 	println(str)
-		// }
-		pbytes, _ := json.Marshal(respBody)
-		fmt.Println(string(pbytes))
-
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
+	
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus,
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -946,17 +897,16 @@ func LookupInstanceSpecList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	instanceSpecInfoList, respStatus := service.LookupInstanceSpecList()
-	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":             respStatus,
+		"status":            respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"InstanceSpecList":   instanceSpecInfoList,
 	})

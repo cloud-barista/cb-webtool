@@ -179,6 +179,7 @@ func LoginProc(c echo.Context) error {
 
 	//////// 현재구조에서는 nsList 부분을 포함해야 함. TODO : 이부분 호출되는 화면에서 필요할 듯 한데.. 공통으로 뺄까?
 	nsList, nsStatus := service.GetNameSpaceList()
+	log.Println(nsStatus);
 	if nsStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": nsStatus.Message,

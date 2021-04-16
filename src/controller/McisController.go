@@ -305,16 +305,16 @@ func GetMcisList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	mcisList, respStatus := service.GetMcisList(defaultNameSpaceID)
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":             respStatus,
+		"status":             respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"McisList":           mcisList,
 	})
@@ -356,16 +356,16 @@ func McisRegProc(c echo.Context) error {
 	_, respStatus := service.RegMcis(defaultNameSpaceID, mCISInfo)
 	log.Println("RegMcis service returned")
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  200,
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -616,16 +616,15 @@ func McisLifeCycle(c echo.Context) error {
 	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
 	log.Println("McisLifeCycle service returned")
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
-
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  200,
+		"status":  respStatus.StatusCode,
 	})
 }
 
@@ -654,16 +653,16 @@ func McisVmLifeCycle(c echo.Context) error {
 	_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
 	log.Println("McisVmLifeCycle service returned")
 	// if vNetErr != nil {
-	if respStatus != util.HTTP_CALL_SUCCESS && respStatus != util.HTTP_POST_SUCCESS {
+	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  respStatus,
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
 		})
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  200,
+		"status":  respStatus.StatusCode,
 	})
 }
 
