@@ -43,7 +43,8 @@ func GetMcisList(nameSpaceID string) ([]model.MCISInfo, int) {
 	return mcisList["mcis"], respStatus
 }
 
-func GetMCIS(nameSpaceID string, mcisID string) (model.MCISInfo, int) {
+// 특정 MCIS 조회
+func GetMcisData(nameSpaceID string, mcisID string) (model.MCISInfo, int) {
 	// func GetMCIS(nsid string, mcisId string) []MCISInfo {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
 	// 	// resp, err := http.Get(url)
@@ -89,18 +90,6 @@ func GetMCIS(nameSpaceID string, mcisID string) (model.MCISInfo, int) {
 
 func RegMcis(nameSpaceID string, mCISInfo *model.MCISInfo) (model.MCISInfo, int) {
 
-	// vm_len = Simple_Server_Config_Arr.length;
-	// 								console.log("Simple_Server_Config_Arr length: ",vm_len);
-	// 								new_obj['vm'] = Simple_Server_Config_Arr;
-	// 								console.log("new obj is : ",new_obj);
-	// 								var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
-	// 								try{
-	// 									AjaxLoadingShow(true);
-	// 									axios.post(url,new_obj,{
-	// 										headers :{
-	// 											'Content-type': 'application/json',
-	// 											'Authorization': apiInfo,
-	// 											},
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 
 	pbytes, _ := json.Marshal(mCISInfo)
@@ -332,8 +321,8 @@ func GetVMConnectionCountByMcis(mcisInfo model.MCISInfo) map[string]int {
 	return mcisConnectionCountMap
 }
 
-// MCIS의 VM 조회
-func GetVMofMCIS(nameSpaceID string, mcisID string, vmID string) (model.VMInfo, int) {
+// MCIS의 특정 VM 조회
+func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (model.VMInfo, int) {
 	///ns/{nsId}/mcis/{mcisId}/vm/{vmId}
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
 

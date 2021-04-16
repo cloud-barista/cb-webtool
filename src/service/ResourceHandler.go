@@ -704,7 +704,7 @@ func DelInstanceSpec(nameSpaceID string, instanceSpecID string) (io.ReadCloser, 
 
 func LookupInstanceSpecList() ([]model.InstanceSpecInfo, int) {
 	fmt.Println("LookupInstanceSpecList ************ : ")
-	url := util.TUMBLEBUG + "/lookupSpecmage"
+	url := util.TUMBLEBUG + "/lookupSpec"
 
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)

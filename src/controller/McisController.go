@@ -417,7 +417,7 @@ func McisVMRegForm(c echo.Context) error {
 	// MCIS 정보는 받은것으로
 
 	// MCIS 조회
-	resultMcisInfo, _ := service.GetMCIS(defaultNameSpaceID, mcisId) // TODO : store에 있는 것 꺼내쓰도록.  주기적으로 store 갱신.
+	resultMcisInfo, _ := service.GetMcisData(defaultNameSpaceID, mcisId) // TODO : store에 있는 것 꺼내쓰도록.  주기적으로 store 갱신.
 	log.Println(" resultMcisInfo  ", resultMcisInfo)
 
 	// vm List
@@ -530,7 +530,7 @@ func GetMcisInfoData(c echo.Context) error {
 	mcisID := c.Param("mcisID")
 	log.Println("mcisID= " + mcisID)
 
-	resultMcisInfo, _ := service.GetMCIS(defaultNameSpaceID, mcisID)
+	resultMcisInfo, _ := service.GetMcisData(defaultNameSpaceID, mcisID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",
@@ -582,7 +582,7 @@ func GetVmInfoData(c echo.Context) error {
 	// 		}
 	// 	}
 	// }
-	returnVmInfo, _ := service.GetVMofMCIS(defaultNameSpaceID, mcisID, vmID)
+	returnVmInfo, _ := service.GetVMofMcisData(defaultNameSpaceID, mcisID, vmID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",

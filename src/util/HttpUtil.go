@@ -3,7 +3,7 @@ package util
 import (
 	"encoding/base64"
 	"fmt"
-
+	// "reflect"
 	// "io"
 	"io/ioutil"
 	"log"
@@ -144,14 +144,34 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 
 	req.Header.Add("Authorization", authInfo)
 	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	// displayResponse(resp) // return message 확인 용
+	// if err != nil {
+	// 	log.Println("*********************Error*****************************")
+	// 	// v := reflect.ValueOf(err)
+	// 	// log.Println("**********************1************************")
+	// 	// log.Println(v)
+	// 	// for i := 0; i < v.NumField(); i++ {
+	// 	// 	log.Println("**********************222************************")
+	// 	// 	log.Println(v.Type().Field(i).Name)
+	// 	// 	log.Println("\t", v.Field(i))
+	// 	// }
+
+	// 	log.Println(err)
+	// 	log.Println(resp)
+	// 	// log.Println("http %d - %s ", resp.StatusCode, err)
+	// 	log.Println("********************Error End******************************")
+	// 	// log.Println(err)
+	// 	// // log.Println(errorRespBody)
+	// 	// log.Println("resp.StatusCode ", resp.StatusCode)
+	// 	// log.Println("resp.Body ", resp.Body)
+	// 	//DisplayResponse(resp) // return message 확인 용
+
+	// 	// panic(err)
+	// }
+	// // displayResponse(resp) // return message 확인 용
 
 	// fmt.Println(resp.StatusCode)
-	//defer resp.Body.Close()
-	// fmt.Println("resp.Body ", resp.Body)
+	// //defer resp.Body.Close()
+	// // fmt.Println("resp.Body ", resp.Body)
 	return resp, err
 }
 
@@ -227,32 +247,36 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 // return message 확인용
 func DisplayResponse(resp *http.Response) {
 	fmt.Println("*****DisplayResponse begin****")
-	// data, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	//     panic(err)
-	// }
-	// fmt.Printf("%s\n", string(data))
+	if resp == nil {
+		log.Println(" response is nil ")
+	} else {
+		// data, err := ioutil.ReadAll(resp.Body)
+		// if err != nil {
+		//     panic(err)
+		// }
+		// fmt.Printf("%s\n", string(data))
 
-	// resultStatus := resp.StatusCode
-	// fmt.Println("resultStatus ", resultStatus)
-	// // fmt.Println("body ",  resp.Body)
-	resultBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		str := string(resultBody)
-		println("nil ", str)
-		println("err ", err)
+		// resultStatus := resp.StatusCode
+		// fmt.Println("resultStatus ", resultStatus)
+		// // fmt.Println("body ",  resp.Body)
+		resultBody, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			str := string(resultBody)
+			println("nil ", str)
+			println("err ", err)
+		}
+		fmt.Println(string(resultBody))
+
+		var target interface{}
+		body, _ := ioutil.ReadAll(resp.Body)
+		json.Unmarshal(body, &target)
+		fmt.Println(fmt.Println(target))
+		// // json.NewDecoder(respBody).Decode(&stringMap)
+		// pbytes, _ := json.Marshal(resultBody)
+		// fmt.Println(string(pbytes))
+
+		fmt.Println("*****DisplayResponse end****")
 	}
-	fmt.Println(string(resultBody))
-
-	var target interface{}
-	body, _ := ioutil.ReadAll(resp.Body)
-	json.Unmarshal(body, &target)
-	fmt.Println(fmt.Println(target))
-	// // json.NewDecoder(respBody).Decode(&stringMap)
-	// pbytes, _ := json.Marshal(resultBody)
-	// fmt.Println(string(pbytes))
-
-	fmt.Println("*****DisplayResponse end****")
 }
 
 // Response 객체의 내용

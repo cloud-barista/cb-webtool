@@ -551,12 +551,12 @@ func ConnectionList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	nsList, nsErr := service.GetNameSpaceList()
-	if nsErr != 200 {
-		log.Println(" nsErr  ", nsErr)
+	nsList, nsStatus := service.GetNameSpaceList()
+	if nsStatus.StatusCode == 500 {
+		log.Println(" nsErr  ", nsStatus)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "invalid tumblebug connection",
-			"status":  "403",
+			"message": nsStatus.Message,
+			"status":  nsStatus.StatusCode,
 		})
 	}
 
@@ -568,11 +568,11 @@ func ConnectionList(c echo.Context) error {
 		nameSpaceInfo.Description = "default name space name"
 		respBody, respStatus := service.RegNameSpace(nameSpaceInfo)
 		log.Println(" respBody  ", respBody)
-		if respStatus != 200 {
+		if respStatus.StatusCode == 500 {
 			log.Println(" respStatus  ", respStatus)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "invalid tumblebug connection",
-				"status":  "403",
+				"message": respStatus.Message,
+				"status":  respStatus.StatusCode,
 			})
 		}
 

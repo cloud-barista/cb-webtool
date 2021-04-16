@@ -264,6 +264,7 @@ func main() {
 
 	e.GET("/", controller.Index)
 	e.GET("/about", controller.About)
+	e.GET("/apitest", controller.ApiTest)
 
 	mainGroup := e.Group("/main", mainTemplate)
 	mainGroup.GET("/", controller.MainForm)
@@ -322,8 +323,6 @@ func main() {
 	e.POST("/operation/manages/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
 	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
-
-	//var url = DragonFlyURL+"/ns/"+nsid+"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
 
 	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
 	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;

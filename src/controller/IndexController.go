@@ -21,6 +21,7 @@ import (
 	//db "mzc/src/databases/store"
 	"github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/service"
+	"github.com/cloud-barista/cb-webtool/src/util"
 )
 
 type TokenDetails struct {
@@ -66,8 +67,9 @@ func MainForm(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	nameSpaceInfoList, nsErr := service.GetNameSpaceList()
-	if nsErr != 200 {
+	nameSpaceInfoList, nsStatus := service.GetNameSpaceList()
+	if nsStatus.StatusCode == 500 {
+		// if nsErr != 200 {
 		// return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -83,12 +85,17 @@ func MainForm(c echo.Context) error {
 				"LoginInfo": loginInfo,
 				// "CloudOSList":               cloudOsList,
 				"NameSpaceList": nameSpaceInfoList,
+				"message":       nsStatus.Message,
+				"status":        nsStatus.StatusCode,
 			})
 	}
 }
 
-func Test(c echo.Context) error {
-	return c.Render(http.StatusOK, "Test.html", map[string]interface{}{})
+func ApiTest(c echo.Context) error {
+	apiInfo := util.AuthenticationHandler()
+	return c.Render(http.StatusOK, "ApiTest.html", map[string]interface{}{
+		"apiInfo": apiInfo,
+	})
 }
 
 func LoginForm(c echo.Context) error {
@@ -171,9 +178,12 @@ func LoginProc(c echo.Context) error {
 	// store.Save()
 
 	//////// 현재구조에서는 nsList 부분을 포함해야 함. TODO : 이부분 호출되는 화면에서 필요할 듯 한데.. 공통으로 뺄까?
-	nsList, err := service.GetNameSpaceList()
-	if err != 200 {
-
+	nsList, nsStatus := service.GetNameSpaceList()
+	if nsStatus.StatusCode == 500 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": nsStatus.Message,
+			"status":  nsStatus.StatusCode,
+		})
 	}
 	if len(nsList) == 0 {
 		nameSpaceInfo, createNameSpaceErr := service.CreateDefaultNamespace()
