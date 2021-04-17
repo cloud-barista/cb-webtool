@@ -143,7 +143,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	// req.Header.Set("Content-Type", "application/json")
 
 	req.Header.Add("Authorization", authInfo)
-	resp, err := client.Do(req)
+	resp, err := client.Do(req)// err 자체는 nil 이고 resp 내에 statusCode가 500임...
 	// if err != nil {
 	// 	log.Println("*********************Error*****************************")
 	// 	// v := reflect.ValueOf(err)
@@ -154,9 +154,12 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	// 	// 	log.Println(v.Type().Field(i).Name)
 	// 	// 	log.Println("\t", v.Field(i))
 	// 	// }
+		
+		// log.Println(" after client.do ")
+		// log.Println(err)
+		// log.Println(" after client.do22 ")
+		// log.Println(resp)
 
-	// 	log.Println(err)
-	// 	log.Println(resp)
 	// 	// log.Println("http %d - %s ", resp.StatusCode, err)
 	// 	log.Println("********************Error End******************************")
 	// 	// log.Println(err)
@@ -167,7 +170,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 
 	// 	// panic(err)
 	// }
-	// // displayResponse(resp) // return message 확인 용
+	// DisplayResponse(resp) // return message 확인 용
 
 	// fmt.Println(resp.StatusCode)
 	// //defer resp.Body.Close()
@@ -250,6 +253,21 @@ func DisplayResponse(resp *http.Response) {
 	if resp == nil {
 		log.Println(" response is nil ")
 	} else {
+		// resultMessage, err1 := ioutil.ReadAll(resp.Message)
+		// if err1 != nil {
+		// 	str := string(resultMessage)
+		// 	println("nil ", str)
+		// 	println("err1 ", err1)
+		// }
+		// fmt.Println(string(resultMessage))
+		// log.Println(" 11111111111111111111111111111 ")
+	
+		
+		fmt.Println(resp.StatusCode)
+		log.Println(" 22222222222222222222222222 ")
+	
+		fmt.Println(string(resp.Status))
+		log.Println(" 3333333333333333333 ")
 		// data, err := ioutil.ReadAll(resp.Body)
 		// if err != nil {
 		//     panic(err)

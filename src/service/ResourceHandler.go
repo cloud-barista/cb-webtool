@@ -199,22 +199,35 @@ func GetSecurityGroupData(nameSpaceID string, securityGroupID string) (*model.Se
 func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGroupRegInfo) (*model.SecurityGroupInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup"
 
-	// fmt.Println("vnetInfo : ", vnetInfo)
+	fmt.Println("RegSecurityGroup : ")
 
 	pbytes, _ := json.Marshal(securityGroupRegInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	securityGroupInfo := model.SecurityGroupInfo{}
 	if err != nil {
+		log.Println("-----")
 		fmt.Println(err)
+		log.Println("-----1111")
+		fmt.Println(err.Error())
+		log.Println("-----222")
 		return &securityGroupInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 	// respStatus := resp.Status
-	// log.Println("respStatusCode = ", respStatusCode)
-	// log.Println("respStatus = ", respStatus)
+	log.Println("respStatusCode = ", resp.StatusCode)
+	log.Println("respStatus = ", resp.Status)
+	if respStatus != 200 {
+		// b, _ := ioutil.ReadAll(respBody)
+		// log.Fatal(string(b))
+		
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println(errorInfo)
+		return nil, model.WebStatus{StatusCode: 500, Message: errorInfo.Message}
+	  }
 
 	// 응답에 생성한 객체값이 옴
 	
@@ -519,8 +532,10 @@ func LookupVirtualMachineImageList(connectionName string) ([]model.VirtualMachin
 	// //spew.Dump(body)
 	// // fmt.Println(lookupImageList["image"])
 
-	util.DisplayResponse(resp)
+	// util.DisplayResponse(resp)
 	// log.Println("LookupVirtualMachineImageList called 4 ")
+
+
 	outputAsBytes, err := ioutil.ReadAll(resp.Body)
 	// resp.Body.Close()
 	// if err != nil {

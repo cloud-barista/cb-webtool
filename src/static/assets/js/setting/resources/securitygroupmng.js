@@ -526,7 +526,7 @@ function createSecurityGroup() {
     console.log("description : ", description);
     console.log("connectionName : ", connectionName);
     console.log("vNetId : ", vNetId);
-    console.log("fwrsJsonList : ", fwrsJsonList);
+    console.log("fwrsJsonList : ", fwrsJsonList);// TODO : 비어있으면 에러나므로 valid check 필요
     
     var apiInfo = "{{ .apiInfo}}";
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup"
@@ -558,10 +558,22 @@ function createSecurityGroup() {
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
-                alert("Fail Create Security Group")
+                commonAlert("Fail Create Security Group")
             }
         }).catch(function(error){
-            console.log("sg create error : ",error);        
+            console.log("sg create error : ");
+            
+            //return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		// 	"message": respStatus.Message,
+		// 	"status":  respStatus.StatusCode,
+		// })
+            // console.log(error.response.data);
+            console.log("Status", error.response.status);// map interface의 status
+            console.log("Status", error.response.data.message);// map interface의 message
+            console.log('Error', error.message);// [0]번째 param : http.StatusBadRequest
+
+            // message는 , 로 나눈 뒤 : 를 기준으로 key,value로 파싱하면 될 것 같음.
+            // console.log(error.config);
         });
     } else {
         alert("Input Security Group Name")
