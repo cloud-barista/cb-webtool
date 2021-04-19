@@ -275,6 +275,7 @@ func main() {
 
 	loginGroup.GET("", controller.LoginForm)
 	loginGroup.POST("/proc", controller.LoginProc)
+	e.GET("/logout", controller.LogoutProc)
 	// loginGroup.POST("/process", controller.LoginProcess)
 	//login 관련
 	// e.GET("/login", controller.LoginForm)

@@ -101,12 +101,16 @@ function commonConfirmOpen(targetAction){
     //  [ id , 문구]
     let confirmModalTextMap = new Map(
         [
-            ["logout", "Would you like to logout?"],
+            ["Logout", "Would you like to logout?"],
             ["Config", "Would you like to set Cloud config ?"],
             ["SDK", "Would you like to set Cloud Driver SDK ?"],
             ["Credential", "Would you like to set Credential ?"],
             ["Region", "Would you like to set Region ?"],
             ["Provider", "Would you like to set Cloud Provider ?"],
+
+            ["MoveToConnection", "Would you like to set Cloud config ?"],
+
+
             // ["IdPassRequired", "ID/Password required !"],    --. 이거는 confirm이 아니잖아
             ["idpwLost", "Illegal account / password 다시 입력 하시겠습니까?"],
             ["ManageNS", "Would you like to manage <br />Name Space?"],
@@ -155,17 +159,17 @@ function commonConfirmOpen(targetAction){
     );
     console.log(confirmModalTextMap.get(targetAction));
     try{
-    // $('#modalText').text(targetText);// text아니면 html로 해볼까? 태그있는 문구가 있어서
-    //$('#modalText').text(confirmModalTextMap.get(targetAction));
-    $('#confirmText').html(confirmModalTextMap.get(targetAction));
-    $('#confirmOkAction').val(targetAction);
-    
-    if( targetAction == "Region"){
-        // button에 target 지정
-        // data-target="#Add_Region_Register"
-        // TODO : confirm 으로 물어본 뒤 OK버튼 클릭 시 targetDIV 지정하도록
-    }
-    $('#confirmArea').modal(); 
+        // $('#modalText').text(targetText);// text아니면 html로 해볼까? 태그있는 문구가 있어서
+        //$('#modalText').text(confirmModalTextMap.get(targetAction));
+        $('#confirmText').html(confirmModalTextMap.get(targetAction));
+        $('#confirmOkAction').val(targetAction);
+        
+        if( targetAction == "Region"){
+            // button에 target 지정
+            // data-target="#Add_Region_Register"
+            // TODO : confirm 으로 물어본 뒤 OK버튼 클릭 시 targetDIV 지정하도록
+        }
+        $('#confirmArea').modal(); 
     }catch(e){
         console.log(e);
         alert(e);
@@ -176,8 +180,12 @@ function commonConfirmOpen(targetAction){
 function commonConfirmOk(){
     //modalArea
     var targetAction = $('#confirmOkAction').val();
-    if( targetAction == "logout"){
+    if( targetAction == "Logout"){
         // Logout처리하고 index화면으로 간다. Logout ==> cookie expire
+        location.href="/logout"
+        
+    }else if ( targetAction == "MoveToConnection"){
+        location.href="/setting/connections/cloudconnectionconfig/mngform"
     }else if ( targetAction == "Config"){
         //id="Config"
         console.log("commonConfirmOk " + targetAction);
@@ -257,8 +265,10 @@ function commonConfirmOk(){
     }else if ( targetAction == "MCISManagement"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "MoveToMCISManagement"){
+        $('#loadingContainer').show();
         location.href ="/operation/manages/mcis/mngform/";
     }else if ( targetAction == "AddNewMCIS"){
+        $('#loadingContainer').show();
         location.href ="/operation/manages/mcis/regform/";
     }else if ( targetAction == "VMLifeCycle"){
         alert("수행할 function 정의되지 않음");

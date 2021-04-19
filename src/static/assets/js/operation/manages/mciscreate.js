@@ -107,11 +107,12 @@ function deployMcis(){
                 console.log("MCIR Register data : ",result);
                 console.log("Result Status : ",result.status); 
                 if(result.status == 201 || result.status == 200){
-                    alert("Register Success")
+                    commonAlert("Register Success")
                     // location.href = "/Manage/MCIS/list";
+                    $('#loadingContainer').show();
                     location.href = "/operation/manages/mcis/mngform/"
                 }else{
-                    alert("Register Fail")
+                    commonAlert("Register Fail")
                     //location.reload(true);
                 }
             })

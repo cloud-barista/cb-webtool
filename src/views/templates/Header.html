@@ -12,7 +12,10 @@
 			
 			<div class="topmenu">
 				<ul>
-					<li class="logout"><a href="javascript:void(0);" data-toggle="modal" data-target="#logout"><img src="/assets/img/common/icon_logout.png" alt=""/> Logout</a></li>
+					<li class="logout">
+						<a href="javascript:void(0);" data-toggle="modal" data-target="#logout" onClick="commonConfirmOpen('Logout')">
+							<img src="/assets/img/common/icon_logout.png" alt=""/> Logout</a>
+					</li>
 					<li class="add">
 						<img src="/assets/img/common/icon_add.png" alt=""/>
 						<div class="infobox">
@@ -25,28 +28,28 @@
 							<div class="box box_txt">See you in the next release !</div>
 						</div>
 					</li>
-					<li class="email">
+					<!-- <li class="email">
 						<img src="/assets/img/common/icon_email.png" alt=""/><span>7</span>
 						<div class="infobox">
 							<div class="box box_txt">See you in the next release !</div>
 						</div>
-					</li>
+					</li> -->
 					<li class="setting">
 						<a href="javascript:void(0);"><img src="/assets/img/common/icon_setting.png" alt=""/></a>
 						<div class="infobox">
 							<div class="box">
 								<p>Cloud Setting</p>
 								<ul>
-									<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Config">[Cloud] Config</a></li>
-									<li><a href="javascript:void(0);" data-toggle="modal" data-target="#SDK">[Cloud] Driver SDK</a></li>
-									<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Credential">Credential</a></li>
-									<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Region">Region</a></li>
-									<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Provider">[Cloud] Provider</a></li>
+									<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Connection" onClick="commonConfirmOpen('MoveToConnection')">[Cloud] Connection</a></li>
 								</ul>
 							</div>
 						</div>
 					</li>
-					<li class="question"><a href="../operation/About.html"><img src="/assets/img/common/icon_question.png" alt=""/></a></li>
+					<li class="question">
+						<a href="/main/apitestmng">
+							<img src="/assets/img/common/icon_question.png" alt="Api call test"/>
+						</a>
+					</li>
 				</ul>
 			</div>
 			

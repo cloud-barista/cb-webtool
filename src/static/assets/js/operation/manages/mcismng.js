@@ -4,6 +4,7 @@
 function createNewMCIS(){// Manage_MCIS_Life_Cycle_popup.html
     var url = "/operation/manage" + "/mcis/regform/"
     // location.href = "/Manage/MCIS/reg"
+    $('#loadingContainer').show();
     location.href = url;
 }
 

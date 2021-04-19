@@ -564,6 +564,7 @@ func LogoutForm(c echo.Context) error {
 	return c.Render(http.StatusOK, "logout.html", nil)
 }
 
+// 세션을 초기화 하고 login 화면으로 보낸다.
 func LogoutProc(c echo.Context) error {
 	fmt.Println("============== Logout proc ===============")
 	store := echosession.FromContext(c)
@@ -576,6 +577,7 @@ func LogoutProc(c echo.Context) error {
 	store.Save()
 	log.Println(" auth expired ")
 
-	return c.Render(http.StatusOK, "login.html", nil)
+	// return c.Render(http.StatusOK, "login.html", nil)
+	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 
 }

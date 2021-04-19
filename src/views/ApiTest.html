@@ -23,48 +23,86 @@
 						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>API Test</strong></div>
 					</div>
 
+					<div class="dashboard dashboard_cont">
+						
+						<div class="d_box box_m box_w100">
+							
+                            <div class="tit initial cg"><strong> &nbsp;</strong></div>							
+							
+							<div class="ds_cont">
+                                <div class="table-overflow">
+                                    <table class="table table-bordered table-hover">
+                                        <colgroup>
+                                            <col style="width: 150px">
+                                            <col style="width: 250px">
+                                            <col>
+                                        </colgroup>
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Parameters</th>
+                                                <th>Values</th>
+                                                <th>Result</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="spec_list">
+                                            <tr>
+                                                <td class="text-left"><label>Target : </label></td>
+                                                <td class="text-left">
+                                                    <input type="radio" id="ApiTargetSpider" name="ApiTarget" value="SPIDER" checked><label for="ApiTargetSpider">SPIDER</label>
+                                                    <br/>
+                                                    <input type="radio" id="ApiTargetTumblebug" name="ApiTarget" value="TUMBLEBUG"><label for="ApiTargetTumblebug">TUMBLEBUG</label>
+                                                    <br/>
+                                                    <input type="radio" id="ApiTargetLadybug" name="ApiTarget" value="LADYBUG"><label for="ApiTargetLadybug">LADYBUG</label>
+                                                    <br/>
+                                                    <input type="radio" id="ApiTargetDragonfly" name="ApiTarget" value="DRAGONFLY"><label for="ApiTargetDragonfly">DRAGONFLY</label>                                
+                                                </td>
+                                                <td class="text-left" rowspan="4">
+                                                    <textarea  id="ApiResult" name="ApiResult" cols="90%" rows="30" placeholder="ApiResult" class="pline" title=""></textarea>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left"><label>API METHOD : </label></td>
+                                                <td class="text-left">
+                                                    <input type="radio" id="ApiMethodGET" name="ApiMethod" value="GET" checked><label for="ApiMethodGET">GET</label>
+                                                    <br/>
+                                                    <input type="radio" id="ApiMethodPOST" name="ApiMethod" value="POST"><label for="ApiMethodPOST">POST</label>
+                                                    <br/>
+                                                    <input type="radio" id="ApiMethodPUT" name="ApiMethod" value="PUT"><label for="ApiMethodPUT">PUT</label>
+                                                    <br/>
+                                                    <input type="radio" id="ApiMethodDELETE" name="ApiMethod" value="DELETE"><label for="ApiMethodDELETE">DELETE</label>
+                                                </td>                                               
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left"><label>ApiURL : </label></td>
+                                                <td class="text-left">
+                                                    <input type="text" id="ApiURL" name="ApiURL" placeholder="Input ApiURL" class="pline" title="" />
+                                                </td>                                               
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left"><label>API Params : </label></td>
+                                                <td class="text-left">
+                                                    <textarea  id="ApiObj" name="ApiObj" cols="" rows="5" placeholder="json parameters" class="pline" title=""></textarea>
+                                                </td>                                               
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="btnbox">
+                                    <div class="btn_center">
+                                        <!-- <button name="" value="" class="btn_co btn_cr_g w135 btn_cancel" onclick="clearParams()">Clear</button>  -->
+                                        <button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="apiCall()">Submit</button> 
+                                    </div>
+                                </div>
+                                
+							</div><!-- end of ds_cont-->
+							
+						</div>
+						
+					</div>
+					
 
 
-                    <div class="ipbox ipbox2">
-                        <ul>
-                            <li class="reg_1">
-                                <label>Target : </label>
-
-                                <input type="radio" id="ApiTargetSpider" name="ApiTarget" value="SPIDER" checked><label for="ApiTargetSpider">SPIDER</label>
-                                <input type="radio" id="ApiTargetTumblebug" name="ApiTarget" value="TUMBLEBUG"><label for="ApiTargetTumblebug">TUMBLEBUG</label>
-                                <input type="radio" id="ApiTargetLadybug" name="ApiTarget" value="LADYBUG"><label for="ApiTargetLadybug">LADYBUG</label>
-                                <input type="radio" id="ApiTargetDragonfly" name="ApiTarget" value="DRAGONFLY"><label for="ApiTargetDragonfly">DRAGONFLY</label>                                
-                            </li>
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>API METHOD : </label>
-
-                                <input type="radio" id="ApiMethodGET" name="ApiMethod" value="GET" checked><label for="ApiMethodGET">GET</label>
-                                <input type="radio" id="ApiMethodPOST" name="ApiMethod" value="POST"><label for="ApiMethodPOST">POST</label>
-                                <input type="radio" id="ApiMethodPUT" name="ApiMethod" value="PUT"><label for="ApiMethodPUT">PUT</label>
-                                <input type="radio" id="ApiMethodDELETE" name="ApiMethod" value="DELETE"><label for="ApiMethodDELETE">DELETE</label>
-                            </li>
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>ApiURL</label>
-                                <input type="text" id="ApiURL" name="ApiURL" value="" placeholder="Input ApiURL" class="pline" title="" />
-                            </li>
-                            <li>
-                                    <label>API Params</label>
-                                    <textarea  id="ApiObj" name="ApiObj" cols="80" rows="5" placeholder="Description" class="pline" title=""></textarea>
-                            </li>
-                            
-                        </ul>
-
-                        <div class="btnbox">
-                            <button name="" value="" class="btn_create" id="ns_create_btn" onclick="apiCall()">Submit</button>
-                            <button name="" value="" class="btn_clear">Clear</button>
-                        </div>
-
-                    </div>
-                    <hr/>
-                    <div>
-                        <label>Result </label>
-                        <textarea  id="ApiResult" name="ApiResult" cols="80" rows="5" placeholder="ApiResult" class="pline" title=""></textarea>
-                    </div>
+                    
 
 <script>
     function apiCall(){
@@ -99,6 +137,13 @@
             console.log(error.data);
             $("#ApiResult").val(error)
         });
+    }
+
+    function clearParams(){
+        $("#ApiURL").val("");
+        $("#ApiObj").val("");
+        $("#ApiResult").val("");
+        
     }
 </script>
 {{template "Footer" .}}

@@ -597,6 +597,7 @@ function getCommonSecurityGroupList(targetKey, sortType) {
                 $('#topboxDefaultNameSpaceName').text(data.DefaultNameSpaceName)
 
 				if( callerLocation == "Main"){
+					$('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
 					location.href = "/operation/dashboards/dashboardnamespace/mngform"
 				}else{
 					location.reload(); // TODO : 호출한 곳에서 reload를 할 것인지 redirect를 할 것인지
