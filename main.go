@@ -264,10 +264,12 @@ func main() {
 
 	e.GET("/", controller.Index)
 	e.GET("/about", controller.About)
-	e.GET("/apitest", controller.ApiTest)
+	//e.GET("/apicall", controller.ApiCall)
+	e.POST("/apicall", controller.ApiCall)
 
 	mainGroup := e.Group("/main", mainTemplate)
 	mainGroup.GET("/", controller.MainForm)
+	mainGroup.GET("/apitestmng", controller.ApiTestMngForm)
 
 	loginGroup := e.Group("/login", loginTemplate)
 

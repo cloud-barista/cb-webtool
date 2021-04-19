@@ -1,0 +1,105 @@
+{{ template "Top" .}}
+	
+		<div id="lnb">
+			
+			<div class="bg"></div>
+				
+			<div class="m_box">
+				
+				{{template "TopBox" .}}
+
+			</div>
+			
+			<div class="bottom"></div>
+			<a href="javascript:;" id="m_close"></a>
+			
+		</div>
+			
+		{{template "Header" .}}	
+				<!-- contents -->
+				<div class="contbox">
+					
+					<div class="titlebox">
+						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>API Test</strong></div>
+					</div>
+
+
+
+                    <div class="ipbox ipbox2">
+                        <ul>
+                            <li class="reg_1">
+                                <label>Target : </label>
+
+                                <input type="radio" id="ApiTargetSpider" name="ApiTarget" value="SPIDER" checked><label for="ApiTargetSpider">SPIDER</label>
+                                <input type="radio" id="ApiTargetTumblebug" name="ApiTarget" value="TUMBLEBUG"><label for="ApiTargetTumblebug">TUMBLEBUG</label>
+                                <input type="radio" id="ApiTargetLadybug" name="ApiTarget" value="LADYBUG"><label for="ApiTargetLadybug">LADYBUG</label>
+                                <input type="radio" id="ApiTargetDragonfly" name="ApiTarget" value="DRAGONFLY"><label for="ApiTargetDragonfly">DRAGONFLY</label>                                
+                            </li>
+                            <li class="reg_1">
+                                <label><span class="ch">*</span>API METHOD : </label>
+
+                                <input type="radio" id="ApiMethodGET" name="ApiMethod" value="GET" checked><label for="ApiMethodGET">GET</label>
+                                <input type="radio" id="ApiMethodPOST" name="ApiMethod" value="POST"><label for="ApiMethodPOST">POST</label>
+                                <input type="radio" id="ApiMethodPUT" name="ApiMethod" value="PUT"><label for="ApiMethodPUT">PUT</label>
+                                <input type="radio" id="ApiMethodDELETE" name="ApiMethod" value="DELETE"><label for="ApiMethodDELETE">DELETE</label>
+                            </li>
+                            <li class="reg_1">
+                                <label><span class="ch">*</span>ApiURL</label>
+                                <input type="text" id="ApiURL" name="ApiURL" value="" placeholder="Input ApiURL" class="pline" title="" />
+                            </li>
+                            <li>
+                                    <label>API Params</label>
+                                    <textarea  id="ApiObj" name="ApiObj" cols="80" rows="5" placeholder="Description" class="pline" title=""></textarea>
+                            </li>
+                            
+                        </ul>
+
+                        <div class="btnbox">
+                            <button name="" value="" class="btn_create" id="ns_create_btn" onclick="apiCall()">Submit</button>
+                            <button name="" value="" class="btn_clear">Clear</button>
+                        </div>
+
+                    </div>
+                    <hr/>
+                    <div>
+                        <label>Result </label>
+                        <textarea  id="ApiResult" name="ApiResult" cols="80" rows="5" placeholder="ApiResult" class="pline" title=""></textarea>
+                    </div>
+
+<script>
+    function apiCall(){
+        // var apiTarget = $("#ApiTarget").val();
+        // var apiMethod = $("#ApiMethod").val();
+        // var id = $('input[name="rdColors"]:checked').attr('id');
+        // var value = $('input[name="rdColors"]:checked').val();
+        
+        var apiTarget = $('input[name="ApiTarget"]:checked').val();
+        var apiMethod = $('input[name="ApiMethod"]:checked').val();
+        var apiURL = $("#ApiURL").val();
+        var apiObj = $("#ApiObj").val();
+        
+        var url = "/apicall";
+        axios.post(url,{
+            headers: { },
+            ApiTarget:apiTarget,
+            ApiMethod:apiMethod,
+            ApiURL:apiURL,
+            ApiObj:apiObj
+        }).then(result=>{
+            // console.log(result)
+            markers=JSON.stringify(result.data.resp);
+            $("#ApiResult").val(markers)
+            // console.log("result : ")
+            // console.log(result)
+            
+            
+        }).catch(function(error){
+            console.log(" api call error : ");
+            console.log(error);
+            console.log(error.data);
+            $("#ApiResult").val(error)
+        });
+    }
+</script>
+{{template "Footer" .}}
+

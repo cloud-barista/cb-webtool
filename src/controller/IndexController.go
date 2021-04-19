@@ -1,13 +1,14 @@
 package controller
 
 import (
+	// "encoding/json"
+	"bytes"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
-
 	//"github.com/foolin/echo-template"
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
@@ -91,11 +92,100 @@ func MainForm(c echo.Context) error {
 	}
 }
 
-func ApiTest(c echo.Context) error {
-	apiInfo := util.AuthenticationHandler()
-	return c.Render(http.StatusOK, "ApiTest.html", map[string]interface{}{
-		"apiInfo": apiInfo,
-	})
+func ApiTestMngForm(c echo.Context) error {
+	return echotemplate.Render(c, http.StatusOK,
+		"ApiTest", // 파일명
+		map[string]interface{}{})
+}
+
+// API 호출 Test
+func ApiCall(c echo.Context) error {
+	fmt.Println("============== ApiCall ===============")
+
+	params := make(map[string]string)
+	if err := c.Bind(&params); err != nil {
+		fmt.Println("err = ", err)
+	}
+	fmt.Println(params)
+	// apiInfo := util.AuthenticationHandler()
+	//name := c.FormValue("name")
+	// paramApiTarget := c.Param("ApiTarget") // SPIDER인지, Tumblebug인지
+	// paramApiURL := c.Param("ApiURL")       // 호출되는 경로 : 변수가 있더라도 변수까지 반영 된 최종 호출 될 url
+	// paramApiMethod := c.Param("ApiMethod") // GET인지 POST인지
+	// paramApiObj := c.Param("ApiObj")       // 호출에 사용되는 parameter들 (json형태)
+
+	// fmt.Println("paramApiTarget=", paramApiTarget)
+	// fmt.Println("paramApiURL=", paramApiURL)
+	// fmt.Println("paramApiMethod=", paramApiMethod)
+	// fmt.Println("paramApiObj=", paramApiObj)
+	// paramUserID := strings.TrimSpace(reqInfo.UserID)
+	apiTarget := ""
+
+	if params["ApiTarget"] == "SPIDER" {
+		apiTarget = util.SPIDER
+	} else if params["ApiTarget"] == "TUMBLEBUG" {
+		apiTarget = util.TUMBLEBUG
+	} else if params["ApiTarget"] == "DRAGONFLY" {
+		apiTarget = util.DRAGONFLY
+	}
+
+	apiMethod := ""
+	if params["ApiMethod"] == "GET" {
+		apiMethod = http.MethodGet
+	} else if params["ApiMethod"] == "POST" {
+		apiMethod = http.MethodPost
+	} else if params["ApiMethod"] == "PUT" {
+		apiMethod = http.MethodPut
+	} else if params["ApiMethod"] == "DELETE" {
+		apiMethod = http.MethodDelete
+	}
+
+	//url := util.TUMBLEBUG + "/ns"
+	url := apiTarget + params["ApiURL"]
+
+	fmt.Println("url=", url)
+
+	if params["ApiObj"] != "" {
+		pbytes := []byte(params["ApiObj"])
+		// pbytes, _ := json.Marshal(paramApiObj)
+		fmt.Println("CommonHttp=")
+		resp, err := util.CommonHttp(url, pbytes, apiMethod)
+
+		if err != nil {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"err": err,
+			})
+		}
+
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(resp.Body)
+		resultStr := buf.String()
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"resp": resultStr,
+			"err":  err,
+		})
+	} else {
+		fmt.Println("CommonHttpWithoutParam=")
+		resp, err := util.CommonHttpWithoutParam(url, apiMethod)
+
+		if err != nil {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"err": err,
+			})
+		}
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(resp.Body)
+		resultStr := buf.String()
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"resp": resultStr,
+			"err":  err,
+		})
+	}
+
+	// CommonHttp(url string, json []byte, httpMethod string)
+
 }
 
 func LoginForm(c echo.Context) error {

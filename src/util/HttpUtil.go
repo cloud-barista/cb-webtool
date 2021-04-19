@@ -143,7 +143,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	// req.Header.Set("Content-Type", "application/json")
 
 	req.Header.Add("Authorization", authInfo)
-	resp, err := client.Do(req)// err 자체는 nil 이고 resp 내에 statusCode가 500임...
+	resp, err := client.Do(req) // err 자체는 nil 이고 resp 내에 statusCode가 500임...
 	// if err != nil {
 	// 	log.Println("*********************Error*****************************")
 	// 	// v := reflect.ValueOf(err)
@@ -154,11 +154,11 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	// 	// 	log.Println(v.Type().Field(i).Name)
 	// 	// 	log.Println("\t", v.Field(i))
 	// 	// }
-		
-		// log.Println(" after client.do ")
-		// log.Println(err)
-		// log.Println(" after client.do22 ")
-		// log.Println(resp)
+
+	// log.Println(" after client.do ")
+	// log.Println(err)
+	// log.Println(" after client.do22 ")
+	// log.Println(resp)
 
 	// 	// log.Println("http %d - %s ", resp.StatusCode, err)
 	// 	log.Println("********************Error End******************************")
@@ -235,10 +235,15 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 
 	fmt.Println("CommonHttp ", url)
 	client := &http.Client{}
+	fmt.Println("111")
 	req, err := http.NewRequest(httpMethod, url, nil)
+	fmt.Println("222")
 	if err != nil {
+		fmt.Println("456")
+		fmt.Println(err)
 		panic(err)
 	}
+	fmt.Println("333")
 
 	// set the request header Content-Type for json
 	// req.Header.Set("Content-Type", "application/json; charset=utf-8")	// 사용에 주의할 것.
@@ -261,11 +266,10 @@ func DisplayResponse(resp *http.Response) {
 		// }
 		// fmt.Println(string(resultMessage))
 		// log.Println(" 11111111111111111111111111111 ")
-	
-		
+
 		fmt.Println(resp.StatusCode)
 		log.Println(" 22222222222222222222222222 ")
-	
+
 		fmt.Println(string(resp.Status))
 		log.Println(" 3333333333333333333 ")
 		// data, err := ioutil.ReadAll(resp.Body)
