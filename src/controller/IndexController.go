@@ -77,7 +77,7 @@ func MainForm(c echo.Context) error {
 	if len(nameSpaceInfoList) == 1 { // namespace가 1개이면 mcis 체크
 		// mcis가 있으면 dashboard로 ( dashboard에서 mcis가 없으면 mcis 생성화면으로 : TODO 현재 미완성으로 MCIS관리화면으로 이동)
 
-		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manage/mcis/mngform/")
+		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/mngform/")
 	} else {
 		return echotemplate.Render(c, http.StatusOK,
 			"auth/Main", // 파일명
@@ -179,7 +179,7 @@ func LoginProc(c echo.Context) error {
 
 	//////// 현재구조에서는 nsList 부분을 포함해야 함. TODO : 이부분 호출되는 화면에서 필요할 듯 한데.. 공통으로 뺄까?
 	nsList, nsStatus := service.GetNameSpaceList()
-	log.Println(nsStatus);
+	log.Println(nsStatus)
 	if nsStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": nsStatus.Message,

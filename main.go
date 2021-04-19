@@ -289,7 +289,7 @@ func main() {
 	dashboardGroup := e.Group("/operation/dashboards", dashboardTemplate)
 
 	dashboardGroup.GET("/dashboardnamespace/mngform", controller.DashBoardByNameSpaceMngForm)
-	dashboardGroup.GET("/dashboardglobalnamespace/mngform", controller.GlobalDashBoard)
+	dashboardGroup.GET("/dashboardglobalnamespace/mngform", controller.GlobalDashBoardMngForm)
 
 	// // Monitoring Control
 	// e.GET("/Monitoring/MCIS/list", controller.MornitoringListForm)

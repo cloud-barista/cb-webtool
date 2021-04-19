@@ -611,6 +611,15 @@ func McisLifeCycle(c echo.Context) error {
 
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	if defaultNameSpaceID != mcisLifeCycle.NameSpaceID {
+		// 변경할 Namespace 정보가 다르므로 변경 불가
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "선택된 Namespace가 아닙니다. Namespace를 임의로 변경하여 호출하면 안됨.",
+			"status":  "400", // TODO : custom으로 만드는 resultCode 정리 필요
+		})
+	}
+
 	mcisLifeCycle.NameSpaceID = defaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.McisLifeCycle(mcisLifeCycle)

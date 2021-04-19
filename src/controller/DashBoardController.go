@@ -172,8 +172,8 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 
 }
 
-func GlobalDashBoard(c echo.Context) error {
-	fmt.Println("GlobalDashBoard ************ : ")
+func GlobalDashBoardMngForm(c echo.Context) error {
+	fmt.Println("GlobalDashBoardMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
