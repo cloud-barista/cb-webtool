@@ -414,3 +414,93 @@ function isEmpty(str){
 	else
 		return false ;
 }
+
+
+function tableSort(tableId, columnName, sortType){
+    sortType = (sortType === 'asc') ? 'desc':'asc';
+
+    var sortTargetColumnIndex = 0;// sort 기준되는 칼럼의 index
+    var theadIndex = 0;
+    $('#' + tableId).find('thead > tr > th').each(function(){
+        //thArray.push($(this).text())
+        var thText = $(this).text().toUpperCase();
+        if( thText == columnName){
+            sortTargetColumnIndex = theadIndex;
+            break;
+        }
+        theadIndex++
+    })
+
+    $("#tableId").find("tbody > tr").sort(function(a, b){
+        // var checkNum = $(b).attr(dataNm) - $(a).attr(dataNm);
+        // if (isNaN(checkNum)) {
+        //     var $a = $(a).attr(dataNm).toLowerCase();
+        //     var $b = $(b).attr(dataNm).toLowerCase();
+        //     // 문자 정렬
+        //     if (orderBy == "ASC") {
+        //         return $a < $b ? -1 : $a > $b ? 1 : 0;
+        //     } else {
+        //         return $a > $b ? -1 : $a < $b ? 1 : 0;
+        //     }
+        // } else {
+        //     // 숫자 정렬
+        //     if (orderBy == "ASC") {
+        //         return $(a).attr(dataNm) - $(b).attr(dataNm);
+        //     } else {
+        //         return $(b).attr(dataNm) - $(a).attr(dataNm);
+        //     }
+        // }
+    });
+}
+
+// todo : fintering을 하려면 keyword를 입력 받아야 하는데???
+// filter 항목에서 column을 선택하면 popup으로 keyword를 입력받아 filterTable()을 실행하게 하면 될 까?
+function filterTable(tableId, filterColumn, filterKeyword){
+    
+    var filter = filterKeyword.toUpperCase();
+    var columnName = filterColumn.toUpperCase();
+    // var tableObj = document.getElementById(tableId);
+    // var tableHeader = tableObj.getElementsByTagName("thead");
+    // // var headers = tableHeader.getElementsByTagName('th');
+    // // var tBodyObj = tableObj.getElementsByTagName("tbody");
+    // // var trObj = tableObj.getElementsByTagName("tr");
+
+    // var headers = tableObj.find('thead > th').get();
+    // for( var i = 0; i < headers.length; i++){
+    //     var aHeader = headers[i].toUpperCase();
+        
+    // }
+
+    // 해당 column의 index를 찾는다.
+    var filterTargetColumnIndex = 0;// 필터를 적용할 td 칼럼의 index
+    var theadIndex = 0;
+    $('#' + tableId).find('thead > tr > th').each(function(){
+        //thArray.push($(this).text())
+        var thText = $(this).text().toUpperCase();
+        if( thText == columnName){
+            filterTargetColumnIndex = theadIndex;
+            break;
+        }
+        theadIndex++
+    })
+
+    
+    // // thead 의 text
+    // theadOjb.find('th').eq(1)
+
+
+    // Loop through all table rows, and hide those who don't match the search query
+    // 찾은 column을 기준으로 fintering한다.
+    for (i = 0; i < trObj.length; i++) {
+        tdObj = trObj[i].getElementsByTagName("td")[filterTargetColumnIndex];//
+        if (tdObj) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+}
