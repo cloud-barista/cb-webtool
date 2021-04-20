@@ -16,6 +16,7 @@
 		</div>
 			
 		{{template "Header" .}}	
+        {{template "Modal" .}}
 				<!-- contents -->
 				<div class="contbox">
 					
@@ -57,7 +58,9 @@
                                                     <input type="radio" id="ApiTargetDragonfly" name="ApiTarget" value="DRAGONFLY"><label for="ApiTargetDragonfly">DRAGONFLY</label>                                
                                                 </td>
                                                 <td class="text-left" rowspan="4">
-                                                    <textarea  id="ApiResult" name="ApiResult" cols="90%" rows="30" placeholder="ApiResult" class="pline" title=""></textarea>
+                                                    <textarea  id="ApiResult" name="ApiResult" style="width:100%;" cols="45" rows="30" placeholder="ApiResult" class="pline" title=""></textarea>
+                                                    <br>
+                                                    <span>Not found의 경우 param정보등이 잘못된 경우일 수 있음. 슬래시 ( / ) 로 시작했는지 확인</span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -73,15 +76,18 @@
                                                 </td>                                               
                                             </tr>
                                             <tr>
-                                                <td class="text-left"><label>ApiURL : </label></td>
+                                                <td class="text-left"><label>ApiURL : </label>                                                    
+                                                </td>
                                                 <td class="text-left">
-                                                    <input type="text" id="ApiURL" name="ApiURL" placeholder="Input ApiURL" class="pline" title="" />
+                                                    <input type="text" id="ApiURL" name="ApiURL" style="width:100%;" placeholder="Input ApiURL" class="pline" title="" />
+                                                    <br/>
+                                                    <span>ex) localhost:1024/spider 이므로 /cloudos 처럼 / 를 붙인다.</span>
                                                 </td>                                               
                                             </tr>
                                             <tr>
                                                 <td class="text-left"><label>API Params : </label></td>
                                                 <td class="text-left">
-                                                    <textarea  id="ApiObj" name="ApiObj" cols="" rows="5" placeholder="json parameters" class="pline" title=""></textarea>
+                                                    <textarea  id="ApiObj" name="ApiObj" cols="" rows="5" style="width:100%;" placeholder="json parameters" class="pline" title=""></textarea>
                                                 </td>                                               
                                             </tr>
                                         </tbody>

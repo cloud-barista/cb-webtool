@@ -233,17 +233,15 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, error) {
 	authInfo := AuthenticationHandler()
 
-	fmt.Println("CommonHttp ", url)
+	log.Println("CommonHttpWithoutParam "+httpMethod+", ", url)
+	log.Println("authInfo ", authInfo)
 	client := &http.Client{}
-	fmt.Println("111")
 	req, err := http.NewRequest(httpMethod, url, nil)
-	fmt.Println("222")
 	if err != nil {
-		fmt.Println("456")
+		fmt.Println("CommonHttpWithoutParam error")
 		fmt.Println(err)
 		panic(err)
 	}
-	fmt.Println("333")
 
 	// set the request header Content-Type for json
 	// req.Header.Set("Content-Type", "application/json; charset=utf-8")	// 사용에 주의할 것.

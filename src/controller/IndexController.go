@@ -1,9 +1,10 @@
 package controller
 
 import (
-	// "encoding/json"
 	"bytes"
+	"encoding/json"
 	"fmt"
+	// "io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -104,7 +105,7 @@ func ApiCall(c echo.Context) error {
 
 	params := make(map[string]string)
 	if err := c.Bind(&params); err != nil {
-		fmt.Println("err = ", err)
+		fmt.Println("err = ", err) // bind Error는 나지만 크게 상관없는 듯.
 	}
 	fmt.Println(params)
 	// apiInfo := util.AuthenticationHandler()
@@ -145,47 +146,59 @@ func ApiCall(c echo.Context) error {
 
 	fmt.Println("url=", url)
 
-	if params["ApiObj"] != "" {
-		pbytes := []byte(params["ApiObj"])
-		// pbytes, _ := json.Marshal(paramApiObj)
-		fmt.Println("CommonHttp=")
-		resp, err := util.CommonHttp(url, pbytes, apiMethod)
+	// if params["ApiObj"] != "" {// ApiObj유무에 따라 CommonHttp, CommonHttpWithoutParam으로 나눌까 하다가 하나로 호출.
+	pbytes := []byte(params["ApiObj"]) // 없으면 없는대로 CommonHttp호출.
+	// pbytes, _ := json.Marshal(paramApiObj)
+	fmt.Println("CommonHttp=")
+	resp, err := util.CommonHttp(url, pbytes, apiMethod)
 
-		if err != nil {
-			return c.JSON(http.StatusOK, map[string]interface{}{
-				"err": err,
-			})
-		}
-
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(resp.Body)
-		resultStr := buf.String()
-
+	if err != nil {
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"resp": resultStr,
-			"err":  err,
-		})
-	} else {
-		fmt.Println("CommonHttpWithoutParam=")
-		resp, err := util.CommonHttpWithoutParam(url, apiMethod)
-
-		if err != nil {
-			return c.JSON(http.StatusOK, map[string]interface{}{
-				"err": err,
-			})
-		}
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(resp.Body)
-		resultStr := buf.String()
-
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"resp": resultStr,
-			"err":  err,
+			"err": err,
 		})
 	}
 
-	// CommonHttp(url string, json []byte, httpMethod string)
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(resp.Body)
+	resultStr := buf.String()
 
+	jsonMap := make(map[string]interface{})
+	err = json.Unmarshal([]byte(resultStr), &jsonMap)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		// "resp": resultStr,
+		"resp": jsonMap,
+		"err":  err,
+	})
+	// } else {
+	// 	fmt.Println("CommonHttpWithoutParam=")
+	// 	resp, err := util.CommonHttpWithoutParam(url, apiMethod)
+
+	// 	if err != nil {
+	// 		fmt.Println("result error=", err)
+	// 		// fmt.Println("result error=", err)
+	// 		return c.JSON(http.StatusOK, map[string]interface{}{
+	// 			"err": err,
+	// 		})
+	// 	}
+	// 	buf := new(bytes.Buffer)
+	// 	buf.ReadFrom(resp.Body)
+	// 	resultStr := buf.String()
+	// 	log.Println(resultStr)
+	// 	// data, err := ioutil.ReadAll(resp.Body)
+	// 	// if err != nil {
+	// 	// 	return c.JSON(http.StatusOK, map[string]interface{}{
+	// 	// 		"err": err,
+	// 	// 	})
+	// 	// }
+	// 	jsonMap := make(map[string]interface{})
+	// 	err = json.Unmarshal([]byte(resultStr), &jsonMap)
+
+	// 	return c.JSON(http.StatusOK, map[string]interface{}{
+	// 		"resp": jsonMap,
+	// 		"err":  err,
+	// 	})
+	// }
 }
 
 func LoginForm(c echo.Context) error {

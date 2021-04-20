@@ -167,7 +167,6 @@ func GetCloudConnectionConfigData(configName string) (model.CloudConnectionConfi
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
 	json.NewDecoder(respBody).Decode(&cloudConnectionConfigInfo)
 	fmt.Println(cloudConnectionConfigInfo)
 	return cloudConnectionConfigInfo, model.WebStatus{StatusCode: respStatus}
@@ -264,7 +263,7 @@ func GetRegionData(regionName string) (*model.RegionInfo, model.WebStatus) {
 	// json.NewDecoder(body).Decode(&regionList)
 	// fmt.Println(regionList)	// map[KeyValueInfoList:[] ProviderName:[] RegionName:[]]
 	// // fmt.Println(regionList["connectionconfig"])
-	
+
 	json.NewDecoder(respBody).Decode(&regionInfo)
 	// fmt.Println(regionInfo)
 	// fmt.Println(regionInfo.KeyValueInfoList)
@@ -369,7 +368,6 @@ func GetCredentialData(credentialName string) (*model.CredentialInfo, model.WebS
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
 	json.NewDecoder(respBody).Decode(&credentialInfo)
 	// fmt.Println(credentialInfo)
 	// fmt.Println(credentialInfo.KeyValueInfoList)
@@ -394,7 +392,7 @@ func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, model.W
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	util.DisplayResponse(resp)
+	// util.DisplayResponse(resp)
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
