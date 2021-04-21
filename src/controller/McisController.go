@@ -111,7 +111,7 @@ func McisMngForm(c echo.Context) error {
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
 	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
 	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap
-	mcisSimpleInfoList := []model.MCISSimpleInfo{}              // 표에 뿌려줄 mics summary 정보
+	mcisSimpleInfoList := []model.McisSimpleInfo{}              // 표에 뿌려줄 mics summary 정보
 
 	for _, mcisInfo := range mcisList {
 		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
@@ -168,7 +168,7 @@ func McisMngForm(c echo.Context) error {
 		vmStatusCountMapByMcis[mcisInfo.ID] = resultVmStatusCountMap // MCIS 내 vm 상태별 cnt
 
 		// Provider 별 connection count (Location 내에 있는 provider로 갯수 셀 것.)
-		mcisConnectionMap := service.GetVMConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
+		mcisConnectionMap := service.GetVmConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
 		log.Println(mcisConnectionMap)
 
 		mcisConnectionNames := ""
@@ -176,7 +176,7 @@ func McisMngForm(c echo.Context) error {
 			mcisConnectionNames += connectKey + " "
 		}
 		////////////// return value 에 set
-		mcisSimpleInfo := model.MCISSimpleInfo{}
+		mcisSimpleInfo := model.McisSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
 		mcisSimpleInfo.Status = mcisInfo.Status
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
@@ -261,7 +261,7 @@ func McisMngForm(c echo.Context) error {
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
-			"McisList":           mcisList,
+			// "McisList":           mcisList,	// mcisSimpleInfoList 로 대체
 			// "McisIDList":         mcisIdArr,
 			// "VmIDList":           vmIdArr,
 			// "VMStatusList":  vmStatusArr,
@@ -274,20 +274,20 @@ func McisMngForm(c echo.Context) error {
 			// "ProviderCount":            providerCount,
 
 			// mcis count 영역
-			"TotalMCISCount":          totalMcisCount,
-			"TotalMCISStatusCountMap": totalMcisStatusCountMap, // 모든 MCIS의 상태 Map
+			"TotalMcisCount":          totalMcisCount,
+			"TotalMcisStatusCountMap": totalMcisStatusCountMap, // 모든 MCIS의 상태 Map
 
 			// server count 영역
 			"TotalVmCount":          totalVmCount,
-			"TotalVMStatusCountMap": totalVmStatusCountMap, // 모든 VmStatus 별 count Map(MCIS 무관)
+			"TotalVmStatusCountMap": totalVmStatusCountMap, // 모든 VmStatus 별 count Map(MCIS 무관)
 
 			// cp count 영역
 			"TotalProviderCount":         providerCount,            // VM이 등록 된 provider 목록
 			"TotalConnectionConfigCount": totalConnectionCount,     // 총 connection 갯수
 			"ConnectionConfigCountMap":   connectionConfigCountMap, // provider별 connection 수
 			// mcis list
-			"MCISList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
-			"VmStatusCountMapByMCIS": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
+			"McisList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
+			"VmStatusCountMapByMcis": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
 
 		})
 }
@@ -339,7 +339,7 @@ func McisRegProc(c echo.Context) error {
 	// map[description:bb installMonAgent:yes name:aa vm:[map[connectionName:gcp-asia-east1 description:dd imageId:gcp-jsyoo-ubuntu name:cc provider:GCP securityGroupIds:[gcp-jsyoo-sg-01] specId:gcp-jsyoo-01 sshKeyId:gcp-jsyoo-sshkey subnetId:jsyoo-gcp-sub-01 vNetId:jsyoo-gcp-01 vm_add_cnt:0 vm_cnt:]]]
 	log.Println("get info")
 	//&[]Person{}
-	mCISInfo := &model.MCISInfo{}
+	mCISInfo := &model.McisInfo{}
 	if err := c.Bind(mCISInfo); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
@@ -398,11 +398,11 @@ func McisRegProc(c echo.Context) error {
 // }
 
 // MCIS에 VM 추가
-func McisVMRegForm(c echo.Context) error {
+func McisVmRegForm(c echo.Context) error {
 	mcisId := c.Param("mcisID")
 	mcisName := c.Param("mcisName")
 
-	log.Println("McisVMRegForm : ")
+	log.Println("McisVmRegForm : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -421,7 +421,7 @@ func McisVMRegForm(c echo.Context) error {
 	log.Println(" resultMcisInfo  ", resultMcisInfo)
 
 	// vm List
-	vmList := resultMcisInfo.VMs
+	vmList := resultMcisInfo.Vms
 
 	// provider 별 연결정보 count(MCIS 무관)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
@@ -443,80 +443,6 @@ func McisVMRegForm(c echo.Context) error {
 
 }
 
-// func VMAddForm(c echo.Context) error {
-// 	mcis_id := c.Param("mcis_id")
-// 	mcis_name := c.Param("mcis_name")
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	if mcis_id == "" && mcis_name == "" {
-// 		mcis_id = ""
-// 		mcis_name = ""
-// 	}
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-// 		namespace := service.GetNameSpaceToString(c)
-// 		return c.Render(http.StatusOK, "Manage_Create_VM.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"NameSpace": namespace,
-// 			"McisID":    mcis_id,
-// 			"McisName":  mcis_name,
-// 			"comURL":    comURL,
-// 			"apiInfo":   apiInfo,
-// 		})
-
-// 	}
-
-// 	//return c.Render(http.StatusOK, "MCISlist.html", nil)
-// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-// }
-
-// func McisRegForm(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-// 		namespace := service.GetNameSpaceToString(c)
-// 		return c.Render(http.StatusOK, "Manage_Create_Mcis.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"NameSpace": namespace,
-// 			"comURL":    comURL,
-// 			"apiInfo":   apiInfo,
-// 		})
-
-// 	}
-
-// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
-// }
-
-// func McisRegController(c echo.Context) error {
-// 	m := new(model.MCISRequest)
-
-// 	vmspec := c.FormValue("vmspec")
-// 	namespace := c.FormValue("namespace")
-// 	mcis_name := c.FormValue("mcis_name")
-// 	provider := c.FormValue("provider")
-// 	sg := c.FormValue("sg")
-
-// 	fmt.Println("namespace : ", namespace)
-// 	fmt.Println("mcis_name : ", mcis_name)
-// 	fmt.Println("vmSpec : ", vmspec)
-// 	fmt.Println("provider : ", provider)
-// 	fmt.Println("sg : ", sg)
-
-// 	if err := c.Bind(m); err != nil {
-// 		fmt.Println("bind Error")
-// 		return err
-// 	}
-// 	fmt.Println("Bind Form : ", m)
-// 	fmt.Println("nameSPace:", m.NameSpace)
-// 	fmt.Println("vmName 0 : ", m.VMName[0])
-// 	fmt.Println("vmName 1 : ", m.VMName[1])
-// 	fmt.Println("vmSpec 0 : ", m.VMSpec[0])
-// 	fmt.Println("vmspec 1 : ", m.VMSpec[1])
-
-// 	//spew.Dump(m)
-// 	//return c.Redirect(http.StatusTemporaryRedirect, "/MCIS/list")
-// 	return nil
-// }
-
 // GetMcisInfoData
 // 특정 MCIS의 상세정보를 가져온다.
 func GetMcisInfoData(c echo.Context) error {
@@ -535,7 +461,7 @@ func GetMcisInfoData(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",
 		"status":   200,
-		"MCISInfo": resultMcisInfo,
+		"McisInfo": resultMcisInfo,
 	})
 }
 
@@ -562,8 +488,8 @@ func GetVmInfoData(c echo.Context) error {
 	// }
 
 	// log.Println("stored key = " + "MCIS_" + loginInfo.UserID)
-	// mcisList := mcisObj.([]model.MCISInfo)
-	// mcisInfo := model.MCISInfo{}
+	// mcisList := mcisObj.([]model.McisInfo)
+	// mcisInfo := model.McisInfo{}
 	// for _, keyMcisInfo := range mcisList {
 	// 	if keyMcisInfo.ID == mcisID {
 	// 		mcisInfo = keyMcisInfo
@@ -571,7 +497,7 @@ func GetVmInfoData(c echo.Context) error {
 	// 	}
 	// }
 
-	// vmList := mcisInfo.VMs
+	// vmList := mcisInfo.Vms
 	// returnVmInfo := model.VMInfo{}
 	// if len(vmList) > 0 {
 	// 	for _, keyVmInfo := range vmList {
@@ -645,7 +571,7 @@ func McisVmLifeCycle(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	vmLifeCycle := &model.VMLifeCycle{}
+	vmLifeCycle := &model.VmLifeCycle{}
 	if err := c.Bind(vmLifeCycle); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -689,7 +615,7 @@ func GetVmMonitoring(c echo.Context) error {
 	// metric := c.Param("metric")
 	// log.Println("mcisID= " + mcisID + " , vmID= " + vmID)
 
-	vmMonitoring := &model.VMMonitoring{}
+	vmMonitoring := &model.VmMonitoring{}
 	if err := c.Bind(vmMonitoring); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -702,10 +628,6 @@ func GetVmMonitoring(c echo.Context) error {
 	// vmMonitoring.McisID = mcisID
 	// vmMonitoring.VmID = vmID
 	// vmMonitoring.Metric = metric
-
-	//e.GET("/operation/manage/mcis/:mcisID/vm/:vmID/metric/:metric/info", controller.GetVmMonitoring)
-	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
-	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
 
 	returnVMMonitoringInfo, _ := service.GetVmMonitoring(vmMonitoring)
 

@@ -1,10 +1,10 @@
 package model
 
-type MCISRequest struct {
-	VMSpec           []string `form:"vmspec"`
+type McisRequest struct {
+	VmSpec           []string `form:"vmspec"`
 	NameSpace        string   `form:"namespace"`
 	McisName         string   `form:"mcis_name"`
-	VMName           []string `form:"vmName"`
+	VmName           []string `form:"vmName"`
 	Provider         []string `form:"provider"`
 	SecurityGroupIds []string `form:"sg"`
 }

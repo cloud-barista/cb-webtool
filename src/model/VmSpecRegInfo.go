@@ -1,13 +1,13 @@
 package model
 
-// InstanceSpecInfo 와 동일하나 임력용으로 param이 다른 경우가 있어 따로 관리
-type InstanceSpecRegInfo struct {
+// VMSpecInfo 와 동일하나 임력용으로 param이 다른 경우가 있어 따로 관리
+type VmSpecRegInfo struct {
 	ConnectionName string `json:"connectionName"`
 	ID             string `json:"id"`
 	Name           string `json:"name"`
 	Description    string `json:"description"`
 
-	costPerHour string `json:"cost_per_hour"`
+	CostPerHour string `json:"cost_per_hour"`
 	CspSpecName string `json:"cspSpecName"`
 	EbsBwMbps   string `json:"ebs_bw_Mbps"`
 

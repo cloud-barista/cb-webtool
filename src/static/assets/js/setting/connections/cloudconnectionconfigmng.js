@@ -133,26 +133,18 @@ function getCloudConnectionList(sort_type){
 //     })
 }
 
+// 원래는 confirm창이었으나 입력form에 물어볼 필요 없으므로 config Area만 show
 function addCloudConnectionConfirm(){
-    console.log("cloud connection 생성하겠냐는 물음")
+    // console.log("cloud connection 생성하겠냐는 물음")
     $(".dashboard.register_cont").toggleClass("active");
     $(".dashboard.server_status").removeClass("view");
     $(".dashboard .status_list tbody tr").removeClass("on");
     //ok 위치이동
-    $('#RegistBox').on('hidden.bs.modal', function () {
+    // $('#RegistBox').on('hidden.bs.modal', function () {
         console.log(" ok 눌렀음");// cancel 눌러도 들어옴.
         var offset = $("#CreateBox").offset();
-        $("#wrap").animate({scrollTop : offset.top}, 300);
-
-        // getRegionList()
-        // getCredentialList()
-        // getDriverList()
-    })
-}
-
-function deleteCloudConnectionConfirm(){
-    console.log("cloud connection 삭제하겠냐는 물음")
-    deleteCloudConnection()
+        $("#wrap").animate({scrollTop : offset.top}, 300);        
+    // })
 }
 
 // connection 클릭시 나타남.
@@ -272,6 +264,7 @@ function createCloudConnection(){
     }
 }
 
+// confirm에서 Ok를 눌렀으므로 바로 처리
 function deleteCloudConnection(){
 
     var cnt = 0;
@@ -289,11 +282,11 @@ function deleteCloudConnection(){
     })
 
         if(cnt < 1 ){
-            alert("삭제할 대상을 선택해 주세요.");
+            commonAlert("삭제할 대상을 선택해 주세요.");
             return;
         }
         if(cnt >1){
-            alert("한개씩만 삭제 가능합니다.")
+            commonAlert("한개씩만 삭제 가능합니다.")
             return;
         }
 
@@ -302,7 +295,7 @@ function deleteCloudConnection(){
             //var url = CommonURL+"/ns/"+NAMESPACE+"/mcis/"+mcc_id
             //var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig/"+mcc_id;
             var url = "/setting/connections/cloudconnectionconfig" + "/del/"+mcc_id;
-            if(confirm("삭제하시겠습니까?")){
+            // if(confirm("삭제하시겠습니까?")){
                 axios.delete(url,{
                     headers :{
                         'Content-type': 'application/json',
@@ -312,13 +305,13 @@ function deleteCloudConnection(){
                     var data = result.data
                     console.log(data);        
                     if(result.status == 200){
-                        alert(data.message)
+                        commonAlert(data.message)
                         location.reload(true)
                     }
                 }).catch(function(error){
                     console.log("connection delete error : ",error);        
                 });
-            }
+            // }
         }
 }
 

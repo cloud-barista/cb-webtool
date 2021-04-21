@@ -266,6 +266,7 @@ func main() {
 	e.GET("/about", controller.About)
 	//e.GET("/apicall", controller.ApiCall)
 	e.POST("/apicall", controller.ApiCall)
+	e.POST("/servercall", controller.ServerCall)
 
 	mainGroup := e.Group("/main", mainTemplate)
 	mainGroup.GET("/", controller.MainForm)
@@ -303,7 +304,7 @@ func main() {
 
 	// MCIS
 	// e.GET("/Manage/MCIS/reg", controller.McisRegForm)
-	// e.GET("/Manage/MCIS/reg/:mcis_id/:mcis_name", controller.VMAddForm)
+	// e.GET("/Manage/MCIS/reg/:mcis_id/:mcis_name", controller.VmAddForm)
 	// e.POST("/Manage/MCIS/reg/proc", controller.McisRegController)
 	// e.GET("/Manage/MCIS/list", controller.McisListForm)
 	// e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
@@ -311,7 +312,7 @@ func main() {
 	// mcis에 form이 2개가 되면서 group을 나눔. json return은 굳이 group이 필요없어서 전체경로로 작음.
 	mcisGroup := e.Group("/operation/manages/mcis/mngform", mcisTemplate)
 	// e.GET("/mcis/reg", controller.McisRegForm)
-	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VMAddForm)
+	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VmAddForm)
 	// e.POST("/mcis/reg/proc", controller.McisRegController)
 	mcisGroup.GET("/", controller.McisMngForm)
 
@@ -327,15 +328,12 @@ func main() {
 	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
-	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
-	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
-
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	//http://54.248.3.145:1234/Manage/MCIS/reg/mz-azure-mcis/mz-azure-mcis
 	mcisRegGroup := e.Group("/operation/manages/mcis/regform", mcisRegTemplate)
 	mcisRegGroup.GET("/", controller.McisRegForm)                    // MCIS 생성 + VM생성
-	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVMRegForm) // MCIS의 VM생성
+	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVmRegForm) // MCIS의 VM생성
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
@@ -349,20 +347,11 @@ func main() {
 	// // e.POST("/NS/reg/proc", controller.NsRegController)
 	// // e.GET("/GET/ns", controller.GetNameSpace)
 	namespaceGroup := e.Group("/setting/namespaces", namespaceTemplate)
-	namespaceGroup.GET("/namespace/mngform", controller.NameSpaceMngForm) // namespace 보여주는 form 표시. DashboardController로 이동?
-	// namespaceGroup.GET("/GET/ns", controller.GetNameSpace)         // 선택된 namespace 정보조회. Tumblebuck 호출
-	// namespaceGroup.GET("/GET/nsList", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
-	namespaceGroup.GET("/namespace/list", controller.GetNameSpaceList) // 등록된 namespace 목록 조회. Tumblebuck 호출
-
-	//namespaceGroup.GET("/SET/NS/:nsid", controller.SetNameSpace) // default namespace set
+	namespaceGroup.GET("/namespace/mngform", controller.NameSpaceMngForm)      // namespace 보여주는 form 표시. DashboardController로 이동?
+	namespaceGroup.GET("/namespace/list", controller.GetNameSpaceList)         // 등록된 namespace 목록 조회. Tumblebuck 호출
 	namespaceGroup.GET("/namespace/set/:nameSpaceID", controller.SetNameSpace) // default namespace set
-	// namespaceGroup.GET("/NS/reg", controller.NsRegForm)          // namespace 등록 form 표시
-	// namespaceGroup.GET("/namespace/reg/form", controller.NameSpaceRegForm) // namespace 등록 form 표시	--> 사용안함.
-	// namespaceGroup.POST("/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
-	namespaceGroup.POST("/namespace/reg/proc", controller.NameSpaceRegProc) // namespace 등록 처리
+	namespaceGroup.POST("/namespace/reg/proc", controller.NameSpaceRegProc)    // namespace 등록 처리
 	// namespaceGroup.PUT("/namespace/update/proc", controller.NameSpaceUpdateProc)// namespace 수정 : TB에 해당기능없음.
-
-	// namespaceGroup.DELETE("/namespace/del/proc", controller.NameSpaceDelProc) // namespace 삭제 처리
 	namespaceGroup.DELETE("/namespace/del/:nameSpaceID", controller.NameSpaceDelProc) // namespace 삭제 처리
 
 	cloudConnectionGroup := e.Group("/setting/connections", cloudConnectionTemplate)
@@ -388,9 +377,15 @@ func main() {
 
 	// driver form은 popup으로 대체
 	cloudConnectionGroup.GET("/driver", controller.GetDriverList)
-	cloudConnectionGroup.GET("/driver/:driver", controller.GetDriver) // Credential 조회
+	cloudConnectionGroup.GET("/driver/:driver", controller.GetDriver) // Driver 조회
 	cloudConnectionGroup.POST("/driver/reg/proc", controller.DriverRegProc)
 	cloudConnectionGroup.DELETE("/driver/del/:driver", controller.DriverDelProc)
+
+	// config form은 popup으로 대체(UI 정의되지 않음.)
+	cloudConnectionGroup.GET("/config", controller.GetConfigList)
+	cloudConnectionGroup.GET("/config/:configID", controller.GetConfig) // Config 조회
+	cloudConnectionGroup.POST("/config/reg/proc", controller.ConfigRegProc)
+	cloudConnectionGroup.DELETE("/config/del/:configID", controller.ConfigDelProc)
 
 	resourcesGroup := e.Group("/setting/resources", resourceTemplate)
 	resourcesGroup.GET("/network/mngform", controller.VpcMngForm)
@@ -419,19 +414,22 @@ func main() {
 
 	resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)          // TODO : Image 전체목록인가? 확인필요
 	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
+	resourcesGroup.GET("/machineimage/fetchimage", controller.FetchVirtualMachineImageList)            // TODO : Image 정보 갱신인가? 확인필요
+
 	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
 
-	resourcesGroup.GET("/instancespec/mngform", controller.InstanceSpecMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
-	resourcesGroup.GET("/instancespec/list", controller.GetInstanceSpecList)
-	resourcesGroup.GET("/instancespec/:specID", controller.GetInstanceSpecData)
-	resourcesGroup.POST("/instancespec/reg", controller.InstanceSpecRegProc)           // RegProc _ SshKey 같이 앞으로 넘길까
-	resourcesGroup.DELETE("/instancespec/del/:specID", controller.InstanceSpecDelProc) // DelProc + SskKey 같이 앞으로 넘길까
-	// resourcesGroup.PUT("/instancespec/put/:specID", controller.InstanceSpecPutProc)	// TODO : put 만들어야 함
+	resourcesGroup.GET("/vmspec/mngform", controller.VmSpecMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
+	resourcesGroup.GET("/vmspec/list", controller.GetVmSpecList)
+	resourcesGroup.GET("/vmspec/:vmSpecID", controller.GetVmSpecData)
+	resourcesGroup.POST("/vmspec/reg", controller.VmSpecRegProc)             // RegProc _ SshKey 같이 앞으로 넘길까
+	resourcesGroup.DELETE("/vmspec/del/:vmSpecID", controller.VmSpecDelProc) // DelProc + SskKey 같이 앞으로 넘길까
+	// resourcesGroup.PUT("/vmspec/put/:vmSpecID", controller.VmSpecPutProc)	// TODO : put 만들어야 함
 
-	resourcesGroup.GET("/instancespec/lookupspec", controller.LookupInstanceSpecList)           // TODO : Image 전체목록인가? 확인필요
-	resourcesGroup.GET("/instancespec/lookupspec/:specName", controller.LookupInstanceSpecData) // TODO : Image 상세 정보인가? 확인필요
-	// resourcesGroup.POST("/instancespec/filterspecs", controller.FilterInstanceSpecList)	// TODO : post방식의 filterspec 생성필요
-	// resourcesGroup.POST("/instancespec/filterspecsbyrange", controller.FilterInstanceSpecListByRange)// TODO : post방식의 filterspec 생성필요
+	resourcesGroup.GET("/vmspec/lookupvmspec", controller.LookupVmSpecList)             // TODO : Image 전체목록인가? 확인필요
+	resourcesGroup.GET("/vmspec/lookupvmspec/:vmSpecName", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
+	resourcesGroup.GET("/vmspec/fetchvmspec", controller.FetchVmSpecList)               // TODO : Image 정보 갱신인가? 확인필요
+	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
+	// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
 
 	// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
 	// e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)

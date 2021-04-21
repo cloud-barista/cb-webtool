@@ -10,16 +10,16 @@
 							<div class="box_cont">
 								<div class="lbox">
 									
-									<strong id="total_mcis" title="Total count of MCIS">{{ .TotalMCISCount }}</strong>
+									<strong id="total_mcis" title="Total count of MCIS">{{ .TotalMcisCount }}</strong>
 									<!-- <strong class="txt_3n">999</strong> -->
 								</div>
 								<div class="rbox">
 									
 									<div class="numbox" id="mcis_numbox">
-										<div class="num bgbox_b"><span title="Running State">{{ .TotalMCISStatusCountMap.RUNNING }}</span></div>
+										<div class="num bgbox_b"><span title="Running State">{{ .TotalMcisStatusCountMap.RUNNING }}</span></div>
 										<!-- <div class="num bgbox_b"><span class="txt_3n">999</span></div> -->
-										<div class="num bgbox_r"><span title="Stopped State">{{ .TotalMCISStatusCountMap.STOPPED }}</span></div>
-										<div class="num bgbox_g"><span title="Terminated State">{{ .TotalMCISStatusCountMap.TERMINATED }}</span></div>
+										<div class="num bgbox_r"><span title="Stopped State">{{ .TotalMcisStatusCountMap.STOPPED }}</span></div>
+										<div class="num bgbox_g"><span title="Terminated State">{{ .TotalMcisStatusCountMap.TERMINATED }}</span></div>
 									</div>
 							
 									<div class="txt">Status of Infra Service</div>
@@ -33,9 +33,9 @@
 									
 								</div>
 								{ {range $index, $item := .McisList} }
-									{ { $vmList := $item.VMs} }									
+									{ { $vmList := $item.Vms} }									
 									
-									{ {range $vmIndex, $vm := $item.VMs} }
+									{ {range $vmIndex, $vm := $item.Vms} }
 										
 									<span> { { $index } } :: { { $vmIndex } } ::: { { $vm.Status } }</span>
 									{ { end } }
@@ -55,13 +55,13 @@
 								<div class="rbox">
 									<div class="numbox" id="vm_numbox">
 										<div class="num bgbox_b boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">											
-											<span title="Running State">{{ .TotalVMStatusCountMap.running }}</span>
+											<span title="Running State">{{ .TotalVmStatusCountMap.running }}</span>
 										</div>
 										<div class="num bgbox_r boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">
-											<span title="Stopped State">{{ .TotalVMStatusCountMap.stopped }}</span>
+											<span title="Stopped State">{{ .TotalVmStatusCountMap.stopped }}</span>
 										</div>
 										<div class="num bgbox_g boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">
-											<span title="Terminated State">{{ .TotalVMStatusCountMap.terminated }}</span>
+											<span title="Terminated State">{{ .TotalVmStatusCountMap.terminated }}</span>
 										</div>
 									</div>
 									<div class="txt">Status of Server</div>

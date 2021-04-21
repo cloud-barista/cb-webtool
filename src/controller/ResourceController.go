@@ -71,7 +71,7 @@ func VpcMngForm(c echo.Context) error {
 			"CloudOSList":   cloudOsList,
 			"NameSpaceList": nsList,
 			"VNetList":      vNetInfoList,
-			"status":  respStatus.StatusCode,
+			"status":        respStatus.StatusCode,
 		})
 }
 
@@ -231,7 +231,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 			"CloudOSList":       cloudOsList,
 			"NameSpaceList":     nsList,
 			"SecurityGroupList": securityGroupInfoList,
-			"status":  respStatus.StatusCode,
+			"status":            respStatus.StatusCode,
 		})
 }
 
@@ -384,7 +384,7 @@ func SshKeyMngForm(c echo.Context) error {
 			"CloudOSList":   cloudOsList,
 			"NameSpaceList": nsList,
 			"SshKeyList":    sshKeyInfoList,
-			"status":  respStatus.StatusCode,
+			"status":        respStatus.StatusCode,
 		})
 }
 
@@ -408,7 +408,7 @@ func GetSshKeyList(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":  respStatus.StatusCode,
+		"status":             respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
 		"SshKeyList":         sshKeyInfoList,
 	})
@@ -537,7 +537,7 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 			"CloudOSList":             cloudOsList,
 			"NameSpaceList":           nsList,
 			"VirtualMachineImageList": virtualMachineImageInfoList,
-			"status":  respStatus.StatusCode,
+			"status":                  respStatus.StatusCode,
 		})
 }
 
@@ -657,7 +657,45 @@ func VirtualMachineImageDelProc(c echo.Context) error {
 	})
 }
 
+// 해당 namespace의 모든 VMImage 삭제
+func AllVirtualMachineImageDelProc(c echo.Context) error {
+	log.Println("AllVirtualMachineImageDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramNameSpaceID := c.Param("nameSpaceID")
+
+	// 해당 Namespace의 모든 Image가 삭제 되므로 선택한 namespace와 defaultNamespace가 같아야 삭제가능
+	if defaultNameSpaceID != paramNameSpaceID {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "현재 namespace만 삭제 가능합니다.",
+			"status":  4040,
+		})
+	}
+
+	respBody, respStatus := service.DelAllVirtualMachineImage(defaultNameSpaceID)
+	fmt.Println("=============respBody =============", respBody)
+
+	if respStatus.StatusCode == 500 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+	})
+}
+
 // connection에 해당하는 machine image 목록
+// connection이 resion별로 생성되므로 결국 해당 provider의 resion 내 vm목록을 가져옴
 func LookupVirtualMachineImageList(c echo.Context) error {
 	log.Println("GetVirtualMachineImageList : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -724,9 +762,36 @@ func SearchVirtualMachineImageList(c echo.Context) error {
 	})
 }
 
-// InstanceSpecMng 등록 form
-func InstanceSpecMngForm(c echo.Context) error {
-	fmt.Println("InstanceSpecMngForm ************ : ")
+// TODO : Fetch 의 의미 파악
+func FetchVirtualMachineImageList(c echo.Context) error {
+	log.Println("FetchVirtualMachineImageList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	virtualMachineImageInfoList, respStatus := service.FetchVirtualMachineImageList(defaultNameSpaceID)
+	// if vNetErr != nil {
+	if respStatus.StatusCode == 500 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+		// "DefaultNameSpaceID": defaultNameSpaceID,
+		"VirtualMachineImageList": virtualMachineImageInfoList,
+	})
+}
+
+// VMSpecMng 등록 form
+func VmSpecMngForm(c echo.Context) error {
+	fmt.Println("VmSpecMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -746,28 +811,28 @@ func InstanceSpecMngForm(c echo.Context) error {
 	store.Set("namespace", nsList)
 	log.Println(" nsList  ", nsList)
 
-	instanceSpecInfoList, respStatus := service.GetInstanceSpecInfoList(defaultNameSpaceID)
+	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
 	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
 		})
 	}
-	log.Println("instanceSpecInfoList", instanceSpecInfoList)
+	log.Println("VmSpecInfoList", vmSpecInfoList)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"setting/resources/InstanceSpecMng", // 파일명
+		"setting/resources/VirtualMachineSpecMng", // 파일명
 		map[string]interface{}{
-			"LoginInfo":        loginInfo,
-			"CloudOSList":      cloudOsList,
-			"NameSpaceList":    nsList,
-			"InstanceSpecList": instanceSpecInfoList,
-			"status":  respStatus.StatusCode,
+			"LoginInfo":     loginInfo,
+			"CloudOSList":   cloudOsList,
+			"NameSpaceList": nsList,
+			"VmSpecList":    vmSpecInfoList,
+			"status":        respStatus.StatusCode,
 		})
 }
 
-func GetInstanceSpecList(c echo.Context) error {
-	log.Println("GetInstanceSpecList : ")
+func GetVmSpecList(c echo.Context) error {
+	log.Println("GetVmSpecList : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -776,7 +841,7 @@ func GetInstanceSpecList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	instanceSpecInfoList, respStatus := service.GetInstanceSpecInfoList(defaultNameSpaceID)
+	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
 	// if vNetErr != nil {
 	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -789,13 +854,13 @@ func GetInstanceSpecList(c echo.Context) error {
 		"message":            "success",
 		"status":             respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
-		"InstanceSpecList":   instanceSpecInfoList,
+		"VmSpecList":         vmSpecInfoList,
 	})
 }
 
-// InstanceSpec 상세정보
-func GetInstanceSpecData(c echo.Context) error {
-	log.Println("GetInstanceSpecData : ")
+// VMSpec 상세정보
+func GetVmSpecData(c echo.Context) error {
+	log.Println("GetVmSpecData : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -803,19 +868,19 @@ func GetInstanceSpecData(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	paramInstanceSpec := c.Param("specID")
-	instanceSpecInfo, respStatus := service.GetInstanceSpecData(defaultNameSpaceID, paramInstanceSpec)
+	paramVMSpecID := c.Param("specID")
+	vmSpecInfo, respStatus := service.GetVmSpecInfoData(defaultNameSpaceID, paramVMSpecID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":          "success",
-		"status":           respStatus,
-		"InstanceSpecInfo": instanceSpecInfo,
+		"message": "success",
+		"status":  respStatus,
+		"VmSpec":  vmSpecInfo,
 	})
 }
 
-// InstanceSpec 등록 :
-func InstanceSpecRegProc(c echo.Context) error {
-	log.Println("InstanceSpecRegProc : ")
+// VMSpec 등록 :
+func VmSpecRegProc(c echo.Context) error {
+	log.Println("VMSpecRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -823,8 +888,8 @@ func InstanceSpecRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	instanceSpecRegInfo := new(model.InstanceSpecRegInfo)
-	if err := c.Bind(instanceSpecRegInfo); err != nil {
+	vmSpecRegInfo := new(model.VmSpecRegInfo)
+	if err := c.Bind(vmSpecRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
@@ -832,7 +897,7 @@ func InstanceSpecRegProc(c echo.Context) error {
 		})
 	}
 
-	resultInstanceSpecInfo, respStatus := service.RegInstanceSpec(defaultNameSpaceID, instanceSpecRegInfo)
+	resultVmSpecInfo, respStatus := service.RegVmSpec(defaultNameSpaceID, vmSpecRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
 	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -847,15 +912,15 @@ func InstanceSpecRegProc(c echo.Context) error {
 	// log.Println("respStatus = ", respStatus)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":          "success",
-		"status":           respStatus.StatusCode,
-		"InstanceSpecInfo": resultInstanceSpecInfo,
+		"message": "success",
+		"status":  respStatus.StatusCode,
+		"VMSpec":  resultVmSpecInfo,
 	})
 }
 
 // 삭제
-func InstanceSpecDelProc(c echo.Context) error {
-	log.Println("InstanceSpecDelProc : ")
+func VmSpecDelProc(c echo.Context) error {
+	log.Println("VmSpecDelProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -865,9 +930,9 @@ func InstanceSpecDelProc(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	paramInstanceSpecID := c.Param("specID")
+	paramVMSpecID := c.Param("specID")
 
-	respBody, respStatus := service.DelInstanceSpec(defaultNameSpaceID, paramInstanceSpecID)
+	respBody, respStatus := service.DelVMSpec(defaultNameSpaceID, paramVMSpecID)
 	fmt.Println("=============respBody =============", respBody)
 
 	// if reErr != nil {
@@ -877,7 +942,6 @@ func InstanceSpecDelProc(c echo.Context) error {
 			"status":  respStatus.StatusCode,
 		})
 	}
-	
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
@@ -886,8 +950,8 @@ func InstanceSpecDelProc(c echo.Context) error {
 }
 
 // lookupImage 목록
-func LookupInstanceSpecList(c echo.Context) error {
-	log.Println("GetInstanceSpecList : ")
+func LookupVmSpecList(c echo.Context) error {
+	log.Println("LookupVmSpecList : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -896,7 +960,7 @@ func LookupInstanceSpecList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	instanceSpecInfoList, respStatus := service.LookupInstanceSpecList()
+	vmSpecInfoList, respStatus := service.LookupVmSpecInfoList()
 	if respStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
@@ -906,30 +970,56 @@ func LookupInstanceSpecList(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
-		"status":            respStatus.StatusCode,
+		"status":             respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
-		"InstanceSpecList":   instanceSpecInfoList,
+		"VmSpecList":         vmSpecInfoList,
 	})
 }
 
 // lookupImage 상세정보
-func LookupInstanceSpecData(c echo.Context) error {
-	log.Println("LookupInstanceSpecData : ")
+func LookupVmSpecData(c echo.Context) error {
+	log.Println("LookupVmSpecData : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	paramInstanceSpec := c.Param("specID")
-	instanceSpecInfo, respStatus := service.LookupInstanceSpecData(paramInstanceSpec)
+	paramVMSpec := c.Param("specID") // IID
+	vmSpecInfo, respStatus := service.LookupVmSpecInfoData(paramVMSpec)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":          "success",
-		"status":           respStatus,
-		"InstanceSpecInfo": instanceSpecInfo,
+		"message": "success",
+		"status":  respStatus,
+		"VmSpec":  vmSpecInfo,
 	})
 }
 
-// resourcesGroup.PUT("/instancespec/put/:specID", controller.InstanceSpecPutProc)	// RegProc _ SshKey 같이 앞으로 넘길까
-// resourcesGroup.POST("/instancespec/filterspecs", controller.FilterInstanceSpecList)
-// resourcesGroup.POST("/instancespec/filterspecsbyrange", controller.FilterInstanceSpecListByRange)
+// TODO : Fetch 의미 파악필요
+func FetchVmSpecList(c echo.Context) error {
+	log.Println("FetchVMSpecList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	vmSpecInfoList, respStatus := service.FetchVmSpecInfoList(defaultNameSpaceID)
+	if respStatus.StatusCode == 500 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+		// "DefaultNameSpaceID": defaultNameSpaceID,
+		"VmSpec": vmSpecInfoList,
+	})
+}
+
+// resourcesGroup.PUT("/vmspec/put/:specID", controller.VMSpecPutProc)	// RegProc _ SshKey 같이 앞으로 넘길까
+// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVMSpecList)
+// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVMSpecListByRange)

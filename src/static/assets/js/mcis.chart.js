@@ -50,7 +50,7 @@ function showMonitoring(mcis_id, vm_id, metric, periodType, duration){
 	$("#canvas_vm").empty();
 	var statisticsCriteria = "last";
     
-	getVMMetric("canvas_vm",metric,mcis_id,vm_id,metric,periodType,statisticsCriteria,duration);
+	getVmMetric("canvas_vm",metric,mcis_id,vm_id,metric,periodType,statisticsCriteria,duration);
 }
 function genChartFmt(chart_target){
 
@@ -523,7 +523,7 @@ window.chartColors = {
 
 
 //vm 의 통계조회
-function getVMMetric(chartTarget,target, mcisID, vmID, metric, periodType,statisticsCriteria, duration){     
+function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statisticsCriteria, duration){     
 	console.log("====== Start GetMetric ====== ")
 	var color = "";
     var metric_size ="";

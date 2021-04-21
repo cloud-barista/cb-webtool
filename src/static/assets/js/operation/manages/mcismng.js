@@ -1,7 +1,7 @@
 ///////////// MCIS Handling //////////////
 
 // 등록 form으로 이동
-function createNewMCIS(){// Manage_MCIS_Life_Cycle_popup.html
+function createNewMcis(){// Manage_MCIS_Life_Cycle_popup.html
     var url = "/operation/manage" + "/mcis/regform/"
     // location.href = "/Manage/MCIS/reg"
     $('#loadingContainer').show();
@@ -25,7 +25,7 @@ function callMcisLifeCycle(type){
         }
     })
     if(checked_nothing == 0){
-        alert("Please Select MCIS!!")
+        commonAlert("Please Select MCIS!!")
         return;
     }
 }
@@ -54,9 +54,9 @@ function addNewVirtualMachine(){
 }
 
 function vmLifeCycle(type){
-    var mcis_id = $("#mcis_id").val();
-    var vm_id = $("#vm_id").val();
-    var vm_name = $("#vm_name").val();
+    var mcisID = $("#mcis_id").val();
+    var vmID = $("#vm_id").val();
+    var vmName = $("#vm_name").val();
     
     // var checked =""
     // $("[id^='td_ch_'").each(function(){
@@ -68,12 +68,12 @@ function vmLifeCycle(type){
     //     }
     // })
     // return;
-    if(!mcis_id){
-        alert("Please Select MCIS!!")
+    if(!mcisID){
+        commonAlert("Please Select MCIS!!")
         return;
     }
-    if(!vm_id){
-        alert("Please Select VM!!")
+    if(!vmID){
+        commonAlert("Please Select VM!!")
         return;
     }
     
@@ -133,7 +133,7 @@ const config_arr = new Array();
 // List Of MCIS 클릭 시 
 // mcis 테이블의 선택한 row 강조( on )
 // 해당 MCIS의 VM 상태목록 보여주는 함수 호출
-function clickListOfMCIS(id,index){
+function clickListOfMcis(id,index){
     console.log("click view mcis id :",id)
     $(".server_status").addClass("view");
     
@@ -170,8 +170,8 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
     var mcisDescription =  $("#mcisDescription" + mcisIndex).val();
     var mcisStatus =  $("#mcisStatus" + mcisIndex).val();
     var mcisCloudConnections = $("#mcisCloudConnections" + mcisIndex).val();
-    var vmTotalCountOfMcis = $("#mcisVMTotalCount" + mcisIndex).val();
-    var vms = $("#mcisVMStatusList" + mcisIndex).val();
+    var vmTotalCountOfMcis = $("#mcisVmTotalCount" + mcisIndex).val();
+    var vms = $("#mcisVmStatusList" + mcisIndex).val();
 
     $(".server_status").addClass("view")
     $("#mcis_info_txt").text("[ "+ mcisName +" ]");
@@ -307,7 +307,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
     axios.get(url,{})
         .then(result=>{
             console.log("get  Data : ",result.data);
-            var data = result.data.VMInfo;
+            var data = result.data.VmInfo;
 
             var vmId = data.id;
             var vmName = data.name;
@@ -388,8 +388,8 @@ function vmDetailInfo(mcisID, mcisName, vmID){
                 $("#server_detail_view_archi").val(architecture)
             }
             //    // server spec
-            // var vmSecName = data.VMSpecName
-            var vmSecName = data.vmspecName
+            // var vmSecName = data.VmSpecName
+            var vmSecName = data.vmspecName// TODO : 바로 return하는 경우인가?? 이름이 모두 소문자네
             $("#server_info_vmspec_name").val(vmSecName)
             $("#server_detail_view_server_spec_text").text(vmSecName)
             //var spec_id = data.specId
@@ -400,7 +400,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             $("#server_info_start_time").val(startTime)
 
             //    // server spec
-            var vmSpecName = vmDetail.VMSpecName
+            var vmSpecName = vmDetail.VmSpecName
             $("#server_info_vmspec_name").val(vmSpecName)
             $("#server_detail_view_server_spec_text").text(vmSpecName)
             
@@ -490,7 +490,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             ////// vm mornitoring tab //////
             // install Mon agent
             var installMonAgent = data.monAgentStatus
-            showVMMonitoring(mcisID,vmID)
+            showVmMonitoring(mcisID,vmID)
         }
     ).catch(function(error){
         console.log(" display error : ",error);        
@@ -592,7 +592,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
 
 
 // 조회 성공 시 Monitoring Tab 표시
-function showVMMonitoring(mcisID, vmID){
+function showVmMonitoring(mcisID, vmID){
     $("#mcis_detail_info_check_monitoring").prop("checked",true)
     $("#mcis_detail_info_check_monitoring").attr("disabled",true)
     $("#Monitoring_tab").show();
@@ -601,7 +601,7 @@ function showVMMonitoring(mcisID, vmID){
     var metric_arr = ["cpu","memory","disk","network"];
     var statisticsCriteria = "last";
     for(var i in metric_arr){
-        getVMMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
+        getVmMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
     }    
  }
  

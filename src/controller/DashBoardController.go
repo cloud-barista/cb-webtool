@@ -20,8 +20,8 @@ type RespPublicIPInfo struct {
 	PublicIPInfo []struct {
 		PublicIp string `json:"publicIP"`
 		Status   string `json:"status"`
-		VMID     string `json:"id"`
-		VMName   string `json:"name"`
+		VmID     string `json:"id"`
+		VmName   string `json:"name"`
 	} `json:"vm"`
 }
 
@@ -59,7 +59,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
 	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
 	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
-	mcisSimpleInfoList := []model.MCISSimpleInfo{}              // mics summary 정보
+	mcisSimpleInfoList := []model.McisSimpleInfo{}              // mics summary 정보
 
 	for _, mcisInfo := range mcisList {
 		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
@@ -111,7 +111,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 		vmStatusCountMapByMcis[mcisInfo.ID] = resultVmStatusCountMap // MCIS 내 vm 상태별 cnt
 
 		// Provider 별 connection count (Location 내에 있는 provider로 갯수 셀 것.)
-		mcisConnectionMap := service.GetVMConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
+		mcisConnectionMap := service.GetVmConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
 		log.Println(mcisConnectionMap)
 
 		mcisConnectionNames := ""
@@ -119,7 +119,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 			mcisConnectionNames += connectKey + " "
 		}
 		////////////// return value 에 set
-		mcisSimpleInfo := model.MCISSimpleInfo{}
+		mcisSimpleInfo := model.McisSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
 		mcisSimpleInfo.Status = mcisInfo.Status
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
@@ -154,7 +154,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 
 			// server count 영역
 			"TotalVmCount":          totalVmCount,
-			"TotalVMStatusCountMap": totalVmStatusCountMap, // 모든 VmStatus 별 count Map(MCIS 무관)
+			"TotalVmStatusCountMap": totalVmStatusCountMap, // 모든 VmStatus 별 count Map(MCIS 무관)
 
 			// cp count 영역
 			"TotalProviderCount":         providerCount,            // VM이 등록 된 provider 목록
@@ -162,12 +162,12 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 			"ConnectionConfigCountMap":   connectionConfigCountMap, // provider별 connection 수
 
 			// mcis count 영역
-			"TotalMCISCount":          totalMcisCount,
-			"TotalMCISStatusCountMap": totalMcisStatusCountMap, // 모든 MCIS의 상태 Map
+			"TotalMcisCount":          totalMcisCount,
+			"TotalMcisStatusCountMap": totalMcisStatusCountMap, // 모든 MCIS의 상태 Map
 
 			// mcis list
-			"MCISList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
-			"VmStatusCountMapByMCIS": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
+			"McisList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
+			"VmStatusCountMapByMcis": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
 		})
 
 }
@@ -205,7 +205,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
 	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
 	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
-	mcisSimpleInfoList := []model.MCISSimpleInfo{}              // mics summary 정보
+	mcisSimpleInfoList := []model.McisSimpleInfo{}              // mics summary 정보
 
 	for _, mcisInfo := range mcisList {
 		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
@@ -262,7 +262,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 		vmStatusCountMapByMcis[mcisInfo.ID] = resultVmStatusCountMap // MCIS 내 vm 상태별 cnt
 
 		// Provider 별 connection count (Location 내에 있는 provider로 갯수 셀 것.)
-		mcisConnectionMap := service.GetVMConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
+		mcisConnectionMap := service.GetVmConnectionCountByMcis(mcisInfo) // 해당 MCIS의 각 provider별 connection count
 		log.Println(mcisConnectionMap)
 
 		mcisConnectionNames := ""
@@ -270,7 +270,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 			mcisConnectionNames += connectKey + " "
 		}
 		////////////// return value 에 set
-		mcisSimpleInfo := model.MCISSimpleInfo{}
+		mcisSimpleInfo := model.McisSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
 		mcisSimpleInfo.Status = mcisInfo.Status
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
@@ -297,7 +297,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
-			"McisList":           mcisList,
+			// "McisList":           mcisList,	// mcisSimpleInfoList 로 대체
 
 			// server count 영역
 			"TotalVmCount":          totalVmCount,
@@ -313,8 +313,8 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 			// "TotalMCISStatusCountMap": totalMcisStatusCountMap, // 모든 MCIS의 상태 Map
 
 			// mcis list
-			"MCISList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
-			"VmStatusCountMapByMCIS": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
+			"McisList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
+			"VmStatusCountMapByMcis": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
 		})
 
 	// comURL := service.GetCommonURL()
@@ -438,7 +438,7 @@ func Map(c echo.Context) error {
 // 	for _, item := range publicIpInfo.PublicIPInfo {
 // 		wg.Add(1)
 
-// 		go service.GetGeoMetryInfo(&wg, item.PublicIp, item.Status, item.VMID, item.VMName, &ipStackInfo)
+// 		go service.GetGeoMetryInfo(&wg, item.PublicIp, item.Status, item.VmID, item.VmName, &ipStackInfo)
 
 // 	}
 // 	wg.Wait()

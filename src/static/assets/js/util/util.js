@@ -109,6 +109,7 @@ function commonConfirmOpen(targetAction){
             ["Provider", "Would you like to set Cloud Provider ?"],
 
             ["MoveToConnection", "Would you like to set Cloud config ?"],
+            ["DeleteCloudConnection", "Woudl you like to delete <br /> Cloud connection? "],
 
 
             // ["IdPassRequired", "ID/Password required !"],    --. 이거는 confirm이 아니잖아
@@ -132,29 +133,29 @@ function commonConfirmOpen(targetAction){
             ["AddNewVirtualMachineImage", "Would you like to register Image <br />Resource ?"],
             ["DeleteVirtualMachineImage", "Would you like to un-register Image <br />Resource ?"],  
 
-            ["AddNewInstanceSpec", "Would you like to register Spec <br />Resource ?"],
-            ["DeleteInstanceSpec", "Would you like to un-register Spec <br />Resource ?"],  
+            ["AddNewVmSpec", "Would you like to register Spec <br />Resource ?"],
+            ["DeleteVmSpec", "Would you like to un-register Spec <br />Resource ?"],  
 
             ["GotoMonitoringPerformance", "Would you like to view performance <br />for MCIS ?"],
             ["GotoMonitoringFault", "Would you like to view fault <br />for MCIS ?"],
             ["GotoMonitoringCost", "Would you like to view cost <br />for MCIS ?"],
             ["GotoMonitoringUtilize", "Would you like to view utilize <br />for MCIS ?"],
 
-            ["MCISLifeCycleReboot", "Would you like to reboot MCIS ?"],// mcis_life_cycle('reboot')
-            ["MCISLifeCycleSuspend", "Would you like to suspend MCIS ?"],//onclick="mcis_life_cycle('suspend')
-            ["MCISLifeCycleResume", "Would you like to resume MCIS ?"],//onclick="mcis_life_cycle('resume')"
-            ["MCISLifeCycleTerminate", "Would you like to terminate MCIS ?"],//onclick="mcis_life_cycle('terminate')
-            ["MCISManagement", "Would you like to manage MCIS ?"],// 해당 function 없음...
-            ["MoveToMCISManagement", "Would you like to manage MCIS ?"],            
-            ["AddNewMCIS", "Would you like to create MCIS ?"],
+            ["McisLifeCycleReboot", "Would you like to reboot MCIS ?"],// mcis_life_cycle('reboot')
+            ["McisLifeCycleSuspend", "Would you like to suspend MCIS ?"],//onclick="mcis_life_cycle('suspend')
+            ["McisLifeCycleResume", "Would you like to resume MCIS ?"],//onclick="mcis_life_cycle('resume')"
+            ["McisLifeCycleTerminate", "Would you like to terminate MCIS ?"],//onclick="mcis_life_cycle('terminate')
+            ["McisManagement", "Would you like to manage MCIS ?"],// 해당 function 없음...
+            ["MoveToMcisManagement", "Would you like to manage MCIS ?"],            
+            ["AddNewMcis", "Would you like to create MCIS ?"],
 
-            ["VMLifeCycle", "Would you like to view Server ?"],
-            ["VMLifeCycleReboot", "Would you like to reboot MCIS ?"], //onclick="vm_life_cycle('reboot')"
-            ["VMLifeCycleSuspend", "Would you like to suspend MCIS ?"], // onclick="vm_life_cycle('suspend')"
-            ["VMLifeCycleResume", "Would you like to resume MCIS ?"], // onclick="vm_life_cycle('resume')"
-            ["VMLifeCycleTerminate", ">Would you like to terminate MCIS ?"], // onclick="vm_life_cycle('terminate')"
-            ["VMManagement", "Would you like to manage VM ?"], // 해당 function 없음
-            ["AddNewVM", "Would you like to add VM ?"], //onclick="vm_add()"
+            ["VmLifeCycle", "Would you like to view Server ?"],
+            ["VmLifeCycleReboot", "Would you like to reboot MCIS ?"], //onclick="vm_life_cycle('reboot')"
+            ["VmLifeCycleSuspend", "Would you like to suspend MCIS ?"], // onclick="vm_life_cycle('suspend')"
+            ["VmLifeCycleResume", "Would you like to resume MCIS ?"], // onclick="vm_life_cycle('resume')"
+            ["VmLifeCycleTerminate", ">Would you like to terminate MCIS ?"], // onclick="vm_life_cycle('terminate')"
+            ["VmManagement", "Would you like to manage VM ?"], // 해당 function 없음
+            ["AddNewVm", "Would you like to add VM ?"], //onclick="vm_add()"
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -186,6 +187,8 @@ function commonConfirmOk(){
         
     }else if ( targetAction == "MoveToConnection"){
         location.href="/setting/connections/cloudconnectionconfig/mngform"
+    }else if ( targetAction == "DeleteCloudConnection"){
+        deleteCloudConnection();        
     }else if ( targetAction == "Config"){
         //id="Config"
         console.log("commonConfirmOk " + targetAction);
@@ -214,7 +217,7 @@ function commonConfirmOk(){
         setDefaultNameSpace(changeNameSpaceID)
     }else if ( targetAction == "AddNewNameSpace"){//-- AddNewNameSpace
         displayNameSpaceInfo("REG")
-        goFocus('reg_name');
+        goFocus('ns_reg');// 해당 영역으로 scroll
     }else if ( targetAction == "DeleteNameSpace"){
         deleteNameSpace ()
     }else if ( targetAction == "AddNewVpc"){
@@ -237,11 +240,11 @@ function commonConfirmOk(){
         goFocus('virtualMachineImageCreateBox');
     }else if ( targetAction == "DeleteVirtualMachineImage"){
         deleteVirtualMachineImage()
-    }else if ( targetAction == "AddNewInstanceSpec"){
-        displayInstanceSpecInfo("REG")
-        goFocus('instanceSpecCreateBox');
-    }else if ( targetAction == "DeleteInstanceSpec"){
-        deleteInstanceSpec()   
+    }else if ( targetAction == "AddNewVmSpec"){
+        displayVmSpecInfo("REG")
+        goFocus('vmSpecCreateBox');
+    }else if ( targetAction == "DeleteVmSpec"){
+        deleteVmSpec()   
     }else if ( targetAction == "GotoMonitoringPerformance"){
         alert("모니터링으로 이동 GotoMonitoringPerformance")
         // location.href ="";//../operation/Monitoring_Mcis.html
@@ -254,35 +257,35 @@ function commonConfirmOk(){
     }else if ( targetAction == "GotoMonitoringUtilize"){
         alert("모니터링으로 이동 GotoMonitoringUtilize")
         // location.href ="";//../operation/Monitoring_Mcis.html    
-    }else if ( targetAction == "MCISLifeCycleReboot"){
+    }else if ( targetAction == "McisLifeCycleReboot"){
         callMcisLifeCycle('reboot')
-    }else if ( targetAction == "MCISLifeCycleSuspend"){
+    }else if ( targetAction == "McisLifeCycleSuspend"){
         callMcisLifeCycle('suspend')
-    }else if ( targetAction == "MCISLifeCycleResume"){
+    }else if ( targetAction == "McisLifeCycleResume"){
         callMcisLifeCycle('resume')
-    }else if ( targetAction == "MCISLifeCycleTerminate"){
+    }else if ( targetAction == "McisLifeCycleTerminate"){
         callMcisLifeCycle('terminate')
-    }else if ( targetAction == "MCISManagement"){
+    }else if ( targetAction == "McisManagement"){
         alert("수행할 function 정의되지 않음");
-    }else if ( targetAction == "MoveToMCISManagement"){
+    }else if ( targetAction == "MoveToMcisManagement"){
         $('#loadingContainer').show();
         location.href ="/operation/manages/mcis/mngform/";
-    }else if ( targetAction == "AddNewMCIS"){
+    }else if ( targetAction == "AddNewMcis"){
         $('#loadingContainer').show();
         location.href ="/operation/manages/mcis/regform/";
-    }else if ( targetAction == "VMLifeCycle"){
+    }else if ( targetAction == "VmLifeCycle"){
         alert("수행할 function 정의되지 않음");
-    }else if ( targetAction == "VMLifeCycleReboot"){
+    }else if ( targetAction == "VmLifeCycleReboot"){
         vmLifeCycle('reboot')
-    }else if ( targetAction == "VMLifeCycleSuspend"){
+    }else if ( targetAction == "VmLifeCycleSuspend"){
         vmLifeCycle('suspend')
-    }else if ( targetAction == "VMLifeCycleResume"){
+    }else if ( targetAction == "VmLifeCycleResume"){
         vmLifeCycle('resume')
-    }else if ( targetAction == "VMLifeCycleTerminate"){
+    }else if ( targetAction == "VmLifeCycleTerminate"){
         vmLifeCycle('terminate')
-    }else if ( targetAction == "VMManagement"){
+    }else if ( targetAction == "VmManagement"){
         alert("수행할 function 정의되지 않음");
-    }else if ( targetAction == "AddNewVM"){
+    }else if ( targetAction == "AddNewVm"){
     }else if ( targetAction == "--"){
         addNewVirtualMachine()
     }else {
@@ -425,8 +428,7 @@ function tableSort(tableId, columnName, sortType){
         //thArray.push($(this).text())
         var thText = $(this).text().toUpperCase();
         if( thText == columnName){
-            sortTargetColumnIndex = theadIndex;
-            break;
+            sortTargetColumnIndex = theadIndex;            
         }
         theadIndex++
     })
@@ -479,7 +481,6 @@ function filterTable(tableId, filterColumn, filterKeyword){
         var thText = $(this).text().toUpperCase();
         if( thText == columnName){
             filterTargetColumnIndex = theadIndex;
-            break;
         }
         theadIndex++
     })

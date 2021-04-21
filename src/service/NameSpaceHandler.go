@@ -160,6 +160,27 @@ func GetNameSpaceList() ([]model.NameSpaceInfo, model.WebStatus) {
 	return nameSpaceInfoList["ns"], model.WebStatus{StatusCode: respStatus}
 }
 
+func GetNameSpaceData(nameSpaceID string) (model.NameSpaceInfo, model.WebStatus) {
+	fmt.Println("GetNameSpaceData start")
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	nameSpaceInfo := model.NameSpaceInfo{}
+	if err != nil {
+		return nameSpaceInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// defer body.Close()
+	json.NewDecoder(respBody).Decode(&nameSpaceInfo)
+	fmt.Println(nameSpaceInfo)
+
+	return nameSpaceInfo, model.WebStatus{StatusCode: respStatus}
+}
+
 // NameSpace 등록
 func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)

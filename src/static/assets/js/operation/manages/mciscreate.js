@@ -76,7 +76,7 @@ function displayNewServerForm(){
 function deployMcis(){
     var mcis_name = $("#mcis_name").val();
     if(!mcis_name){
-        alert("Please Input MCIS Name!!!!!")
+        commonAlert("Please Input MCIS Name!!!!!")
         return;
     }
     var mcis_desc = $("#mcis_desc").val();

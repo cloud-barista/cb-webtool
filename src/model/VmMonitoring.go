@@ -1,7 +1,7 @@
 package model
 
 // VM Monitoring 시 parameter 전달용
-type VMMonitoring struct {
+type VmMonitoring struct {
 	NameSpaceID        string `json:"nameSpaceID"`
 	McisID             string `json:"mcisID"`
 	VmID               string `json:"vmID"`

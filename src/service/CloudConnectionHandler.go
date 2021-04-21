@@ -504,6 +504,94 @@ func DelDriver(driverName string) (io.ReadCloser, model.WebStatus) {
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
+///////////// Config
+// 현재 설정된 Driver 목록
+func GetConfigList() ([]model.ConfigInfo, model.WebStatus) {
+	url := util.SPIDER + "/" + "config"
+	fmt.Println("=========== GetConfigListData : ", url)
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	configList := map[string][]model.ConfigInfo{}
+	json.NewDecoder(respBody).Decode(&configList)
+	fmt.Println(configList["config"])
+
+	return configList["config"], model.WebStatus{StatusCode: respStatus}
+}
+
+// Config 상세조회
+func GetConfigData(configID string) (*model.ConfigInfo, model.WebStatus) {
+	url := util.SPIDER + "/config/" + configID
+	fmt.Println("=========== GetConfigData : ", url)
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// defer body.Close()
+	configInfo := model.ConfigInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return &configInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	json.NewDecoder(respBody).Decode(&configInfo)
+	fmt.Println(configInfo)
+	return &configInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// Driver 등록
+func RegConfig(configInfo *model.ConfigInfo) (io.ReadCloser, model.WebStatus) {
+	// buff := bytes.NewBuffer(pbytes)
+	url := util.SPIDER + "/config"
+
+	fmt.Println("configInfo : ", configInfo)
+
+	// body, err := util.CommonHttpPost(url, regionInfo)
+	pbytes, _ := json.Marshal(configInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, model.WebStatus{StatusCode: respStatus}
+}
+
+// Driver 삭제
+func DelConfig(configID string) (io.ReadCloser, model.WebStatus) {
+
+	// buff := bytes.NewBuffer(pbytes)
+	url := util.SPIDER + "/config/" + configID
+
+	fmt.Println("configID : ", configID)
+
+	pbytes, _ := json.Marshal(configID)
+	// body, err := util.CommonHttpDelete(url, pbytes)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	return respBody, model.WebStatus{StatusCode: respStatus}
+}
+
+/////////////
 // 해당 namespace의 vpc 목록 조회 -> ResourceHandler로 이동
 // func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
 // url := TumbleUrl + "ns/" + nameSpaceID + "/resources/vNet"

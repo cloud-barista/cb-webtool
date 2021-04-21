@@ -109,7 +109,7 @@ func GetVmConnectionName(vmConnectionName string) string {
 // 		mcisStatusStopped++
 // 	}
 
-// 	vmList := mcisInfo.VMs
+// 	vmList := mcisInfo.Vms
 
 // 	for vmIndex, vmInfo := range vmList {
 // 		// log.Println(" vmInfo  ", vmIndex, vmInfo)

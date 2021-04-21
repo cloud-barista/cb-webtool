@@ -44,17 +44,17 @@
 							
 							<div class="box_cont">
 								<div class="lbox">
-									<strong id="total_mcis" title="Total count of MCIS">{{ .TotalMCISCount }}</strong>
+									<strong id="total_mcis" title="Total count of MCIS">{{ .TotalMcisCount }}</strong>
 									<span>/</span>
 									<span title="Total count of VM" id="total_vm">{{ .TotalVmCount }}</span>
 								</div>
 								<div class="rbox">
 									<div class="numbox">
 										<div class="num bgbox_b cursor" >
-											<span id="run_cnt" title="Running State">{{ .TotalVMStatusCountMap.running }}</span>
+											<span id="run_cnt" title="Running State">{{ .TotalVmStatusCountMap.running }}</span>
 										</div>
 										<div class="num bgbox_g cursor" >
-											<span id="stop_cnt" title="Stopped State">{{ .TotalVMStatusCountMap.stopped }}</span>
+											<span id="stop_cnt" title="Stopped State">{{ .TotalVmStatusCountMap.stopped }}</span>
 										</div>
 									</div>
 									<div class="txt">Status of Infra Service</div>
@@ -145,17 +145,17 @@
 															<strong>Life Cycle</strong>
 															<ul>
 																<!-- <li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Start">Start</a></li> -->
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Reboot" onClick="commonConfirmOpen('MCISLifeCycleReboot')">Reboot</a></li>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Suspend" onClick="commonConfirmOpen('MCISLifeCycleSuspend')">Suspend</a></li>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Resume" onClick="commonConfirmOpen('MCISLifeCycleResume')">Resume</a></li>								
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Terminate" onClick="commonConfirmOpen('MCISLifeCycleTerminate')">Terminate</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Reboot" onClick="commonConfirmOpen('McisLifeCycleReboot')">Reboot</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Suspend" onClick="commonConfirmOpen('McisLifeCycleSuspend')">Suspend</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Resume" onClick="commonConfirmOpen('McisLifeCycleResume')">Resume</a></li>								
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Terminate" onClick="commonConfirmOpen('McisLifeCycleTerminate')">Terminate</a></li>
 															</ul>
 														</li>
 														<li>
 															<strong>Manage</strong>
 															<ul>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#n_Manage" onClick="commonConfirmOpen('MoveToMCISManagement')">Manage</a></li>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#n_New" onClick="commonConfirmOpen('AddNewMCIS')">New</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#n_Manage" onClick="commonConfirmOpen('MoveToMcisManagement')">Manage</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#n_New" onClick="commonConfirmOpen('AddNewMcis')">New</a></li>
 															</ul>
 														</li>
 													</ul>
@@ -172,7 +172,7 @@
 							<!-- <div class="ds_cont" id="table_1"> -->
 							<div class="ds_cont" id="mcisList">
 								<!-- MCIS 목록 -->
-								{{range $index, $item := .MCISList}}
+								{{range $index, $item := .McisList}}
 								<div class="areabox dbinfo cursor active" id="mcis_areabox_{{$index}}" onclick="selectMcis('{{$item.ID}}','{{$item.Name}}','mcis_areabox_{{$index}}', this)">
 									<div class="box">
 							   			<div class="top">

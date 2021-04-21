@@ -1,6 +1,6 @@
 package model
 
-type VMInfo struct {
+type VmInfo struct {
 	ID             string `json:"id"`
 	Name           string `json:"name"`
 	ConnectionName string `json:"connectionName"`
@@ -93,27 +93,3 @@ type NameSystemIdInfo struct {
 	NameID   string `json:"nameId"`
 	SystemID string `json:"systemId"`
 }
-
-// type IIDInfo struct {
-// 	NameID  string `json:"nameId"`
-// 	SystemID  string `json:"systemId"`
-// }
-// type ImageIIDInfo struct {
-// 	NameID  string `json:"nameId"`
-// 	SystemID  string `json:"systemId"`
-// }
-// type keyPairIIDInfo struct {
-// 	NameID  string `json:"nameId"`
-// 	SystemID  string `json:"systemId"`
-// }
-
-// // 원래는 RegionInfo가 맞으나, Resouce에서 RegionInfo를 사용하므로 RegionZoneInfo로 명명
-// type RegionZoneInfo struct {
-// 	Region  string `json:"region"`
-// 	Zone  string `json:"zone"`
-// }
-
-// type SecurityGroupIIdsInfo struct {
-// 	NameID  string `json:"nameId"`
-// 	SystemID  string `json:"systemId"`
-// }

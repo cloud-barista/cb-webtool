@@ -9,14 +9,14 @@
 			// Connection 정보가 바뀌면 등록에 필요한 목록들을 다시 가져온다.
 			function changeConnectionInfo(configName){
 				console.log("config name : ",configName)
-                getVMIInfo(configName);
+                getVmIInfo(configName);
                 getSecurityInfo(configName);
                 getSSHKeyInfo(configName);
 				getVnetInfo(configName);
 				getSpecInfo(configName);
 			}
 			
-			function getVMIInfo(){
+			function getVmIInfo(){
 				
 				 var configName = $("#regConnectionName option:selected").val();
 				 
@@ -98,7 +98,7 @@
 					configName = $("#regConnectionName option:selected").val();
 				}
 
-				var url = "/setting/resources" + "/instancespec/list"
+				var url = "/setting/resources" + "/vmspec/list"
 				// var url = CommonURL+"/ns/"+NAMESPACE+"/resources/spec";
 				var html = "";
 				// var apiInfo = ApiInfo
@@ -108,7 +108,7 @@
 					// }
 				}).then(result=>{
 					// console.log(result.data)
-					var data = result.data.InstanceSpecList
+					var data = result.data.VmSpecList
 					console.log("spec result : ",data)
 					if(data){
 						html +="<option value=''>Select SpecName</option>"

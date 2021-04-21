@@ -1,6 +1,6 @@
 package model
 
-type MCISInfo struct {
+type McisInfo struct {
 	// ID     string `json:"id"`
 	// Name   string `json:"name"`
 	// Status string `json:"status"`
@@ -19,13 +19,13 @@ type MCISInfo struct {
 	TargetAction string `json:"targetAction"`
 	TargetStatus string `json:"targetStatus"`
 
-	VMs []VMInfo `json:"vm"`
+	Vms []VmInfo `json:"vm"`
 }
 
-type MCISInfos []MCISInfo
+type McisInfos []McisInfo
 
 // MCIS의 일부정보만 추려서
-type MCISSimpleInfo struct {
+type McisSimpleInfo struct {
 	// ID     string `json:"id"`
 	// Name   string `json:"name"`
 	// Status string `json:"status"`
@@ -44,7 +44,7 @@ type MCISSimpleInfo struct {
 	// vm_run_cnt, vm_stop_cnt
 	VmCount          int            `json:"vmCount"`
 	VmStatusNames    string         `json:"vmStatusNames"`
-	VmSimpleList     []VMSimpleInfo `json:"vmSimpleList"`
+	VmSimpleList     []VmSimpleInfo `json:"vmSimpleList"`
 	VmStatusCountMap map[string]int `json:"vmStatusCountMap"`
 	// VmRunningCount    int `json:"vnRunningCount"`
 	// VmStoppedCount    int `json:"vmStopped"`
@@ -56,4 +56,4 @@ type MCISSimpleInfo struct {
 	// ConnectionConfigProviderNames []string       `json:"connectionConfigProviderNames"` // 해당 MCIS 등록된 connection의 provider 목록
 	ConnectionConfigProviderCount int `json:"connectionConfigProviderCount"`
 }
-type MCISSimpleInfos []MCISSimpleInfo
+type McisSimpleInfos []McisSimpleInfo

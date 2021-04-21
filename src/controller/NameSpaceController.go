@@ -280,6 +280,10 @@ func SetNameSpace(c echo.Context) error {
 	fmt.Println("nsResult : ", nsResult)
 	if !nsOk {
 		fmt.Println("nsOk : ", nsOk)
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "저장된 namespace가 없습니다.",
+			"status":  "403",
+		})
 	} else {
 		fmt.Println("______________")
 

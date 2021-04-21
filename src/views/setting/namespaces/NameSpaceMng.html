@@ -80,35 +80,7 @@
 									</ul>
 								</div>
 							</div>
-	
-							<!-- popup Add -->
-							<!-- <div class="modal fade layerpopup" id="AddBox" tabindex="-1" role="dialog" aria-hidden="true" id="modal_reg">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										
-										<div class="modal-body">
-											<div class="txt">Would you like to register NameSpace <br />Resource ?</div>
-											<div class="btnbox">
-												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok register" onclick="goFocus('reg_name')" data-dismiss="modal">OK</button>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div> -->
-							<!-- //popup Add -->
-							
-							<script>
-								// $(document).ready(function(){
-									// $('#AddBox .btn_ok.register').click(function(){
-									// 	$(".dashboard.register_cont").toggleClass("active");
-									// 	$(".dashboard.server_status").removeClass("view");
-									// 	$(".dashboard .status_list tbody tr").removeClass("on");
-									// });
-								// });
-							</script>
-							
+															
 							<div class="ds_cont">
 								
 								<div class="dataTable status_list">
@@ -126,13 +98,7 @@
 											</tr>
 										</thead>
 										<tbody id="nsList">
-											<!-- <tr>
-												<td class="overlay hidden" data-th=""><input type="checkbox" name="chk" value="" id="td_ch1" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>
-												<td class="btn_mtd ovm" data-th="Name">Ns-mcis-t01 <span class="ov"></span></td>
-												<td class="overlay hidden" data-th="ID">ns-id-mcis-t01</td>
-												<td class="overlay hidden td_left" data-th="description">가동중인 서비스 01 …</td>
-												<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>
-											</tr> -->
+											
 											{{ $length := len .NameSpaceList }} 
 											{{ if eq $length 0 }}
 											<tr>
@@ -233,7 +199,7 @@
 									</div>
 									<div class="btnbox">
 										<div class="btn_center">
-											<button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="setDefaultNameSpace()">Ok</button> 
+											<button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="nameSpaceSet('NameSpace')">Ok</button> 
 										</div>
 									</div>
 								</div>

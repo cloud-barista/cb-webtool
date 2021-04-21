@@ -541,6 +541,116 @@ func DriverDelProc(c echo.Context) error {
 	})
 }
 
+///////// Config ////////////
+
+// 현재 설정된 Config 목록
+func GetConfigList(c echo.Context) error {
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		// Login 정보가 없으므로 login화면으로
+		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		// 	"message": "invalid tumblebug connection",
+		// 	"status":  "403",
+		// })
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	configList, respStatus := service.GetConfigList()
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus,
+		"Config":  configList,
+	})
+}
+
+// Config 조회
+func GetConfig(c echo.Context) error {
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		// Login 정보가 없으므로 login화면으로
+		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		// 	"message": "invalid tumblebug connection",
+		// 	"status":  "403",
+		// })
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	paramConfigID := c.Param("configID")
+	configInfo, respStatus := service.GetDriverData(paramConfigID)
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus,
+		"Config":  configInfo,
+	})
+}
+
+// Config 등록
+// func ConfigRegProc
+func ConfigRegProc(c echo.Context) error {
+	log.Println("ConfigRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		// Login 정보가 없으므로 login화면으로
+		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		// 	"message": "invalid tumblebug connection",
+		// 	"status":  "403",
+		// })
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	configInfo := new(model.ConfigInfo)
+	if err := c.Bind(configInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(configInfo)
+	respBody, respStatus := service.RegConfig(configInfo)
+	fmt.Println("=============respBody =============", respBody)
+	if respStatus.StatusCode == 500 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+	})
+}
+
+// Config 삭제
+func ConfigDelProc(c echo.Context) error {
+	log.Println("ConfigDelProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		// Login 정보가 없으므로 login화면으로
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	paramConfigID := c.Param("configID")
+	log.Println(paramConfigID)
+
+	respBody, respStatus := service.DelConfig(paramConfigID)
+	fmt.Println("=============respBody =============", respBody)
+	// if reErr != nil {
+	if respStatus.StatusCode == 500 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+	})
+}
+
+///////// condif //////////
 // Cloud 연결정보 표시(driver)
 func ConnectionList(c echo.Context) error {
 	fmt.Println("ConnectionList ************ : ")

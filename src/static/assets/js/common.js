@@ -111,7 +111,7 @@ function goFocus(target){
 	fnMove(target)
 }
 
-function getVMStatus(vm_name, connection_name){
+function getVmStatus(vm_name, connection_name){
     var url = "/vmstatus/"+vm_name+"?connection_name="+connection_name
     var apiInfo = ApiInfo;
     $.ajax({
@@ -595,10 +595,14 @@ function getCommonSecurityGroupList(targetKey, sortType) {
                 console.log(" defaultNameSpaceID : " + data.DefaultNameSpaceID)
                 $('#topboxDefaultNameSpaceID').val(data.DefaultNameSpaceID)
                 $('#topboxDefaultNameSpaceName').text(data.DefaultNameSpaceName)
-
+				
 				if( callerLocation == "Main"){
 					$('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
 					location.href = "/operation/dashboards/dashboardnamespace/mngform"
+				}else if( callerLocation == "NameSpace"){
+					// commonAlert(data.DefaultNameSpaceID + "가 기본 NameSpace로 변경되었습니다.")
+					commonAlert("기본 NameSpace로 변경되었습니다")					
+					location.reload(); // TODO : 호출한 곳에서 reload를 할 것인지 redirect를 할 것인지
 				}else{
 					location.reload(); // TODO : 호출한 곳에서 reload를 할 것인지 redirect를 할 것인지
 				}

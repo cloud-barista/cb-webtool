@@ -77,7 +77,7 @@ function selectMonitoringMcis(mcisId){
         }
     }).then(result=>{
         console.log("selectMonitoringMcis result")
-        var mcis = result.data.MCISInfo
+        var mcis = result.data.McisInfo
         console.log(mcis)
         var vms = mcis.vm
         console.log(vms)

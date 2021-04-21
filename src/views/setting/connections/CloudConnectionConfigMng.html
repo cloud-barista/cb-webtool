@@ -69,9 +69,9 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox" onClick='addCloudConnectionConfirm()'>Add</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox" onClick="addCloudConnectionConfirm()">Add</a></li>
 														<!-- <li><a href="javascript:void(0);">Change</a></li> -->
-														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist" onClick='deleteCloudConnectionConfirm()'>Delete</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist" onClick="commonConfirmOpen('DeleteCloudConnection')">Delete</a></li>
 													</ul>
 												</div>
 											</div>
@@ -81,66 +81,7 @@
 								</div>
 							</div>
 	
-							<!-- popup Regist -->
-							<div class="modal fade layerpopup" id="RegistBox" tabindex="-1" role="dialog" aria-hidden="true" id="modal_reg">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										
-										<div class="modal-body">
-											<div class="txt">Would you like to register <br />Cloud Connection?</div>
-											<div class="btnbox">
-												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok register" onclick="goFocus('regConfigName')" data-dismiss="modal">OK</button>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-							<!-- //popup Regist -->
-
-                            <!-- popup Delete -->
-							<div class="modal fade layerpopup" id="UnRegist" tabindex="-1" role="dialog" aria-hidden="true" id="modal_del">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										
-										<div class="modal-body">
-											<div class="txt">Would you like to delete <br />Cloud Connection?</div>
-											<div class="btnbox">
-												<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-												<button type="button" class="btn_ok delete" data-dismiss="modal">OK</button>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-							<!-- //popup Regist -->
-							
-							<script>
-								
-								// $(document).ready(function(){
-								// 	$('#RegistBox .btn_ok.register').click(function(){
-								// 		$(".dashboard.register_cont").toggleClass("active");
-								// 		$(".dashboard.server_status").removeClass("view");
-								// 		$(".dashboard .status_list tbody tr").removeClass("on");
-                                //         //ok 위치이동
-								// 		$('#RegistBox').on('hidden.bs.modal', function () {
-								// 			var offset = $("#CreateBox").offset();
-								// 			$("#wrap").animate({scrollTop : offset.top}, 300);
-
-                                //             getRegionList()
-                                //             getCredentialList()
-                                //             getDriverList()
-								// 		})
-								// 	});
-								// 	$('#UnRegist .btn_ok.delete').click(function(){
-                                //         console.log("do click delete ok")
-								// 		cloudConnection_delete()
-								// 	});
-								// });
-							</script>
-							
+					
 							<div class="ds_cont">
 								
 								<div class="dataTable status_list">

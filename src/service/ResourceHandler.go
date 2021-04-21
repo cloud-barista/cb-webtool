@@ -63,7 +63,6 @@ func GetVpcData(nameSpaceID string, vNetID string) (*model.VNetInfo, model.WebSt
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
 	// json.NewDecoder(body).Decode(&vNetInfo)
 	json.NewDecoder(respBody).Decode(&vNetInfo)
 	fmt.Println(vNetInfo)
@@ -95,7 +94,7 @@ func RegVpc(nameSpaceID string, vnetRegInfo *model.VNetRegInfo) (*model.VNetInfo
 	// log.Println("Reg respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
-	
+
 	json.NewDecoder(respBody).Decode(&vNetInfo)
 	fmt.Println(vNetInfo)
 
@@ -222,15 +221,15 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGr
 	if respStatus != 200 {
 		// b, _ := ioutil.ReadAll(respBody)
 		// log.Fatal(string(b))
-		
+
 		errorInfo := model.ErrorInfo{}
 		json.NewDecoder(respBody).Decode(&errorInfo)
 		fmt.Println(errorInfo)
 		return nil, model.WebStatus{StatusCode: 500, Message: errorInfo.Message}
-	  }
+	}
 
 	// 응답에 생성한 객체값이 옴
-	
+
 	json.NewDecoder(respBody).Decode(&securityGroupInfo)
 	fmt.Println(securityGroupInfo)
 	// return respBody, respStatusCode
@@ -313,7 +312,6 @@ func GetSshKeyData(nameSpaceID string, sshKeyID string) (*model.SshKeyInfo, mode
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
 	json.NewDecoder(respBody).Decode(&sshKeyInfo)
 	fmt.Println(sshKeyInfo)
 
@@ -342,7 +340,7 @@ func RegSshKey(nameSpaceID string, sshKeyRegInfo *model.SshKeyRegInfo) (*model.S
 	// log.Println("respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
-	
+
 	json.NewDecoder(respBody).Decode(&sshKeyInfo)
 	fmt.Println(sshKeyInfo)
 	// return respBody, respStatusCode
@@ -432,7 +430,6 @@ func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
 	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
 	fmt.Println(virtualMachineImageInfo)
 
@@ -470,14 +467,14 @@ func RegVirtualMachineImage(nameSpaceID string, virtualMachineImageRegInfo *mode
 	// log.Println("respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
-	
+
 	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
 	fmt.Println(virtualMachineImageInfo)
 	// return respBody, respStatusCode
 	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-// VirtualMachineImage 삭제
+// 해당 namespace의 특정 VirtualMachineImage 삭제
 func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (io.ReadCloser, model.WebStatus) {
 	// if ValidateString(VirtualMachineImageID) != nil {
 	if len(virtualMachineImageID) == 0 {
@@ -506,6 +503,26 @@ func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (i
 
 }
 
+// 해당 namespace의 모든 VirtualMachineImage 삭제
+func DelAllVirtualMachineImage(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+	// if ValidateString(VirtualMachineImageID) != nil {
+
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image"
+
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, model.WebStatus{StatusCode: respStatus}
+}
+
 func LookupVirtualMachineImageList(connectionName string) ([]model.VirtualMachineLookupImageInfo, model.WebStatus) {
 	fmt.Println("LookupVirtualMachineImageList ************ : ", connectionName)
 	url := util.TUMBLEBUG + "/lookupImage"
@@ -529,37 +546,48 @@ func LookupVirtualMachineImageList(connectionName string) ([]model.VirtualMachin
 
 	json.NewDecoder(respBody).Decode(&lookupImageList)
 	log.Println("LookupVirtualMachineImageList called 3 ")
-	// //spew.Dump(body)
-	// // fmt.Println(lookupImageList["image"])
 
-	// util.DisplayResponse(resp)
-	// log.Println("LookupVirtualMachineImageList called 4 ")
+	return lookupImageList["image"], model.WebStatus{StatusCode: respStatus}
+}
 
+func FetchVirtualMachineImageList(nameSpaceID string) ([]model.VirtualMachineLookupImageInfo, model.WebStatus) {
+	fmt.Println("FetchVirtualMachineImageList ************ : ", nameSpaceID)
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/fetchImages"
 
-	outputAsBytes, err := ioutil.ReadAll(resp.Body)
-	// resp.Body.Close()
+	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	fetchImageList := map[string][]model.VirtualMachineLookupImageInfo{}
+
+	json.NewDecoder(respBody).Decode(&fetchImageList)
+	log.Println("FetchVirtualMachineImageList called ")
+
+	// outputAsBytes, err := ioutil.ReadAll(resp.Body)
+	// // resp.Body.Close()
+	// // if err != nil {
+	// // 	log.Fatal(err)
+	// // }
+	// // fmt.Printf("%s", robots)
+	// log.Println("FetchVirtualMachineImageList called 4 ")
+	// fmt.Println(string(outputAsBytes))
+	// var output apiResponse
+	// err = json.Unmarshal(outputAsBytes, &output)
+
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
-	// fmt.Printf("%s", robots)
-	log.Println("LookupVirtualMachineImageList called 4 ")
-	fmt.Println(string(outputAsBytes))
-	var output apiResponse
-	err = json.Unmarshal(outputAsBytes, &output)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	// fmt.Printf("%s", output)
 
-	fmt.Printf("%s", output)
+	log.Println("FetchVirtualMachineImageList called 5 ")
+	return fetchImageList["image"], model.WebStatus{StatusCode: respStatus}
 
-	log.Println("LookupVirtualMachineImageList called 5 ")
-	return lookupImageList["image"], model.WebStatus{StatusCode: respStatus}
-
-}
-
-type apiResponse struct {
-	Id, Kind, LongURL string
 }
 
 func LookupVirtualMachineImageData(virtualMachineImageID string) (*model.VirtualMachineImageInfo, model.WebStatus) {
@@ -579,7 +607,6 @@ func LookupVirtualMachineImageData(virtualMachineImageID string) (*model.Virtual
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
 	json.NewDecoder(respBody).Decode(virtualMachineImageInfo)
 	fmt.Println(virtualMachineImageInfo)
 
@@ -604,16 +631,15 @@ func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID str
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
 	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
 	fmt.Println(virtualMachineImageInfo)
 
 	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-// InstanceSpec 목록 조회
-func GetInstanceSpecInfoList(nameSpaceID string) ([]model.InstanceSpecInfo, model.WebStatus) {
-	fmt.Println("GetInstanceSpecInfoList ************ : ")
+// VMSpec 목록 조회
+func GetVmSpecInfoList(nameSpaceID string) ([]model.VmSpecInfo, model.WebStatus) {
+	fmt.Println("GetVMSpecInfoList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
 
 	// pbytes, _ := json.Marshal(nameSpaceID)
@@ -629,58 +655,57 @@ func GetInstanceSpecInfoList(nameSpaceID string) ([]model.InstanceSpecInfo, mode
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	instanceSpecList := map[string][]model.InstanceSpecInfo{}
+	vmSpecList := map[string][]model.VmSpecInfo{}
 
-	json.NewDecoder(respBody).Decode(&instanceSpecList)
+	json.NewDecoder(respBody).Decode(&vmSpecList)
 	//spew.Dump(body)
-	fmt.Println(instanceSpecList["spec"])
+	fmt.Println(vmSpecList["spec"])
 
-	return instanceSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+	return vmSpecList["spec"], model.WebStatus{StatusCode: respStatus}
 
 }
 
-// InstanceSpec 상세 조회
-func GetInstanceSpecData(nameSpaceID string, instanceSpecID string) (*model.InstanceSpecInfo, model.WebStatus) {
-	fmt.Println("GetInstanceSpecData ************ : ")
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec/" + instanceSpecID
+// VMSpec 상세 조회
+func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*model.VmSpecInfo, model.WebStatus) {
+	fmt.Println("GetVMSpecInfoData ************ : ")
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec/" + vmSpecID
 
 	// fmt.Println("nameSpaceID : ", nameSpaceID)
 
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	instanceSpecInfo := model.InstanceSpecInfo{}
+	vmSpecInfo := model.VmSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
-		return &instanceSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
-	json.NewDecoder(respBody).Decode(&instanceSpecInfo)
-	fmt.Println(instanceSpecInfo)
+	json.NewDecoder(respBody).Decode(&vmSpecInfo)
+	fmt.Println(vmSpecInfo)
 
-	return &instanceSpecInfo, model.WebStatus{StatusCode: respStatus}
+	return &vmSpecInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-// InstanceSpec 등록
-func RegInstanceSpec(nameSpaceID string, instanceSpecRegInfo *model.InstanceSpecRegInfo) (*model.InstanceSpecInfo, model.WebStatus) {
-	fmt.Println("RegInstanceSpec ************ : ")
+// VMSpecInfo 등록
+func RegVmSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.VmSpecInfo, model.WebStatus) {
+	fmt.Println("RegVMSpec ************ : ")
 
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"// parameter를 모두 받지않기 때문에 param의 data type이 틀려 오류남.
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec" // action 인자없이 전송
 
 	// fmt.Println("vnetInfo : ", vnetInfo)
 
-	pbytes, _ := json.Marshal(instanceSpecRegInfo)
+	pbytes, _ := json.Marshal(vmSpecRegInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	instanceSpecInfo := model.InstanceSpecInfo{}
+	vmSpecInfo := model.VmSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
-		return &instanceSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
@@ -696,25 +721,57 @@ func RegInstanceSpec(nameSpaceID string, instanceSpecRegInfo *model.InstanceSpec
 	// log.Println("respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
-	
-	json.NewDecoder(respBody).Decode(&instanceSpecInfo)
-	fmt.Println(instanceSpecInfo)
+
+	json.NewDecoder(respBody).Decode(&vmSpecInfo)
+	fmt.Println(vmSpecInfo)
 	// return respBody, respStatusCode
-	return &instanceSpecInfo, model.WebStatus{StatusCode: respStatus}
+	return &vmSpecInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-// InstanceSpec 삭제
-func DelInstanceSpec(nameSpaceID string, instanceSpecID string) (io.ReadCloser, model.WebStatus) {
-	// if ValidateString(InstanceSpecID) != nil {
-	if len(instanceSpecID) == 0 {
+func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.VmSpecInfo, model.WebStatus) {
+	fmt.Println("UpdateVMSpec ************ : ")
+
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"// parameter를 모두 받지않기 때문에 param의 data type이 틀려 오류남.
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec" // action 인자없이 전송
+
+	// fmt.Println("vnetInfo : ", vnetInfo)
+
+	pbytes, _ := json.Marshal(vmSpecRegInfo)
+	fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	vmSpecInfo := model.VmSpecInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s\n", string(data))
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	json.NewDecoder(respBody).Decode(&vmSpecInfo)
+	fmt.Println(vmSpecInfo)
+
+	return &vmSpecInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// VMSpec 삭제
+func DelVMSpec(nameSpaceID string, vmSpecID string) (io.ReadCloser, model.WebStatus) {
+	// if ValidateString(VMSpecID) != nil {
+	if len(vmSpecID) == 0 {
 		log.Println("specID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다.")
 		return nil, model.WebStatus{StatusCode: 4040, Message: "specID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다."}
 	}
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec/" + instanceSpecID
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec/" + vmSpecID
 
-	fmt.Println("instanceSpecID : ", instanceSpecID)
+	fmt.Println("vmSpecID : ", vmSpecID)
 
-	pbytes, _ := json.Marshal(instanceSpecID)
+	pbytes, _ := json.Marshal(vmSpecID)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
 	if err != nil {
@@ -729,11 +786,31 @@ func DelInstanceSpec(nameSpaceID string, instanceSpecID string) (io.ReadCloser, 
 	// log.Println("respStatus = ", respStatus)
 
 	return respBody, model.WebStatus{StatusCode: respStatus}
-
 }
 
-func LookupInstanceSpecList() ([]model.InstanceSpecInfo, model.WebStatus) {
-	fmt.Println("LookupInstanceSpecList ************ : ")
+// 해당 namespace의 모든 VMSpec 삭제 : TODO : 로그인 유저의 동일 namespace일 때만 삭제가능하도록
+func DelAllVMSpec(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+	fmt.Println("DelAllVMSpec ************ : ")
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec/"
+
+	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	// respStatus := resp.Status
+	// log.Println("respStatusCode = ", respStatusCode)
+	// log.Println("respStatus = ", respStatus)
+
+	return respBody, model.WebStatus{StatusCode: respStatus}
+}
+
+func LookupVmSpecInfoList() ([]model.VmSpecInfo, model.WebStatus) {
+	fmt.Println("LookupVmSpecInfoList ************ : ")
 	url := util.TUMBLEBUG + "/lookupSpec"
 
 	// body, err := util.CommonHttpGet(url)
@@ -749,40 +826,105 @@ func LookupInstanceSpecList() ([]model.InstanceSpecInfo, model.WebStatus) {
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	instanceSpecList := map[string][]model.InstanceSpecInfo{}
+	vmSpecList := map[string][]model.VmSpecInfo{}
 
-	json.NewDecoder(respBody).Decode(&instanceSpecList)
+	json.NewDecoder(respBody).Decode(&vmSpecList)
 	//spew.Dump(body)
-	fmt.Println(instanceSpecList["vmspec"])
+	fmt.Println(vmSpecList["vmspec"])
 
-	return instanceSpecList["vmspec"], model.WebStatus{StatusCode: respStatus}
+	return vmSpecList["vmspec"], model.WebStatus{StatusCode: respStatus}
 
 }
 
-func LookupInstanceSpecData(instanceSpecName string) (*model.InstanceSpecInfo, model.WebStatus) {
-	url := util.TUMBLEBUG + "/lookupSpec/" + instanceSpecName
+func LookupVmSpecInfoData(vmSpecName string) (*model.VmSpecInfo, model.WebStatus) {
+	url := util.TUMBLEBUG + "/lookupSpec/" + vmSpecName
 
-	fmt.Println("instanceSpecName : ", instanceSpecName)
+	fmt.Println("vmSpecName : ", vmSpecName)
 
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	instanceSpecInfo := model.InstanceSpecInfo{}
+	vmSpecInfo := model.VmSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
-		return &instanceSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	
-	json.NewDecoder(respBody).Decode(&instanceSpecInfo)
-	fmt.Println(instanceSpecInfo)
+	json.NewDecoder(respBody).Decode(&vmSpecInfo)
+	fmt.Println(vmSpecInfo)
 
-	return &instanceSpecInfo, model.WebStatus{StatusCode: respStatus}
+	return &vmSpecInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-// resourcesGroup.PUT("/instancespec/put/:specID", controller.InstanceSpecPutProc)	// RegProc _ SshKey 같이 앞으로 넘길까
-// resourcesGroup.POST("/instancespec/filterspecs", controller.FilterInstanceSpecList)
-// resourcesGroup.POST("/instancespec/filterspecsbyrange", controller.FilterInstanceSpecListByRange)
+func FetchVmSpecInfoList(nameSpaceID string) ([]model.VmSpecInfo, model.WebStatus) {
+	fmt.Println("FetchVmSpecInfoList ************ : ", nameSpaceID)
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/fetchSpecs"
+
+	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodPost)
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	fetchSpecList := map[string][]model.VmSpecInfo{}
+
+	json.NewDecoder(respBody).Decode(&fetchSpecList)
+	log.Println("FetchVmSpecList called ")
+
+	return fetchSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+}
+
+// resourcesGroup.PUT("/vmspec/put/:specID", controller.VmSpecPutProc)	// RegProc _ SshKey 같이 앞으로 넘길까
+// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)
+
+// spec들을 filterling
+func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) ([]model.VmSpecInfo, model.WebStatus) {
+	fmt.Println("FilterVmSpecInfoList ************ : ", nameSpaceID)
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/filterSpecs"
+	// /ns/{nsId}/resources/filterSpecs
+	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodPost)
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	fetchSpecList := map[string][]model.VmSpecInfo{}
+
+	json.NewDecoder(respBody).Decode(&fetchSpecList)
+	log.Println("FilterVmSpecInfoList called ")
+
+	return fetchSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+}
+
+// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)
+func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *model.RangeMinMax) ([]model.VmSpecInfo, model.WebStatus) {
+	fmt.Println("FilterVmSpecInfoListByRange ************ : ", nameSpaceID)
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/filterSpecsByRange"
+	// /ns/{nsId}/resources/filterSpecsByRange
+
+	pbytes, _ := json.Marshal(vmSpecRangeMinMax)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	fetchVmSpecList := map[string][]model.VmSpecInfo{}
+
+	json.NewDecoder(respBody).Decode(&fetchVmSpecList)
+	log.Println("FilterVmSpecInfoListByRange called ")
+
+	return fetchVmSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+}

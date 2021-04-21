@@ -54,6 +54,10 @@ type TokenDetails struct {
 
 func Index(c echo.Context) error {
 	fmt.Println("============== index ===============")
+
+	//TODO : virtual Machine 이미지 목록을 가져온다.: 스토어에 저장하면 되나?
+	// virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList(paramConnectionName)
+	//TODO : server spec 목록을 가져온다.  : 스토어에 저장하면 되나?
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
@@ -153,6 +157,7 @@ func ApiCall(c echo.Context) error {
 	resp, err := util.CommonHttp(url, pbytes, apiMethod)
 
 	if err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"err": err,
 		})
@@ -199,6 +204,79 @@ func ApiCall(c echo.Context) error {
 	// 		"err":  err,
 	// 	})
 	// }
+}
+
+// Server API 호출 Test : 너무 복잡함....
+func ServerCall(c echo.Context) error {
+	fmt.Println("============== ServerCall ===============")
+
+	params := make(map[string]string)
+	if err := c.Bind(&params); err != nil {
+		fmt.Println("err = ", err) // bind Error는 나지만 크게 상관없는 듯.
+	}
+	fmt.Println(params)
+	// apiInfo := util.AuthenticationHandler()
+	//name := c.FormValue("name")
+	// paramApiTarget := c.Param("ApiTarget") // SPIDER인지, Tumblebug인지
+	// paramApiURL := c.Param("ApiURL")       // 호출되는 경로 : 변수가 있더라도 변수까지 반영 된 최종 호출 될 url
+	// paramApiMethod := c.Param("ApiMethod") // GET인지 POST인지
+	// paramApiObj := c.Param("ApiObj")       // 호출에 사용되는 parameter들 (json형태)
+
+	// fmt.Println("paramApiTarget=", paramApiTarget)
+	// fmt.Println("paramApiURL=", paramApiURL)
+	// fmt.Println("paramApiMethod=", paramApiMethod)
+	// fmt.Println("paramApiObj=", paramApiObj)
+	// paramUserID := strings.TrimSpace(reqInfo.UserID)
+	apiTarget := ""
+
+	if params["ApiTarget"] == "SPIDER" {
+		apiTarget = util.SPIDER
+	} else if params["ApiTarget"] == "TUMBLEBUG" {
+		apiTarget = util.TUMBLEBUG
+	} else if params["ApiTarget"] == "DRAGONFLY" {
+		apiTarget = util.DRAGONFLY
+	}
+
+	apiMethod := ""
+	if params["ApiMethod"] == "GET" {
+		apiMethod = http.MethodGet
+	} else if params["ApiMethod"] == "POST" {
+		apiMethod = http.MethodPost
+	} else if params["ApiMethod"] == "PUT" {
+		apiMethod = http.MethodPut
+	} else if params["ApiMethod"] == "DELETE" {
+		apiMethod = http.MethodDelete
+	}
+
+	//url := util.TUMBLEBUG + "/ns"
+	url := apiTarget + params["ApiURL"]
+
+	fmt.Println("url=", url)
+
+	// if params["ApiObj"] != "" {// ApiObj유무에 따라 CommonHttp, CommonHttpWithoutParam으로 나눌까 하다가 하나로 호출.
+	pbytes := []byte(params["ApiObj"]) // 없으면 없는대로 CommonHttp호출.
+	// pbytes, _ := json.Marshal(paramApiObj)
+	fmt.Println("CommonHttp=")
+	resp, err := util.CommonHttp(url, pbytes, apiMethod)
+
+	if err != nil {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"err": err,
+		})
+	}
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(resp.Body)
+	resultStr := buf.String()
+
+	jsonMap := make(map[string]interface{})
+	err = json.Unmarshal([]byte(resultStr), &jsonMap)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		// "resp": resultStr,
+		"resp": jsonMap,
+		"err":  err,
+	})
 }
 
 func LoginForm(c echo.Context) error {

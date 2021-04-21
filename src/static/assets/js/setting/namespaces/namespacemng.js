@@ -80,6 +80,9 @@ function showNameSpaceInfo(target){
     $("#infoDesc").val(infos[2])
     
     $("#infoName").focus();
+
+    // 선택한 namespace를 defaultNameSpace 로 지정. -> OK버튼 클릭했을 때 설정 됨
+    $("#tempSelectedNameSpaceID").val(infos[0]);
 }
 
 // 삭제 처리 후 namespace 상세정보 초기화  TODO : display ... function으로 바꿀 것

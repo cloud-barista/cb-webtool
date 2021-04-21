@@ -41,16 +41,16 @@
 															<strong>Life Cycle</strong>
 															<ul>
 																<!-- <li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Start">Start</a></li> -->
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Reboot" onClick="commonConfirmOpen('MCISLifeCycleReboot')">Reboot</a></li>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Suspend" onClick="commonConfirmOpen('MCISLifeCycleSuspend')">Suspend</a></li>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Resume" onClick="commonConfirmOpen('MCISLifeCycleResume')">Resume</a></li>								
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Terminate" onClick="commonConfirmOpen('MCISLifeCycleTerminate')">Terminate</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Reboot" onClick="commonConfirmOpen('McisLifeCycleReboot')">Reboot</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Suspend" onClick="commonConfirmOpen('McisLifeCycleSuspend')">Suspend</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Resume" onClick="commonConfirmOpen('McisLifeCycleResume')">Resume</a></li>								
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Terminate" onClick="commonConfirmOpen('McisLifeCycleTerminate')">Terminate</a></li>
 															</ul>
 														</li>
 														<li>
 															<strong>Manage</strong>
 															<ul>
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('AddNewMCIS')">New / Extend</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('AddNewMcis')">New / Extend</a></li>
 															</ul>
 														</li>
 													</ul>
@@ -81,15 +81,15 @@
 										<tbody id="mcisList">
 											<!-- //
 											// mcis.ID, mcis.status, mcis.name -->
-											{{ $length := len .MCISList }} 
+											{{ $length := len .McisList }} 
 											{{ if eq $length 0 }}
 											<tr>
 												<td class="overlay hidden" data-th="" colspan="8">No Data</td>
 											</tr>
 											{{ end }}
-											{{range $index, $item := .MCISList}}
+											{{range $index, $item := .McisList}}
 
-											<tr onclick="clickListOfMCIS('{{$item.ID}}', '{{$index}}' );" id="server_info_tr_{{$index}}" item="{{$item.ID}}|{{$index}}">
+											<tr onclick="clickListOfMcis('{{$item.ID}}', '{{$index}}' );" id="server_info_tr_{{$index}}" item="{{$item.ID}}|{{$index}}">
 												<td class="overlay hidden td_left" data-th="Status">
 													<img src="/assets/img/contents/icon_{{$item.McisStatus}}.png" class="icon" alt=""/>{{$item.Status}}<span class="ov off"></span>
 													
@@ -121,7 +121,7 @@
 													<input type="hidden" name="mcisStatus" value="{{$item.McisStatus}}" id="mcisStatus{{$index}}"/>
 													<input type="hidden" name="mcisDescription" value="{{$item.Description}}" id="mcisDescription{{$index}}"/>
 													<input type="hidden" name="mcisCloudConnections" value="{{$item.ConnectionConfigProviderNames}}" id="mcisCloudConnections{{$index}}"/>
-													<input type="hidden" name="mcisVMTotalCount" value="{{$vmStatusCountMap.TOTAL}}" id="mcisVMTotalCount{{$index}}"/>
+													<input type="hidden" name="mcisVmTotalCount" value="{{$vmStatusCountMap.TOTAL}}" id="mcisVmTotalCount{{$index}}"/>
 													
 													<!-- MCIS의 VM들 이름, ID, 상태-->
 													{{range $vmStatusIndex, $vmStatusObj := $item.VmSimpleList}}													

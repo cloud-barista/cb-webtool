@@ -37,7 +37,7 @@ $(document).ready(function(){
 
 $(document).ready(function () {
     // order_type = "name"
-    // getInstanceSpecList(order_type);
+    // getVMSpecList(order_type);
 
     // var apiInfo = "{{ .apiInfo}}";
     // getCloudOS(apiInfo,'provider');
@@ -60,12 +60,12 @@ $(document).ready(function () {
 // }
 
 // 등록/상세 area 보이기 숨기기
-function displayInstanceSpecInfo(targetAction){
+function displayVmSpecInfo(targetAction){
     if( targetAction == "REG"){
-        $('#instanceSpecCreateBox').toggleClass("active");
-        $('#instanceSpecInfoBox').removeClass("view");
-        $('#instanceSpecListTable').removeClass("on");
-        var offset = $("#instanceSpecCreateBox").offset();
+        $('#vmSpecCreateBox').toggleClass("active");
+        $('#vmSpecInfoBox').removeClass("view");
+        $('#vmSpecListTable').removeClass("on");
+        var offset = $("#vmSpecCreateBox").offset();
         // var offset = $("#" + target+"").offset();
     	$("#TopWrap").animate({scrollTop : offset.top}, 300);
 
@@ -74,41 +74,41 @@ function displayInstanceSpecInfo(targetAction){
         $("#regCspSpecName").val('')
 
     }else if ( targetAction == "REG_SUCCESS"){
-        $('#instanceSpecCreateBox').removeClass("active");
-        $('#instanceSpecInfoBox').removeClass("view");
-        $('#instanceSpecListTable').addClass("on");
+        $('#vmSpecCreateBox').removeClass("active");
+        $('#vmSpecInfoBox').removeClass("view");
+        $('#vmSpecListTable').addClass("on");
         
         // form 초기화
         $("#regSpecName").val('')
         $("#regCspSpecName").val('')
         
-        var offset = $("#instanceSpecCreateBox").offset();
+        var offset = $("#vmSpecCreateBox").offset();
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
         
-        getInstanceSpecList("name");
+        getVmSpecList("name");
     }else if ( targetAction == "DEL"){
-        $('#instanceSpecCreateBox').removeClass("active");
-        $('#instanceSpecInfoBox').addClass("view");
-        $('#instanceSpecListTable').removeClass("on");
+        $('#vmSpecCreateBox').removeClass("active");
+        $('#vmSpecInfoBox').addClass("view");
+        $('#vmSpecListTable').removeClass("on");
 
-        var offset = $("#instanceSpecInfoBox").offset();
+        var offset = $("#vmSpecInfoBox").offset();
     	$("#TopWrap").animate({scrollTop : offset.top}, 300);
 
     }else if ( targetAction == "DEL_SUCCESS"){
-        $('#instanceSpecCreateBox').removeClass("active");
-        $('#instanceSpecInfoBox').removeClass("view");
-        $('#instanceSpecListTable').addClass("on");
+        $('#vmSpecCreateBox').removeClass("active");
+        $('#vmSpecInfoBox').removeClass("view");
+        $('#vmSpecListTable').addClass("on");
 
-        var offset = $("#instanceSpecInfoBox").offset();
+        var offset = $("#vmSpecInfoBox").offset();
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
-        getInstanceSpecList("name");
+        getVmSpecList("name");
     }
 }
 
-function getInstanceSpecList(sort_type) {
+function getVmSpecList(sort_type) {
     console.log(sort_type);
-    var url = "/setting/resources"+"/instancespec/list"
+    var url = "/setting/resources"+"/vmspec/list"
     console.log("URL : ",url)
     axios.get(url, {
         headers: {
@@ -118,14 +118,14 @@ function getInstanceSpecList(sort_type) {
     }).then(result => {
         console.log("get Spec List : ", result.data);
         
-        var data = result.data.InstanceSpecList;
+        var data = result.data.VmSpecList;
         var html = ""
         
         if (data.length) {
             if (sort_type) {
                 console.log("check : ", sort_type);
                 data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                    html += '<tr onclick="showInstanceSpecInfo(\'' + item.name + '\');">' 
+                    html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
                         + '<td class="overlay hidden" data-th="">' 
                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSpecName + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
@@ -137,7 +137,7 @@ function getInstanceSpecList(sort_type) {
                 ))
             } else {
                 data.filter((list) => list.name !== "").map((item, index) => (
-                    html += '<tr onclick="showInstanceSpecInfo(\'' + item.name + '\');">' 
+                    html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
                         + '<td class="overlay hidden" data-th="">' 
                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
@@ -187,12 +187,12 @@ function ModalDetail() {
     });
 }
 
-function showInstanceSpecInfo(target) {
-    console.log("target showInstanceSpecInfo : ", target);
+function showVmSpecInfo(target) {
+    console.log("target showVMSpecInfo : ", target);
     // var apiInfo = "{{ .apiInfo}}";
     var specId = encodeURIComponent(target);
     
-    var url = "/setting/resources"+"/instancespec/" + specId;
+    var url = "/setting/resources"+"/vmspec/" + specId;
     console.log("URL : ",url)
     
     return axios.get(url,{
@@ -201,7 +201,7 @@ function showInstanceSpecInfo(target) {
         }
     
     }).then(result=>{
-        var data = result.data.InstanceSpecInfo
+        var data = result.data.VmSpec
         console.log("Show Data : ",data);
 
         var dtlSpecName = data.name;
@@ -220,12 +220,12 @@ function showInstanceSpecInfo(target) {
 
         getProviderNameByConnection(dtlConnectionName, 'dtlProvider')// provider는 connection 정보에서 가져옴
 
-        displayInstanceSpecInfo("DEL")
+        displayVmSpecInfo("DEL")
     }) 
 }
 
 
-function createInstanceSpec() {
+function createVmSpec() {
     var specId = $("#regSpecName").val();
     var specName = $("#regSpecName").val();
     var connectionName = $("#regConnectionName").val();
@@ -238,7 +238,7 @@ function createInstanceSpec() {
     }
 
     // var apiInfo = "{{ .apiInfo}}";
-    var url = "/setting/resources"+"/instancespec/reg"
+    var url = "/setting/resources"+"/vmspec/reg"
     console.log("URL : ",url)
     var obj = {
         id: specId,
@@ -259,7 +259,7 @@ function createInstanceSpec() {
             if (result.status == 200 || result.status == 201) {
                 alert("Success Create Image!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getInstanceSpecList("name");
+                getVmSpecList("name");
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
                 // $("#btn_add2").click()
@@ -276,7 +276,7 @@ function createInstanceSpec() {
     }
 }
 
-function deleteInstanceSpec() {
+function deleteVmSpec() {
     var selSpecId = "";
     var count = 0;
 
@@ -299,7 +299,7 @@ function deleteInstanceSpec() {
         return false;
     }
     
-    var url = "/setting/resources"+"/instancespec/del/" + selSpecId;
+    var url = "/setting/resources"+"/vmspec/del/" + selSpecId;
     console.log("URL : ",url)
     axios.delete(url, {
         headers: {
@@ -311,9 +311,9 @@ function deleteInstanceSpec() {
         if (result.status == 200 || result.status == 201) {
             alert("Success Delete Spec.");
             // location.reload(true);
-            getInstanceSpecList("name");
+            getVmSpecList("name");
             
-            displayInstanceSpecInfo("DEL_SUCCESS")
+            displayVmSpecInfo("DEL_SUCCESS")
         }
     })
 }                                                  
