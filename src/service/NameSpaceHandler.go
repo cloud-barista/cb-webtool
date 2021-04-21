@@ -49,7 +49,7 @@ func CreateDefaultNamespace() (*model.NameSpaceInfo, model.WebStatus) {
 	nameSpaceInfo.Description = "default name space name"
 	respBody, respStatus := RegNameSpace(&nameSpaceInfo)
 	log.Println(" respBody  ", respBody) // respBody에 namespace Id가 있으면 할당해서 사용할 것
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		log.Println(" nsCreateErr  ", respStatus)
 		return &nameSpaceInfo, respStatus
 	}

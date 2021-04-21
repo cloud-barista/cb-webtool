@@ -55,8 +55,7 @@ func VpcMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -90,8 +89,7 @@ func GetVpcList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -149,7 +147,7 @@ func VpcRegProc(c echo.Context) error {
 	// fmt.Println("=============respStatus =============", respStatus)
 	// fmt.Println("=============respBody ===============", respBody)
 
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -180,7 +178,7 @@ func VpcDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelVpc(defaultNameSpaceID, paramVNetID)
 	fmt.Println("=============respBody =============", respBody)
 
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -216,7 +214,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -247,8 +245,7 @@ func GetSecirityGroupList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -303,7 +300,7 @@ func SecirityGroupRegProc(c echo.Context) error {
 
 	resultSecurityGroupInfo, respStatus := service.RegSecurityGroup(defaultNameSpaceID, securityGroupRegInfo)
 
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -334,7 +331,7 @@ func SecirityGroupDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelSecurityGroup(defaultNameSpaceID, paramSecurityGroupID)
 	fmt.Println("=============respBody =============", respBody)
 
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -369,7 +366,7 @@ func SshKeyMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	sshKeyInfoList, respStatus := service.GetSshKeyInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -399,7 +396,7 @@ func GetSshKeyList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	sshKeyInfoList, respStatus := service.GetSshKeyInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -455,7 +452,7 @@ func SshKeyRegProc(c echo.Context) error {
 
 	resultSshKeyInfo, respStatus := service.RegSshKey(defaultNameSpaceID, sshKeyRegInfo)
 
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -486,7 +483,7 @@ func SshKeyDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelSshKey(defaultNameSpaceID, paramSshKeyID)
 	fmt.Println("=============respBody =============", respBody)
 
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -522,7 +519,7 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -552,8 +549,7 @@ func GetVirtualMachineImageList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -609,7 +605,7 @@ func VirtualMachineImageRegProc(c echo.Context) error {
 
 	resultVirtualMachineImageInfo, respStatus := service.RegVirtualMachineImage(defaultNameSpaceID, virtualMachineImageRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -645,7 +641,7 @@ func VirtualMachineImageDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageID)
 	fmt.Println("=============respBody =============", respBody)
 
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -682,7 +678,7 @@ func AllVirtualMachineImageDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelAllVirtualMachineImage(defaultNameSpaceID)
 	fmt.Println("=============respBody =============", respBody)
 
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -708,8 +704,7 @@ func LookupVirtualMachineImageList(c echo.Context) error {
 
 	log.Println("paramConnectionName : ", paramConnectionName)
 	virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList(paramConnectionName)
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -773,8 +768,7 @@ func FetchVirtualMachineImageList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	virtualMachineImageInfoList, respStatus := service.FetchVirtualMachineImageList(defaultNameSpaceID)
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -812,7 +806,7 @@ func VmSpecMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -842,8 +836,7 @@ func GetVmSpecList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -899,7 +892,7 @@ func VmSpecRegProc(c echo.Context) error {
 
 	resultVmSpecInfo, respStatus := service.RegVmSpec(defaultNameSpaceID, vmSpecRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -935,8 +928,7 @@ func VmSpecDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelVMSpec(defaultNameSpaceID, paramVMSpecID)
 	fmt.Println("=============respBody =============", respBody)
 
-	// if reErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -961,7 +953,7 @@ func LookupVmSpecList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	vmSpecInfoList, respStatus := service.LookupVmSpecInfoList()
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -1005,7 +997,7 @@ func FetchVmSpecList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	vmSpecInfoList, respStatus := service.FetchVmSpecInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,

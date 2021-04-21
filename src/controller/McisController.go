@@ -304,8 +304,7 @@ func GetMcisList(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	mcisList, respStatus := service.GetMcisList(defaultNameSpaceID)
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -355,8 +354,7 @@ func McisRegProc(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.RegMcis(defaultNameSpaceID, mCISInfo)
 	log.Println("RegMcis service returned")
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -550,8 +548,7 @@ func McisLifeCycle(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
 	log.Println("McisLifeCycle service returned")
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
@@ -587,8 +584,7 @@ func McisVmLifeCycle(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
 	log.Println("McisVmLifeCycle service returned")
-	// if vNetErr != nil {
-	if respStatus.StatusCode == 500 {
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,

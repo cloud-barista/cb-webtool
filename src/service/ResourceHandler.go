@@ -218,7 +218,7 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGr
 	// respStatus := resp.Status
 	log.Println("respStatusCode = ", resp.StatusCode)
 	log.Println("respStatus = ", resp.Status)
-	if respStatus != 200 {
+	if respStatus != 200 && respStatus != 201 {
 		// b, _ := ioutil.ReadAll(respBody)
 		// log.Fatal(string(b))
 
@@ -229,7 +229,6 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGr
 	}
 
 	// 응답에 생성한 객체값이 옴
-
 	json.NewDecoder(respBody).Decode(&securityGroupInfo)
 	fmt.Println(securityGroupInfo)
 	// return respBody, respStatusCode
