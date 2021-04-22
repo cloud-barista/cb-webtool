@@ -18,6 +18,30 @@
 	</div>
 	<!-- //popup modal -->
 
+	<!-- popup prompt -->
+	<div class="modal fade layerpopup" id="promptArea" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">				
+				<div class="modal-body">
+					<div class="txt"><span id="confirmText"></div>
+					<div class="txt">
+						<span id="PromptQuestion">
+						<input type="text" name="promptText" id="promptText"/>
+					</div>
+					<div class="btnbox">
+						<input type="hidden" id="promptOkAction" value=""><!-- modal에서 OK버튼 클릭 시 수행할 action 지정-->
+						<input type="hidden" id="promptTargetObjId" value=""><!-- modal에서 값을 전달할 대상 object 지정-->
+						
+						<button type="button" class="btn_cancel" data-dismiss="modal" onclick="commonPromptClose()">Cancel</button>
+						<button type="button" class="btn_ok" data-dismiss="modal" onclick="commonPromptOk()">OK</button>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- //popup prompt -->
+
 	<!-- popup alert -->
 	<div class="modal fade layerpopup" id="alertArea" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">

@@ -337,6 +337,52 @@ function commonConfirmClose(){
     $("#confirmArea").modal("hide");
 }
 
+//////// Prompt start ////////
+// confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정
+function commonPromptOpen(targetAction, targetObjId){
+    console.log("commonPromptOpen : " + targetAction)
+    
+    let promptModalTextMap = new Map(
+        [
+            ["FilterName", "필터링할 단어를 입력하세요"],
+            ["Config", "Would you like to set Cloud config ?"],
+        ]
+    );
+    console.log(promptModalTextMap.get(targetAction));
+    try{
+        $('#promptQuestion').html(promptModalTextMap.get(targetAction));
+        $('#promptText').val('');
+
+        $('#promptTargetObjId').val(targetObjId);
+        $('#promptOkAction').val(targetAction);// Prompt입력창에서 OK버튼을 눌렀을 때 이동할 targetKey
+                
+        $('#promptArea').modal();
+    }catch(e){
+        console.log(e);
+        alert(e);
+    }
+}
+
+function commonPromptOk(){
+    var targetAction = $('#promptOkAction').val();
+    var targetObjId = $('#promptTargetObjId').val();
+    var targetValue = $('#promptText').val();
+
+    console.log("promptOkAction : " + targetAction)
+    if( targetAction == 'FilterName'){
+        // Name이라는 Column을 Filtering
+        filterTable(targetObjId, "Name", targetValue)
+    }
+    commonPromptClose();
+}
+
+function commonPromptClose(){
+    $('#promptQuestion').text('');
+    $('#promptText').text('');
+    $('#promptOkAction').val('');
+    $("#promptArea").modal("hide");
+}
+//////// Prompt end //////////
 // provider에 등록된 connection을 selectbox에 표시
 function getConnectionListForSelectbox(provider, targetSelectBoxID){
     
@@ -517,53 +563,39 @@ function tableSort(tableId, columnName){
     }    
 }
 
+
 // todo : fintering을 하려면 keyword를 입력 받아야 하는데???
 // filter 항목에서 column을 선택하면 popup으로 keyword를 입력받아 filterTable()을 실행하게 하면 될 까?
-function filterTable(tableId, filterColumn, filterKeyword){
-    
+// 1. 대상 table에 ID가 있어야 함.
+// 2. filter > 대상 칼럼을 선택 시 > txt 입력창이 떠서 keyword를 입력하면 해당 내용으로 filtering
+// 3. 입력 단어가 ALL 이면 모두 보여준다.
+function filterTable(tableId, filterColumnName, filterKeyword){
+    var filterTargetColumnIndex = getTableColumnIndex(tableId, filterColumnName)
+    console.log("filterTargetColumnIndex=" + filterTargetColumnIndex);
     var filter = filterKeyword.toUpperCase();
-    var columnName = filterColumn.toUpperCase();
-    // var tableObj = document.getElementById(tableId);
-    // var tableHeader = tableObj.getElementsByTagName("thead");
-    // // var headers = tableHeader.getElementsByTagName('th');
-    // // var tBodyObj = tableObj.getElementsByTagName("tbody");
-    // // var trObj = tableObj.getElementsByTagName("tr");
-
-    // var headers = tableObj.find('thead > th').get();
-    // for( var i = 0; i < headers.length; i++){
-    //     var aHeader = headers[i].toUpperCase();
-        
-    // }
-
-    // 해당 column의 index를 찾는다.
-    var filterTargetColumnIndex = 0;// 필터를 적용할 td 칼럼의 index
-    var theadIndex = 0;
-    $('#' + tableId).find('thead > tr > th').each(function(){
-        //thArray.push($(this).text())
-        var thText = $(this).text().toUpperCase();
-        if( thText == columnName){
-            filterTargetColumnIndex = theadIndex;
-        }
-        theadIndex++
-    })
-
+	console.log("filter=" + filter);
     
-    // // thead 의 text
-    // theadOjb.find('th').eq(1)
-
-
+    //var tableObj = $('#' + tableId);
+	var tableObj = document.getElementById(tableId);
+	var trObj = tableObj.getElementsByTagName("tr");
+    //var rows = tableObj[0].rows;
+	console.log(trObj.length);
     // Loop through all table rows, and hide those who don't match the search query
     // 찾은 column을 기준으로 fintering한다.
-    for (i = 0; i < trObj.length; i++) {
-        tdObj = trObj[i].getElementsByTagName("td")[filterTargetColumnIndex];//
-        if (tdObj) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
+    for (i = 1; i < trObj.length; i++) {
+		console.log(trObj[i]);
+        var tdTag = trObj[i].getElementsByTagName("td")[filterTargetColumnIndex];
+        console.log(tdTag);
+        if (tdTag) {
+            txtValue = tdTag.textContent || tdTag.innerText;
+            console.log(txtValue + " = " + tdTag.textContent + " || " + tdTag.innerText);
+            if(filter == "ALL") {
+                trObj[i].style.display = "";			
+			} else if (txtValue.toUpperCase().indexOf(filter) > -1) {
+				trObj[i].style.display = "";
+            }else {
+				trObj[i].style.display = "none";
+			}
         }
     }
-
 }
