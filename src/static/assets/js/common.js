@@ -597,8 +597,10 @@ function getCommonSecurityGroupList(targetKey, sortType) {
                 $('#topboxDefaultNameSpaceName').text(data.DefaultNameSpaceName)
 				
 				if( callerLocation == "Main"){
-					$('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
-					location.href = "/operation/dashboards/dashboardnamespace/mngform"
+					// $('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
+					// location.href = "/operation/dashboards/dashboardnamespace/mngform"
+					var targetUrl = "/operation/dashboards/dashboardnamespace/mngform"
+					changePage(targetUrl)
 				}else if( callerLocation == "NameSpace"){
 					// commonAlert(data.DefaultNameSpaceID + "가 기본 NameSpace로 변경되었습니다.")
 					commonAlert("기본 NameSpace로 변경되었습니다")					

@@ -54,7 +54,7 @@
 								</div>
 								<div class="rbox">
 									<div class="numbox" id="vm_numbox">
-										<div class="num bgbox_b boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">											
+										<div class="num bgbox_b boxrd cursor" onclick="changePage('../operation/Manage_Mcis.html')">											
 											<span title="Running State">{{ .TotalVmStatusCountMap.running }}</span>
 										</div>
 										<div class="num bgbox_r boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">
@@ -62,7 +62,7 @@
 										</div>
 										<div class="num bgbox_g boxrd cursor" onclick="location.href='../operation/Manage_Mcis.html'">
 											<span title="Terminated State">{{ .TotalVmStatusCountMap.terminated }}</span>
-										</div>
+										</div>										
 									</div>
 									<div class="txt">Status of Server</div>
 								</div>

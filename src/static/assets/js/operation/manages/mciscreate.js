@@ -97,7 +97,7 @@ function deployMcis(){
         // var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
         var url = "/operation/manages/mcis/reg/proc"
         try{
-            AjaxLoadingShow(true);
+            // AjaxLoadingShow(true);// interceptor 에서 loading 보여줌
             axios.post(url,new_obj,{
                 headers :{
                     'Content-type': 'application/json',
@@ -109,15 +109,17 @@ function deployMcis(){
                 if(result.status == 201 || result.status == 200){
                     commonAlert("Register Success")
                     // location.href = "/Manage/MCIS/list";
-                    $('#loadingContainer').show();
-                    location.href = "/operation/manages/mcis/mngform/"
+                    // $('#loadingContainer').show();
+                    // location.href = "/operation/manages/mcis/mngform/"
+                    var targetUrl = "/operation/manages/mcis/mngform"
+					changePage(targetUrl)
                 }else{
                     commonAlert("Register Fail")
                     //location.reload(true);
                 }
             })
         }finally{
-            AjaxLoadingShow(false);
+            // AjaxLoadingShow(false);
         }  
     }else{
         alert("Please Input Servers");

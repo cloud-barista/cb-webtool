@@ -353,6 +353,10 @@ func SshKeyMngForm(c echo.Context) error {
 	}
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	log.Println(" defaultNameSpaceID  ", defaultNameSpaceID)
+	if defaultNameSpaceID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/main?namespace=unknown")
+	}
 
 	store := echosession.FromContext(c)
 
@@ -861,7 +865,7 @@ func GetVmSpecData(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	paramVMSpecID := c.Param("specID")
+	paramVMSpecID := c.Param("vmSpecID")
 	vmSpecInfo, respStatus := service.GetVmSpecInfoData(defaultNameSpaceID, paramVMSpecID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -893,7 +897,8 @@ func VmSpecRegProc(c echo.Context) error {
 	resultVmSpecInfo, respStatus := service.RegVmSpec(defaultNameSpaceID, vmSpecRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		// 호출은 정상: http.StatusOK, 결과는 정상이 아님. (statusCode != 200,201)
+		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
 		})
@@ -923,7 +928,7 @@ func VmSpecDelProc(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	paramVMSpecID := c.Param("specID")
+	paramVMSpecID := c.Param("vmSpecID")
 
 	respBody, respStatus := service.DelVMSpec(defaultNameSpaceID, paramVMSpecID)
 	fmt.Println("=============respBody =============", respBody)

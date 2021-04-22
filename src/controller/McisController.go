@@ -506,12 +506,19 @@ func GetVmInfoData(c echo.Context) error {
 	// 		}
 	// 	}
 	// }
-	returnVmInfo, _ := service.GetVMofMcisData(defaultNameSpaceID, mcisID, vmID)
+	returnVmInfo, respStatus := service.GetVMofMcisData(defaultNameSpaceID, mcisID, vmID)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
+		})
+	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  200,
-		"VMInfo":  returnVmInfo,
+		"message": respStatus.Message,
+		"status":  respStatus.StatusCode,
+		"VmInfo":  returnVmInfo,
 	})
 }
 
@@ -625,11 +632,16 @@ func GetVmMonitoring(c echo.Context) error {
 	// vmMonitoring.VmID = vmID
 	// vmMonitoring.Metric = metric
 
-	returnVMMonitoringInfo, _ := service.GetVmMonitoring(vmMonitoring)
-
+	returnVMMonitoringInfo, respStatus := service.GetVmMonitoring(vmMonitoring)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
+		})
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
-		"status":           200,
+		"status":           respStatus.StatusCode,
 		"VMMonitoringInfo": returnVMMonitoringInfo,
 	})
 }

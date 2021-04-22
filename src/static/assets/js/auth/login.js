@@ -32,7 +32,9 @@ $(document).ready(function(){
                         tokenSuccess(result.data.LoginInfo)
                         
                         // location.href = "/setting/connections/cloudconnectionconfig/mngform" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
-                        location.href = "/main/" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
+                        // location.href = "/main" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
+                        var targetUrl = "/main"
+					    changePage(targetUrl)
                  }else{
                      alert("ID or PASSWORKD MISMATCH!!Check yourself!")
                     //  location.reload(true); 

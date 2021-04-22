@@ -300,7 +300,7 @@ function createSSHKey() {
         }).then(result => {
             console.log(result);
             if (result.status == 200 || result.status == 201) {
-                alert("Success Create SSH Key")
+                commonAlert("Success Create SSH Key")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getSshKeyList("name");
                 //아니면 화면을 리로딩 시킬것인가?
@@ -309,13 +309,13 @@ function createSSHKey() {
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
-                alert("Fail Create SSH Key")
+                commonAlert("Fail Create SSH Key")
             }
         }).catch(function(error){
             console.log("get create error : ",error);        
         });
     } else {
-        alert("Input SSH Key Name")
+        commonAlert("Input SSH Key Name")
         $("#regCspSshKeyName").focus()
         return;
     }

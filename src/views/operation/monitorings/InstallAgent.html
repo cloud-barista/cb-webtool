@@ -206,8 +206,9 @@ $(document).ready(function(){
                 //alert(result);
                 if(result.status == 200 || result.status == 201){
                     alert("Monitoring Service Activation is complete.");
-                    //location.href = "/Driver/list";
-                    location.href = "/dashboard";
+                    //location.href = "/Driver/list";                    
+                    var targetUrl = "/dashboard";
+                    changePage(targetUrl)
                 }else{
                     alert("Monitoring Service Activation failed : " + result.status);
                 }

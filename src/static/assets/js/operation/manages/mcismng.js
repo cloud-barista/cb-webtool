@@ -2,10 +2,11 @@
 
 // 등록 form으로 이동
 function createNewMcis(){// Manage_MCIS_Life_Cycle_popup.html
-    var url = "/operation/manage" + "/mcis/regform/"
+    var targetUrl = "/operation/manage" + "/mcis/regform"
     // location.href = "/Manage/MCIS/reg"
-    $('#loadingContainer').show();
-    location.href = url;
+    // $('#loadingContainer').show();
+    // location.href = url;
+    changePage(targetUrl)
 }
 
 // MCIS 제어 : 선택한 VM의 상태 변경 
@@ -307,14 +308,21 @@ function vmDetailInfo(mcisID, mcisName, vmID){
     axios.get(url,{})
         .then(result=>{
             console.log("get  Data : ",result.data);
-            var data = result.data.VmInfo;
 
+            var statusCode = result.data.status;
+            var message = result.data.message;
+            
+            if( statusCode != 200 && statusCode != 201) {
+                commonAlert(message +"(" + statusCode + ")");
+                return;
+            }
+            var data = result.data.VmInfo;
+            
             var vmId = data.id;
             var vmName = data.name;
             var vmStatus = data.status;
             var vmDescription = data.description;
             var vmPublicIp = data.publicIP === undefined ? "" : data.publicIP;
-             
             //vm info
             $("#vm_id").val(vmId);   
             $("#vm_name").val(vmName);
@@ -493,7 +501,9 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             showVmMonitoring(mcisID,vmID)
         }
     ).catch(function(error){
-        console.log(" display error : ",error);        
+        var statusCode = error.response.data.status;
+        var message = error.response.data.message;
+        commonErrorAlert(statusCode, message)        
     });
 
 

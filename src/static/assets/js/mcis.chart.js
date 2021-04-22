@@ -541,8 +541,18 @@ function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statis
         periodType:periodType,
         statisticsCriteria:statisticsCriteria,
         duration:duration
-    }).then(result=>{
-        var data = result.data.VMMonitoringInfo
+    }).then(result=>{    
+        console.log(result)    
+
+        var statusCode = result.data.status;
+        var message = result.data.message;
+        
+        if( statusCode != 200 && statusCode != 201) {
+            commonAlert(message +"(" + statusCode + ")");
+            return;
+        }
+
+        var data = result.data.VmMonitoringInfo
         console.log("Get Monitoring Data : ",data)
         console.log("info items : ", target);
         console.log("======== start mapping data ======");
@@ -572,6 +582,10 @@ function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statis
         
         vmChart.data = timeObj;
         vmChart.update();
+    }).catch(function(error){
+        var statusCode = error.response.data.status;
+        var message = error.response.data.message;
+        commonErrorAlert(statusCode, message)        
     });
 	
 }

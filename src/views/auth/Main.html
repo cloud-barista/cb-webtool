@@ -102,6 +102,12 @@
 				<!-- //contents -->
 <script >
 
+// onLoad 시 namespace=known 또는 namespace 가 없으면 선택해야한다는 commontAlert 띄울 것.
+$(document).ready(function () {
+   var message = "NameSpace 선택 후 이용가능합니다." 
+   commonAlert(message);
+});                   
+
 // 버튼 클릭시 target area를 보이고 숨기고
 function showHideByButton(origin, target){
     var originObj = $("#"+origin);

@@ -269,7 +269,7 @@ func main() {
 	e.POST("/servercall", controller.ServerCall)
 
 	mainGroup := e.Group("/main", mainTemplate)
-	mainGroup.GET("/", controller.MainForm)
+	mainGroup.GET("", controller.MainForm)
 	mainGroup.GET("/apitestmng", controller.ApiTestMngForm)
 
 	loginGroup := e.Group("/login", loginTemplate)
@@ -314,7 +314,9 @@ func main() {
 	// e.GET("/mcis/reg", controller.McisRegForm)
 	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VmAddForm)
 	// e.POST("/mcis/reg/proc", controller.McisRegController)
-	mcisGroup.GET("/", controller.McisMngForm)
+
+	// mcisGroup.GET("/", controller.McisMngForm)
+	mcisGroup.GET("", controller.McisMngForm)
 
 	e.GET("/operation/manages/mcis/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
 	e.POST("/operation/manages/mcis/reg/proc", controller.McisRegProc)
@@ -326,13 +328,14 @@ func main() {
 	//var url = "/operation/manage" + "/mcis/" + mcisID + "/operation/" + type
 	e.POST("/operation/manages/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
 	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
-	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
+	// e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	//http://54.248.3.145:1234/Manage/MCIS/reg/mz-azure-mcis/mz-azure-mcis
 	mcisRegGroup := e.Group("/operation/manages/mcis/regform", mcisRegTemplate)
-	mcisRegGroup.GET("/", controller.McisRegForm)                    // MCIS 생성 + VM생성
+	// mcisRegGroup.GET("/", controller.McisRegForm)                    // MCIS 생성 + VM생성
+	mcisRegGroup.GET("", controller.McisRegForm)                     // MCIS 생성 + VM생성
 	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVmRegForm) // MCIS의 VM생성
 
 	// // Resource

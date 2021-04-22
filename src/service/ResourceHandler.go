@@ -98,7 +98,7 @@ func RegVpc(nameSpaceID string, vnetRegInfo *model.VNetRegInfo) (*model.VNetInfo
 	json.NewDecoder(respBody).Decode(&vNetInfo)
 	fmt.Println(vNetInfo)
 
-	util.DisplayResponse(resp)
+	//util.DisplayResponse(resp)
 
 	// return respBody, respStatusCode
 	return &vNetInfo, model.WebStatus{StatusCode: respStatus}
@@ -701,17 +701,18 @@ func RegVmSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.V
 	pbytes, _ := json.Marshal(vmSpecRegInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
 	vmSpecInfo := model.VmSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%s\n", string(data))
+	// data, err := ioutil.ReadAll(resp.Body) // 1회용이므로 한번쓰면 뒤에서 재사용 불가
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf("%s\n", string(data))
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
@@ -721,10 +722,20 @@ func RegVmSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.V
 
 	// 응답에 생성한 객체값이 옴
 
-	json.NewDecoder(respBody).Decode(&vmSpecInfo)
-	fmt.Println(vmSpecInfo)
+	returnStatus := model.WebStatus{}
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&vmSpecInfo)
+		fmt.Println(vmSpecInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
 	// return respBody, respStatusCode
-	return &vmSpecInfo, model.WebStatus{StatusCode: respStatus}
+	return &vmSpecInfo, returnStatus
 }
 
 func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.VmSpecInfo, model.WebStatus) {
@@ -790,7 +801,7 @@ func DelVMSpec(nameSpaceID string, vmSpecID string) (io.ReadCloser, model.WebSta
 // 해당 namespace의 모든 VMSpec 삭제 : TODO : 로그인 유저의 동일 namespace일 때만 삭제가능하도록
 func DelAllVMSpec(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 	fmt.Println("DelAllVMSpec ************ : ")
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec/"
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
 
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
 

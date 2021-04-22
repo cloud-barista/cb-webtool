@@ -97,28 +97,63 @@ func RegMcis(nameSpaceID string, mCISInfo *model.McisInfo) (*model.McisInfo, mod
 	pbytes, _ := json.Marshal(mCISInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	resultMcisInfo := model.McisInfo{}
-	if err != nil {
-		fmt.Println(err)
-		return &resultMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	returnMcisInfo := model.McisInfo{}
+	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	// respStatus := resp.Status
-	// log.Println("respStatusCode = ", respStatusCode)
-	// log.Println("respStatus = ", respStatus)
 
-	// 응답에 생성한 객체값이 옴
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
 
-	json.NewDecoder(respBody).Decode(resultMcisInfo)
-	fmt.Println(resultMcisInfo)
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnMcisInfo)
+		fmt.Println(returnMcisInfo)
+	}
+	returnStatus.StatusCode = respStatus
 
-	// return body, err
+	// return respBody, respStatusCode
+	return &returnMcisInfo, returnStatus
+
+	// resultMcisInfo := model.McisInfo{}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return &resultMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
 	// respBody := resp.Body
 	// respStatus := resp.StatusCode
-	// return respBody, respStatus
-	return &resultMcisInfo, model.WebStatus{StatusCode: respStatus}
+
+	// return respBody, model.WebStatus{StatusCode: respStatus}
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+	// // respStatus := resp.Status
+	// // log.Println("respStatusCode = ", respStatusCode)
+	// // log.Println("respStatus = ", respStatus)
+
+	// // 응답에 생성한 객체값이 옴
+
+	// json.NewDecoder(respBody).Decode(resultMcisInfo)
+	// fmt.Println(resultMcisInfo)
+
+	// // return body, err
+	// // respBody := resp.Body
+	// // respStatus := resp.StatusCode
+	// // return respBody, respStatus
+	// return &resultMcisInfo, model.WebStatus{StatusCode: respStatus}
 
 }
 
@@ -508,18 +543,52 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *model.McisCommandInfo) (*m
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	resultMcisCommandResult := model.McisCommandResult{}
-	if err != nil {
-		fmt.Println(err)
-		return &resultMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	returnMcisCommandResult := model.McisCommandResult{}
+	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	json.NewDecoder(respBody).Decode(resultMcisCommandResult)
-	fmt.Println(resultMcisCommandResult)
-	return &resultMcisCommandResult, model.WebStatus{StatusCode: respStatus}
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnMcisCommandResult)
+		fmt.Println(returnMcisCommandResult)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &returnMcisCommandResult, returnStatus
+
+	// resultMcisCommandResult := model.McisCommandResult{}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return &resultMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// json.NewDecoder(respBody).Decode(resultMcisCommandResult)
+	// fmt.Println(resultMcisCommandResult)
+	// return &resultMcisCommandResult, model.WebStatus{StatusCode: respStatus}
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // 특정 VM에 명령내리기
@@ -532,19 +601,53 @@ func CommandVMOfMcis(nameSpaceID string, mcisCommandInfo *model.McisCommandInfo)
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	resultMcisCommandResult := model.McisCommandResult{}
-	if err != nil {
-		fmt.Println(err)
-		return &resultMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	returnMcisCommandResult := model.McisCommandResult{}
+	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	// TODO : result는 string으로 "result" 만 있는데...
-	json.NewDecoder(respBody).Decode(resultMcisCommandResult)
-	fmt.Println(resultMcisCommandResult)
-	return &resultMcisCommandResult, model.WebStatus{StatusCode: respStatus}
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnMcisCommandResult)
+		fmt.Println(returnMcisCommandResult)
+	}
+	returnStatus.StatusCode = respStatus
+
+	// return respBody, respStatusCode
+	return &returnMcisCommandResult, returnStatus
+
+	// resultMcisCommandResult := model.McisCommandResult{}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return &resultMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// // TODO : result는 string으로 "result" 만 있는데...
+	// json.NewDecoder(respBody).Decode(resultMcisCommandResult)
+	// fmt.Println(resultMcisCommandResult)
+	// return &resultMcisCommandResult, model.WebStatus{StatusCode: respStatus}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 //Install the benchmark agent to specified MCIS
@@ -556,19 +659,53 @@ func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisCommandInfo *model.Mcis
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	resultMcisCommandResult := model.McisCommandResult{}
-	if err != nil {
-		fmt.Println(err)
-		return &resultMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	returnMcisCommandResult := model.McisCommandResult{}
+	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	// TODO : result는 resultArray인데....
-	json.NewDecoder(respBody).Decode(resultMcisCommandResult)
-	fmt.Println(resultMcisCommandResult)
-	return &resultMcisCommandResult, model.WebStatus{StatusCode: respStatus}
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnMcisCommandResult)
+		fmt.Println(returnMcisCommandResult)
+	}
+	returnStatus.StatusCode = respStatus
+
+	// return respBody, respStatusCode
+	return &returnMcisCommandResult, returnStatus
+
+	// resultMcisCommandResult := model.McisCommandResult{}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return &resultMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// // TODO : result는 resultArray인데....
+	// json.NewDecoder(respBody).Decode(resultMcisCommandResult)
+	// fmt.Println(resultMcisCommandResult)
+	// return &resultMcisCommandResult, model.WebStatus{StatusCode: respStatus}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 func DelAllMcis(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
@@ -626,19 +763,53 @@ func RegVM(nameSpaceID string, mcisID string, vmInfo *model.VmInfo) (*model.VmIn
 	pbytes, _ := json.Marshal(vmInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	resultVmResult := model.VmInfo{}
-	if err != nil {
-		fmt.Println(err)
-		return &resultVmResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	returnVmInfo := model.VmInfo{}
+	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	// TODO : result는 resultArray인데....
-	json.NewDecoder(respBody).Decode(resultVmResult)
-	fmt.Println(resultVmResult)
-	return &resultVmResult, model.WebStatus{StatusCode: respStatus}
+	if err != nil {
+		fmt.Println(err)
+		return &returnVmInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnVmInfo)
+		fmt.Println(returnVmInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	// return respBody, respStatusCode
+	return &returnVmInfo, returnStatus
+
+	// resultVmResult := model.VmInfo{}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return &resultVmResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// // TODO : result는 resultArray인데....
+	// json.NewDecoder(respBody).Decode(resultVmResult)
+	// fmt.Println(resultVmResult)
+	// return &resultVmResult, model.WebStatus{StatusCode: respStatus}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 func DelVM(nameSpaceID string, mcisID string, vmID string) (io.ReadCloser, model.WebStatus) {
@@ -696,17 +867,50 @@ func GetMcisRecommand(nameSpaceID string, mcisID string, mcisRecommandReq *model
 	pbytes, _ := json.Marshal(mcisRecommandReq)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	mcisRecommandesult := model.McisRecommendInfo{}
-	if err != nil {
-		fmt.Println(err)
-		return &mcisRecommandesult, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	returnMcisRecommendInfo := model.McisRecommendInfo{}
+	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	// TODO : result는 resultArray인데....
-	json.NewDecoder(respBody).Decode(mcisRecommandesult)
-	fmt.Println(mcisRecommandesult)
-	return &mcisRecommandesult, model.WebStatus{StatusCode: respStatus}
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisRecommendInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnMcisRecommendInfo)
+		fmt.Println(returnMcisRecommendInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &returnMcisRecommendInfo, returnStatus
+
+	// mcisRecommandesult := model.McisRecommendInfo{}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return &mcisRecommandesult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// // TODO : result는 resultArray인데....
+	// json.NewDecoder(respBody).Decode(mcisRecommandesult)
+	// fmt.Println(mcisRecommandesult)
+	// return &mcisRecommandesult, model.WebStatus{StatusCode: respStatus}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }

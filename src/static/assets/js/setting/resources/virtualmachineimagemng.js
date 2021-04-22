@@ -223,7 +223,8 @@ function getVirtualMachineImageList(sort_type) {
 }
 
 function setVirtualMachineImageListAtServerImage(data, sortType){
-    var html = ""
+    var html = "";
+    console.log(data);// TODO : no Data 일 때 (ex. 모든 이미지 삭제 등) data.length에서 오류 남.
     if (data.length) {
         if (sortType) {
             console.log("check : ", sortType);

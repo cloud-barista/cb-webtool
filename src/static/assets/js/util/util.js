@@ -52,6 +52,11 @@ function AjaxLoadingShow(isShow){
 //  });
 //========== 로딩 바 종료 =========
 
+// 다른 화면으로 이동 시킬 때 Loading bar 표시를 위해
+function changePage(url){
+    $('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
+    location.href = url;
+}
 
 // 문자열이 빈 경우 defaultString을 return
 function nvl(str, defaultStr){         
@@ -76,6 +81,11 @@ function commonAlert(alertMessage){
 // alert창 닫기
 function commonAlertClose(){
     $("#alertArea").modal("hide");
+}
+
+// 에러 메세지 alert 통일 용
+function commonErrorAlert(statusCode, message){
+    commonAlert("Error(" + statusCode + ") : " + message);
 }
 
 // confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정
@@ -183,10 +193,13 @@ function commonConfirmOk(){
     var targetAction = $('#confirmOkAction').val();
     if( targetAction == "Logout"){
         // Logout처리하고 index화면으로 간다. Logout ==> cookie expire
-        location.href="/logout"
+        // location.href="/logout"
+        var targetUrl = "/logout"
+        changePage(targetUrl)
         
     }else if ( targetAction == "MoveToConnection"){
-        location.href="/setting/connections/cloudconnectionconfig/mngform"
+        var targetUrl="/setting/connections/cloudconnectionconfig/mngform"
+        changePage(targetUrl)
     }else if ( targetAction == "DeleteCloudConnection"){
         deleteCloudConnection();        
     }else if ( targetAction == "Config"){
@@ -246,17 +259,25 @@ function commonConfirmOk(){
     }else if ( targetAction == "DeleteVmSpec"){
         deleteVmSpec()   
     }else if ( targetAction == "GotoMonitoringPerformance"){
-        alert("모니터링으로 이동 GotoMonitoringPerformance")
+        // alert("모니터링으로 이동 GotoMonitoringPerformance")
         // location.href ="";//../operation/Monitoring_Mcis.html
+        var targetUrl = "/operation/monitorings/mcis/mngform"
+        changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringFault"){
-        alert("모니터링으로 이동 GotoMonitoringFault")
+        // alert("모니터링으로 이동 GotoMonitoringFault")
         // location.href ="";//../operation/Monitoring_Mcis.html
+        var targetUrl = "/operation/monitorings/mcis/mngform"
+        changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringCost"){
-        alert("모니터링으로 이동 GotoMonitoringCost")
+        // alert("모니터링으로 이동 GotoMonitoringCost")
         // location.href ="";//../operation/Monitoring_Mcis.html
+        var targetUrl = "/operation/monitorings/mcis/mngform"
+        changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringUtilize"){
-        alert("모니터링으로 이동 GotoMonitoringUtilize")
+        // alert("모니터링으로 이동 GotoMonitoringUtilize")
         // location.href ="";//../operation/Monitoring_Mcis.html    
+        var targetUrl = "/operation/monitorings/mcis/mngform"
+        changePage(targetUrl)
     }else if ( targetAction == "McisLifeCycleReboot"){
         callMcisLifeCycle('reboot')
     }else if ( targetAction == "McisLifeCycleSuspend"){
@@ -268,11 +289,15 @@ function commonConfirmOk(){
     }else if ( targetAction == "McisManagement"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "MoveToMcisManagement"){
-        $('#loadingContainer').show();
-        location.href ="/operation/manages/mcis/mngform/";
+        // $('#loadingContainer').show();
+        // location.href ="/operation/manages/mcis/mngform/";
+        var targetUrl = "/operation/manages/mcis/mngform";
+        changePage(targetUrl)
     }else if ( targetAction == "AddNewMcis"){
-        $('#loadingContainer').show();
-        location.href ="/operation/manages/mcis/regform/";
+        // $('#loadingContainer').show();
+        // location.href ="/operation/manages/mcis/regform/";
+        var targetUrl = "/operation/manages/mcis/regform";
+        changePage(targetUrl)
     }else if ( targetAction == "VmLifeCycle"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "VmLifeCycleReboot"){
@@ -419,40 +444,77 @@ function isEmpty(str){
 }
 
 
-function tableSort(tableId, columnName, sortType){
-    sortType = (sortType === 'asc') ? 'desc':'asc';
+// table의 column별로 sortType을 달리 가져간다.
+// TODO : sortType을 바꾸고 table정렬을 바로 할 것인지? sort action을 통해 정렬을 할 것인지..
+// tableId : 대상 tableID
+// columnName : 정렬하려는 column의 text
+// sorType을 찾아 사용하고, 사용한 뒤에는 반대되는 것을 넣음.
+// - changerSortType 에서 정렬방식 선택, 정렬할 column의 index 찾기 -> table 에서 정렬할 column index에 해당 하는 column을 sort
+var tableSortTypeletMap = new Map();
+function getSortType(tableId, columnName){
+    var sortType = tableSortTypeletMap.get(tableId + "|" + columnName);
+    if(!sortType){
+        sortType = "asc" // default
+        tableSortTypeletMap.set(tableId + "|" + columnName, sortType);
+    }
 
-    var sortTargetColumnIndex = 0;// sort 기준되는 칼럼의 index
-    var theadIndex = 0;
-    $('#' + tableId).find('thead > tr > th').each(function(){
-        //thArray.push($(this).text())
-        var thText = $(this).text().toUpperCase();
-        if( thText == columnName){
-            sortTargetColumnIndex = theadIndex;            
+    var returnSortType = (sortType === 'asc') ? 'desc':'asc';
+    tableSortTypeletMap.set(tableId + "|" + columnName, returnSortType);
+    return returnSortType// 현재 set 된 sortType의 반대를 return    
+}
+
+
+// tr에 정의된 column 이름으로 해당 column의 index를 찾는다.
+// table 밑의 첫번째 tr에서 해당 이름을 찾음.
+function getTableColumnIndex(tableId, columnName){
+    var tableObj = $('#' + tableId);
+    // console.log(tableObj)
+    var checkSort = true;
+    var rows = tableObj[0].rows;
+    var columns = rows[0].cells// 첫번째 tr 
+    console.log(columns);
+    var columnIndex = 0;
+    for (var i = 0; i < columns.length; i++) {
+        var columnText = columns[i];
+        console.log(columnName + ":" + columnText.innerHTML)
+        if( columnName == columnText.innerText){
+            columnIndex = i;
+            break;
+        }        
+    }
+    return columnIndex;
+}
+
+// table tag에 id를 줘야 한다. columnName의 첫번째 tr 아래에 있는 cell(th, td)의 text
+function tableSort(tableId, columnName){
+    var sortTargetColumnIndex = getTableColumnIndex(tableId, columnName)
+    var sortType = getSortType(tableId, columnName);
+    console.log(tableId + " : " + columnName + " : " + sortTargetColumnIndex + " : " + sortType)
+    var tableObj = $('#' + tableId);
+    // console.log(tableObj)
+    var checkSort = true;
+    var rows = tableObj[0].rows;
+    // console.log(rows);
+    while (checkSort) { // 현재와 다음만 비교하기때문에 위치변경되면 다시 정렬해준다.
+        checkSort = false;
+
+        for (var i = 1; i < (rows.length - 1); i++) {
+            console.log("***** " + sortTargetColumnIndex + ", " + sortType)
+            console.log(rows[i].cells[sortTargetColumnIndex].innerText);
+            var fCell = rows[i].cells[sortTargetColumnIndex].innerText.toUpperCase();
+            var sCell = rows[i + 1].cells[sortTargetColumnIndex].innerText.toUpperCase();
+
+            var row = rows[i];
+
+            // 오름차순<->내림차순 ( 이부분이 이해 잘안됬는데 오름차순이면 >, 내림차순이면 < 이고 if문의 내용은 동일하다 )
+            if ( (sortType == 'asc' && fCell > sCell) || 
+                    (sortType == 'desc' && fCell < sCell) ) {
+
+                row.parentNode.insertBefore(row.nextSibling, row);
+                checkSort = true;
+            }
         }
-        theadIndex++
-    })
-
-    $("#tableId").find("tbody > tr").sort(function(a, b){
-        // var checkNum = $(b).attr(dataNm) - $(a).attr(dataNm);
-        // if (isNaN(checkNum)) {
-        //     var $a = $(a).attr(dataNm).toLowerCase();
-        //     var $b = $(b).attr(dataNm).toLowerCase();
-        //     // 문자 정렬
-        //     if (orderBy == "ASC") {
-        //         return $a < $b ? -1 : $a > $b ? 1 : 0;
-        //     } else {
-        //         return $a > $b ? -1 : $a < $b ? 1 : 0;
-        //     }
-        // } else {
-        //     // 숫자 정렬
-        //     if (orderBy == "ASC") {
-        //         return $(a).attr(dataNm) - $(b).attr(dataNm);
-        //     } else {
-        //         return $(b).attr(dataNm) - $(a).attr(dataNm);
-        //     }
-        // }
-    });
+    }    
 }
 
 // todo : fintering을 하려면 keyword를 입력 받아야 하는데???

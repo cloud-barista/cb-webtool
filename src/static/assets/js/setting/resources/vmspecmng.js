@@ -190,9 +190,9 @@ function ModalDetail() {
 function showVmSpecInfo(target) {
     console.log("target showVMSpecInfo : ", target);
     // var apiInfo = "{{ .apiInfo}}";
-    var specId = encodeURIComponent(target);
+    var vmSpecId = encodeURIComponent(target);
     
-    var url = "/setting/resources"+"/vmspec/" + specId;
+    var url = "/setting/resources"+"/vmspec/" + vmSpecId;
     console.log("URL : ",url)
     
     return axios.get(url,{
@@ -256,8 +256,10 @@ function createVmSpec() {
             }
         }).then(result => {
             console.log("result spec : ", result);
-            if (result.status == 200 || result.status == 201) {
-                alert("Success Create Image!!")
+            var statusCode = result.data.status;
+            if( statusCode == 200 || statusCode == 201) {
+            // if (result.status == 200 || result.status == 201) {
+                commonAlert("Success Create Image!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getVmSpecList("name");
                 //아니면 화면을 리로딩 시킬것인가?
@@ -266,11 +268,17 @@ function createVmSpec() {
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
-                alert("Fail Create Spec")
+                var message = result.data.message;
+                commonAlert("Fail Create Spec : " + message +"(" + statusCode + ")");
+                // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
             }
+        }).catch(function(error){
+            console.log("get create error : ");
+            console.log(error);
+            commonAlert(error);// TODO : error처리하자.
         });
     } else {
-        alert("Input Spec Name")
+        commonlert("Input Spec Name")
         $("#regSpecName").focus()
         return;
     }
@@ -307,13 +315,25 @@ function deleteVmSpec() {
             'Content-Type': "application/json"
         }
     }).then(result => {
-        var data = result.data;
-        if (result.status == 200 || result.status == 201) {
-            alert("Success Delete Spec.");
+        // var data = result.data;
+        // if (result.status == 200 || result.status == 201) {
+        var statusCode = result.data.status;
+        if( statusCode == 200 || statusCode == 201) {
+            commonAlert("Success Delete Spec.");
             // location.reload(true);
             getVmSpecList("name");
             
             displayVmSpecInfo("DEL_SUCCESS")
+        } else {
+            var message = result.data.message;
+            commonAlert("Fail Create Spec : " + message +"(" + statusCode + ")");
+            // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
         }
-    })
+    }).catch(function(error){
+
+        var statusCode = error.response.data.status;
+        var message = error.response.data.message;
+        commonErrorAlert(statusCode, message)
+        
+    });
 }                                                  

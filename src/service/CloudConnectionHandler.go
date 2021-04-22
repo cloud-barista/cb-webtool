@@ -173,7 +173,9 @@ func GetCloudConnectionConfigData(configName string) (model.CloudConnectionConfi
 }
 
 // CloudConnectionConfigInfo 등록
-func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (io.ReadCloser, model.WebStatus) {
+// func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (io.ReadCloser, model.WebStatus) {
+func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (*model.CloudConnectionConfigInfo, model.WebStatus) {
+
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/connectionconfig"
 
@@ -183,15 +185,38 @@ func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionCo
 	pbytes, _ := json.Marshal(cloudConnectionConfigInfo)
 	// body, err := util.CommonHttpPost(url, pbytes)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+	//cloudConnectionConfigInfo
+	// return respBody, model.WebStatus{StatusCode: respStatus}
+
+	returnCloudConnectionConfigInfo := model.CloudConnectionConfigInfo{}
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &returnCloudConnectionConfigInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	returnStatus := model.WebStatus{}
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnCloudConnectionConfigInfo)
+		fmt.Println(returnCloudConnectionConfigInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &returnCloudConnectionConfigInfo, returnStatus
 }
 
 // CloudConnectionConfigInfo 삭제
@@ -271,7 +296,8 @@ func GetRegionData(regionName string) (*model.RegionInfo, model.WebStatus) {
 }
 
 // Region 등록
-func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, model.WebStatus) {
+// func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, model.WebStatus) {
+func RegRegion(regionInfo *model.RegionInfo) (*model.RegionInfo, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/region"
 
@@ -282,15 +308,38 @@ func RegRegion(regionInfo *model.RegionInfo) (io.ReadCloser, model.WebStatus) {
 	// body, err := util.CommonHttpPost(url, pbytes)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
 
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	returnRegionInfo := model.RegionInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnRegionInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnRegionInfo)
+		fmt.Println(returnRegionInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &returnRegionInfo, returnStatus
 }
 
 // Region 삭제
@@ -375,7 +424,7 @@ func GetCredentialData(credentialName string) (*model.CredentialInfo, model.WebS
 }
 
 // Credential 등록
-func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, model.WebStatus) {
+func RegCredential(credentialInfo *model.CredentialInfo) (*model.CredentialInfo, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/credential"
 
@@ -384,16 +433,40 @@ func RegCredential(credentialInfo *model.CredentialInfo) (io.ReadCloser, model.W
 	// body, err := util.CommonHttpPost(url, regionInfo)
 	pbytes, _ := json.Marshal(credentialInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+
+	// // util.DisplayResponse(resp)
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	// util.DisplayResponse(resp)
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	returnCredentialInfo := model.CredentialInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnCredentialInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnCredentialInfo)
+		fmt.Println(returnCredentialInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &returnCredentialInfo, returnStatus
 }
 
 // Credential 삭제
@@ -463,7 +536,7 @@ func GetDriverData(driverlName string) (*model.DriverInfo, model.WebStatus) {
 }
 
 // Driver 등록
-func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, model.WebStatus) {
+func RegDriver(driverInfo *model.DriverInfo) (*model.DriverInfo, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/driver"
 
@@ -472,14 +545,38 @@ func RegDriver(driverInfo *model.DriverInfo) (io.ReadCloser, model.WebStatus) {
 	// body, err := util.CommonHttpPost(url, regionInfo)
 	pbytes, _ := json.Marshal(driverInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
+
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	return respBody, model.WebStatus{StatusCode: respStatus}
+
+	returnDriverInfo := model.DriverInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnDriverInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnDriverInfo)
+		fmt.Println(returnDriverInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &returnDriverInfo, returnStatus
 }
 
 // Driver 삭제
@@ -550,7 +647,7 @@ func GetConfigData(configID string) (*model.ConfigInfo, model.WebStatus) {
 }
 
 // Driver 등록
-func RegConfig(configInfo *model.ConfigInfo) (io.ReadCloser, model.WebStatus) {
+func RegConfig(configInfo *model.ConfigInfo) (*model.ConfigInfo, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.SPIDER + "/config"
 
@@ -559,14 +656,37 @@ func RegConfig(configInfo *model.ConfigInfo) (io.ReadCloser, model.WebStatus) {
 	// body, err := util.CommonHttpPost(url, regionInfo)
 	pbytes, _ := json.Marshal(configInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
 
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	return respBody, model.WebStatus{StatusCode: respStatus}
+
+	returnConfigInfo := model.ConfigInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnConfigInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnConfigInfo)
+		fmt.Println(returnConfigInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &returnConfigInfo, returnStatus
 }
 
 // Driver 삭제

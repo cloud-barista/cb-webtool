@@ -652,9 +652,9 @@ function deleteRegion(){
     
     alert(regionName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
     
-    var url = "/setting/connections/region/del/";
+    var url = "/setting/connections/region/del/"+regionName;
     //axios.post("/setting/connections/region/reg/proc",regionInfo,{
-    axios.delete(url+regionName, {},{
+    axios.delete(url, {},{
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
@@ -750,8 +750,8 @@ function deleteCredential(){
     
     alert(credentialName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
     
-    var url = "/setting/connections/credential/del/";
-    axios.delete(url+credentialName, {},{
+    var url = "/setting/connections/credential/del/"+credentialName;
+    axios.delete(url, {},{
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
@@ -824,8 +824,8 @@ function deleteDriver(){
     
     alert(driverName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
     
-    var url = "/setting/connections/driver/del/";
-    axios.delete(url+driverName, {},{
+    var url = "/setting/connections/driver/del/"+driverName;
+    axios.delete(url, {},{
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
