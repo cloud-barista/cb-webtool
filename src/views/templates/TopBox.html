@@ -1,0 +1,38 @@
+{{define "TopBox"}}
+<!-- 사용자정보, 현재 name space 표시 -->
+<div class="topbox">
+    <div class="info">
+        <div class="thumb"><span><img src="/assets/img/contents/img_thumb.jpg" alt=""></span></div>
+        <div class="txt_1">Leonardo DiCaprio : {{.LoginInfo.Username}}</div>
+        <div class="txt_2">
+            <input type="hidden" id="topboxDefaultNameSpaceID" value="{{.LoginInfo.DefaultNameSpaceID}}" />
+            <span id="topboxDefaultNameSpaceName">{{.LoginInfo.DefaultNameSpaceName}}</span>
+            <div class="infobox">
+                <div class="box">
+                    <ul>
+                        <li>
+                            <a href="javascript:void(0);">Change NameSpace</a>
+                            <ul id="menuNameSpaceList">      
+                                {{with .NameSpaceList}}
+                                    {{range .}}
+                                <li><a href="javascript:void(0);" onclick="selectDefaultNameSpace('TobBox', '{{.ID}}')" data-toggle="modal" data-target="#NameSpace">{{.Name}}</a></li>    
+                                    {{end}}
+                                {{end}}                          
+                             
+                            </ul>	
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);">Manage NameSpace</a>
+                            <ul>
+                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NewNS">new NS</a></li>
+                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#ManageNS">Manage NS</a></li>
+                            </ul>	
+                        </li>
+                        <input type="hidden" id="select_namespace" />
+                    </ul>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+{{end}}
