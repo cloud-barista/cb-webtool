@@ -659,6 +659,8 @@
 	$(document).ready(function(){
 		order_type = "ConfigName"
 		getCloudConnectionList(order_type);
+		alert("CloudConnections");
+		getCloudOS("{{ .apiInfo}}",'ModalProviderName');
 	})
 
 

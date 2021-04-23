@@ -391,13 +391,13 @@
 												<li>
 													<label>Cloud Provider</label>
 													<select class="selectbox white pline w3" id="provider" name="ProvideName" onchange="getConnectionInfo(this.value)">
-														<option selected>Select Cloud Provider</option>
+														<!-- <option selected>Select Cloud Provider</option>
 														<option value="AWS">AWS</option>
 														<option value="AZURE">AZURE</option>
 														<option value="Alibaba">Alibaba</option>
 														<option value="GCP">GCP</option>
 														<option value="Cloudit">Cloudit</option>
-														<option value="Openstack">Openstack</option>
+														<option value="Openstack">Openstack</option> -->
 													</select>
 												</li>
 												<li>
@@ -440,6 +440,9 @@
 						$(document).ready(function () {
                             order_type = "name"
                             getVpcList(order_type);
+
+							var apiInfo = "{{ .apiInfo}}";
+							getCloudOS(apiInfo,'provider');
 						})                      
 						
 						function goFocus(target) {

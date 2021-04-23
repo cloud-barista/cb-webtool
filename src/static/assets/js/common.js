@@ -410,3 +410,40 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
   }
 });
 */
+
+/*
+	지원하는 cloud driver 목록
+	target : target object = id (name아님)
+	getCloudOS(apiInfo, target)
+
+	ex)
+	var spiderURL =  "{{ .comURL.SpiderURL}}"
+	var apiInfo = "{{ .apiInfo}}";
+	getCloudOS(spiderURL,apiInfo,'ProviderName')
+ */
+function getCloudOS(apiInfo, target){
+	var url = SpiderURL;
+	
+    var req_url = SpiderURL+"/cloudos"
+	console.log("getCloudOS ::: " + " : " + req_url );
+    var initCSP = ""
+    axios.get(req_url,{
+    headers:{
+            'Authorization': apiInfo
+        }
+    }).then(result=>{
+        var data = result.data.cloudos
+        var html =""
+        if(data){
+            html += '<option>Select Provider</option>'
+            data.map(csp=>(html += '<option value="'+csp+'">'+csp+'</option>'))
+        }
+        html += '<option value="MOCK">MOCK</option>'
+        $("#"+target).empty()
+        $("#"+target).append(html)
+
+        initCSP = data[0]
+
+        // changeProvider(url,initCSP)// 이게 필요한가? 바뀔때 Event가 이미 있을 텐데??
+    }) 
+}

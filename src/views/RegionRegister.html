@@ -41,7 +41,8 @@
                                 <tr>
                                     <th>Cloud Provider</th>
                                     <td colspan="5">
-                                        <select class="form-control form-control-sm" name="ProviderName">
+                                        <select class="form-control form-control-sm" name="ProviderName" id="RegionProvider">
+                                            <!--
                                             <option selected>Select Cloud Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
@@ -49,6 +50,7 @@
                                             <option value="GCP">GCP</option>
                                             <option value="Cloudit">Cloudit</option>
                                             <option value="Openstack">Openstack</option>
+                                            -->
                                         </select>
                                     </td>
                                 </tr>
@@ -93,7 +95,10 @@
         {{template "Footer" .}}
 
 <script>
-$(document).ready(function(){
+$(document).ready(function(){    
+    alert("RegionRegister.html");
+    getCloudOS(ApiInfo,'RegionProvider');
+    console.log("RegionRegister finished");
     $("#reg_btn").click(function(){
 
         var obj = $("#form").serializeObject()

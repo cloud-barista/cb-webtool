@@ -41,6 +41,7 @@
                                             <th>Cloud Provider<strong class="text-danger">*</strong></th>
                                             <td>
                                                 <select class="form-control form-control-sm" name="cspType" id="cspType" >
+                                                    <!--
                                                     <option selected>Select Cloud Provider</option>
                                                     <option value="AWS">AWS</option>
                                                     <option value="AZURE">AZURE</option>
@@ -48,6 +49,7 @@
                                                     <option value="GCP">GCP</option>
                                                     <option value="CLOUDIT">Cloudit</option>
                                                     <option value="OPENSTACK">Openstack</option>
+                                                    -->
                                                 </select>
                                             </td>
                                         </tr>
@@ -169,6 +171,12 @@ function show_vmSSHInfo(){
 $(document).ready(function(){
     $("#ns_id").val(NAMESPACE)
     show_vmSSHInfo();
+
+    
+    alert("InstallAgent.html");
+	getCloudOS(ApiInfo,'cspType');
+    console.log("getCloudOS finished");
+
     $("#reg_btn").click(function(){
         console.log("reg btn click : ","{{ .comURL.DragonFlyURL}}") 
         var url = DragonFlyURL+"/agent/install";

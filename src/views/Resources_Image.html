@@ -486,6 +486,7 @@
 												<li class="reg_1">
 													<label>Cloud Provider</label>
 													<select class="selectbox white pline w3" name="ProviderName" id="provider" onchange="getConnectionInfo(this.value)">
+														<!--
 														<option selected>Select Cloud Provider</option>
 														<option value="AWS">AWS</option>
 														<option value="AZURE">AZURE</option>
@@ -493,12 +494,9 @@
 														<option value="GCP">GCP</option>
 														<option value="Cloudit">Cloudit</option>
 														<option value="Openstack">Openstack</option>
+														-->
                                                     </select> 
-                                                    <!--
-													<select class="selectbox white pline w2">
-														<option value="1">Selected Region</option>
-                                                    </select>
-                                                    -->
+                                             
 												</li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Connection Name</label>
@@ -606,6 +604,9 @@
                             $(document).ready(function () {
                                 order_type = "name"
                                 getImageList(order_type);
+								
+								var apiInfo = "{{ .apiInfo}}";
+								getCloudOS(apiInfo,'provider');
                             });
 
                             function fnMove(target) {

@@ -438,13 +438,13 @@
                                 <li>
                                     <label>Provider(CP/Region)</label>
                                     <select class="selectbox white pline w1" name="ProviderName" id="provider" onchange="getConnectionInfo(this.value)">
-                                        <option selected>Select Cloud Provider</option>
+                                        <!-- <option selected>Select Cloud Provider</option>
                                             <option value="AWS">AWS</option>
                                             <option value="AZURE">AZURE</option>
                                             <option value="Alibaba">Alibaba</option>
                                             <option value="GCP">GCP</option>
                                             <option value="Cloudit">Cloudit</option>
-                                            <option value="Openstack">Openstack</option>
+                                            <option value="Openstack">Openstack</option> -->
                                     </select>
                                     <select class="selectbox white pline w2">
                                         <option value="1">Selected Region</option>
@@ -683,7 +683,10 @@
     }
 
     $(document).ready(function () {
-        //alert("reload")
+
+        alert("VpcList.html");        
+        getCloudOS(apiInfo,'provider');
+        console.log("VpcList finished"); 
 
         var url = CommonURL + "/ns/" + NAMESPACE + "/resources/vNet"
         axios.get(url, {

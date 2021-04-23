@@ -178,7 +178,7 @@
 				var simple_target = "select_provider"
 				var simple_config_cnt = 0
 				getRegionName();
-				getCloudOS(spiderURL, apiInfo, simple_target)
+				getCloudOS(apiInfo, simple_target)
 				
 			})
 
@@ -207,24 +207,24 @@
 				})
 			}
 
-			function getCloudOS(url, apiInfo, target){
-				var req_url = url+"/cloudos"
-				var initCSP = ""
-				axios.get(req_url,{
-				headers:{
-						'Authorization': apiInfo
-					}
-				}).then(result=>{
-					var data = result.data.cloudos
-					var html =""
-					if(data){
-						html += "<option value=''>Select Provider</option>"
-						data.map(csp=>(html += '<option value="'+csp+'">'+csp+'</option>'))
-					}
-					$("#"+target).empty()
-					$("#"+target).append(html)
-				}) 
-			}
+			// function getCloudOS(url, apiInfo, target){
+			// 	var req_url = url+"/cloudos"
+			// 	var initCSP = ""
+			// 	axios.get(req_url,{
+			// 	headers:{
+			// 			'Authorization': apiInfo
+			// 		}
+			// 	}).then(result=>{
+			// 		var data = result.data.cloudos
+			// 		var html =""
+			// 		if(data){
+			// 			html += "<option value=''>Select Provider</option>"
+			// 			data.map(csp=>(html += '<option value="'+csp+'">'+csp+'</option>'))
+			// 		}
+			// 		$("#"+target).empty()
+			// 		$("#"+target).append(html)
+			// 	}) 
+			// }
 			function changeConnectionInfo(configName){
 				console.log("config name : ",configName)
                 getImageInfo(configName);
