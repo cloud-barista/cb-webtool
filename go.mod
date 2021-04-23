@@ -14,6 +14,7 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/stretchr/testify v1.6.1 // indirect
+	github.com/twinj/uuid v1.0.0
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0
 	gopkg.in/go-playground/validator.v9 v9.31.0 // indirect
