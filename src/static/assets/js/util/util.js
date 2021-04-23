@@ -369,9 +369,10 @@ function commonPromptOk(){
     var targetValue = $('#promptText').val();
 
     console.log("promptOkAction : " + targetAction)
-    if( targetAction == 'FilterName'){
-        // Name이라는 Column을 Filtering
-        filterTable(targetObjId, "Name", targetValue)
+    if( targetAction == 'FilterName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }        
     }
     commonPromptClose();
 }
