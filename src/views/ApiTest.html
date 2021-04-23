@@ -1,0 +1,209 @@
+{{ template "Top" .}}
+	
+		<div id="lnb">
+			
+			<div class="bg"></div>
+				
+			<div class="m_box">
+				
+				{{template "TopBox" .}}
+
+			</div>
+			
+			<div class="bottom"></div>
+			<a href="javascript:;" id="m_close"></a>
+			
+		</div>
+			
+		{{template "Header" .}}	
+        {{template "Modal" .}}
+				<!-- contents -->
+				<div class="contbox">
+					
+					<div class="titlebox">
+						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>API Test</strong></div>
+					</div>
+
+					<div class="dashboard dashboard_cont">
+						
+						<div class="d_box box_m box_w100">
+							
+                            <div class="tit initial cg"><strong> &nbsp;</strong></div>							
+							
+							<div class="ds_cont">
+                                <div class="table-overflow">
+                                    <table class="table table-bordered table-hover">
+                                        <colgroup>
+                                            <col style="width: 150px">
+                                            <col style="width: 250px">
+                                            <col>
+                                        </colgroup>
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Parameters</th>
+                                                <th>Values</th>
+                                                <th>Result</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="spec_list">
+                                            <tr>
+                                                <td class="text-left"><label>Target : </label></td>
+                                                <td class="text-left">
+                                                    <input type="radio" id="ApiTargetSpider" name="ApiTarget" value="SPIDER" checked><label for="ApiTargetSpider">SPIDER</label>
+                                                    &nbsp;&nbsp;
+                                                    <input type="radio" id="ApiTargetTumblebug" name="ApiTarget" value="TUMBLEBUG"><label for="ApiTargetTumblebug">TUMBLEBUG</label>
+                                                    <br/>
+                                                    <input type="radio" id="ApiTargetLadybug" name="ApiTarget" value="LADYBUG"><label for="ApiTargetLadybug">LADYBUG</label>
+                                                    &nbsp;&nbsp;
+                                                    <input type="radio" id="ApiTargetDragonfly" name="ApiTarget" value="DRAGONFLY"><label for="ApiTargetDragonfly">DRAGONFLY</label>                                
+                                                </td>
+                                                <td class="text-left" rowspan="5">
+                                                    <textarea  id="ApiResult" name="ApiResult" style="width:100%;" cols="45" rows="30" placeholder="ApiResult" class="pline" title=""></textarea>
+                                                    <br>
+                                                    <span>Not found의 경우 param정보등이 잘못된 경우일 수 있음. 슬래시 ( / ) 로 시작했는지 확인</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left"><label>API METHOD : </label></td>
+                                                <td class="text-left">
+                                                    <input type="radio" id="ApiMethodGET" name="ApiMethod" value="GET" checked><label for="ApiMethodGET">GET</label>
+                                                    &nbsp;&nbsp;
+                                                    <input type="radio" id="ApiMethodPOST" name="ApiMethod" value="POST"><label for="ApiMethodPOST">POST</label>
+                                                    <br/>
+                                                    <input type="radio" id="ApiMethodPUT" name="ApiMethod" value="PUT"><label for="ApiMethodPUT">PUT</label>
+                                                    &nbsp;&nbsp;
+                                                    <input type="radio" id="ApiMethodDELETE" name="ApiMethod" value="DELETE"><label for="ApiMethodDELETE">DELETE</label>
+                                                </td>                                               
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left"><label>ApiURL : </label>                                                    
+                                                </td>
+                                                <td class="text-left">
+                                                    <input type="text" id="ApiURL" name="ApiURL" style="width:100%;" placeholder="Input ApiURL" class="pline" title="" />
+                                                    <br/>
+                                                    <span>ex) localhost:1024/spider 이므로 /cloudos 처럼 / 를 붙인다.</span>
+                                                </td>                                               
+                                            </tr>
+                                            <!-- <tr>
+                                                <td class="text-left"><label>ServerURL : </label>                                                    
+                                                </td>
+                                                <td class="text-left">
+                                                    <input type="text" id="ServerURL" name="ServerURL" style="width:100%;" placeholder="Input ServerURL" class="pline" title="" />
+                                                    <br/>
+                                                    <span>ex) 서버에서 호출하는 주소</span>
+                                                </td>                                               
+                                            </tr> -->
+                                            <tr>
+                                                <td class="text-left"><label>API Params : </label></td>
+                                                <td class="text-left">
+                                                    <textarea  id="ApiObj" name="ApiObj" cols="" rows="5" style="width:100%;" placeholder="json parameters" class="pline" title=""></textarea>
+                                                </td>                                               
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="btnbox">
+                                    <div class="btn_center">
+                                        <!-- <button name="" value="" class="btn_co btn_cr_g w135 btn_cancel" onclick="clearParams()">Clear</button>  -->
+                                        <button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="apiCall()">apiCall</button> 
+                                        <!-- <button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="serverCall()">serverCall</button>  -->
+                                        
+                                    </div>
+                                </div>
+                                
+							</div><!-- end of ds_cont-->
+							
+						</div>
+						
+					</div>
+					
+
+
+                    
+
+<script>
+    // 서버에 호출하는건... 너무 복잡할 듯.
+    function serverCall(){
+        // var apiTarget = $("#ApiTarget").val();
+        // var apiMethod = $("#ApiMethod").val();
+        // var id = $('input[name="rdColors"]:checked').attr('id');
+        // var value = $('input[name="rdColors"]:checked').val();
+        
+        var apiTarget = $('input[name="ApiTarget"]:checked').val();
+        var apiMethod = $('input[name="ApiMethod"]:checked').val();
+        var serverURL = $("#ServerURL").val();
+        
+        var apiObj = $("#ApiObj").val();
+    
+        var url = "/servercall";
+
+        axios.post(url,{
+            headers: { },
+            ApiTarget:apiTarget,
+            ApiMethod:apiMethod,
+            ApiURL:serverURL,
+            ApiObj:apiObj
+        }).then(result=>{
+            // console.log(result)
+            markers=JSON.stringify(result.data.resp);
+            $("#ApiResult").val(markers)
+            // console.log("result : ")
+            // console.log(result)
+            
+            
+        }).catch(function(error){
+            console.log(" api call error : ");
+            console.log(error);
+            console.log(error.data);
+            $("#ApiResult").val(error)
+        });    
+    
+    }
+    function apiCall(){
+        // var apiTarget = $("#ApiTarget").val();
+        // var apiMethod = $("#ApiMethod").val();
+        // var id = $('input[name="rdColors"]:checked').attr('id');
+        // var value = $('input[name="rdColors"]:checked').val();
+        
+        var apiTarget = $('input[name="ApiTarget"]:checked').val();
+        var apiMethod = $('input[name="ApiMethod"]:checked').val();
+        var apiURL = $("#ApiURL").val();
+        var apiObj = $("#ApiObj").val();
+        var url = "/apicall";
+
+        axios.post(url,{
+            headers: { },
+            ApiTarget:apiTarget,
+            ApiMethod:apiMethod,
+            ApiURL:apiURL,
+            ApiObj:apiObj
+        }).then(result=>{
+            console.log(result)
+            if ( result.data.resp ){
+                markers=JSON.stringify(result.data.resp);
+                $("#ApiResult").val(markers)
+            }else{
+                markers=JSON.stringify(result.data);
+                $("#ApiResult").val(markers)
+            }
+            // console.log("result : ")
+            // console.log(result)            
+            
+        }).catch(function(error){
+            console.log(" api call error : ");
+            console.log(error);
+            console.log(error.data);
+            $("#ApiResult").val(error)
+        });
+    
+    }
+
+    function clearParams(){
+        $("#ApiURL").val("");
+        $("#ApiObj").val("");
+        $("#ApiResult").val("");
+        
+    }
+</script>
+{{template "Footer" .}}
+
