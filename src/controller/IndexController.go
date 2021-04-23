@@ -4,19 +4,22 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	// "io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
 	//"github.com/foolin/echo-template"
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
 
 	"github.com/dgrijalva/jwt-go"
 
-	"github.com/twinj/uuid"
+	//"github.com/twinj/uuid"
+	"github.com/google/uuid"
 
 	"github.com/labstack/echo"
 
@@ -570,10 +573,10 @@ func createToken(userID string) (*TokenDetails, error) {
 
 	td := &TokenDetails{}
 	td.AtExpires = time.Now().Add(time.Minute * 5).Unix()
-	td.AccessUuid = uuid.NewV4().String()
+	td.AccessUuid = uuid.New().String() // uuid.NewV4().String()
 	// td.RtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
 	td.RtExpires = time.Now().Add(time.Minute * 30).Unix()
-	td.RefreshUuid = uuid.NewV4().String()
+	td.RefreshUuid = uuid.New().String() // uuid.NewV4().String()
 
 	atClaims := jwt.MapClaims{}
 	atClaims["authorized"] = true
