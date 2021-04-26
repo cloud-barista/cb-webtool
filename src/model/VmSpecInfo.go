@@ -5,7 +5,7 @@ type VmSpecInfo struct {
 	ID                    string `json:"id"`
 	Name                  string `json:"name"`
 	Description           string `json:"description"`
-	costPerHour           string `json:"cost_per_hour"`
+	CostPerHour           string `json:"cost_per_hour"`
 	CspSpecName           string `json:"cspSpecName"`
 	EbsBwMbps             string `json:"ebs_bw_Mbps"`
 	GpuModel              string `json:"gpu_model"`

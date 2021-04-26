@@ -238,7 +238,7 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGr
 // 해당 Namespace의 모든 SecurityGroup 삭제
 func DelAllSecurityGroup(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup/" + securityGroupID
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup/"
 	// /ns/{nsId}/resources/securityGroup
 	fmt.Println("url : ", url)
 
