@@ -1,5 +1,6 @@
 package model
 
+// Tumblebug에서 사용하는 AgentInstall
 type VmMonitoringAgentReg struct {
 	Command  string `json:"command"`
 	PublicIp string `json:"ip"`
