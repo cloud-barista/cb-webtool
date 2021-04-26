@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	model "github.com/cloud-barista/cb-webtool/src/model"
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
@@ -64,27 +65,94 @@ func MornitoringListForm(c echo.Context) error {
 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
+///mcis/:mcisID/vm/:vmID/agent/mngform
+// vm에 monitoring Agent 등록 하는 폼.
+// TODO : 이거 지금 쓰는데가 없는데???
+func VmMonitoringAgentRegForm(c echo.Context) error {
+	fmt.Println("VmMonitoringAgentRegForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	mcisID := c.Param("mcisID")
+	vmID := c.Param("vmID")
+	//publicIp := c.Param("public_ip")
+
+	namespace := service.GetNameSpaceToString(c)
+	return c.Render(http.StatusOK, "InstallAgent.html", map[string]interface{}{
+		// return c.Render(http.StatusOK, "InstallAgent.html", map[string]interface{}{
+		"LoginInfo": loginInfo,
+		"NameSpace": namespace,
+		"mcisID":    mcisID,
+		"vmID":      vmID,
+		// "publicIp":  publicIp,
+	})
+
+}
+
+// VM에 모니터링 Agent 설치
+// /ns/{nsId}/monitoring/install/mcis/{mcisId}
+func VmMonitoringAgentRegProc(c echo.Context) error {
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	vmMonitoringAgentReg := &model.VmMonitoringAgentReg{}
+	if err := c.Bind(vmMonitoringAgentReg); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(vmMonitoringAgentReg)
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	vmMonitoringAgentInfo, respStatus := service.RegMonitoringAgentInVm(defaultNameSpaceID, vmMonitoringAgentReg)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":               "success",
+		"status":                respStatus.StatusCode,
+		"VmMonitoringAgentInfo": vmMonitoringAgentInfo,
+	})
+}
+
+// InstallAgent.html
 // func AgentRegForm(c echo.Context) error {
-// 	comURL := service.GetCommonURL()
-// 	apiInfo := service.AuthenticationHandler()
-// 	mcis_id := c.Param("mcis_id")
-// 	vm_id := c.Param("vm_id")
-// 	public_ip := c.Param("public_ip")
-
-// 	if loginInfo := service.CallLoginInfo(c); loginInfo.Username != "" {
-// 		namespace := service.GetNameSpaceToString(c)
-// 		return c.Render(http.StatusOK, "InstallAgent.html", map[string]interface{}{
-// 			"LoginInfo": loginInfo,
-// 			"NameSpace": namespace,
-// 			"comURL":    comURL,
-// 			"mcis_id":   mcis_id,
-// 			"vm_id":     vm_id,
-// 			"public_ip": public_ip,
-// 			"apiInfo":   apiInfo,
-// 		})
-
-// 	}
-
-// 	//return c.Render(http.StatusOK, "MCISlist.html", nil)
-// 	return c.Redirect(http.StatusTemporaryRedirect, "/login")
 // }
+
+// GetMcisInfoData
+// 특정 MCIS의 상세정보를 가져온다.
+func GetVmMonitoringInfoData(c echo.Context) error {
+	log.Println("GetVmMonitoringInfoData")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login") // 조회기능에서 바로 login화면으로 돌리지말고 return message로 하는게 낫지 않을까?
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	mcisID := c.Param("mcisID")
+	metric := c.Param("metric")
+	log.Println("mcisID= " + mcisID)
+	//monitoringGroup.GET("/mcis/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
+
+	resultMcisInfo, _ := service.GetVmMonitoringInfoData(defaultNameSpaceID, mcisID, metric)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "success",
+		"status":   200,
+		"McisInfo": resultMcisInfo,
+	})
+}
