@@ -235,6 +235,26 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGr
 	return &securityGroupInfo, model.WebStatus{StatusCode: respStatus}
 }
 
+// 해당 Namespace의 모든 SecurityGroup 삭제
+func DelAllSecurityGroup(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup/"
+	// /ns/{nsId}/resources/securityGroup
+	fmt.Println("url : ", url)
+
+	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, model.WebStatus{StatusCode: respStatus}
+}
+
 // SecurityGroup 삭제
 func DelSecurityGroup(nameSpaceID string, securityGroupID string) (io.ReadCloser, model.WebStatus) {
 	// if ValidateString(vNetID) != nil {

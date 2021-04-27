@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	// "io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
 	//"github.com/foolin/echo-template"
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
@@ -83,7 +85,7 @@ func MainForm(c echo.Context) error {
 	if len(nameSpaceInfoList) == 1 { // namespace가 1개이면 mcis 체크
 		// mcis가 있으면 dashboard로 ( dashboard에서 mcis가 없으면 mcis 생성화면으로 : TODO 현재 미완성으로 MCIS관리화면으로 이동)
 
-		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/mngform/")
+		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/mngform")
 	} else {
 		return echotemplate.Render(c, http.StatusOK,
 			"auth/Main", // 파일명

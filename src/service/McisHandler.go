@@ -457,33 +457,6 @@ func McisVmLifeCycle(vmLifeCycle *model.VmLifeCycle) (*model.VmLifeCycle, model.
 
 }
 
-// VM monitoring
-func GetVmMonitoring(vmMonitoring *model.VmMonitoring) (*model.VmMonitoringInfo, model.WebStatus) {
-	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
-	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
-	urlParam := "periodType=" + vmMonitoring.PeriodType + "&statisticsCriteria=" + vmMonitoring.StatisticsCriteria + "&duration=" + vmMonitoring.Duration
-	url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID + "/metric/" + vmMonitoring.Metric + "/info?" + urlParam
-
-	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-
-	// defer body.Close()
-	vmMonitoringInfo := model.VmMonitoringInfo{}
-	if err != nil {
-		fmt.Println(err)
-		return &vmMonitoringInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
-	// util.DisplayResponse(resp) // 수신내용 확인
-
-	respBody := resp.Body
-	respStatus := resp.StatusCode
-
-	json.NewDecoder(respBody).Decode(&vmMonitoringInfo)
-	fmt.Println(vmMonitoringInfo)
-
-	return &vmMonitoringInfo, model.WebStatus{StatusCode: respStatus}
-}
-
 // 벤치마크?? MCIS 조회. 근데 왜 결과는 resultarray지?
 // TODO : 여러개 return되면 method이름을 xxxData -> xxxList 로 바꿀 것
 func GetBenchmarkMcisData(nameSpaceID string, mcisID string, host string) (*[]model.McisBenchmarkInfo, model.WebStatus) {
