@@ -6,7 +6,10 @@ import (
 	"log"
 	"net/http"
 
-	model "github.com/cloud-barista/cb-webtool/src/model"
+	// model "github.com/cloud-barista/cb-webtool/src/model"
+	"github.com/cloud-barista/cb-webtool/src/model/dragonfly"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	util "github.com/cloud-barista/cb-webtool/src/util"
 
@@ -111,7 +114,7 @@ func McisMngForm(c echo.Context) error {
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
 	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
 	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap
-	mcisSimpleInfoList := []model.McisSimpleInfo{}              // 표에 뿌려줄 mics summary 정보
+	mcisSimpleInfoList := []tumblebug.McisSimpleInfo{}          // 표에 뿌려줄 mics summary 정보
 
 	for _, mcisInfo := range mcisList {
 		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
@@ -176,7 +179,7 @@ func McisMngForm(c echo.Context) error {
 			mcisConnectionNames += connectKey + " "
 		}
 		////////////// return value 에 set
-		mcisSimpleInfo := model.McisSimpleInfo{}
+		mcisSimpleInfo := tumblebug.McisSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
 		mcisSimpleInfo.Status = mcisInfo.Status
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
@@ -338,7 +341,7 @@ func McisRegProc(c echo.Context) error {
 	// map[description:bb installMonAgent:yes name:aa vm:[map[connectionName:gcp-asia-east1 description:dd imageId:gcp-jsyoo-ubuntu name:cc provider:GCP securityGroupIds:[gcp-jsyoo-sg-01] specId:gcp-jsyoo-01 sshKeyId:gcp-jsyoo-sshkey subnetId:jsyoo-gcp-sub-01 vNetId:jsyoo-gcp-01 vm_add_cnt:0 vm_cnt:]]]
 	log.Println("get info")
 	//&[]Person{}
-	mCISInfo := &model.McisInfo{}
+	mCISInfo := &tumblebug.McisInfo{}
 	if err := c.Bind(mCISInfo); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
@@ -530,7 +533,7 @@ func McisLifeCycle(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	mcisLifeCycle := &model.McisLifeCycle{}
+	mcisLifeCycle := &tumblebug.McisLifeCycle{}
 	if err := c.Bind(mcisLifeCycle); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -575,7 +578,7 @@ func McisVmLifeCycle(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	vmLifeCycle := &model.VmLifeCycle{}
+	vmLifeCycle := &tumblebug.VmLifeCycle{}
 	if err := c.Bind(vmLifeCycle); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -618,7 +621,7 @@ func GetVmMonitoring(c echo.Context) error {
 	// metric := c.Param("metric")
 	// log.Println("mcisID= " + mcisID + " , vmID= " + vmID)
 
-	vmMonitoring := &model.VmMonitoring{}
+	vmMonitoring := &dragonfly.VmMonitoring{}
 	if err := c.Bind(vmMonitoring); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{

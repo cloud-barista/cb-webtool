@@ -12,6 +12,9 @@ import (
 	// "reflect"
 	//"github.com/davecgh/go-spew/spew"
 	model "github.com/cloud-barista/cb-webtool/src/model"
+	// "github.com/cloud-barista/cb-webtool/src/model/spider"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
 
@@ -25,9 +28,9 @@ import (
 // }
 
 // 저장된 namespace가 없을 때 최초 1개 생성하고 해당 namespace 정보를 return  : 검증 필요(TODO : 이미 namespace가 있어서 확인 못함)
-func CreateDefaultNamespace() (*model.NameSpaceInfo, model.WebStatus) {
+func CreateDefaultNamespace() (*tumblebug.NameSpaceInfo, model.WebStatus) {
 	// nsInfo := new(model.NSInfo)
-	nameSpaceInfo := model.NameSpaceInfo{}
+	nameSpaceInfo := tumblebug.NameSpaceInfo{}
 
 	// 사용자의 namespace 목록조회
 	nsList, nsStatus := GetNameSpaceList()
@@ -134,7 +137,7 @@ func CreateDefaultNamespace() (*model.NameSpaceInfo, model.WebStatus) {
 // }
 
 // 사용자의 namespace 목록 조회
-func GetNameSpaceList() ([]model.NameSpaceInfo, model.WebStatus) {
+func GetNameSpaceList() ([]tumblebug.NameSpaceInfo, model.WebStatus) {
 	fmt.Println("GetNameSpaceList start")
 	url := util.TUMBLEBUG + "/ns"
 
@@ -151,7 +154,7 @@ func GetNameSpaceList() ([]model.NameSpaceInfo, model.WebStatus) {
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	nameSpaceInfoList := map[string][]model.NameSpaceInfo{}
+	nameSpaceInfoList := map[string][]tumblebug.NameSpaceInfo{}
 	// defer body.Close()
 	json.NewDecoder(respBody).Decode(&nameSpaceInfoList)
 	//spew.Dump(body)
@@ -160,13 +163,13 @@ func GetNameSpaceList() ([]model.NameSpaceInfo, model.WebStatus) {
 	return nameSpaceInfoList["ns"], model.WebStatus{StatusCode: respStatus}
 }
 
-func GetNameSpaceData(nameSpaceID string) (model.NameSpaceInfo, model.WebStatus) {
+func GetNameSpaceData(nameSpaceID string) (tumblebug.NameSpaceInfo, model.WebStatus) {
 	fmt.Println("GetNameSpaceData start")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
-	nameSpaceInfo := model.NameSpaceInfo{}
+	nameSpaceInfo := tumblebug.NameSpaceInfo{}
 	if err != nil {
 		return nameSpaceInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
@@ -182,7 +185,7 @@ func GetNameSpaceData(nameSpaceID string) (model.NameSpaceInfo, model.WebStatus)
 }
 
 // NameSpace 등록
-func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
+func RegNameSpace(nameSpaceInfo *tumblebug.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.TUMBLEBUG + "/ns"
 
@@ -202,7 +205,7 @@ func RegNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, model.WebS
 }
 
 // NameSpace 수정 : namespace 없데이트 기능 없음
-func UpdateNameSpace(nameSpaceInfo *model.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
+func UpdateNameSpace(nameSpaceInfo *tumblebug.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	url := util.TUMBLEBUG + "/ns"
 

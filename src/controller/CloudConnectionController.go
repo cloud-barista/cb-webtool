@@ -5,7 +5,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/cloud-barista/cb-webtool/src/model"
+	// "github.com/cloud-barista/cb-webtool/src/model"
+
+	// dragonfly "github.com/cloud-barista/cb-webtool/src/model/dragonfly"
+	// ladybug "github.com/cloud-barista/cb-webtool/src/model/ladybug"
+	spider "github.com/cloud-barista/cb-webtool/src/model/spider"
+	tumblebug "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+
 	service "github.com/cloud-barista/cb-webtool/src/service"
 
 	"github.com/cloud-barista/cb-webtool/src/util"
@@ -152,7 +158,7 @@ func CloudConnectionConfigRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	cloudConnectionConfigInfo := new(model.CloudConnectionConfigInfo)
+	cloudConnectionConfigInfo := new(spider.CloudConnectionConfigInfo)
 	if err := c.Bind(cloudConnectionConfigInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -264,7 +270,7 @@ func RegionRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	regionInfo := new(model.RegionInfo)
+	regionInfo := new(spider.RegionInfo)
 	if err := c.Bind(regionInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -375,7 +381,7 @@ func CredentialRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	credentialInfo := new(model.CredentialInfo)
+	credentialInfo := new(spider.CredentialInfo)
 	if err := c.Bind(credentialInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -488,7 +494,7 @@ func DriverRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	driverInfo := new(model.DriverInfo)
+	driverInfo := new(spider.DriverInfo)
 	if err := c.Bind(driverInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -597,7 +603,7 @@ func ConfigRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	configInfo := new(model.ConfigInfo)
+	configInfo := new(spider.ConfigInfo)
 	if err := c.Bind(configInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -671,7 +677,7 @@ func ConnectionList(c echo.Context) error {
 	// namespace 가 없으면 1개를 기본으로 생성한다.
 	if len(nsList) == 0 {
 		// create default namespace
-		nameSpaceInfo := new(model.NameSpaceInfo)
+		nameSpaceInfo := new(tumblebug.NameSpaceInfo)
 		nameSpaceInfo.Name = "NS-01" // default namespace name
 		nameSpaceInfo.Description = "default name space name"
 		respBody, respStatus := service.RegNameSpace(nameSpaceInfo)
