@@ -41,7 +41,7 @@ func GetMcisList(nameSpaceID string) ([]tumblebug.McisInfo, model.WebStatus) {
 	json.NewDecoder(respBody).Decode(&mcisList)
 	fmt.Println(mcisList["mcis"])
 	log.Println(respBody)
-	util.DisplayResponse(resp) // 수신내용 확인
+	// util.DisplayResponse(resp) // 수신내용 확인
 
 	return mcisList["mcis"], model.WebStatus{StatusCode: respStatus}
 }

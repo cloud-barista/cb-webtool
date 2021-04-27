@@ -20,11 +20,18 @@ $(document).ready(function(){
                 userID : userID,
                 password : password,
             };
+
+            const frm = new FormData()
+            frm.append('userID', userID)
+            frm.append('password', password)
+
             console.log(req)
-            axios.post("/login/proc",{
-                headers: { },
-                userID:userID,password:password 
-                })
+            var url = "/login/proc";
+            azios.post(url, frm)
+            // axios.post("/login/proc",{
+            //     headers: { },
+            //     userID:userID,password:password 
+            //     })
                 .then(result =>{
                     console.log(result);
                     if(result.status == 200){
