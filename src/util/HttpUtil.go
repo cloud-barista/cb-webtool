@@ -66,12 +66,14 @@ func AuthenticationHandler() string {
 // ex2) path인 경우 :abc
 func MappingUrlParameter(originalUrl string, paramMapper map[string]string) string {
 	returnUrl := originalUrl
+	log.Println("originalUrl= ", originalUrl)
 	if paramMapper != nil {
 		for key, replaceValue := range paramMapper {
 			returnUrl := strings.Replace(originalUrl, key, replaceValue, -1)
 			fmt.Println("Key:", key, "=>", "Element:", replaceValue+":"+returnUrl)
 		}
 	}
+	log.Println("returnUrl= ", returnUrl)
 	return returnUrl
 }
 
