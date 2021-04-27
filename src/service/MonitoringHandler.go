@@ -130,14 +130,14 @@ func GetMcisMonitoringMetricInfo(vmMonitoring *dragonfly.VmMonitoring) (*dragonf
 }
 
 // 모니터링 정책 조회
-func GetMonitoringConfig() (*model.MonitoringConfig, model.WebStatus) {
+func GetMonitoringConfig() (*dragonfly.MonitoringConfig, model.WebStatus) {
 
 	url := util.DRAGONFLY + "/config"
 	// {{ip}}:{{port}}/dragonfly/config
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	monitoringConfig := model.MonitoringConfig{}
+	monitoringConfig := dragonfly.MonitoringConfig{}
 	if err != nil {
 		fmt.Println(err)
 		return &monitoringConfig, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -154,7 +154,7 @@ func GetMonitoringConfig() (*model.MonitoringConfig, model.WebStatus) {
 }
 
 // 모니터링 정책 설정
-func PutMonigoringConfig(monitoringConfig *model.MonitoringConfig) (*model.MonitoringConfig, model.WebStatus) {
+func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonfly.MonitoringConfig, model.WebStatus) {
 	url := util.DRAGONFLY + "/config"
 
 	fmt.Println("UpdateMonigoringConfig : ")
@@ -162,7 +162,7 @@ func PutMonigoringConfig(monitoringConfig *model.MonitoringConfig) (*model.Monit
 	pbytes, _ := json.Marshal(monitoringConfig)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
-	resultMonitoringConfig := model.MonitoringConfig{}
+	resultMonitoringConfig := dragonfly.MonitoringConfig{}
 	if err != nil {
 		log.Println("-----")
 		fmt.Println(err)
@@ -191,13 +191,13 @@ func PutMonigoringConfig(monitoringConfig *model.MonitoringConfig) (*model.Monit
 }
 
 // 모니터링 정책 초기화
-func ResetMonigoringConfig(monitoringConfig *model.MonitoringConfig) (*model.MonitoringConfig, model.WebStatus) {
+func ResetMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonfly.MonitoringConfig, model.WebStatus) {
 	url := util.DRAGONFLY + "/config/reset"
 
 	fmt.Println("ResetMonigoringConfig : ", url)
 
 	resp, err := util.CommonHttp(url, nil, http.MethodPut)
-	resultMonitoringConfig := model.MonitoringConfig{}
+	resultMonitoringConfig := dragonfly.MonitoringConfig{}
 	if err != nil {
 		log.Println("-----")
 		fmt.Println(err)
