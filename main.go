@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+
 	//"github.com/cloud-barista/cb-webtool/src/controller"
 	"github.com/cloud-barista/cb-webtool/src/controller"
 	echotemplate "github.com/foolin/echo-template"
@@ -144,6 +145,22 @@ func main() {
 		Root:      "src/views",
 		Extension: ".html",
 		// Master:    "operation/dashboards/Dashboard",
+		Partials: []string{
+			"templates/OperationTop",
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+
+	policyTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/dashboards/Policy",
 		Partials: []string{
 			"templates/OperationTop",
 			"templates/TopBox",
@@ -301,6 +318,15 @@ func main() {
 	// e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 	monitoringGroup := e.Group("/operation/monitorings", monitoringTemplate)
 	monitoringGroup.GET("/mcis/mngform", controller.McisMonitoringMngForm)
+	monitoringGroup.GET("/mcis/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
+	monitoringGroup.POST("/mcis/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
+	monitoringGroup.GET("/mcis/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
+
+	policyGroup := e.Group("/operation/policies", policyTemplate)
+	policyGroup.GET("/policy/mngform", controller.McisPolicyMngForm)
+	policyGroup.GET("/mcis/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
+	policyGroup.POST("/mcis/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
+	policyGroup.GET("/mcis/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
 
 	// MCIS
 	// e.GET("/Manage/MCIS/reg", controller.McisRegForm)

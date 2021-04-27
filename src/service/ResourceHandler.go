@@ -13,12 +13,15 @@ import (
 	"io/ioutil"
 	//"github.com/davecgh/go-spew/spew"
 	model "github.com/cloud-barista/cb-webtool/src/model"
+	// "github.com/cloud-barista/cb-webtool/src/model/spider"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
 
 // 해당 namespace의 vpc 목록 조회
 //func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
-func GetVnetList(nameSpaceID string) ([]model.VNetInfo, model.WebStatus) {
+func GetVnetList(nameSpaceID string) ([]tumblebug.VNetInfo, model.WebStatus) {
 	fmt.Println("GetVnetList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
@@ -36,7 +39,7 @@ func GetVnetList(nameSpaceID string) ([]model.VNetInfo, model.WebStatus) {
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	vNetInfoList := map[string][]model.VNetInfo{}
+	vNetInfoList := map[string][]tumblebug.VNetInfo{}
 	json.NewDecoder(respBody).Decode(&vNetInfoList)
 	//spew.Dump(body)
 	fmt.Println(vNetInfoList["vNet"])
@@ -46,7 +49,7 @@ func GetVnetList(nameSpaceID string) ([]model.VNetInfo, model.WebStatus) {
 }
 
 // vpc 상세 조회-> ResourceHandler로 이동
-func GetVpcData(nameSpaceID string, vNetID string) (*model.VNetInfo, model.WebStatus) {
+func GetVpcData(nameSpaceID string, vNetID string) (*tumblebug.VNetInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet/" + vNetID
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
@@ -54,7 +57,7 @@ func GetVpcData(nameSpaceID string, vNetID string) (*model.VNetInfo, model.WebSt
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	vNetInfo := model.VNetInfo{}
+	vNetInfo := tumblebug.VNetInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vNetInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -72,8 +75,8 @@ func GetVpcData(nameSpaceID string, vNetID string) (*model.VNetInfo, model.WebSt
 }
 
 // vpc 등록
-// func RegVpc(nameSpaceID string, vnetRegInfo *model.VNetRegInfo) (io.ReadCloser, int) {
-func RegVpc(nameSpaceID string, vnetRegInfo *model.VNetRegInfo) (*model.VNetInfo, model.WebStatus) {
+// func RegVpc(nameSpaceID string, vnetRegInfo *tumblebug.VNetRegInfo) (io.ReadCloser, int) {
+func RegVpc(nameSpaceID string, vnetRegInfo *tumblebug.VNetRegInfo) (*tumblebug.VNetInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
 	fmt.Println("vnetRegInfo : ", vnetRegInfo)
@@ -81,7 +84,7 @@ func RegVpc(nameSpaceID string, vnetRegInfo *model.VNetRegInfo) (*model.VNetInfo
 	pbytes, _ := json.Marshal(vnetRegInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	vNetInfo := model.VNetInfo{}
+	vNetInfo := tumblebug.VNetInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vNetInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -142,7 +145,7 @@ func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, model.WebStatus) 
 }
 
 // 해당 namespace의 SecurityGroup 목록 조회
-func GetSecurityGroupList(nameSpaceID string) ([]model.SecurityGroupInfo, model.WebStatus) {
+func GetSecurityGroupList(nameSpaceID string) ([]tumblebug.SecurityGroupInfo, model.WebStatus) {
 	fmt.Println("GetSecurityGroupList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup"
 
@@ -160,7 +163,7 @@ func GetSecurityGroupList(nameSpaceID string) ([]model.SecurityGroupInfo, model.
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	securityGroupList := map[string][]model.SecurityGroupInfo{}
+	securityGroupList := map[string][]tumblebug.SecurityGroupInfo{}
 
 	json.NewDecoder(respBody).Decode(&securityGroupList)
 	//spew.Dump(body)
@@ -171,7 +174,7 @@ func GetSecurityGroupList(nameSpaceID string) ([]model.SecurityGroupInfo, model.
 }
 
 // SecurityGroup 상세 조회
-func GetSecurityGroupData(nameSpaceID string, securityGroupID string) (*model.SecurityGroupInfo, model.WebStatus) {
+func GetSecurityGroupData(nameSpaceID string, securityGroupID string) (*tumblebug.SecurityGroupInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup/" + securityGroupID
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
@@ -179,7 +182,7 @@ func GetSecurityGroupData(nameSpaceID string, securityGroupID string) (*model.Se
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	securityGroupInfo := model.SecurityGroupInfo{}
+	securityGroupInfo := tumblebug.SecurityGroupInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &securityGroupInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -195,7 +198,7 @@ func GetSecurityGroupData(nameSpaceID string, securityGroupID string) (*model.Se
 }
 
 // SecurityGroup 등록
-func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGroupRegInfo) (*model.SecurityGroupInfo, model.WebStatus) {
+func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *tumblebug.SecurityGroupRegInfo) (*tumblebug.SecurityGroupInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup"
 
 	fmt.Println("RegSecurityGroup : ")
@@ -203,7 +206,7 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGr
 	pbytes, _ := json.Marshal(securityGroupRegInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	securityGroupInfo := model.SecurityGroupInfo{}
+	securityGroupInfo := tumblebug.SecurityGroupInfo{}
 	if err != nil {
 		log.Println("-----")
 		fmt.Println(err)
@@ -233,6 +236,26 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *model.SecurityGr
 	fmt.Println(securityGroupInfo)
 	// return respBody, respStatusCode
 	return &securityGroupInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// 해당 Namespace의 모든 SecurityGroup 삭제
+func DelAllSecurityGroup(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+
+	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup/"
+	// /ns/{nsId}/resources/securityGroup
+	fmt.Println("url : ", url)
+
+	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // SecurityGroup 삭제
@@ -265,7 +288,7 @@ func DelSecurityGroup(nameSpaceID string, securityGroupID string) (io.ReadCloser
 }
 
 // SSHKey 목록 조회 : /ns/{nsId}/resources/sshKey
-func GetSshKeyInfoList(nameSpaceID string) ([]model.SshKeyInfo, model.WebStatus) {
+func GetSshKeyInfoList(nameSpaceID string) ([]tumblebug.SshKeyInfo, model.WebStatus) {
 	fmt.Println("GetSshKeyInfoList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
 
@@ -283,7 +306,7 @@ func GetSshKeyInfoList(nameSpaceID string) ([]model.SshKeyInfo, model.WebStatus)
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	sshKeyList := map[string][]model.SshKeyInfo{}
+	sshKeyList := map[string][]tumblebug.SshKeyInfo{}
 
 	json.NewDecoder(respBody).Decode(&sshKeyList)
 	//spew.Dump(body)
@@ -294,7 +317,7 @@ func GetSshKeyInfoList(nameSpaceID string) ([]model.SshKeyInfo, model.WebStatus)
 }
 
 // sshKey 상세 조회
-func GetSshKeyData(nameSpaceID string, sshKeyID string) (*model.SshKeyInfo, model.WebStatus) {
+func GetSshKeyData(nameSpaceID string, sshKeyID string) (*tumblebug.SshKeyInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey/" + sshKeyID
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
@@ -302,7 +325,7 @@ func GetSshKeyData(nameSpaceID string, sshKeyID string) (*model.SshKeyInfo, mode
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	sshKeyInfo := model.SshKeyInfo{}
+	sshKeyInfo := tumblebug.SshKeyInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &sshKeyInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -318,7 +341,7 @@ func GetSshKeyData(nameSpaceID string, sshKeyID string) (*model.SshKeyInfo, mode
 }
 
 // sshKey 등록
-func RegSshKey(nameSpaceID string, sshKeyRegInfo *model.SshKeyRegInfo) (*model.SshKeyInfo, model.WebStatus) {
+func RegSshKey(nameSpaceID string, sshKeyRegInfo *tumblebug.SshKeyRegInfo) (*tumblebug.SshKeyInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
 
 	// fmt.Println("vnetInfo : ", vnetInfo)
@@ -326,7 +349,7 @@ func RegSshKey(nameSpaceID string, sshKeyRegInfo *model.SshKeyRegInfo) (*model.S
 	pbytes, _ := json.Marshal(sshKeyRegInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	sshKeyInfo := model.SshKeyInfo{}
+	sshKeyInfo := tumblebug.SshKeyInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &sshKeyInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -376,7 +399,7 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (io.ReadCloser, model.WebSta
 }
 
 // VirtualMachineImage 목록 조회
-func GetVirtualMachineImageInfoList(nameSpaceID string) ([]model.VirtualMachineImageInfo, model.WebStatus) {
+func GetVirtualMachineImageInfoList(nameSpaceID string) ([]tumblebug.VirtualMachineImageInfo, model.WebStatus) {
 	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image"
 
@@ -393,7 +416,7 @@ func GetVirtualMachineImageInfoList(nameSpaceID string) ([]model.VirtualMachineI
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	virtualMachineImageList := map[string][]model.VirtualMachineImageInfo{}
+	virtualMachineImageList := map[string][]tumblebug.VirtualMachineImageInfo{}
 
 	json.NewDecoder(respBody).Decode(&virtualMachineImageList)
 	//spew.Dump(body)
@@ -411,7 +434,7 @@ func GetVirtualMachineImageInfoList(nameSpaceID string) ([]model.VirtualMachineI
 }
 
 // VirtualMachineImage 상세 조회
-func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string) (*model.VirtualMachineImageInfo, model.WebStatus) {
+func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string) (*tumblebug.VirtualMachineImageInfo, model.WebStatus) {
 	fmt.Println("GetVirtualMachineImageData ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image/" + virtualMachineImageID
 
@@ -420,7 +443,7 @@ func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	virtualMachineImageInfo := model.VirtualMachineImageInfo{}
+	virtualMachineImageInfo := tumblebug.VirtualMachineImageInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -436,7 +459,7 @@ func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string
 }
 
 // VirtualMachineImage 등록
-func RegVirtualMachineImage(nameSpaceID string, virtualMachineImageRegInfo *model.VirtualMachineImageRegInfo) (*model.VirtualMachineImageInfo, model.WebStatus) {
+func RegVirtualMachineImage(nameSpaceID string, virtualMachineImageRegInfo *tumblebug.VirtualMachineImageRegInfo) (*tumblebug.VirtualMachineImageInfo, model.WebStatus) {
 	fmt.Println("RegVirtualMachineImage ************ : ")
 
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image?action=registerWithInfo" //
@@ -447,7 +470,7 @@ func RegVirtualMachineImage(nameSpaceID string, virtualMachineImageRegInfo *mode
 	pbytes, _ := json.Marshal(virtualMachineImageRegInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	virtualMachineImageInfo := model.VirtualMachineImageInfo{}
+	virtualMachineImageInfo := tumblebug.VirtualMachineImageInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -522,7 +545,7 @@ func DelAllVirtualMachineImage(nameSpaceID string) (io.ReadCloser, model.WebStat
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
-func LookupVirtualMachineImageList(connectionName string) ([]model.VirtualMachineLookupImageInfo, model.WebStatus) {
+func LookupVirtualMachineImageList(connectionName string) ([]tumblebug.VirtualMachineLookupImageInfo, model.WebStatus) {
 	fmt.Println("LookupVirtualMachineImageList ************ : ", connectionName)
 	url := util.TUMBLEBUG + "/lookupImage"
 
@@ -541,7 +564,7 @@ func LookupVirtualMachineImageList(connectionName string) ([]model.VirtualMachin
 	log.Println("LookupVirtualMachineImageList called 2 ", respStatus)
 	// return respBody, respStatus
 	// log.Println(respBody)
-	lookupImageList := map[string][]model.VirtualMachineLookupImageInfo{}
+	lookupImageList := map[string][]tumblebug.VirtualMachineLookupImageInfo{}
 
 	json.NewDecoder(respBody).Decode(&lookupImageList)
 	log.Println("LookupVirtualMachineImageList called 3 ")
@@ -549,7 +572,7 @@ func LookupVirtualMachineImageList(connectionName string) ([]model.VirtualMachin
 	return lookupImageList["image"], model.WebStatus{StatusCode: respStatus}
 }
 
-func FetchVirtualMachineImageList(nameSpaceID string) ([]model.VirtualMachineLookupImageInfo, model.WebStatus) {
+func FetchVirtualMachineImageList(nameSpaceID string) ([]tumblebug.VirtualMachineLookupImageInfo, model.WebStatus) {
 	fmt.Println("FetchVirtualMachineImageList ************ : ", nameSpaceID)
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/fetchImages"
 
@@ -562,7 +585,7 @@ func FetchVirtualMachineImageList(nameSpaceID string) ([]model.VirtualMachineLoo
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	fetchImageList := map[string][]model.VirtualMachineLookupImageInfo{}
+	fetchImageList := map[string][]tumblebug.VirtualMachineLookupImageInfo{}
 
 	json.NewDecoder(respBody).Decode(&fetchImageList)
 	log.Println("FetchVirtualMachineImageList called ")
@@ -589,7 +612,7 @@ func FetchVirtualMachineImageList(nameSpaceID string) ([]model.VirtualMachineLoo
 
 }
 
-func LookupVirtualMachineImageData(virtualMachineImageID string) (*model.VirtualMachineImageInfo, model.WebStatus) {
+func LookupVirtualMachineImageData(virtualMachineImageID string) (*tumblebug.VirtualMachineImageInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/lookupImage/" + virtualMachineImageID
 
 	fmt.Println("virtualMachineImageID : ", virtualMachineImageID)
@@ -597,7 +620,7 @@ func LookupVirtualMachineImageData(virtualMachineImageID string) (*model.Virtual
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	virtualMachineImageInfo := model.VirtualMachineImageInfo{}
+	virtualMachineImageInfo := tumblebug.VirtualMachineImageInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -613,7 +636,7 @@ func LookupVirtualMachineImageData(virtualMachineImageID string) (*model.Virtual
 }
 
 // VirtualMachineImage 상세 조회
-func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID string) (*model.VirtualMachineImageInfo, model.WebStatus) {
+func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID string) (*tumblebug.VirtualMachineImageInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/searchImage/"
 
 	fmt.Println("nameSpaceID : ", nameSpaceID)
@@ -621,7 +644,7 @@ func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID str
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	virtualMachineImageInfo := model.VirtualMachineImageInfo{}
+	virtualMachineImageInfo := tumblebug.VirtualMachineImageInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -637,7 +660,7 @@ func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID str
 }
 
 // VMSpec 목록 조회
-func GetVmSpecInfoList(nameSpaceID string) ([]model.VmSpecInfo, model.WebStatus) {
+func GetVmSpecInfoList(nameSpaceID string) ([]tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("GetVMSpecInfoList ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
 
@@ -654,7 +677,7 @@ func GetVmSpecInfoList(nameSpaceID string) ([]model.VmSpecInfo, model.WebStatus)
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	vmSpecList := map[string][]model.VmSpecInfo{}
+	vmSpecList := map[string][]tumblebug.VmSpecInfo{}
 
 	json.NewDecoder(respBody).Decode(&vmSpecList)
 	//spew.Dump(body)
@@ -665,7 +688,7 @@ func GetVmSpecInfoList(nameSpaceID string) ([]model.VmSpecInfo, model.WebStatus)
 }
 
 // VMSpec 상세 조회
-func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*model.VmSpecInfo, model.WebStatus) {
+func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("GetVMSpecInfoData ************ : ")
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec/" + vmSpecID
 
@@ -674,7 +697,7 @@ func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*model.VmSpecInfo, 
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	vmSpecInfo := model.VmSpecInfo{}
+	vmSpecInfo := tumblebug.VmSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -690,7 +713,7 @@ func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*model.VmSpecInfo, 
 }
 
 // VMSpecInfo 등록
-func RegVmSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.VmSpecInfo, model.WebStatus) {
+func RegVmSpec(nameSpaceID string, vmSpecRegInfo *tumblebug.VmSpecRegInfo) (*tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("RegVMSpec ************ : ")
 
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"// parameter를 모두 받지않기 때문에 param의 data type이 틀려 오류남.
@@ -702,7 +725,7 @@ func RegVmSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.V
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	vmSpecInfo := model.VmSpecInfo{}
+	vmSpecInfo := tumblebug.VmSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -738,7 +761,7 @@ func RegVmSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.V
 	return &vmSpecInfo, returnStatus
 }
 
-func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*model.VmSpecInfo, model.WebStatus) {
+func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *tumblebug.VmSpecRegInfo) (*tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("UpdateVMSpec ************ : ")
 
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"// parameter를 모두 받지않기 때문에 param의 data type이 틀려 오류남.
@@ -749,7 +772,7 @@ func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) (*mode
 	pbytes, _ := json.Marshal(vmSpecRegInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
-	vmSpecInfo := model.VmSpecInfo{}
+	vmSpecInfo := tumblebug.VmSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -819,7 +842,7 @@ func DelAllVMSpec(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
-func LookupVmSpecInfoList() ([]model.VmSpecInfo, model.WebStatus) {
+func LookupVmSpecInfoList() ([]tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("LookupVmSpecInfoList ************ : ")
 	url := util.TUMBLEBUG + "/lookupSpec"
 
@@ -836,7 +859,7 @@ func LookupVmSpecInfoList() ([]model.VmSpecInfo, model.WebStatus) {
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	vmSpecList := map[string][]model.VmSpecInfo{}
+	vmSpecList := map[string][]tumblebug.VmSpecInfo{}
 
 	json.NewDecoder(respBody).Decode(&vmSpecList)
 	//spew.Dump(body)
@@ -846,7 +869,7 @@ func LookupVmSpecInfoList() ([]model.VmSpecInfo, model.WebStatus) {
 
 }
 
-func LookupVmSpecInfoData(vmSpecName string) (*model.VmSpecInfo, model.WebStatus) {
+func LookupVmSpecInfoData(vmSpecName string) (*tumblebug.VmSpecInfo, model.WebStatus) {
 	url := util.TUMBLEBUG + "/lookupSpec/" + vmSpecName
 
 	fmt.Println("vmSpecName : ", vmSpecName)
@@ -854,7 +877,7 @@ func LookupVmSpecInfoData(vmSpecName string) (*model.VmSpecInfo, model.WebStatus
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	// body, err := util.CommonHttpGet(url)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	vmSpecInfo := model.VmSpecInfo{}
+	vmSpecInfo := tumblebug.VmSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -869,7 +892,7 @@ func LookupVmSpecInfoData(vmSpecName string) (*model.VmSpecInfo, model.WebStatus
 	return &vmSpecInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-func FetchVmSpecInfoList(nameSpaceID string) ([]model.VmSpecInfo, model.WebStatus) {
+func FetchVmSpecInfoList(nameSpaceID string) ([]tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("FetchVmSpecInfoList ************ : ", nameSpaceID)
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/fetchSpecs"
 
@@ -882,7 +905,7 @@ func FetchVmSpecInfoList(nameSpaceID string) ([]model.VmSpecInfo, model.WebStatu
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	fetchSpecList := map[string][]model.VmSpecInfo{}
+	fetchSpecList := map[string][]tumblebug.VmSpecInfo{}
 
 	json.NewDecoder(respBody).Decode(&fetchSpecList)
 	log.Println("FetchVmSpecList called ")
@@ -894,7 +917,7 @@ func FetchVmSpecInfoList(nameSpaceID string) ([]model.VmSpecInfo, model.WebStatu
 // resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)
 
 // spec들을 filterling
-func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo) ([]model.VmSpecInfo, model.WebStatus) {
+func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *tumblebug.VmSpecRegInfo) ([]tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("FilterVmSpecInfoList ************ : ", nameSpaceID)
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/filterSpecs"
 	// /ns/{nsId}/resources/filterSpecs
@@ -907,7 +930,7 @@ func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	fetchSpecList := map[string][]model.VmSpecInfo{}
+	fetchSpecList := map[string][]tumblebug.VmSpecInfo{}
 
 	json.NewDecoder(respBody).Decode(&fetchSpecList)
 	log.Println("FilterVmSpecInfoList called ")
@@ -916,7 +939,7 @@ func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *model.VmSpecRegInfo
 }
 
 // resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)
-func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *model.RangeMinMax) ([]model.VmSpecInfo, model.WebStatus) {
+func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebug.RangeMinMax) ([]tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("FilterVmSpecInfoListByRange ************ : ", nameSpaceID)
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/filterSpecsByRange"
 	// /ns/{nsId}/resources/filterSpecsByRange
@@ -931,7 +954,7 @@ func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *model.Ra
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	fetchVmSpecList := map[string][]model.VmSpecInfo{}
+	fetchVmSpecList := map[string][]tumblebug.VmSpecInfo{}
 
 	json.NewDecoder(respBody).Decode(&fetchVmSpecList)
 	log.Println("FilterVmSpecInfoListByRange called ")
