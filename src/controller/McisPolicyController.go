@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	model "github.com/cloud-barista/cb-webtool/src/model"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
 
@@ -100,7 +100,7 @@ func McisPolicyRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	mcisPolicyInfo := &model.McisPolicyInfo{}
+	mcisPolicyInfo := &tumblebug.McisPolicyInfo{}
 	if err := c.Bind(mcisPolicyInfo); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)

@@ -9,11 +9,14 @@ import (
 
 	// "os"
 	model "github.com/cloud-barista/cb-webtool/src/model"
+	// "github.com/cloud-barista/cb-webtool/src/model/spider"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
 
 //
-func GetMcisPolicyList(nameSpaceID string) ([]model.McisPolicyInfo, model.WebStatus) {
+func GetMcisPolicyList(nameSpaceID string) ([]tumblebug.McisPolicyInfo, model.WebStatus) {
 
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis"
 	///ns/{nsId}/policy/mcis
@@ -29,7 +32,7 @@ func GetMcisPolicyList(nameSpaceID string) ([]model.McisPolicyInfo, model.WebSta
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	mcisPolicyList := map[string][]model.McisPolicyInfo{}
+	mcisPolicyList := map[string][]tumblebug.McisPolicyInfo{}
 	json.NewDecoder(respBody).Decode(&mcisPolicyList)
 	fmt.Println(mcisPolicyList["mcisPolicy"])
 	log.Println(respBody)
@@ -39,7 +42,7 @@ func GetMcisPolicyList(nameSpaceID string) ([]model.McisPolicyInfo, model.WebSta
 }
 
 // Get McisPolish Data
-func GetMcisPolicyInfoData(nameSpaceID string, mcisID string) (*model.McisPolicyInfo, model.WebStatus) {
+func GetMcisPolicyInfoData(nameSpaceID string, mcisID string) (*tumblebug.McisPolicyInfo, model.WebStatus) {
 
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis/" + mcisID
 	// /ns/{nsId}/policy/mcis/{mcisId}
@@ -47,7 +50,7 @@ func GetMcisPolicyInfoData(nameSpaceID string, mcisID string) (*model.McisPolicy
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	mcisPolicyInfo := model.McisPolicyInfo{}
+	mcisPolicyInfo := tumblebug.McisPolicyInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &mcisPolicyInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -64,7 +67,7 @@ func GetMcisPolicyInfoData(nameSpaceID string, mcisID string) (*model.McisPolicy
 }
 
 //
-func RegMcisPolicy(nameSpaceID string, mcisID string, mcisPolicyInfo *model.McisPolicyInfo) (*model.McisPolicyInfo, model.WebStatus) {
+func RegMcisPolicy(nameSpaceID string, mcisID string, mcisPolicyInfo *tumblebug.McisPolicyInfo) (*tumblebug.McisPolicyInfo, model.WebStatus) {
 
 	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis" + mcisID
 	// /ns/{nsId}/policy/mcis/{mcisId}
@@ -72,7 +75,7 @@ func RegMcisPolicy(nameSpaceID string, mcisID string, mcisPolicyInfo *model.Mcis
 	pbytes, _ := json.Marshal(mcisPolicyInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnMcisPolicyInfo := model.McisPolicyInfo{}
+	returnMcisPolicyInfo := tumblebug.McisPolicyInfo{}
 	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body

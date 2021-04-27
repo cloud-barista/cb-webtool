@@ -7,7 +7,9 @@ import (
 	"net/http"
 	// "sync"
 
-	model "github.com/cloud-barista/cb-webtool/src/model"
+	// model "github.com/cloud-barista/cb-webtool/src/model"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+
 	"github.com/cloud-barista/cb-webtool/src/service"
 	util "github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
@@ -59,7 +61,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
 	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
 	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
-	mcisSimpleInfoList := []model.McisSimpleInfo{}              // mics summary 정보
+	mcisSimpleInfoList := []tumblebug.McisSimpleInfo{}          // mics summary 정보
 
 	for _, mcisInfo := range mcisList {
 		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
@@ -119,7 +121,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 			mcisConnectionNames += connectKey + " "
 		}
 		////////////// return value 에 set
-		mcisSimpleInfo := model.McisSimpleInfo{}
+		mcisSimpleInfo := tumblebug.McisSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
 		mcisSimpleInfo.Status = mcisInfo.Status
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
@@ -205,7 +207,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
 	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
 	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
-	mcisSimpleInfoList := []model.McisSimpleInfo{}              // mics summary 정보
+	mcisSimpleInfoList := []tumblebug.McisSimpleInfo{}          // mics summary 정보
 
 	for _, mcisInfo := range mcisList {
 		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
@@ -270,7 +272,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 			mcisConnectionNames += connectKey + " "
 		}
 		////////////// return value 에 set
-		mcisSimpleInfo := model.McisSimpleInfo{}
+		mcisSimpleInfo := tumblebug.McisSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
 		mcisSimpleInfo.Status = mcisInfo.Status
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)

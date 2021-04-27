@@ -3,7 +3,7 @@ package controller
 import (
 	// "encoding/json"
 	"fmt"
-	"github.com/cloud-barista/cb-webtool/src/model"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	// util "github.com/cloud-barista/cb-webtool/src/util"
 
@@ -133,7 +133,7 @@ func VpcRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vNetRegInfo := new(model.VNetRegInfo)
+	vNetRegInfo := new(tumblebug.VNetRegInfo)
 	if err := c.Bind(vNetRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -289,7 +289,7 @@ func SecirityGroupRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	securityGroupRegInfo := new(model.SecurityGroupRegInfo)
+	securityGroupRegInfo := new(tumblebug.SecurityGroupRegInfo)
 	if err := c.Bind(securityGroupRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -445,7 +445,7 @@ func SshKeyRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	sshKeyRegInfo := new(model.SshKeyRegInfo)
+	sshKeyRegInfo := new(tumblebug.SshKeyRegInfo)
 	if err := c.Bind(sshKeyRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -598,7 +598,7 @@ func VirtualMachineImageRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	virtualMachineImageRegInfo := new(model.VirtualMachineImageRegInfo)
+	virtualMachineImageRegInfo := new(tumblebug.VirtualMachineImageRegInfo)
 	if err := c.Bind(virtualMachineImageRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -885,7 +885,7 @@ func VmSpecRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vmSpecRegInfo := new(model.VmSpecRegInfo)
+	vmSpecRegInfo := new(tumblebug.VmSpecRegInfo)
 	if err := c.Bind(vmSpecRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{

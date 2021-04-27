@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	model "github.com/cloud-barista/cb-webtool/src/model"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
@@ -99,7 +99,7 @@ func VmMonitoringAgentRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	vmMonitoringAgentReg := &model.VmMonitoringAgentReg{}
+	vmMonitoringAgentReg := &tumblebug.VmMonitoringAgentReg{}
 	if err := c.Bind(vmMonitoringAgentReg); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
