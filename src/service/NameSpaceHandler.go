@@ -62,84 +62,14 @@ func CreateDefaultNamespace() (*tumblebug.NameSpaceInfo, model.WebStatus) {
 	return &nameSpaceInfo, respStatus
 }
 
-// func GetNS(nsID string) model.NSInfo {
-// 	url := NameSpaceUrl + "ns" + nsID
-
-// 	body := HttpGetHandler(url)
-// 	defer body.Close()
-// 	nsInfo := model.NSInfo{}
-// 	json.NewDecoder(body).Decode(&nsInfo)
-// 	fmt.Println("nsInfo : ", nsInfo.ID)
-// 	return nsInfo
-
-// }
-
-// func GetNSList() []model.NSInfo {
-// 	url := NameSpaceUrl + "/ns"
-// 	fmt.Println("============= NameSpace URL =============", url)
-// 	// authInfo := controller.AuthenticationHandler()
-// 	// req, err := http.NewRequest("GET", url, nil)
-// 	// if err != nil {
-
-// 	// }
-// 	// req.Header.Add("Authorization", authInfo)
-// 	// client := &http.Client{}
-// 	// resp, err := client.Do(req)
-// 	// fmt.Println("=============result GetNSList =============", resp)
-// 	// //spew.Dump(resp)
-// 	// if err != nil {
-// 	// 	fmt.Println("========= GetNSList Error : ", err)
-// 	// 	fmt.Println("request URL : ", url)
-// 	// 	return nil
-// 	// }
-
-// 	// defer resp.Body.Close()
-// 	body := HttpGetHandler(url)
-// 	nsInfo := map[string][]model.NSInfo{}
-// 	defer body.Close()
-// 	json.NewDecoder(body).Decode(&nsInfo)
-// 	//spew.Dump(body)
-// 	return nsInfo["ns"]
-
-// }
-
-// func GetNSCnt() int {
-// 	url := NameSpaceUrl + "/ns"
-// 	fmt.Println("============= NameSpace URL =============", url)
-
-// 	// defer resp.Body.Close()
-// 	body := HttpGetHandler(url)
-// 	nsInfo := map[string][]model.NSInfo{}
-// 	defer body.Close()
-// 	json.NewDecoder(body).Decode(&nsInfo)
-// 	//spew.Dump(body)
-// 	if nsInfo["ns"] == nil {
-// 		return 0
-// 	} else {
-// 		return len(nsInfo["ns"])
-
-// 	}
-
-// }
-
-// 안쓰는 function인듯.
-// func RequestGet(url string) {
-// 	resp, err := http.Get(url)
-// 	if err != nil {
-// 		fmt.Println("request URL : ", url)
-// 	}
-
-// 	defer resp.Body.Close()
-// 	nameSpaceInfo := map[string][]model.NSInfo{}
-// 	fmt.Println("nameSpaceInfo type : ", reflect.TypeOf(nameSpaceInfo))
-// 	json.NewDecoder(resp.Body).Decode(&nameSpaceInfo)
-// 	fmt.Println("nameSpaceInfo : ", nameSpaceInfo["ns"][0].ID)
-// }
-
 // 사용자의 namespace 목록 조회
 func GetNameSpaceList() ([]tumblebug.NameSpaceInfo, model.WebStatus) {
 	fmt.Println("GetNameSpaceList start")
-	url := util.TUMBLEBUG + "/ns"
+	var originalUrl = "/ns"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns"
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	//body := HttpGetHandler(url)
@@ -163,9 +93,16 @@ func GetNameSpaceList() ([]tumblebug.NameSpaceInfo, model.WebStatus) {
 	return nameSpaceInfoList["ns"], model.WebStatus{StatusCode: respStatus}
 }
 
+// Get namespace
 func GetNameSpaceData(nameSpaceID string) (tumblebug.NameSpaceInfo, model.WebStatus) {
 	fmt.Println("GetNameSpaceData start")
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID
+	var originalUrl = "/ns/{nsId}"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
@@ -187,9 +124,10 @@ func GetNameSpaceData(nameSpaceID string) (tumblebug.NameSpaceInfo, model.WebSta
 // NameSpace 등록
 func RegNameSpace(nameSpaceInfo *tumblebug.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.TUMBLEBUG + "/ns"
-
-	fmt.Println("nameSpaceInfo : ", nameSpaceInfo)
+	var originalUrl = "/ns"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns"
 
 	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
 	pbytes, _ := json.Marshal(nameSpaceInfo)
@@ -205,13 +143,14 @@ func RegNameSpace(nameSpaceInfo *tumblebug.NameSpaceInfo) (io.ReadCloser, model.
 }
 
 // NameSpace 수정 : namespace 없데이트 기능 없음
-func UpdateNameSpace(nameSpaceInfo *tumblebug.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
-	// buff := bytes.NewBuffer(pbytes)
-	url := util.TUMBLEBUG + "/ns"
+func UpdateNameSpace(nameSpaceID string, nameSpaceInfo *tumblebug.NameSpaceInfo) (io.ReadCloser, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns"
 
-	fmt.Println("nameSpaceInfo : ", nameSpaceInfo)
-
-	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
 	pbytes, _ := json.Marshal(nameSpaceInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 
@@ -227,16 +166,15 @@ func UpdateNameSpace(nameSpaceInfo *tumblebug.NameSpaceInfo) (io.ReadCloser, mod
 
 // NameSpace 삭제
 func DelNameSpace(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
-	// buff := bytes.NewBuffer(pbytes)
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID
-
-	fmt.Println("nameSpaceID : ", nameSpaceID)
-
-	//body, err := util.CommonHttpPost(url, nsInfo)
+	var originalUrl = "/ns/{nsId}"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID
 
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
-	// body, err := util.CommonHttpDelete(url, pbytes)
 	if err != nil {
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}

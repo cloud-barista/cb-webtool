@@ -18,11 +18,17 @@ import (
 
 // VM 에 모니터링 Agent 설치
 ///ns/{nsId}/monitoring/install/mcis/{mcisId}
-func RegMonitoringAgentInVm(nameSpaceID string, vmMonitoringAgentReg *tumblebug.VmMonitoringAgentReg) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
+func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *tumblebug.VmMonitoringAgentReg) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
 	fmt.Println("RegMonitoringAgentInVm ************ : ")
+	var originalUrl = "/ns/{nsId}/monitoring/install/mcis/{mcisId}"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/monitoring/install/mcis/"
-	// /ns/{nsId}/monitoring/install/mcis/{mcisId}
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/monitoring/install/mcis/"
 
 	pbytes, _ := json.Marshal(vmMonitoringAgentReg)
 	fmt.Println(string(pbytes))
@@ -54,9 +60,16 @@ func RegMonitoringAgentInVm(nameSpaceID string, vmMonitoringAgentReg *tumblebug.
 
 // Get Monitoring Data
 func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/monitoring/mcis/{mcisId}/metric/{metric}"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/monitoring/mcis/" + mcisID + "/metric/" + metric
-	// /ns/{nsId}/monitoring/mcis/{mcisId}/metric/{metric}
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{metric}"] = metric
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/monitoring/mcis/" + mcisID + "/metric/" + metric
 
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
@@ -66,7 +79,6 @@ func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (
 		fmt.Println(err)
 		return &vmMonitoringAgentInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
@@ -78,11 +90,34 @@ func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (
 }
 
 // VM monitoring
+// Get vm monitoring info
+// 멀티 클라우드 인프라 VM 모니터링 정보 조회
 func GetVmMonitoring(vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitoringInfo, model.WebStatus) {
-	////var url = DragonFlyURL+"/ns/"+NAMESPACE+
+	nameSpaceID := vmMonitoring.NameSpaceID
+	mcisID := vmMonitoring.McisID
+	vmID := vmMonitoring.VmID
+	metric := vmMonitoring.Metric
+	periodType := vmMonitoring.PeriodType
+	statisticsCriteria := vmMonitoring.StatisticsCriteria
+	duration := vmMonitoring.Duration
+
+	var originalUrl = "/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/metric/:metric_name/info?periodType={periodType}&statisticsCriteria={statisticsCriteria}&duration={duration}"
+	//{{ip}}:{{port}}/dragonfly/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/metric/:metric_name/info?periodType=m&statisticsCriteria=last&duration=5m
+	var paramMapper = make(map[string]string)
+	paramMapper[":ns_id"] = nameSpaceID
+	paramMapper[":mcis_id"] = mcisID
+	paramMapper[":vm_id"] = vmID
+	paramMapper["{metric}"] = metric
+	paramMapper["{periodType}"] = periodType
+	paramMapper["{statisticsCriteria}"] = statisticsCriteria
+	paramMapper["{duration}"] = duration
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.DRAGONFLY + urlParam
+
 	//"/mcis/"+mcis_id+"/vm/"+vm_id+"/metric/"+metric+"/info?periodType="+periodType+"&statisticsCriteria="+statisticsCriteria+"&duration="+duration;
-	urlParam := "periodType=" + vmMonitoring.PeriodType + "&statisticsCriteria=" + vmMonitoring.StatisticsCriteria + "&duration=" + vmMonitoring.Duration
-	url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID + "/metric/" + vmMonitoring.Metric + "/info?" + urlParam
+	// urlParam := "periodType=" + vmMonitoring.PeriodType + "&statisticsCriteria=" + vmMonitoring.StatisticsCriteria + "&duration=" + vmMonitoring.Duration
+	// url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID + "/metric/" + vmMonitoring.Metric + "/info?" + urlParam
 
 	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
@@ -105,11 +140,29 @@ func GetVmMonitoring(vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitor
 }
 
 // 멀티 클라우드 인프라 VM 온디맨드 모니터링 정보 조회
-func GetMcisMonitoringMetricInfo(vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitoringInfo, model.WebStatus) {
+// Get MCIS on-demand monitoring metric info
+func GetMcisMonitoringMetricInfo(agentIp string, metricName string, vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitoringInfo, model.WebStatus) {
+	nameSpaceID := vmMonitoring.NameSpaceID
+	mcisID := vmMonitoring.McisID
+	vmID := vmMonitoring.VmID
+	// agentIp := vmMonitoring.AgentIp
+	// metricName := vmMonitoring.MetricName
+
+	var originalUrl = "/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/agent_ip/:agent_ip/mcis_metric/:metric_name/mcis-monitoring-info"
+	//{{ip}}:{{port}}/dragonfly/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/agent_ip/:agent_ip/mcis_metric/:metric_name/mcis-monitoring-info
+	var paramMapper = make(map[string]string)
+	paramMapper[":ns_id"] = nameSpaceID
+	paramMapper[":mcis_id"] = mcisID
+	paramMapper[":vm_id"] = vmID
+	paramMapper[":agent_ip"] = agentIp
+	paramMapper[":metric_name"] = metricName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.DRAGONFLY + urlParam
 
 	// url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID + "/agent_ip/" + vmMonitoring.AgentIP + "/mcis_metric/" + vmMonitoring.MetricName + "/mcis-monitoring-info"
-	url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID // TODO : 객체에 parameter추가해야 함
-	//{{ip}}:{{port}}/dragonfly/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/agent_ip/:agent_ip/mcis_metric/:metric_name/mcis-monitoring-info
+	// url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID // TODO : 객체에 parameter추가해야 함
+
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
@@ -130,10 +183,14 @@ func GetMcisMonitoringMetricInfo(vmMonitoring *dragonfly.VmMonitoring) (*dragonf
 }
 
 // 모니터링 정책 조회
+// Get monitoring config
 func GetMonitoringConfig() (*dragonfly.MonitoringConfig, model.WebStatus) {
+	var originalUrl = "/config"
+	//{{ip}}:{{port}}/dragonfly/config
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
-	url := util.DRAGONFLY + "/config"
-	// {{ip}}:{{port}}/dragonfly/config
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/config"
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
@@ -155,7 +212,12 @@ func GetMonitoringConfig() (*dragonfly.MonitoringConfig, model.WebStatus) {
 
 // 모니터링 정책 설정
 func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonfly.MonitoringConfig, model.WebStatus) {
-	url := util.DRAGONFLY + "/config"
+	var originalUrl = "/config"
+	//{{ip}}:{{port}}/dragonfly/config
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/config"
 
 	fmt.Println("UpdateMonigoringConfig : ")
 
@@ -192,9 +254,12 @@ func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonf
 
 // 모니터링 정책 초기화
 func ResetMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonfly.MonitoringConfig, model.WebStatus) {
-	url := util.DRAGONFLY + "/config/reset"
+	var originalUrl = "/config/reset"
+	//{{ip}}:{{port}}/dragonfly/config/reset
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
-	fmt.Println("ResetMonigoringConfig : ", url)
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/config/reset"
 
 	resp, err := util.CommonHttp(url, nil, http.MethodPut)
 	resultMonitoringConfig := dragonfly.MonitoringConfig{}
@@ -228,9 +293,12 @@ func ResetMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*drago
 // Install agent to vm
 // 모니터링 에이전트 설치 : 위에 RegMonitoringAgentInVm 와 뭐가 다른거지?
 func InstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.VmMonitoringInstallReg) (*dragonfly.VmMonitoringInstallReg, model.WebStatus) {
+	var originalUrl = "/agent/install"
+	//{{ip}}:{{port}}/dragonfly/agent/install
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
-	url := util.DRAGONFLY + "/agent/install/"
-	// {{ip}}:{{port}}/dragonfly/agent/install
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/agent/install/"
 
 	pbytes, _ := json.Marshal(vmMonitoringInstallReg)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
@@ -263,9 +331,12 @@ func InstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.VmMo
 // 모니터링 에이전트 제거
 // Uninstall agent to vm
 func UnInstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.VmMonitoringInstallReg) (*dragonfly.VmMonitoringInstallReg, model.WebStatus) {
+	var originalUrl = "/agent/uninstall"
+	//{{ip}}:{{port}}/dragonfly/agent/uninstall
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
-	url := util.DRAGONFLY + "/agent/uninstall/"
-	// {{ip}}:{{port}}/dragonfly/agent/uninstall
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/agent/uninstall/"
 
 	pbytes, _ := json.Marshal(vmMonitoringInstallReg)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
@@ -298,10 +369,13 @@ func UnInstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.Vm
 // 알람 목록 조회
 // List monitoring alert
 func GetMonitoringAlertList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
-
-	url := util.DRAGONFLY + "/alert/tasks"
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	var originalUrl = "/alert/tasks"
 	// {{ip}}:{{port}}/dragonfly/alert/tasks
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/tasks"
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
@@ -320,10 +394,15 @@ func GetMonitoringAlertList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatu
 // 알람  조회
 // monitoring alert
 func GetMonitoringAlertData(taskName string) (dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
-
-	url := util.DRAGONFLY + "/alert/task/" + taskName
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	var originalUrl = "/alert/task/:task_name"
 	// {{ip}}:{{port}}/dragonfly/alert/task/:task_name
+	var paramMapper = make(map[string]string)
+	paramMapper[":task_name"] = taskName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/task/" + taskName
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
 	vmMonitoringAlertInfo := dragonfly.VmMonitoringAlertInfo{}
 	if err != nil {
@@ -343,9 +422,12 @@ func GetMonitoringAlertData(taskName string) (dragonfly.VmMonitoringAlertInfo, m
 // Create Monitoring Alert
 func RegMonitoringAlert(vmMonitoringAlertInfo *dragonfly.VmMonitoringAlertInfo) (*dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
 	fmt.Println("RegMonitoringAlert ************ : ")
-
-	url := util.DRAGONFLY + "/alert/task"
+	var originalUrl = "/alert/task"
 	// {{ip}}:{{port}}/dragonfly/alert/task
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/task"
 
 	pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
 	fmt.Println(string(pbytes))
@@ -379,9 +461,12 @@ func RegMonitoringAlert(vmMonitoringAlertInfo *dragonfly.VmMonitoringAlertInfo) 
 // Update Monitoring Alert
 func PutMonitoringAlert(taskName string, vmMonitoringAlertInfo *dragonfly.VmMonitoringAlertInfo) (*dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
 	fmt.Println("PutMonitoringAlert ************ : ")
-
-	url := util.DRAGONFLY + "/alert/task/" + taskName
+	var originalUrl = "/alert/task"
 	// {{ip}}:{{port}}/dragonfly/alert/task
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/task/" + taskName
 
 	pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
 	fmt.Println(string(pbytes))
@@ -414,10 +499,14 @@ func PutMonitoringAlert(taskName string, vmMonitoringAlertInfo *dragonfly.VmMoni
 // 알람 제거
 // Delete Monitoring Alert
 func DelMonitoringAlert(taskName string) (io.ReadCloser, model.WebStatus) {
-	// buff := bytes.NewBuffer(pbytes)
-	url := util.DRAGONFLY + "/alert/task/" + taskName
-	// /ns/{nsId}/mcis/{mcisId}
-	fmt.Println("url : ", url)
+	var originalUrl = "/alert/task/:task_name"
+	// {{ip}}:{{port}}/dragonfly/alert/task/:task_name
+	var paramMapper = make(map[string]string)
+	paramMapper[":task_name"] = taskName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/task/" + taskName
 
 	if taskName == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "TaskName is required"}
@@ -440,9 +529,16 @@ func DelMonitoringAlert(taskName string) (io.ReadCloser, model.WebStatus) {
 // type : 이벤트 핸들러 유형 ( "slack" | "smtp" )
 // name : slackHandler(EventHandlerName)
 func GetMonitoringAlertEventHandlerData(eventHandlerType string, eventName string) (dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
-
-	url := util.DRAGONFLY + "/alert/eventhandler/type/" + eventHandlerType + "/event/" + eventName
+	var originalUrl = "/alert/eventhandler/type/:type/event/:name"
 	//{{ip}}:{{port}}/dragonfly/alert/eventhandler/type/:type/event/:name
+	var paramMapper = make(map[string]string)
+	paramMapper[":type"] = eventHandlerType
+	paramMapper[":name"] = eventName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/eventhandler/type/" + eventHandlerType + "/event/" + eventName
+
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
 	vmMonitoringAlertInfo := dragonfly.VmMonitoringAlertInfo{}
@@ -463,9 +559,12 @@ func GetMonitoringAlertEventHandlerData(eventHandlerType string, eventName strin
 // Create monitoring alert event-handler
 func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfo *dragonfly.VmMonitoringAlertEventHandlerInfo) (*dragonfly.VmMonitoringAlertEventHandlerInfo, model.WebStatus) {
 	fmt.Println("RegMonitoringAlertEventHandler ************ : ")
-
-	url := util.DRAGONFLY + "/alert/eventhandler"
+	var originalUrl = "/alert/eventhandler"
 	// {{ip}}:{{port}}/dragonfly/alert/eventhandler
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/eventhandler"
 
 	pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfo)
 	fmt.Println(string(pbytes))
@@ -496,17 +595,23 @@ func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfo *dragonfly
 }
 
 // 알람 이벤트 핸들러 수정( handlerType=slack)
-func PutMonitoringAlertEventHandlerSlack(eventHandlerType string, eventName string, vmMonitoringAlertEventHandlerInfo *dragonfly.VmMonitoringAlertEventHandlerInfo) (*dragonfly.VmMonitoringAlertEventHandlerInfo, model.WebStatus) {
+func PutMonitoringAlertEventHandlerSlack(eventHandlerType string, eventName string, vmMonitoringAlertEventHandlerSlackInfo *dragonfly.EventHandlerOptionSlack) (*dragonfly.VmMonitoringAlertEventHandlerSlackInfo, model.WebStatus) {
 	fmt.Println("PutMonitoringAlertEventHandler ************ : ")
-
-	url := util.DRAGONFLY + "/alert/eventhandler/type/" + eventHandlerType + "/event/" + eventName
+	var originalUrl = "/alert/eventhandler/type/:type/event/:name"
 	// {{ip}}:{{port}}/dragonfly/alert/eventhandler/type/:type/event/:name
+	var paramMapper = make(map[string]string)
+	paramMapper[":type"] = eventHandlerType
+	paramMapper[":name"] = eventName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfo)
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/eventhandler/type/" + eventHandlerType + "/event/" + eventName
+
+	pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerSlackInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 
-	resultVmMonitoringAlertEventHandlerInfo := dragonfly.VmMonitoringAlertEventHandlerInfo{}
+	resultVmMonitoringAlertEventHandlerInfo := dragonfly.VmMonitoringAlertEventHandlerSlackInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &resultVmMonitoringAlertEventHandlerInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -531,17 +636,24 @@ func PutMonitoringAlertEventHandlerSlack(eventHandlerType string, eventName stri
 }
 
 // 알람 이벤트 핸들러 수정( handlerType=smtp)
-func PutMonitoringAlertEventHandlerSmtp(eventHandlerType string, eventName string, vmMonitoringAlertEventHandlerInfo *dragonfly.VmMonitoringAlertEventHandlerInfo) (*dragonfly.VmMonitoringAlertEventHandlerInfo, model.WebStatus) {
+func PutMonitoringAlertEventHandlerSmtp(eventHandlerType string, eventName string, vmMonitoringAlertEventHandlerInfo *dragonfly.EventHandlerOptionSmtp) (*dragonfly.VmMonitoringAlertEventHandlerSmtpInfo, model.WebStatus) {
 	fmt.Println("PutMonitoringAlertEventHandlerSmtp ************ : ")
+	var originalUrl = "/alert/eventhandler/type/:type/event/:name"
+	// {{ip}}:{{port}}/dragonfly/alert/eventhandler/type/:type/event/:name
+	var paramMapper = make(map[string]string)
+	paramMapper[":type"] = eventHandlerType
+	paramMapper[":name"] = eventName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.DRAGONFLY + "/alert/eventhandler/type/" + eventHandlerType + "/event/" + eventName
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/eventhandler/type/" + eventHandlerType + "/event/" + eventName
 	// {{ip}}:{{port}}/dragonfly/alert/eventhandler/type/:type/event/:name
 
 	pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 
-	resultVmMonitoringAlertEventHandlerInfo := dragonfly.VmMonitoringAlertEventHandlerInfo{}
+	resultVmMonitoringAlertEventHandlerInfo := dragonfly.VmMonitoringAlertEventHandlerSmtpInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &resultVmMonitoringAlertEventHandlerInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -567,17 +679,22 @@ func PutMonitoringAlertEventHandlerSmtp(eventHandlerType string, eventName strin
 
 // 알람 제거
 // Delete monitoring alert event-handler
-func DelMonitoringAlertEventHandler(eventHandlerType string, eventHandlerName string) (io.ReadCloser, model.WebStatus) {
-
-	url := util.DRAGONFLY + "/alert/eventhandler/type/" + eventHandlerType + "/event/" + eventHandlerName
+func DelMonitoringAlertEventHandler(eventHandlerType string, eventName string) (io.ReadCloser, model.WebStatus) {
+	var originalUrl = "/alert/eventhandler/type/:type/event/:name"
 	// {{ip}}:{{port}}/dragonfly/alert/eventhandler/type/:type/event/:name
-	fmt.Println("url : ", url)
+	var paramMapper = make(map[string]string)
+	paramMapper[":type"] = eventHandlerType
+	paramMapper[":name"] = eventName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/eventhandler/type/" + eventHandlerType + "/event/" + eventName
 
 	if eventHandlerType == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "eventHandlerType is required"}
 	}
-	if eventHandlerName == "" {
-		return nil, model.WebStatus{StatusCode: 500, Message: "eventHandlerName is required"}
+	if eventName == "" {
+		return nil, model.WebStatus{StatusCode: 500, Message: "eventName is required"}
 	}
 
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
@@ -594,11 +711,19 @@ func DelMonitoringAlertEventHandler(eventHandlerType string, eventHandlerName st
 
 // 알람 로그 정보 목록 조회
 // List monitoring alert event
-func GetMonitoringAlertLogList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
-
-	url := util.DRAGONFLY + "/alert/task"
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+func GetMonitoringAlertLogList(taskName string, logLevel string) ([]dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
+	if logLevel == "" {
+		logLevel = "warning"
+	}
+	var originalUrl = "/alert/task/:task_name/events?level={logLevel}"
 	// {{ip}}:{{port}}/dragonfly/alert/task/:task_name/events?level=warning
+	var paramMapper = make(map[string]string)
+	paramMapper[":task_name"] = taskName
+	paramMapper["{logLevel}"] = logLevel
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.DRAGONFLY + urlParam
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)

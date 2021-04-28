@@ -108,13 +108,14 @@ func NameSpaceUpdateProc(c echo.Context) error {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	nameSpaceInfo := new(tumblebug.NameSpaceInfo)
 	if err := c.Bind(nameSpaceInfo); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	respBody, respStatus := service.UpdateNameSpace(nameSpaceInfo)
+	respBody, respStatus := service.UpdateNameSpace(defaultNameSpaceID, nameSpaceInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{

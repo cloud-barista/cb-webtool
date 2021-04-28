@@ -24,8 +24,14 @@ import (
 
 // MCIS 목록 조회
 func GetMcisList(nameSpaceID string) ([]tumblebug.McisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
@@ -48,9 +54,15 @@ func GetMcisList(nameSpaceID string) ([]tumblebug.McisInfo, model.WebStatus) {
 
 // 특정 MCIS 조회
 func GetMcisData(nameSpaceID string, mcisID string) (*tumblebug.McisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
-	// /ns/{nsId}/mcis/{mcisId}
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
 
 	// 	// resp, err := http.Get(url)
 	// 	// if err != nil {
@@ -95,8 +107,14 @@ func GetMcisData(nameSpaceID string, mcisID string) (*tumblebug.McisInfo, model.
 
 // MCIS 등록. VM도 함께 등록
 func RegMcis(nameSpaceID string, mcisInfo *tumblebug.McisInfo) (*tumblebug.McisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 
 	pbytes, _ := json.Marshal(mcisInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
@@ -367,8 +385,16 @@ func GetVmConnectionCountByMcis(mcisInfo tumblebug.McisInfo) map[string]int {
 
 // MCIS의 특정 VM 조회
 func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tumblebug.VmInfo, model.WebStatus) {
-	///ns/{nsId}/mcis/{mcisId}/vm/{vmId}
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
 
 	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
@@ -379,7 +405,6 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tumblebug
 		fmt.Println(err)
 		return &vmInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
@@ -387,20 +412,25 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tumblebug
 	json.NewDecoder(respBody).Decode(&vmInfo)
 	fmt.Println(vmInfo)
 
-	// resultBody, err := ioutil.ReadAll(respBody)
-	// if err == nil {
-	// 	str := string(resultBody)
-	// 	println(str)
-	// }
-	// pbytes, _ := json.Marshal(respBody)
-	// fmt.Println(string(pbytes))
-
 	return &vmInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // MCIS의 Status변경
 func McisLifeCycle(mcisLifeCycle *tumblebug.McisLifeCycle) (*tumblebug.McisLifeCycle, model.WebStatus) {
-	url := util.TUMBLEBUG + "/ns/" + mcisLifeCycle.NameSpaceID + "/mcis/" + mcisLifeCycle.McisID + "?action=" + mcisLifeCycle.LifeCycleType
+	nameSpaceID := mcisLifeCycle.NameSpaceID
+	mcisID := mcisLifeCycle.McisID
+	lifeCycleType := mcisLifeCycle.LifeCycleType
+
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}?action={type}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{type}"] = lifeCycleType
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + mcisLifeCycle.NameSpaceID + "/mcis/" + mcisLifeCycle.McisID + "?action=" + mcisLifeCycle.LifeCycleType
 	//// var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
 	pbytes, _ := json.Marshal(mcisLifeCycle)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
@@ -431,8 +461,17 @@ func McisLifeCycle(mcisLifeCycle *tumblebug.McisLifeCycle) (*tumblebug.McisLifeC
 
 // MCIS의 VM Status변경
 func McisVmLifeCycle(vmLifeCycle *tumblebug.VmLifeCycle) (*tumblebug.VmLifeCycle, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}?action={type}"
 
-	url := util.TUMBLEBUG + "/ns/" + vmLifeCycle.NameSpaceID + "/mcis/" + vmLifeCycle.McisID + "/vm/" + vmLifeCycle.VmID + "?action=" + vmLifeCycle.LifeCycleType
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = vmLifeCycle.NameSpaceID
+	paramMapper["{mcisId}"] = vmLifeCycle.McisID
+	paramMapper["{vmId}"] = vmLifeCycle.VmID
+	paramMapper["{type}"] = vmLifeCycle.LifeCycleType
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + vmLifeCycle.NameSpaceID + "/mcis/" + vmLifeCycle.McisID + "/vm/" + vmLifeCycle.VmID + "?action=" + vmLifeCycle.LifeCycleType
 	///url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
 	pbytes, _ := json.Marshal(vmLifeCycle)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
@@ -444,30 +483,28 @@ func McisVmLifeCycle(vmLifeCycle *tumblebug.VmLifeCycle) (*tumblebug.VmLifeCycle
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	// respStatus := resp.Status
-	// log.Println("respStatusCode = ", respStatusCode)
-	// log.Println("respStatus = ", respStatus)
 
 	// 응답에 생성한 객체값이 옴
-
 	json.NewDecoder(respBody).Decode(resultVmLifeCycle)
 	fmt.Println(resultVmLifeCycle)
 
-	// return body, err
-	// respBody := resp.Body
-	// respStatus := resp.StatusCode
-	// return respBody, respStatus
 	return &resultVmLifeCycle, model.WebStatus{StatusCode: respStatus}
-
 }
 
 // 벤치마크?? MCIS 조회. 근데 왜 결과는 resultarray지?
 // TODO : 여러개 return되면 method이름을 xxxData -> xxxList 로 바꿀 것
-func GetBenchmarkMcisData(nameSpaceID string, mcisID string, host string) (*[]tumblebug.McisBenchmarkInfo, model.WebStatus) {
-	// func GetMCIS(nsid string, mcisId string) []McisInfo {
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/benchmark/mcis/" + mcisID
+func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string) (*[]tumblebug.McisBenchmarkInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/benchmark/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/benchmark/mcis/" + mcisID
 	// /ns/{nsId}/benchmark/mcis/{mcisId}
-	pbytes, _ := json.Marshal(host)
+	pbytes, _ := json.Marshal(hostIp)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	// defer body.Close()
@@ -487,11 +524,19 @@ func GetBenchmarkMcisData(nameSpaceID string, mcisID string, host string) (*[]tu
 	return &resultBenchmarkInfos, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, host string) (*[]tumblebug.McisBenchmarkInfo, model.WebStatus) {
+// List all MCISs
+func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) (*[]tumblebug.McisBenchmarkInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/benchmarkall/mcis/{mcisId}"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/benchmark/mcis/" + mcisID
-	// /ns/{nsId}/benchmark/mcis/{mcisId}
-	pbytes, _ := json.Marshal(host)
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/benchmark/mcis/" + mcisID
+
+	pbytes, _ := json.Marshal(hostIp)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	// defer body.Close()
@@ -500,7 +545,6 @@ func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, host string) (*[
 		fmt.Println(err)
 		return &resultBenchmarkInfos, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
@@ -513,10 +557,18 @@ func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, host string) (*[
 
 // MCIS에 명령 내리기
 func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo) (*tumblebug.McisCommandResult, model.WebStatus) {
-
 	mcisID := mcisCommandInfo.McisID
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/cmd/mcis/" + mcisID
-	// /ns/{nsId}/cmd/mcis/{mcisId}
+
+	var originalUrl = "/ns/{nsId}/cmd/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/cmd/mcis/" + mcisID
+
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
@@ -570,11 +622,20 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo)
 
 // 특정 VM에 명령내리기
 func CommandVMOfMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo) (*tumblebug.McisCommandResult, model.WebStatus) {
-
 	mcisID := mcisCommandInfo.McisID
 	vmID := mcisCommandInfo.VmID
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
-	// /ns/{nsId}/cmd/mcis/{mcisId}/vm/{vmId}
+
+	var originalUrl = "/ns/{nsId}/cmd/mcis/{mcisId}/vm/{vmId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
+
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
@@ -629,9 +690,17 @@ func CommandVMOfMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandI
 
 //Install the benchmark agent to specified MCIS
 func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo) (*tumblebug.McisCommandResult, model.WebStatus) {
-
 	mcisID := mcisCommandInfo.McisID
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
+
+	var originalUrl = "/ns/{nsId}/install/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
 	// /ns/{nsId}/install/mcis/{mcisId}
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
@@ -685,22 +754,24 @@ func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisCommandInfo *tumblebug.
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
+// Delete All MCISs
 func DelAllMcis(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
-	// buff := bytes.NewBuffer(pbytes)
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/"
-	// /ns/{nsId}/mcis/{mcisId}
-	fmt.Println("url : ", url)
+	var originalUrl = "/ns/{nsId}/mcis"
 
-	//body, err := util.CommonHttpPost(url, nsInfo)
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/"
 
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
-	// body, err := util.CommonHttpDelete(url, pbytes)
 	if err != nil {
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	// return body, err
+
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
@@ -709,25 +780,25 @@ func DelAllMcis(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 
 // MCIS 삭제. TODO : 해당 namespace의 MCIS만 삭제 가능... 창 두개에서 1개는 MCIS삭제, 1개는 namespace 변경이 있을 수 있으므로 UI에서 namespace도 넘겨서 비교할 것.
 func DelMcis(nameSpaceID string, mcisID string) (io.ReadCloser, model.WebStatus) {
-	// buff := bytes.NewBuffer(pbytes)
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
-	// /ns/{nsId}/mcis/{mcisId}
-	fmt.Println("url : ", url)
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
 
 	if mcisID == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "MCIS ID is required"}
 	}
 
-	//body, err := util.CommonHttpPost(url, nsInfo)
-
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
-	// body, err := util.CommonHttpDelete(url, pbytes)
 	if err != nil {
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 	return respBody, model.WebStatus{StatusCode: respStatus}
@@ -735,8 +806,16 @@ func DelMcis(nameSpaceID string, mcisID string) (io.ReadCloser, model.WebStatus)
 
 // MCIS에 VM 생성. path에 mcisID가 있음. VMInfo에는 mcisID가 없음.
 func RegVM(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) (*tumblebug.VmInfo, model.WebStatus) {
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm"
-	// /ns/{nsId}/mcis/{mcisId}/vm
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm"
+
 	pbytes, _ := json.Marshal(vmInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
@@ -790,10 +869,17 @@ func RegVM(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) (*tumble
 }
 
 func DelVM(nameSpaceID string, mcisID string, vmID string) (io.ReadCloser, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm"
 	// /ns/{nsId}/mcis/{mcisId}/vm/{vmId}
-	fmt.Println("url : ", url)
 
 	if vmID == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "vmID ID is required"}
@@ -814,9 +900,16 @@ func DelVM(nameSpaceID string, mcisID string, vmID string) (io.ReadCloser, model
 
 // 특정 VM 조회
 func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tumblebug.VmInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
-	// /ns/{nsId}/mcis/{mcisId}/vm/{vmId}
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID + "/vm/" + vmID
 
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
@@ -839,8 +932,15 @@ func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tumblebug.VmInf
 
 // Get MCIS recommendation
 func GetMcisRecommand(nameSpaceID string, mcisID string, mcisRecommandReq *tumblebug.McisRecommendReq) (*tumblebug.McisRecommendInfo, model.WebStatus) {
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/recommend"
-	// /ns/{nsId}/mcis/recommend
+	var originalUrl = "/ns/{nsId}/mcis/recommend"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/recommend"
+
 	pbytes, _ := json.Marshal(mcisRecommandReq)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
