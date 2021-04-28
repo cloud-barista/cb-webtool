@@ -310,17 +310,20 @@ func LoginProc(c echo.Context) error {
 	fmt.Println("============== Login proc ===============")
 	store := echosession.FromContext(c) // store내 param은 모두 소문자.
 
-	reqInfo := new(model.ReqInfo)
-	if err := c.Bind(reqInfo); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "fail",
-			"status":  "fail",
-		})
-	}
+	// reqInfo := new(model.ReqInfo)
+	// if err := c.Bind(reqInfo); err != nil {
+	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 		"message": "fail",
+	// 		"status":  "fail",
+	// 	})
+	// }
 
-	paramUserID := strings.TrimSpace(reqInfo.UserID)
-	// paramEmail := strings.TrimSpace(reqInfo.Email)
-	paramPass := strings.TrimSpace(reqInfo.Password)
+	// paramUserID := strings.TrimSpace(reqInfo.UserID)
+	// // paramEmail := strings.TrimSpace(reqInfo.Email)
+	// paramPass := strings.TrimSpace(reqInfo.Password)
+
+	paramUserID := c.FormValue("userID")
+	paramPass := c.FormValue("password")
 	fmt.Println("paramUser & getPass : ", paramUserID, paramPass)
 
 	// echoSession에서 가져오기
