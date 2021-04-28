@@ -134,6 +134,8 @@ func ApiCall(c echo.Context) error {
 		apiTarget = util.TUMBLEBUG
 	} else if params["ApiTarget"] == "DRAGONFLY" {
 		apiTarget = util.DRAGONFLY
+	} else if params["ApiTarget"] == "LADYBUG" {
+		apiTarget = util.LADYBUG
 	}
 
 	apiMethod := ""
