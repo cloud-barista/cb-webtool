@@ -27,7 +27,7 @@ $(document).ready(function(){
 
             console.log(req)
             var url = "/login/proc";
-            azios.post(url, frm)
+            axios.post(url, frm)
             // axios.post("/login/proc",{
             //     headers: { },
             //     userID:userID,password:password 
