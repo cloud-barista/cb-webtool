@@ -1,4 +1,4 @@
-package model
+package dragonfly
 
 // 모니터링 정책 설정
 type MonitoringConfig struct {

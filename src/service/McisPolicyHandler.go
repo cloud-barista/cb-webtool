@@ -15,11 +15,16 @@ import (
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
 
-//
+// List all MCIS Policys
 func GetMcisPolicyList(nameSpaceID string) ([]tumblebug.McisPolicyInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/policy/mcis"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis"
-	///ns/{nsId}/policy/mcis
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis"
 
 	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
@@ -43,9 +48,14 @@ func GetMcisPolicyList(nameSpaceID string) ([]tumblebug.McisPolicyInfo, model.We
 
 // Get McisPolish Data
 func GetMcisPolicyInfoData(nameSpaceID string, mcisID string) (*tumblebug.McisPolicyInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/policy/mcis/{mcisId}"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis/" + mcisID
-	// /ns/{nsId}/policy/mcis/{mcisId}
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis/" + mcisID
 
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
@@ -68,9 +78,14 @@ func GetMcisPolicyInfoData(nameSpaceID string, mcisID string) (*tumblebug.McisPo
 
 //
 func RegMcisPolicy(nameSpaceID string, mcisID string, mcisPolicyInfo *tumblebug.McisPolicyInfo) (*tumblebug.McisPolicyInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/policy/mcis/{mcisId}"
 
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis" + mcisID
-	// /ns/{nsId}/policy/mcis/{mcisId}
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis" + mcisID
 
 	pbytes, _ := json.Marshal(mcisPolicyInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
@@ -102,10 +117,14 @@ func RegMcisPolicy(nameSpaceID string, mcisID string, mcisPolicyInfo *tumblebug.
 
 //
 func DelAllMcisPolicy(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
-	// buff := bytes.NewBuffer(pbytes)
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis"
-	// /ns/{nsId}/policy/mcis
-	fmt.Println("url : ", url)
+	var originalUrl = "/ns/{nsId}/policy/mcis"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis"
 
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
@@ -121,10 +140,14 @@ func DelAllMcisPolicy(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 }
 
 func DelMcisPolicy(nameSpaceID string, mcisID string) (io.ReadCloser, model.WebStatus) {
-	// buff := bytes.NewBuffer(pbytes)
-	url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis/" + mcisID
-	// /ns/{nsId}/policy/mcis/{mcisId}
-	fmt.Println("url : ", url)
+	var originalUrl = "/ns/{nsId}/policy/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis/" + mcisID
 
 	if mcisID == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "MCIS ID is required"}
