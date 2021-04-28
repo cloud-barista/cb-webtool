@@ -1,7 +1,7 @@
 package ladybug
 
 // ladybug
-type Node struct {
+type NodeInfo struct {
 	Credential string `json:"credential"`
 	Kind       string `json:"kind"`
 	Name       string `json:"name"`
@@ -10,4 +10,4 @@ type Node struct {
 	Spec       string `json:"spec"`
 	UID        string `json:"uid"`
 }
-type Nodes []Node
+type Nodes []NodeInfo

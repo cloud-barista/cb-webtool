@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	// "time"
 	"bytes"
@@ -59,71 +60,24 @@ func AuthenticationHandler() string {
 
 }
 
-// func CommonHttpGet(url string) (io.ReadCloser, error) {
-// 	authInfo := AuthenticationHandler()
-
-// 	fmt.Println("CommonHttpGet ", url)
-// 	req, _ := http.NewRequest("GET", url, nil)
-// 	req.Header.Add("Authorization", authInfo)
-
-// 	client := &http.Client{}
-// 	resp, err := client.Do(req)
-// 	// defer resp.Body.Close()
-
-// 	return resp.Body, err
-// }
-
-// func CommonHttpPost(url string, json []byte) (io.ReadCloser, error) {
-// 	authInfo := AuthenticationHandler()
-
-// 	fmt.Println("CommonHttpPost ", url)
-// 	client := &http.Client{}
-// 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	// set the request header Content-Type for json
-// 	// req.Header.Set("Content-Type", "application/json; charset=utf-8")
-// 	req.Header.Add("Authorization", authInfo)
-// 	resp, err := client.Do(req)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	fmt.Println(resp.StatusCode)
-// 	defer resp.Body.Close()
-
-// 	return resp.Body, err
-// }
-
-// 호출 전 json.Marshal로 byte형태로 바꾸어 호출. json []byte로 받으면 공통으로 사용가능하므로
-// func CommonHttpDelete(url string, json []byte) (io.ReadCloser, error) {
-// 	authInfo := AuthenticationHandler()
-
-// 	fmt.Println("CommonHttpDelete ", url)
-// 	client := &http.Client{}
-// 	req, err := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer(json))
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	// set the request header Content-Type for json
-// 	// req.Header.Set("Content-Type", "application/json; charset=utf-8")
-// 	req.Header.Add("Authorization", authInfo)
-// 	resp, err := client.Do(req)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	fmt.Println(resp.StatusCode)
-// 	defer resp.Body.Close()
-
-// 	return resp.Body, err
-// }
+// originalUrl 은 API의 전체 경로
+// parammapper 의 Key는 replace할 모든 text
+// ex1) path인 경우 {abc}
+// ex2) path인 경우 :abc
+func MappingUrlParameter(originalUrl string, paramMapper map[string]string) string {
+	returnUrl := originalUrl
+	log.Println("originalUrl= ", originalUrl)
+	if paramMapper != nil {
+		for key, replaceValue := range paramMapper {
+			returnUrl := strings.Replace(originalUrl, key, replaceValue, -1)
+			fmt.Println("Key:", key, "=>", "Element:", replaceValue+":"+returnUrl)
+		}
+	}
+	log.Println("returnUrl= ", returnUrl)
+	return returnUrl
+}
 
 // http 호출
-// func CommonHttp(url string, json []byte, httpMethod string) (io.ReadCloser, int) {
 func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, error) {
 
 	authInfo := AuthenticationHandler()
@@ -144,37 +98,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 
 	req.Header.Add("Authorization", authInfo)
 	resp, err := client.Do(req) // err 자체는 nil 이고 resp 내에 statusCode가 500임...
-	// if err != nil {
-	// 	log.Println("*********************Error*****************************")
-	// 	// v := reflect.ValueOf(err)
-	// 	// log.Println("**********************1************************")
-	// 	// log.Println(v)
-	// 	// for i := 0; i < v.NumField(); i++ {
-	// 	// 	log.Println("**********************222************************")
-	// 	// 	log.Println(v.Type().Field(i).Name)
-	// 	// 	log.Println("\t", v.Field(i))
-	// 	// }
 
-	// log.Println(" after client.do ")
-	// log.Println(err)
-	// log.Println(" after client.do22 ")
-	// log.Println(resp)
-
-	// 	// log.Println("http %d - %s ", resp.StatusCode, err)
-	// 	log.Println("********************Error End******************************")
-	// 	// log.Println(err)
-	// 	// // log.Println(errorRespBody)
-	// 	// log.Println("resp.StatusCode ", resp.StatusCode)
-	// 	// log.Println("resp.Body ", resp.Body)
-	// 	//DisplayResponse(resp) // return message 확인 용
-
-	// 	// panic(err)
-	// }
-	// DisplayResponse(resp) // return message 확인 용
-
-	// fmt.Println(resp.StatusCode)
-	// //defer resp.Body.Close()
-	// // fmt.Println("resp.Body ", resp.Body)
 	return resp, err
 }
 

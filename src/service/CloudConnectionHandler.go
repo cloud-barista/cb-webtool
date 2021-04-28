@@ -85,9 +85,9 @@ type IPStackInfo struct {
 // Cloud Provider 목록
 func GetCloudOSList() ([]string, model.WebStatus) {
 
-	// CloudConnectionUrl == SPIDER
-	url := util.SPIDER + "/cloudos"
-	// fmt.Println("=========== GetCloudOSList : ", url)
+	var originalUrl = "/cloudos"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+	url := util.SPIDER + urlParam
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// defer resp.Close()
@@ -131,10 +131,9 @@ func GetCloudConnectionCountMap(cloudConnectionConfigInfoList []spider.CloudConn
 
 // 현재 설정된 connection 목록 GetConnectionConfigListData -> GetCloudConnectionConfigList로 변경
 func GetCloudConnectionConfigList() ([]spider.CloudConnectionConfigInfo, model.WebStatus) {
-
-	// CloudConnectionUrl == SPIDER
-	url := util.SPIDER + "/connectionconfig"
-	// fmt.Println("=========== GetCloudConnectionConfigList : ", url)
+	var originalUrl = "/connectionconfig"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+	url := util.SPIDER + urlParam
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// defer body.Close()
@@ -156,7 +155,15 @@ func GetCloudConnectionConfigList() ([]spider.CloudConnectionConfigInfo, model.W
 
 // Connection 상세
 func GetCloudConnectionConfigData(configName string) (spider.CloudConnectionConfigInfo, model.WebStatus) {
-	url := util.SPIDER + "/connectionconfig/" + configName
+	var originalUrl = "/connectionconfig/{{config_name}}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{{config_name}}"] = configName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
+
+	// url := util.SPIDER + "/connectionconfig/" + configName
 	fmt.Println("=========== GetCloudConnectionConfigData : ", configName)
 	cloudConnectionConfigInfo := spider.CloudConnectionConfigInfo{}
 
@@ -179,9 +186,12 @@ func GetCloudConnectionConfigData(configName string) (spider.CloudConnectionConf
 // CloudConnectionConfigInfo 등록
 // func RegCloudConnectionConfig(cloudConnectionConfigInfo *model.CloudConnectionConfigInfo) (io.ReadCloser, model.WebStatus) {
 func RegCloudConnectionConfig(cloudConnectionConfigInfo *spider.CloudConnectionConfigInfo) (*spider.CloudConnectionConfigInfo, model.WebStatus) {
+	var originalUrl = "/connectionconfig"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
+	url := util.SPIDER + urlParam
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.SPIDER + "/connectionconfig"
+	// url := util.SPIDER + "/connectionconfig"
 
 	fmt.Println("cloudConnectionConfigInfo : ", cloudConnectionConfigInfo)
 
@@ -225,8 +235,16 @@ func RegCloudConnectionConfig(cloudConnectionConfigInfo *spider.CloudConnectionC
 
 // CloudConnectionConfigInfo 삭제
 func DelCloudConnectionConfig(configName string) (io.ReadCloser, model.WebStatus) {
+	var originalUrl = "/connectionconfig/{{config_name}}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{{config_name}}"] = configName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
+
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.SPIDER + "/connectionconfig/" + configName
+	// url := util.SPIDER + "/connectionconfig/" + configName
 
 	fmt.Println("DelCloudConnectionConfig : ", configName)
 
@@ -249,9 +267,12 @@ func DelCloudConnectionConfig(configName string) (io.ReadCloser, model.WebStatus
 
 // 현재 설정된 region 목록
 func GetRegionList() ([]spider.RegionInfo, model.WebStatus) {
+	var originalUrl = "/region"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
-	// SPIDER == SPIDER
-	url := util.SPIDER + "/region"
+	url := util.SPIDER + urlParam
+
+	// url := util.SPIDER + "/region"
 	// fmt.Println("=========== GetRegionListData : ", url)
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -273,7 +294,15 @@ func GetRegionList() ([]spider.RegionInfo, model.WebStatus) {
 }
 
 func GetRegionData(regionName string) (*spider.RegionInfo, model.WebStatus) {
-	url := util.SPIDER + "/region/" + regionName
+	var originalUrl = "/region/{{region_name}}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{{region_name}}"] = regionName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
+
+	// url := util.SPIDER + "/region/" + regionName
 	fmt.Println("=========== GetRegionData : ", regionName)
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -302,8 +331,13 @@ func GetRegionData(regionName string) (*spider.RegionInfo, model.WebStatus) {
 // Region 등록
 // func RegRegion(regionInfo *spider.RegionInfo) (io.ReadCloser, model.WebStatus) {
 func RegRegion(regionInfo *spider.RegionInfo) (*spider.RegionInfo, model.WebStatus) {
+	var originalUrl = "/region"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.SPIDER + urlParam
+
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.SPIDER + "/region"
+	// url := util.SPIDER + "/region"
 
 	fmt.Println("RegRegion : ", regionInfo)
 
@@ -348,8 +382,16 @@ func RegRegion(regionInfo *spider.RegionInfo) (*spider.RegionInfo, model.WebStat
 
 // Region 삭제
 func DelRegion(regionName string) (io.ReadCloser, model.WebStatus) {
+	var originalUrl = "/region/{{region_name}}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{{region_name}}"] = regionName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
+
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.SPIDER + "/region/" + regionName
+	// url := util.SPIDER + "/region/" + regionName
 
 	fmt.Println("DelRegion : ", regionName)
 
@@ -372,9 +414,13 @@ func DelRegion(regionName string) (io.ReadCloser, model.WebStatus) {
 
 // 현재 설정된 credential 목록 : 목록에서는 key의 value는 ...으로 표시
 func GetCredentialList() ([]spider.CredentialInfo, model.WebStatus) {
+	var originalUrl = "/credential"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.SPIDER + urlParam
 
 	// SPIDER == SPIDER
-	url := util.SPIDER + "/credential"
+	// url := util.SPIDER + "/credential"
 	// fmt.Println("=========== GetRegionListData : ", url)
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -407,7 +453,15 @@ func GetCredentialList() ([]spider.CredentialInfo, model.WebStatus) {
 
 // Credential 상세조회
 func GetCredentialData(credentialName string) (*spider.CredentialInfo, model.WebStatus) {
-	url := util.SPIDER + "/credential/" + credentialName
+	var originalUrl = "/credential/{{credential_name}}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{{credential_name}}"] = credentialName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
+
+	// url := util.SPIDER + "/credential/" + credentialName
 	fmt.Println("=========== GetCredentialData : ", credentialName)
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -429,8 +483,10 @@ func GetCredentialData(credentialName string) (*spider.CredentialInfo, model.Web
 
 // Credential 등록
 func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInfo, model.WebStatus) {
-	// buff := bytes.NewBuffer(pbytes)
-	url := util.SPIDER + "/credential"
+	var originalUrl = "/credential"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.SPIDER + urlParam
 
 	fmt.Println("RegCredential : ", credentialInfo)
 
@@ -475,9 +531,15 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 
 // Credential 삭제
 func DelCredential(credentialName string) (io.ReadCloser, model.WebStatus) {
+	var originalUrl = "/credential/{{credential_name}}"
 
+	var paramMapper = make(map[string]string)
+	paramMapper["{{credential_name}}"] = credentialName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.SPIDER + "/credential/" + credentialName
+	// url := util.SPIDER + "/credential/" + credentialName
 
 	fmt.Println("DelCredential : ", credentialName)
 
@@ -497,7 +559,12 @@ func DelCredential(credentialName string) (io.ReadCloser, model.WebStatus) {
 
 // 현재 설정된 Driver 목록
 func GetDriverList() ([]spider.DriverInfo, model.WebStatus) {
-	url := util.SPIDER + "/driver"
+	var originalUrl = "/driver"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.SPIDER + urlParam
+
+	// url := util.SPIDER + "/driver"
 	fmt.Println("=========== GetDriverListData : ", url)
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -520,7 +587,15 @@ func GetDriverList() ([]spider.DriverInfo, model.WebStatus) {
 
 // Driver 상세조회
 func GetDriverData(driverlName string) (*spider.DriverInfo, model.WebStatus) {
-	url := util.SPIDER + "/driver/" + driverlName
+	var originalUrl = "/driver/{{driver_name}}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{{driver_name}}"] = driverlName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
+
+	//url := util.SPIDER + "/driver/" + driverlName
 	fmt.Println("=========== GetDriverData : ", url)
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -541,8 +616,12 @@ func GetDriverData(driverlName string) (*spider.DriverInfo, model.WebStatus) {
 
 // Driver 등록
 func RegDriver(driverInfo *spider.DriverInfo) (*spider.DriverInfo, model.WebStatus) {
+	var originalUrl = "/driver"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.SPIDER + urlParam
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.SPIDER + "/driver"
+	// url := util.SPIDER + "/driver"
 
 	fmt.Println("driverInfo : ", driverInfo)
 
@@ -585,9 +664,15 @@ func RegDriver(driverInfo *spider.DriverInfo) (*spider.DriverInfo, model.WebStat
 
 // Driver 삭제
 func DelDriver(driverName string) (io.ReadCloser, model.WebStatus) {
+	var originalUrl = "/driver/{{driver_name}}"
 
+	var paramMapper = make(map[string]string)
+	paramMapper["{{driver_name}}"] = driverName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
 	// buff := bytes.NewBuffer(pbytes)
-	url := util.SPIDER + "/driver/" + driverName
+	// url := util.SPIDER + "/driver/" + driverName
 
 	fmt.Println("driverName : ", driverName)
 
@@ -606,7 +691,7 @@ func DelDriver(driverName string) (io.ReadCloser, model.WebStatus) {
 }
 
 ///////////// Config
-// 현재 설정된 Driver 목록
+// 현재 설정된 Config 목록  TODO :Spider에서 /config 가 없는 것 같은데.... 나중에 확인해서 안쓰면 제거할 것
 func GetConfigList() ([]spider.ConfigInfo, model.WebStatus) {
 	url := util.SPIDER + "/config"
 	fmt.Println("=========== GetConfigListData : ", url)

@@ -607,7 +607,8 @@ func VirtualMachineImageRegProc(c echo.Context) error {
 		})
 	}
 
-	resultVirtualMachineImageInfo, respStatus := service.RegVirtualMachineImage(defaultNameSpaceID, virtualMachineImageRegInfo)
+	paramVirtualMachineImageRegistType := c.Param("virtualMachineImageRegistType") // registerWithId 또는 registerWithInfo
+	resultVirtualMachineImageInfo, respStatus := service.RegVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageRegistType, virtualMachineImageRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -894,7 +895,9 @@ func VmSpecRegProc(c echo.Context) error {
 		})
 	}
 
-	resultVmSpecInfo, respStatus := service.RegVmSpec(defaultNameSpaceID, vmSpecRegInfo)
+	paramVMSpecregisteringMethod := c.Param("specregisteringMethod") // registerWithInfo or Else(간단등록인 경우 param설정 필요 X)
+
+	resultVmSpecInfo, respStatus := service.RegVmSpec(defaultNameSpaceID, paramVMSpecregisteringMethod, vmSpecRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		// 호출은 정상: http.StatusOK, 결과는 정상이 아님. (statusCode != 200,201)
