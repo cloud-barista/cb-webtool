@@ -141,7 +141,7 @@ func GetVmMonitoring(vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitor
 
 // 멀티 클라우드 인프라 VM 온디맨드 모니터링 정보 조회
 // Get MCIS on-demand monitoring metric info
-func GetMcisMonitoringMetricInfo(agentIp string, metricName string, vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitoringInfo, model.WebStatus) {
+func GetMcisOnDemandMonitoringMetricInfo(agentIp string, metricName string, vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.McisMonitoringOnDemandInfo, model.WebStatus) {
 	nameSpaceID := vmMonitoring.NameSpaceID
 	mcisID := vmMonitoring.McisID
 	vmID := vmMonitoring.VmID
@@ -150,6 +150,49 @@ func GetMcisMonitoringMetricInfo(agentIp string, metricName string, vmMonitoring
 
 	var originalUrl = "/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/agent_ip/:agent_ip/mcis_metric/:metric_name/mcis-monitoring-info"
 	//{{ip}}:{{port}}/dragonfly/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/agent_ip/:agent_ip/mcis_metric/:metric_name/mcis-monitoring-info
+	var paramMapper = make(map[string]string)
+	paramMapper[":ns_id"] = nameSpaceID
+	paramMapper[":mcis_id"] = mcisID
+	paramMapper[":vm_id"] = vmID
+	paramMapper[":agent_ip"] = agentIp       // 에이전트 아이피
+	paramMapper[":metric_name"] = metricName // 메트릭 정보 ( "InitDB" | "ResetDB" | "CpuM" | "CpuS" | "MemR" | "MemW" | "FioW" | "FioR" | "DBW" | DBR" | "Rtt" | "Mrtt" )
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.DRAGONFLY + urlParam
+
+	// url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID + "/agent_ip/" + vmMonitoring.AgentIP + "/mcis_metric/" + vmMonitoring.MetricName + "/mcis-monitoring-info"
+	// url := util.DRAGONFLY + "/ns/" + vmMonitoring.NameSpaceID + "/mcis/" + vmMonitoring.McisID + "/vm/" + vmMonitoring.VmID // TODO : 객체에 parameter추가해야 함
+
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	// defer body.Close()
+	mcisMonitoringInfo := dragonfly.McisMonitoringOnDemandInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return &mcisMonitoringInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// util.DisplayResponse(resp) // 수신내용 확인
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	json.NewDecoder(respBody).Decode(&mcisMonitoringInfo)
+	fmt.Println(mcisMonitoringInfo)
+
+	return &mcisMonitoringInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// 멀티 클라우드 인프라 VM 온디맨드 모니터링 정보 조회
+// Get vm on-demand monitoring metric info
+func GetVmOnDemandMonitoringMetricInfo(agentIp string, metricName string, vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitoringOnDemandInfo, model.WebStatus) {
+	nameSpaceID := vmMonitoring.NameSpaceID
+	mcisID := vmMonitoring.McisID
+	vmID := vmMonitoring.VmID
+	// agentIp := vmMonitoring.AgentIp
+	// metricName := vmMonitoring.MetricName
+
+	var originalUrl = "/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/agent_ip/:agent_ip/metric/:metric_name/ondemand-monitoring-info"
+	// {{ip}}:{{port}}/dragonfly/ns/:ns_id/mcis/:mcis_id/vm/:vm_id/agent_ip/:agent_ip/metric/:metric_name/ondemand-monitoring-info
 	var paramMapper = make(map[string]string)
 	paramMapper[":ns_id"] = nameSpaceID
 	paramMapper[":mcis_id"] = mcisID
@@ -166,7 +209,7 @@ func GetMcisMonitoringMetricInfo(agentIp string, metricName string, vmMonitoring
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	vmMonitoringInfo := dragonfly.VmMonitoringInfo{}
+	vmMonitoringInfo := dragonfly.VmMonitoringOnDemandInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmMonitoringInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}

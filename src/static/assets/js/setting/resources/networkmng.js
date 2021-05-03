@@ -93,8 +93,11 @@ function deleteVPC(){
             //vNetInfoBox 안보이게
             displayVNetInfo("DEL_SUCCESS")
             // getVpcList("name");
+        }else{
+            commonAlert(data)
         }
     }).catch(function(error){
+        commonAlert(error)
         console.log("Network delete error : ",error);        
     });
 }          
@@ -378,12 +381,14 @@ function createVNet() {
             }
         }).then(result => {
             console.log("result vNet : ", result);
-            if (result.status == 200 || result.status == 201) {
+            var data = result.data;
+                console.log(data);
+            if (data.status == 200 || data.status == 201) {
                 commonAlert("Success Create Network(vNet)!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 // 등록 성공시 등록한 객체가 들어 옴. 일단 기존 List에 추가하는 것으로?
-                var data = result.data;
-                console.log(data);
+                // var data = result.data;
+                // console.log(data);
                 // var html = addVNetRow(data)
                 // $("#vpcList").append(html)
                 
@@ -396,10 +401,14 @@ function createVNet() {
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
-                commonAlert("Fail Create Network(vNet)")
+                commonAlert("Fail Create Network(vNet) " + data.message)
             }
         }).catch(function(error){
-            console.log("Network create error : ",error);        
+
+            var data = error.data;
+                console.log(data);
+            console.log(error);        
+            commonAlert("Network create error : ",error)            
         });
     } else {
         commonAlert("Input VPC Name")
