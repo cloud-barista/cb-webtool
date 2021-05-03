@@ -64,7 +64,13 @@ func Index(c echo.Context) error {
 }
 
 func About(c echo.Context) error {
-	return c.Render(http.StatusOK, "About.html", map[string]interface{}{})
+	// return c.Render(http.StatusOK, "About.html", map[string]interface{}{})
+	return echotemplate.Render(c, http.StatusOK,
+		"About", // 파일명
+		map[string]interface{}{
+			"message": "",
+			"status":  200,
+		})
 }
 
 func MainForm(c echo.Context) error {
@@ -83,9 +89,16 @@ func MainForm(c echo.Context) error {
 
 	// cloudOsList , _ := service.GetCloudOSList()
 	if len(nameSpaceInfoList) == 1 { // namespace가 1개이면 mcis 체크
+		defaultNameSpace := nameSpaceInfoList[0]
 		// mcis가 있으면 dashboard로 ( dashboard에서 mcis가 없으면 mcis 생성화면으로 : TODO 현재 미완성으로 MCIS관리화면으로 이동)
-
-		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/mngform")
+		mcisList, _ := service.GetMcisList(defaultNameSpace.ID)
+		if len(mcisList) > 0 {
+			log.Println(" mcisList  ", len(mcisList))
+			return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/mngform")
+		} else {
+			log.Println(" mcisList is null ", mcisList)
+			return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/regform")
+		}
 	} else {
 		return echotemplate.Render(c, http.StatusOK,
 			"auth/Main", // 파일명

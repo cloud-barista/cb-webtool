@@ -34,7 +34,7 @@ func ResourceBoard(c echo.Context) error {
 
 // func VpcListForm(c echo.Context) error {
 func VpcMngForm(c echo.Context) error {
-	fmt.Println("ConnectionConfigList ************ : ")
+	fmt.Println("VpcMngForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -56,10 +56,15 @@ func VpcMngForm(c echo.Context) error {
 
 	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
-		})
+		return echotemplate.Render(c, http.StatusOK,
+			"setting/resources/NetworkMng", // 파일명
+			map[string]interface{}{
+				"LoginInfo":     loginInfo,
+				"CloudOSList":   cloudOsList,
+				"NameSpaceList": nsList,
+				"VNetList":      vNetInfoList,
+				"status":        respStatus.StatusCode,
+			})
 	}
 	log.Println("VNetList", vNetInfoList)
 
@@ -148,7 +153,8 @@ func VpcRegProc(c echo.Context) error {
 	// fmt.Println("=============respBody ===============", respBody)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": respStatus.Message,
 			"status":  respStatus.StatusCode,
 		})
@@ -215,10 +221,16 @@ func SecirityGroupMngForm(c echo.Context) error {
 
 	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
-		})
+		return echotemplate.Render(c, http.StatusOK,
+			"setting/resources/SecurityGroupMng", // 파일명
+			map[string]interface{}{
+				"LoginInfo":         loginInfo,
+				"CloudOSList":       cloudOsList,
+				"NameSpaceList":     nsList,
+				"SecurityGroupList": securityGroupInfoList,
+				"status":            respStatus.StatusCode,
+			})
+
 	}
 	log.Println("securityGroupInfoList", securityGroupInfoList)
 
@@ -371,10 +383,15 @@ func SshKeyMngForm(c echo.Context) error {
 
 	sshKeyInfoList, respStatus := service.GetSshKeyInfoList(defaultNameSpaceID)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
-		})
+		return echotemplate.Render(c, http.StatusOK,
+			"setting/resources/SshKeyMng", // 파일명
+			map[string]interface{}{
+				"LoginInfo":     loginInfo,
+				"CloudOSList":   cloudOsList,
+				"NameSpaceList": nsList,
+				"SshKeyList":    sshKeyInfoList,
+				"status":        respStatus.StatusCode,
+			})
 	}
 	log.Println("sshKeyInfoList", sshKeyInfoList)
 
@@ -524,10 +541,15 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 
 	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
-		})
+		return echotemplate.Render(c, http.StatusOK,
+			"setting/resources/VirtualMachineImageMng", // 파일명
+			map[string]interface{}{
+				"LoginInfo":               loginInfo,
+				"CloudOSList":             cloudOsList,
+				"NameSpaceList":           nsList,
+				"VirtualMachineImageList": virtualMachineImageInfoList,
+				"status":                  respStatus.StatusCode,
+			})
 	}
 	log.Println("VirtualMachineImageInfoList", virtualMachineImageInfoList)
 
@@ -812,10 +834,15 @@ func VmSpecMngForm(c echo.Context) error {
 
 	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
-		})
+		return echotemplate.Render(c, http.StatusOK,
+			"setting/resources/VirtualMachineSpecMng", // 파일명
+			map[string]interface{}{
+				"LoginInfo":     loginInfo,
+				"CloudOSList":   cloudOsList,
+				"NameSpaceList": nsList,
+				"VmSpecList":    vmSpecInfoList,
+				"status":        respStatus.StatusCode,
+			})
 	}
 	log.Println("VmSpecInfoList", vmSpecInfoList)
 
