@@ -104,7 +104,15 @@ func RegVpc(nameSpaceID string, vnetRegInfo *tumblebug.VNetRegInfo) (*tumblebug.
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	fmt.Println("respStatus ", respStatus)
 
+	if respStatus == 500 {
+		webStatus := model.WebStatus{}
+		json.NewDecoder(respBody).Decode(&webStatus)
+		fmt.Println(webStatus)
+		webStatus.StatusCode = respStatus
+		return &vNetInfo, webStatus
+	}
 	// 응답에 생성한 객체값이 옴
 	json.NewDecoder(respBody).Decode(&vNetInfo)
 	fmt.Println(vNetInfo)
