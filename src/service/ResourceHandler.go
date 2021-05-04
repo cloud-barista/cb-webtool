@@ -671,6 +671,7 @@ func LookupVirtualMachineImageData(virtualMachineImageID string) (*tumblebug.Vir
 	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
 }
 
+// csp에 등록된 정보조회.
 func FetchVirtualMachineImageList(nameSpaceID string) ([]tumblebug.VirtualMachineLookupImageInfo, model.WebStatus) {
 	fmt.Println("FetchVirtualMachineImageList ************ : ", nameSpaceID)
 	var originalUrl = "/ns/{nsId}/resources/fetchImages"
