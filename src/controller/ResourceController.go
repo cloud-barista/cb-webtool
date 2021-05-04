@@ -728,8 +728,37 @@ func AllVirtualMachineImageDelProc(c echo.Context) error {
 
 // connection에 해당하는 machine image 목록
 // connection이 resion별로 생성되므로 결국 해당 provider의 resion 내 vm목록을 가져옴
-func LookupVirtualMachineImageList(c echo.Context) error {
-	log.Println("GetVirtualMachineImageList : ")
+// deprecated
+// func LookupVirtualMachineImageList(c echo.Context) error {
+// 	log.Println("GetVirtualMachineImageList : ")
+// 	loginInfo := service.CallLoginInfo(c)
+// 	if loginInfo.UserID == "" {
+// 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+// 	}
+
+// 	// paramConnectionName := c.Param("connectionName")
+// 	paramConnectionName := c.QueryParam("connectionName")
+
+// 	log.Println("paramConnectionName : ", paramConnectionName)
+// 	virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList(paramConnectionName)
+// 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+// 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+// 			"error":  respStatus.Message,
+// 			"status": respStatus.StatusCode,
+// 		})
+// 	}
+
+// 	return c.JSON(http.StatusOK, map[string]interface{}{
+// 		"message": "success",
+// 		"status":  respStatus.StatusCode,
+// 		// "DefaultNameSpaceID": defaultNameSpaceID,
+// 		"VirtualMachineImageList": virtualMachineImageInfoList,
+// 	})
+// }
+
+// 해당 csp의 전체 image목록 : -> TODO : thread로 처리 할 것. 시간 오래걸림. NETS DB에 저장하는 것으로
+func LookupCspVirtualMachineImageList(c echo.Context) error {
+	log.Println("LookupCspVirtualMachineImageList : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
