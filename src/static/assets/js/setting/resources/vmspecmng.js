@@ -272,10 +272,17 @@ function createVmSpec() {
                 commonAlert("Fail Create Spec : " + message +"(" + statusCode + ")");
                 // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
             }
-        }).catch(function(error){
-            console.log("get create error : ");
-            console.log(error);
-            commonAlert(error);// TODO : error처리하자.
+        // }).catch(function(error){
+        //     console.log("get create error : ");
+        //     console.log(error);
+        //     commonAlert(error);// TODO : error처리하자.
+        // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage);
         });
     } else {
         commonlert("Input Spec Name")
@@ -329,11 +336,18 @@ function deleteVmSpec() {
             commonAlert("Fail Create Spec : " + message +"(" + statusCode + ")");
             // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
         }
-    }).catch(function(error){
+    // }).catch(function(error){
 
-        var statusCode = error.response.data.status;
-        var message = error.response.data.message;
-        commonErrorAlert(statusCode, message)
+    //     var statusCode = error.response.data.status;
+    //     var message = error.response.data.message;
+    //     commonErrorAlert(statusCode, message)
         
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }                                                  

@@ -151,11 +151,12 @@
             // console.log("result : ")
             // console.log(result)            
             
-        }).catch(function(error){
-            console.log(" api call error : ");
-            console.log(error);
-            console.log(error.data);
-            $("#ApiResult").val(error)
+        // }).catch(function(error){
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            console.log(error.response.data.error)
+            $("#ApiResult").val(error.response.data.error)
         });
     
     }

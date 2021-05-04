@@ -158,8 +158,15 @@ function getSshKeyList(sort_type) {
             ModalDetail()
 
         }
-    }).catch(function(error){
-        console.log("get sshKeyList error : ",error);        
+    // }).catch(function(error){
+    //     console.log("get sshKeyList error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }
 
@@ -211,8 +218,15 @@ function deleteSshKey(){
             // location.reload(true);
             getSshKeyList("name");
         }
-    }).catch(function(error){
-        console.log("get delete error : ",error);        
+    // }).catch(function(error){
+    //     console.log("get delete error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }
 
@@ -257,10 +271,16 @@ function showSshKeyInfo(sshKeyId) {
        $('#dtlPublicKey').val(dtlPublicKey);
        $('#dtlPrivateKey').val(dtlPrivateKey);
        $('#dtlFingerprint').val(dtlFingerprint);
-    }).catch(function(error){
-        console.log("get sshKey error : ",error);        
+    // }).catch(function(error){
+    //     console.log("get sshKey error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
-
 }
 
 function createSSHKey() {
@@ -311,8 +331,15 @@ function createSSHKey() {
             } else {
                 commonAlert("Fail Create SSH Key")
             }
-        }).catch(function(error){
-            console.log("get create error : ",error);        
+        // }).catch(function(error){
+        //     console.log("get create error : ",error);        
+        // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage);
         });
     } else {
         commonAlert("Input SSH Key Name")

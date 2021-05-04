@@ -96,9 +96,16 @@ function deleteVPC(){
         }else{
             commonAlert(data)
         }
-    }).catch(function(error){
-        commonAlert(error)
-        console.log("Network delete error : ",error);        
+    // }).catch(function(error){
+    //     commonAlert(error)
+    //     console.log("Network delete error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }          
 
@@ -156,8 +163,15 @@ function getVpcList(sort_type) {
             
             ModalDetail()
         }
-    }).catch(function(error){
-        console.log("Network list error : ",error);        
+    // }).catch(function(error){
+    //     console.log("Network list error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }
 
@@ -307,8 +321,12 @@ function getConnectionInfo(provider){
         $("#regConnectionName").empty();
         $("#regConnectionName").append(html);
 
-    }).catch(function(error){
-        console.log("Network data error : ",error);        
+    // }).catch(function(error){
+    //     console.log("Network data error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
     });
 }
 
@@ -403,12 +421,18 @@ function createVNet() {
             } else {
                 commonAlert("Fail Create Network(vNet) " + data.message)
             }
-        }).catch(function(error){
-
-            var data = error.data;
-                console.log(data);
-            console.log(error);        
-            commonAlert("Network create error : ",error)            
+        // }).catch(function(error){
+        //     var data = error.data;
+        //         console.log(data);
+        //     console.log(error);        
+        //     commonAlert("Network create error : ",error)            
+        // });
+        }).catch((error) => {
+            // console.warn(error);
+            console.log(error.response) 
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage) 
         });
     } else {
         commonAlert("Input VPC Name")

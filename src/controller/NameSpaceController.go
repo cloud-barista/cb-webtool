@@ -76,9 +76,9 @@ func NameSpaceRegProc(c echo.Context) error {
 	respBody, respStatus := service.RegNameSpace(nameSpaceInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -118,9 +118,9 @@ func NameSpaceUpdateProc(c echo.Context) error {
 	respBody, respStatus := service.UpdateNameSpace(defaultNameSpaceID, nameSpaceInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -162,9 +162,9 @@ func NameSpaceDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelNameSpace(paramNameSpaceID)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 

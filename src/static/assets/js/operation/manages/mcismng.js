@@ -500,10 +500,16 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var installMonAgent = data.monAgentStatus
             showVmMonitoring(mcisID,vmID)
         }
-    ).catch(function(error){
-        var statusCode = error.response.data.status;
-        var message = error.response.data.message;
-        commonErrorAlert(statusCode, message)        
+    // ).catch(function(error){
+    //     var statusCode = error.response.data.status;
+    //     var message = error.response.data.message;
+    //     commonErrorAlert(statusCode, message)        
+    // });
+    ).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
     });
 
 

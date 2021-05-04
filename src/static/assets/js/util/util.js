@@ -8,6 +8,7 @@ axios.interceptors.request.use(function (config) {
         return config;
     }, function (error) {
         console.log("axios.interceptors.request error")
+        console.log(error)
         // 에라 나면 로딩 끄기
         $('#loadingContainer').hide();
         // AjaxLoadingShow(false);
@@ -22,6 +23,7 @@ axios.interceptors.response.use(function (response) {
         return response;
     }, function (error) {
         console.log("axios.interceptors.response error")
+        console.log(error)
         // 응답 에러 시에도 로딩 끄기
         $('#loadingContainer').hide();
         return Promise.reject(error);
@@ -428,9 +430,15 @@ function getConnectionListForSelectbox(provider, targetSelectBoxID){
             $("#" + targetSelectBoxID + " option[value=" + configName + "]").prop('selected', true).change();         
         }
         // getVnetInfoListForSelectbox(configName);
-    }).catch(function(error){
-        console.log("Network data error : ",error);        
-    });   
+    // }).catch(function(error){
+    //     console.log("Network data error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
+    });
 }
 
 // connection에 등록된 vnet List를 selectbox에 표시

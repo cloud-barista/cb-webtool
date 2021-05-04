@@ -29,15 +29,24 @@ function mcisLifeCycle(mcisID, type){
         //     alert(status)
         //     return;
         // }
-    }).catch(function(error){
-        // console.log(" display error : ",error);
-        console.log(error.response.data);
-        console.log(error.response.status);
-        // console.log(error.response.headers); 
-        var status = error.response.status;
-        var data =  error.response.data
+    // }).catch(function(error){
+    //     // console.log(" display error : ",error);
+    //     console.log(error.response.data);
+    //     console.log(error.response.status);
+    //     // console.log(error.response.headers); 
+    //     var status = error.response.status;
+    //     var data =  error.response.data
 
-        callbackMcisLifeCycle(status, data, type)
+    //     callbackMcisLifeCycle(status, data, type)
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        // var errorMessage = error.response.data.error;
+        // commonErrorAlert(statusCode, errorMessage) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }
 ////////////// MCIS Handling end //////////////// 

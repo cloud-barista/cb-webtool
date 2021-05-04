@@ -27,3 +27,9 @@ ex)
         
     });
 ----
+
+catch 를 function 대시 object로 변경
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response) 
+        });

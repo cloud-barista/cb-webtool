@@ -308,8 +308,14 @@ function deleteCloudConnection(){
                         commonAlert(data.message)
                         location.reload(true)
                     }
-                }).catch(function(error){
-                    console.log("connection delete error : ",error);        
+                // }).catch(function(error){
+                //     console.log("connection delete error : ",error);        
+                // });
+                }).catch((error) => {
+                    console.warn(error);
+                    console.log(error.response)
+                    var errorMessage = error.response.data.error;
+                    commonErrorAlert(statusCode, errorMessage) 
                 });
             // }
         }
@@ -343,8 +349,14 @@ function getRegionDetail(target){
                 console.log("info Region Detail, regionName : ",target,", region : ",regionID, ", zone : ",zoneID)
                 setRegionDispInfo(regionID, zoneID)
             }
-        }).catch(function(error){
-            console.log("region detail error : ",error);        
+        // }).catch(function(error){
+        //     console.log("region detail error : ",error);        
+        // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            commonErrorAlert(statusCode, errorMessage) 
         });
 }
 
@@ -410,10 +422,15 @@ function getRegionList(){
                 })
             }// end of data.length
         }
-    ).catch(function(error){
-        console.log("region display error : ",error);        
+    // ).catch(function(error){
+    //     console.log("region display error : ",error);        
+    // });
+    ).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
     });
-
 }
 
 function getCredentialList(){
@@ -482,8 +499,14 @@ function getCredentialList(){
                     })
             })
         }// end of data.length
-    }).catch(function(error){
-        console.log("region display error : ",error);        
+    // }).catch(function(error){
+    //     console.log("region display error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
     });
 }
 
@@ -525,8 +548,14 @@ function getDriverList(){
                     })
             })
         }
-    }).catch(function(error){
-        console.log("region display error : ",error);        
+    // }).catch(function(error){
+    //     console.log("region display error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
     });
 }
 
@@ -633,10 +662,15 @@ function saveNewRegion(){
             alert("Fail Create Cloud Region")
         }
   
-    }).catch(function(error){
-        console.log("save error : ",error);
-    
-    });    
+    // }).catch(function(error){
+    //     console.log("save error : ",error);    
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
+    });
 }
 
 // region 삭제
@@ -664,8 +698,14 @@ function deleteRegion(){
             }else{
                 alert("Fail to delete the Cloud Region")
             }
-        }).catch(function(error){
-            console.log("delete error : ",error);        
+        // }).catch(function(error){
+        //     console.log("delete error : ",error);        
+        // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            commonErrorAlert(statusCode, errorMessage) 
         });
 }
 
@@ -731,10 +771,15 @@ function saveNewCredential(){
             alert("Fail Create Cloud Credential")
         }
   
-    }).catch(function(error){
-        console.log("save error : ",error);
-    
-    });    
+    // }).catch(function(error){
+    //     console.log("save error : ",error);    
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
+    });
 }
 
 // Credential 삭제
@@ -761,8 +806,14 @@ function deleteCredential(){
             }else{
                 alert("Fail to delete the Cloud Credential")
             }
-        }).catch(function(error){
-            console.log("delete error : ",error);        
+        // }).catch(function(error){
+        //     console.log("delete error : ",error);        
+        // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            commonErrorAlert(statusCode, errorMessage) 
         });
 }
 
@@ -804,11 +855,15 @@ function saveNewDriver(){
             alert("Fail Create Cloud Driver")
         }
   
-    }).catch(function(error){
-        console.log("save error : ",error);
-    
+    // }).catch(function(error){
+    //     console.log("save error : ",error);    
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
     });
-    
 }
 
 // Driver 삭제
@@ -835,8 +890,14 @@ function deleteDriver(){
             }else{
                 alert("Fail to delete the Cloud Driver")
             }
-        }).catch(function(error){
-            console.log("delete error : ",error);        
+        // }).catch(function(error){
+        //     console.log("delete error : ",error);        
+        // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            commonErrorAlert(statusCode, errorMessage) 
         });
 }
 

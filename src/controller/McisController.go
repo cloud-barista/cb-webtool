@@ -308,9 +308,9 @@ func GetMcisList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	mcisList, respStatus := service.GetMcisList(defaultNameSpaceID)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -358,9 +358,9 @@ func McisRegProc(c echo.Context) error {
 	_, respStatus := service.RegMcis(defaultNameSpaceID, mCISInfo)
 	log.Println("RegMcis service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -512,9 +512,9 @@ func GetVmInfoData(c echo.Context) error {
 	returnVmInfo, respStatus := service.GetVMofMcisData(defaultNameSpaceID, mcisID, vmID)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -559,9 +559,9 @@ func McisLifeCycle(c echo.Context) error {
 	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
 	log.Println("McisLifeCycle service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -595,9 +595,9 @@ func McisVmLifeCycle(c echo.Context) error {
 	_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
 	log.Println("McisVmLifeCycle service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -637,9 +637,9 @@ func GetVmMonitoring(c echo.Context) error {
 
 	returnVMMonitoringInfo, respStatus := service.GetVmMonitoring(vmMonitoring)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{

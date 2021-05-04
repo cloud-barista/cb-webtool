@@ -51,8 +51,14 @@
 					 $("#s_imageId").empty();
 					 $("#s_imageId").append(html);//which OS
 					 
-				 }).catch(function(error){
-					console.log(error);        
+				//  }).catch(function(error){
+				// 	console.log(error);        
+				// });
+				}).catch((error) => {
+					console.warn(error);
+					console.log(error.response)
+					var errorMessage = error.response.data.error;
+					commonErrorAlert(statusCode, errorMessage) 
 				});
 			}
 

@@ -117,9 +117,9 @@ func VmMonitoringAgentRegProc(c echo.Context) error {
 	mcisID := c.Param("mcisID")
 	vmMonitoringAgentInfo, respStatus := service.RegMonitoringAgentInVm(defaultNameSpaceID, mcisID, vmMonitoringAgentReg)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
