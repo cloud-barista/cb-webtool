@@ -430,11 +430,11 @@ func McisVmRegForm(c echo.Context) error {
 	// connection , Spec, 등은 Provider 변경할 때 가져오므로 필요없음. -> 모두 가져온 다음 filtering
 	regionInfoList, _ := service.GetRegionList()
 
-	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
+	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
 
 	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
 
-	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
+	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
 
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
 

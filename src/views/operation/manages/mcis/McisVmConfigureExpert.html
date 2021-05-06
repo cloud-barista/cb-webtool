@@ -33,17 +33,18 @@
 					<ul>
 						<li>
 							<label>Cloud Provider / Region</label>
-							<select class="selectbox white pline sel_1" id="e_regProvider" onchange="getRegionListForSelectbox(this.value, 'e_regRegion', 'e_regConnectionName');">
+							<select class="selectbox white pline sel_1" id="e_regProvider" onchange="getRegionListFilterForSelectbox(this.value, 'e_regRegion', 'e_regConnectionName');">
 								<option value="1">Selected CP</option>
 								{{ range $cloudItem := .CloudOSList}}	
 								<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
 								{{ end }}
 							</select>
-							<select class="selectbox white pline sel_1" id="e_regRegion" onchange="getConnectionListForSelectbox(this.value, 'e_regConnectionName');">
+							<select class="selectbox white pline sel_1" id="e_regRegion" onchange="getConnectionListFilterForSelectbox(this.value, 'e_regConnectionName');">
 								<option value="">Selected Region</option>
 								{{ range $regionItem := .RegionList}}	
-								<option value="{{ $regionItem }}">{{ $regionItem }}</option>
+								<option value="{{ $regionItem.RegionName }}">[{{ $regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
 								{{ end }}
+						
 							</select>
 						</li>
 						<li>
@@ -51,8 +52,8 @@
 							<span class="sbox">
 								<select class="selectbox white pline sel_2" id="e_regConnectionName">
 									<option value="">Selected CP</option>
-									{{ range $connectionItem := .ConnectionList}}	
-									<option value="{{ $connectionItem }}">{{ $connectionItem }}</option>
+									{{ range $connectionItem := .CloudConnectionConfigInfoList}}	
+									<option value="{{ $connectionItem.ConfigName }}">[{{ $connectionItem.ProviderName }}] {{ $connectionItem.RegionName }}</option>
 									{{ end }}
 								</select>
 								<a href="javascript:void(0);" class="btn_assist">Assist</a>
@@ -82,28 +83,29 @@
 							
 							<div class="toptxt">
 								<label>Cloud Provider / Region</label>
-								<select class="selectbox sel_1" id="popProvider" onchange="getRegionListForPopSelectbox(this.value, 's_regConnectionName');">
-									<option value="1">Selected CP</option>
+								
+								<select class="selectbox sel_1" id="popProvider" onchange="popProviderChange('popProvider', 'popRegion', 'popCloudConnection');">
+									<option value="">Selected CP</option>
 									{{ range $cloudItem := .CloudOSList}}	
 									<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
 									{{ end }}
 								</select>
-								<select class="selectbox sel_1" id="popRegion" onchange="getConnectionListByRegionForSelectbox(this.value,'popProvider', 'e_regConnectionName');">
-									<option value="1">Selected Region</option>
+								<select class="selectbox sel_1" id="popRegion" onchange="getConnectionListFilterForTable('popProvider','popRegion', 'popCloudConnection');">
+									<option value="">Selected Region</option>
 									{{ range $regionItem := .RegionList}}	
-									<option value="{{ $regionItem }}">{{ $regionItem }}</option>
+									<option value="{{ $regionItem.RegionName }}">[{{ $regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
 									{{ end }}
 								</select>
 							</div>
 							
 							<div class="imgbox">
-								<img src="/assets/img/contents/img_thumb_dt.jpg" alt="img">
+								<img src="/assets/img/contents/img_thumb_dt.jpg" alt="img"><!-- TODO : 이 이미지는 뭐지? -->
 							</div>
 							
 							<!-- table scrollbar -->
 							<div class="dtbox scrollbar-inner">
 								<div class="dataTable dt_overlay">
-									<table cellpadding="0" cellspacing="0" border="1" summary="">
+									<table cellpadding="0" cellspacing="0" border="1" summary="" id="popCloudConnection">
 										<colgroup><col width="35%"><col width="25%"><col width=""></colgroup>
 										<thead>
 											<tr>
@@ -115,9 +117,9 @@
 										<tbody>
 											{{ range $connectionConfigItem := .CloudConnectionConfigInfoList}}	
 											<tr>
-												<td class="btn_mtd" data-th="Cloud Provide">{{ $connectionConfigItem.Provider }}<span class="ov off"></span></td>
-												<td class="overlay hidden" data-th="Region">{{ $connectionConfigItem.Region }}</td>
-												<td class="overlay hidden" data-th="Cloud Connections">{{ $connectionConfigItem.Connection }}</td>
+												<td class="btn_mtd" data-th="Cloud Provide">{{ $connectionConfigItem.ProviderName }}<span class="ov off"></span></td>
+												<td class="overlay hidden" data-th="Region">{{ $connectionConfigItem.RegionName }}</td>
+												<td class="overlay hidden" data-th="Cloud Connections">{{ $connectionConfigItem.ConfigName }}</td>
 											</tr>
 											{{ end }}
 											<!-- <tr>
