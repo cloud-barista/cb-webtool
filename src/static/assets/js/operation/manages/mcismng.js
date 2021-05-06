@@ -51,7 +51,8 @@ function callbackMcisLifeCycle(resultStatus, resultData, type){
 function addNewVirtualMachine(){
     var mcis_id = $("#mcis_id").val()
     var mcis_name = $("#mcis_name").val()
-    //location.href = "/Manage/MCIS/reg/"+mcis_id+"/"+mcis_name
+    // location.href = "/Manage/MCIS/reg/"+mcis_id+"/"+mcis_name
+    location.href = "/operation/manages/mcis/regform/"+mcis_id+"/"+mcis_name;
 }
 
 function vmLifeCycle(type){
@@ -186,8 +187,6 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
     // $("#mcis_info_targetAction").val(targetAction);
     $("#mcis_info_cloud_connection").val(mcisCloudConnections)    //
     
-    $(".server_status").addClass("view")
-   
     $("#mcis_name").val(mcisName)
 
     var mcis_badge = "";
@@ -280,8 +279,11 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
 
     //Manage MCIS Server List on/off : table을 클릭하면 해당 Row 에 active style로 보여주기
     $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function(){
-        var $sel_list = $(this),
-            $detail = $(".server_info");
+        var $sel_list = $(this);
+        var $detail = $(".server_info");
+        console.log($sel_list);
+        console.log($detail);
+        console.log(">>>>>");
         $sel_list.off("click").click(function(){
             $sel_list.addClass("active");
             $sel_list.siblings().removeClass("active");

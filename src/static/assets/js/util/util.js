@@ -160,6 +160,7 @@ function commonConfirmOpen(targetAction){
             ["McisManagement", "Would you like to manage MCIS ?"],// 해당 function 없음...
             ["MoveToMcisManagement", "Would you like to manage MCIS ?"],            
             ["AddNewMcis", "Would you like to create MCIS ?"],
+            ["AddNewVmOfMcis", "Would you like to add a new VM to this MCIS ?"],
 
             ["VmLifeCycle", "Would you like to view Server ?"],
             ["VmLifeCycleReboot", "Would you like to reboot MCIS ?"], //onclick="vm_life_cycle('reboot')"
@@ -313,10 +314,13 @@ function commonConfirmOk(){
     }else if ( targetAction == "VmManagement"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "AddNewVm"){
+        addNewVirtualMachine()
+    }else if ( targetAction == "AddNewVmOfMcis"){
+        addNewVirtualMachine()
     }else if ( targetAction == "--"){
         addNewVirtualMachine()
     }else {
-        alert("수행할 function 정의되지 않음");
+        alert("수행할 function 정의되지 않음 " + targetAction);
     }
     console.log("commonConfirmOk " + targetAction);
     commonConfirmClose();
@@ -490,6 +494,25 @@ function getProviderNameByConnection(configName, targetObjID){
         
     })
 }
+
+function getRegionListByProviderForSelectbox(provider, targetObjID){
+    console.log("getRegionListByProviderForSelectbox : ", provider);
+    
+    var url = "/setting/connections" + "/region/" + configName
+    axios.get(url,{
+        headers:{
+            // 'Authorization': apiInfo
+        }
+    }).then(result=>{
+        data = result.data.ConnectionConfig;
+        console.log("connection data : ",data);
+        var providerName = data.ProviderName
+        console.log("providerName : ",providerName);
+        $("#" + targetObjID).val(providerName);
+        
+    })
+}
+
 
 function isEmpty(str){
 	if(typeof str == "undefined" || str == null || str == "")

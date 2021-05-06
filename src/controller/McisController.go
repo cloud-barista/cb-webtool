@@ -400,10 +400,10 @@ func McisRegProc(c echo.Context) error {
 
 // MCIS에 VM 추가
 func McisVmRegForm(c echo.Context) error {
+	log.Println("McisVmRegForm : ")
 	mcisId := c.Param("mcisID")
 	mcisName := c.Param("mcisName")
 
-	log.Println("McisVmRegForm : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -425,21 +425,37 @@ func McisVmRegForm(c echo.Context) error {
 	vmList := resultMcisInfo.Vms
 
 	// provider 별 연결정보 count(MCIS 무관)
-	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	cloudOsList, _ := service.GetCloudOSList()
 
-	// connection , Spec, 등은 Provider 변경할 때 가져오므로 필요없음.
+	// connection , Spec, 등은 Provider 변경할 때 가져오므로 필요없음. -> 모두 가져온 다음 filtering
+	regionInfoList, _ := service.GetRegionList()
+
+	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
+
+	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
+
+	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
+
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manage/McisVmCreate", // 파일명
+		"operation/manages/McisVmCreate", // 파일명
 		map[string]interface{}{
-			"LoginInfo":                     loginInfo,
-			"DefaultNameSpaceID":            defaultNameSpaceID,
-			"NameSpaceList":                 nsList,
-			"McisID":                        mcisId,
-			"McisName":                      mcisName,
-			"VMList":                        vmList,
+			"LoginInfo":          loginInfo,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"NameSpaceList":      nsList,
+			"McisID":             mcisId,
+			"McisName":           mcisName,
+			"VMList":             vmList,
+
+			"CloudOSList":                   cloudOsList,
+			"RegionList":                    regionInfoList,
 			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
+
+			"VMSpecList":        vmSpecInfoList,
+			"VNetList":          vNetInfoList,
+			"SecurityGroupList": securityGroupInfoList,
 		})
 
 }
@@ -463,6 +479,43 @@ func GetMcisInfoData(c echo.Context) error {
 		"message":  "success",
 		"status":   200,
 		"McisInfo": resultMcisInfo,
+	})
+}
+
+// MCIS에 VM 추가 등록
+func VmRegProc(c echo.Context) error {
+	log.Println("VmRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// mCISInfo := &tumblebug.McisInfo{}
+	vmInfo := &tumblebug.VmInfo{}
+	if err := c.Bind(vmInfo); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(vmInfo)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	mcisID := c.Param("mcisID")
+	_, respStatus := service.RegVm(defaultNameSpaceID, mcisID, vmInfo)
+	log.Println("RegVM service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
 	})
 }
 

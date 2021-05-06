@@ -179,6 +179,117 @@ func RegMcis(nameSpaceID string, mcisInfo *tumblebug.McisInfo) (*tumblebug.McisI
 
 }
 
+// MCIS에 VM 추가 등록
+func RegVm(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) (*tumblebug.VmInfo, model.WebStatus) {
+	// var mcisInfoID = mcisInfo.ID // path의 mcisID와 전송되는 parameter의 mcisID 비교용
+	// var vmList = mcisInfo.Vms
+
+	// 전송은 vm -> 수신 vm
+	returnVmInfo := tumblebug.VmInfo{}
+	returnStatus := model.WebStatus{}
+	fmt.Println("111")
+
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
+	// if len(vmList) == 0 {
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: "There no Vm info"}
+	// }
+	// fmt.Println("222")
+	// // mcisID 변조 체크
+	// if mcisID != mcisInfoID {
+	// 	return nil, model.WebStatus{StatusCode: 500, Message: "MCIS Info not valid"}
+	// }
+	fmt.Println("333")
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	fmt.Println(originalUrl)
+	url := util.TUMBLEBUG + urlParam
+	// fmt.Println(vmList)
+	// pbytes, _ := json.Marshal(vmList)
+	fmt.Println(vmInfo)
+	pbytes, _ := json.Marshal(vmInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	fmt.Println("result ", err)
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnVmInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		//util.DisplayResponse(resp) // 결과 확인용
+
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnVmInfo)
+		fmt.Println(returnVmInfo)
+	}
+	returnStatus.StatusCode = respStatus
+	fmt.Println(respBody)
+	fmt.Println(respStatus)
+
+	return &returnVmInfo, returnStatus
+}
+
+// MCIS에 VM 추가 등록
+func RegVmGroup(nameSpaceID string, mcisID string, mcisInfo *tumblebug.McisInfo) (*tumblebug.McisInfo, model.WebStatus) {
+	var mcisInfoID = mcisInfo.ID
+	var vmList = mcisInfo.Vms
+
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup" // 여러개 추가할 때
+	if len(vmList) == 0 {
+		return nil, model.WebStatus{StatusCode: 500, Message: "There no Vm info"}
+	}
+
+	// mcisID 변조 체크
+	if mcisID != mcisInfoID {
+		return nil, model.WebStatus{StatusCode: 500, Message: "MCIS Info not valid"}
+	}
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(vmList)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	// 전송은 vm이나 수신은 mcisInfo (mcis안에 vm목록이 있음.)
+	returnMcisInfo := tumblebug.McisInfo{}
+	returnStatus := model.WebStatus{}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnMcisInfo)
+		fmt.Println(returnMcisInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	// return respBody, respStatusCode
+	return &returnMcisInfo, returnStatus
+}
+
+////////////////
 // func GetVMStatus(vm_name string, connectionConfig string) string {
 // 	url := SpiderUrl + "/vmstatus/" + vm_name + "?connection_name=" + connectionConfig
 // 	// resp, err := http.Get(url)

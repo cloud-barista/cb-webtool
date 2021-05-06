@@ -6,19 +6,22 @@
 			// function changeProvider(provider, target){
 			// }
 
-			// Connection 정보가 바뀌면 등록에 필요한 목록들을 다시 가져온다.
+			// Connection 정보가 바뀌면 등록에 필요한 목록들을 다시 가져온다.(config는 ID가아닌 configName을 사용한다.)
 			function changeConnectionInfo(configName){
 				console.log("config name : ",configName)
-                getVmIInfo(configName);
-                getSecurityInfo(configName);
+				if( configName == ""){
+					// 0번째면 selectbox들을 초기화한다.(vmInfo, sshKey, image 등)
+				}
+                getVmiInfo(configName);
+                // getSecurityInfo(configName);// TODO : simple에서 사용안하는 것 같은데...
                 getSSHKeyInfo(configName);
-				getVnetInfo(configName);
+				// getVnetInfo(configName);// TODO : simple에서 사용안하는 것 같은데...
 				getSpecInfo(configName);
 			}
 			
-			function getVmIInfo(){
+			function getVmiInfo(){
 				
-				 var configName = $("#regConnectionName option:selected").val();
+				 var configName = $("#s_regConnectionName option:selected").val();
 				 
 				 console.log("2 : ",configName);
 				// getCommonVirtualMachineImageList("mcissimpleconfigure", "name"); setCommonVirtualMachineImageList()
@@ -44,9 +47,10 @@
 						 return;
 					 }
 					 for(var i in data){
-						 if(data[i].connectionName == configName){
-							 html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
-						 }
+						html +="<option value=''>Select Image</option>"
+						if(data[i].connectionName == configName){
+							html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
+						}
 					 }
 					 $("#s_imageId").empty();
 					 $("#s_imageId").append(html);//which OS
@@ -65,7 +69,7 @@
  			function getSecurityInfo(configName){
 				 var configName = configName;
 				 if(!configName){
-					 configName = $("#regConnectionName option:selected").val();
+					 configName = $("#s_regConnectionName option:selected").val();
 				 }
 				//  var url = CommonURL+"/ns/"+NAMESPACE+"/resources/securityGroup";
 				var url = "/setting/resources" + "/securitygroup/list"
@@ -94,14 +98,14 @@
 				   
 					 $("#sg").empty();
 					 $("#sg").append(html);// TODO : 해당 화면에 id=sg 가 없음.
-					 $("#securityGroupIds").val(default_sg)
+					 $("#s_securityGroupIds").val(default_sg)
 					 
 				 })
 			 }
 			 function getSpecInfo(configName){
 				var configName = configName;
 				if(!configName){
-					configName = $("#regConnectionName option:selected").val();
+					configName = $("#s_regConnectionName option:selected").val();
 				}
 
 				var url = "/setting/resources" + "/vmspec/list"
@@ -135,7 +139,7 @@
 			function getSSHKeyInfo(configName){
 				//  var configName = configName;
 				 if(!configName){
-					 configName = $("#regConnectionName option:selected").val();
+					 configName = $("#s_regConnectionName option:selected").val();
 				 }
 				//  var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey";
 				var url = "/setting/resources" + "/sshkey/list"
@@ -153,8 +157,8 @@
 							 html += '<option value="'+data[i].id+'" >'+data[i].cspSshKeyName+'('+data[i].id+')</option>'; 
 						 }
 					 }
-					 $("#sshKey").empty();
-					 $("#sshKey").append(html);
+					 $("#s_sshKey").empty();
+					 $("#s_sshKey").append(html);
 					 
 				 })
 			 }
@@ -164,7 +168,7 @@
 				var configName = configName;
 				console.log("get vnet INfo config name : ",configName)
                 if(!configName){
-                    configName = $("#regConnectionName option:selected").val();
+                    configName = $("#s_regConnectionName option:selected").val();
 				}
 				console.log("get vnet INfo config name : ",configName)
                 // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
@@ -222,7 +226,7 @@
 			function simple_btn(){
 				var simple_form = $("#simple_form").serializeObject()
 				var server_name = simple_form.name
-				var server_cnt = parseInt(simple_form.vm_add_cnt)
+				var server_cnt = parseInt(simple_form.s_vm_add_cnt)
 				console.log('server_cnt : ',server_cnt)
 				var add_server_html = "";
 				

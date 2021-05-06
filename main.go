@@ -227,8 +227,8 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manages/mcis/McisSimpleConfigure",
-			"operation/manages/mcis/McisExpertConfigure",
+			"operation/manages/mcis/McisVmConfigureSimple",
+			"operation/manages/mcis/McisVmConfigureExpert",
 			"operation/manages/mcis/McisPopup",
 
 			"operation/manages/mcis/McisOshw",
@@ -365,11 +365,15 @@ func main() {
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
 	e.GET("/operation/manages/mcis/:mcisID", controller.GetMcisInfoData)
+
+	e.POST("/operation/manages/mcis/:mcisID/vm/reg/proc", controller.VmRegProc) // vm 등록이므로 vmID없이 reg/proc
 	e.GET("/operation/manages/mcis/:mcisID/vm/:vmID", controller.GetVmInfoData)
+
 	e.POST("/operation/manages/mcis/proc/mcislifecycle", controller.McisLifeCycle)
 	//var url = "/operation/manage" + "/mcis/" + mcisID + "/operation/" + type
 	e.POST("/operation/manages/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
 	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
+
 	// e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)

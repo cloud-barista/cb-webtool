@@ -1,5 +1,9 @@
 package tumblebug
 
+import (
+	"time"
+)
+
 type VmInfo struct {
 	ID             string `json:"id"`
 	Name           string `json:"name"`
@@ -21,7 +25,7 @@ type VmInfo struct {
 	Label       string `json:"label"`
 
 	Location   LocationInfo     `json:"location"`
-	RegionZone NameSystemIdInfo `json:"region"`
+	RegionZone NameSystemIdInfo `json:"region"` // tumblebug에서 결과에 region에 region/zone을 같이보내는가?
 
 	publicIP   string `json:"publicIP"`
 	publicDNS  string `json:"publicDNS"`
@@ -62,7 +66,7 @@ type CspViewVmDetailInfo struct {
 	SecurityGroupIIDs []NameSystemIdInfo `json:"securityGroupIIds"`
 	keyPairIID        NameSystemIdInfo   `json:"keyPairIId"`
 
-	StartTime  string           `json:"startTime"`
+	StartTime  time.Time        `json:"startTime"`
 	RegionZone NameSystemIdInfo `json:"region"`
 
 	NetworkInterface string `json:"networkInterface"`

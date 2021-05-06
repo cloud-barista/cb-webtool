@@ -11,13 +11,16 @@
 						<li>
 							<label><span class="ch">*</span>OS Platform</label>
 							<select class="selectbox white pline sel_1">
-								<option value="1">All</option>
+								<option value="">All</option>
+								<option value="WINDOWS">WINDOWS</option>
+								<option value="UBUNTU">UBUNTU</option>
+								<option value="CENTOS">CENTOS</option>
 							</select>
 							<span class="sbox">
 								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" title="" />
 								<input type="submit" name="" class="btn_search" value="" title="" />
 							</span>
-							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly />
+							<input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly />
 						</li>
 					</ul>
 				</div>
@@ -25,7 +28,7 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>HW Spec</label>
-							<select class="selectbox white pline sel_1">
+							<select class="selectbox white pline sel_1"><!-- 선택한 namespace 에 등록된 spec목록 -->
 								<option value="1">All</option>
 							</select>
 							<span class="sbox sbox_m">

@@ -1,4 +1,4 @@
-{{define "McisExpertConfigure"}}
+{{define "McisVmConfigureExpert"}}
 <div class="servers_config new_servers_config" id="expertServerConfig">
 													
 	<div class="top_box">
@@ -21,11 +21,11 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>Server Name</label>
-							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" />
+							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" id="e_name"/>
 						</li>
 						<li>
 							<label>Description</label>
-							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1 ta_2" title="" ></textarea>
+							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1 ta_2" title="" id="e_description"></textarea>
 						</li>
 					</ul>
 				</div>
@@ -33,18 +33,27 @@
 					<ul>
 						<li>
 							<label>Cloud Provider / Region</label>
-							<select class="selectbox white pline sel_1">
+							<select class="selectbox white pline sel_1" id="e_regProvider" onchange="getRegionListForSelectbox(this.value, 'e_regRegion', 'e_regConnectionName');">
 								<option value="1">Selected CP</option>
+								{{ range $cloudItem := .CloudOSList}}	
+								<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
+								{{ end }}
 							</select>
-							<select class="selectbox white pline sel_1">
-								<option value="1">Selected Region</option>
+							<select class="selectbox white pline sel_1" id="e_regRegion" onchange="getConnectionListForSelectbox(this.value, 'e_regConnectionName');">
+								<option value="">Selected Region</option>
+								{{ range $regionItem := .RegionList}}	
+								<option value="{{ $regionItem }}">{{ $regionItem }}</option>
+								{{ end }}
 							</select>
 						</li>
 						<li>
 							<label><span class="ch">*</span>Cloud Connection</label>
 							<span class="sbox">
-								<select class="selectbox white pline sel_2">
-									<option value="1">Selected CP</option>
+								<select class="selectbox white pline sel_2" id="e_regConnectionName">
+									<option value="">Selected CP</option>
+									{{ range $connectionItem := .ConnectionList}}	
+									<option value="{{ $connectionItem }}">{{ $connectionItem }}</option>
+									{{ end }}
 								</select>
 								<a href="javascript:void(0);" class="btn_assist">Assist</a>
 							</span>
@@ -53,21 +62,7 @@
 				</div>
 			</div>
 		</div>
-		
-		<script>
-		$(document).ready(function(){
-			//Deployment Target table scrollbar
-		  $('.btn_assist').on('click', function() {
-			$("#Deployment_box").modal();
-				$('.dtbox.scrollbar-inner').scrollbar();
-			});
-			//Server Configuration clear
-			$(".btn_clear").click(function() {
-				$('.svc_ipbox').find('input, textarea').val('');
-			});
-		});
-		</script>
-											
+					
 	</div>
 
 	<!-- Deployment Target popup -->
@@ -87,11 +82,17 @@
 							
 							<div class="toptxt">
 								<label>Cloud Provider / Region</label>
-								<select class="selectbox sel_1">
+								<select class="selectbox sel_1" id="popProvider" onchange="getRegionListForPopSelectbox(this.value, 's_regConnectionName');">
 									<option value="1">Selected CP</option>
+									{{ range $cloudItem := .CloudOSList}}	
+									<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
+									{{ end }}
 								</select>
-								<select class="selectbox sel_1">
+								<select class="selectbox sel_1" id="popRegion" onchange="getConnectionListByRegionForSelectbox(this.value,'popProvider', 'e_regConnectionName');">
 									<option value="1">Selected Region</option>
+									{{ range $regionItem := .RegionList}}	
+									<option value="{{ $regionItem }}">{{ $regionItem }}</option>
+									{{ end }}
 								</select>
 							</div>
 							
@@ -112,7 +113,14 @@
 											</tr>
 										</thead>
 										<tbody>
+											{{ range $connectionConfigItem := .CloudConnectionConfigInfoList}}	
 											<tr>
+												<td class="btn_mtd" data-th="Cloud Provide">{{ $connectionConfigItem.Provider }}<span class="ov off"></span></td>
+												<td class="overlay hidden" data-th="Region">{{ $connectionConfigItem.Region }}</td>
+												<td class="overlay hidden" data-th="Cloud Connections">{{ $connectionConfigItem.Connection }}</td>
+											</tr>
+											{{ end }}
+											<!-- <tr>
 												<td class="btn_mtd" data-th="Cloud Provide">gcp <span class="ov off"></span></td>
 												<td class="overlay hidden" data-th="Region">region01</td>
 												<td class="overlay hidden" data-th="Cloud Connections">gcp-region01-drv01</td>
@@ -131,7 +139,7 @@
 												<td class="btn_mtd" data-th="Cloud Provide">gcp <span class="ov off"></span></td>
 												<td class="overlay hidden" data-th="Region">region01</td>
 												<td class="overlay hidden" data-th="Cloud Connections">gcp-region01-drv01</td>
-											</tr>
+											</tr> -->
 										</tbody>
 									</table>
 								</div>
@@ -157,62 +165,6 @@
 	</div>
 	<!-- //Deployment Target popup -->
 		
-	<script>
-		$(document).ready(function(){	
-			
-			//tab menu Server / OS_HW /	Network / Security / Other 위치 표시
-			$(".create_tab .nav a").click(function() {
-			  var idx = $(".create_tab .nav a").index(this);
-			  for (i = 0; i < $(".create_tab .nav a").length; i++) {
-				if (i == idx) {
-						$('.config_location > div').removeClass('on');
-						$('.config_location > div > span').eq(idx).parent().addClass('on');
-				} 
-			  }
-			});
-			//tab 내용 다음
-		  $(".create_tab .btn_next").click(function(e) {
-			var $active = $('.create_tab .nav li > .active');
-			$active.parent().next().find('.nav-link').removeClass('disabled');
-			nextTab($active);
-		  });
-		
-			//tab 내용 이전
-		  $(".create_tab .btn_prev").click(function(e) {
-			var $active = $('.create_tab .nav li > a.active');
-			prevTab($active);
-		  });
-		  
-		});
-		//next
-		function nextTab(elem) {
-		  $(elem).parent().next().find('a[data-toggle="tab"]').click();
-		}
-		//prev
-		function prevTab(elem) {
-		  $(elem).parent().prev().find('a[data-toggle="tab"]').click();
-		}
-
-		$(document).ready(function(){	
-			//OS_HW - Clear
-			$("#OS_HW .btn_clear").click(function() {
-				$('#OS_HW .tab_ipbox').find('input, textarea').val('');
-			});
-			//Network - Clear
-			$("#Network .btn_clear").click(function() {
-				$('#Network .tab_ipbox').find('input, textarea').val('');
-			});
-			//Security - Clear
-			$("#Security .btn_clear").click(function() {
-				$('#Security .tab_ipbox').find('input, textarea').val('');
-			});
-			//Other - Clear
-			$("#Other .btn_clear").click(function() {
-				$('#Other .tab_ipbox').find('input, textarea').val('');
-			});
-		});
-
-	</script>
 
 	<div class="create_tab">
 		<ul class="nav">
@@ -263,4 +215,5 @@
 	</div>
 
 </div>
+<script src="/assets/js/operation/manages/mcis/mcisconfigureexpert.js"></script>  
 {{end}}

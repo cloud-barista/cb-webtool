@@ -84,7 +84,7 @@ function deployMcis(){
     var installMonAgent = $("#installMonAgent").val();
     console.log(Simple_Server_Config_Arr)
     var new_obj = {}
-    // var apiInfo = ApiInfo;
+    // mcis 생성이므로 mcisID가 없음
     new_obj['name'] = mcis_name
     new_obj['description'] = mcis_desc
     new_obj['installMonAgent'] = installMonAgent
