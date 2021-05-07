@@ -633,4 +633,169 @@
 									</div>
 									<!-- //Security edit popup -->
 
+									<!-- //Import Export popup -->
+									<div class="modal fade popup_CreateTabBox" id="VmImportExport" tabindex="-1" role="dialog" aria-hidden="true">
+										
+										<div class="modal-dialog modal-dialog-centered" role="document">
+											<div class="modal-content">
+												<div class="servers_box">
+													<div class="title">Import</div>
+													<div class="switch">
+														<label><span class="ch">*</span>Import File</label>
+														<button onclick="openTextFile()">Open</button>
+													</div>
+													
+													<div class="list">														
+														<textarea  cols="120" rows="10" placeholder="Input Description" class="pline ta_1" id="fileContent" ></textarea>
+													</div>
+												</div>
+												
+												<div class="servers_box">
+													<div class="title">Export</div>
+													<div class="switch">
+														<label><span class="ch">*</span>Expert File</label>
+														<button class="btn_del" name="" onclick="saveVmInfoToFile()">Expert</button>
+													</div>
+													<div class="list">
+														<table>
+															<colgroup><col width="15%"><col width=""></colgroup>
+															<tr>
+																<td>
+																	<table cellpadding="0" cellspacing="0" border="1" summary="" id="popVmList">																		
+																		<thead>
+																			<tr>
+																				<th>ServerName </th>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			{{range $vmIndex, $vmItem := .VMList}}
+																			<tr onclick="exportVmScript('{{ $vmIndex }}')">
+																				<td class="btn_mtd" data-th="Cloud Provide">
+																					{{$vmItem.Name}}<span class="ov off"></span>
+			
+																					<input type="hidden" id="p_connectionName_{{ $vmIndex }}" value="{{ $vmItem.ConnectionName }}">
+																					<input type="hidden" id="p_description_{{ $vmIndex }}" value="{{ $vmItem.Description }}">
+																					<input type="hidden" id="p_imageId_{{ $vmIndex }}" value="{{ $vmItem.ImageID }}">
+																					<input type="hidden" id="p_label_{{ $vmIndex }}" value="{{ $vmItem.Label }}">
+																					<input type="hidden" id="p_name_{{ $vmIndex }}" value="{{ $vmItem.Name }}">
+																					<input type="hidden" id="p_securityGroupIds_{{ $vmIndex }}" value="{{ $vmItem.SecurityGroupIDs }}">
+																					<input type="hidden" id="p_specId_{{ $vmIndex }}" value="{{ $vmItem.SpecID }}">
+																					<input type="hidden" id="p_sshKeyId_{{ $vmIndex }}" value="{{ $vmItem.SshKeyID }}">
+																					<input type="hidden" id="p_subnetId_{{ $vmIndex }}" value="{{ $vmItem.SubnetID }}">
+																					<input type="hidden" id="p_vNetId_{{ $vmIndex }}" value="{{ $vmItem.VNetID }}">
+			
+																					<input type="hidden" id="p_vmGroupSize_{{ $vmIndex }}" value="0"><!-- VM은 Group단위로 만들지 않음. 처음 생성시 동일한 VM을 만들기 위한 변수 임 -->
+																					<input type="hidden" id="p_vmUserAccount_{{ $vmIndex }}" value="">
+																					<input type="hidden" id="p_vmUserPassword_{{ $vmIndex }}" value="">
+																				</td>
+																				
+																			</tr>
+																			{{ end }}
+																		</tbody>
+																	</table>
+																</td>
+																<td>
+																	<textarea  cols="90%" rows="10" placeholder="Input Description" class="pline ta_1" id="vmExportScript"></textarea>																	
+																	<input type=hidden id="exportFileName">
+																</td>
+															</tr>
+														</table>														
+														
+													</div>													
+												</div>
+												
+												<div class="btnbox">
+													<div class="btn_right">														
+														<!-- Apply를 클릭하면 VM이 추가 됨. Deploy해야 실제 생성요청들어감.-->
+														<button name="" value="" class="btn_cancel btn_co btn_cr_b w135" data-dismiss="modal" onclick="saveVmInfoToFile()">Apply</button> 
+														<button name="" value="" class="btn_cancel btn_co btn_cr_b w135" data-dismiss="modal">Close</button> 
+													</div>
+												</div>
+											</div>
+										</div>
+									
+									</div>
+
+									<!-- //Import Export popup -->
+<script>
+function openTextFile() {
+    var input = document.createElement("input");
+    input.type = "file";
+    input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
+    input.onchange = function (event) {
+        processFile(event.target.files[0]);
+    };
+    input.click();
+}
+
+// 선택한 파일을 읽어 화면에 보여줌
+function processFile(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+		console.log(reader.result);
+        $("#fileContent").val(reader.result);
+    };
+    //reader.readAsText(file, /* optional */ "euc-kr");
+	reader.readAsText(file);
+}
+
+
+function exportVmScript(vmIndex){
+	
+	var connectionNameVal = $("#p_connectionName_" + vmIndex).val();
+	var descriptionVal = $("#p_description_" + vmIndex).val();
+	var imageIdVal = $("#p_imageId_" + vmIndex).val();
+	var labelVal = $("#p_label_" + vmIndex).val();
+	var nameVal = $("#p_name_" + vmIndex).val();
+	var securityGroupIdsVal = $("#p_securityGroupIds_" + vmIndex).val();
+	var specIdVal = $("#p_specId_" + vmIndex).val();
+	var sshKeyIdVal = $("#p_sshKeyId_" + vmIndex).val();
+	var subnetIdVal = $("#p_subnetId_" + vmIndex).val();
+	var vNetIdVal = $("#p_vNetId_" + vmIndex).val();
+	var vmGroupSizeVal = $("#p_vmGroupSize_" + vmIndex).val();
+	var vmUserAccountVal = $("#p_vmUserAccount_" + vmIndex).val();
+	var vmUserPasswordVal = $("#p_vmUserPassword_" + vmIndex).val();
+
+	var vmCreateScript = "";
+	vmCreateScript += "{	";
+	vmCreateScript += "connectionName: " + connectionNameVal;
+	vmCreateScript += ",description: " + descriptionVal;
+	vmCreateScript += ",imageId: " + imageIdVal;
+	vmCreateScript += ",label: " + labelVal;
+	vmCreateScript += ",name: " + nameVal;
+	vmCreateScript += ",securityGroupIds: [ ";
+    vmCreateScript += "	" + securityGroupIdsVal;
+	vmCreateScript += "	], ";
+	vmCreateScript += ",specId " + specIdVal;
+	vmCreateScript += ",sshKeyId " + sshKeyIdVal;
+	vmCreateScript += ",subnetId " + subnetIdVal;
+	vmCreateScript += ",vNetId " + vNetIdVal;
+	vmCreateScript += ",vmGroupSize " + vmGroupSizeVal;
+	vmCreateScript += ",vmUserAccount " + vmUserAccountVal;
+	vmCreateScript += ",vmUserPassword " + vmUserPasswordVal;
+	vmCreateScript += "}";
+
+	
+	$("#exportFileName").val(nameVal);
+	$("#vmExportScript").val(vmCreateScript);
+}
+
+function saveVmInfoToFile(){
+	var fileName = $("#exportFileName").val();
+	var exportScript = $("#vmExportScript").val();
+	
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
+	element.setAttribute('download', fileName);
+
+	element.style.display = 'none';
+	document.body.appendChild(element);
+
+	element.click();
+
+	document.body.removeChild(element);
+
+}
+</script>
+
 {{end}}

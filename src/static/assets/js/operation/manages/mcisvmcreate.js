@@ -9,47 +9,79 @@ $(document).ready(function(){
         $('#security_edit .dtbox.scrollbar-inner').scrollbar();
     });
 
-    //Servers Expert on/off
-    var check = $(".switch .ch");
-    var $Servers = $(".servers_config");
-    var $NewServers = $(".new_servers_config");
-    var $SimpleServers = $(".simple_servers_config");
-    var simple_config_cnt = 0;
-    var expert_config_cnt = 0;
-    
-    check.click(function(){
-        $(".switch span.txt_c").toggle();
-        $NewServers.removeClass("active");
-    });
-   
-  //Expert add
-    $('.servers_box .server_add').click(function(){
-        $NewServers.toggleClass("active");
-      if($Servers.hasClass("active")) {
-        $Servers.toggleClass("active");
-    } else {
-        $Servers.toggleClass("active");
-    }
-    });
-    // Simple add
-  $(".servers_box .switch").change(function() {
-    if ($(".switch .ch").is(":checked")) {	
-            $('.servers_box .server_add').click(function(){	
+    // $("input[name='vmInfoType']:radio").change(function () {
+    //     //라디오 버튼 값을 가져온다.
+    //     var formType = this.value;
                 
-                $NewServers.addClass("active");
-                $SimpleServers.removeClass("active");		
-            });
-    } else {
-            $('.servers_box .server_add').click(function(){
+    // });
+
+    var $SimpleServers = $("#simpleServerConfig");
+    var $ExpertServers = $("#expertServerConfig");
+    var $ImportServers = $("#importServerConfig");
+    // server add 버튼 클릭 시
+    $('.servers_box .server_add').click(function(){	
+        var vmFormType = $("input[name='vmInfoType']:checked").val();
+        console.log("vmFormType = " + vmFormType)
+        if( vmFormType == "expert"){
+            $SimpleServers.removeClass("active");
+            $ExpertServers.addClass("active");            
+            $ImportServers.removeClass("active");
+        }else if( vmFormType == "import"){
+            $SimpleServers.removeClass("active");
+            $ExpertServers.removeClass("active");            
+            $ImportServers.addClass("active");
+        }else{// simple
+            $SimpleServers.addClass("active");
+            $ExpertServers.removeClass("active");            
+            $ImportServers.removeClass("active");
+        }
+        //<div class="servers_config import_servers_config" id="importServerConfig">
+        //<div class="servers_config new_servers_config" id="expertServerConfig">
+    });
+
+    //Servers Expert on/off
+//     var check = $(".switch .ch");
+//     var $Servers = $(".servers_config");
+//     var $NewServers = $(".new_servers_config");
+//     var $SimpleServers = $(".simple_servers_config");
+//     var simple_config_cnt = 0;
+//     var expert_config_cnt = 0;
+    
+//     check.click(function(){
+//         $(".switch span.txt_c").toggle();
+//         $NewServers.removeClass("active");
+//     });
+   
+//   //Expert add
+//     $('.servers_box .server_add').click(function(){
+//         $NewServers.toggleClass("active");
+//       if($Servers.hasClass("active")) {
+//         $Servers.toggleClass("active");
+//     } else {
+//         $Servers.toggleClass("active");
+//     }
+//     });
+//     // Simple add
+//   $(".servers_box .switch").change(function() {
+//     if ($(".switch .ch").is(":checked")) {	
+//             $('.servers_box .server_add').click(function(){	
+                
+//                 $NewServers.addClass("active");
+//                 $SimpleServers.removeClass("active");		
+//             });
+//     } else {
+//             $('.servers_box .server_add').click(function(){
             
-                $NewServers.removeClass("active");
-                $SimpleServers.addClass("active");
+//                 $NewServers.removeClass("active");
+//                 $SimpleServers.addClass("active");
             
             
-            });		
-    }
-  });
+//             });		
+//     }
+//   });
 });
+
+
 
 function btn_deploy(){
     var mcis_name = $("#mcis_name").val();
@@ -115,6 +147,71 @@ function btn_deploy(){
             // return 받으면 해당 VM
         } 
     }
+
+    ///////// export
+    ///////// import
+    if(Import_Server_Config_Arr){// mcissimpleconfigure.js 에 const로 정의 됨.
+        vm_len = Import_Server_Config_Arr.length;			
+        console.log("Import_Server_Config_Arr length: ",vm_len);
+        // var new_obj = {}
+        // new_obj['vm'] = Simple_Server_Config_Arr;
+        // console.log("new obj is : ",new_obj);
+        // var url = "/operation/manages/mcis/:mcisID/vm/reg/proc"
+        var url = "/operation/manages/mcis/" + mcis_id +"/vm/reg/proc"
+
+        // 한개씩 for문으로 추가
+        for(var i in Import_Server_Config_Arr){
+            new_obj = Import_Server_Config_Arr[i];
+            console.log("new obj is : ",new_obj);
+            try{
+                resultVmCreateMap.set("Import"+ i, "")
+                axios.post(url,new_obj,{
+                    headers :{
+                        },
+                }).then(result=>{
+                    console.log("MCIR VM Register data : ",result);
+                    console.log("Result Status : ",result.status); 
+
+                    var statusCode = result.data.status;
+                    var message = result.data.message;
+                    console.log("Result Status : ",statusCode); 
+                    console.log("Result message : ",message); 
+
+                    if(result.status == 201 || result.status == 200){
+                        vmCreateCallback("Import"+ i, "Success")
+                    //     commonAlert("Register Success")
+                    //     // location.href = "/Manage/MCIS/list";
+                    //     // $('#loadingContainer').show();
+                    //     // location.href = "/operation/manages/mcis/mngform/"
+                    //     var targetUrl = "/operation/manages/mcis/mngform"
+                    //     changePage(targetUrl)
+                    }else{
+                        vmCreateCallback("Import"+ i, message)    
+                    //     commonAlert("Register Fail")
+                    //     //location.reload(true);
+                    }
+                }).catch((error) => {
+                    // console.warn(error);
+                    console.log(error.response)
+                    var errorMessage = error.response.data.error;
+                    // commonErrorAlert(statusCode, errorMessage) 
+                    vmCreateCallback("Import"+ i, errorMessage)
+                })
+            }finally{
+                
+            }
+
+            // post로 호출을 했으면 해당 VM의 정보는 비활성시킨 후(클릭 Evnet 안먹게)
+            // 상태값을 모니터링 하여 결과 return 까지 대기.
+            // return 받으면 해당 VM
+        } 
+    }
+}
+
+// Import / Export Modal 표시
+function btn_ImportExport() {
+    $("#VmImportExport").modal();
+    $('#VmImportExport .dtbox.scrollbar-inner').scrollbar();
 }
 
 // vm 생성 결과 표시
@@ -130,3 +227,4 @@ function vmCreateCallback(resultVmKey, resultStatus){
 
     $("#serverRegistResult").text(resultText)
 }
+

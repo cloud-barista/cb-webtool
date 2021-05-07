@@ -1768,6 +1768,7 @@
 .dashboard .create_box .servers_config { display:none; position:relative; margin:33px 0 0 0; padding:34px 20px; background-color:#fff; box-shadow:2px 2px 5px 0  #f0f1f2, -2px -2px 5px 0  #f0f1f2; border-radius:10px;  -webkit-transition:all 0.3s; -moz-transition:all 0.3s; -o-transition:all 0.3s; -ms-transition:all 0.3s; transition:all 0.3s; }
 .dashboard .create_box .new_servers_config.active { display:block; }
 .dashboard .create_box .simple_servers_config.active { display:block; }
+.dashboard .create_box .import_servers_config.active { display:block; }
 .dashboard .create_box .servers_config .top_box { padding:0 25px; }
 .dashboard .create_box .servers_config .top_box .titbox_sc .tit { display:inline-block; margin:0 18px 0 0; vertical-align:middle; color:#06a9b7; font-size:20px; font-weight:500; }
 .dashboard .create_box .servers_config .top_box .titbox_sc .config_location { display:inline-block; vertical-align:middle; }

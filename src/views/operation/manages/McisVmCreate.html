@@ -86,8 +86,20 @@
 												<div class="servers_box">
 													<div class="title">Servers</div>
 													<div class="switch">
-														<span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title=""  /><span></span></label>
+														<!-- <span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title=""  /><span></span></label> -->
+
+														<!-- <span class="txt">Import <span class="txt_c on d_none">ON</span>
+														<span class="txt_c off ">OFF</span></span>
+														<label>
+														<input type="checkbox" name="consent" class="ch" id="isImport" />
+														<span></span></label> -->
+
+														<label><input type="radio" id="vmInfoTypeSimple" name="vmInfoType" value="simple" checked>Simple</label><br>
+														<label><input type="radio" id="vmInfoTypeExpert" name="vmInfoType" value="expert">Expert</label><br>
+														<label><input type="radio" id="vmInfoTypeImport" name="vmInfoType" value="import">Import</label>
+
 													</div>
+													
 																						
 													<div class="list">
 														
@@ -114,23 +126,26 @@
 												<!-- //servers -->												
 												<div>
 													<span class="text-center" id="serverRegistResult">&nbsp;</span>
+													<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="btn_ImportExport();"><span>Import/Export</span></button> 
 												</div>
 
 												<div class="btnbox">
 													<div class="btn_right">
 														<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="btn_deploy();"><span>DEPLOY</span></button> 
 													</div>
-												</div>
-						
+												</div>						
 
 												<!-- Simple Server Configuration -->
 												{{template "McisVmConfigureSimple" .}}
 												<!-- Simple Server Configuration -->
 												
-												<!-- New Server Config -->
+												<!-- Expert Server Config -->
 												{{template "McisVmConfigureExpert" .}}
-												<!-- //New Server Config -->
+												<!-- //Expert Server Config -->
 
+												<!-- Import Server Config -->
+												{{template "McisVmConfigureImport" .}}
+												<!-- //Import Server Config -->
 												
 												{{template "McisAssistPopup" .}}
 
@@ -152,5 +167,7 @@
 					
 				</div>
 				<!-- //contents -->
-<script src="/assets/js/operation/manages/mcisvmcreate.js"></script>
+				<script src="/assets/js/operation/manages/mcis/mcisvmconfigureimport.js"></script>
+				<script src="/assets/js/operation/manages/mcisvmcreate.js"></script>
+
 {{template "Footer" .}}			

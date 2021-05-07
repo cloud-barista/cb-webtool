@@ -1,4 +1,6 @@
 $(document).ready(function(){
+
+
     //Servers Expert on/off
 //     var check = $(".switch .ch");
 //     var $Servers = $(".servers_config");
@@ -45,28 +47,41 @@ $(document).ready(function(){
 // isExpert의 체크 여부에 따라 바뀜.
 // newServers 와 simpleServers가 있음.
 function displayNewServerForm(){
-    
-    var expertServerConfig = $("#expertServerConfig");
+    alert("here")
     var simpleServerConfig = $("#simpleServerConfig");
-    if ($("#isExpert").is(":checked")) {
-        //expertServerConfig
-        if(expertServerConfig.hasClass("active")) {
-            expertServerConfig.removeClass("active");
-        }else{
-            expertServerConfig.addClass("active");
+    var expertServerConfig = $("#expertServerConfig");    
+    var importServerConfig = $("#importServerConfig");
+    // if ($("#isExpert").is(":checked")) {        
+    //     if(expertServerConfig.hasClass("active")) {
+    //         expertServerConfig.removeClass("active");
+    //     }else{
+    //         simpleServerConfig.removeClass("active");
+    //         expertServerConfig.addClass("active");
+    //         importServerConfig.removeClass("active");
+    //     }
+    // }else if ($("#isImport").is(":checked")) {
+    if ($("#isImport").is(":checked")) {
+        if(importServerConfig.hasClass("active")) {
+            importServerConfig.removeClass("active");
+        }else{            
             simpleServerConfig.removeClass("active");
+            expertServerConfig.removeClass("active");
+            importServerConfig.addClass("active");
         }
     }else{
         //simpleServerConfig
         if(simpleServerConfig.hasClass("active")) {
             simpleServerConfig.removeClass("active");
         }else{
-            expertServerConfig.removeClass("active");
             simpleServerConfig.addClass("active");
+            expertServerConfig.removeClass("active");
+            importServerConfig.removeClass("active");
+            
         }
     }
-
 }
+
+
 
 // 서버정보 입력 area에서 'DONE'버튼 클릭시 array에 담고 form을 초기화
 
