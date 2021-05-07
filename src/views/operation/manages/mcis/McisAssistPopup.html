@@ -1,4 +1,4 @@
-{{define "McisPopup"}}
+{{define "McisAssistPopup"}}
 
 									<!-- OS HW Spec -->
 									<div class="modal fade popup_CreateTabBox popup_plineNone" id="OS_HW_Spec" tabindex="-1" role="dialog" aria-hidden="true">
@@ -23,10 +23,16 @@
 																			<li>
 																				<label>Cloud Provider / Region</label>
 																				<select class="selectbox white pline sel_2">
-																					<option value="1">Selected CP</option>
+																					<option value="">Selected CP</option>
+																					{{ range $cloudItem := .CloudOSList}}	
+																					<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
+																					{{ end }}
 																				</select>
 																				<select class="selectbox white pline sel_2">
-																					<option value="1">Selected Region</option>
+																					<option value="">Selected Region</option>
+																					{{ range $regionItem := .RegionList}}	
+																					<option value="{{ $regionItem.RegionName }}">[{{ $regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
+																					{{ end }}
 																				</select>
 																			</li>
 																		</ul>
@@ -423,7 +429,10 @@
 																			<li>
 																				<label>Security Group</label>
 																				<select class="selectbox white pline sel_1">
-																					<option value="1">Input / select Name</option>
+																					<option value="">Input / select Name</option>
+																					{{ range $securityGroupItem := .SecurityGroupList}}	
+																					<option value="{{ $securityGroupItem.ID }}">[{{ $securityGroupItem.ConnectionName }}] {{ $securityGroupItem.Name }} {{ $securityGroupItem.VNetID }}</option>
+																					{{ end }}
 																				</select>
 																			</li>
 																		</ul>

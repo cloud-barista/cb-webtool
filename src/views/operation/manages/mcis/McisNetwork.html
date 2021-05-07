@@ -14,7 +14,10 @@
 							<label><span class="ch">*</span>Network Name</label>
 							<span class="sbox sbox_m">
 								<select class="selectbox white pline sel_2">
-									<option value="1">Input / select Name</option>
+									<option value="">Input / select Name</option>
+									{{ range $vNetItem := .VNetList}}	
+									<option value="{{ $vNetItem.ID }}">[{{ $vNetItem.ConnectionName }}] {{ $vNetItem.Name }} {{ $vNetItem.CspVNetName }}</option>
+									{{ end }}
 								</select>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#Network_Interface" class="btn_view btn_Interface">View</a>
 							</span>

@@ -8,9 +8,9 @@
 			<div class="tab_ipbox">
 				<div class="ipbox ipbox1">
 					<ul>
-						<li>
+						<li><!-- VM parameter 자체에는 OS Platform이 없고 Spec에 OS Type 있음.  OS Platform은 filter조건인가? TODO : 없앨 것인가? -->
 							<label><span class="ch">*</span>OS Platform</label>
-							<select class="selectbox white pline sel_1">
+							<select class="selectbox white pline sel_1" id="e_vmOsType">
 								<option value="">All</option>
 								<option value="WINDOWS">WINDOWS</option>
 								<option value="UBUNTU">UBUNTU</option>
@@ -28,12 +28,16 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>HW Spec</label>
-							<select class="selectbox white pline sel_1"><!-- 선택한 namespace 에 등록된 spec목록 -->
-								<option value="1">All</option>
+							<select class="selectbox white pline sel_1" id="e_specId"><!-- 선택한 namespace 에 등록된 spec목록 -->
+								<option value="">All</option>
+								{{ range $vmSpecItem := .VMSpecList}}
+								<option value="{{ $vmSpecItem.ID }}">[{{ $vmSpecItem.Name }}] {{ $vmSpecItem.CspSpecName }}  {{ $vmSpecItem.NumVCPU }} {{ $vmSpecItem.NumCore }}</option>
+								{{ end }}
+
 							</select>
 							<span class="sbox sbox_m">
-								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" title="" />
-								<input type="submit" name="" class="btn_search" value="" title="" />
+								<input type="text" name="e_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" title="" id="e_specFilterKeyword"/>
+								<input type="submit" name="" class="btn_search" value="" title="" onclick="hardwareSpecFilter('e_specId', 'e_specFilterKeyword')"/>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
 							</span>
 							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly />
@@ -43,9 +47,35 @@
 			</div>
 		</div>
   
-  <div class="btn_tab">
-	  <a href="javascript:void(0);" class="btn_next">Next</a>
-  </div>
+		<div class="btn_tab">
+			<a href="javascript:void(0);" class="btn_next">Next</a>
+		</div>
 	</div>
 	<!-- //OS/HW -->
+<script>
+	$(document).ready(function(){
+		$("input[name=e_specFilterKeyword]").keydown(function (key) {
+	
+			if(key.keyCode == 13){//키가 13이면 실행 (엔터는 13)
+				console.log(this.value);
+				selectBoxFilterByText('e_specId', this.value)
+			}
+	
+		});		
+	});
+
+
+	function hardwareSpecFilterByEnter(targetObjId, keyword){
+		console.log(event.KeyCode + " : " + keyword);
+		if( event.KeyCode == 13){
+			selectBoxFilterByText(targetObjId, keyword)
+		}
+	}
+
+	function hardwareSpecFilter(targetObjId, keywordObjId){
+		var keyword = $("#" + keywordObjId).val();
+		selectBoxFilterByText(targetObjId, keyword)
+	}
+
+</script>	
 {{end}}

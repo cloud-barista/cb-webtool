@@ -457,7 +457,6 @@ func McisVmRegForm(c echo.Context) error {
 			"VNetList":          vNetInfoList,
 			"SecurityGroupList": securityGroupInfoList,
 		})
-
 }
 
 // GetMcisInfoData

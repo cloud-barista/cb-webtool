@@ -229,7 +229,7 @@ func main() {
 
 			"operation/manages/mcis/McisVmConfigureSimple",
 			"operation/manages/mcis/McisVmConfigureExpert",
-			"operation/manages/mcis/McisPopup",
+			"operation/manages/mcis/McisAssistPopup",
 
 			"operation/manages/mcis/McisOshw",
 			"operation/manages/mcis/McisNetwork",
