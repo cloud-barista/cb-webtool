@@ -1,7 +1,8 @@
 function importVmInfoFromFile() {
     var input = document.createElement("input");
     input.type = "file";
-    input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
+    // input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
+	input.accept = ".json";
     input.onchange = function (event) {
         processFile(event.target.files[0]);
     };
@@ -23,6 +24,24 @@ function processFile(file) {
 			// var jsonObj = JSON.parse(reader.result);
 			var jsonObj = JSON.parse(jsonStr);
 			console.log(jsonObj);
+			console.log(jsonObj[0]);
+			console.log(jsonObj[10]);
+			console.log(jsonObj.name);
+			console.log("---3")
+
+			// 요거 작동 하네.
+			var newJ= $.parseJSON(reader.result);
+			console.log(newJ);
+			console.log(newJ[0]);
+			console.log(newJ[10]);
+			console.log(newJ.name);
+
+			// var jsonObj2 = JSON.parse(reader.result);
+			// console.log(jsonObj2);
+			
+			// var str = '{	"connectionName" : "aws-us-east-1"}'
+			// jsonObj2 = JSON.parse(str);
+			// console.log(jsonObj2.connectionName)
 		};
 		//reader.readAsText(file, /* optional */ "euc-kr");
 		reader.readAsText(file);

@@ -756,24 +756,24 @@ function exportVmScript(vmIndex){
 	var vmUserAccountVal = $("#p_vmUserAccount_" + vmIndex).val();
 	var vmUserPasswordVal = $("#p_vmUserPassword_" + vmIndex).val();
 
+	var paramValueAppend = '"';
 	var vmCreateScript = "";
-	vmCreateScript += "{	";
-	vmCreateScript += "connectionName: " + connectionNameVal;
-	vmCreateScript += ",description: " + descriptionVal;
-	vmCreateScript += ",imageId: " + imageIdVal;
-	vmCreateScript += ",label: " + labelVal;
-	vmCreateScript += ",name: " + nameVal;
-	vmCreateScript += ",securityGroupIds: [ ";
-    vmCreateScript += "	" + securityGroupIdsVal;
-	vmCreateScript += "	], ";
-	vmCreateScript += ",specId " + specIdVal;
-	vmCreateScript += ",sshKeyId " + sshKeyIdVal;
-	vmCreateScript += ",subnetId " + subnetIdVal;
-	vmCreateScript += ",vNetId " + vNetIdVal;
-	vmCreateScript += ",vmGroupSize " + vmGroupSizeVal;
-	vmCreateScript += ",vmUserAccount " + vmUserAccountVal;
-	vmCreateScript += ",vmUserPassword " + vmUserPasswordVal;
-	vmCreateScript += "}";
+	vmCreateScript += '{	';
+	vmCreateScript += paramValueAppend + 'connectionName' + paramValueAppend + ' : ' + paramValueAppend + connectionNameVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + descriptionVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'imageId' + paramValueAppend + ' : ' + paramValueAppend + imageIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + labelVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + nameVal + paramValueAppend;
+	// vmCreateScript += ',securityGroupIds: ';
+    // vmCreateScript += '	' + paramValueAppend + securityGroupIdsVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'specId' + paramValueAppend + ' : ' + paramValueAppend + specIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
+	vmCreateScript += '}';
 
 	
 	$("#exportFileName").val(nameVal);
@@ -785,8 +785,10 @@ function saveVmInfoToFile(){
 	var exportScript = $("#vmExportScript").val();
 	
 	var element = document.createElement('a');
-	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
-	element.setAttribute('download', fileName);
+	// element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
+	element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
+	// element.setAttribute('download', fileName);
+	element.setAttribute('download', fileName + ".json");
 
 	element.style.display = 'none';
 	document.body.appendChild(element);
