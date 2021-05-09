@@ -51,33 +51,20 @@ function displayNewServerForm(){
     var simpleServerConfig = $("#simpleServerConfig");
     var expertServerConfig = $("#expertServerConfig");    
     var importServerConfig = $("#importServerConfig");
-    // if ($("#isExpert").is(":checked")) {        
-    //     if(expertServerConfig.hasClass("active")) {
-    //         expertServerConfig.removeClass("active");
-    //     }else{
-    //         simpleServerConfig.removeClass("active");
-    //         expertServerConfig.addClass("active");
-    //         importServerConfig.removeClass("active");
-    //     }
-    // }else if ($("#isImport").is(":checked")) {
+
     if ($("#isImport").is(":checked")) {
-        if(importServerConfig.hasClass("active")) {
-            importServerConfig.removeClass("active");
-        }else{            
-            simpleServerConfig.removeClass("active");
-            expertServerConfig.removeClass("active");
-            importServerConfig.addClass("active");
-        }
+        simpleServerConfig.removeClass("active");
+        expertServerConfig.removeClass("active");
+        importServerConfig.addClass("active");
+    }else if ($("#isExpert").is(":checked")) {
+        simpleServerConfig.removeClass("active");
+        expertServerConfig.addClass("active");
+        importServerConfig.removeClass("active");        
     }else{
-        //simpleServerConfig
-        if(simpleServerConfig.hasClass("active")) {
-            simpleServerConfig.removeClass("active");
-        }else{
-            simpleServerConfig.addClass("active");
-            expertServerConfig.removeClass("active");
-            importServerConfig.removeClass("active");
-            
-        }
+        //simpleServerConfig        
+        simpleServerConfig.addClass("active");
+        expertServerConfig.removeClass("active");
+        importServerConfig.removeClass("active");        
     }
 }
 

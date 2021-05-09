@@ -11,40 +11,28 @@ $(document).ready(function(){
       }
     });
     //tab 내용 다음
-  $(".create_tab .btn_next").click(function(e) {
-    var $active = $('.create_tab .nav li > .active');
-    $active.parent().next().find('.nav-link').removeClass('disabled');
-    nextTab($active);
-  });
+    $(".create_tab .btn_next").click(function(e) {
+      var $active = $('.create_tab .nav li > .active');
+      $active.parent().next().find('.nav-link').removeClass('disabled');
+      nextTab($active);
+    });
 
     //tab 내용 이전
-  $(".create_tab .btn_prev").click(function(e) {
-    var $active = $('.create_tab .nav li > a.active');
-    prevTab($active);
-  });
+    $(".create_tab .btn_prev").click(function(e) {
+      var $active = $('.create_tab .nav li > a.active');
+      prevTab($active);
+    });
   
-});
-//next
-function nextTab(elem) {
-  $(elem).parent().next().find('a[data-toggle="tab"]').click();
-}
-//prev
-function prevTab(elem) {
-  $(elem).parent().prev().find('a[data-toggle="tab"]').click();
-}
-
-$(document).ready(function(){	
     //Deployment Target table scrollbar
     $('.btn_assist').on('click', function() {
-        $("#Deployment_box").modal();
-        $('.dtbox.scrollbar-inner').scrollbar();
+      $("#Deployment_box").modal();
+      $('.dtbox.scrollbar-inner').scrollbar();
     });
     //Server Configuration clear
     $(".btn_clear").click(function() {
         $('.svc_ipbox').find('input, textarea').val('');
     });
-
-
+    
     //OS_HW - Clear
     $("#OS_HW .btn_clear").click(function() {
         $('#OS_HW .tab_ipbox').find('input, textarea').val('');
@@ -63,6 +51,14 @@ $(document).ready(function(){
     });
 });
 
+//next
+function nextTab(elem) {
+  $(elem).parent().next().find('a[data-toggle="tab"]').click();
+}
+//prev
+function prevTab(elem) {
+  $(elem).parent().prev().find('a[data-toggle="tab"]').click();
+}
 
 // TODO : util.js로 옮길 것
 // select box의 option text에 compareText가 있으면 show 없으면 hide
@@ -186,4 +182,11 @@ function getRegionListForPopSelectbox(provider, targetRegionObj, targetConnectio
 // region 변경시, 해당 provider, region으로 connection 목록 조회
 function getConnectionListByRegionForSelectbox(region, targetProviderObj, targetConnectionObj){
 
+}
+
+
+const Expert_Server_Config_Arr = new Array();
+var expert_data_cnt = 0
+const expertServerCloneObj = obj=>JSON.parse(JSON.stringify(obj))
+function expertDone_btn(){
 }

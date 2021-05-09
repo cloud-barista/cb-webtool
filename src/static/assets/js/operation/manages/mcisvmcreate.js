@@ -15,29 +15,13 @@ $(document).ready(function(){
                 
     // });
 
-    var $SimpleServers = $("#simpleServerConfig");
-    var $ExpertServers = $("#expertServerConfig");
-    var $ImportServers = $("#importServerConfig");
+
     // server add 버튼 클릭 시
-    $('.servers_box .server_add').click(function(){	
-        var vmFormType = $("input[name='vmInfoType']:checked").val();
-        console.log("vmFormType = " + vmFormType)
-        if( vmFormType == "expert"){
-            $SimpleServers.removeClass("active");
-            $ExpertServers.addClass("active");            
-            $ImportServers.removeClass("active");
-        }else if( vmFormType == "import"){
-            $SimpleServers.removeClass("active");
-            $ExpertServers.removeClass("active");            
-            $ImportServers.addClass("active");
-        }else{// simple
-            $SimpleServers.addClass("active");
-            $ExpertServers.removeClass("active");            
-            $ImportServers.removeClass("active");
-        }
-        //<div class="servers_config import_servers_config" id="importServerConfig">
-        //<div class="servers_config new_servers_config" id="expertServerConfig">
-    });
+    // $('.servers_box .server_add').click(function(){	
+
+    //     //<div class="servers_config import_servers_config" id="importServerConfig">
+    //     //<div class="servers_config new_servers_config" id="expertServerConfig">
+    // });
 
     //Servers Expert on/off
 //     var check = $(".switch .ch");
@@ -81,8 +65,29 @@ $(document).ready(function(){
 //   });
 });
 
+function displayNewServerForm(){
+    var $SimpleServers = $("#simpleServerConfig");
+    var $ExpertServers = $("#expertServerConfig");
+    var $ImportServers = $("#importServerConfig");
 
+    var vmFormType = $("input[name='vmInfoType']:checked").val();
+    console.log("vmFormType = " + vmFormType)
+    if( vmFormType == "expert"){
+        $SimpleServers.removeClass("active");
+        $ExpertServers.addClass("active");            
+        $ImportServers.removeClass("active");
+    }else if( vmFormType == "import"){
+        $SimpleServers.removeClass("active");
+        $ExpertServers.removeClass("active");            
+        $ImportServers.addClass("active");
+    }else{// simple
+        $SimpleServers.addClass("active");
+        $ExpertServers.removeClass("active");            
+        $ImportServers.removeClass("active");
+    }
+}
 
+var totalDeployServerCount = 0;
 function btn_deploy(){
     var mcis_name = $("#mcis_name").val();
     var mcis_id = $("#mcis_id").val();
@@ -90,9 +95,11 @@ function btn_deploy(){
         commonAlert("Please Select MCIS !!!!!")
         return;
     }
-        
+    totalDeployServerCount = 0;// deploy vm 개수 초기화
+
     if(Simple_Server_Config_Arr){// mcissimpleconfigure.js 에 const로 정의 됨.
-        vm_len = Simple_Server_Config_Arr.length;			
+        var vm_len = Simple_Server_Config_Arr.length;
+        totalDeployServerCount += vm_len
         console.log("Simple_Server_Config_Arr length: ",vm_len);
         // var new_obj = {}
         // new_obj['vm'] = Simple_Server_Config_Arr;
@@ -151,8 +158,9 @@ function btn_deploy(){
     ///////// export
     ///////// import
     if(Import_Server_Config_Arr){// mcissimpleconfigure.js 에 const로 정의 됨.
-        vm_len = Import_Server_Config_Arr.length;			
+        var vm_len = Import_Server_Config_Arr.length;			
         console.log("Import_Server_Config_Arr length: ",vm_len);
+        totalDeployServerCount += vm_len
         // var new_obj = {}
         // new_obj['vm'] = Simple_Server_Config_Arr;
         // console.log("new obj is : ",new_obj);
@@ -210,6 +218,7 @@ function btn_deploy(){
 
 // Import / Export Modal 표시
 function btn_ImportExport() {
+    // export할 VM을 선택한 후 export 버튼 누르라고...
     $("#VmImportExport").modal();
     $('#VmImportExport .dtbox.scrollbar-inner').scrollbar();
 }
@@ -223,8 +232,95 @@ function vmCreateCallback(resultVmKey, resultStatus){
     for (let key of resultVmCreateMap.keys()) { 
         console.log("vmCreateresult " + key + " : " + resultVmCreateMap.get(resultVmKey) );
         resultText += key + " = " + resultVmCreateMap.get(resultVmKey) + ","
+        totalDeployServerCount--
     }
 
-    $("#serverRegistResult").text(resultText)
+    $("#serverRegistResult").text(resultText);
+
+    if( resultStatus != "Success"){
+        // add된 항목 제거 해야 함.
+
+        // array는 초기화
+        Simple_Server_Config_Arr.length = 0;
+        simple_data_cnt = 0
+        // TODO : expert 추가하면 주석 제거할 것
+        Expert_Server_Config_Arr.length = 0;
+        expert_data_cnt = 0
+        Import_Server_Config_Arr.length = 0;
+        import_data_cnt = 0
+    }
+
+    if( totalDeployServerCount == 0){
+        getVmList();
+        commonAlert($("#serverRegistResult").text());
+        // vm목록 조회
+    }
+}
+
+// 현재 mcis의 vm 목록 조회 : deploy후 상태볼 때 사용
+function getVmList(){
+    var mcis_id = $("#mcis_id").val();
+    
+    
+    // /operation/manages/mcis/:mcisID
+    var url = "/operation/manages/mcis/" + mcis_id 
+    axios.get(url,{})
+    .then(result=>{
+        console.log("MCIR VM Register data : ",result);
+        console.log("Result Status : ",result.status); 
+
+        var statusCode = result.data.status;
+        var message = result.data.message;
+        //
+        console.log("Result Status : ",statusCode); 
+        console.log("Result message : ",message); 
+
+
+        if(result.status == 201 || result.status == 200){
+            var mcis = result.data.McisInfo
+            console.log(mcis)
+
+            
+            var vms = mcis.vm
+            if(vms){
+                vm_len = vms.length
+
+                $("#mcis_server_list *").remove();
+                var appendLi = "";
+
+                for(var o in vms){
+                    var vm_status = vms[o].status
+                    var vm_name = vms[o].name
+
+                    console.log(o + "번째 " + vm_name + " : " + vm_status)
+                    // mcis_server_list 밑의 li들을 1개빼고 삭제. 
+                    // 가져온 vm list 를 add? (1개는 더하기 버튼이므로)                    
+                                    
+                    
+                    appendLi = appendLi + '<li>';
+                    appendLi = appendLi + '<div class="server server_on bgbox_g">';
+                    appendLi = appendLi + '<div class="icon"></div>';
+                    appendLi = appendLi + '<div class="txt">' + vm_name + '</div>';
+                    appendLi = appendLi + '</li>';
+
+                    appendLi = appendLi + '</li>';                
+                    
+                }
+                appendLi = appendLi + '<li>';
+                appendLi = appendLi + '<div class="server server_add" onClick="displayNewServerForm()">';
+                appendLi = appendLi + '</div>';
+                appendLi = appendLi + '</li>';
+
+                $("#mcis_server_list").append(appendLi);
+
+                // commonAlert("VM 목록 조회 완료")
+                $("#serverRegistResult").text("VM 목록 조회 완료");
+            }
+        }
+    }).catch((error) => {
+        // console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+    })
 }
 

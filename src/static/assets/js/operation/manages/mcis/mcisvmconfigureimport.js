@@ -20,28 +20,26 @@ function processFile(file) {
 			
 			var jsonStr = JSON.stringify(reader.result)
 			console.log(JSON.stringify(jsonStr));
-			console.log("---2")
+
+			// 요거는 string으로만 나오네... 
+			// console.log("---2")
 			// var jsonObj = JSON.parse(reader.result);
-			var jsonObj = JSON.parse(jsonStr);
-			console.log(jsonObj);
-			console.log(jsonObj[0]);
-			console.log(jsonObj[10]);
-			console.log(jsonObj.name);
-			console.log("---3")
+			// var jsonObj = JSON.parse(jsonStr);
+			// console.log(jsonObj);
+			// console.log(jsonObj[0]);
+			// console.log(jsonObj[10]);
+			// console.log(jsonObj.name);
+			// console.log("---3")
 
-			// 요거 작동 하네.
+			// 요거 작동 하네.  param, value 모두 따옴표로 묶여진 json 형태여야 함.
 			var newJ= $.parseJSON(reader.result);
-			console.log(newJ);
-			console.log(newJ[0]);
-			console.log(newJ[10]);
-			console.log(newJ.name);
 
-			// var jsonObj2 = JSON.parse(reader.result);
-			// console.log(jsonObj2);
-			
-			// var str = '{	"connectionName" : "aws-us-east-1"}'
-			// jsonObj2 = JSON.parse(str);
-			// console.log(jsonObj2.connectionName)
+			console.log(newJ.name);
+			console.log(newJ.imageId);
+			console.log(newJ.connectionName);
+			console.log(newJ.securityGroupIds);
+			setVmInfoToForm(newJ);
+			//securityGroupIds: [ 	"sg-mz-aws-us-east-01"	],
 		};
 		//reader.readAsText(file, /* optional */ "euc-kr");
 		reader.readAsText(file);
@@ -51,70 +49,34 @@ function processFile(file) {
 	}
 }
 
-// // 파일 선택
-// function importVmInfoFromFile(){
-// 	var input = document.createElement("input");
-//     input.type = "file";
-//     input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
-//     input.onchange = function (event) {
-//         //processFile(event.target.files[0]);
-// 		setVmInfoToForm(event.target.files[0]);
-//     };
-//     input.click();
-// }
-// // 선택한 파일을 읽어 화면에 보여줌
-// function setVmInfoToForm(file) {
-//     var reader = new FileReader();
-//     reader.onload = function () {
-// 		console.log(reader.result);
-// 		var jsonObj = JSON.parse(reader.result);
-//         // $("#fileContent").val(reader.result);
-// 		console.log(jsonObj);
-//     };
-//     //reader.readAsText(file, /* optional */ "euc-kr");
-// 	// reader.readAsText(file);
-// }
-
-
-
 // 선택한 파일을 읽어 form에 Set
-// function setVmInfoToForm(vmInfoStr){
-// 	console.log("setVmInfo");
-// 	console.log(vmInfoStr);
-// 	//Split
-// 	// 1. 콤마
-// 	// 2. : 콜론
-// 	//var params = vmInfoStr.split(",")
+function setVmInfoToForm(vmInfoObj){
+	//export form
+	$("#i_name").val(vmInfoObj.name);
+	$("#i_description").val(vmInfoObj.description);
+	$("#i_connectionName").val(vmInfoObj.connectionName);
+	$("#i_specId").val(vmInfoObj.specId);
+	$("#i_subnetId").val(vmInfoObj.subnetId);
+	$("#i_vNetId").val(vmInfoObj.vNetId);
+	$("#i_securityGroupIds").val(vmInfoObj.securityGroupIds);
+	$("#i_sshKeyId").val(vmInfoObj.sshKeyId);
+	$("#i_label").val(vmInfoObj.label);
 
-// 	var jsonObj = JSON.parse(vmInfoStr);
-// 	console.log(jsonObj);
-// 	// $.getJSON(vmInfoStr, function(data) {
-// 	// 	console.log("getJson");
-// 	// 	console.log(data);
-// 	// 	var html = '';
-// 	// 	$.each(data, function(entryIndex, entry) {
-// 	// 		console.log(entryIndex + " : " + entry)
-// 	// 		// html += '<div class="entry">';
-// 	// 		// html += '<h3 class="term">' + entry.term + '</h3>';
-// 	// 		// html += '<div class="part">' + entry.part + '</div>';
-// 	// 		// html += '<div class="definition">';
-// 	// 		// html += entry.definition;
-// 	// 		// html += '</div>';
-// 	// 		// html += '</div>';
-// 	// 	});
-// 	// 	// console.log(html);
-// 	// 	// $('#dictionary').html(html);
-// 	// });
-// }
-			
+	$("#i_vmUserAccount").val(vmInfoObj.vmUserAccount);
+	$("#i_vmUserPassword").val(vmInfoObj.vmUserPassword);
+
+	var addServerCnt = vmInfoObj.vmGroupSize == "" ? 0: vmInfoObj.vmGroupSize;
+	$("#i_vm_add_cnt").val(addServerCnt);	
+}
+
 			
 const Import_Server_Config_Arr = new Array();
 var import_data_cnt = 0
 const importServerCloneObj = obj=>JSON.parse(JSON.stringify(obj))
-function import_btn(){
+function importDone_btn(){
 	var import_form = $("#import_form").serializeObject()
 	var server_name = import_form.name
-	var server_cnt = parseInt(import_form.s_vm_add_cnt)
+	var server_cnt = parseInt(import_form.i_vm_add_cnt)
 	console.log('server_cnt : ',server_cnt)
 	var add_server_html = "";
 	
@@ -143,7 +105,11 @@ function import_btn(){
 						+'</li>';
 
 	}
+
+	// Done 버튼 클릭 시 form은 비활성
 	$(".import_servers_config").removeClass("active");
+
+	// server List에 추가
 	$("#mcis_server_list").prepend(add_server_html)
 	console.log("import btn click and import form data : ",import_form)
 	console.log("import data array : ",Import_Server_Config_Arr);
