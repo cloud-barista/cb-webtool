@@ -8,14 +8,15 @@
 			<div class="tab_ipbox">
 				<div class="ipbox ipbox1">
 					<ul>
-						<li><!-- 등록 된 VM Image 목록-->
+						<!-- 등록 된 VM Image 목록-->
+						<li>
 							<label><span class="ch">*</span>OS Platform</label>
-							<select class="selectbox white pline sel_1" id="e_imageID">
+							<!-- <select class="selectbox white pline sel_1" id="e_imageID">
 								<option value="">All</option>
 								{{ range $vmImageItem := .VMImageList}}
 								<option value="{{ $vmImageItem.ID }}">[{{ $vmImageItem.ConnectionName }}] {{ $vmImageItem.Name }}  {{ $vmImageItem.CspImageName }}</option>
 								{{ end }}
-							</select>
+							</select> -->
 							<span class="sbox">
 								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" title="" />
 								<input type="submit" name="" class="btn_search" value="" title="" />
@@ -23,12 +24,64 @@
 							<input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly />
 						</li>
 					</ul>
+					<div class="dataTable status_list">
+						<table cellpadding="0" cellspacing="0" summary="" id="e_imageList">
+							<colgroup>
+								<col width="50px">
+								<col width="16%">
+								<col width="14%">
+								<col width="15%">
+								<col width="15%">
+								<col width="15%">						
+							</colgroup>
+							<thead>
+								<tr>
+									<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+									<th>Image ID</th>
+									<th>Image Name</th>
+									<th>CspImageId</th>
+									<th>CspImageName</th>
+									<th>Os</th>
+								</tr>
+							</thead>
+							<tbody id="cList">
+								{{ $length := len .VMImageList }} 
+								{{ if eq $length 0 }}
+								<tr>
+									<td class="overlay hidden" data-th="" colspan="8">No Data</td>
+								</tr>
+								{{ end }}
+
+								{{range $index, $item := .VMImageList}}	
+								<tr onclick="showConnectionConfigInfo('cc_info_{{$index}}');">
+									<td class="overlay hidden" data-th="">
+										<input type="hidden" id="cc_info_{{$index}}" value="{{$item.ConfigName}}|{{$item.ProviderName}}|{{$item.RegionName}}|{{$item.CredentialName}}|{{$item.DriverName}}"/>
+										<input type="checkbox" name="cloudconnection_chk" value="{{$item.ConfigName}}" id="raw_{{$index}}" title="" />
+										<label for="td_ch1"></label> <span class="ov off"></span>
+									</td>
+									<td class="btn_mtd ovm td_left" data-th="Name">
+										{{$item.ConfigName}}<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span>
+									</td>
+									<td class="overlay hidden" data-th="Cloud Provider">{{$item.ProviderName}}</td>
+									<td class="overlay hidden" data-th="Region">{{$item.RegionName}}</td>
+									<td class="overlay hidden" data-th="Zone">{{$item.RegionName}}</td>
+									<td class="overlay hidden" data-th="Credential">{{$item.CredentialName}}</td>
+									<td class="overlay hidden" data-th="Driver">{{$item.DriverName}}</td>
+									<td class="overlay hidden" data-th="">
+										<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
+									</td>
+								</tr>											
+								{{end}}
+								
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div class="ipbox ipbox2">
 					<ul>
 						<li>
 							<label><span class="ch">*</span>HW Spec</label>
-							<select class="selectbox white pline sel_1" id="e_specId"><!-- 선택한 namespace 에 등록된 spec목록 -->
+							<!-- <select class="selectbox white pline sel_1" id="e_specId">
 								<option value="">All</option>
 								{{ range $vmSpecItem := .VMSpecList}}
 								<option value="{{ $vmSpecItem.ID }}">[{{ $vmSpecItem.Name }}] {{ $vmSpecItem.CspSpecName }}  {{ $vmSpecItem.NumVCPU }} {{ $vmSpecItem.NumCore }}</option>
@@ -40,9 +93,17 @@
 								<input type="submit" name="" class="btn_search" value="" title="" onclick="hardwareSpecFilter('e_specId', 'e_specFilterKeyword')"/>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
 							</span>
-							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly />
+							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly /> -->
+							<span class="sbox sbox_m">
+								<input type="text" name="e_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" title="" id="e_specFilterKeyword"/>
+								<input type="submit" name="" class="btn_search" value="" title="" onclick="hardwareSpecFilter('e_specId', 'e_specFilterKeyword')"/>
+								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
+							</span>
+
 						</li>
 					</ul>
+
+					
 				</div>
 			</div>
 		</div>
