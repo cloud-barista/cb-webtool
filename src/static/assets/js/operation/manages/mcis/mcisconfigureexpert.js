@@ -90,25 +90,12 @@ function selectBoxFilterBy2Texts(targetObject, compareText1, compareText2){
 // 추가로 connection 정보도 조회하라고 호출
 function getRegionListFilterForSelectbox(provider, targetRegionObj, targetConnectionObj){
 
+  // region 목록 filter
   selectBoxFilterByText(targetRegionObj, provider)
-  // $('#' + targetRegionObj +' option').filter(function() {
-  //   // return this.text == provider;
-  //   if( this.value == "") return;
-
-  //   // console.log(targetRegionObj + "::" + this.text  + " vs " + provider)
-  //   // console.log(this.text.indexOf(provider))
-  //   this.text.indexOf(provider) > -1 ? $(this).show() : $(this).hide();    
-  // });
-
-  // connection filter
-  selectBoxFilterByText(targetConnectionObj, provider)
-  // $('#' + targetConnectionObj +' option').filter(function() {
-  //   // return this.text == provider;
-  //   if( this.value == "") return;
-
-  //   return this.text.indexOf(provider) > -1 ? $(this).show() : $(this).hide();    
-  // });
   $("#" + targetRegionObj + " option:eq(0)").attr("selected", "selected");
+
+  // connection 목록 filter
+  selectBoxFilterByText(targetConnectionObj, provider)
   $("#" + targetConnectionObj + " option:eq(0)").attr("selected", "selected");
 }
 
@@ -122,10 +109,22 @@ function getConnectionListFilterForSelectbox(region, referenceObj, targetConnect
   }else{
     selectBoxFilterBy2Texts(targetConnectionObj, referenceVal, regionValue)
   }
-  // $('#' + targetConnectionObj).val("");
   $("#" + targetConnectionObj + " option:eq(0)").attr("selected", "selected");
-
 }
+
+// TODO : filter 기능 check
+// provider, region, connection은 먼저 선택이 필수가 아닐 수 있음.
+// 그래도 하위에서 일단 선택되면 변경시 알려줘야할 듯.
+// 1. provider 선택시 -> 
+// 2. region 선택시
+// 3. OS Platform(Image) 선택 시
+// 4. HW Spec 선택시
+// 5. Vnet 선택시
+// 6. SecurityGroup 선택시
+// 7. sshKey 선택시
+// 8. subnet 선택시??
+
+//e_imageID
 
 // Asist를 클릭했을 때 나타나는 popup에서 provider 변경 시 region selectbox와 connection table을 filter
 function popProviderChange(providerObj, regionObj, targetTableObj ){

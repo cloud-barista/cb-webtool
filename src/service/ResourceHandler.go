@@ -816,9 +816,9 @@ func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*tumblebug.VmSpecIn
 // VMSpecInfo 등록
 func RegVmSpec(nameSpaceID string, specregisteringMethod string, vmSpecRegInfo *tumblebug.VmSpecRegInfo) (*tumblebug.VmSpecInfo, model.WebStatus) {
 	fmt.Println("RegVMSpec ************ : ")
-	// if specregisteringMethod == "" {
-	// 	specregisteringMethod = "registerWithInfo" // registerWithInfo or Else 이므로 registerWithInfo 를 넣거나 아니거나.
-	// }
+	if specregisteringMethod == "" {
+		specregisteringMethod = "registerWithInfo" // registerWithInfo or Else 이므로 registerWithInfo 를 넣거나 아니거나.
+	}
 
 	// else인 경우에는 4개의 parameter만 있음{
 	// 	"connectionName": "string",
@@ -826,13 +826,13 @@ func RegVmSpec(nameSpaceID string, specregisteringMethod string, vmSpecRegInfo *
 	// 	"description": "string",
 	// 	"name": "string"
 	//   }
-	var originalUrl = "/ns/{nsId}/resources/specregisteringMethod={specregisteringMethod}"
+	var originalUrl = "/ns/{nsId}/resources/spec?registeringMethod={specregisteringMethod}"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{specregisteringMethod}"] = specregisteringMethod
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.TUMBLEBUG + urlParam
-
+	// "https://localhost:1323/tumblebug/ns/ns01/resources/spec?registeringMethod=registerWithInfo"
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"// parameter를 모두 받지않기 때문에 param의 data type이 틀려 오류남.
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec" // 그래서 action 인자없이 전송
 

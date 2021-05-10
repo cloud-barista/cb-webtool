@@ -13,9 +13,9 @@
 					// 0번째면 selectbox들을 초기화한다.(vmInfo, sshKey, image 등)
 				}
                 getVmiInfo(configName);
-                // getSecurityInfo(configName);// TODO : simple에서 사용안하는 것 같은데...
+                getSecurityInfo(configName);
                 getSSHKeyInfo(configName);
-				// getVnetInfo(configName);// TODO : simple에서 사용안하는 것 같은데...
+				getVnetInfo(configName);
 				getSpecInfo(configName);
 			}
 			
@@ -269,7 +269,8 @@
 				var select_form_data = Simple_Server_Config_Arr[cnt]
 				console.log('select_form_data : ', select_form_data);
 				$(".simple_servers_config").addClass("active")
-				$(".new_servers_config").removeClass("active")
+				$(".expert_servers_config").removeClass("active")
+				$(".import_servers_config").removeClass("active")
 
 			}
 			

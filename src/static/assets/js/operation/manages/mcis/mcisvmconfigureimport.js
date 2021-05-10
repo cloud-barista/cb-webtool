@@ -55,6 +55,7 @@ function setVmInfoToForm(vmInfoObj){
 	$("#i_name").val(vmInfoObj.name);
 	$("#i_description").val(vmInfoObj.description);
 	$("#i_connectionName").val(vmInfoObj.connectionName);
+	$("#i_imageId").val(vmInfoObj.imageId);	
 	$("#i_specId").val(vmInfoObj.specId);
 	$("#i_subnetId").val(vmInfoObj.subnetId);
 	$("#i_vNetId").val(vmInfoObj.vNetId);
@@ -125,8 +126,8 @@ function view_import(cnt){
 	console.log('view import cnt : ',cnt);
 	var select_form_data = Import_Server_Config_Arr[cnt]
 	console.log('select_form_data : ', select_form_data);
+	$(".simple_servers_config").removeClass("active")
+	$(".expert_servers_config").removeClass("active")
 	$(".import_servers_config").addClass("active")
-	$(".new_servers_config").removeClass("active")
-
 }
 

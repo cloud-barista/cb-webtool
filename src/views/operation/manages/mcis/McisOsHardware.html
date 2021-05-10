@@ -1,4 +1,4 @@
-{{define "McisOshw"}}
+{{define "McisOsHardware"}}
 	<!-- OS/HW -->
 	<div class="tab-pane fade show active" id="OS_HW">
 													
@@ -8,13 +8,13 @@
 			<div class="tab_ipbox">
 				<div class="ipbox ipbox1">
 					<ul>
-						<li><!-- VM parameter 자체에는 OS Platform이 없고 Spec에 OS Type 있음.  OS Platform은 filter조건인가? TODO : 없앨 것인가? -->
+						<li><!-- 등록 된 VM Image 목록-->
 							<label><span class="ch">*</span>OS Platform</label>
-							<select class="selectbox white pline sel_1" id="e_vmOsType">
+							<select class="selectbox white pline sel_1" id="e_imageID">
 								<option value="">All</option>
-								<option value="WINDOWS">WINDOWS</option>
-								<option value="UBUNTU">UBUNTU</option>
-								<option value="CENTOS">CENTOS</option>
+								{{ range $vmImageItem := .VMImageList}}
+								<option value="{{ $vmImageItem.ID }}">[{{ $vmImageItem.ConnectionName }}] {{ $vmImageItem.Name }}  {{ $vmImageItem.CspImageName }}</option>
+								{{ end }}
 							</select>
 							<span class="sbox">
 								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" title="" />

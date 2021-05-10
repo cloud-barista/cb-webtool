@@ -233,7 +233,7 @@ func main() {
 
 			"operation/manages/mcis/McisAssistPopup",
 
-			"operation/manages/mcis/McisOshw",
+			"operation/manages/mcis/McisOsHardware",
 			"operation/manages/mcis/McisNetwork",
 			"operation/manages/mcis/McisSecurity",
 			"operation/manages/mcis/McisOther",

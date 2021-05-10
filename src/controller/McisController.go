@@ -424,19 +424,16 @@ func McisVmRegForm(c echo.Context) error {
 	// vm List
 	vmList := resultMcisInfo.Vms
 
-	// provider 별 연결정보 count(MCIS 무관)
-	cloudOsList, _ := service.GetCloudOSList()
+	///////// 등록을 위한 정보 ////////////
+	cloudOsList, _ := service.GetCloudOSList()                                 // provider
+	regionInfoList, _ := service.GetRegionList()                               // region
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
 
-	// connection , Spec, 등은 Provider 변경할 때 가져오므로 필요없음. -> 모두 가져온 다음 filtering
-	regionInfoList, _ := service.GetRegionList()
-
+	//// namespace에 등록 된 resource 정보들 //////
+	virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
 	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
-
 	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
-
 	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
-
-	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
@@ -452,10 +449,10 @@ func McisVmRegForm(c echo.Context) error {
 			"CloudOSList":                   cloudOsList,
 			"RegionList":                    regionInfoList,
 			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
-
-			"VMSpecList":        vmSpecInfoList,
-			"VNetList":          vNetInfoList,
-			"SecurityGroupList": securityGroupInfoList,
+			"VMImageList":                   virtualMachineImageInfoList,
+			"VMSpecList":                    vmSpecInfoList,
+			"VNetList":                      vNetInfoList,
+			"SecurityGroupList":             securityGroupInfoList,
 		})
 }
 
@@ -513,7 +510,7 @@ func VmRegProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
+		"message": respStatus.Message,
 		"status":  respStatus.StatusCode,
 	})
 }
