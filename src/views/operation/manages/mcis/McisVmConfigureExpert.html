@@ -3,9 +3,12 @@
 	<!-- 변경사항 발생 시 expert_form 에 Data Set. done 버튼 클릭 시 array에 push.  deploy button에서 serialize 해서 사용
 		div가 hidden일 때 해당 id를 읽을 수 있으면 form을 전체로 하고
 		읽을 수 없ㄷ으면 input type=hidden으로 변경 data를 set 해서 사용
+
+		화면에 나타나는 Cloud Connection은 filter용이므로 connection정보로 사용할 수 없음.
+		선택하는 resource에서 connection을 추출하여 set
 	-->
 	<form id="expert_form">
-		<!-- <input type="hidden" name="name" id="e_name" />
+		<input type="hidden" name="name" id="e_name" />
 		<input type="hidden" name="description" id="e_description" />		
 		<input type="hidden" name="connectionName" id="e_connectionName" />
 		<input type="hidden" name="vNetId" id="e_vNetId" />								
@@ -16,7 +19,7 @@
 		<input type="hidden" name="specId" id="e_specId" />
 		<input type="hidden" name="label" id="e_label" />								
 		<input type="hidden" name="vm_userAccount"  id="e_vmUserAccount" />								
-		<input type="hidden" name="vm_password" id="e_vmUserPassword" />								 -->
+		<input type="hidden" name="vm_password" id="e_vmUserPassword" />								
 	</form>
 
 
@@ -40,11 +43,11 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>Server Name</label>
-							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" id="e_name"/>
+							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" id="es_name"/>
 						</li>
 						<li>
 							<label>Description</label>
-							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1 ta_2" title="" id="e_description"></textarea>
+							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1 ta_2" title="" id="es_description"></textarea>
 						</li>
 					</ul>
 				</div>
@@ -52,13 +55,13 @@
 					<ul>
 						<li>
 							<label>Cloud Provider / Region</label>
-							<select class="selectbox white pline sel_1" id="e_regProvider" onchange="getRegionListFilterForSelectbox(this.value, 'e_regRegion', 'e_regConnectionName');">
+							<select class="selectbox white pline sel_1" id="es_regProvider" onchange="getRegionListFilterForSelectbox(this.value, 'es_regRegion', 'es_regConnectionName');">
 								<option value="1">Selected CP</option>
 								{{ range $cloudItem := .CloudOSList}}	
 								<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
 								{{ end }}
 							</select>
-							<select class="selectbox white pline sel_1" id="e_regRegion" onchange="getConnectionListFilterForSelectbox(this.value, 'e_regConnectionName');">
+							<select class="selectbox white pline sel_1" id="es_regRegion" onchange="getConnectionListFilterForSelectbox(this.value, 'es_regConnectionName');">
 								<option value="">Selected Region</option>
 								{{ range $regionItem := .RegionList}}	
 								<option value="{{ $regionItem.RegionName }}">[{{ $regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
@@ -69,7 +72,7 @@
 						<li>
 							<label><span class="ch">*</span>Cloud Connection</label>
 							<span class="sbox">
-								<select class="selectbox white pline sel_2" id="e_regConnectionName">
+								<select class="selectbox white pline sel_2" id="es_regConnectionName">
 									<option value="">Selected CP</option>
 									{{ range $connectionItem := .CloudConnectionConfigInfoList}}	
 									<option value="{{ $connectionItem.ConfigName }}">[{{ $connectionItem.ProviderName }}] {{ $connectionItem.RegionName }}</option>
