@@ -1,6 +1,25 @@
 {{define "McisVmConfigureExpert"}}
 <div class="servers_config expert_servers_config" id="expertServerConfig">
-													
+	<!-- 변경사항 발생 시 expert_form 에 Data Set. done 버튼 클릭 시 array에 push.  deploy button에서 serialize 해서 사용
+		div가 hidden일 때 해당 id를 읽을 수 있으면 form을 전체로 하고
+		읽을 수 없ㄷ으면 input type=hidden으로 변경 data를 set 해서 사용
+	-->
+	<form id="expert_form">
+		<!-- <input type="hidden" name="name" id="e_name" />
+		<input type="hidden" name="description" id="e_description" />		
+		<input type="hidden" name="connectionName" id="e_connectionName" />
+		<input type="hidden" name="vNetId" id="e_vNetId" />								
+		<input type="hidden" name="subnetId" id="e_subnetId" />								
+		<input type="hidden" name="securityGroupIds[]" id="e_securityGroupIds" />								
+		<input type="hidden" name="sshKeyId" id="e_sshKeyId" />								
+		<input type="hidden" name="imageId" id="e_imageId" />
+		<input type="hidden" name="specId" id="e_specId" />
+		<input type="hidden" name="label" id="e_label" />								
+		<input type="hidden" name="vm_userAccount"  id="e_vmUserAccount" />								
+		<input type="hidden" name="vm_password" id="e_vmUserPassword" />								 -->
+	</form>
+
+
 	<div class="top_box">
 		<div class="titbox_sc">
 			<div class="tit">New Server #1 Config</div>
