@@ -44,10 +44,9 @@ func McisRegForm(c echo.Context) error {
 	regionList, _ := service.GetRegionList()
 	log.Println(" regionList  ", regionList)
 
-	
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
-	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID);
-	
+	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
+
 	//// namespace에 등록 된 resource 정보들 //////
 	virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
 	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
@@ -55,7 +54,7 @@ func McisRegForm(c echo.Context) error {
 	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/McisCreate", // 파일명
+		"operation/manages/mcis/McisCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
@@ -273,10 +272,10 @@ func McisMngForm(c echo.Context) error {
 	// 	mcisSimpleInfo.VmTerminatedCount = mcisVmStatusCountMap[util.VM_STATUS_RUNNING]
 	// }
 
-	cloudOsList, _ := service.GetCloudOSList()                                 // provider
-	log.Println("---------------------- GetCloudOSList ", defaultNameSpaceID);
-	regionInfoList, _ := service.GetRegionList()                               // region
-	log.Println("---------------------- GetRegionList ", defaultNameSpaceID);
+	cloudOsList, _ := service.GetCloudOSList() // provider
+	log.Println("---------------------- GetCloudOSList ", defaultNameSpaceID)
+	regionInfoList, _ := service.GetRegionList() // region
+	log.Println("---------------------- GetRegionList ", defaultNameSpaceID)
 	// cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
 	// log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID);
 	//// namespace에 등록 된 resource 정보들 //////
@@ -287,7 +286,7 @@ func McisMngForm(c echo.Context) error {
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/McisMng", // 파일명
+		"operation/manages/mcis/McisMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
@@ -460,12 +459,12 @@ func McisVmRegForm(c echo.Context) error {
 	vmList := resultMcisInfo.Vms
 
 	///////// 등록을 위한 정보 ////////////
-	cloudOsList, _ := service.GetCloudOSList()                                 // provider
-	log.Println("---------------------- GetCloudOSList ", defaultNameSpaceID);
-	regionInfoList, _ := service.GetRegionList()                               // region
-	log.Println("---------------------- GetRegionList ", defaultNameSpaceID);
+	cloudOsList, _ := service.GetCloudOSList() // provider
+	log.Println("---------------------- GetCloudOSList ", defaultNameSpaceID)
+	regionInfoList, _ := service.GetRegionList() // region
+	log.Println("---------------------- GetRegionList ", defaultNameSpaceID)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
-	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID);
+	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
 	//// namespace에 등록 된 resource 정보들 //////
 	virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
 	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
@@ -474,7 +473,7 @@ func McisVmRegForm(c echo.Context) error {
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/McisVmCreate", // 파일명
+		"operation/manages/mcis/McisVmCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
