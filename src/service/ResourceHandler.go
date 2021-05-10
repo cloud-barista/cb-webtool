@@ -616,6 +616,33 @@ func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (i
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
+// 자신의 provider에 등록된 resource 조회
+func GetInspectResourceList(inspectResource *tumblebug.InspectResourcesRequest) (*tumblebug.InspectResourcesResponse, model.WebStatus) {
+	fmt.Println("GetInspectResourceList ************ : ")
+	var originalUrl = "/inspectResources"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(inspectResource)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	inspectResourcesResponse := tumblebug.InspectResourcesResponse{}
+	if err != nil {
+		fmt.Println(err)
+		return &inspectResourcesResponse, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	json.NewDecoder(respBody).Decode(inspectResourcesResponse)
+	fmt.Println(inspectResourcesResponse)
+
+	return &inspectResourcesResponse, model.WebStatus{StatusCode: respStatus}
+
+}
+
+// VM Image 조회
 func LookupVirtualMachineImageList(connectionName string) ([]tumblebug.VirtualMachineLookupImageInfo, model.WebStatus) {
 	fmt.Println("LookupVirtualMachineImageList ************ : ", connectionName)
 	var originalUrl = "/lookupImage"
