@@ -66,7 +66,10 @@ function setVmInfoToForm(vmInfoObj){
 	$("#i_vmUserPassword").val(vmInfoObj.vmUserPassword);
 
 	var addServerCnt = vmInfoObj.vmGroupSize == "" ? 0: vmInfoObj.vmGroupSize;
-	$("#i_vm_add_cnt").val(addServerCnt);	
+	$("#i_vm_add_cnt").val(addServerCnt);
+
+	$("#vmImportScript").val(JSON.stringify(vmInfoObj));
+	
 }
 
 			

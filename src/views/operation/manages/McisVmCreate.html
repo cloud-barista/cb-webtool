@@ -85,23 +85,28 @@
 												<!-- servers -->
 												<div class="servers_box">
 													<div class="title">Servers</div>
+													<!--
 													<div class="switch">
-														<!-- <span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title=""  /><span></span></label> -->
+														 <span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title=""  /><span></span></label> -->
 
 														<!-- <span class="txt">Import <span class="txt_c on d_none">ON</span>
 														<span class="txt_c off ">OFF</span></span>
 														<label>
 														<input type="checkbox" name="consent" class="ch" id="isImport" />
-														<span></span></label> -->
-
-														<label><input type="radio" id="vmInfoTypeSimple" name="vmInfoType" value="simple" checked>Simple</label><br>
-														<label><input type="radio" id="vmInfoTypeExpert" name="vmInfoType" value="expert">Expert</label><br>
-														<label><input type="radio" id="vmInfoTypeImport" name="vmInfoType" value="import">Import</label>
-
+														<span></span></label> 
 													</div>
-													
-																						
+													-->
+								
 													<div class="list">
+														<div class="radio">
+															<label><input type="radio" id="vmInfoTypeSimple" name="vmInfoType" value="simple" checked>Simple</label><br>
+														</div>
+														<div class="radio">
+															<label><input type="radio" id="vmInfoTypeExpert" name="vmInfoType" value="expert">Expert</label><br>
+														</div>
+														<div class="radio">
+															<label><input type="radio" id="vmInfoTypeImport" name="vmInfoType" value="import">Import</label>
+														</div>
 														
 														<ul id="mcis_server_list">
 															{{range $vmIndex, $item := .VMList}}
