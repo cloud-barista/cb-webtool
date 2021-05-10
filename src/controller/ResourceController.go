@@ -1089,3 +1089,28 @@ func FetchVmSpecList(c echo.Context) error {
 // resourcesGroup.PUT("/vmspec/put/:specID", controller.VMSpecPutProc)	// RegProc _ SshKey 같이 앞으로 넘길까
 // resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVMSpecList)
 // resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVMSpecListByRange)
+
+func GetInspectResourceList(c echo.Context) error {
+	log.Println("GetInspectResourceList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	inspectResource := new(tumblebug.InspectResourcesRequest)
+	if err := c.Bind(inspectResource); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	inspectResourcesResponse, respStatus := service.GetInspectResourceList(inspectResource)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":                  "success",
+		"status":                   respStatus,
+		"InspectResourcesResponse": inspectResourcesResponse,
+	})
+}
