@@ -439,6 +439,7 @@ func main() {
 	cloudConnectionGroup.DELETE("/config/del/:configID", controller.ConfigDelProc)
 
 	resourcesGroup := e.Group("/setting/resources", resourceTemplate)
+	e.POST("/getinspectresources", controller.GetInspectResourceList)
 	resourcesGroup.GET("/network/mngform", controller.VpcMngForm)
 	resourcesGroup.GET("/network/list", controller.GetVpcList)
 	resourcesGroup.GET("/network/:vNetID", controller.GetVpcData)
