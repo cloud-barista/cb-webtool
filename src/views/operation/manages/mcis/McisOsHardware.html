@@ -32,19 +32,21 @@
 								<col width="14%">
 								<col width="15%">
 								<col width="15%">
-								<col width="15%">						
+								<col width="15%">
+								<col width="*">					
 							</colgroup>
 							<thead>
 								<tr>
 									<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
-									<th>Image ID</th>
 									<th>Image Name</th>
+									<th>Connection Name</th>
 									<th>CspImageId</th>
 									<th>CspImageName</th>
 									<th>Os</th>
+									<th>Desc</th>
 								</tr>
 							</thead>
-							<tbody id="cList">
+							<tbody id="e_imageListTbody">
 								{{ $length := len .VMImageList }} 
 								{{ if eq $length 0 }}
 								<tr>
@@ -52,27 +54,24 @@
 								</tr>
 								{{ end }}
 
-								{{range $index, $item := .VMImageList}}	
-								<tr onclick="showConnectionConfigInfo('cc_info_{{$index}}');">
+								{{range $vmInageIndex, $vmImageItem := .VMImageList}}	
+								<tr>
 									<td class="overlay hidden" data-th="">
-										<input type="hidden" id="cc_info_{{$index}}" value="{{$item.ConfigName}}|{{$item.ProviderName}}|{{$item.RegionName}}|{{$item.CredentialName}}|{{$item.DriverName}}"/>
-										<input type="checkbox" name="cloudconnection_chk" value="{{$item.ConfigName}}" id="raw_{{$index}}" title="" />
+										<input type="hidden" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}"/>
+										<input type="checkbox" name="vmImage_chk" id="vmImageRaw_{{$vmInageIndex}}" title="" />
 										<label for="td_ch1"></label> <span class="ov off"></span>
 									</td>
-									<td class="btn_mtd ovm td_left" data-th="Name">
-										{{$item.ConfigName}}<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span>
+									<td class="overlay hidden" data-th="Name">{{$vmImageItem.Name}}</td>
+									<td class="btn_mtd ovm td_left" data-th="ConnectionName">
+										{{$vmImageItem.ConnectionName}}
 									</td>
-									<td class="overlay hidden" data-th="Cloud Provider">{{$item.ProviderName}}</td>
-									<td class="overlay hidden" data-th="Region">{{$item.RegionName}}</td>
-									<td class="overlay hidden" data-th="Zone">{{$item.RegionName}}</td>
-									<td class="overlay hidden" data-th="Credential">{{$item.CredentialName}}</td>
-									<td class="overlay hidden" data-th="Driver">{{$item.DriverName}}</td>
-									<td class="overlay hidden" data-th="">
-										<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
-									</td>
+									<td class="overlay hidden" data-th="CspImageId">{{$vmImageItem.CspImageId}}</td>
+									<td class="overlay hidden" data-th="CspImageName">{{$vmImageItem.CspImageName}}</td>
+									<td class="overlay hidden" data-th="GuestOS">{{$vmImageItem.GuestOS}}</td>
+									<td class="overlay hidden" data-th="Description">{{$vmImageItem.Description}}</td>
 								</tr>											
 								{{end}}
-								
+
 							</tbody>
 						</table>
 					</div>
@@ -102,7 +101,48 @@
 
 						</li>
 					</ul>
+					<div class="dataTable status_list">
+						<table cellpadding="0" cellspacing="0" summary="" id="e_specList">
+							<colgroup>
+								<col width="50px">
+								<col width="30%">
+								<col width="30%">
+								<col width="30%">			
+							</colgroup>
+							<thead>
+								<tr>
+									<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+									<th>Spec Name</th>
+									<th>Connection Name</th>
+									<th>CSP Spec Name</th>
+								</tr>
+							</thead>
+							<tbody id="e_specListTbody">
+								{{ $length := len .VMSpecList }} 
+								{{ if eq $length 0 }}
+								<tr>
+									<td class="overlay hidden" data-th="" colspan="8">No Data</td>
+								</tr>
+								{{ end }}
 
+								{{range $vmSpecIndex, $vmSpecItem := .VMSpecList}}	
+								<tr>
+									<td class="overlay hidden" data-th="">
+										<input type="hidden" id="vmSpec_info_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
+										<input type="checkbox" name="vmSpec_chk" id="vmSpecRaw_{{$vmSpecIndex}}" title="" />
+										<label for="td_ch1"></label> <span class="ov off"></span>
+									</td>
+									<td class="overlay hidden" data-th="Name">{{$vmSpecItem.Name}}</td>
+									<td class="btn_mtd ovm td_left" data-th="ConnectionName">
+										{{$vmSpecItem.ConnectionName}}
+									</td>
+									<td class="overlay hidden" data-th="CspSpecName">{{$vmSpecItem.CspSpecName}}</td>
+								</tr>											
+								{{end}}
+								
+							</tbody>
+						</table>
+					</div>
 					
 				</div>
 			</div>
