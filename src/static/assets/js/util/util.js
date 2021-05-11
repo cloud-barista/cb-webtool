@@ -631,3 +631,26 @@ function filterTable(tableId, filterColumnName, filterKeyword){
         }
     }
 }
+
+function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword){
+
+    var filter = filterKeyword.toUpperCase();
+	console.log("filter=" + filter);
+
+    var trs = $('#' + tableId + ' tr');
+    console.log(trs);
+    //for (var i = 1; i < $('#' + tableId + ' tr').size(); i++) {
+    for (var i = 1; i < trs.size(); i++) {
+        //var hiddenval = trs.eq(i).find('input:hidden[name="vmImageInfo"]').val();
+        var hiddenval = trs.eq(i).find('input:hidden[name="' + hiddenColumnName + '"]').val();
+        // console.log("hiddenval " + hiddenval);
+
+        if(filter == "ALL") {
+            trs.eq(i).css("display", "");
+        }else if (hiddenval.toUpperCase().indexOf(filter) > -1) {
+            trs.eq(i).css("display", "");
+        }else {
+            trs.eq(i).css("display", "none");
+        }
+    }    
+}
