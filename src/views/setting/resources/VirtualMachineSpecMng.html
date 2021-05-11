@@ -48,9 +48,9 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);">Name</a></li>
-														<li><a href="javascript:void(0);">Connect Name</a></li>
-														<li><a href="javascript:void(0);">CSP Spec Name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSrvSpecName', 'serverSpecList')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSrvSpecConnName', 'serverSpecList')">Connect Name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSrvCspSpecName', 'serverSpecList')">CSP Spec Name</a></li>
 													</ul>
 												</div>
 											</div>
@@ -60,9 +60,14 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
+														<li><a href="javascript:void(0);" onclick="tableSort('serverSpecList', 'Name')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('serverSpecList', 'Connection Name')">Connect Name</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('serverSpecList', 'CSP Spec Name')">CSP Spec Name</a></li>
+														<!--
 														<li><a href="javascript:void(0);" onclick="getVmSpecList('name')">Name</a></li>
 														<li><a href="javascript:void(0);" onclick="getVmSpecList('connectionName')">Connect Name</a></li>
 														<li><a href="javascript:void(0);" onclick="getVmSpecList('cspSpecName')">CSP Spec Name</a></li>
+														-->
 													</ul>
 												</div>
 											</div>
@@ -86,7 +91,7 @@
 							<div class="ds_cont">
 								
 								<div class="dataTable status_list" id="vmSpecListTable">
-									<table cellpadding="0" cellspacing="0" border="1" summary="">
+									<table cellpadding="0" cellspacing="0" border="1" summary="" id="serverSpecList">
                                         <colgroup>
                                             <col width="50px">
                                             <col width="">
