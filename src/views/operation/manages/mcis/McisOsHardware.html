@@ -18,10 +18,10 @@
 								{{ end }}
 							</select> -->
 							<span class="sbox">
-								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" title="" />
-								<input type="submit" name="" class="btn_search" value="" title="" />
+								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" id="filter_image" onkeydown="filterEnterToHidden(this.id, 'vmImageInfo', 'es_imageList');"/>
+								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_image', 'vmImageInfo', 'es_imageList')"/>
 							</span>
-							<input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly />
+							<!-- <input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly /> -->
 						</li>
 					</ul>
 					<div class="dataTable status_list">
@@ -37,7 +37,7 @@
 							</colgroup>
 							<thead>
 								<tr>
-									<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+									<th>&nbsp</td>
 									<th>Image Name</th>
 									<th>Connection Name</th>
 									<th>CspImageId</th>
@@ -55,10 +55,13 @@
 								{{ end }}
 
 								{{range $vmInageIndex, $vmImageItem := .VMImageList}}	
-								<tr>
+								
+
+								<tr onclick="setValueToFormObj('es_imageList', 'vmImage_chk', '{{$vmInageIndex}}', '{{$vmImageItem.ID}}', 'e_imageId');">
 									<td class="overlay hidden" data-th="">
-										<input type="hidden" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}"/>
 										<input type="checkbox" name="vmImage_chk" id="vmImageRaw_{{$vmInageIndex}}" title="" />
+										<input type="hidden" id="vmImage_id_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}"/>
+										<input type="hidden" name="vmImageInfo" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>
 										<label for="td_ch1"></label> <span class="ov off"></span>
 									</td>
 									<td class="overlay hidden" data-th="Name">{{$vmImageItem.Name}}</td>
@@ -93,9 +96,10 @@
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
 							</span>
 							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly /> -->
+
 							<span class="sbox sbox_m">
-								<input type="text" name="es_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" title="" id="es_specFilterKeyword"/>
-								<input type="submit" name="" class="btn_search" value="" title="" onclick="hardwareSpecFilter('es_specId', 'es_specFilterKeyword')"/>
+								<input type="text" name="es_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" title="" id="filter_spec" onkeydown="filterEnterToHidden(this.id, 'vmSpecInfo', 'e_specList');"/>
+								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_spec', 'vmSpecInfo', 'e_specList')"/>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
 							</span>
 
@@ -126,10 +130,12 @@
 								{{ end }}
 
 								{{range $vmSpecIndex, $vmSpecItem := .VMSpecList}}	
-								<tr>
+								<tr onclick="setValueToFormObj('e_specList', 'vmSpec_chk', '{{$vmSpecIndex}}', '{{$vmSpecItem.ID}}', 'e_specId');">
 									<td class="overlay hidden" data-th="">
-										<input type="hidden" id="es_vmSpec_info_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
 										<input type="checkbox" name="vmSpec_chk" id="es_vmSpecRaw_{{$vmSpecIndex}}" title="" />
+										<input type="hidden" id="vmSpec_id_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
+										<input type="hidden" name="vmSpecInfo" id="vmSpecInfo{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}|{{$vmSpecItem.Name}}|{{$vmSpecItem.ConnectionName}}|{{$vmSpecItem.CspSpecName}}"/>
+										
 										<label for="td_ch1"></label> <span class="ov off"></span>
 									</td>
 									<td class="overlay hidden" data-th="Name">{{$vmSpecItem.Name}}</td>
@@ -178,5 +184,47 @@
 		selectBoxFilterByText(targetObjId, keyword)
 	}
 
+
+	// hidden에 들어있는 값을 기준으로 filter
+	function filterEnterToHidden(keyworkObjId, filterColumnName, targetObjId){
+		if (window.event.keyCode == 13) {
+			filterToHidden(keyworkObjId, filterColumnName, targetObjId)
+        }
+	}
+	// vm image 를 filter. 입력한 단어를 전체에서 찾기
+	// hidden에 들어있는 값을 기준으로 filter
+	function filterToHidden(keyworkObjId, filterColumnName, targetObjId){
+		var keyword = $("#" + keyworkObjId).val();
+		if( keyword == ''){
+			commonAlert("검색할 단어를 입력하세요")
+		}
+
+		// hidden fild 의 Data 를 기준으로 filter.
+		// 해당 table의 column을 지정하여 filter하는데... hidden을 filterling하는 법 찾자
+		filterTableByHiddenColumn(targetObjId, filterColumnName, keyword)
+	}
+
+	// 대상 table, 선택한 tr의 index, set할 값, 대상 form의 obj 지정하여
+	// tr의 check시 해당 값이 obj에 저장
+	// check 해제하면 저장된 값 초기화
+	function setValueToFormObj(tableId, chkObjName, selectedIndex, setValue, targetObjId){
+		var headerTrSize = 1;
+		var chk = $('#' + tableId + ' tr').eq(selectedIndex + 1 ).children().find('input[type="checkbox"]').is(':checked');
+		
+		$('input[type="checkbox"][name="' + chkObjName + '"]').prop('checked',false);
+
+		if( chk ){			
+			$("#" + targetObjId).val(setValue);
+			console.log("chk=" + chk + ":" + $("#" + targetObjId).val())
+
+			$('input[type="checkbox"][name="' + chkObjName + '"]').prop('checked',false);//전체 체크해제
+			// $('input:checkbox[name="' + chkObjName + '"]').prop('checked',true);
+			$('#' + tableId + ' tr').eq(selectedIndex + 1 ).children().find('input[type="checkbox"]').prop('checked',true);
+		}else{
+			$("#" + targetObjId).val("");
+			console.log("chk=" + chk + ":" + $("#" + targetObjId).val())
+		}
+        
+	}
 </script>	
 {{end}}

@@ -631,3 +631,61 @@ function filterTable(tableId, filterColumnName, filterKeyword){
         }
     }
 }
+
+function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword){
+
+    //$('#' + tableId + ' tr').eq(i).find('input[type="text"]').val();
+    // var aaa = $('#' + tableId + ' tr').eq(1).find('input[type="hidden"]').val();
+    // console.log(aaa);    
+    // var bbb = $('#' + tableId + ' tr').eq(1).find('input:hidden[name="vmImageInfo"]').val();
+    // console.log(bbb);    
+    
+    var filter = filterKeyword.toUpperCase();
+	console.log("filter=" + filter);
+
+    var trs = $('#' + tableId + ' tr');
+    console.log(trs);
+    //for (var i = 1; i < $('#' + tableId + ' tr').size(); i++) {
+    for (var i = 1; i < trs.size(); i++) {
+        //var hiddenval = trs.eq(i).find('input:hidden[name="vmImageInfo"]').val();
+        var hiddenval = trs.eq(i).find('input:hidden[name="' + hiddenColumnName + '"]').val();
+        // console.log("hiddenval " + hiddenval);
+
+        if(filter == "ALL") {
+            trs.eq(i).css("display", "");
+        }else if (hiddenval.toUpperCase().indexOf(filter) > -1) {
+            trs.eq(i).css("display", "");
+        }else {
+            trs.eq(i).css("display", "none");
+        }
+    }
+    
+    // // var tableObj = $('#' + tableId);
+	// var tableObj = document.getElementById(tableId);
+	// var trObj = tableObj.getElementsByTagName("tr");
+    // //var rows = tableObj[0].rows;
+	// console.log(trObj.length);
+    // // Loop through all table rows, and hide those who don't match the search query
+    // // 찾은 column을 기준으로 fintering한다.
+    // for (i = 1; i < trObj.length; i++) {
+	// 	console.log(trObj[i]);
+    //     // var hiddenVal = trObj[i].eq(0).find('input:hidden[name="vmImageInfo"]').val();
+    //     var tdTag = trObj[i].getElementsByTagName("td")[filterTargetColumnIndex];
+    //     console.log(tdTag);
+    //     var hiddenVal = tdTag.eq(0).find('input[type="hidden"]').val();
+    //     //var hiddenVal = tdTag.eq(0).find('input:hidden[name="vmImageInfo"]').val();
+
+    //     console.log(hiddenVal);
+    //     // if (tdTag) {
+    //     //     txtValue = tdTag.textContent || tdTag.innerText;
+    //     //     console.log(txtValue + " = " + tdTag.textContent + " || " + tdTag.innerText);
+    //     //     if(filter == "ALL") {
+    //     //         trObj[i].style.display = "";			
+	// 	// 	} else if (txtValue.toUpperCase().indexOf(filter) > -1) {
+	// 	// 		trObj[i].style.display = "";
+    //     //     }else {
+	// 	// 		trObj[i].style.display = "none";
+	// 	// 	}
+    //     // }
+    // }
+}
