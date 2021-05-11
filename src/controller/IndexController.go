@@ -122,7 +122,8 @@ func ApiTestMngForm(c echo.Context) error {
 func ApiCall(c echo.Context) error {
 	fmt.Println("============== ApiCall ===============")
 
-	params := make(map[string]string)
+	// params := make(map[string]string)
+	params := echo.Map{}
 	if err := c.Bind(&params); err != nil {
 		fmt.Println("err = ", err) // bind Error는 나지만 크게 상관없는 듯.
 	}
@@ -163,12 +164,12 @@ func ApiCall(c echo.Context) error {
 	}
 
 	//url := util.TUMBLEBUG + "/ns"
-	url := apiTarget + params["ApiURL"]
+	url := apiTarget + fmt.Sprintf("%v", params["ApiURL"])
 
 	fmt.Println("url=", url)
 
 	// if params["ApiObj"] != "" {// ApiObj유무에 따라 CommonHttp, CommonHttpWithoutParam으로 나눌까 하다가 하나로 호출.
-	pbytes := []byte(params["ApiObj"]) // 없으면 없는대로 CommonHttp호출.
+	pbytes := []byte(fmt.Sprintf("%v", params["ApiObj"])) // 없으면 없는대로 CommonHttp호출.
 	// pbytes, _ := json.Marshal(paramApiObj)
 	fmt.Println("CommonHttp=")
 	resp, err := util.CommonHttp(url, pbytes, apiMethod)

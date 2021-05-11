@@ -118,8 +118,8 @@ func McisPolicyRegProc(c echo.Context) error {
 	resultMcisPolishInfo, respStatus := service.RegMcisPolicy(defaultNameSpaceID, mcisID, mcisPolicyInfo)
 	log.Println("RegMcis service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message":        respStatus.Message,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":          respStatus.Message,
 			"status":         respStatus.StatusCode,
 			"McisPolishInfo": resultMcisPolishInfo,
 		})
@@ -150,9 +150,9 @@ func McisPolicyDelProc(c echo.Context) error {
 	// error 났을 때만 Message가 set 되고 정상인 경우에는 success로 return.
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 

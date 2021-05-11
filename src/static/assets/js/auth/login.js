@@ -46,7 +46,8 @@ $(document).ready(function(){
                      alert("ID or PASSWORKD MISMATCH!!Check yourself!")
                     //  location.reload(true); 
                  }
-             }).catch(function(error){
+            //  }).catch(function(error){
+            }).catch((error) => {               
                 console.log(error.response.data);
                 console.log(error.response.status);
                 // console.log(error.response.headers);

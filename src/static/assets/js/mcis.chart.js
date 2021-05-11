@@ -582,10 +582,16 @@ function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statis
         
         vmChart.data = timeObj;
         vmChart.update();
-    }).catch(function(error){
-        var statusCode = error.response.data.status;
-        var message = error.response.data.message;
-        commonErrorAlert(statusCode, message)        
+    // }).catch(function(error){
+    //     var statusCode = error.response.data.status;
+    //     var message = error.response.data.message;
+    //     commonErrorAlert(statusCode, message)        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        commonErrorAlert(statusCode, errorMessage) 
     });
 	
 }

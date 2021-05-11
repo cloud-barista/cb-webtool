@@ -1,6 +1,35 @@
-{{define "McisExpertConfigure"}}
-<div class="servers_config new_servers_config" id="expertServerConfig">
-													
+{{define "McisVmConfigureExpert"}}
+<div class="servers_config expert_servers_config" id="expertServerConfig">
+	<!-- 변경사항 발생 시 expert_form 에 Data Set. done 버튼 클릭 시 array에 push.  deploy button에서 serialize 해서 사용
+		div가 hidden일 때 해당 id를 읽을 수 있으면 form을 전체로 하고
+		읽을 수 없ㄷ으면 input type=hidden으로 변경 data를 set 해서 사용
+
+		화면에 나타나는 Cloud Connection은 filter용이므로 connection정보로 사용할 수 없음.
+		선택하는 resource에서 connection을 추출하여 set
+
+		id naming 
+		s_ : simple
+		e_ : expert
+		i_ : import
+
+		es_ : expert의 조건 조회용 id
+	-->
+	<form id="expert_form">
+		<input type="hidden" name="name" id="e_name" />
+		<input type="hidden" name="description" id="e_description" />		
+		<input type="hidden" name="connectionName" id="e_connectionName" />
+		<input type="hidden" name="vNetId" id="e_vNetId" />								
+		<input type="hidden" name="subnetId" id="e_subnetId" />								
+		<input type="hidden" name="securityGroupIds[]" id="e_securityGroupIds" />								
+		<input type="hidden" name="sshKeyId" id="e_sshKeyId" />								
+		<input type="hidden" name="imageId" id="e_imageId" />
+		<input type="hidden" name="specId" id="e_specId" />
+		<input type="hidden" name="label" id="e_label" />								
+		<input type="hidden" name="vm_userAccount"  id="e_vmUserAccount" />								
+		<input type="hidden" name="vm_password" id="e_vmUserPassword" />								
+	</form>
+
+
 	<div class="top_box">
 		<div class="titbox_sc">
 			<div class="tit">New Server #1 Config</div>
@@ -21,11 +50,11 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>Server Name</label>
-							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" />
+							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" id="es_name"/>
 						</li>
 						<li>
 							<label>Description</label>
-							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1 ta_2" title="" ></textarea>
+							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1 ta_2" title="" id="es_description"></textarea>
 						</li>
 					</ul>
 				</div>
@@ -33,18 +62,28 @@
 					<ul>
 						<li>
 							<label>Cloud Provider / Region</label>
-							<select class="selectbox white pline sel_1">
+							<select class="selectbox white pline sel_1" id="es_regProvider" onchange="getRegionListFilterForSelectbox(this.value, 'es_regRegion', 'es_regConnectionName');">
 								<option value="1">Selected CP</option>
+								{{ range $cloudItem := .CloudOSList}}	
+								<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
+								{{ end }}
 							</select>
-							<select class="selectbox white pline sel_1">
-								<option value="1">Selected Region</option>
+							<select class="selectbox white pline sel_1" id="es_regRegion" onchange="getConnectionListFilterForSelectbox(this.value, 'es_regConnectionName');">
+								<option value="">Selected Region</option>
+								{{ range $regionItem := .RegionList}}	
+								<option value="{{ $regionItem.RegionName }}">[{{ $regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
+								{{ end }}
+						
 							</select>
 						</li>
 						<li>
 							<label><span class="ch">*</span>Cloud Connection</label>
 							<span class="sbox">
-								<select class="selectbox white pline sel_2">
-									<option value="1">Selected CP</option>
+								<select class="selectbox white pline sel_2" id="es_regConnectionName">
+									<option value="">Selected CP</option>
+									{{ range $connectionItem := .CloudConnectionConfigInfoList}}	
+									<option value="{{ $connectionItem.ConfigName }}">[{{ $connectionItem.ProviderName }}] {{ $connectionItem.RegionName }}</option>
+									{{ end }}
 								</select>
 								<a href="javascript:void(0);" class="btn_assist">Assist</a>
 							</span>
@@ -53,21 +92,7 @@
 				</div>
 			</div>
 		</div>
-		
-		<script>
-		$(document).ready(function(){
-			//Deployment Target table scrollbar
-		  $('.btn_assist').on('click', function() {
-			$("#Deployment_box").modal();
-				$('.dtbox.scrollbar-inner').scrollbar();
-			});
-			//Server Configuration clear
-			$(".btn_clear").click(function() {
-				$('.svc_ipbox').find('input, textarea').val('');
-			});
-		});
-		</script>
-											
+					
 	</div>
 
 	<!-- Deployment Target popup -->
@@ -87,22 +112,29 @@
 							
 							<div class="toptxt">
 								<label>Cloud Provider / Region</label>
-								<select class="selectbox sel_1">
-									<option value="1">Selected CP</option>
+								
+								<select class="selectbox sel_1" id="popProvider" onchange="popProviderChange('popProvider', 'popRegion', 'popCloudConnection');">
+									<option value="">Selected CP</option>
+									{{ range $cloudItem := .CloudOSList}}	
+									<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
+									{{ end }}
 								</select>
-								<select class="selectbox sel_1">
-									<option value="1">Selected Region</option>
+								<select class="selectbox sel_1" id="popRegion" onchange="getConnectionListFilterForTable('popProvider','popRegion', 'popCloudConnection');">
+									<option value="">Selected Region</option>
+									{{ range $regionItem := .RegionList}}	
+									<option value="{{ $regionItem.RegionName }}">[{{ $regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
+									{{ end }}
 								</select>
 							</div>
 							
 							<div class="imgbox">
-								<img src="/assets/img/contents/img_thumb_dt.jpg" alt="img">
+								<img src="/assets/img/contents/img_thumb_dt.jpg" alt="img"><!-- TODO : 이 이미지는 뭐지? -->
 							</div>
 							
 							<!-- table scrollbar -->
 							<div class="dtbox scrollbar-inner">
 								<div class="dataTable dt_overlay">
-									<table cellpadding="0" cellspacing="0" border="1" summary="">
+									<table cellpadding="0" cellspacing="0" border="1" summary="" id="popCloudConnection">
 										<colgroup><col width="35%"><col width="25%"><col width=""></colgroup>
 										<thead>
 											<tr>
@@ -112,26 +144,14 @@
 											</tr>
 										</thead>
 										<tbody>
+											{{ range $connectionConfigItem := .CloudConnectionConfigInfoList}}	
 											<tr>
-												<td class="btn_mtd" data-th="Cloud Provide">gcp <span class="ov off"></span></td>
-												<td class="overlay hidden" data-th="Region">region01</td>
-												<td class="overlay hidden" data-th="Cloud Connections">gcp-region01-drv01</td>
+												<td class="btn_mtd" data-th="Cloud Provide">{{ $connectionConfigItem.ProviderName }}<span class="ov off"></span></td>
+												<td class="overlay hidden" data-th="Region">{{ $connectionConfigItem.RegionName }}</td>
+												<td class="overlay hidden" data-th="Cloud Connections">{{ $connectionConfigItem.ConfigName }}</td>
 											</tr>
-											<tr>
-												<td class="btn_mtd" data-th="Cloud Provide">gcp <span class="ov off"></span></td>
-												<td class="overlay hidden" data-th="Region">region01</td>
-												<td class="overlay hidden" data-th="Cloud Connections">gcp-region01-drv01</td>
-											</tr>
-											<tr>
-												<td class="btn_mtd" data-th="Cloud Provide">gcp <span class="ov off"></span></td>
-												<td class="overlay hidden" data-th="Region">region01</td>
-												<td class="overlay hidden" data-th="Cloud Connections">gcp-region01-drv01</td>
-											</tr>
-											<tr>
-												<td class="btn_mtd" data-th="Cloud Provide">gcp <span class="ov off"></span></td>
-												<td class="overlay hidden" data-th="Region">region01</td>
-												<td class="overlay hidden" data-th="Cloud Connections">gcp-region01-drv01</td>
-											</tr>
+											{{ end }}
+											
 										</tbody>
 									</table>
 								</div>
@@ -157,62 +177,6 @@
 	</div>
 	<!-- //Deployment Target popup -->
 		
-	<script>
-		$(document).ready(function(){	
-			
-			//tab menu Server / OS_HW /	Network / Security / Other 위치 표시
-			$(".create_tab .nav a").click(function() {
-			  var idx = $(".create_tab .nav a").index(this);
-			  for (i = 0; i < $(".create_tab .nav a").length; i++) {
-				if (i == idx) {
-						$('.config_location > div').removeClass('on');
-						$('.config_location > div > span').eq(idx).parent().addClass('on');
-				} 
-			  }
-			});
-			//tab 내용 다음
-		  $(".create_tab .btn_next").click(function(e) {
-			var $active = $('.create_tab .nav li > .active');
-			$active.parent().next().find('.nav-link').removeClass('disabled');
-			nextTab($active);
-		  });
-		
-			//tab 내용 이전
-		  $(".create_tab .btn_prev").click(function(e) {
-			var $active = $('.create_tab .nav li > a.active');
-			prevTab($active);
-		  });
-		  
-		});
-		//next
-		function nextTab(elem) {
-		  $(elem).parent().next().find('a[data-toggle="tab"]').click();
-		}
-		//prev
-		function prevTab(elem) {
-		  $(elem).parent().prev().find('a[data-toggle="tab"]').click();
-		}
-
-		$(document).ready(function(){	
-			//OS_HW - Clear
-			$("#OS_HW .btn_clear").click(function() {
-				$('#OS_HW .tab_ipbox').find('input, textarea').val('');
-			});
-			//Network - Clear
-			$("#Network .btn_clear").click(function() {
-				$('#Network .tab_ipbox').find('input, textarea').val('');
-			});
-			//Security - Clear
-			$("#Security .btn_clear").click(function() {
-				$('#Security .tab_ipbox').find('input, textarea').val('');
-			});
-			//Other - Clear
-			$("#Other .btn_clear").click(function() {
-				$('#Other .tab_ipbox').find('input, textarea').val('');
-			});
-		});
-
-	</script>
 
 	<div class="create_tab">
 		<ul class="nav">
@@ -223,7 +187,7 @@
 		</ul>
 		
 		<div class="tab-content">
-			{{template "McisOshw" .}}														
+			{{template "McisOsHardware" .}}														
 			{{template "McisNetwork" .}}
 			{{template "McisSecurity" .}}
 			{{template "McisOther" .}}
@@ -263,4 +227,5 @@
 	</div>
 
 </div>
+<script src="/assets/js/operation/manages/mcis/mcisconfigureexpert.js"></script>  
 {{end}}

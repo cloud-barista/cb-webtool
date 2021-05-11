@@ -170,9 +170,9 @@ func CloudConnectionConfigRegProc(c echo.Context) error {
 	respBody, respStatus := service.RegCloudConnectionConfig(cloudConnectionConfigInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -202,9 +202,9 @@ func CloudConnectionConfigDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelCloudConnectionConfig(paramConfigName)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -282,9 +282,9 @@ func RegionRegProc(c echo.Context) error {
 	respBody, respStatus := service.RegRegion(regionInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -313,9 +313,9 @@ func RegionDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelRegion(paramRegion)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -393,9 +393,9 @@ func CredentialRegProc(c echo.Context) error {
 	respBody, respStatus := service.RegCredential(credentialInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -425,9 +425,9 @@ func CredentialDelProc(c echo.Context) error {
 	fmt.Println("=============respBody =============", respBody)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -506,9 +506,9 @@ func DriverRegProc(c echo.Context) error {
 	respBody, respStatus := service.RegDriver(driverInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -534,9 +534,9 @@ func DriverDelProc(c echo.Context) error {
 	fmt.Println("=============respBody =============", respBody)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -615,9 +615,9 @@ func ConfigRegProc(c echo.Context) error {
 	respBody, respStatus := service.RegConfig(configInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -642,9 +642,9 @@ func ConfigDelProc(c echo.Context) error {
 	respBody, respStatus := service.DelConfig(paramConfigID)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": respStatus.Message,
-			"status":  respStatus.StatusCode,
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
 		})
 	}
 
@@ -684,9 +684,9 @@ func ConnectionList(c echo.Context) error {
 		log.Println(" respBody  ", respBody)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			log.Println(" respStatus  ", respStatus)
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": respStatus.Message,
-				"status":  respStatus.StatusCode,
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
 			})
 		}
 

@@ -227,14 +227,35 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manages/mcis/McisSimpleConfigure",
-			"operation/manages/mcis/McisExpertConfigure",
-			"operation/manages/mcis/McisPopup",
+			"operation/manages/mcis/McisVmConfigureSimple",
+			"operation/manages/mcis/McisVmConfigureExpert",
+			"operation/manages/mcis/McisVmConfigureImport",
 
-			"operation/manages/mcis/McisOshw",
+			"operation/manages/mcis/McisAssistPopup",
+
+			"operation/manages/mcis/McisOsHardware",
 			"operation/manages/mcis/McisNetwork",
 			"operation/manages/mcis/McisSecurity",
 			"operation/manages/mcis/McisOther",
+		},
+		DisableCache: true,
+	})
+
+	// MCKS 등록 form Template
+	mcksRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/mcis/mcismng",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
+
+			"operation/manages/mcis/McksNodeConfigure",
 		},
 		DisableCache: true,
 	})
@@ -365,11 +386,15 @@ func main() {
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
 	e.GET("/operation/manages/mcis/:mcisID", controller.GetMcisInfoData)
+
+	e.POST("/operation/manages/mcis/:mcisID/vm/reg/proc", controller.VmRegProc) // vm 등록이므로 vmID없이 reg/proc
 	e.GET("/operation/manages/mcis/:mcisID/vm/:vmID", controller.GetVmInfoData)
+
 	e.POST("/operation/manages/mcis/proc/mcislifecycle", controller.McisLifeCycle)
 	//var url = "/operation/manage" + "/mcis/" + mcisID + "/operation/" + type
 	e.POST("/operation/manages/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
 	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
+
 	// e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
@@ -379,6 +404,12 @@ func main() {
 	// mcisRegGroup.GET("/", controller.McisRegForm)                    // MCIS 생성 + VM생성
 	mcisRegGroup.GET("", controller.McisRegForm)                     // MCIS 생성 + VM생성
 	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVmRegForm) // MCIS의 VM생성
+
+	mcksMngGroup := e.Group("/operation/manages/mcks/mngform", mcksRegTemplate)
+	mcksMngGroup.GET("", controller.McisRegForm) // MCKS 생성 + Node생성
+
+	mcksRegGroup := e.Group("/operation/manages/mcks/regform", mcksRegTemplate)
+	mcksRegGroup.GET("", controller.McisRegForm) // Node생성
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
@@ -433,6 +464,7 @@ func main() {
 	cloudConnectionGroup.DELETE("/config/del/:configID", controller.ConfigDelProc)
 
 	resourcesGroup := e.Group("/setting/resources", resourceTemplate)
+	e.POST("/getinspectresources", controller.GetInspectResourceList)
 	resourcesGroup.GET("/network/mngform", controller.VpcMngForm)
 	resourcesGroup.GET("/network/list", controller.GetVpcList)
 	resourcesGroup.GET("/network/:vNetID", controller.GetVpcData)
@@ -457,7 +489,8 @@ func main() {
 	resourcesGroup.POST("/machineimage/reg", controller.VirtualMachineImageRegProc)            // RegProc _ SshKey 같이 앞으로 넘길까
 	resourcesGroup.DELETE("/machineimage/del/:imageID", controller.VirtualMachineImageDelProc) // DelProc + SskKey 같이 앞으로 넘길까
 
-	resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)          // TODO : Image 전체목록인가? 확인필요
+	resourcesGroup.GET("/machineimage/lookupimages", controller.LookupCspVirtualMachineImageList) // TODO : Image 전체목록인가? 확인필요
+	//resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)          // TODO : Image 전체목록인가? 확인필요
 	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
 	resourcesGroup.GET("/machineimage/fetchimage", controller.FetchVirtualMachineImageList)            // TODO : Image 정보 갱신인가? 확인필요
 
