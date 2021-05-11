@@ -241,6 +241,25 @@ func main() {
 		DisableCache: true,
 	})
 
+	// MCKS 등록 form Template
+	mcksRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/mcis/mcismng",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
+
+			"operation/manages/mcis/McksNodeConfigure",
+		},
+		DisableCache: true,
+	})
+
 	cloudConnectionTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
@@ -385,6 +404,12 @@ func main() {
 	// mcisRegGroup.GET("/", controller.McisRegForm)                    // MCIS 생성 + VM생성
 	mcisRegGroup.GET("", controller.McisRegForm)                     // MCIS 생성 + VM생성
 	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVmRegForm) // MCIS의 VM생성
+
+	mcksMngGroup := e.Group("/operation/manages/mcks/mngform", mcksRegTemplate)
+	mcksMngGroup.GET("", controller.McisRegForm) // MCKS 생성 + Node생성
+
+	mcksRegGroup := e.Group("/operation/manages/mcks/regform", mcksRegTemplate)
+	mcksRegGroup.GET("", controller.McisRegForm) // Node생성
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)

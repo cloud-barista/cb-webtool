@@ -10,7 +10,7 @@
 			<div class="tab_ipbox">
 				<div class="ipbox ipbox1">
 					<ul>
-						<li>
+						<!-- <li>
 							<label><span class="ch">*</span>Network Name</label>
 							<span class="sbox sbox_m">
 								<select class="selectbox white pline sel_2">
@@ -21,32 +21,33 @@
 								</select>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#Network_Interface" class="btn_view btn_Interface">View</a>
 							</span>
+						</li> -->
+						<li>
+							<label>Network Name</label>
+							<input type="text" name="" placeholder="Network Name" class="pline ip_2" title="" id="es_networkName"/>
 						</li>
 						<li>
 							<label>Description</label>
-							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1" title="" ></textarea>
+							<input type="text" name="" placeholder="Network Description" class="pline ip_2" title="" id="es_networkDescription"/>
 						</li>
 						<li>
 							<label>CIDR Block</label>
-							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" />
+							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" id="es_networkCidrBlock"/>
 						</li>
 						<li>
 							<label><span class="ch">*</span>subnet Name</label>
-							<span class="sbox sbox_m">
-								<select class="selectbox white pline sel_2">
-									<option value="1">Input / select Name</option>
-								</select>
-								<a href="javascript:void(0);" class="btn_view">View</a>
-							</span>
+							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" id="es_networkSubnetname"/>							
 						</li>
+						<!-- region이 선택 된 경우 해당 region의 az -->
 						<li>
 							<label>Availability Zone</label>
-							<select class="selectbox white pline sel_2">
+							<select class="selectbox white pline sel_2" id="es_networkAvailabilityZone">
 								<option value="1">Select Zone Name</option>
 							</select>
 						</li>
 						<li>
 							<label><span class="ch">*</span>Interface Name</label>
+							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" id="es_networkInterfaceName"/>
 							<span class="sbox sbox_m">
 								<select class="selectbox white pline sel_2">
 									<option value="1">Input / select Name</option>
@@ -103,7 +104,8 @@
 			</div>
 						
 		</div>
-		<div class="btn_n_box"><div class="add"><button class="network_btn_add" value="btn_add" name="">add</button></div></div>
+		<!-- TODO : 현단계에서는 modify 기능 없음(insert/delete만 가능하여 주석처리)-->
+		<!-- <div class="btn_n_box"><div class="add"><button class="network_btn_add" value="btn_add" name="">add</button></div></div>
 		
 		<div id="addDiv"></div>
 		
@@ -120,7 +122,7 @@
 				});  
 			  });                                   
 			});
-		</script>
+		</script> -->
 		
 		<!-- 
 		<script>

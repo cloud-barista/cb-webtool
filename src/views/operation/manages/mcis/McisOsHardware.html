@@ -25,7 +25,7 @@
 						</li>
 					</ul>
 					<div class="dataTable status_list">
-						<table cellpadding="0" cellspacing="0" summary="" id="e_imageList">
+						<table cellpadding="0" cellspacing="0" summary="" id="es_imageList">
 							<colgroup>
 								<col width="50px">
 								<col width="16%">
@@ -46,7 +46,7 @@
 									<th>Desc</th>
 								</tr>
 							</thead>
-							<tbody id="e_imageListTbody">
+							<tbody id="es_imageListTbody">
 								{{ $length := len .VMImageList }} 
 								{{ if eq $length 0 }}
 								<tr>
@@ -94,8 +94,8 @@
 							</span>
 							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly /> -->
 							<span class="sbox sbox_m">
-								<input type="text" name="e_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" title="" id="e_specFilterKeyword"/>
-								<input type="submit" name="" class="btn_search" value="" title="" onclick="hardwareSpecFilter('e_specId', 'e_specFilterKeyword')"/>
+								<input type="text" name="es_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" title="" id="es_specFilterKeyword"/>
+								<input type="submit" name="" class="btn_search" value="" title="" onclick="hardwareSpecFilter('es_specId', 'es_specFilterKeyword')"/>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
 							</span>
 
@@ -128,8 +128,8 @@
 								{{range $vmSpecIndex, $vmSpecItem := .VMSpecList}}	
 								<tr>
 									<td class="overlay hidden" data-th="">
-										<input type="hidden" id="vmSpec_info_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
-										<input type="checkbox" name="vmSpec_chk" id="vmSpecRaw_{{$vmSpecIndex}}" title="" />
+										<input type="hidden" id="es_vmSpec_info_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
+										<input type="checkbox" name="vmSpec_chk" id="es_vmSpecRaw_{{$vmSpecIndex}}" title="" />
 										<label for="td_ch1"></label> <span class="ov off"></span>
 									</td>
 									<td class="overlay hidden" data-th="Name">{{$vmSpecItem.Name}}</td>
@@ -155,11 +155,11 @@
 	<!-- //OS/HW -->
 <script>
 	$(document).ready(function(){
-		$("input[name=e_specFilterKeyword]").keydown(function (key) {
+		$("input[name=es_specFilterKeyword]").keydown(function (key) {
 	
 			if(key.keyCode == 13){//키가 13이면 실행 (엔터는 13)
 				console.log(this.value);
-				selectBoxFilterByText('e_specId', this.value)
+				selectBoxFilterByText('es_specId', this.value)
 			}
 	
 		});		
