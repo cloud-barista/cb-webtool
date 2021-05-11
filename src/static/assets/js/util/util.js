@@ -351,6 +351,24 @@ function commonPromptOpen(targetAction, targetObjId){
     let promptModalTextMap = new Map(
         [
             ["FilterName", "필터링할 단어를 입력하세요"],
+            ["FilterCloudProvider", "필터링할 단어를 입력하세요"],
+            ["FilterDriver", "필터링할 단어를 입력하세요"],
+            ["FilterCredential", "필터링할 단어를 입력하세요"],
+            ["RsFltVPCName", "필터링할 단어를 입력하세요"],
+            ["RsFltCIDRBlock", "필터링할 단어를 입력하세요"],
+            ["RsFltSecurityGroupName", "필터링할 단어를 입력하세요"],
+            ["RsFltConnectionName", "필터링할 단어를 입력하세요"],
+            ["RsFltSshName", "필터링할 단어를 입력하세요"],
+            ["RsFltSshConnName", "필터링할 단어를 입력하세요"],
+            ["RsFltSshKeyName", "필터링할 단어를 입력하세요"],
+            ["RsFltSrvImgId", "필터링할 단어를 입력하세요"],
+            ["RsFltSrvImgName", "필터링할 단어를 입력하세요"],
+            ["RsFltSrvSpecName", "필터링할 단어를 입력하세요"],
+            ["RsFltSrvSpecConnName", "필터링할 단어를 입력하세요"],
+            ["RsFltSrvCspSpecName", "필터링할 단어를 입력하세요"],
+            ["NSFltName", "필터링할 단어를 입력하세요"],
+            ["NSFltId", "필터링할 단어를 입력하세요"],
+            ["NSFltDescription", "필터링할 단어를 입력하세요"],
             ["Config", "Would you like to set Cloud config ?"],
         ]
     );
@@ -379,7 +397,80 @@ function commonPromptOk(){
         if( targetValue ){
             filterTable(targetObjId, "Name", targetValue)
         }        
+    }else if( targetAction == 'FilterCloudProvider'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Cloud Provider", targetValue)
+        }       
+    }else if( targetAction == 'FilterDriver'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Driver", targetValue)
+        }       
+    }else if( targetAction == 'FilterCredential'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Credential", targetValue)
+        }       
+    }else if( targetAction == 'RsFltVPCName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "VPC Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltCIDRBlock'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "CIDR Block", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSecurityGroupName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "SecurityGroup Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltConnectionName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Connection Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSshName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSshConnName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Connection Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSshKeyName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "SSH KEY Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSrvImgId'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Image ID", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSrvImgName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Image Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSrvSpecName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSrvSpecConnName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Connection Name", targetValue)
+        }       
+    }else if( targetAction == 'RsFltSrvCspSpecName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "CSP Spec Name", targetValue)
+        }       
+    }else if( targetAction == 'NSFltName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }       
+    }else if( targetAction == 'NSFltId'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "ID", targetValue)
+        }       
+    }else if( targetAction == 'NSFltDescription'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "description", targetValue)
+        }       
     }
+    
     commonPromptClose();
 }
 
@@ -630,4 +721,27 @@ function filterTable(tableId, filterColumnName, filterKeyword){
 			}
         }
     }
+}
+
+function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword){
+
+    var filter = filterKeyword.toUpperCase();
+	console.log("filter=" + filter);
+
+    var trs = $('#' + tableId + ' tr');
+    console.log(trs);
+    //for (var i = 1; i < $('#' + tableId + ' tr').size(); i++) {
+    for (var i = 1; i < trs.size(); i++) {
+        //var hiddenval = trs.eq(i).find('input:hidden[name="vmImageInfo"]').val();
+        var hiddenval = trs.eq(i).find('input:hidden[name="' + hiddenColumnName + '"]').val();
+        // console.log("hiddenval " + hiddenval);
+
+        if(filter == "ALL") {
+            trs.eq(i).css("display", "");
+        }else if (hiddenval.toUpperCase().indexOf(filter) > -1) {
+            trs.eq(i).css("display", "");
+        }else {
+            trs.eq(i).css("display", "none");
+        }
+    }    
 }
