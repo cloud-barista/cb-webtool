@@ -39,6 +39,7 @@ function processFile(file) {
 			console.log(newJ.connectionName);
 			console.log(newJ.securityGroupIds);
 			setVmInfoToForm(newJ);
+			jsonFormatter(newJ)
 			//securityGroupIds: [ 	"sg-mz-aws-us-east-01"	],
 		};
 		//reader.readAsText(file, /* optional */ "euc-kr");
@@ -47,6 +48,13 @@ function processFile(file) {
 		commonAlert("File Load Failed");
 		console.log(error);
 	}
+}
+
+// json 객체를 textarea에 표시할 때 예쁘게
+function jsonFormatter(vmInfoObj){
+	// var fmt = JSON.stringify(vmInfoObj, null, "\t"); // stringify with tabs inserted at each level
+	var fmt = JSON.stringify(vmInfoObj, null, 4);    // stringify with 4 spaces at each level
+	$("#vmImportScriptPretty").val(fmt);	
 }
 
 // 선택한 파일을 읽어 form에 Set

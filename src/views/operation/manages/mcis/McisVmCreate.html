@@ -85,20 +85,14 @@
 												<!-- servers -->
 												<div class="servers_box">
 													<div class="title">Servers</div>
-													<!--
+													
 													<div class="switch">
-														 <span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> <label><input type="checkbox" name="consent" value="" class="ch" title=""  /><span></span></label> -->
-
-														<!-- <span class="txt">Import <span class="txt_c on d_none">ON</span>
-														<span class="txt_c off ">OFF</span></span>
-														<label>
-														<input type="checkbox" name="consent" class="ch" id="isImport" />
-														<span></span></label> 
+														 <span class="txt">Expert <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span></span> 
+														 <label><input type="checkbox" name="consent" class="ch" onclick="displayNewServerForm()"  /><span></span></label>
 													</div>
-													-->
 								
 													<div class="list">
-														<div class="radio">
+														<!-- <div class="radio">
 															<label><input type="radio" id="vmInfoTypeSimple" name="vmInfoType" value="simple" checked>Simple</label><br>
 														</div>
 														<div class="radio">
@@ -106,7 +100,7 @@
 														</div>
 														<div class="radio">
 															<label><input type="radio" id="vmInfoTypeImport" name="vmInfoType" value="import">Import</label>
-														</div>
+														</div> -->
 														
 														<ul id="mcis_server_list">
 															{{range $vmIndex, $item := .VMList}}
@@ -132,7 +126,9 @@
 												</div>
 												<!-- //servers -->												
 												<div>
-													<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="btn_ImportExport();"><span>Export</span></button> 
+													<!-- TODO : MCIS mng 화면으로 이동
+														<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="btn_ImportExport();"><span>Export</span></button>  
+													-->
 													<span class="text-center" id="serverRegistResult">&nbsp;</span>
 												</div>
 

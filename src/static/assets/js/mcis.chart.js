@@ -590,8 +590,13 @@ function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statis
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
-        var errorMessage = error.response.data.error;
-        commonErrorAlert(statusCode, errorMessage) 
+
+        var statusCode1 = error.response.status;
+        var errorMessage1 = error.response.statusText;
+        commonErrorAlert(statusCode1, errorMessage1) 
+        // var statusCode = error.response.data.status;
+        // var errorMessage = error.response.data.error;
+        // commonErrorAlert(statusCode, errorMessage) 
     });
 	
 }
