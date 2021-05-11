@@ -255,7 +255,7 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manages/mcis/McksNodeConfigure",
+			"operation/manages/mcks/McksNodeConfigure",
 		},
 		DisableCache: true,
 	})
