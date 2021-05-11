@@ -12,3 +12,12 @@ if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
         "status":  respStatus.StatusCode,
     })
 }
+
+-> 최종 변경 : return시 error로 send, error code 도 return받는 respStatus
+if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+    return c.JSON(respStatus.StatusCode, map[string]interface{}{
+        "error":  respStatus.Message,
+        "status": respStatus.StatusCode,
+    })
+}

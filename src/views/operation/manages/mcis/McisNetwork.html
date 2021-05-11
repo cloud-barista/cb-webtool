@@ -10,51 +10,44 @@
 			<div class="tab_ipbox">
 				<div class="ipbox ipbox1">
 					<ul>
-						<li>
+						<!-- <li>
 							<label><span class="ch">*</span>Network Name</label>
 							<span class="sbox sbox_m">
 								<select class="selectbox white pline sel_2">
-									<option value="1">Input / select Name</option>
+									<option value="">Input / select Name</option>
+									{{ range $vNetItem := .VNetList}}	
+									<option value="{{ $vNetItem.ID }}">[{{ $vNetItem.ConnectionName }}] {{ $vNetItem.Name }} {{ $vNetItem.CspVNetName }}</option>
+									{{ end }}
 								</select>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#Network_Interface" class="btn_view btn_Interface">View</a>
 							</span>
+						</li> -->
+						<li>
+							<label>Network Name</label>
+							<input type="text" name="" placeholder="Network Name" class="pline ip_2" title="" id="es_networkName"/>
 						</li>
 						<li>
 							<label>Description</label>
-							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1" title="" ></textarea>
+							<input type="text" name="" placeholder="Network Description" class="pline ip_2" title="" id="es_networkDescription"/>
 						</li>
-					</ul>
-				</div>
-				<div class="ipbox ipbox2">
-					<ul>
 						<li>
 							<label>CIDR Block</label>
-							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" />
+							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" id="es_networkCidrBlock"/>
 						</li>
 						<li>
 							<label><span class="ch">*</span>subnet Name</label>
-							<span class="sbox sbox_m">
-								<select class="selectbox white pline sel_2">
-									<option value="1">Input / select Name</option>
-								</select>
-								<a href="javascript:void(0);" class="btn_view">View</a>
-							</span>
+							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" id="es_networkSubnetname"/>							
 						</li>
+						<!-- region이 선택 된 경우 해당 region의 az -->
 						<li>
 							<label>Availability Zone</label>
-							<select class="selectbox white pline sel_2">
+							<select class="selectbox white pline sel_2" id="es_networkAvailabilityZone">
 								<option value="1">Select Zone Name</option>
 							</select>
 						</li>
-					</ul>
-				</div>
-			</div>
-			
-			<div class="tab_ipbox tab_ipbox_2">
-				<div class="ipbox ipbox1">
-					<ul>
 						<li>
 							<label><span class="ch">*</span>Interface Name</label>
+							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" id="es_networkInterfaceName"/>
 							<span class="sbox sbox_m">
 								<select class="selectbox white pline sel_2">
 									<option value="1">Input / select Name</option>
@@ -63,11 +56,56 @@
 							</span>
 						</li>
 					</ul>
+					<div class="dataTable status_list">
+						<table cellpadding="0" cellspacing="0" summary="" id="e_vNetList">
+							<colgroup>
+								<col width="50px">
+								<col width="30%">
+								<col width="30%">
+								<col width="30%">			
+							</colgroup>
+							<thead>
+								<tr>
+									<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+									<th>VPC Name</th>
+									<th>CIDR Block</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody id="e_vNetListTbody">
+								{{ $length := len .VNetList }} 
+								{{ if eq $length 0 }}
+								<tr>
+									<td class="overlay hidden" data-th="" colspan="8">No Data</td>
+								</tr>
+								{{ end }}
+
+								{{range $vNetIndex, $vNetItem := .VNetList}}	
+								<tr>
+									<td class="overlay hidden" data-th="">
+										<input type="hidden" id="vNet_info_{{$vNetIndex}}" value="{{$vNetItem.ID}}"/>
+										<input type="checkbox" name="vNet_chk" id="vNetRaw_{{$vNetIndex}}" title="" />
+										<label for="td_ch1"></label> <span class="ov off"></span>
+									</td>
+									<td class="overlay hidden" data-th="Name">{{$vNetItem.Name}}</td>
+									<td class="btn_mtd ovm td_left" data-th="CidrBlock">
+										{{$vNetItem.CidrBlock}}
+									</td>
+									<td class="overlay hidden" data-th="Description">{{$vNetItem.Description}}</td>
+								</tr>											
+								{{end}}
+								
+							</tbody>
+						</table>
+					</div>
+					
 				</div>
+
 			</div>
-			
+						
 		</div>
-		<div class="btn_n_box"><div class="add"><button class="network_btn_add" value="btn_add" name="">add</button></div></div>
+		<!-- TODO : 현단계에서는 modify 기능 없음(insert/delete만 가능하여 주석처리)-->
+		<!-- <div class="btn_n_box"><div class="add"><button class="network_btn_add" value="btn_add" name="">add</button></div></div>
 		
 		<div id="addDiv"></div>
 		
@@ -84,7 +122,7 @@
 				});  
 			  });                                   
 			});
-		</script>
+		</script> -->
 		
 		<!-- 
 		<script>

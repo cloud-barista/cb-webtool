@@ -1,18 +1,22 @@
 package tumblebug
 
+import (
+	"time"
+)
+
 type VmInfo struct {
 	ID             string `json:"id"`
 	Name           string `json:"name"`
 	ConnectionName string `json:"connectionName"`
 
-	SpecId  string `json:"specId"`
+	SpecID  string `json:"specId"`
 	ImageID string `json:"imageId"`
 
-	VNetId           string   `json:"vNetId"`
-	SubnetId         string   `json:"subnetId"`
+	VNetID           string   `json:"vNetId"`
+	SubnetID         string   `json:"subnetId"`
 	SecurityGroupIDs []string `json:"securityGroupIds"`
 
-	SshKeyId string `json:"sshKeyId"`
+	SshKeyID string `json:"sshKeyId"`
 
 	VmUserAccount  string `json:"vmUserAccount"`
 	VmUserPassword string `json:"vmUserPassword"`
@@ -21,7 +25,7 @@ type VmInfo struct {
 	Label       string `json:"label"`
 
 	Location   LocationInfo     `json:"location"`
-	RegionZone NameSystemIdInfo `json:"region"`
+	RegionZone NameSystemIdInfo `json:"region"` // tumblebug에서 결과에 region에 region/zone을 같이보내는가?
 
 	publicIP   string `json:"publicIP"`
 	publicDNS  string `json:"publicDNS"`
@@ -51,7 +55,7 @@ type CspViewVmDetailInfo struct {
 
 	VmspecName string `json:"vmspecName"`
 
-	VmuserId     string `json:"vmuserId"`
+	VmuserID     string `json:"vmuserId"`
 	VmuserPasswd string `json:"vmuserPasswd"`
 
 	ConnectionName    string             `json:"connectionName"`
@@ -62,7 +66,7 @@ type CspViewVmDetailInfo struct {
 	SecurityGroupIIDs []NameSystemIdInfo `json:"securityGroupIIds"`
 	keyPairIID        NameSystemIdInfo   `json:"keyPairIId"`
 
-	StartTime  string           `json:"startTime"`
+	StartTime  time.Time        `json:"startTime"`
 	RegionZone NameSystemIdInfo `json:"region"`
 
 	NetworkInterface string `json:"networkInterface"`

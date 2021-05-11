@@ -136,8 +136,15 @@ function deleteSecurityGroup() {
             // location.reload(true);
             displaySecurityGroupInfo("DEL_SUCCESS")
         }
-    }).catch(function(error){
-        console.log("sg del error : ",error);        
+    // }).catch(function(error){
+    //     console.log("sg del error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }          
 
@@ -332,8 +339,15 @@ function showSecurityGroupInfo(sgName) {
         // console.log("providerValue = " + providerValue)
 
         displaySecurityGroupInfo("DEL")// 상세 area 보여주고 focus이동
-    }).catch(function(error){
-        console.log("show sg info error : ",error);        
+    // }).catch(function(error){
+    //     console.log("show sg info error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }
 
@@ -560,7 +574,11 @@ function createSecurityGroup() {
             } else {
                 commonAlert("Fail Create Security Group")
             }
-        }).catch(function(error){
+        // }).catch(function(error){
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+           
             console.log("sg create error : ");
             
             //return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -568,9 +586,9 @@ function createSecurityGroup() {
 		// 	"status":  respStatus.StatusCode,
 		// })
             // console.log(error.response.data);
-            console.log("Status", error.response.status);// map interface의 status
-            console.log("Status", error.response.data.message);// map interface의 message
-            console.log('Error', error.message);// [0]번째 param : http.StatusBadRequest
+            // console.log("Status", error.response.status);// map interface의 status
+            // console.log("Error", error.response.data.error);// map interface의 message
+            // console.log('Error', error.message);// [0]번째 param : http.StatusBadRequest
 
             // message는 , 로 나눈 뒤 : 를 기준으로 key,value로 파싱하면 될 것 같음.
             // console.log(error.config);

@@ -126,6 +126,7 @@
         var apiMethod = $('input[name="ApiMethod"]:checked').val();
         var apiURL = $("#ApiURL").val();
         var apiObj = $("#ApiObj").val();
+        var jsonStr = JSON.stringify(apiObj)
         var serverURL = $("#ServerURL").val();
         var url = "/apicall";
 
@@ -139,6 +140,7 @@
             ApiMethod:apiMethod,
             ApiURL:apiURL,
             ApiObj:apiObj
+            // ApiObj:jsonStr
         }).then(result=>{
             console.log(result)
             if ( result.data.resp ){
@@ -151,11 +153,12 @@
             // console.log("result : ")
             // console.log(result)            
             
-        }).catch(function(error){
-            console.log(" api call error : ");
-            console.log(error);
-            console.log(error.data);
-            $("#ApiResult").val(error)
+        // }).catch(function(error){
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            console.log(error.response.data.error)
+            $("#ApiResult").val(error.response.data.error)
         });
     
     }

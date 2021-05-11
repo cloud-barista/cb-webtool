@@ -163,8 +163,15 @@ function deleteVirtualMachineImage() {
             displayVirtualMachineImageInfo("DEL_SUCCESS")
             // location.reload(true);
         }
-    }).catch(function(error){
-        console.log("image delete error : ",error);        
+    // }).catch(function(error){
+    //     console.log("image delete error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }                                                  
 
@@ -385,8 +392,15 @@ function createVirtualMachineImage() {
             } else {
                 commonAlert("Fail Create Image)")
             }
-        }).catch(function(error){
-            console.log("image create error : ",error);        
+        // }).catch(function(error){
+        //     console.log("image create error : ",error);        
+        // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage);
         });
     } else {
         commonAlert("Input Image Name")
@@ -440,8 +454,15 @@ function showVirtualMachinImageInfo(target) {
 
         // getProvider(dtlConnectionName);
         getProviderNameByConnection(dtlConnectionName, 'dtlProvider')// provider는 connection 정보에서 가져옴
-    }).catch(function(error){
-        console.log("image data error : ",error);        
+    // }).catch(function(error){
+    //     console.log("image data error : ",error);        
+    // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
     });
 }
 

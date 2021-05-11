@@ -166,8 +166,14 @@ function deleteNameSpace () {
             }else{
                 commonAlert("Namespace deletion failed");
             }
-        }).catch(function(error){
-            console.log("namespace delete error : ",error);        
+        // }).catch(function(error){
+        //     console.log("namespace delete error : ",error);        
+        // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            commonErrorAlert(statusCode, errorMessage) 
         });
     }else{
         // alert("Input NameSpace")

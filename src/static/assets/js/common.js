@@ -513,9 +513,13 @@ function getCommonVirtualMachineImageList(targetKey, sortType) {
 			console.log("return get Data")
 			setVirtualMachineImageListAtSimpleConfigure(data, sortType)			
 		}
-    }).catch(function(error){
-        console.log("list error : ",error);        
-    });
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response) 
+	});
 }
 
 
@@ -540,9 +544,13 @@ function getCommonSecurityGroupList(targetKey, sortType) {
 			console.log("return get Data")
 			setSecurityGroupListAtSimpleConfigure(data, sortType)			
 		}
-    }).catch(function(error){
-        console.log("get gsList error : ",error);        
-    });
+    // }).catch(function(error){
+    //     console.log("get gsList error : ",error);        
+    // });
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response) 
+	});
 }
 
 
@@ -609,9 +617,13 @@ function getCommonSecurityGroupList(targetKey, sortType) {
 					location.reload(); // TODO : 호출한 곳에서 reload를 할 것인지 redirect를 할 것인지
 				}
                 // 
-			}).catch(function(error){
-				console.log("setNameSpace error : ",error);        
-            });
+			// }).catch(function(error){
+			// 	console.log("setNameSpace error : ",error);        
+            // });
+			}).catch((error) => {
+				console.warn(error);
+				console.log(error.response) 
+			});
         }else{
             commonAlert("NameSpace가 선택되어 있지 않습니다.\n등록되어 있지 않은 경우 등록하세요.")
             //location.href ="/NS/reg";
