@@ -44,3 +44,7 @@ souce
     <input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" id="filter_image" onkeydown="filterEnterToHidden(this.id, 'vmImageInfo', 'es_imageList');"/>
     <input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_image', 'vmImageInfo', 'es_imageList')"/>
 </span>
+
+
+* 일반적으로 table filter는 대상테이블에 TH 이름 칼럼을 기준으로 동작함
+* expert mode의 table filter는 hidden obj에 넣고 싶은 값을 모두 넣고 이를 기준으로 동작시킴 ( util.filterTableByHiddenColumn)
