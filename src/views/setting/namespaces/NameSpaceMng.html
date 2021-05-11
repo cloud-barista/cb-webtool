@@ -44,8 +44,9 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);">Name</a></li>
-														<li><a href="javascript:void(0);">Description</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('NSFltName', 'nameSpaceList')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('NSFltId', 'nameSpaceList')">ID</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('NSFltDescription', 'nameSpaceList')">Description</a></li>
 													</ul>
 												</div>
 											</div>
@@ -55,8 +56,13 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
+														<li><a href="javascript:void(0);" onclick="tableSort('nameSpaceList', 'Name')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('nameSpaceList', 'ID')">ID</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('nameSpaceList', 'description')">Description</a></li>
+														<!--
 														<li><a href="javascript:void(0);" onclick='getNameSpaceList("name")'>Name</a></li>
 														<li><a href="javascript:void(0);" onclick='getNameSpaceList("description")'>Description</a></li>
+														-->
 														<!-- <li><a href="javascript:void(0);">Date</a></li> -->
 													</ul>
 												</div>
@@ -84,7 +90,7 @@
 							<div class="ds_cont">
 								
 								<div class="dataTable status_list">
-									<table cellpadding="0" cellspacing="0" border="1" summary="">
+									<table cellpadding="0" cellspacing="0" border="1" summary="" id="nameSpaceList">
 										<colgroup>
 											<col width="50px"><col width="20%"><col width="20%"><col width=""><col width="60px">
 										</colgroup>

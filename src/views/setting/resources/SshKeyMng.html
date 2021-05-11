@@ -50,9 +50,9 @@
                             <div class="infobox">
                                 <div class="box">
                                     <ul>
-                                        <li><a href="javascript:void(0);">Name</a></li>
-                                        <li><a href="javascript:void(0);">Connection Name</a></li>
-                                        <li><a href="javascript:void(0);">SSH Key Name</a></li>
+                                        <li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSshName', 'sshkeyList')">Name</a></li>
+                                        <li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSshConnName', 'sshkeyList')">Connection Name</a></li>
+                                        <li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSshKeyName', 'sshkeyList')">SSH Key Name</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -62,9 +62,14 @@
                             <div class="infobox">
                                 <div class="box">
                                     <ul>
+                                        <li><a href="javascript:void(0);" onclick="tableSort('sshkeyList', 'Name')">Name</a></li>
+                                        <li><a href="javascript:void(0);" onclick="tableSort('sshkeyList', 'Name')">Connection Name</a></li>
+                                        <li><a href="javascript:void(0);" onclick="tableSort('sshkeyList', 'Name')">SSH Key Name</a></li>
+                                        <!--
                                         <li><a href="javascript:void(0);" onclick='getSSHList("name")'>Name</a></li>
                                         <li><a href="javascript:void(0);" onclick='getSSHList("connectionName")'>Connection Name</a></li>
                                         <li><a href="javascript:void(0);" onclick='getSSHList("cspSshKeyName")'>SSH Key Name</a></li>
+                                        -->
                                     </ul>
                                 </div>
                             </div>
@@ -124,7 +129,7 @@
             <div class="ds_cont" id="sshKeyListTable">
 
                 <div class="dataTable status_list">
-                    <table cellpadding="0" cellspacing="0" border="1" summary="">
+                    <table cellpadding="0" cellspacing="0" border="1" summary="" id="sshkeyList">
                         <colgroup>
                             <col width="50px">
                             <col width="">
