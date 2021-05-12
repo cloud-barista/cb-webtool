@@ -9,29 +9,25 @@
 			<div class="ipbox ipbox1">
 				<ul>
 					<li>
-						<label><span class="ch">*</span>Security Group Name</label>
-						<input type="text" name="" placeholder="Security Group Name" class="pline ip_2" title="" id="es_securityGroupName"/>
-					</li>
-					<li>
-						<label>Description</label>
-						<input type="text" name="" placeholder="Security Group Name" class="pline ip_2" title="" id="es_securityGroupDescription"/>
-					</li>
-					<li class="alink">
-						<label>subnet Name</label>
-						<input type="text" name="" placeholder="Security Group Name" class="pline ip_2" title="" id="es_securityGroupSubnetName"/>
-					</li>
+						<label><span class="ch">*</span>Security Group </label>
+
+						<span class="sbox sbox_m">
+							<input type="text" name="es_securityGroupFilterKeyword" placeholder="Security Group Name, description, subnet keyword" class="pline ip_1 search_ip" id="filter_securityGroup" onkeydown="filterEnterToHidden(this.id, 'securityGroup_info', 'e_securityGroupList');"/>
+							<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_securityGroup', 'securityGroup_info', 'e_securityGroupList')"/>
+						</span>
+						<input type="text" name="tab_securityGroupInfo" placeholder="" class="gray ip_2"  id="tab_securityGroupInfo" readonly />
+					</li>					
 				</ul>
-				<div class="dataTable status_list">
-					<table cellpadding="0" cellspacing="0" summary="" id="e_securityGroupList">
+
+				<div class="dataTable status_list" >
+					<table cellpadding="0" cellspacing="0" id="e_securityGroupList" style="display:none;">				
 						<colgroup>
-							<col width="50px">
 							<col width="30%">
 							<col width="30%">
 							<col width="30%">			
 						</colgroup>
 						<thead>
 							<tr>
-								<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 								<th>SecurityGroup Name</th>
 								<th>Connection Name</th>
 								<th>Description</th>
@@ -46,10 +42,11 @@
 							{{ end }}
 
 							{{range $securityGroupIndex, $securityGroupItem := .SecurityGroupList}}	
-							<tr>
+							<tr onclick="setValueToFormObj('e_securityGroupList', 'tab_securityGroupInfo', 'securityGroup', '{{$securityGroupIndex}}', 'e_securityGroupIds');">
 								<td class="overlay hidden" data-th="">
-									<input type="hidden" id="securityGroup_info_{{$securityGroupIndex}}" value="{{$securityGroupItem.ID}}"/>
-									<input type="checkbox" name="securityGroup_chk" id="securityGroupRaw_{{$securityGroupIndex}}" title="" />
+									<input type="hidden" id="securityGroup_id_{{$securityGroupIndex}}" value="{{$securityGroupItem.ID}}"/>
+									<input type="hidden" name="securityGroup_info" id="securityGroup_info_{{$securityGroupIndex}}" value="{{$securityGroupItem.Name}}|{{$securityGroupItem.ConnectionName}}|{{$securityGroupItem.Description}}"/>
+											
 									<label for="td_ch1"></label> <span class="ov off"></span>
 								</td>
 								<td class="overlay hidden" data-th="Name">{{$securityGroupItem.Name}}</td>
@@ -72,26 +69,75 @@
 				<ul>
 					<li>
 						<label><span class="ch">*</span>Access (ssh key)</label>
-						<select class="selectbox white pline sel_1">
+						<!-- <select class="selectbox white pline sel_1">
 							<option value="1">All</option>
 						</select>
 						<span class="sbox">
 							<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" title="" />
 							<input type="submit" name="" class="btn_search" value="" title="" />
 						</span>
-						<input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly />
+						<input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly /> -->
+						
+						<span class="sbox sbox_m">
+							<input type="text" name="es_sshKeyFilterKeyword" placeholder="SSH Key Name, description, connection keyword" class="pline ip_1 search_ip" id="filter_sshKey" onkeydown="filterEnterToHidden(this.id, 'sshKey_info', 'es_sshKeyList');"/>
+							<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_sshKey', 'sshKey_info', 'es_sshKeyList')"/>
+						</span>
+						<input type="text" name="tab_sshKeyInfo" placeholder="" class="gray ip_2"  id="tab_sshKeyInfo" readonly />
+
 					</li>
 				</ul>
+				
+				<div class="dataTable status_list" >
+					<table cellpadding="0" cellspacing="0" id="es_sshKeyList" style="display:none;">				
+						<colgroup>
+							<col width="30%">
+							<col width="30%">
+							<col width="30%">			
+						</colgroup>
+						<thead>
+							<tr>
+								<th>Key Name</th>
+								<th>Connection Name</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody id="e_sshKeyListTbody">
+							{{ $length := len .SshKeyList }} 
+							{{ if eq $length 0 }}
+							<tr>
+								<td class="overlay hidden" data-th="" colspan="4">No Data</td>
+							</tr>
+							{{ end }}
+
+							{{range $sshKeyIndex, $sshKeyItem := .SshKeyList}}	
+							<tr onclick="setValueToFormObj('es_sshKeyList', 'tab_sshKeyInfo', 'sshKey', '{{$sshKeyIndex}}', 'e_sshKeyId');">
+								<td class="overlay hidden" data-th="">
+									<input type="hidden" id="sshKey_id_{{$sshKeyIndex}}" value="{{$sshKeyItem.ID}}"/>
+									<input type="hidden" name="sshKey_info" id="sshKey_info_{{$sshKeyIndex}}" value="{{$sshKeyItem.Name}}|{{$sshKeyItem.ConnectionName}}|{{$sshKeyItem.Description}}"/>
+											
+									<label for="td_ch1"></label> <span class="ov off"></span>
+								</td>
+								<td class="overlay hidden" data-th="Name">{{$sshKeyItem.Name}}</td>
+								<td class="btn_mtd ovm td_left" data-th="ConnectionName">
+									{{$sshKeyItem.ConnectionName}}
+								</td>
+								<td class="overlay hidden" data-th="Description">{{$sshKeyItem.Description}}</td>
+							</tr>											
+							{{end}}
+							
+						</tbody>
+					</table>
+				</div>
 			</div>
 			<div class="ipbox ipbox2">
 				<ul>
 					<li>
 						<label>Access ID</label>
-						<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_2" title="" />
+						<input type="text" name="" value="" placeholder="Access User Account" class="pline ip_2" id="es_vmUserAccount" onkeydown="setTextValueToFormObj(this.value, 'e_vmUserAccount')" />
 					</li>
 					<li>
 						<label>Access Password</label>
-						<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly />
+						<input type="text" name="" value="" placeholder="AccessUser Password" class="pline ip_2" id="es_vmUserPassword" onkeydown="setTextValueToFormObj(this.value, 'e_vmUserPassword')" />
 					</li>
 				</ul>
 			</div>

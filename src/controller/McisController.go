@@ -52,6 +52,7 @@ func McisRegForm(c echo.Context) error {
 	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
 	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
 	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
+	sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
 
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manages/mcismng/McisCreate", // 파일명
@@ -67,6 +68,7 @@ func McisRegForm(c echo.Context) error {
 			"VMSpecList":                    vmSpecInfoList,
 			"VNetList":                      vNetInfoList,
 			"SecurityGroupList":             securityGroupInfoList,
+			"SshKeyList":                    sshKeyInfoList,
 		})
 }
 
@@ -470,6 +472,7 @@ func McisVmRegForm(c echo.Context) error {
 	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
 	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
 	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
+	sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
@@ -489,6 +492,7 @@ func McisVmRegForm(c echo.Context) error {
 			"VMSpecList":                    vmSpecInfoList,
 			"VNetList":                      vNetInfoList,
 			"SecurityGroupList":             securityGroupInfoList,
+			"SshKeyList":                    sshKeyInfoList,
 		})
 }
 

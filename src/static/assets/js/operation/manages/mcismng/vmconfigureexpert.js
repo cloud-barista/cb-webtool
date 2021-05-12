@@ -51,6 +51,20 @@ $(document).ready(function(){
     });
 });
 
+$(document).ready(function(){
+  //table 스크롤바 제한
+  $(window).on("load resize",function(){
+    var vpwidth = $(window).width();
+    if (vpwidth > 768 && vpwidth < 1800) {
+      $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
+      $(".dataTable.scrollbar-inner").scrollbar();
+    } else {
+      $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
+    }
+  });
+});
+
+
 //next
 function nextTab(elem) {
   $(elem).parent().next().find('a[data-toggle="tab"]').click();
@@ -189,3 +203,61 @@ var expert_data_cnt = 0
 const expertServerCloneObj = obj=>JSON.parse(JSON.stringify(obj))
 function expertDone_btn(){
 }
+
+
+
+//////////////////// filterling 기능 ///////////////
+
+function hardwareSpecFilterByEnter(targetObjId, keyword){
+  console.log(event.KeyCode + " : " + keyword);
+  if( event.KeyCode == 13){
+    selectBoxFilterByText(targetObjId, keyword)
+  }
+}
+
+function hardwareSpecFilter(targetObjId, keywordObjId){
+  var keyword = $("#" + keywordObjId).val();
+  selectBoxFilterByText(targetObjId, keyword)
+}
+
+
+// hidden에 들어있는 값을 기준으로 filter
+function filterEnterToHidden(keyworkObjId, filterColumnName, targetTableId){
+  if (window.event.keyCode == 13) {
+    filterToHidden(keyworkObjId, filterColumnName, targetTableId)
+      }
+}
+// vm image 를 filter. 입력한 단어를 전체에서 찾기
+// hidden에 들어있는 값을 기준으로 filter
+function filterToHidden(keyworkObjId, filterColumnName, tableId){
+  var keyword = $("#" + keyworkObjId).val();
+  if( keyword == ''){
+    commonAlert("검색할 단어를 입력하세요")
+  }
+
+  // hidden fild 의 Data 를 기준으로 filter.
+  // 해당 table의 column을 지정하여 filter하는데... hidden을 filterling하는 법 찾자
+  filterTableByHiddenColumn(tableId, filterColumnName, keyword)
+
+  // target Table이 display:none이면 보이도록
+  document.getElementById(tableId).style.display = "";
+}
+
+// 대상 table, 선택한 tr의 index, set할 값, 대상 form의 obj 지정하여
+// tr의 check시 해당 값이 obj에 저장
+// TODO : 초기화는??	
+function setValueToFormObj(tableId, targetTabObjId, prefixName, selectedIndex, targetObjId){
+  var selectedId = $("#" + prefixName + "_id_" + selectedIndex).val();
+  var selectedInfo = $("#" + prefixName + "_info_" + selectedIndex).val();
+  $("#" + targetTabObjId).val(selectedInfo);
+  $("#" + targetObjId).val(selectedId);
+
+  // 값이 설정된 후에는 table 안보이게
+  document.getElementById(tableId).style.display = "none";
+}	
+
+// Textbox 값이 변경 된 경우 해당 값을 form obj에 set
+function setTextValueToFormObj(setValue, targetObjId){
+  $("#" + targetObjId).val(setValue);
+}
+//////////////////// filterling 기능 //////////////
