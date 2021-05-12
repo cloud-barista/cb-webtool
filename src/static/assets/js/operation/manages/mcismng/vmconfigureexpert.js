@@ -260,4 +260,7 @@ function setValueToFormObj(tableId, targetTabObjId, prefixName, selectedIndex, t
 function setTextValueToFormObj(setValue, targetObjId){
   $("#" + targetObjId).val(setValue);
 }
+
+// TODO : Table의 Check Box를 여러개 체크하여 해당 값을 securityGroupIds 에 넣는 function 
+//  TODO : 여러 filter 조건으로 table filter 하는 function 만들 것.
 //////////////////// filterling 기능 //////////////
