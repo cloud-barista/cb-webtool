@@ -94,10 +94,10 @@ func MainForm(c echo.Context) error {
 		mcisList, _ := service.GetMcisList(defaultNameSpace.ID)
 		if len(mcisList) > 0 {
 			log.Println(" mcisList  ", len(mcisList))
-			return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/mngform")
+			return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/mngform")
 		} else {
 			log.Println(" mcisList is null ", mcisList)
-			return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/regform")
+			return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/regform")
 		}
 	} else {
 		return echotemplate.Render(c, http.StatusOK,

@@ -34,36 +34,9 @@
 					</div>
 					
 					
-					{{template "McksStatus" .}}				
-					
-					<!-- list -->
-					{{template "McksList" .}}
-					<!-- //list -->
-					
-					<!-- Info -->
-					{{template "McksInfo" .}}
-					<!-- //Info -->
-					
-					<script>
-						/*
-						$(document).ready(function(){
-							$('.listbox li').click(function(){
-								var contTop = $('.listbox').height();
-								var offset = $('#dashboard_detailBox').offset();
-								$('html,body,#wrap').animate({scrollTop : offset.top + contTop}, 400);
-								return false;
-							});
-						});	
-						*/    	
-					</script>
-		    	
-					<!-- detail -->
-					{{template "McksServerInfo" .}}
-					<!-- //detail -->
-					
 				</div>
 				<!-- //contents -->
 
-<script type="text/javascript" src="/assets/js/operation/manages/mcksmng.js"></script>
+<script type="text/javascript" src="/assets/js/operation/manages/mcks/mcksmng.js"></script>
 <script type="text/javascript" src="/assets/js/util/mckslifecycle.js"></script>
 {{template "Footer" .}}

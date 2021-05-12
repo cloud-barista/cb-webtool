@@ -132,7 +132,7 @@ function btn_deploy(){
         // new_obj['vm'] = Simple_Server_Config_Arr;
         // console.log("new obj is : ",new_obj);
         // var url = "/operation/manages/mcis/:mcisID/vm/reg/proc"
-        var url = "/operation/manages/mcis/" + mcis_id +"/vm/reg/proc"
+        var url = "/operation/manages/mcismng/" + mcis_id +"/vm/reg/proc"
 
         // 한개씩 for문으로 추가
         for(var i in Simple_Server_Config_Arr){
@@ -194,7 +194,7 @@ function btn_deploy(){
         // new_obj['vm'] = Simple_Server_Config_Arr;
         // console.log("new obj is : ",new_obj);
         // var url = "/operation/manages/mcis/:mcisID/vm/reg/proc"
-        var url = "/operation/manages/mcis/" + mcis_id +"/vm/reg/proc"
+        var url = "/operation/manages/mcismng/" + mcis_id +"/vm/reg/proc"
 
         // 한개씩 for문으로 추가
         for(var i in Import_Server_Config_Arr){
@@ -292,7 +292,7 @@ function getVmList(){
     
     
     // /operation/manages/mcis/:mcisID
-    var url = "/operation/manages/mcis/" + mcis_id 
+    var url = "/operation/manages/mcismng/" + mcis_id 
     axios.get(url,{})
     .then(result=>{
         console.log("MCIR VM Register data : ",result);

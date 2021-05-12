@@ -531,7 +531,7 @@ function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statis
     var vmChart = setVmChart(chartTarget,target);
 	vmChart.clear()
     
-	var url = "/operation/manages/mcis/proc/vmmonitoring"    
+	var url = "/operation/manages/mcismng/proc/vmmonitoring"    
     console.log("Request URL : ",url)
     axios.post(url,{
         headers: { },
