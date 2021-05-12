@@ -17,6 +17,7 @@
 	<form id="expert_form">
 		<!-- <input type="hidden" name="name" id="e_name" />
 		<input type="hidden" name="description" id="e_description" />		 -->
+		temp_connectionName<input type="text" name="tempConnectionName" id="t_connectionName" />
 		e_connectionName<input type="text" name="connectionName" id="e_connectionName" />
 		e_vNetId<input type="text" name="vNetId" id="e_vNetId" />								
 		e_subnetId<input type="text" name="subnetId" id="e_subnetId" />								
@@ -84,8 +85,8 @@
 						<li>
 							<label>Cloud Connection</label>
 							<span class="sbox">
-								<select class="selectbox white pline sel_2" id="es_regConnectionName">
-									<option value="">Selected CP</option>
+								<select class="selectbox white pline sel_2" id="es_regConnectionName" onchange="setConnectionValue(this.value)">
+									<option value="">Selected Connection</option>
 									{{ range $connectionItem := .CloudConnectionConfigInfoList}}	
 									<option value="{{ $connectionItem.ConfigName }}">[{{ $connectionItem.ProviderName }}] {{ $connectionItem.RegionName }}</option>
 									{{ end }}

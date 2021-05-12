@@ -49,6 +49,36 @@ $(document).ready(function(){
     $("#Other .btn_clear").click(function() {
         $('#Other .tab_ipbox').find('input, textarea').val('');
     });
+
+    //// checkbox를 사용하는 table에서 checkbox를 사용할 때 Event정의
+    $("input:checkbox[name='securityGroup_chk']").change(function(){
+      var chkIdArr = $(this).attr('id').split("_");// 0번째와 2번째를 합치면 id 추출가능  ex) securityGroup_Raw_0
+      if( $(this).is(":checked")){
+        // 해당 securityGroup의 connection과 form의 connection이 다르면초기화 후 set
+        // 같으면 securityGroup set
+        // alert("A " + $(this).is(":checked") + " : " +  securityGroupId);
+
+        console.log("setMuipleValueToFormObj = " + formObjId);
+        var securityGroupId = $("#" + chkIdArr[0] + "_id_" + chkIdArr[2]).val()//id="securityGroup_id_{{$securityGroupIndex}}"
+        var securityGroupConnectionName = $("#" + chkIdArr[0] + "_connectionName_" + chkIdArr[2]).val()
+        if( $("#e_connectionName").val() != ""){
+          if( $("#e_connectionName").val() != securityGroupConnectionName){
+            $("#t_connectionName").val(securityGroupConnectionName);// 임시 connectionName set            
+            // TODO : commonConfirmOpen 해서 OK면 초기화  : DifferentConnection
+            // securityGroupTable 및 display securityGroup ifno 를 현재 connection Name으로 Set.
+            // 다른 table은 1개만 선택하므로 display input box 들 초기화.
+            //  connection정보로 선택된 항목의 connectionName 비교 후 초기화 function 만들 것.
+          }
+        }
+
+        setMuipleValueToFormObj('securityGroup_chk', 'tab_securityGroupInfo', 'e_securityGroupIds')
+      }else{//Uncheck event
+      //   // alert("B " + $(this).is(":checked") + " : " +  securityGroupId);
+        setMuipleValueToFormObj('securityGroup_chk', 'tab_securityGroupInfo', 'e_securityGroupIds')
+      }
+      //
+      
+    });
 });
 
 $(document).ready(function(){
@@ -202,11 +232,42 @@ const Expert_Server_Config_Arr = new Array();
 var expert_data_cnt = 0
 const expertServerCloneObj = obj=>JSON.parse(JSON.stringify(obj))
 function expertDone_btn(){
+  // validation check 
 }
 
 
 
 //////////////////// filterling 기능 ///////////////
+
+function setConnectionValue(connName){
+  var connectionObj = $("#e_connectionName")
+  if( connectionObj.val() == "" ){// 비어있으면 그냥 set
+    console.log(" initial connName")
+    connectionObj.val(connName);
+  } else if( connectionObj.val() != connName){
+    console.log(" diff connName " + connName + " : " + connectionObj.val())
+    $("#t_connectionName").val(connName);
+    commonConfirmOpen("DifferentConnection")
+  } else {
+    
+  }
+}
+
+// 다른 connectinName으로 set 할 때 기존에 있던 것들 중 connectionName이 다른 것들은 초기화
+function setAndClearByDifferentConnectionName(){
+  var tempConnectionName = $("#t_connectionName").val();
+
+  $("#expert_form").reset();
+
+  $("#e_connectionName").val(tempConnectionName);
+
+  // e_vNetId<input type="text" name="vNetId" id="e_vNetId" />								
+	// 	e_subnetId<input type="text" name="subnetId" id="e_subnetId" />								
+	// 	e_securityGroupIds<input type="text" name="securityGroupIds[]" id="e_securityGroupIds" />								
+	// 	e_sshKeyId<input type="text" name="sshKeyId" id="e_sshKeyId" />								
+	// 	e_imageId<input type="text" name="imageId" id="e_imageId" />
+	// 	e_specId<input type="text" name="specId" id="e_specId" />
+}
 
 function hardwareSpecFilterByEnter(targetObjId, keyword){
   console.log(event.KeyCode + " : " + keyword);
@@ -261,6 +322,45 @@ function setTextValueToFormObj(setValue, targetObjId){
   $("#" + targetObjId).val(setValue);
 }
 
-// TODO : Table의 Check Box를 여러개 체크하여 해당 값을 securityGroupIds 에 넣는 function 
-//  TODO : 여러 filter 조건으로 table filter 하는 function 만들 것.
+// TODO 1: Table의 Check Box를 여러개 체크하여 해당 값을 securityGroupIds 에 넣는 function : securityGroup에서 사용
+// 동일한 Name을 가져야 함.
+// 체크된 목록을 보여줄 objId
+// form에 set할 objId
+function setMuipleValueToFormObj(chkboxName, targetObjId, formObjId){
+  var checkedIds = "";
+  var idandConnectionName = "";
+  var securityGroupConnectionName = "";
+  $('input:checkbox[name="' + chkboxName + '"]').each(function() {
+    if(this.checked){//checked 처리된 항목의 값
+      var chkIdArr = $(this).attr('id').split("_");// 0번째와 2번째를 합치면 id 추출가능  ex) securityGroup_Raw_0
+      console.log("setMuipleValueToFormObj = " + formObjId);
+      var securityGroupId = $("#" + chkIdArr[0] + "_id_" + chkIdArr[2]).val()//id="securityGroup_id_{{$securityGroupIndex}}"
+      securityGroupConnectionName = $("#" + chkIdArr[0] + "_connectionName_" + chkIdArr[2]).val()
+      idandConnectionName+= securityGroupId + "(" + securityGroupConnectionName + ")" + ",";
+      checkedIds+= securityGroupId + ",";
+    }
+  });
+  
+  idandConnectionName = idandConnectionName.substr(0, idandConnectionName.length -1);
+  checkedIds = checkedIds.substr(0, checkedIds.length -1);
+
+  $("#" + targetObjId).val(idandConnectionName);// 선택항목 display
+  $("#" + formObjId).val(checkedIds);// set
+}
+// TODO 2: 여러 filter 조건으로 table filter 하는 function 만들 것.
+//         TODO3에서 사용하는 것으로 hidden obj에 값을 세팅하고
+//         검색시 해당값과 &조건으로 filterling  
+// TODO 3: connection  정보가 필수인데, 상단부분을 선택할 수도 있고 Tab에서 선택한 항목에서 connection정보를 가져올 수도 있다.
+//       상단에서 변경한 경우 hidden connection에 값이 없으면 set
+//       상단에서 변경한 경우 hidden connection에 값이 있으면
+//          값을 비교하여 동일하면 continue
+//          값디 다르면 confirm : 선택한 connection정보와 기존에 설정된 connection정보가 다릅니다. 
+//              선택한 connection으로 할 경우 설정된 값들은 초기화 됩니다.
+//              OK 누르면 값들 초기화 -> Tab에서 다시선택해야함
+//       Tab에서 항목 조회시 hidden connection이 있으면
+//          값을 비교하여 동일하면 continue
+//          값이 다르면 confirm : 선택한 connection정보와 기존에 설정된 connection정보가 다릅니다. 
+//              선택한 connection으로 할 경우 설정된 값들은 초기화 됩니다.
+//              OK 누르면 값들 초기화 -> Tab에서 다시 선택해야함.
+
 //////////////////// filterling 기능 //////////////

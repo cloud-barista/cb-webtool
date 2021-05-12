@@ -22,12 +22,14 @@
 				<div class="dataTable status_list" >
 					<table cellpadding="0" cellspacing="0" id="e_securityGroupList" style="display:none;">				
 						<colgroup>
+							<col width="50px">
 							<col width="30%">
 							<col width="30%">
 							<col width="30%">			
 						</colgroup>
 						<thead>
 							<tr>
+								<th>&nbsp;</td>
 								<th>SecurityGroup Name</th>
 								<th>Connection Name</th>
 								<th>Description</th>
@@ -42,9 +44,14 @@
 							{{ end }}
 
 							{{range $securityGroupIndex, $securityGroupItem := .SecurityGroupList}}	
-							<tr onclick="setValueToFormObj('e_securityGroupList', 'tab_securityGroupInfo', 'securityGroup', '{{$securityGroupIndex}}', 'e_securityGroupIds');">
+							<!-- <tr onclick="setValueToFormObj('e_securityGroupList', 'tab_securityGroupInfo', 'securityGroup', '{{$securityGroupIndex}}', 'e_securityGroupIds');"> -->
+							<tr>
 								<td class="overlay hidden" data-th="">
+									<input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_{{$securityGroupIndex}}" title="" />
 									<input type="hidden" id="securityGroup_id_{{$securityGroupIndex}}" value="{{$securityGroupItem.ID}}"/>
+									<input type="hidden" id="securityGroup_name_{{$securityGroupIndex}}" value="{{$securityGroupItem.Name}}"/>
+									<input type="hidden" id="securityGroup_connectionName_{{$securityGroupIndex}}" value="{{$securityGroupItem.ConnectionName}}"/>
+									
 									<input type="hidden" name="securityGroup_info" id="securityGroup_info_{{$securityGroupIndex}}" value="{{$securityGroupItem.Name}}|{{$securityGroupItem.ConnectionName}}|{{$securityGroupItem.Description}}"/>
 											
 									<label for="td_ch1"></label> <span class="ov off"></span>
@@ -133,11 +140,11 @@
 				<ul>
 					<li>
 						<label>Access ID</label>
-						<input type="text" name="" value="" placeholder="Access User Account" class="pline ip_2" id="es_vmUserAccount" onkeydown="setTextValueToFormObj(this.value, 'e_vmUserAccount')" />
+						<input type="text" name="" value="" placeholder="Access User Account" class="pline ip_2" id="es_vmUserAccount" onkeyup="setTextValueToFormObj(this.value, 'e_vmUserAccount')" />
 					</li>
 					<li>
 						<label>Access Password</label>
-						<input type="text" name="" value="" placeholder="AccessUser Password" class="pline ip_2" id="es_vmUserPassword" onkeydown="setTextValueToFormObj(this.value, 'e_vmUserPassword')" />
+						<input type="text" name="" value="" placeholder="AccessUser Password" class="pline ip_2" id="es_vmUserPassword" onkeyup="setTextValueToFormObj(this.value, 'e_vmUserPassword')" />
 					</li>
 				</ul>
 			</div>

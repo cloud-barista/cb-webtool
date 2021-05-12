@@ -169,6 +169,8 @@ function commonConfirmOpen(targetAction){
             ["VmLifeCycleTerminate", ">Would you like to terminate MCIS ?"], // onclick="vm_life_cycle('terminate')"
             ["VmManagement", "Would you like to manage VM ?"], // 해당 function 없음
             ["AddNewVm", "Would you like to add VM ?"], //onclick="vm_add()"
+
+            ["DifferentConnection", "Do you want to set different connectionName?"]
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -319,6 +321,8 @@ function commonConfirmOk(){
         addNewVirtualMachine()
     }else if ( targetAction == "--"){
         addNewVirtualMachine()
+    }else if ( targetAction == "DifferentConnection"){
+        setAndClearByDifferentConnectionName();
     }else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
