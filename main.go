@@ -227,16 +227,16 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manages/mcismng/McisVmConfigureSimple",
-			"operation/manages/mcismng/McisVmConfigureExpert",
-			"operation/manages/mcismng/McisVmConfigureImport",
+			"operation/manages/mcismng/VmConfigureSimple",
+			"operation/manages/mcismng/VmConfigureExpert",
+			"operation/manages/mcismng/VmConfigureImport",
 
-			"operation/manages/mcismng/McisAssistPopup",
+			"operation/manages/mcismng/VmAssistPopup",
 
-			"operation/manages/mcismng/McisOsHardware",
-			"operation/manages/mcismng/McisNetwork",
-			"operation/manages/mcismng/McisSecurity",
-			"operation/manages/mcismng/McisOther",
+			"operation/manages/mcismng/VmOsHardware",
+			"operation/manages/mcismng/VmNetwork",
+			"operation/manages/mcismng/VmSecurity",
+			"operation/manages/mcismng/VmOther",
 		},
 		DisableCache: true,
 	})
