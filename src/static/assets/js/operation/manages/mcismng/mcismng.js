@@ -2,7 +2,7 @@
 
 // 등록 form으로 이동
 function createNewMcis(){// Manage_MCIS_Life_Cycle_popup.html
-    var targetUrl = "/operation/manage" + "/mcis/regform"
+    var targetUrl = "/operation/manage" + "/mcismng/regform"
     // location.href = "/Manage/MCIS/reg"
     // $('#loadingContainer').show();
     // location.href = url;
@@ -52,7 +52,7 @@ function addNewVirtualMachine(){
     var mcis_id = $("#mcis_id").val()
     var mcis_name = $("#mcis_name").val()
     // location.href = "/Manage/MCIS/reg/"+mcis_id+"/"+mcis_name
-    location.href = "/operation/manages/mcis/regform/"+mcis_id+"/"+mcis_name;
+    location.href = "/operation/manages/mcismng/regform/"+mcis_id+"/"+mcis_name;
 }
 
 function vmLifeCycle(type){
@@ -84,7 +84,7 @@ function vmLifeCycle(type){
 
     //url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
     //var url = "/operation/manage" + "/mcis/" + mcis + "/vm/" + vm_id + "/action/" + type
-    var url = "/operation/manages" + "/mcis/proc/vmlifecycle";
+    var url = "/operation/manages" + "/mcismng/proc/vmlifecycle";
     // url = "http://54.248.3.145:1323/tumblebug/ns/ns-01/mcis/mz-azure-mcis/vm/mz-azure-ubuntu1804-5?action=suspend";
     // var apiInfo = "Basic ZGVmYXVsdDpkZWZhdWx0"
     
@@ -306,7 +306,7 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
 
 // VM 목록에서 VM 클릭시 해당 VM의 상세정보 
 function vmDetailInfo(mcisID, mcisName, vmID){
-    var url = "/operation/manages/mcis/" + mcisID + "/vm/" + vmID
+    var url = "/operation/manages/mcismng/" + mcisID + "/vm/" + vmID
     axios.get(url,{})
         .then(result=>{
             console.log("get  Data : ",result.data);

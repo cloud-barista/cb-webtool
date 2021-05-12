@@ -1,11 +1,23 @@
 {{define "McisVmConfigureImport"}}
 <!-- server 추가 form -->
 <div class="servers_config import_servers_config" id="importServerConfig">
-	<label><span class="ch">*</span>Import File</label>
-	<button onclick="importVmInfoFromFile()">Open</button>
+	<!-- <label><span class="ch">*</span>Import File</label>
+	<button onclick="importVmInfoFromFile()">Open</button> -->
 
 	<form id="import_form">	
-		
+		<input type="hidden" name="name" id="i_name" />
+		<input type="hidden" name="description" id="i_description" />
+		<input type="hidden" name="connectionName" id="i_connectionName" />
+		<input type="hidden" name="vNetId" id="i_vNetId" />								
+		<input type="hidden" name="subnetId" id="i_subnetId" />								
+		<input type="hidden" name="securityGroupIds[]" id="i_securityGroupIds" />								
+		<input type="hidden" name="sshKeyId" id="i_sshKeyId" />								
+		<input type="hidden" name="imageId" id="i_imageId" />
+		<input type="hidden" name="specId" id="i_specId" />
+		<input type="hidden" name="label" id="i_label" />								
+		<input type="hidden" name="vm_userAccount" id="i_vmUserAccount" />								
+		<input type="hidden" name="vm_password" id="i_vmUserPassword" />
+	</form>
 		<!--id 에 간단설정이면 s_, Expert On 이면 e_, Import면 i_-->
 
 		<div class="top_box">
@@ -16,11 +28,18 @@
 			</div>
 		
 			<div class="ip_box">
-				<div class="svc_ipbox">
+				<!-- <div class="svc_ipbox">
 					<div class="ipbox ipbox3">
 						<textarea  style="width:100%" rows="10" placeholder="Display imported Vm Script" class="pline ta_1" id="vmImportScript"></textarea>																	
 					</div>
+				</div> -->
+				<input type="hidden" name="vmImportScript" id="i_vmImportScript" />
+				<div class="svc_ipbox">
+					<div class="ipbox ipbox3">
+						<textarea  style="width:100%" rows="20" placeholder="Display imported Vm Script" class="pline ta_1" id="vmImportScriptPretty"></textarea>																	
+					</div>
 				</div>
+<!-- 				
 				<div class="svc_ipbox">
 					<div class="ipbox ipbox3">
 						<ul>
@@ -74,7 +93,7 @@
 							</li>							
 						</ul>
 					</div>
-				</div>				
+				</div>				 -->
 			</div>
 			<!-- button -->
 			<div class="btnbox spec_select_box">
@@ -111,7 +130,7 @@
 			</div>
 			<!-- //button -->
 		</div>
-	</form>
+
 </div>
 
 {{end}}

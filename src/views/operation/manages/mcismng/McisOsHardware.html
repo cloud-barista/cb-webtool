@@ -21,11 +21,13 @@
 								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" id="filter_image" onkeydown="filterEnterToHidden(this.id, 'vmImageInfo', 'es_imageList');"/>
 								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_image', 'vmImageInfo', 'es_imageList')"/>
 							</span>
-							<!-- <input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly /> -->
+							<input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly />
 						</li>
 					</ul>
 					<div class="dataTable status_list">
-						<table cellpadding="0" cellspacing="0" summary="" id="es_imageList">
+						<!-- <input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly /> -->
+						
+						<table cellpadding="0" cellspacing="0" summary="" id="es_imageList" style="display:none;">
 							<colgroup>
 								<col width="50px">
 								<col width="16%">
@@ -102,54 +104,56 @@
 								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_spec', 'vmSpecInfo', 'e_specList')"/>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
 							</span>
-
+							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly />
 						</li>
 					</ul>
-					<div class="dataTable status_list">
-						<table cellpadding="0" cellspacing="0" summary="" id="e_specList">
-							<colgroup>
-								<col width="50px">
-								<col width="30%">
-								<col width="30%">
-								<col width="30%">			
-							</colgroup>
-							<thead>
-								<tr>
-									<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
-									<th>Spec Name</th>
-									<th>Connection Name</th>
-									<th>CSP Spec Name</th>
-								</tr>
-							</thead>
-							<tbody id="e_specListTbody">
-								{{ $length := len .VMSpecList }} 
-								{{ if eq $length 0 }}
-								<tr>
-									<td class="overlay hidden" data-th="" colspan="8">No Data</td>
-								</tr>
-								{{ end }}
-
-								{{range $vmSpecIndex, $vmSpecItem := .VMSpecList}}	
-								<tr onclick="setValueToFormObj('e_specList', 'vmSpec_chk', '{{$vmSpecIndex}}', '{{$vmSpecItem.ID}}', 'e_specId');">
-									<td class="overlay hidden" data-th="">
-										<input type="checkbox" name="vmSpec_chk" id="es_vmSpecRaw_{{$vmSpecIndex}}" title="" />
-										<input type="hidden" id="vmSpec_id_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
-										<input type="hidden" name="vmSpecInfo" id="vmSpecInfo{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}|{{$vmSpecItem.Name}}|{{$vmSpecItem.ConnectionName}}|{{$vmSpecItem.CspSpecName}}"/>
-										
-										<label for="td_ch1"></label> <span class="ov off"></span>
-									</td>
-									<td class="overlay hidden" data-th="Name">{{$vmSpecItem.Name}}</td>
-									<td class="btn_mtd ovm td_left" data-th="ConnectionName">
-										{{$vmSpecItem.ConnectionName}}
-									</td>
-									<td class="overlay hidden" data-th="CspSpecName">{{$vmSpecItem.CspSpecName}}</td>
-								</tr>											
-								{{end}}
-								
-							</tbody>
-						</table>
-					</div>
 					
+					<div class="dataTable status_list" >
+							<table cellpadding="0" cellspacing="0" id="e_specList" style="display:none;">
+								<colgroup>
+									<col width="50px">
+									<col width="30%">
+									<col width="30%">
+									<col width="30%">			
+								</colgroup>
+								<thead>
+									<tr>
+										<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+										<th>Spec Name</th>
+										<th>Connection Name</th>
+										<th>CSP Spec Name</th>
+									</tr>
+								</thead>
+								<tbody id="e_specListTbody">
+									{{ $length := len .VMSpecList }} 
+									{{ if eq $length 0 }}
+									<tr>
+										<td class="overlay hidden" data-th="" colspan="8">No Data</td>
+									</tr>
+									{{ end }}
+
+									{{range $vmSpecIndex, $vmSpecItem := .VMSpecList}}	
+									<tr onclick="setValueToFormObj('e_specList', 'vmSpec_chk', '{{$vmSpecIndex}}', '{{$vmSpecItem.ID}}', 'e_specId');">
+										<td class="overlay hidden" data-th="">
+											<input type="checkbox" name="vmSpec_chk" id="es_vmSpecRaw_{{$vmSpecIndex}}" title="" />
+											<input type="hidden" id="vmSpec_id_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
+											<input type="hidden" name="vmSpecInfo" id="vmSpecInfo{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}|{{$vmSpecItem.Name}}|{{$vmSpecItem.ConnectionName}}|{{$vmSpecItem.CspSpecName}}"/>
+											
+											<label for="td_ch1"></label> <span class="ov off"></span>
+										</td>
+										<td class="overlay hidden" data-th="Name">{{$vmSpecItem.Name}}</td>
+										<td class="btn_mtd ovm td_left" data-th="ConnectionName">
+											{{$vmSpecItem.ConnectionName}}
+										</td>
+										<td class="overlay hidden" data-th="CspSpecName">{{$vmSpecItem.CspSpecName}}</td>
+									</tr>											
+									{{end}}
+									
+								</tbody>
+							</table>
+						
+					</div>
+
 				</div>
 			</div>
 		</div>
@@ -169,6 +173,18 @@
 			}
 	
 		});		
+
+
+		//table 스크롤바 제한
+		$(window).on("load resize",function(){
+			var vpwidth = $(window).width();
+			if (vpwidth > 768 && vpwidth < 1800) {
+				$(".dashboard_cont .dataTable").addClass("scrollbar-inner");
+				$(".dataTable.scrollbar-inner").scrollbar();
+			} else {
+				$(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
+			}
+		});
 	});
 
 
@@ -226,5 +242,8 @@
 		}
         
 	}
+
+
+	
 </script>	
 {{end}}

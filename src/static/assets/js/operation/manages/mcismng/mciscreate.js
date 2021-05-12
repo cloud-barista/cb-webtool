@@ -97,7 +97,7 @@ function deployMcis(){
         new_obj['vm'] = Simple_Server_Config_Arr;
         console.log("new obj is : ",new_obj);
         // var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
-        var url = "/operation/manages/mcis/reg/proc"
+        var url = "/operation/manages/mcismng/reg/proc"
         try{
             // AjaxLoadingShow(true);// interceptor 에서 loading 보여줌
             axios.post(url,new_obj,{
@@ -112,8 +112,8 @@ function deployMcis(){
                     commonAlert("Register Success")
                     // location.href = "/Manage/MCIS/list";
                     // $('#loadingContainer').show();
-                    // location.href = "/operation/manages/mcis/mngform/"
-                    var targetUrl = "/operation/manages/mcis/mngform"
+                    // location.href = "/operation/manages/mcismng/mngform/"
+                    var targetUrl = "/operation/manages/mcismng/mngform"
 					changePage(targetUrl)
                 }else{
                     commonAlert("Register Fail")

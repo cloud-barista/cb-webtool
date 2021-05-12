@@ -70,20 +70,47 @@ function displayNewServerForm(){
     var $ExpertServers = $("#expertServerConfig");
     var $ImportServers = $("#importServerConfig");
 
-    var vmFormType = $("input[name='vmInfoType']:checked").val();
-    console.log("vmFormType = " + vmFormType)
-    if( vmFormType == "expert"){
+    var check = $(".switch .ch").is(":checked");
+    console.log("check=" + check);
+    if( check){
         $SimpleServers.removeClass("active");
         $ExpertServers.addClass("active");            
         $ImportServers.removeClass("active");
-    }else if( vmFormType == "import"){
-        $SimpleServers.removeClass("active");
-        $ExpertServers.removeClass("active");            
-        $ImportServers.addClass("active");
-    }else{// simple
+    }else{
         $SimpleServers.addClass("active");
         $ExpertServers.removeClass("active");            
         $ImportServers.removeClass("active");
+    }
+
+    // var vmFormType = $("input[name='vmInfoType']:checked").val();
+    // console.log("vmFormType = " + vmFormType)
+    // if( vmFormType == "expert"){
+    //     $SimpleServers.removeClass("active");
+    //     $ExpertServers.addClass("active");            
+    //     $ImportServers.removeClass("active");
+    // }else if( vmFormType == "import"){
+    //     $SimpleServers.removeClass("active");
+    //     $ExpertServers.removeClass("active");            
+    //     $ImportServers.addClass("active");
+    // }else{// simple
+    //     $SimpleServers.addClass("active");
+    //     $ExpertServers.removeClass("active");            
+    //     $ImportServers.removeClass("active");
+    // }
+}
+// Expert Mode에 Import 버튼 클릭 시 해당 form display
+function displayImportServerFormByImport(){
+    var $SimpleServers = $("#simpleServerConfig");
+    var $ExpertServers = $("#expertServerConfig");
+    var $ImportServers = $("#importServerConfig");
+    var check = $(".switch .ch").is(":checked");
+    console.log("check=" + check);
+    if( check){
+        $SimpleServers.removeClass("active");
+        $ExpertServers.removeClass("active");            
+        $ImportServers.addClass("active");
+
+        importVmInfoFromFile();// import창 띄우기 
     }
 }
 
@@ -105,7 +132,7 @@ function btn_deploy(){
         // new_obj['vm'] = Simple_Server_Config_Arr;
         // console.log("new obj is : ",new_obj);
         // var url = "/operation/manages/mcis/:mcisID/vm/reg/proc"
-        var url = "/operation/manages/mcis/" + mcis_id +"/vm/reg/proc"
+        var url = "/operation/manages/mcismng/" + mcis_id +"/vm/reg/proc"
 
         // 한개씩 for문으로 추가
         for(var i in Simple_Server_Config_Arr){
@@ -158,6 +185,8 @@ function btn_deploy(){
     ///////// export
     ///////// import
     if(Import_Server_Config_Arr){// mcissimpleconfigure.js 에 const로 정의 됨.
+        // TODO : 어차피 simple/expert와 로직이 다른데... 
+        // json 그대로 넘기도록
         var vm_len = Import_Server_Config_Arr.length;			
         console.log("Import_Server_Config_Arr length: ",vm_len);
         totalDeployServerCount += vm_len
@@ -165,7 +194,7 @@ function btn_deploy(){
         // new_obj['vm'] = Simple_Server_Config_Arr;
         // console.log("new obj is : ",new_obj);
         // var url = "/operation/manages/mcis/:mcisID/vm/reg/proc"
-        var url = "/operation/manages/mcis/" + mcis_id +"/vm/reg/proc"
+        var url = "/operation/manages/mcismng/" + mcis_id +"/vm/reg/proc"
 
         // 한개씩 for문으로 추가
         for(var i in Import_Server_Config_Arr){
@@ -263,7 +292,7 @@ function getVmList(){
     
     
     // /operation/manages/mcis/:mcisID
-    var url = "/operation/manages/mcis/" + mcis_id 
+    var url = "/operation/manages/mcismng/" + mcis_id 
     axios.get(url,{})
     .then(result=>{
         console.log("MCIR VM Register data : ",result);

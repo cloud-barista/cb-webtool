@@ -37,7 +37,7 @@ func McisMonitoringMngForm(c echo.Context) error {
 	log.Println(" mcisList  ", mcisList)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/monitorings/McisMonitoringMng", // 파일명
+		"operation/monitorings/mcismonitoring/McisMonitoringMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
@@ -157,4 +157,38 @@ func GetVmMonitoringInfoData(c echo.Context) error {
 		"status":   200,
 		"McisInfo": resultMcisInfo,
 	})
+}
+
+//////////////
+// MCKS Monitoring 화면
+func McksMonitoringMngForm(c echo.Context) error {
+	fmt.Println("McksMonitoringMngForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	store := echosession.FromContext(c)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	log.Println(" nsList  ", nsList)
+
+	// 해당 Namespace의 모든 MCIS 조회
+	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	log.Println(" mcisList  ", mcisList)
+
+	return echotemplate.Render(c, http.StatusOK,
+		"operation/monitorings/mcksmonitoring/McksMonitoringMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":          loginInfo,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"NameSpaceList":      nsList,
+			"McisList":           mcisList,
+		})
+
 }

@@ -200,15 +200,15 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manages/mcis/McisStatus",
-			"operation/manages/mcis/McisList",
-			"operation/manages/mcis/McisInfo",
-			"operation/manages/mcis/McisServerInfo",
-			"operation/manages/mcis/McisDetailInfo",
-			"operation/manages/mcis/McisDetailView",
-			"operation/manages/mcis/McisConnectionView",
-			"operation/manages/mcis/McisMonitoring",
-			"operation/manages/mcis/McisMonitoringView",
+			"operation/manages/mcismng/McisStatus",
+			"operation/manages/mcismng/McisList",
+			"operation/manages/mcismng/McisInfo",
+			"operation/manages/mcismng/McisServerInfo",
+			"operation/manages/mcismng/McisDetailInfo",
+			"operation/manages/mcismng/McisDetailView",
+			"operation/manages/mcismng/McisConnectionView",
+			"operation/manages/mcismng/McisMonitoring",
+			"operation/manages/mcismng/McisMonitoringView",
 		},
 		DisableCache: true,
 	})
@@ -227,16 +227,16 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manages/mcis/McisVmConfigureSimple",
-			"operation/manages/mcis/McisVmConfigureExpert",
-			"operation/manages/mcis/McisVmConfigureImport",
+			"operation/manages/mcismng/McisVmConfigureSimple",
+			"operation/manages/mcismng/McisVmConfigureExpert",
+			"operation/manages/mcismng/McisVmConfigureImport",
 
-			"operation/manages/mcis/McisAssistPopup",
+			"operation/manages/mcismng/McisAssistPopup",
 
-			"operation/manages/mcis/McisOsHardware",
-			"operation/manages/mcis/McisNetwork",
-			"operation/manages/mcis/McisSecurity",
-			"operation/manages/mcis/McisOther",
+			"operation/manages/mcismng/McisOsHardware",
+			"operation/manages/mcismng/McisNetwork",
+			"operation/manages/mcismng/McisSecurity",
+			"operation/manages/mcismng/McisOther",
 		},
 		DisableCache: true,
 	})
@@ -255,7 +255,7 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer", // TODO : McisCreate 파일에서 가져오는 partials는 다른 경로인데 어떻게 불러오지?
 
-			"operation/manages/mcis/McksNodeConfigure",
+			"operation/manages/mcksmng/McksNodeConfigure",
 		},
 		DisableCache: true,
 	})
@@ -294,6 +294,59 @@ func main() {
 		},
 		DisableCache: true,
 	})
+
+	// Policy Monitoring mng form Template
+	policyMonitoringTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "마스터파일 경로. controller에서 지정",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+	// 등록화면이 별도로 필요한 경우 policyMonitoringRegTemplate을 만들 것.   이름RegTemplate
+
+	// Policy Threshold mng form Template
+	policythresholdTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "마스터파일 경로. controller에서 지정",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+
+	// Policy Placement mng form Template
+	policyPlacementTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "마스터파일 경로. controller에서 지정",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+
 	// "setting/connections/CloudConnectionModal", --> Region, Credential, Driver modal로 쪼개짐
 
 	// // mcis 매핑할 middleware 추가
@@ -354,11 +407,25 @@ func main() {
 	// e.GET("/Monitoring/mcis", controller.MornitoringListForm)
 	// e.GET("/monitoring/install/agent/:mcis_id/:vm_id/:public_ip", controller.AgentRegForm)
 	monitoringGroup := e.Group("/operation/monitorings", monitoringTemplate)
-	monitoringGroup.GET("/mcis/mngform", controller.McisMonitoringMngForm)
-	monitoringGroup.GET("/mcis/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
-	monitoringGroup.POST("/mcis/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
-	monitoringGroup.GET("/mcis/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
+	monitoringGroup.GET("/mcismonitoring/mngform", controller.McisMonitoringMngForm)
+	monitoringGroup.GET("/mcismonitoring/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
+	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
+	monitoringGroup.GET("/mcismonitoring/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
 
+	monitoringGroup.GET("/mcksmonitoring/mngform", controller.McksMonitoringMngForm)
+
+	// Policy Control
+	// html화면이 있는 경우 template 사용, json return의 경우 e.GET, e.POST 등 사용
+	policyMonitoringGroup := e.Group("/operation/policies/monitoringpolicy/mngform", policyMonitoringTemplate)
+	policyMonitoringGroup.GET("", controller.MonitoringPolicyMngForm)
+
+	policyThresholdGroup := e.Group("/operation/policies/thresholdpolicy/mngform", policythresholdTemplate)
+	policyThresholdGroup.GET("", controller.ThresholdPolicyMngForm)
+
+	policyPlacementGroup := e.Group("/operation/policies/placementpolicy/mngform", policyPlacementTemplate)
+	policyPlacementGroup.GET("", controller.PlacementPolicyMngForm)
+
+	// TODO : 사용안하는 것 같은데...
 	policyGroup := e.Group("/operation/policies", policyTemplate)
 	policyGroup.GET("/policy/mngform", controller.McisPolicyMngForm)
 	policyGroup.GET("/mcis/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
@@ -373,7 +440,7 @@ func main() {
 	// e.GET("/Manage/MCIS/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	// mcis에 form이 2개가 되면서 group을 나눔. json return은 굳이 group이 필요없어서 전체경로로 작음.
-	mcisGroup := e.Group("/operation/manages/mcis/mngform", mcisTemplate)
+	mcisGroup := e.Group("/operation/manages/mcismng/mngform", mcisTemplate)
 	// e.GET("/mcis/reg", controller.McisRegForm)
 	// e.GET("/mcis/reg/:mcis_id/:mcis_name", controller.VmAddForm)
 	// e.POST("/mcis/reg/proc", controller.McisRegController)
@@ -381,35 +448,35 @@ func main() {
 	// mcisGroup.GET("/", controller.McisMngForm)
 	mcisGroup.GET("", controller.McisMngForm)
 
-	e.GET("/operation/manages/mcis/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
-	e.POST("/operation/manages/mcis/reg/proc", controller.McisRegProc)
+	e.GET("/operation/manages/mcismng/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
+	e.POST("/operation/manages/mcismng/reg/proc", controller.McisRegProc)
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
-	e.GET("/operation/manages/mcis/:mcisID", controller.GetMcisInfoData)
+	e.GET("/operation/manages/mcismng/:mcisID", controller.GetMcisInfoData)
 
-	e.POST("/operation/manages/mcis/:mcisID/vm/reg/proc", controller.VmRegProc) // vm 등록이므로 vmID없이 reg/proc
-	e.GET("/operation/manages/mcis/:mcisID/vm/:vmID", controller.GetVmInfoData)
+	e.POST("/operation/manages/mcismng/:mcisID/vm/reg/proc", controller.VmRegProc) // vm 등록이므로 vmID없이 reg/proc
+	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID", controller.GetVmInfoData)
 
-	e.POST("/operation/manages/mcis/proc/mcislifecycle", controller.McisLifeCycle)
+	e.POST("/operation/manages/mcismng/proc/mcislifecycle", controller.McisLifeCycle)
 	//var url = "/operation/manage" + "/mcis/" + mcisID + "/operation/" + type
-	e.POST("/operation/manages/mcis/proc/vmlifecycle", controller.McisVmLifeCycle)
-	e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
+	e.POST("/operation/manages/mcismng/proc/vmlifecycle", controller.McisVmLifeCycle)
+	e.POST("/operation/manages/mcismng/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	// e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
 
 	//http://54.248.3.145:1234/Manage/MCIS/reg/mz-azure-mcis/mz-azure-mcis
-	mcisRegGroup := e.Group("/operation/manages/mcis/regform", mcisRegTemplate)
+	mcisRegGroup := e.Group("/operation/manages/mcismng/regform", mcisRegTemplate)
 	// mcisRegGroup.GET("/", controller.McisRegForm)                    // MCIS 생성 + VM생성
 	mcisRegGroup.GET("", controller.McisRegForm)                     // MCIS 생성 + VM생성
 	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVmRegForm) // MCIS의 VM생성
 
-	mcksMngGroup := e.Group("/operation/manages/mcks/mngform", mcksRegTemplate)
-	mcksMngGroup.GET("", controller.McisRegForm) // MCKS 생성 + Node생성
+	mcksMngGroup := e.Group("/operation/manages/mcksmng/mngform", mcksRegTemplate)
+	mcksMngGroup.GET("", controller.McksMngForm) // MCKS 생성 + Node생성
 
-	mcksRegGroup := e.Group("/operation/manages/mcks/regform", mcksRegTemplate)
-	mcksRegGroup.GET("", controller.McisRegForm) // Node생성
+	mcksRegGroup := e.Group("/operation/manages/mcksmng/regform", mcksRegTemplate)
+	mcksRegGroup.GET("", controller.McksRegForm) // Node생성
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
@@ -508,6 +575,11 @@ func main() {
 	resourcesGroup.GET("/vmspec/fetchvmspec", controller.FetchVmSpecList)               // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
 	// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
+
+	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
+	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)
+
+	/////////////////////////////////////
 
 	// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
 	// e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)

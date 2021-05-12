@@ -264,22 +264,22 @@ function commonConfirmOk(){
     }else if ( targetAction == "GotoMonitoringPerformance"){
         // alert("모니터링으로 이동 GotoMonitoringPerformance")
         // location.href ="";//../operation/Monitoring_Mcis.html
-        var targetUrl = "/operation/monitorings/mcis/mngform"
+        var targetUrl = "/operation/monitorings/mcismng/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringFault"){
         // alert("모니터링으로 이동 GotoMonitoringFault")
         // location.href ="";//../operation/Monitoring_Mcis.html
-        var targetUrl = "/operation/monitorings/mcis/mngform"
+        var targetUrl = "/operation/monitorings/mcismng/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringCost"){
         // alert("모니터링으로 이동 GotoMonitoringCost")
         // location.href ="";//../operation/Monitoring_Mcis.html
-        var targetUrl = "/operation/monitorings/mcis/mngform"
+        var targetUrl = "/operation/monitorings/mcismng/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringUtilize"){
         // alert("모니터링으로 이동 GotoMonitoringUtilize")
         // location.href ="";//../operation/Monitoring_Mcis.html    
-        var targetUrl = "/operation/monitorings/mcis/mngform"
+        var targetUrl = "/operation/monitorings/mcismng/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "McisLifeCycleReboot"){
         callMcisLifeCycle('reboot')
@@ -294,12 +294,12 @@ function commonConfirmOk(){
     }else if ( targetAction == "MoveToMcisManagement"){
         // $('#loadingContainer').show();
         // location.href ="/operation/manages/mcis/mngform/";
-        var targetUrl = "/operation/manages/mcis/mngform";
+        var targetUrl = "/operation/manages/mcismng/mngform";
         changePage(targetUrl)
     }else if ( targetAction == "AddNewMcis"){
         // $('#loadingContainer').show();
         // location.href ="/operation/manages/mcis/regform/";
-        var targetUrl = "/operation/manages/mcis/regform";
+        var targetUrl = "/operation/manages/mcismng/regform";
         changePage(targetUrl)
     }else if ( targetAction == "VmLifeCycle"){
         alert("수행할 function 정의되지 않음");

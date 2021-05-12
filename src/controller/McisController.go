@@ -54,7 +54,7 @@ func McisRegForm(c echo.Context) error {
 	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/mcis/McisCreate", // 파일명
+		"operation/manages/mcismng/McisCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
@@ -286,7 +286,7 @@ func McisMngForm(c echo.Context) error {
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/mcis/McisMng", // 파일명
+		"operation/manages/mcismng/McisMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
@@ -473,7 +473,7 @@ func McisVmRegForm(c echo.Context) error {
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/mcis/McisVmCreate", // 파일명
+		"operation/manages/mcismng/McisVmCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
@@ -760,7 +760,7 @@ func McksRegForm(c echo.Context) error {
 	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/mcks/McksCreate", // 파일명
+		"operation/manages/mcksmng/McksCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
@@ -800,7 +800,7 @@ func McksMngForm(c echo.Context) error {
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/mcks/McksMng", // 파일명
+		"operation/manages/mcksmng/McksMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
