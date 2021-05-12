@@ -294,6 +294,59 @@ func main() {
 		},
 		DisableCache: true,
 	})
+
+	// Policy Monitoring mng form Template
+	policyMonitoringTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "마스터파일 경로. controller에서 지정",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+	// 등록화면이 별도로 필요한 경우 policyMonitoringRegTemplate을 만들 것.   이름RegTemplate
+
+	// Policy Threshold mng form Template
+	policythresholdTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "마스터파일 경로. controller에서 지정",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+
+	// Policy Placement mng form Template
+	policyPlacementTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "마스터파일 경로. controller에서 지정",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+
 	// "setting/connections/CloudConnectionModal", --> Region, Credential, Driver modal로 쪼개짐
 
 	// // mcis 매핑할 middleware 추가
@@ -508,6 +561,21 @@ func main() {
 	resourcesGroup.GET("/vmspec/fetchvmspec", controller.FetchVmSpecList)               // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
 	// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
+
+	// html화면이 있는 경우 template 사용, json return의 경우 e.GET, e.POST 등 사용
+	policyMonitoringGroup := e.Group("/operation/policies/monitoring/mngform", policyMonitoringTemplate)
+	policyMonitoringGroup.GET("", controller.MonitoringPolicyMngForm)
+
+	policyThresholdGroup := e.Group("/operation/policies/threshold/mngform", policythresholdTemplate)
+	policyThresholdGroup.GET("", controller.ThresholdPolicyMngForm)
+
+	policyPlacementGroup := e.Group("/operation/policies/placement/mngform", policyPlacementTemplate)
+	policyPlacementGroup.GET("", controller.PlacementPolicyMngForm)
+
+	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
+	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)
+
+	/////////////////////////////////////
 
 	// e.GET("/SecurityGroup/list", controller.SecurityGroupListForm)
 	// e.GET("/SecurityGroup/reg", controller.SecurityGroupRegForm)
