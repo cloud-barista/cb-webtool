@@ -22,11 +22,10 @@
 								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_image', 'vmImage_info', 'es_imageList')"/>
 							</span>
 							<input type="text" name="tab_vmImageInfo" placeholder="" class="gray ip_2" id="tab_vmImageInfo" readonly />
+							<input type="hidden" name="tab_vmImageConnectionName" id="tab_vmImageConnectionName"/>
 						</li>
 					</ul>
-					<div class="dataTable status_list">
-						<!-- <input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly /> -->
-						
+					<div class="dataTable status_list">						
 						<table cellpadding="0" cellspacing="0" summary="" id="es_imageList" style="display:none;">
 							<colgroup>
 								<col width="16%">
@@ -56,12 +55,10 @@
 
 								{{range $vmInageIndex, $vmImageItem := .VMImageList}}	
 								
-								<tr onclick="setValueToFormObj('es_imageList', 'tab_vmImageInfo', 'vmImage', '{{$vmInageIndex}}', 'e_imageId');">
-									<td class="overlay hidden" data-th="">
+								<tr onclick="setValueToFormObj('es_imageList', 'tab_vmImage', 'vmImage', '{{$vmInageIndex}}', 'e_imageId');">
 										<input type="hidden" id="vmImage_id_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}"/>
-										<input type="hidden" name="vmImage_info" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>
-										<label for="td_ch1"></label> <span class="ov off"></span>
-									</td>
+										<input type="hidden" name="vmImage_connectionName" id="vmImage_connectionName_{{$vmInageIndex}}" value="{{$vmImageItem.ConnectionName}}"/>
+										<input type="hidden" name="vmImage_info" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>										
 									<td class="overlay hidden" data-th="Name">{{$vmImageItem.Name}}</td>
 									<td class="btn_mtd ovm td_left" data-th="ConnectionName">
 										{{$vmImageItem.ConnectionName}}
@@ -97,10 +94,11 @@
 
 							<span class="sbox sbox_m">
 								<input type="text" name="es_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" id="filter_spec" onkeydown="filterEnterToHidden(this.id, 'vmSpec_info', 'es_specList');"/>
-								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_spec', 'vmSpec_info', 'e_specList')"/>
+								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_spec', 'vmSpec_info', 'es_specList')"/>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
 							</span>
 							<input type="text" name="tab_vmSpecInfo" placeholder="" class="gray ip_2"  id="tab_vmSpecInfo" readonly />
+							<input type="hidden" name="tab_vmSpecConnectionName" id="tab_vmSpecConnectionName"/>
 						</li>
 					</ul>
 					
@@ -127,13 +125,11 @@
 									{{ end }}
 
 									{{range $vmSpecIndex, $vmSpecItem := .VMSpecList}}	
-									<tr onclick="setValueToFormObj('es_specList', 'tab_vmSpecInfo', 'vmSpec', '{{$vmSpecIndex}}', 'e_specId');">
-										<td class="overlay hidden" data-th="">
+									<tr onclick="setValueToFormObj('es_specList', 'tab_vmSpec', 'vmSpec', '{{$vmSpecIndex}}', 'e_specId');">
 											<input type="hidden" id="vmSpec_id_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
+											<input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_{{$vmSpecIndex}}" value="{{$vmSpecItem.ConnectionName}}"/>
 											<input type="hidden" name="vmSpec_info" id="vmSpec_info_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}|{{$vmSpecItem.Name}}|{{$vmSpecItem.ConnectionName}}|{{$vmSpecItem.CspSpecName}}"/>
-											
-											<label for="td_ch1"></label> <span class="ov off"></span>
-										</td>
+										
 										<td class="overlay hidden" data-th="Name">{{$vmSpecItem.Name}}</td>
 										<td class="btn_mtd ovm td_left" data-th="ConnectionName">
 											{{$vmSpecItem.ConnectionName}}

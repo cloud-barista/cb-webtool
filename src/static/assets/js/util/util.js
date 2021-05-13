@@ -170,7 +170,8 @@ function commonConfirmOpen(targetAction){
             ["VmManagement", "Would you like to manage VM ?"], // 해당 function 없음
             ["AddNewVm", "Would you like to add VM ?"], //onclick="vm_add()"
 
-            ["DifferentConnection", "Do you want to set different connectionName?"]
+            ["DifferentConnection", "Do you want to set different connectionName?"],
+            ["DifferentConnectionAtSecurityGroup", "Do you want to set different connectionName?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -323,6 +324,8 @@ function commonConfirmOk(){
         addNewVirtualMachine()
     }else if ( targetAction == "DifferentConnection"){
         setAndClearByDifferentConnectionName();
+    }else if ( targetAction == "DifferentConnectionAtSecurityGroup"){
+        uncheckDifferentConnectionAtSecurityGroup();
     }else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
@@ -331,11 +334,15 @@ function commonConfirmOk(){
 }
 
 //confirm modal창에서 cancel 버튼 클릭시 수행할 method 지정. 그냥 창만 듣을 경우에는 commonModalClose() 호출
+var rollbackObjArr = [];
 function commonConfirmCancel(targetAction){
     console.log("commonConfirmCancel : " + targetAction)
     //
-    if( targetAction == ''){
-        
+    if( targetAction == 'DifferentConnection'){
+        // set 했던것들 초기화.
+        for( var i = 0; i < rollbackObjArr.length; i++){
+            $("#" + rollbackObjArr[i]).val('');
+        }
     }
     commonConfirmClose();
 }
@@ -727,10 +734,11 @@ function filterTable(tableId, filterColumnName, filterKeyword){
     }
 }
 
+// table에서 hidden으로 설정된 obj를 기준으로 filterling. 보이고 안보이고
 function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword){
 
-    var filter = filterKeyword.toUpperCase();
-	console.log("filter=" + filter);
+    var keyword = filterKeyword.toUpperCase();
+	console.log("filter=" + keyword);
 
     var trs = $('#' + tableId + ' tr');
     console.log(trs);
@@ -740,9 +748,9 @@ function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword){
         var hiddenval = trs.eq(i).find('input:hidden[name="' + hiddenColumnName + '"]').val();
         // console.log("hiddenval " + hiddenval);
 
-        if(filter == "ALL") {
+        if(keyword == "ALL") {
             trs.eq(i).css("display", "");
-        }else if (hiddenval.toUpperCase().indexOf(filter) > -1) {
+        }else if (hiddenval.toUpperCase().indexOf(keyword) > -1) {
             trs.eq(i).css("display", "");
         }else {
             trs.eq(i).css("display", "none");

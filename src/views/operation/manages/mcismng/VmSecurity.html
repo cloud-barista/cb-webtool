@@ -16,6 +16,7 @@
 							<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_securityGroup', 'securityGroup_info', 'e_securityGroupList')"/>
 						</span>
 						<input type="text" name="tab_securityGroupInfo" placeholder="" class="gray ip_2"  id="tab_securityGroupInfo" readonly />
+						<input type="hidden" name="tab_securityGroupConnectionName" id="tab_securityGroupConnectionName"/>
 					</li>					
 				</ul>
 
@@ -50,8 +51,7 @@
 									<input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_{{$securityGroupIndex}}" title="" />
 									<input type="hidden" id="securityGroup_id_{{$securityGroupIndex}}" value="{{$securityGroupItem.ID}}"/>
 									<input type="hidden" id="securityGroup_name_{{$securityGroupIndex}}" value="{{$securityGroupItem.Name}}"/>
-									<input type="hidden" id="securityGroup_connectionName_{{$securityGroupIndex}}" value="{{$securityGroupItem.ConnectionName}}"/>
-									
+									<input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_{{$securityGroupIndex}}" value="{{$securityGroupItem.ConnectionName}}"/>									
 									<input type="hidden" name="securityGroup_info" id="securityGroup_info_{{$securityGroupIndex}}" value="{{$securityGroupItem.Name}}|{{$securityGroupItem.ConnectionName}}|{{$securityGroupItem.Description}}"/>
 											
 									<label for="td_ch1"></label> <span class="ov off"></span>
@@ -90,7 +90,7 @@
 							<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_sshKey', 'sshKey_info', 'es_sshKeyList')"/>
 						</span>
 						<input type="text" name="tab_sshKeyInfo" placeholder="" class="gray ip_2"  id="tab_sshKeyInfo" readonly />
-
+						<input type="hidden" name="tab_sshKeyConnectionName" id="tab_sshKeyConnectionName"/>
 					</li>
 				</ul>
 				
@@ -118,12 +118,10 @@
 
 							{{range $sshKeyIndex, $sshKeyItem := .SshKeyList}}	
 							<tr onclick="setValueToFormObj('es_sshKeyList', 'tab_sshKeyInfo', 'sshKey', '{{$sshKeyIndex}}', 'e_sshKeyId');">
-								<td class="overlay hidden" data-th="">
-									<input type="hidden" id="sshKey_id_{{$sshKeyIndex}}" value="{{$sshKeyItem.ID}}"/>
-									<input type="hidden" name="sshKey_info" id="sshKey_info_{{$sshKeyIndex}}" value="{{$sshKeyItem.Name}}|{{$sshKeyItem.ConnectionName}}|{{$sshKeyItem.Description}}"/>
-											
-									<label for="td_ch1"></label> <span class="ov off"></span>
-								</td>
+								<input type="hidden" id="sshKey_id_{{$sshKeyIndex}}" value="{{$sshKeyItem.ID}}"/>
+								<input type="hidden" id="sshKey_connectionName_{{$sshKeyIndex}}" value="{{$sshKeyItem.ConnectionName}}"/>
+								<input type="hidden" name="sshKey_info" id="sshKey_info_{{$sshKeyIndex}}" value="{{$sshKeyItem.Name}}|{{$sshKeyItem.ConnectionName}}|{{$sshKeyItem.Description}}"/>
+								
 								<td class="overlay hidden" data-th="Name">{{$sshKeyItem.Name}}</td>
 								<td class="btn_mtd ovm td_left" data-th="ConnectionName">
 									{{$sshKeyItem.ConnectionName}}
