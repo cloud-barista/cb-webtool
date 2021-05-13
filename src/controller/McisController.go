@@ -666,7 +666,7 @@ func McisVmLifeCycle(c echo.Context) error {
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
-
+	log.Println("bind")
 	vmLifeCycle := &tumblebug.VmLifeCycle{}
 	if err := c.Bind(vmLifeCycle); err != nil {
 		log.Println(err)

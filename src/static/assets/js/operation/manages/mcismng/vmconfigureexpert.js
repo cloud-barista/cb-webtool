@@ -301,7 +301,59 @@ const Expert_Server_Config_Arr = new Array();
 var expert_data_cnt = 0
 const expertServerCloneObj = obj=>JSON.parse(JSON.stringify(obj))
 function expertDone_btn(){
+  console.log("expert Done")
+  // TODO : 원래는 같은 VM 을 여러개 만들 때 vmGroupSize를 set 하는 것 같은데... for문으로 돌리고 있음.... 고칠까?
+  // $("#e_vmGroupSize").val( $("#es_vm_add_cnt").val() )
   // validation check 
+  if( $("#e_name").val() == ""){ commonAlert("VM Name is required"); return;}
+  if( $("#e_connectionName").val() == ""){ commonAlert("Connection is required"); return;}
+  if( $("#e_vNetId").val() == ""){ commonAlert("vNet is required"); return;}
+  if( $("#e_subnetId").val() == ""){ commonAlert("Subnet is required"); return;}
+  if( $("#e_securityGroupIds").val() == ""){ commonAlert("SecurityGroup is required"); return;}
+  if( $("#e_sshKeyId").val() == ""){ commonAlert("SSH Key is required"); return;}
+  if( $("#e_imageId").val() == ""){ commonAlert("VM Image is required"); return;}
+  if( $("#e_specId").val() == ""){ commonAlert("VM Spec is required"); return;}
+  if( $("#e_connectionName").val() == ""){ commonAlert("ConnectionName is required"); return;}
+
+  var expert_form = $("#expert_form").serializeObject()
+  var server_name = expert_form.name
+  var server_cnt = parseInt($("#e_vm_add_cnt").val())
+  console.log('server_cnt : ',server_cnt)
+  var add_server_html = "";
+
+  if(server_cnt > 1){
+    for(var i = 1; i <= server_cnt; i++){
+      var new_vm_name = server_name+"-"+i;
+      var object = cloneObj(expert_form)
+      object.name = new_vm_name
+      
+      add_server_html +='<li onclick="view_simple(\''+expert_data_cnt+'\')">'
+          +'<div class="server server_on bgbox_b">'
+          +'<div class="icon"></div>'
+          +'<div class="txt">'+new_vm_name+'</div>'
+          +'</div>'
+          +'</li>';
+          Expert_Server_Config_Arr.push(object)
+      console.log(i+"번째 Simple form data 입니다. : ",object);
+    }
+  }else{
+    Expert_Server_Config_Arr.push(expert_form)
+    add_server_html +='<li onclick="view_simple(\''+expert_data_cnt+'\')">'
+            +'<div class="server server_on bgbox_b">'
+            +'<div class="icon"></div>'
+            +'<div class="txt">'+server_name+'</div>'
+            +'</div>'
+            +'</li>';
+
+  }
+  $(".expert_servers_config").removeClass("active");
+  $("#mcis_server_list").prepend(add_server_html)
+  console.log("expert btn click and expert form data : ",expert_form)
+  console.log("expert data array : ",Expert_Server_Config_Arr);
+  expert_data_cnt++;
+  $("#expert_form").each(function(){
+    this.reset();
+  })
 }
 
 
@@ -544,6 +596,8 @@ function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedInd
     $("#t_connectionName").val(selectedConnectionName);// confirm을 통해서 form에 set 되므로 임시(t_connectionName)로 저장.
     commonConfirmOpen("DifferentConnection");
   }else{
+    console.log("setValueToFormObj=" + targetTabObjId);
+    console.log(selectedInfo);
     $("#" + targetTabObjId).val(selectedInfo);
     $("#" + targetTabConnectionNameObjId).val(selectedConnectionName);
     $("#" + targetObjId).val(selectedId);

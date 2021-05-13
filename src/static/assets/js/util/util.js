@@ -166,7 +166,7 @@ function commonConfirmOpen(targetAction){
             ["VmLifeCycleReboot", "Would you like to reboot MCIS ?"], //onclick="vm_life_cycle('reboot')"
             ["VmLifeCycleSuspend", "Would you like to suspend MCIS ?"], // onclick="vm_life_cycle('suspend')"
             ["VmLifeCycleResume", "Would you like to resume MCIS ?"], // onclick="vm_life_cycle('resume')"
-            ["VmLifeCycleTerminate", ">Would you like to terminate MCIS ?"], // onclick="vm_life_cycle('terminate')"
+            ["VmLifeCycleTerminate", "Would you like to terminate MCIS ?"], // onclick="vm_life_cycle('terminate')"
             ["VmManagement", "Would you like to manage VM ?"], // 해당 function 없음
             ["AddNewVm", "Would you like to add VM ?"], //onclick="vm_add()"
 

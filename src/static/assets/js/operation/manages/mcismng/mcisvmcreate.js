@@ -183,6 +183,55 @@ function btn_deploy(){
     }
 
     ///////// export
+    if(Expert_Server_Config_Arr){
+        var vm_len = Expert_Server_Config_Arr.length;			
+        console.log("Expert_Server_Config_Arr length: ",vm_len);
+        totalDeployServerCount += vm_len
+        // var new_obj = {}
+        // new_obj['vm'] = Simple_Server_Config_Arr;
+        // console.log("new obj is : ",new_obj);
+        // var url = "/operation/manages/mcis/:mcisID/vm/reg/proc"
+        var url = "/operation/manages/mcismng/" + mcis_id +"/vm/reg/proc"
+
+        // 한개씩 for문으로 추가
+        for(var i in Expert_Server_Config_Arr){
+            new_obj = Expert_Server_Config_Arr[i];
+            console.log("new obj is : ",new_obj);
+            try{
+                resultVmCreateMap.set("Expert"+ i, "")
+                axios.post(url,new_obj,{
+                    headers :{
+                        },
+                }).then(result=>{
+                    console.log("MCIR VM Register data : ",result);
+                    console.log("Result Status : ",result.status); 
+
+                    var statusCode = result.data.status;
+                    var message = result.data.message;
+                    console.log("Result Status : ",statusCode); 
+                    console.log("Result message : ",message); 
+
+                    if(result.status == 201 || result.status == 200){
+                        vmCreateCallback("Expert"+ i, "Success")                   
+                    }else{
+                        vmCreateCallback("Expert"+ i, message)
+                    }
+                }).catch((error) => {
+                    // console.warn(error);
+                    console.log(error.response)
+                    var errorMessage = error.response.data.error;
+                    // commonErrorAlert(statusCode, errorMessage) 
+                    vmCreateCallback("Expert"+ i, errorMessage)
+                })
+            }finally{
+                
+            }
+
+            // post로 호출을 했으면 해당 VM의 정보는 비활성시킨 후(클릭 Evnet 안먹게)
+            // 상태값을 모니터링 하여 결과 return 까지 대기.
+            // return 받으면 해당 VM
+        } 
+    }
     ///////// import
     if(Import_Server_Config_Arr){// mcissimpleconfigure.js 에 const로 정의 됨.
         // TODO : 어차피 simple/expert와 로직이 다른데... 
@@ -353,3 +402,6 @@ function getVmList(){
     })
 }
 
+function copyValue(targetValue, targetObjId){
+    $("#" + targetObjId).val(targetValue);
+}

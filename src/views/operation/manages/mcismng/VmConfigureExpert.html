@@ -15,19 +15,21 @@
 		es_ : expert의 조건 조회용 id
 	-->
 	<form id="expert_form">
-		<!-- <input type="hidden" name="name" id="e_name" />
-		<input type="hidden" name="description" id="e_description" />		 -->
-		temp_connectionName<input type="text" name="tempConnectionName" id="t_connectionName" />
-		e_connectionName<input type="text" name="connectionName" id="e_connectionName" />
-		e_vNetId<input type="text" name="vNetId" id="e_vNetId" />								
-		e_subnetId<input type="text" name="subnetId" id="e_subnetId" />								
-		e_securityGroupIds<input type="text" name="securityGroupIds[]" id="e_securityGroupIds" />								
-		e_sshKeyId<input type="text" name="sshKeyId" id="e_sshKeyId" />								
-		e_imageId<input type="text" name="imageId" id="e_imageId" />
-		e_specId<input type="text" name="specId" id="e_specId" />
-		e_label<input type="text" name="label" id="e_label" />								
-		e_vmUserAccount<input type="text" name="vm_userAccount"  id="e_vmUserAccount" />								
-		e_vmUserPassword<input type="text" name="vm_password" id="e_vmUserPassword" />								
+		<input type="hidden" name="name" id="e_name" />
+		<input type="hidden" name="description" id="e_description" />		
+		<input type="hidden" name="tempConnectionName" id="t_connectionName" />
+		<input type="hidden" name="connectionName" id="e_connectionName" />
+		<input type="hidden" name="vNetId" id="e_vNetId" />								
+		<input type="hidden" name="subnetId" id="e_subnetId" />								
+		<input type="hidden" name="securityGroupIds[]" id="e_securityGroupIds" />								
+		<input type="hidden" name="sshKeyId" id="e_sshKeyId" />								
+		<input type="hidden" name="imageId" id="e_imageId" />
+		<input type="hidden" name="specId" id="e_specId" />
+		<input type="hidden" name="label" id="e_label" />								
+		<input type="hidden" name="vm_userAccount"  id="e_vmUserAccount" />								
+		<input type="hidden" name="vm_password" id="e_vmUserPassword" />
+		<input type="hidden" name="vmGroupSize" id="e_vmGroupSize" />
+									
 	</form>
 
 
@@ -56,11 +58,11 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>Server Name</label>
-							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" id="es_name"/>
+							<input type="text" name="" value="" placeholder="Input Name" class="pline ip_1" title="" id="es_name" onkeyup="copyValue(this.value, 'e_name') "/>
 						</li>
 						<li>
 							<label>Description</label>
-							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1 ta_2" title="" id="es_description"></textarea>
+							<textarea  cols="" rows="" placeholder="Input Description" class="pline ta_1 ta_2" title="" id="es_description" onkeyup="copyValue(this.value, 'e_description') "/></textarea>
 						</li>
 					</ul>
 				</div>
@@ -201,35 +203,38 @@
 		
 		<!-- button -->
 		<div class="btnbox spec_select_box">
-			<div class="btn_right">
+			<div class="svc_ipbox svc_ipbox_2">
 				
 				<div class="amount_add s_slider_box">
-					<input type="text" name="" value="0" placeholder="" class="a_ip components_input" title="" disabled />
-					<a href="javascript:void(0);" class="btn_add btn_s_plus"></a>
 					<div class="add_box">
 						<div class="a_box">
 							<strong class="t font-NotoKR">추가 수량</strong>
 							<div class="a_slider">
 								<div class="slider_ip">
-									<button class="btn_s btn_s_minus">-</button>
+									<button type="button" class="btn_s btn_s_minus">-</button>
 									<div>
-										<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+										<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
 									</div>
-									<button class="btn_s btn_s_plus">+</button>
+									<button type="button" class="btn_s btn_s_plus">+</button>
 								</div>
-								<input type="text" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+								<input type="text" name="vm_add_cnt" value="0" placeholder="0" class="components_input txt_ipbox" title="" readonly id="es_vm_add_cnt"/>
 							</div>
 						</div>
 					</div>
 				</div>
 				
-				<button name="" value="" class="btn_done btn_co btn_cr_g"><span>DONE</span></button> 
-				<button name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
-				
+			</div>
+
+			<div class="btnbox spec_select_box">
+				<div class="btn_right">
+					
+					<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="expertDone_btn();"><span>DONE</span></button> 
+					<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
+					
+				</div>
 			</div>
 		</div>
 		<!-- //button -->
-
 	</div>
 
 </div>
