@@ -1,0 +1,75 @@
+{{define "NodeConfigure"}}
+
+<!-- server 추가 form -->
+<div class="servers_config node_config" id="nodeConfig">
+	<form id="node_form">	
+		<div class="top_box">
+			<div class="titbox_sc">
+				<div class="tit">Node Configuration</div>
+			</div>
+		
+			<div class="ip_box">				
+				<!-- controlPlane -->
+				<div class="servers_box">
+					<div class="title">Control Plane</div>
+					<div class="list">
+						<ul id="mcks_ControlPlane_list">															
+							<li>
+								<label>Connection</label>
+								<input type="text" name="controlPlaneConnection" value="" id="controlPlaneConnection" placeholder="Input Connection" class="pline ip_1" title="" />
+							</li>
+							<li>
+								<label>Count</label>
+								<input type="text" name="controlPlaneCount" value="" id="controlPlaneCount" placeholder="Input Count" class="pline ip_1" title="" />
+							</li>
+							<li>
+								<label>Spec</label>
+								<input type="text" name="controlPlaneSpec" value="" id="controlPlaneSpec" placeholder="Input Spec" class="pline ip_1" title="" />
+							</li>
+						
+						
+						</ul>
+						추가버튼 
+					</div>
+				</div>
+				<!-- //controlPlane -->
+
+				<!-- worker -->
+				<div class="servers_box">
+					<div class="title">Worker</div>
+					<div class="list">
+						<ul id="mcks_Worker_list">															
+							<li>
+								<label>Connection</label>
+								<input type="text" name="worker" value="" id="controlPlaneConnection" placeholder="Input Connection" class="pline ip_1" title="" />
+							</li>
+							<li>
+								<label>Count</label>
+								<input type="text" name="worker" value="" id="controlPlaneCount" placeholder="Input Count" class="pline ip_1" title="" />
+							</li>
+							<li>
+								<label>Spec</label>
+								<input type="text" name="worker" value="" id="controlPlaneSpec" placeholder="Input Spec" class="pline ip_1" title="" />
+							</li>
+						</ul>
+						추가버튼 
+					</div>
+				</div>
+				<!-- //worker -->	
+			</div>
+			<!-- button -->
+			<div class="btnbox spec_select_box">
+				<div class="btnbox spec_select_box">
+					<div class="btn_right">
+						<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="nodeDone_btn();"><span>DONE</span></button> 
+						<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
+					</div>
+				</div>
+			</div>
+			<!-- //button -->
+		</div>
+	</form>
+</div>
+
+<script src="/assets/js/operation/manages/mcks/nodeconfigure.js"></script>  
+{{end}}
