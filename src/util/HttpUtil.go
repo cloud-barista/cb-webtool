@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -172,6 +173,22 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 	req.Header.Add("Authorization", authInfo)
 	// resp, err := client.Do(req)
 	return client.Do(req)
+}
+
+// Put/Post 등을 formData 형태로 호출할 때
+func CommonHttpFormData(url string, formParam web.ParamMap, httpMethod string) (*http.Response, error) {
+	//m := structs.Map(s)
+	authInfo := AuthenticationHandler()
+
+	log.Println("CommonHttp "+httpMethod+", ", url)
+	log.Println("authInfo ", authInfo)
+
+	resp, err := http.PostForm(url, param.StringMap())
+	if err != nil {
+		panic(err)
+	}
+
+	return resp, err
 }
 
 // return message 확인용
