@@ -1,32 +1,56 @@
 {{define "NodeConfigure"}}
 
 <!-- server 추가 form -->
-<div class="servers_config node_config" id="nodeConfig">
+<div class="servers_config node_config" id="nodeConfig" style="display:block">
 	<form id="node_form">	
 		<div class="top_box">
 			<div class="titbox_sc">
 				<div class="tit">Node Configuration</div>
 			</div>
 		
-			<div class="ip_box">				
+			<div class="ip_box">
+				<div class="svc_ipbox svc_ipbox_2">
+					<div class="ipbox ipbox3">
+						<ul>
+							<li>
+								<label><span class="ch">*</span>Provider</label>
+								<select  class="selectbox white pline sel_4"  name="provider"  id="provider" onchange="getConnectionListForSelectbox(this.value, 'nodeConnectionName');">
+									<option value="">Select Provider</option>
+									{{ range $item := .CloudOSList}}	
+									<option value="{{ $item }}">{{ $item }}</option>
+									{{ end }}
+								</select>
+							</li>
+							<li>
+								<label><span class="ch">*</span>Connection Name</label>
+								<select class="selectbox white pline sel_4" name="nodeConnectionName" id="nodeConnectionName" onchange="changeConnectionInfo(this.value);">
+									<option value="">Select Connection</option>
+								</select>
+							</li>
+						</ul>
+					</div>
+				</div>
+
 				<!-- controlPlane -->
 				<div class="servers_box">
 					<div class="title">Control Plane</div>
 					<div class="list">
 						<ul id="mcks_ControlPlane_list">															
 							<li>
-								<label>Connection</label>
-								<input type="text" name="controlPlaneConnection" value="" id="controlPlaneConnection" placeholder="Input Connection" class="pline ip_1" title="" />
+								<!-- <label>Connection</label> -->
+								<input type="hidden" name="controlPlaneConnection" id="controlPlaneConnection_0" placeholder="Input Connection" class="pline ip_1" title="" />
 							</li>
 							<li>
 								<label>Count</label>
-								<input type="text" name="controlPlaneCount" value="" id="controlPlaneCount" placeholder="Input Count" class="pline ip_1" title="" />
+								<input type="text" name="controlPlaneCount" value="" id="controlPlaneCount_0" placeholder="Input Count" class="pline ip_1" title="" />
 							</li>
 							<li>
-								<label>Spec</label>
-								<input type="text" name="controlPlaneSpec" value="" id="controlPlaneSpec" placeholder="Input Spec" class="pline ip_1" title="" />
+								<label><span class="ch">*</span>Spec</label>
+								<select class="selectbox white pline sel_4" name="controlPlaneSpecId" id="controlPlaneSpecId_0">
+									<option value="1">Select Spec</option>
+								</select>
 							</li>
-						
+
 						
 						</ul>
 						추가버튼 
@@ -40,16 +64,18 @@
 					<div class="list">
 						<ul id="mcks_Worker_list">															
 							<li>
-								<label>Connection</label>
-								<input type="text" name="worker" value="" id="controlPlaneConnection" placeholder="Input Connection" class="pline ip_1" title="" />
+								<!-- <label>Connection</label> -->
+								<input type="hidden" name="workerConnection" value="" id="workerConnection_0" placeholder="Input Connection" class="pline ip_1" title="" />
 							</li>
 							<li>
 								<label>Count</label>
-								<input type="text" name="worker" value="" id="controlPlaneCount" placeholder="Input Count" class="pline ip_1" title="" />
+								<input type="text" name="workerCount" value="" id="workerCount_0" placeholder="Input Count" class="pline ip_1" title="" />
 							</li>
 							<li>
-								<label>Spec</label>
-								<input type="text" name="worker" value="" id="controlPlaneSpec" placeholder="Input Spec" class="pline ip_1" title="" />
+								<label><span class="ch">*</span>Spec</label>
+								<select class="selectbox white pline sel_4" name="workerSpecId" id="workerSpecId_0">
+									<option value="1">Select Spec</option>
+								</select>
 							</li>
 						</ul>
 						추가버튼 
@@ -71,5 +97,5 @@
 	</form>
 </div>
 
-<script src="/assets/js/operation/manages/mcks/nodeconfigure.js"></script>  
+<script src="/assets/js/operation/manages/mcksmng/nodeconfigure.js"></script>  
 {{end}}

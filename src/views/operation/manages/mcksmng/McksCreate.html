@@ -27,7 +27,6 @@
 				</script>
 				<!-- contents -->
 				<div class="contbox">
-					<input type="hidden" name="installMonAgent"  value="yes" id="installMonAgent" />
 					
 					<div class="titlebox">
 						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Manage / <strong>MCKS</strong></div>
@@ -87,8 +86,12 @@
 														<ul id="mcks_kubernated_list">															
 															<li>
 																<label>NetworkCni</label>
-																<input type="text" name="kubernatesNetworkCni" value="" id="kubernatesNetworkCni" placeholder="Input NetworkCni" class="pline ip_1" title="" />
+																&nbsp;&nbsp;
+																<input type="radio" id="kubernatesNetworkCniKilo" name="kubernatesNetworkCni" value="GET" checked><label for="kubernatesNetworkCniKilo">Kilo</label>
+																&nbsp;&nbsp;
+																<input type="radio" id="kubernatesNetworkCniCanal" name="kubernatesNetworkCni" value="POST"><label for="kubernatesNetworkCniCanal">Canal</label>
 															</li>
+														
 															<li>
 																<label>PodCidr</label>
 																<input type="text" name="kubernatesPodCidr" value="" id="kubernatesPodCidr" placeholder="Input PodCidr" class="pline ip_1" title="" />
@@ -107,55 +110,9 @@
 												<!-- //config -->
 
 												<!-- 여기부터는 CreateNode -->
-												<!-- controlPlane -->
-												<div class="servers_box">
-													<div class="title">Control Plane</div>
-													<div class="list">
-														<ul id="mcks_ControlPlane_list">															
-															<li>
-																<label>Connection</label>
-																<input type="text" name="controlPlaneConnection" value="" id="controlPlaneConnection" placeholder="Input Connection" class="pline ip_1" title="" />
-															</li>
-															<li>
-																<label>Count</label>
-																<input type="text" name="controlPlaneCount" value="" id="controlPlaneCount" placeholder="Input Count" class="pline ip_1" title="" />
-															</li>
-															<li>
-																<label>Spec</label>
-																<input type="text" name="controlPlaneSpec" value="" id="controlPlaneSpec" placeholder="Input Spec" class="pline ip_1" title="" />
-															</li>
-														
-														
-														</ul>
-														추가버튼 
-													</div>
-												</div>
-												<!-- //controlPlane -->											
+												{{template "NodeConfigure" .}}										
 
-												<!-- worker -->
-												<div class="servers_box">
-													<div class="title">Worker</div>
-													<div class="list">
-														<ul id="mcks_Worker_list">															
-															<li>
-																<label>Connection</label>
-																<input type="text" name="worker" value="" id="controlPlaneConnection" placeholder="Input Connection" class="pline ip_1" title="" />
-															</li>
-															<li>
-																<label>Count</label>
-																<input type="text" name="worker" value="" id="controlPlaneCount" placeholder="Input Count" class="pline ip_1" title="" />
-															</li>
-															<li>
-																<label>Spec</label>
-																<input type="text" name="worker" value="" id="controlPlaneSpec" placeholder="Input Spec" class="pline ip_1" title="" />
-															</li>
-														
-														
-														</ul>
-														추가버튼 
-													</div>
-												</div>
-												<!-- //worker -->	
+												
 												<div class="btnbox">
 													<div class="btn_right">
 														<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="deployMcis();"><span>DEPLOY</span></button> 
