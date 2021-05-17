@@ -1,13 +1,15 @@
-function changeConnectionInfo(configName){
+// connection 정보가 바뀌었을 때, 변경 될 object : 원래는 각각 만들어야 하나, 가져오는게 spec만 있어서 plane, worker 같이 씀.
+function changeConnectionInfo(configName, targetObjId){
     console.log("config name : ",configName)
     if( configName == ""){
         // 0번째면 selectbox들을 초기화한다.(vmInfo, sshKey, image 등)
     }
     
-    getSpecInfo(configName);
+    getSpecInfo(configName, targetObjId);
 }
 
-function getSpecInfo(configName){
+// connection에 맞는 spec들 조회
+function getSpecInfo(configName, targetObjId){
     var configName = configName;
     if(!configName){
         configName = $("#nodeConnectionName option:selected").val();
@@ -31,13 +33,9 @@ function getSpecInfo(configName){
 
         }else{
             html +=""
-        }
-        
+        }       
       
-        $("#controlPlaneSpecId_0").empty();
-        $("#controlPlaneSpecId_0").append(html);
-        
-        $("#workerSpecId_0").empty();
-        $("#workerSpecId_0").append(html);
+        $("#" + targetObjId).empty();
+        $("#" + targetObjId).append(html);        
     })
 }

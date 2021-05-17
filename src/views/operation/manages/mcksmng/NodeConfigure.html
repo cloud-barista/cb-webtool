@@ -12,21 +12,7 @@
 				<div class="svc_ipbox svc_ipbox_2">
 					<div class="ipbox ipbox3">
 						<ul>
-							<li>
-								<label><span class="ch">*</span>Provider</label>
-								<select  class="selectbox white pline sel_4"  name="provider"  id="provider" onchange="getConnectionListForSelectbox(this.value, 'nodeConnectionName');">
-									<option value="">Select Provider</option>
-									{{ range $item := .CloudOSList}}	
-									<option value="{{ $item }}">{{ $item }}</option>
-									{{ end }}
-								</select>
-							</li>
-							<li>
-								<label><span class="ch">*</span>Connection Name</label>
-								<select class="selectbox white pline sel_4" name="nodeConnectionName" id="nodeConnectionName" onchange="changeConnectionInfo(this.value);">
-									<option value="">Select Connection</option>
-								</select>
-							</li>
+							
 						</ul>
 					</div>
 				</div>
@@ -37,12 +23,23 @@
 					<div class="list">
 						<ul id="mcks_ControlPlane_list">															
 							<li>
-								<!-- <label>Connection</label> -->
-								<input type="hidden" name="controlPlaneConnection" id="controlPlaneConnection_0" placeholder="Input Connection" class="pline ip_1" title="" />
+								<label><span class="ch">*</span>Provider</label>
+								<select  class="selectbox white pline sel_4"  name="controlPlaneProvider"  id="controlPlaneProvider_0" onchange="getConnectionListForSelectbox(this.value, 'controlPlaneConnectionName_0');">
+									<option value="">Select Provider</option>
+									{{ range $item := .CloudOSList}}	
+									<option value="{{ $item }}">{{ $item }}</option>
+									{{ end }}
+								</select>
+							</li>
+							<li>
+								<label><span class="ch">*</span>Connection Name</label>
+								<select class="selectbox white pline sel_4" name="controlPlaneConnectionName" id="controlPlaneConnectionName_0" onchange="changeConnectionInfo(this.value, 'controlPlaneSpecId_0');">
+									<option value="">Select Connection</option>
+								</select>
 							</li>
 							<li>
 								<label>Count</label>
-								<input type="text" name="controlPlaneCount" value="" id="controlPlaneCount_0" placeholder="Input Count" class="pline ip_1" title="" />
+								<input type="text" name="controlPlaneCount" value="" id="controlPlaneCount_0" placeholder="Input Count" class="pline ip_1" value="3" />
 							</li>
 							<li>
 								<label><span class="ch">*</span>Spec</label>
@@ -50,10 +47,8 @@
 									<option value="1">Select Spec</option>
 								</select>
 							</li>
-
-						
 						</ul>
-						추가버튼 
+						<!-- 추가버튼은 향후 사용시 개발. 현재 Array로 받기는 하나 실제로는 1개만 사용 됨.  -->
 					</div>
 				</div>
 				<!-- //controlPlane -->
@@ -64,8 +59,19 @@
 					<div class="list">
 						<ul id="mcks_Worker_list">															
 							<li>
-								<!-- <label>Connection</label> -->
-								<input type="hidden" name="workerConnection" value="" id="workerConnection_0" placeholder="Input Connection" class="pline ip_1" title="" />
+								<label><span class="ch">*</span>Provider</label>
+								<select  class="selectbox white pline sel_4"  name="workerProvider"  id="workerProvider_0" onchange="getConnectionListForSelectbox(this.value, 'workerConnectionName_0');">
+									<option value="">Select Provider</option>
+									{{ range $item := .CloudOSList}}	
+									<option value="{{ $item }}">{{ $item }}</option>
+									{{ end }}
+								</select>
+							</li>
+							<li>
+								<label><span class="ch">*</span>Connection Name</label>
+								<select class="selectbox white pline sel_4" name="workerConnectionName" id="workerConnectionName_0" onchange="changeConnectionInfo(this.value, 'workerSpecId_0');">
+									<option value="">Select Connection</option>
+								</select>
 							</li>
 							<li>
 								<label>Count</label>
@@ -78,7 +84,7 @@
 								</select>
 							</li>
 						</ul>
-						추가버튼 
+						<button class="btn btn_add" name="addSubnet">add</button> 
 					</div>
 				</div>
 				<!-- //worker -->	

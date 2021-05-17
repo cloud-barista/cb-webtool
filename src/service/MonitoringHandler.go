@@ -262,7 +262,7 @@ func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfigReg) (*drag
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/config"
 
-	fmt.Println("UpdateMonigoringConfig : ")
+	fmt.Println("UpdateMonigoringConfig : ", url)
 
 	// pbytes, _ := json.Marshal(monitoringConfig)
 	// fmt.Println(string(pbytes))

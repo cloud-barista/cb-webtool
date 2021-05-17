@@ -64,7 +64,7 @@
 													<div class="ipbox ipbox1">
 														<ul>
 															<li>
-																<label>Name</label>
+																<label>MCKS Name</label>
 																<input type="text" name="mcks_name" value="" id="mcks_name" placeholder="Input Name" class="pline ip_1" title="" />
 															</li>
 <!-- 															
@@ -75,21 +75,15 @@
 															 -->
 														</ul>
 													</div>
-													
-												</div>
-												
-												<!-- config -->
-												<div class="servers_box">
-													<div class="title">Config</div>
-													<!-- kubernates -->
-													<div class="list">
+													<!-- config -->
+													<div class="ipbox ipbox1">
 														<ul id="mcks_kubernated_list">															
 															<li>
 																<label>NetworkCni</label>
-																&nbsp;&nbsp;
-																<input type="radio" id="kubernatesNetworkCniKilo" name="kubernatesNetworkCni" value="GET" checked><label for="kubernatesNetworkCniKilo">Kilo</label>
-																&nbsp;&nbsp;
-																<input type="radio" id="kubernatesNetworkCniCanal" name="kubernatesNetworkCni" value="POST"><label for="kubernatesNetworkCniCanal">Canal</label>
+																<select  class="selectbox white pline sel_1"  name="kubernatesNetworkCni"  id="kubernatesNetworkCni">
+																	<option value="Kilo" selected>Kilo</option>
+																	<option value="Canal">Canal</option>
+																</select>
 															</li>
 														
 															<li>
