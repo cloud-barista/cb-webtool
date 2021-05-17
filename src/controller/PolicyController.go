@@ -112,17 +112,17 @@ func MonitoringConfigPolicyPutProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	monitoringConfigInfo := &dragonfly.MonitoringConfig{}
-	if err := c.Bind(monitoringConfigInfo); err != nil {
+	monitoringConfigRegInfo := &dragonfly.MonitoringConfigReg{}
+	if err := c.Bind(monitoringConfigRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
 			"status":  "fail",
 		})
 	}
-	log.Println(monitoringConfigInfo)
+	log.Println(monitoringConfigRegInfo)
 
-	resultMonitoringConfigInfo, respStatus := service.PutMonigoringConfig(monitoringConfigInfo)
+	resultMonitoringConfigInfo, respStatus := service.PutMonigoringConfig(monitoringConfigRegInfo)
 	log.Println("MonitoringPolicyReg service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
