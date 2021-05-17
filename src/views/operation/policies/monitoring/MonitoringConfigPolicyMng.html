@@ -74,12 +74,12 @@
 											<ul>
 												<li class="reg_1">
 													<label>Schedule Interval</label>
-													<input type="text" id="scheduleInterval" name="scheduleInterval" value="{{.MonitoringConfig.ScheduleInterval}}" placeholder="" class="gray" title="" readonly />
+													<input type="text" id="scheduleInterval" name="scheduleInterval" value="{{if eq .MonitoringConfig.ScheduleInterval 0}}1{{else}}{{.MonitoringConfig.ScheduleInterval}}{{end}}" placeholder="" class="gray" title="" readonly />
 													
 												</li>
 												<li class="reg_1">
 													<label>Agent TTL</label>
-													<input type="text" id="agentTTL" name="agentTTL" value="{{.MonitoringConfig.AgentTTL}}" placeholder="" class="gray" title="" readonly />
+													<input type="text" id="agentTTL" name="agentTTL" value="{{if eq .MonitoringConfig.AgentTTL 0}}1{{else}}{{.MonitoringConfig.AgentTTL}}{{end}}" placeholder="" class="gray" title="" readonly />
 													
 												</li>
 											</ul>
