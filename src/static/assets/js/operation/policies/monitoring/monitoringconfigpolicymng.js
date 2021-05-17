@@ -15,10 +15,10 @@ function regMonitoringConfigPolicy() {
     var agentItv = $("#agentInterval").val();
     var colItv = $("#collectorInterval").val();
     var maxhostcnt = $("#maxHostCount").val();
-    var obj = {
-        AgentInterval : agentItv,
-        CollectorInterval : colItv,
-        MaxHostCount : maxhostcnt   
+    var obj = {        
+        agent_interval : Number(agentItv),
+        collector_interval : Number(colItv),
+        max_host_count : Number(maxhostcnt)
     }
     console.log("info Monitoring Policy obj Data : ", obj);
     

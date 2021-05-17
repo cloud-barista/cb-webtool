@@ -254,7 +254,7 @@ func GetMonitoringConfig() (*dragonfly.MonitoringConfig, model.WebStatus) {
 }
 
 // 모니터링 정책 설정
-func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonfly.MonitoringConfig, model.WebStatus) {
+func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfigReg) (*dragonfly.MonitoringConfig, model.WebStatus) {
 	var originalUrl = "/config"
 	//{{ip}}:{{port}}/dragonfly/config
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -264,9 +264,13 @@ func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonf
 
 	fmt.Println("UpdateMonigoringConfig : ")
 
-	pbytes, _ := json.Marshal(monitoringConfig)
-	fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	// pbytes, _ := json.Marshal(monitoringConfig)
+	// fmt.Println(string(pbytes))
+	fmt.Println(monitoringConfig)
+	urlValues := util.StructToMap(monitoringConfig)
+	fmt.Println(urlValues)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 	resultMonitoringConfig := dragonfly.MonitoringConfig{}
 	if err != nil {
 		log.Println("-----")
