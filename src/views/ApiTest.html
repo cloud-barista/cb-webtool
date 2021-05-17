@@ -144,10 +144,13 @@
         }).then(result=>{
             console.log(result)
             if ( result.data.resp ){
-                markers=JSON.stringify(result.data.resp);
+                //markers=JSON.stringify(result.data.resp);
+                var markers = JSON.stringify(result.data.resp, null, 4);    // stringify with 4 spaces at each level
+	
                 $("#ApiResult").val(markers)
             }else{
-                markers=JSON.stringify(result.data);
+                // markers=JSON.stringify(result.data);
+                var markers = JSON.stringify(result.data, null, 4);
                 $("#ApiResult").val(markers)
             }
             // console.log("result : ")

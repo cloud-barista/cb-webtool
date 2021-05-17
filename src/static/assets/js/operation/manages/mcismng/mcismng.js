@@ -102,13 +102,23 @@ function vmLifeCycle(type){
     
     console.log("life cycle3 url : ",url);
    
-    var message = vm_name+" "+type+ " complete!."  
-
-    axios.post(url,{
-        headers: { },
-        mcisID:mcis_id,
-        vmID:vm_id,
-        vmLifeCycleType:type
+    var message = vmName+" "+type+ " complete!."  
+    var obj = {
+        mcisID : mcisID,
+        vmID : vmID,
+        lifeCycleType : type
+     }
+    axios.post(url,obj,{
+        headers: { 
+            'Content-type': 'application/json',
+            // 'Authorization': apiInfo, 
+        }
+    // })
+    // axios.post(url,{
+    //     headers: { },
+        // mcisID:mcis_id,
+        // vmID:vm_id,
+        // vmLifeCycleType:type
     }).then(result=>{
         var status = result.status
         

@@ -52,6 +52,7 @@ func McisRegForm(c echo.Context) error {
 	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
 	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
 	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
+	sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
 
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manages/mcismng/McisCreate", // 파일명
@@ -67,6 +68,7 @@ func McisRegForm(c echo.Context) error {
 			"VMSpecList":                    vmSpecInfoList,
 			"VNetList":                      vNetInfoList,
 			"SecurityGroupList":             securityGroupInfoList,
+			"SshKeyList":                    sshKeyInfoList,
 		})
 }
 
@@ -95,6 +97,13 @@ func McisMngForm(c echo.Context) error {
 	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
 	log.Println(" mcisList  ", mcisList)
 
+	totalMcisCount := len(mcisList) // mcis 갯수
+	totalVmCount := 0               // 모든 vm 갯수
+
+	if totalMcisCount == 0 {
+		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/regform")
+	}
+
 	store := echosession.FromContext(c)
 	store.Set("MCIS_"+loginInfo.UserID, mcisList)
 
@@ -121,9 +130,6 @@ func McisMngForm(c echo.Context) error {
 	// loginInfo.NameSpace = getNs.(string)
 
 	// vmList := result
-
-	totalMcisCount := len(mcisList) // mcis 갯수
-	totalVmCount := 0               // 모든 vm 갯수
 
 	totalMcisStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
@@ -470,6 +476,7 @@ func McisVmRegForm(c echo.Context) error {
 	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
 	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
 	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
+	sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
@@ -489,6 +496,7 @@ func McisVmRegForm(c echo.Context) error {
 			"VMSpecList":                    vmSpecInfoList,
 			"VNetList":                      vNetInfoList,
 			"SecurityGroupList":             securityGroupInfoList,
+			"SshKeyList":                    sshKeyInfoList,
 		})
 }
 
@@ -662,7 +670,7 @@ func McisVmLifeCycle(c echo.Context) error {
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
-
+	log.Println("bind")
 	vmLifeCycle := &tumblebug.VmLifeCycle{}
 	if err := c.Bind(vmLifeCycle); err != nil {
 		log.Println(err)
@@ -732,78 +740,4 @@ func GetVmMonitoring(c echo.Context) error {
 		"status":           respStatus.StatusCode,
 		"VMMonitoringInfo": returnVMMonitoringInfo,
 	})
-}
-
-///////// MCIS
-func McksRegForm(c echo.Context) error {
-	fmt.Println("McksRegForm ************ : ")
-
-	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.UserID == "" {
-		return c.Redirect(http.StatusTemporaryRedirect, "/login")
-	}
-	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
-
-	// 최신 namespacelist 가져오기
-	nsList, _ := service.GetNameSpaceList()
-	log.Println(" nsList  ", nsList)
-
-	// connectionconfigList 가져오기
-	cloudOsList, _ := service.GetCloudOSList()
-	log.Println(" cloudOsList  ", cloudOsList)
-
-	// regionList 가져오기
-	regionList, _ := service.GetRegionList()
-	log.Println(" regionList  ", regionList)
-
-	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
-	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
-
-	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/mcksmng/McksCreate", // 파일명
-		map[string]interface{}{
-			"LoginInfo":          loginInfo,
-			"DefaultNameSpaceID": defaultNameSpaceID,
-			"NameSpaceList":      nsList,
-			"CloudOSList":        cloudOsList,
-			"RegionList":         regionList,
-
-			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
-		})
-}
-
-func McksMngForm(c echo.Context) error {
-	fmt.Println("McksMngForm ************ : ")
-
-	loginInfo := service.CallLoginInfo(c)
-	if loginInfo.UserID == "" {
-		return c.Redirect(http.StatusTemporaryRedirect, "/login")
-	}
-
-	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
-
-	// 최신 namespacelist 가져오기
-	nsList, _ := service.GetNameSpaceList()
-	log.Println(" nsList  ", nsList)
-
-	// provider 별 연결정보 count(MCIS 무관)
-	// cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	// connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
-	// totalConnectionCount := len(cloudConnectionConfigInfoList)
-
-	// 모든 MCKS 조회
-	// mcksList, _ := service.GetMcksList(defaultNameSpaceID)
-	// log.Println(" mcisList  ", mcisList)
-
-	// store := echosession.FromContext(c)
-	// store.Set("MCKS_"+loginInfo.UserID, mcksList)
-
-	// status, filepath, return params
-	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/mcksmng/McksMng", // 파일명
-		map[string]interface{}{
-			"LoginInfo":          loginInfo,
-			"DefaultNameSpaceID": defaultNameSpaceID,
-			"NameSpaceList":      nsList,
-		})
 }

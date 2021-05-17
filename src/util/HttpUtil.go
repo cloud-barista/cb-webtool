@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	// "net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -173,6 +174,23 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 	// resp, err := client.Do(req)
 	return client.Do(req)
 }
+
+// Put/Post 등을 formData 형태로 호출할 때
+// https://minwook-shin.github.io/go-decode-encode-url-values-form/ 참조할 것
+// func CommonHttpFormData(url string, formParam web.ParamMap, httpMethod string) (*http.Response, error) {
+// 	//m := structs.Map(s)
+// 	authInfo := AuthenticationHandler()
+
+// 	log.Println("CommonHttp "+httpMethod+", ", url)
+// 	log.Println("authInfo ", authInfo)
+
+// 	resp, err := http.PostForm(url, formParam.StringMap())
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	return resp, err
+// }
 
 // return message 확인용
 func DisplayResponse(resp *http.Response) {
