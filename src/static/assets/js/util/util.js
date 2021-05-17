@@ -193,6 +193,21 @@ function commonConfirmOpen(targetAction){
     }
 }
 
+// confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정, text 내용 전송
+function commonConfirmMsgOpen(targetAction, message){
+    console.log("commonConfirmMsgOpen : " + targetAction)
+    
+    try{
+        $('#confirmText').html(message);
+        $('#confirmOkAction').val(targetAction);
+                
+        $('#confirmArea').modal(); 
+    }catch(e){
+        console.log(e);
+        alert(e);
+    }
+}
+
 // confirm modal창에서 ok버튼 클릭시 수행할 method 지정
 function commonConfirmOk(){
     //modalArea
@@ -322,6 +337,8 @@ function commonConfirmOk(){
         addNewVirtualMachine()
     }else if ( targetAction == "--"){
         addNewVirtualMachine()
+    }else if ( targetAction == "monitoringConfigPolicyConfig"){
+        regMonitoringConfigPolicy()
     }else if ( targetAction == "DifferentConnection"){
         setAndClearByDifferentConnectionName();
     }else if ( targetAction == "DifferentConnectionAtSecurityGroup"){

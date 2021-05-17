@@ -437,11 +437,12 @@ func main() {
 
 	// Policy Control
 	// html화면이 있는 경우 template 사용, json return의 경우 e.GET, e.POST 등 사용
-	policyMonitoringGroup := e.Group("/operation/policies/monitoringpolicy/mngform", policyMonitoringTemplate)
-	policyMonitoringGroup.GET("", controller.MonitoringPolicyMngForm)
+	policyMonitoringGroup := e.Group("/operation/policies/monitoringconfigpolicy/mngform", policyMonitoringTemplate)
+	policyMonitoringGroup.GET("", controller.MonitoringConfigPolicyMngForm)
+	e.PUT("/operation/policies/monitoringconfig/policy/put", controller.MonitoringConfigPolicyPutProc)
 
 	policyThresholdGroup := e.Group("/operation/policies/thresholdpolicy/mngform", policythresholdTemplate)
-	policyThresholdGroup.GET("", controller.ThresholdPolicyMngForm)
+	policyThresholdGroup.GET("", controller.MonitoringAlertPolicyMngForm)
 
 	policyPlacementGroup := e.Group("/operation/policies/placementpolicy/mngform", policyPlacementTemplate)
 	policyPlacementGroup.GET("", controller.PlacementPolicyMngForm)
