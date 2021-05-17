@@ -46,8 +46,9 @@
 				// 		 location.href = "/Image/list"
 						 return;
 					 }
+
+					 html +="<option value=''>Select Image</option>"
 					 for(var i in data){
-						html +="<option value=''>Select Image</option>"
 						if(data[i].connectionName == configName){
 							html += '<option value="'+data[i].id+'" >'+data[i].name+'('+data[i].id+')</option>'; 
 						}
@@ -223,7 +224,7 @@
 			const Simple_Server_Config_Arr = new Array();
 			var simple_data_cnt = 0
 			const cloneObj = obj=>JSON.parse(JSON.stringify(obj))
-			function simple_btn(){
+			function simpleDone_btn(){
 				var simple_form = $("#simple_form").serializeObject()
 				var server_name = simple_form.name
 				var server_cnt = parseInt(simple_form.s_vm_add_cnt)

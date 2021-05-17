@@ -47,7 +47,7 @@ $(document).ready(function(){
 // isExpert의 체크 여부에 따라 바뀜.
 // newServers 와 simpleServers가 있음.
 function displayNewServerForm(){
-    alert("here")
+   
     var simpleServerConfig = $("#simpleServerConfig");
     var expertServerConfig = $("#expertServerConfig");    
     var importServerConfig = $("#importServerConfig");
