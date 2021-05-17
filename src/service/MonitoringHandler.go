@@ -412,6 +412,7 @@ func UnInstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.Vm
 // 알람 목록 조회
 // List monitoring alert
 func GetMonitoringAlertList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
+	fmt.Print("#########GetMonitoringAlertList############")
 	var originalUrl = "/alert/tasks"
 	// {{ip}}:{{port}}/dragonfly/alert/tasks
 	urlParam := util.MappingUrlParameter(originalUrl, nil)

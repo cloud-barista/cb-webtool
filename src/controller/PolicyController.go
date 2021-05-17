@@ -179,19 +179,29 @@ func MonitoringAlertPolicyMngForm(c echo.Context) error {
 	nsList, _ := service.GetNameSpaceList()
 	log.Println(" nsList  ", nsList)
 
+	monitoringAlertPolicyList, respStatus := service.GetMonitoringAlertList()
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
 		"/operation/policies/threshold/MonitoringAlertPolicyMng", // 파일명
 		map[string]interface{}{
-			"LoginInfo":          loginInfo,
-			"DefaultNameSpaceID": defaultNameSpaceID,
-			"NameSpaceList":      nsList,
+			"LoginInfo":                 loginInfo,
+			"DefaultNameSpaceID":        defaultNameSpaceID,
+			"NameSpaceList":             nsList,
+			"MonitoringAlertPolicyList": monitoringAlertPolicyList,
 		})
 }
 
 // Monitoring Threshold 목록 조회
-func GetThresholdPolicyList(c echo.Context) error {
-	log.Println("GetMonitoringThresholdList : ")
+func GetMonitoringAlertPolicyList(c echo.Context) error {
+	fmt.Println("GetMonitoringAlertPolicyList ************ : ")
+	log.Println("GetMonitoringAlertPolicyList : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -200,19 +210,19 @@ func GetThresholdPolicyList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	// monitoringPolicyList, respStatus := service.GetMonitoringPolicyList(defaultNameSpaceID)
-	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
-	// 		"error":  respStatus.Message,
-	// 		"status": respStatus.StatusCode,
-	// 	})
-	// }
+	monitoringAlertPolicyList, respStatus := service.GetMonitoringAlertList()
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		// "status":               respStatus.StatusCode,
-		"DefaultNameSpaceID": defaultNameSpaceID,
-		// "MonitoringPolicyList": monitoringPolicyList,
+		"message":                   "success",
+		"status":                    respStatus.StatusCode,
+		"DefaultNameSpaceID":        defaultNameSpaceID,
+		"MonitoringAlertPolicyList": monitoringAlertPolicyList,
 	})
 }
 
