@@ -10,7 +10,7 @@ function applyMonitoringConfig(){
 
 function regMonitoringConfigPolicy() {
     // 여기에서 value 값을 담아서 PUT던진다?
-    var url = "/operation/policies/monitoringconfigpolicy/put"
+    var url = "/operation/policies/monitoringconfig/policy/put"        
     console.log("Monitoring Policy Reg URL : ",url)
     var agentItv = $("#agentInterval").val();
     var colItv = $("#collectorInterval").val();
