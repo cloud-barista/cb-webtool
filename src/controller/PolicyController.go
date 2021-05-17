@@ -68,7 +68,7 @@ func MonitoringConfigPolicyMngForm(c echo.Context) error {
 	monitoringConfig, _ := service.GetMonitoringConfig()
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
-		"/operation/policies/monitoring/MonitoringPolicyMng", // 파일명
+		"/operation/policies/monitoring/MonitoringConfigPolicyMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
