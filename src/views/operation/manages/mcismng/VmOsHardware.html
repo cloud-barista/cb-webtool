@@ -1,4 +1,4 @@
-{{define "McisOsHardware"}}
+{{define "VmOsHardware"}}
 	<!-- OS/HW -->
 	<div class="tab-pane fade show active" id="OS_HW">
 													
@@ -18,18 +18,16 @@
 								{{ end }}
 							</select> -->
 							<span class="sbox">
-								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" id="filter_image" onkeydown="filterEnterToHidden(this.id, 'vmImageInfo', 'es_imageList');"/>
-								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_image', 'vmImageInfo', 'es_imageList')"/>
+								<input type="text" name="" value="" placeholder="Filter Items" class="pline ip_1 search_ip" id="filter_image" onkeydown="filterEnterToHidden(this.id, 'vmImage_info', 'es_imageList');"/>
+								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_image', 'vmImage_info', 'es_imageList')"/>
 							</span>
-							<input type="text" name="" value="" placeholder="" class="gray ip_2" title="" readonly />
+							<input type="text" name="tab_vmImageInfo" placeholder="" class="gray ip_2" id="tab_vmImageInfo" readonly />
+							<input type="hidden" name="tab_vmImageConnectionName" id="tab_vmImageConnectionName"/>
 						</li>
 					</ul>
-					<div class="dataTable status_list">
-						<!-- <input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly /> -->
-						
+					<div class="dataTable status_list">						
 						<table cellpadding="0" cellspacing="0" summary="" id="es_imageList" style="display:none;">
 							<colgroup>
-								<col width="50px">
 								<col width="16%">
 								<col width="14%">
 								<col width="15%">
@@ -39,7 +37,6 @@
 							</colgroup>
 							<thead>
 								<tr>
-									<th>&nbsp</td>
 									<th>Image Name</th>
 									<th>Connection Name</th>
 									<th>CspImageId</th>
@@ -58,14 +55,10 @@
 
 								{{range $vmInageIndex, $vmImageItem := .VMImageList}}	
 								
-
-								<tr onclick="setValueToFormObj('es_imageList', 'vmImage_chk', '{{$vmInageIndex}}', '{{$vmImageItem.ID}}', 'e_imageId');">
-									<td class="overlay hidden" data-th="">
-										<input type="checkbox" name="vmImage_chk" id="vmImageRaw_{{$vmInageIndex}}" title="" />
+								<tr onclick="setValueToFormObj('es_imageList', 'tab_vmImage', 'vmImage', '{{$vmInageIndex}}', 'e_imageId');">
 										<input type="hidden" id="vmImage_id_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}"/>
-										<input type="hidden" name="vmImageInfo" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>
-										<label for="td_ch1"></label> <span class="ov off"></span>
-									</td>
+										<input type="hidden" name="vmImage_connectionName" id="vmImage_connectionName_{{$vmInageIndex}}" value="{{$vmImageItem.ConnectionName}}"/>
+										<input type="hidden" name="vmImage_info" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>										
 									<td class="overlay hidden" data-th="Name">{{$vmImageItem.Name}}</td>
 									<td class="btn_mtd ovm td_left" data-th="ConnectionName">
 										{{$vmImageItem.ConnectionName}}
@@ -100,25 +93,24 @@
 							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly /> -->
 
 							<span class="sbox sbox_m">
-								<input type="text" name="es_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" title="" id="filter_spec" onkeydown="filterEnterToHidden(this.id, 'vmSpecInfo', 'e_specList');"/>
-								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_spec', 'vmSpecInfo', 'e_specList')"/>
+								<input type="text" name="es_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" id="filter_spec" onkeydown="filterEnterToHidden(this.id, 'vmSpec_info', 'es_specList');"/>
+								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_spec', 'vmSpec_info', 'es_specList')"/>
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
 							</span>
-							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly />
+							<input type="text" name="tab_vmSpecInfo" placeholder="" class="gray ip_2"  id="tab_vmSpecInfo" readonly />
+							<input type="hidden" name="tab_vmSpecConnectionName" id="tab_vmSpecConnectionName"/>
 						</li>
 					</ul>
 					
 					<div class="dataTable status_list" >
-							<table cellpadding="0" cellspacing="0" id="e_specList" style="display:none;">
+							<table cellpadding="0" cellspacing="0" id="es_specList" style="display:none;">
 								<colgroup>
-									<col width="50px">
 									<col width="30%">
 									<col width="30%">
 									<col width="30%">			
 								</colgroup>
 								<thead>
 									<tr>
-										<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 										<th>Spec Name</th>
 										<th>Connection Name</th>
 										<th>CSP Spec Name</th>
@@ -133,14 +125,11 @@
 									{{ end }}
 
 									{{range $vmSpecIndex, $vmSpecItem := .VMSpecList}}	
-									<tr onclick="setValueToFormObj('e_specList', 'vmSpec_chk', '{{$vmSpecIndex}}', '{{$vmSpecItem.ID}}', 'e_specId');">
-										<td class="overlay hidden" data-th="">
-											<input type="checkbox" name="vmSpec_chk" id="es_vmSpecRaw_{{$vmSpecIndex}}" title="" />
+									<tr onclick="setValueToFormObj('es_specList', 'tab_vmSpec', 'vmSpec', '{{$vmSpecIndex}}', 'e_specId');">
 											<input type="hidden" id="vmSpec_id_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
-											<input type="hidden" name="vmSpecInfo" id="vmSpecInfo{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}|{{$vmSpecItem.Name}}|{{$vmSpecItem.ConnectionName}}|{{$vmSpecItem.CspSpecName}}"/>
-											
-											<label for="td_ch1"></label> <span class="ov off"></span>
-										</td>
+											<input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_{{$vmSpecIndex}}" value="{{$vmSpecItem.ConnectionName}}"/>
+											<input type="hidden" name="vmSpec_info" id="vmSpec_info_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}|{{$vmSpecItem.Name}}|{{$vmSpecItem.ConnectionName}}|{{$vmSpecItem.CspSpecName}}"/>
+										
 										<td class="overlay hidden" data-th="Name">{{$vmSpecItem.Name}}</td>
 										<td class="btn_mtd ovm td_left" data-th="ConnectionName">
 											{{$vmSpecItem.ConnectionName}}
@@ -163,87 +152,4 @@
 		</div>
 	</div>
 	<!-- //OS/HW -->
-<script>
-	$(document).ready(function(){
-		$("input[name=es_specFilterKeyword]").keydown(function (key) {
-	
-			if(key.keyCode == 13){//키가 13이면 실행 (엔터는 13)
-				console.log(this.value);
-				selectBoxFilterByText('es_specId', this.value)
-			}
-	
-		});		
-
-
-		//table 스크롤바 제한
-		$(window).on("load resize",function(){
-			var vpwidth = $(window).width();
-			if (vpwidth > 768 && vpwidth < 1800) {
-				$(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-				$(".dataTable.scrollbar-inner").scrollbar();
-			} else {
-				$(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-			}
-		});
-	});
-
-
-	function hardwareSpecFilterByEnter(targetObjId, keyword){
-		console.log(event.KeyCode + " : " + keyword);
-		if( event.KeyCode == 13){
-			selectBoxFilterByText(targetObjId, keyword)
-		}
-	}
-
-	function hardwareSpecFilter(targetObjId, keywordObjId){
-		var keyword = $("#" + keywordObjId).val();
-		selectBoxFilterByText(targetObjId, keyword)
-	}
-
-
-	// hidden에 들어있는 값을 기준으로 filter
-	function filterEnterToHidden(keyworkObjId, filterColumnName, targetObjId){
-		if (window.event.keyCode == 13) {
-			filterToHidden(keyworkObjId, filterColumnName, targetObjId)
-        }
-	}
-	// vm image 를 filter. 입력한 단어를 전체에서 찾기
-	// hidden에 들어있는 값을 기준으로 filter
-	function filterToHidden(keyworkObjId, filterColumnName, targetObjId){
-		var keyword = $("#" + keyworkObjId).val();
-		if( keyword == ''){
-			commonAlert("검색할 단어를 입력하세요")
-		}
-
-		// hidden fild 의 Data 를 기준으로 filter.
-		// 해당 table의 column을 지정하여 filter하는데... hidden을 filterling하는 법 찾자
-		filterTableByHiddenColumn(targetObjId, filterColumnName, keyword)
-	}
-
-	// 대상 table, 선택한 tr의 index, set할 값, 대상 form의 obj 지정하여
-	// tr의 check시 해당 값이 obj에 저장
-	// check 해제하면 저장된 값 초기화
-	function setValueToFormObj(tableId, chkObjName, selectedIndex, setValue, targetObjId){
-		var headerTrSize = 1;
-		var chk = $('#' + tableId + ' tr').eq(selectedIndex + 1 ).children().find('input[type="checkbox"]').is(':checked');
-		
-		$('input[type="checkbox"][name="' + chkObjName + '"]').prop('checked',false);
-
-		if( chk ){			
-			$("#" + targetObjId).val(setValue);
-			console.log("chk=" + chk + ":" + $("#" + targetObjId).val())
-
-			$('input[type="checkbox"][name="' + chkObjName + '"]').prop('checked',false);//전체 체크해제
-			// $('input:checkbox[name="' + chkObjName + '"]').prop('checked',true);
-			$('#' + tableId + ' tr').eq(selectedIndex + 1 ).children().find('input[type="checkbox"]').prop('checked',true);
-		}else{
-			$("#" + targetObjId).val("");
-			console.log("chk=" + chk + ":" + $("#" + targetObjId).val())
-		}
-        
-	}
-
-
-	
-</script>	
 {{end}}
