@@ -11,7 +11,7 @@ import (
 	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 
 	service "github.com/cloud-barista/cb-webtool/src/service"
-	// util "github.com/cloud-barista/cb-webtool/src/util"
+	util "github.com/cloud-barista/cb-webtool/src/util"
 
 	echotemplate "github.com/foolin/echo-template"
 	// echosession "github.com/go-session/echo-session"
@@ -81,8 +81,27 @@ func McksMngForm(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcksmng/regform")
 	}
 
-	//totalMcksStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
 	totalMcksStatusCountMap := service.GetMcksStatusCountMap(clusterList)
+	
+	nodeKindCountMapByMcks := make(map[string]map[string]int)   // MCKS UID 별 KindCountMap
+	////////////// return value 에 set
+	mcksSimpleInfoList := []ladybug.ClusterSimpleInfo{}	// 표에 뿌려줄 정보
+	for _, mcksInfo := range clusterList {
+		mcksSimpleInfo := ladybug.ClusterSimpleInfo{}
+		mcksSimpleInfo.UID = mcksInfo.UID
+		mcksSimpleInfo.Status = mcksInfo.Status
+		mcksSimpleInfo.McisStatus = util.GetMcksStatus(mcksInfo.Status)
+		mcksSimpleInfo.Name = mcksInfo.Name
+
+		resultSimpleNodeList, resultSimpleNodeKindCountMap := service.GetSimpleNodeCountMap(mcksInfo)
+
+		mcksSimpleInfo.Nodes = resultSimpleNodeList
+		mcksSimpleInfo.TotalNodeCount = len(resultSimpleNodeList) // 해당 mcks의 모든 node 갯수
+		nodeKindCountMapByMcks[mcksInfo.UID] = resultSimpleNodeKindCountMap // MCIS 내 vm 상태별 cnt
+		// mcksSimpleInfo.NodeSimpleList = resultSimpleNodeList
+		
+		mcksSimpleInfoList = append(mcksSimpleInfoList, mcksSimpleInfo)
+	}
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
@@ -92,7 +111,11 @@ func McksMngForm(c echo.Context) error {
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
 
-			"ClusterList": clusterList,
+			// "ClusterList": clusterList,
+			"ClusterList": mcksSimpleInfoList,
+			"TotalMcksStatusCountMap": totalMcksStatusCountMap,
+			"NodeKindCountMapByMcks": nodeKindCountMapByMcks,
+			"TotalClusterCount": totalClusterCount,
 		})
 }
 

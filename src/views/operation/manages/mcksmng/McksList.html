@@ -71,65 +71,51 @@
 											<tr>
 												<th>Status</th>
 												<th>Name</th>
-												<th>Total Infras <span>Count of Total Nodes</span></th>
-												<th># of Servers <span>Count of Run / Stop / Terminate / etc</span></th>
-												<th>Description</th>
+												<th>Connection</span></th>
 												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 											</tr>
 										</thead>
-										<tbody id="mcisList">
+										<tbody id="mclsList">
 											<!-- //
 											// mcis.ID, mcis.status, mcis.name -->
-											{{ $length := len .McksList }} 
+											{{ $length := len .ClusterList }} 
 											{{ if eq $length 0 }}
 											<tr>
 												<td class="overlay hidden" data-th="" colspan="8">No Data</td>
 											</tr>
 											{{ end }}
-											{ {range $index, $item := .McksList} }
+											{{range $clusterIndex, $clusterItem := .ClusterList}}
 
-											<tr onclick="clickListOfMcks('{ {$item.ID} }', '{ {$index} }' );" id="node_info_tr_{ {$index} }" item="{ {$item.ID} }|{ {$index} }">
+											<tr onclick="clickListOfMcks('{{$clusterItem.UID}}', '{{$clusterIndex}}' );" id="node_info_tr_{{$clusterIndex}}" item="{{$clusterItem.UID}}|{{$clusterIndex}}">
+												<!-- { {$clusterItem} } -->
 												<td class="overlay hidden td_left" data-th="Status">
-													<img src="/assets/img/contents/icon_{ {$item.McksStatus} }.png" class="icon" alt=""/>{ {$item.Status} }<span class="ov off"></span>
+													<img src="/assets/img/contents/icon_{{$clusterItem.Status}}.png" class="icon" alt=""/>{{$clusterItem.Status}}<span class="ov off"></span>
 													
 												</td>
-												<td class="btn_mtd ovm" data-th="Name">{ {$item.Name} }<span class="ov"></span></td>
+												<td class="btn_mtd ovm" data-th="Name">{{$clusterItem.Name}}<span class="ov"></span></td>
 												
 												<td class="overlay hidden" data-th="Cloud Connection">
-													{ { $item.ConnectionConfigProviderNames} }
+													ClusterConfig: {{ $clusterItem.ClusterConfig}} <br>
+													CpLeader: {{ $clusterItem.CpLeader}} <br>
+													Kind: {{ $clusterItem.Kind}} <br>
+													Mcis: {{ $clusterItem.Mcis}} <br>
+													NetworkCni: {{ $clusterItem.NetworkCni}} <br>
 												</td>
-												{ { $vmStatusCountMap := $item.VmStatusCountMap} }
-												<td class="overlay hidden" data-th="Total Infras">{ {$vmStatusCountMap.TOTAL} }</td>
-												<td class="overlay hidden" data-th="# of Servers">
-													<span class="bar" ></span> <span title="running">{ {$vmStatusCountMap.running} }</span>
-													<span class="bar" >/</span> <span title="stopped">{ {$vmStatusCountMap.stopped} }</span>
-													<span class="bar" >/</span> <span title="terminated">{ {$vmStatusCountMap.terminated} }</span>
-													<span class="bar" >/</span> <span title="etc">{ {$vmStatusCountMap.etc} }</span>
-												</td>
-												<td class="overlay hidden" data-th="Description">{ {$item.Description} }</td>
+												
 												<td class="overlay hidden" data-th="">
-													<input type="checkbox" name="chk" value="{ {$item.ID} }" id="td_ch_{ {$index} }" title="" />
-													<label for="td_ch_{ {$index} }"></label>
+													<input type="checkbox" name="chk" value="{{$clusterItem.UID}}" id="td_ch_{{$clusterIndex}}" title="" />
+													<label for="td_ch_{{$clusterIndex}}"></label>
 
 													<!--MCKS 기본정보 hidden : 클릭시 보여주기 위해-->
-													<input type="hidden" name="mcisID" value="{ {$item.ID} }" id="mcisID{ {$index} }"/>
-													<input type="hidden" name="mcisName" value="{ {$item.Name} }" id="mcisName{ {$index} }"/>
-													<input type="hidden" name="mcisStatus" value="{ {$item.McksStatus} }" id="mcisStatus{ {$index} }"/>
-													<input type="hidden" name="mcisDescription" value="{ {$item.Description} }" id="mcisDescription{ {$index} }"/>
-													<input type="hidden" name="mcisCloudConnections" value="{ {$item.ConnectionConfigProviderNames} }" id="mcisCloudConnections{ {$index} }"/>
-													<input type="hidden" name="mcisVmTotalCount" value="{ {$vmStatusCountMap.TOTAL} }" id="mcisVmTotalCount{ {$index} }"/>
+													<input type="hidden" name="mcksUID" value="{{$clusterItem.UID}}" id="mcksUID{{$clusterIndex}}"/>
+													<input type="hidden" name="mcksName" value="{{$clusterItem.Name}}" id="mcksName{{$clusterIndex}}"/>
+													<input type="hidden" name="mcksStatus" value="{{$clusterItem.Status}}" id="mcksStatus{{$clusterIndex}}"/>
+													<input type="hidden" name="mcksConfig" value="{{$clusterItem.ClusterConfig}}" id="mcksConfig{{$clusterIndex}}"/>
 													
-													<!-- MCKS의 VM들 이름, ID, 상태-->
-													{ {range $vmStatusIndex, $vmStatusObj := $item.VmSimpleList} }													
-													<input type="hidden" name="vmID" id="mcisVmID_{ { $index} }_{ { $vmStatusObj.VmIndex} }" value="{ {$vmStatusObj.VmID} }" />
-													<input type="hidden" name="vmName" id="mcisVmName_{ { $index} }_{ { $vmStatusObj.VmIndex} }" value="{ {$vmStatusObj.VmName} }" />
-													<input type="hidden" name="vmStatus" id="mcisVmStatus_{ { $index} }_{ { $vmStatusObj.VmIndex} }" value="{ {$vmStatusObj.VmStatus} }" />
-													{ { end } }
-
 												</td>
 										
 											</tr>
-											{ { end } }
+											{{ end }}
 										</tbody>
 									</table>
 								</div>

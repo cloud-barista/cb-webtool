@@ -60,7 +60,9 @@ func GetClusterList(nameSpaceID string) ([]ladybug.ClusterInfo, model.WebStatus)
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-
+	// 원래는 items 와 kind 가 들어오는데
+	// kind에는 clusterlist 라는 것만 있고 실제로는 items 에 cluster 정보들이 있음.
+	// 그래서 굳이 kind까지 처리하지 않고 item만 return
 	clusterList := map[string][]ladybug.ClusterInfo{}
 	json.NewDecoder(respBody).Decode(&clusterList)
 	fmt.Println(clusterList["items"])
@@ -184,7 +186,7 @@ func GetMcksStatusCountMap(clusterList []ladybug.ClusterInfo) map[string]int {
 	mcksStatusTerminated := 0
 
 	for _, clusterInfo := range clusterList {
-		mcksStatus := util.GetMcksStatus(mcksInfo.Status)
+		mcksStatus := util.GetMcksStatus(clusterInfo.Status)
 		if mcksStatus == util.MCKS_STATUS_RUNNING {
 			mcksStatusRunning++
 		} else if mcksStatus == util.MCKS_STATUS_TERMINATED {
@@ -203,6 +205,30 @@ func GetMcksStatusCountMap(clusterList []ladybug.ClusterInfo) map[string]int {
 	return mcksStatusMap
 }
 
+func GetSimpleNodeCountMap(cluster ladybug.ClusterInfo) ([]ladybug.NodeSimpleInfo, map[string]int){
+	var nodeSimpleList []ladybug.NodeSimpleInfo
+	nodeKindCountMap := map[string]int{}
+	for nodeIndex, nodeInfo := range cluster.Nodes {
+		nodeSimpleObj := ladybug.NodeSimpleInfo{
+			NodeIndex:   nodeIndex,
+			NodeUID:      nodeInfo.UID,
+			NodeName:    nodeInfo.Name,
+			NodeKind:  nodeInfo.Kind,
+			NodeCsp: nodeInfo.Csp,
+			NodePublicIp: nodeInfo.PublicIp,
+			NodeRole: nodeInfo.Role,
+			NodeSpec: nodeInfo.Spec,
+		}
+		nodeSimpleList = append(nodeSimpleList, nodeSimpleObj)
+
+		_, exists := nodeKindCountMap[nodeInfo.Kind]
+		if !exists {
+			nodeKindCountMap[nodeInfo.Kind] = 0
+		}
+		nodeKindCountMap[nodeInfo.Kind] += 1
+	}
+	return nodeSimpleList, nodeKindCountMap
+}
 ////////
 
 // Node 목록 조회
