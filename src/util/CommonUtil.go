@@ -6,7 +6,7 @@ import (
 	// "fmt"
 	// "io"
 	// "io/ioutil"
-	// "log"
+	"log"
 	// "net/http"
 	"net/url"
 	// "os"
@@ -173,7 +173,7 @@ func GetVmConnectionName(vmConnectionName string) string {
 // // vmStatusTotalMap[mcisInfo.ID] = vmStatusMap
 ///////////
 
-func StructToMap(i interface{}) (values url.Values) {
+func StructToUrlValues(i interface{}) (values url.Values) {
 	values = url.Values{}
 	iVal := reflect.ValueOf(i).Elem()
 	typ := iVal.Type()
@@ -201,3 +201,96 @@ func StructToMap(i interface{}) (values url.Values) {
 	}
 	return
 }
+
+// func Struct2Map(obj interface{}) map[string]interface{} {
+// 	t := reflect.TypeOf(obj)
+// 	v := reflect.ValueOf(obj)
+
+// 	var data = make(map[string]interface{})
+// 	for i := 0; i < t.NumField(); i++ {
+// 		data[t.Field(i).Name] = v.Field(i).Interface()
+// 	}
+// 	return data
+// }
+
+func Struct2Map(obj interface{}) map[string]interface{} {
+	var data = make(map[string]interface{})
+
+	target := reflect.ValueOf(obj)
+	elements := target.Elem()
+
+	log.Printf("Type: %s\n", target.Type()) // 구조체 타입명
+
+	for i := 0; i < elements.NumField(); i++ {
+		mValue := elements.Field(i)
+		mType := elements.Type().Field(i)
+		tag := mType.Tag
+
+		log.Printf("%10s %10s ==> %10v, json: %10s\n",
+			mType.Name,         // 이름
+			mType.Type,         // 타입
+			mValue.Interface(), // 값
+			tag.Get("json"))    // json 태그
+
+		data[mType.Name] = mValue.Interface()
+	}
+	return data
+}
+
+func Struct2MapString(obj interface{}) map[string]string {
+	var data = make(map[string]string)
+
+	target := reflect.ValueOf(obj)
+	target = reflect.Indirect(target)
+	elements := target.Elem()
+
+	var stringType = reflect.TypeOf("")
+	log.Printf("Type: %s\n", target.Type()) // 구조체 타입명
+
+	for i := 0; i < elements.NumField(); i++ {
+		mValue := elements.Field(i)
+		mType := elements.Type().Field(i)
+		tag := mType.Tag
+
+		log.Printf("%10s %10s ==> %10v, json: %10s\n",
+			mType.Name,         // 이름
+			mType.Type,         // 타입
+			mValue.Interface(), // 값
+			tag.Get("json"))    // json 태그
+
+		log.Println("vv ", mValue.Convert(stringType))
+		// data[mType.Name] = string(mValue.Interface().(int))
+
+		data[mType.Name] = "1"
+	}
+	return data
+}
+
+// func StructToMap(i interface{}) (values url.Values) {
+// 	values = map[string]
+// 	iVal := reflect.ValueOf(i).Elem()
+// 	typ := iVal.Type()
+// 	for i := 0; i < iVal.NumField(); i++ {
+// 		f := iVal.Field(i)
+// 		// You ca use tags here...
+// 		// tag := typ.Field(i).Tag.Get("tagname")
+// 		// Convert each type into a string for the url.Values string map
+// 		var v string
+// 		switch f.Interface().(type) {
+// 		case int, int8, int16, int32, int64:
+// 			v = strconv.FormatInt(f.Int(), 10)
+// 		case uint, uint8, uint16, uint32, uint64:
+// 			v = strconv.FormatUint(f.Uint(), 10)
+// 		case float32:
+// 			v = strconv.FormatFloat(f.Float(), 'f', 4, 32)
+// 		case float64:
+// 			v = strconv.FormatFloat(f.Float(), 'f', 4, 64)
+// 		case []byte:
+// 			v = string(f.Bytes())
+// 		case string:
+// 			v = f.String()
+// 		}
+// 		values.Set(typ.Field(i).Name, v)
+// 	}
+// 	return
+// }

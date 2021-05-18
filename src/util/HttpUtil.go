@@ -7,8 +7,9 @@ import (
 	// "io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
-	"net/url"
+	// "net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -177,7 +178,8 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 
 // Put/Post 등을 formData 형태로 호출할 때
 // https://minwook-shin.github.io/go-decode-encode-url-values-form/ 참조할 것
-func CommonHttpFormData(targetUrl string, formParam url.Values, httpMethod string) (*http.Response, error) {
+//func CommonHttpFormData(targetUrl string, formParam url.Values, httpMethod string) (*http.Response, error) {
+func CommonHttpFormData(targetUrl string, formParam map[string]string, httpMethod string) (*http.Response, error) {
 	//m := structs.Map(s)
 	authInfo := AuthenticationHandler()
 
@@ -204,19 +206,36 @@ func CommonHttpFormData(targetUrl string, formParam url.Values, httpMethod strin
 	// formParam2.Set("MaxHostCount", "3")
 	// formParam2.Set("ScheduleInterval", "4")
 	// log.Println(formParam2)
-	client := &http.Client{}
+	// client := &http.Client{}
 
 	// response, err := client.PostForm(targetUrl, formParam2)  -> method not allowed
 
 	// req, err1 := http.NewRequest(httpMethod, targetUrl, strings.NewReader(formParam2.Encode()))
 
-	req, err1 := http.NewRequest(httpMethod, targetUrl, strings.NewReader(formParam.Encode()))
-	if err1 != nil {
-		panic(err1)
+	payload := &bytes.Buffer{}
+	writer := multipart.NewWriter(payload)
+	for key, val := range formParam {
+
+		_ = writer.WriteField(key, val)
 	}
+	err := writer.Close()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	client := &http.Client{}
+	req, _ := http.NewRequest(httpMethod, targetUrl, payload)
+
+	// req, err1 := http.NewRequest(httpMethod, targetUrl, strings.NewReader(formParam.Encode()))
+	// if err1 != nil {
+	// 	panic(err1)
+	// }
+
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 	req.Header.Add("Authorization", authInfo)
-	//req.Header.Set("Content-Type", "multipart/form-data; charset=utf-8") // 사용에 주의할 것.
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	// //req.Header.Set("Content-Type", "multipart/form-data; charset=utf-8") // 사용에 주의할 것.
+	// req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	resp, err := client.Do(req)
 	return resp, err
 }

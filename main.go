@@ -495,10 +495,12 @@ func main() {
 	mcisRegGroup.GET("/:mcisID/:mcisName", controller.McisVmRegForm) // MCIS의 VM생성
 
 	mcksMngGroup := e.Group("/operation/manages/mcksmng/mngform", mcksMngTemplate)
-	mcksMngGroup.GET("", controller.McksMngForm) // MCKS 생성 + Node생성
+	mcksMngGroup.GET("", controller.McksMngForm) // MCKS 생성 + Node생성 form
 
 	mcksRegGroup := e.Group("/operation/manages/mcksmng/regform", mcksRegTemplate)
 	mcksRegGroup.GET("", controller.McksRegForm) // Node생성
+
+	e.POST("/operation/manages/mcismng/:mcisID/vm/reg/proc", controller.VmRegProc)
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
