@@ -28,9 +28,326 @@
 				<div class="contbox">
 					
 					<div class="titlebox">
-						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Policy / <strong>Monitoring</strong></div>
-						<div class="location">Home  <span>></span>  Operation  <span>></span>  Policy  <span>></span>  <strong>Monitoring</strong></div>
+						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Policy / <strong>Threshold</strong></div>
+						<div class="location">Home  <span>></span>  Operation  <span>></span>  Policy  <span>></span>  <strong>Threshold</strong></div>
 					</div>
+
+					<!-- list -->
+					<div class="dashboard dashboard_cont">
+						
+						<div class="d_box box_m box_w100">
+							<div class="titbox">
+								<div class="tit initial"><strong>List of Threshold</strong></div>
+								<div class="top_info">
+									<ul>
+										<li>
+											<a href="javascript:void(0);">Filter</a>
+											<div class="infobox">
+												<div class="box">
+													<ul>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('AlertPolicyName', 'monitoringAlertPolicyList')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('AlertPolicyMeasurement', 'monitoringAlertPolicyList')">Measurement</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('AlertPolicyTargetType', 'monitoringAlertPolicyList')">Target Type</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('AlertPolicyEventType', 'monitoringAlertPolicyList')">Alert Event Type</a></li>
+													</ul>
+												</div>
+											</div>
+										</li>
+										<li>
+											<a href="javascript:void(0);">Sort</a>
+											<div class="infobox">
+												<div class="box">
+													<ul>
+														<li><a href="javascript:void(0);" onclick="tableSort('monitoringAlertPolicyList', 'Name')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('monitoringAlertPolicyList', 'Measurement')">Measurement</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('monitoringAlertPolicyList', 'Target Type')">Target Type</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('monitoringAlertPolicyList', 'Alert Event Type')">Alert Event Type</a></li>
+
+														<!-- <li><a href="javascript:void(0);">Date</a></li> -->
+													</ul>
+												</div>
+											</div>
+										</li>
+										<li>
+											<a href="javascript:void(0);">Action</a>
+											<div class="infobox">
+												<div class="box">
+													<ul>
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox" onClick="commonConfirmOpen('AddMonitoringAlertPolicy')">Add</a></li>
+														<!-- <li><a href="javascript:void(0);">Change</a></li> -->
+														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist" onClick="commonConfirmOpen('DeleteMonitoringAlertPolicy')">Delete</a></li>
+													</ul>
+												</div>
+											</div>
+										</li>
+										<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt=""/></a></li>
+									</ul>
+								</div>
+							</div>
+	
+					
+							<div class="ds_cont">
+								
+								<div class="dataTable status_list" id="monitoringAlertListTable">
+									<table cellpadding="0" cellspacing="0" border="1" summary="" id="monitoringAlertPolicyList">
+										<colgroup>
+											<col width="50px"><col width="14%"><col width="16%"><col width="15%"><col width="15%"><col width="15%"><col width=""><col width="60px">
+										</colgroup>
+										<thead>
+											<tr>
+												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+                                                <th>Name</th>
+                                                <th>Measurement</th>
+                                                <th>Target Type</th>
+                                                <th>Target ID</th>
+                                                <th>Alert Event Type</th>
+                                                <th>Alert Event Name</th>
+                                                <th></th>
+											</tr>
+										</thead>
+										<tbody id="alertList">
+											{{ $length := len .MonitoringAlertPolicyList }} 
+											{{ if eq $length 0 }}
+											<tr>
+												<td class="overlay hidden" data-th="" colspan="8">No Data</td>
+											</tr>
+											{{ end }}
+
+											{{range $index, $item := .MonitoringAlertPolicyList}}	
+											<tr onclick="showMonitoringAlertPolicyInfo('alertpolicy_info_{{$index}}');">
+												<td class="overlay hidden" data-th="">
+													<input type="hidden" id="alertpolicy_info_{{$index}}" value="{{$item.Name}}"/>
+													<input type="checkbox" name="alertpolicy_chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
+													<label for="td_ch1"></label> <span class="ov off"></span>
+												</td>
+												<td class="overlay hidden" data-th="Name">{{$item.Name}}</td>
+												<td class="overlay hidden" data-th="Measurement">{{$item.Measurement}}</td>
+												<td class="overlay hidden" data-th="TargetType">{{$item.TargetType}}</td>
+												<td class="overlay hidden" data-th="TargetId">{{$item.TargetID}}</td>
+												<td class="overlay hidden" data-th="AlertEventType">{{$item.AlertEventType}}</td>
+												<td class="overlay hidden" data-th="AlertEventName">{{$item.AlertEventName}}</td>
+												<td class="overlay hidden" data-th="">
+													<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
+												</td>
+											</tr>											
+											{{end}}
+											
+										</tbody>
+									</table>
+								</div>
+							</div>
+							
+						</div>
+						
+					</div>
+					<!-- //list -->
+
+					<!-- Modify Monitoring Alert -->
+					<div class="dashboard dashboard_cont server_status" id="monitoringAlertInfoBox">
+						
+						<div class="d_box box_m box_w100">
+							<div class="titbox_n">
+								<div class="tit initial"><strong>Threshold Info</strong> [ <span class="stxt" id="thresholdName"></span> ] </div>
+							</div>
+							
+							<div class="ds_cont">
+								<div class="register_box">
+									
+									<div class="top_ipbox">
+										<div class="ipbox ipbox1">
+											<ul>
+												<li>
+													<label>VPC Name</label>
+													<span class="sbox">
+														<input type="text" id="dtlVpcName" name="dtlVpcName" value="" placeholder="" class="gray" title="" disabled />
+													</span>
+												</li>
+												<li>
+													<label>Description</label>
+													<span class="sbox">
+														<textarea id="dtlDescription" name="dtlDescription" cols="" rows="" placeholder="" class="gray" title="" disabled ></textarea>
+													</span>
+												</li>
+											</ul>
+										</div>
+										<div class="ipbox ipbox2">
+											<ul>
+												<li>
+													<label>Name</label>
+													<input type="text" id="dtlMonitoringAlertName" name="dtlMonitoringAlertName" value="" placeholder="" class="gray" title="" readonly />
+													<!-- <select class="selectbox w1 ">
+														<option value="1">Selected Provider</option>
+														<option value="2" disabled>Selected disabled</option>
+													</select>
+													<select class="selectbox w2">
+														<option value="1">Selected Region</option>
+													</select> -->
+
+												</li>
+												<li>
+													<label>Measurement</label>
+													<input type="text" id="dtlMonitoringAlertMeasure" name="dtlMonitoringAlertMeasure" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<li>
+													<label>Target Type</label>
+													<input type="text" id="dtlMonitoringAlertTargetType" name="dtlMonitoringAlertTargetType" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<li>
+													<label>Target ID</label>
+													<input type="text" id="dtlMonitoringAlertTargetID" name="dtlMonitoringAlertTargetID" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<li>
+													<label>Event Duration</label>
+													<input type="text" id="dtlMonitoringAlertEventDuration" name="dtlMonitoringAlertEventDuration" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<li>
+													<label>Metric</label>
+													<input type="text" id="dtlMonitoringAlertMetric" name="dtlMonitoringAlertMetric" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<li>
+													<label>Alert Math Expression</label>
+													<input type="text" id="dtlMonitoringAlertAlertMathExpression" name="dtlMonitoringAlertAlertMathExpression" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<li>
+													<label>Alert Threshold</label>
+													<input type="text" id="dtlMonitoringAlertAlertThreshold" name="dtlregMonitoringAlertAlertThreshold" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<li>
+													<label>Warn Event Count</label>
+													<input type="text" id="dtlMonitoringAlertWarnEventCount" name="dtlMonitoringAlertWarnEventCount" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<li>
+													<label>Critic Event Count</label>
+													<input type="text" id="dtlMonitoringAlertCriticEventCount" name="dtlMonitoringAlertCriticEventCount" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+												<!--
+												<li>
+													<label>Subnet</label>
+													<span class="sbox">
+														<input type="text" id="dtlSubnet" name="dtlSubnet" value="" placeholder="" class="gray" title="" readonly />
+														<button name="" value="" class="btn_edit btn_register">Edit</button> 
+													</span>
+												</li>
+												-->
+											</ul>
+										</div>
+									</div>
+									<!-- TODO : tumblebug에 수정 기능 없음. 수정기능 생기면 처리
+									<div class="btnbox">
+										<div class="btn_center">
+											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
+											<button name="" value="" class="btn_co btn_cr_g w135 btn_modify">Modify</button> 
+										</div>
+									</div>
+								 	-->
+								</div>
+							</div>
+							
+						</div>
+						
+					</div>
+					<!-- Modify Monitoring Alert -->
+					
+					<!-- Register Monitoring Alert -->
+					<div class="dashboard dashboard_cont register_cont" id="CreateBox">
+						
+						<div class="d_box box_m box_w100">
+							<div class="titbox_n">
+								<div class="tit initial cg"><strong>Create Threshold</strong></div>
+							</div>
+							
+							<div class="ds_cont">
+								<div class="register_box reg">
+									
+									<div class="top_ipbox">
+										<!--
+										<div class="ipbox ipbox1">
+											<ul>
+												<li class="reg_1">
+										            <input type="hidden" id="regRegion" name="" value="" class="pline" title=""/>
+                                                    <input type="hidden" id="regCredential" name="" value="" class="pline" title=""/>
+                                                    <input type="hidden" id="regDriver" name="" value="" class="pline" title=""/>
+                                                </li>
+											</ul>
+										</div>
+										-->
+										<div class="ipbox ipbox1">
+											<ul>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Name</label>
+													<input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertName"/>
+												</li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Measurement</label>
+                                                    <input type="text" name="" value="" placeholder="cpu | mem | disk" class="pline" title="" id="regMonitoringAlertMeasure"/>
+                                                </li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Target Type</label>
+                                                    <input type="text" name="" value="" placeholder="NS | MCIS | VM" class="pline" title="" id="regMonitoringAlertTargetType"/>
+                                                </li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Target ID</label>
+                                                    <input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertTargetID"/>
+                                                </li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Event Duration</label>
+                                                    <input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertEventDuration"/>
+                                                </li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Metric</label>
+                                                    <input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertMetric"/>
+                                                </li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Alert Math Expression</label>
+                                                    <input type="text" name="" value="" placeholder="equal | greater | equalgreater | less | equalless" class="pline" title="" id="regMonitoringAlertAlertMathExpression"/>
+                                                </li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Alert Threshold</label>
+                                                    <input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertAlertThreshold"/>
+                                                </li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Warn Event Count</label>
+                                                    <input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertWarnEventCount"/>
+                                                </li>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Critic Event Count</label>
+                                                    <input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertCriticEventCount"/>
+                                                </li>
+											</ul>
+										</div>
+									</div>
+									
+									<div class="top_ipbox">
+										<div class="ipbox ipbox1 ipbox5">
+											<ul>
+                                                <li class="reg_1 reg_1n"></li>
+											</ul>
+										</div>
+										<div class="ipbox ipbox2 ipbox6">
+											<ul>
+												<!-- <li class="reg_3">
+													<label><span class="ch">*</span>Cloud Connection Name</label>
+                                                    <input type="text" name="" value="" placeholder="input Cloud Connection Name" class="pline" title="" id="reg_ConfigName"/>
+												</li> -->
+											</ul>
+										</div>
+									</div>
+									
+									<div class="btnbox">
+										<div class="btn_center">
+											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
+											<button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="createMonitoringAlertPolicy()">Ok</button> 
+										</div>
+									</div>
+								
+								</div>
+							</div>
+							
+						</div>
+						
+					</div>
+					<!-- //Register Cloud Connection -->
+                    
 
                 </div>
 				<!-- //contents -->
