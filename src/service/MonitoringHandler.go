@@ -6,7 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-
+	"strconv"
 	// "os"
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	// "github.com/cloud-barista/cb-webtool/src/model/spider"
@@ -254,7 +254,7 @@ func GetMonitoringConfig() (*dragonfly.MonitoringConfig, model.WebStatus) {
 }
 
 // 모니터링 정책 설정
-func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfigReg) (*dragonfly.MonitoringConfig, model.WebStatus) {
+func PutMonigoringConfig(monitoringConfigReg *dragonfly.MonitoringConfigReg) (*dragonfly.MonitoringConfig, model.WebStatus) {
 	var originalUrl = "/config"
 	//{{ip}}:{{port}}/dragonfly/config
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -262,12 +262,18 @@ func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfigReg) (*drag
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/config"
 
-	fmt.Println("UpdateMonigoringConfig : ")
+	fmt.Println("Update MonigoringConfigReg : ", url)
 
 	// pbytes, _ := json.Marshal(monitoringConfig)
 	// fmt.Println(string(pbytes))
-	fmt.Println(monitoringConfig)
-	urlValues := util.StructToMap(monitoringConfig)
+	fmt.Println(monitoringConfigReg)
+	//urlValues := util.Struct2MapString(monitoringConfigReg)
+	urlValues := map[string]string{}
+	urlValues["agent_interval"] = strconv.Itoa(monitoringConfigReg.AgentInterval)
+	urlValues["collector_interval"] = strconv.Itoa(monitoringConfigReg.CollectorInterval)
+	urlValues["max_host_count"] = strconv.Itoa(monitoringConfigReg.MaxHostCount)
+	// urlValues := util.Struct2MapString(monitoringConfigReg)  : TODO : struct -> map으로 변환하도록
+	//urlValues := map[string]int{}
 	fmt.Println(urlValues)
 	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
 	// resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
