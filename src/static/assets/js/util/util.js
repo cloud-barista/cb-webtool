@@ -568,7 +568,7 @@ function getConnectionListForSelectbox(provider, targetSelectBoxID){
         if(count == 0){
             commonAlert("해당 Provider에 등록된 Connection 정보가 없습니다.")            
         }
-        
+        console.log("targetSelectBoxID = " + targetSelectBoxID)
         $("#" + targetSelectBoxID).empty();
         $("#" + targetSelectBoxID).append(html);
 
