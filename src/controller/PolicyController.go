@@ -201,7 +201,7 @@ func MonitoringAlertPolicyMngForm(c echo.Context) error {
 // Monitoring Threshold 목록 조회
 func GetMonitoringAlertPolicyList(c echo.Context) error {
 	fmt.Println("GetMonitoringAlertPolicyList ************ : ")
-	log.Println("GetMonitoringAlertPolicyList : ")
+
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -226,9 +226,37 @@ func GetMonitoringAlertPolicyList(c echo.Context) error {
 	})
 }
 
+func GetMonitoringAlertPolicyData(c echo.Context) error {
+	fmt.Println("GetMonitoringAlertPolicyData ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	taskName := c.Param("alertName")
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	monitoringAlertPolicyInfo, respStatus := service.GetMonitoringAlertData(taskName)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":                   "success",
+		"status":                    respStatus.StatusCode,
+		"DefaultNameSpaceID":        defaultNameSpaceID,
+		"MonitoringAlertPolicyInfo": monitoringAlertPolicyInfo,
+	})
+}
+
 // Threshold 등록 처리
-func ThresholdPolicyRegProc(c echo.Context) error {
-	log.Println("MonitoringThresholdRegProc : ")
+func MonitoringAlertPolicyRegProc(c echo.Context) error {
+	log.Println("MonitoringAlertPolicyRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -244,10 +272,31 @@ func ThresholdPolicyRegProc(c echo.Context) error {
 	// 	})
 	// }
 
+	monitoringAlertRegInfo := &dragonfly.VmMonitoringAlertInfo{}
+	if err := c.Bind(monitoringAlertRegInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(monitoringAlertRegInfo)
+
+	resultMonitoringAlertInfo, respStatus := service.RegMonitoringAlert(monitoringAlertRegInfo)
+	log.Println("MonitoringAlertPolicyReg service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		// "status":  respStatus.StatusCode,
+		"message":          "success",
+		"status":           respStatus.StatusCode,
+		"MonitoringConfig": resultMonitoringAlertInfo,
 	})
+
 }
 
 //

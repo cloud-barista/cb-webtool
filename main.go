@@ -444,6 +444,8 @@ func main() {
 	policyThresholdGroup := e.Group("/operation/policies/monitoringalertpolicy/mngform", policythresholdTemplate)
 	policyThresholdGroup.GET("", controller.MonitoringAlertPolicyMngForm)
 	e.GET("/operation/policies/monitoringalertpolicy/list", controller.GetMonitoringAlertPolicyList)
+	e.GET("/operation/policies/monitoringalertpolicy/:alertName", controller.GetMonitoringAlertPolicyData)
+	e.POST("/operation/policies/monitoringalertpolicy/reg/proc", controller.MonitoringAlertPolicyRegProc)
 
 	policyPlacementGroup := e.Group("/operation/policies/placementpolicy/mngform", policyPlacementTemplate)
 	policyPlacementGroup.GET("", controller.PlacementPolicyMngForm)

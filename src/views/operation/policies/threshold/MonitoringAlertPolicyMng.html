@@ -114,13 +114,13 @@
 											{{ end }}
 
 											{{range $index, $item := .MonitoringAlertPolicyList}}	
-											<tr onclick="showMonitoringAlertPolicyInfo('alertpolicy_info_{{$index}}');">
+											<tr onclick="showMonitoringAlertPolicyInfo('{{$item.AlertName}}');">
 												<td class="overlay hidden" data-th="">
-													<input type="hidden" id="alertpolicy_info_{{$index}}" value="{{$item.Name}}"/>
-													<input type="checkbox" name="alertpolicy_chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
+													<input type="hidden" id="alertpolicy_info_{{$index}}" value="{{$item.AlertName}}"/>
+													<input type="checkbox" name="alertpolicy_chk" value="{{$item.AlertName}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span>
 												</td>
-												<td class="overlay hidden" data-th="Name">{{$item.Name}}</td>
+												<td class="overlay hidden" data-th="Name">{{$item.AlertName}}</td>
 												<td class="overlay hidden" data-th="Measurement">{{$item.Measurement}}</td>
 												<td class="overlay hidden" data-th="TargetType">{{$item.TargetType}}</td>
 												<td class="overlay hidden" data-th="TargetId">{{$item.TargetID}}</td>
@@ -154,23 +154,7 @@
 								<div class="register_box">
 									
 									<div class="top_ipbox">
-										<div class="ipbox ipbox1">
-											<ul>
-												<li>
-													<label>VPC Name</label>
-													<span class="sbox">
-														<input type="text" id="dtlVpcName" name="dtlVpcName" value="" placeholder="" class="gray" title="" disabled />
-													</span>
-												</li>
-												<li>
-													<label>Description</label>
-													<span class="sbox">
-														<textarea id="dtlDescription" name="dtlDescription" cols="" rows="" placeholder="" class="gray" title="" disabled ></textarea>
-													</span>
-												</li>
-											</ul>
-										</div>
-										<div class="ipbox ipbox2">
+										<div class="ipbox ipbox1 ipbox2">
 											<ul>
 												<li>
 													<label>Name</label>

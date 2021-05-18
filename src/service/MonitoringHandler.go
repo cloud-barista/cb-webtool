@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+
+	// "io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
+
 	// "os"
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	// "github.com/cloud-barista/cb-webtool/src/model/spider"
@@ -429,20 +432,28 @@ func GetMonitoringAlertList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatu
 
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/tasks"
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, _ := util.CommonHttp(url, nil, http.MethodGet)
 
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	// vmMonitoringAlertInfoList := dragonfly.VmMonitoringAlertInfo{}
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return vmMonitoringAlertInfoList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	vmMonitoringAlertInfoList := map[string][]dragonfly.VmMonitoringAlertInfo{}
+	vmMonitoringAlertInfoList := []dragonfly.VmMonitoringAlertInfo{}
 	json.NewDecoder(respBody).Decode(&vmMonitoringAlertInfoList)
 
-	return vmMonitoringAlertInfoList["mcis"], model.WebStatus{StatusCode: respStatus}
+	// robots, _ := ioutil.ReadAll(resp.Body)
+	// log.Println(fmt.Print(string(robots)))
+
+	// json.NewDecoder(respBody).Decode(&vmMonitoringAlertInfoList)
+	// fmt.Println(vmMonitoringAlertInfoList)
+
+	return vmMonitoringAlertInfoList, model.WebStatus{StatusCode: respStatus}
 }
 
 // 알람  조회
