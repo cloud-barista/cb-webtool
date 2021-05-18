@@ -102,7 +102,7 @@ func GetClusterData(nameSpaceID string, cluster string) (*ladybug.ClusterInfo, m
 }
 
 // Cluster 생성
-func RegCluster(nameSpaceID string, clusterReq *ladybug.ClusterReq) (*ladybug.ClusterInfo, model.WebStatus) {
+func RegCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*ladybug.ClusterInfo, model.WebStatus) {
 
 	var originalUrl = "/ns/{namespace}/clusters"
 
@@ -112,6 +112,7 @@ func RegCluster(nameSpaceID string, clusterReq *ladybug.ClusterReq) (*ladybug.Cl
 	url := util.LADYBUG + urlParam
 
 	pbytes, _ := json.Marshal(clusterReq)
+	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	returnClusterInfo := ladybug.ClusterInfo{}
@@ -174,6 +175,32 @@ func DelCluster(nameSpaceID string, cluster string) (*ladybug.StatusInfo, model.
 	fmt.Println(statusInfo)
 
 	return &statusInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// MCKS의 상태값 숫자로 표시
+func GetMcksStatusCountMap(clusterList []ladybug.ClusterInfo) map[string]int {
+	mcksStatusRunning := 0
+	mcksStatusStopped := 0
+	mcksStatusTerminated := 0
+
+	for _, clusterInfo := range clusterList {
+		mcksStatus := util.GetMcksStatus(mcksInfo.Status)
+		if mcksStatus == util.MCKS_STATUS_RUNNING {
+			mcksStatusRunning++
+		} else if mcksStatus == util.MCKS_STATUS_TERMINATED {
+			mcksStatusTerminated++
+		} else {
+			mcksStatusStopped++
+		}
+	}
+
+	mcksStatusMap := make(map[string]int)
+	mcksStatusMap["RUNNING"] = mcksStatusRunning
+	mcksStatusMap["STOPPED"] = mcksStatusStopped
+	mcksStatusMap["TERMINATED"] = mcksStatusTerminated
+	mcksStatusMap["TOTAL"] = mcksStatusRunning + mcksStatusStopped + mcksStatusTerminated
+
+	return mcksStatusMap
 }
 
 ////////
@@ -242,7 +269,7 @@ func GetNodeData(nameSpaceID string, cluster string, node string) (*ladybug.Node
 }
 
 // Node 생성
-func RegNode(nameSpaceID string, cluster string, nodeReq *ladybug.NodeReq) (*ladybug.NodeInfo, model.WebStatus) {
+func RegNode(nameSpaceID string, cluster string, nodeRegReq *ladybug.NodeRegReq) (*ladybug.NodeInfo, model.WebStatus) {
 
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes"
 
@@ -252,7 +279,7 @@ func RegNode(nameSpaceID string, cluster string, nodeReq *ladybug.NodeReq) (*lad
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.LADYBUG + urlParam
 
-	pbytes, _ := json.Marshal(nodeReq)
+	pbytes, _ := json.Marshal(nodeRegReq)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	returnNodeInfo := ladybug.NodeInfo{}

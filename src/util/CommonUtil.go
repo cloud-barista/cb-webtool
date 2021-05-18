@@ -51,6 +51,28 @@ func GetMcisStatus(mcisStatus string) string {
 	return returnStatus
 }
 
+func GetMcksStatus(mcisStatus string) string {
+	statusArr := strings.Split(mcisStatus, "-")
+	returnStatus := strings.ToLower(statusArr[0])
+
+	if returnStatus == MCKS_STATUS_RUNNING {
+		returnStatus = "running"
+	} else if returnStatus == MCKS_STATUS_INCLUDE {
+		returnStatus = "stop"
+	} else if returnStatus == MCKS_STATUS_SUSPENDED {
+		returnStatus = "stop"
+	} else if returnStatus == MCKS_STATUS_TERMINATED {
+		returnStatus = "terminate"
+	} else if returnStatus == MCKS_STATUS_PARTIAL {
+		returnStatus = "stop"
+	} else if returnStatus == MCKS_STATUS_ETC {
+		returnStatus = "stop"
+	} else {
+		returnStatus = "stop"
+	}
+	return returnStatus
+}
+
 // VM 상태를 UI에서 표현하는 방식으로 변경
 func GetVmStatus(vmStatus string) string {
 	returnVmStatus := strings.ToLower(vmStatus) // 소문자로 변환

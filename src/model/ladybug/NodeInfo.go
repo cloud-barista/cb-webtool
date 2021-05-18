@@ -3,6 +3,7 @@ package ladybug
 // ladybug
 type NodeInfo struct {
 	Credential string `json:"credential"`
+	Csp        string `json:"csp"`
 	Kind       string `json:"kind"`
 	Name       string `json:"name"`
 	PublicIp   string `json:"publicIp"`
