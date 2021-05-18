@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	// model "github.com/cloud-barista/cb-webtool/src/model"
+	"github.com/cloud-barista/cb-webtool/src/model/ladybug"
 	// "github.com/cloud-barista/cb-webtool/src/model/dragonfly"
 	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 
@@ -73,23 +73,16 @@ func McksMngForm(c echo.Context) error {
 	nsList, _ := service.GetNameSpaceList()
 	log.Println(" nsList  ", nsList)
 
+	// 모든 MCKS 조회
 	clusterList, _ := service.GetClusterList(defaultNameSpaceID)
 
 	totalClusterCount := len(clusterList)
 	if totalClusterCount == 0 {
 		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcksmng/regform")
 	}
-	// provider 별 연결정보 count(MCIS 무관)
-	// cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	// connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
-	// totalConnectionCount := len(cloudConnectionConfigInfoList)
 
-	// 모든 MCKS 조회
-	// mcksList, _ := service.GetMcksList(defaultNameSpaceID)
-	// log.Println(" mcisList  ", mcisList)
-
-	// store := echosession.FromContext(c)
-	// store.Set("MCKS_"+loginInfo.UserID, mcksList)
+	//totalMcksStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
+	totalMcksStatusCountMap := service.GetMcksStatusCountMap(clusterList)
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
@@ -101,4 +94,126 @@ func McksMngForm(c echo.Context) error {
 
 			"ClusterList": clusterList,
 		})
+}
+
+// Cluster 등록 처리
+func McksRegProc(c echo.Context) error {
+	log.Println("McksRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	log.Println("get info")
+	//&[]Person{}
+	clusterReq := &ladybug.ClusterRegReq{}
+	if err := c.Bind(clusterReq); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(clusterReq)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	clusterInfo, respStatus := service.RegCluster(defaultNameSpaceID, clusterReq)
+	log.Println("RegMcis service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":     "success",
+		"status":      respStatus.StatusCode,
+		"ClusterInfo": clusterInfo,
+	})
+}
+
+// Node 등록 form
+func McksNodeRegForm(c echo.Context) error {
+	fmt.Println("McksNodeRegForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	clusteruid := c.Param("clusteruid")
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	log.Println(" nsList  ", nsList)
+
+	// connectionconfigList 가져오기
+	cloudOsList, _ := service.GetCloudOSList()
+	log.Println(" cloudOsList  ", cloudOsList)
+
+	// regionList 가져오기
+	regionList, _ := service.GetRegionList()
+	log.Println(" regionList  ", regionList)
+
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
+	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
+
+	ndeList, _ := service.GetNodeList(defaultNameSpaceID, clusteruid)
+
+	return echotemplate.Render(c, http.StatusOK,
+		"operation/manages/mcksmng/McksCreate", // 파일명
+		map[string]interface{}{
+			"LoginInfo":          loginInfo,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"NameSpaceList":      nsList,
+			"CloudOSList":        cloudOsList,
+			"RegionList":         regionList,
+
+			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
+			"NodeList":                      ndeList,
+			"ClusterUid":                    clusteruid,
+		})
+}
+
+// Node 등록 처리
+func NodeRegProc(c echo.Context) error {
+	log.Println("NodeRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	clusteruid := c.Param("clusteruid")
+
+	nodeRegReq := &ladybug.NodeRegReq{}
+	if err := c.Bind(nodeRegReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(nodeRegReq)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	nodeInfo, respStatus := service.RegNode(defaultNameSpaceID, clusteruid, nodeRegReq)
+	log.Println("RegMcis service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":    "success",
+		"status":     respStatus.StatusCode,
+		"Clusteruid": clusteruid,
+		"NodeInfo":   nodeInfo,
+	})
 }
