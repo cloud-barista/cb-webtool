@@ -6,7 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strconv"
+	// "strconv"
 	// "os"
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	// "github.com/cloud-barista/cb-webtool/src/model/spider"
@@ -264,16 +264,13 @@ func PutMonigoringConfig(monitoringConfigReg *dragonfly.MonitoringConfigReg) (*d
 
 	fmt.Println("Update MonigoringConfigReg : ", url)
 
-	// pbytes, _ := json.Marshal(monitoringConfig)
-	// fmt.Println(string(pbytes))
 	fmt.Println(monitoringConfigReg)
-	//urlValues := util.Struct2MapString(monitoringConfigReg)
-	urlValues := map[string]string{}
-	urlValues["agent_interval"] = strconv.Itoa(monitoringConfigReg.AgentInterval)
-	urlValues["collector_interval"] = strconv.Itoa(monitoringConfigReg.CollectorInterval)
-	urlValues["max_host_count"] = strconv.Itoa(monitoringConfigReg.MaxHostCount)
-	// urlValues := util.Struct2MapString(monitoringConfigReg)  : TODO : struct -> map으로 변환하도록
-	//urlValues := map[string]int{}
+
+	urlValues, convertErr := util.StructToMapByJson(monitoringConfigReg)
+	if convertErr != nil {
+		log.Println(convertErr);
+	}
+	
 	fmt.Println(urlValues)
 	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
 	// resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
