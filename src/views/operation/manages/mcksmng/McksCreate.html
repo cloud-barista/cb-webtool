@@ -65,7 +65,7 @@
 														<ul>
 															<li>
 																<label>MCKS Name</label>
-																<input type="text" name="mcks_name" value="" id="mcks_name" placeholder="Input Name" class="pline ip_1" title="" />
+																<input type="text" name="mcksreg_name" value="" id="mcksreg_name" placeholder="Input Name" class="pline ip_1" title="" />
 															</li>
 <!-- 															
 															<li>
@@ -81,8 +81,8 @@
 															<li>
 																<label>NetworkCni</label>
 																<select  class="selectbox white pline sel_1"  name="kubernatesNetworkCni"  id="kubernatesNetworkCni">
-																	<option value="Kilo" selected>Kilo</option>
-																	<option value="Canal">Canal</option>
+																	<option value="kilo" selected>Kilo</option>
+																	<option value="canal">Canal</option>
 																</select>
 															</li>
 														
@@ -107,11 +107,11 @@
 												{{template "NodeConfigure" .}}										
 
 												
-												<!-- <div class="btnbox">
+												<div class="btnbox">
 													<div class="btn_right">
-														<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="deployMcks();"><span>DEPLOY</span></button> 
+														<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="deploy_btn();"><span>Deploy</span></button> 						
 													</div>
-												</div> -->
+												</div>
 						
 											</div>
 											
@@ -132,5 +132,5 @@
 				</div>
 				<!-- //contents -->
 
-<script src="/assets/js/operation/manages/mcismng/mciscreate.js"></script>                
+<script src="/assets/js/operation/manages/mcksmng/mckscreate.js"></script>                
 {{template "Footer" .}}

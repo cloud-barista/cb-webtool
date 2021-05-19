@@ -1,7 +1,7 @@
 package ladybug
 
-// ladybug
-type ClusterInfo struct {
+// ClusterInfo의 간단버전.
+type ClusterSimpleInfo struct {
 	ClusterConfig string     `json:"clusterConfig"`
 	CpLeader      int        `json:"cpLeader"`
 	Kind          int        `json:"kind"`
@@ -10,6 +10,8 @@ type ClusterInfo struct {
 	NameSpace     string     `json:"namespace"`
 	NetworkCni    string     `json:"networkCni"`
 	Status        string     `json:"status"`
+	McisStatus 	  string     `json:"mcisStatus"`
 	UID           string     `json:"uid"`
-	Nodes         []NodeInfo `json:"nodes"`
+	Nodes         []NodeSimpleInfo `json:"nodes"`
+	TotalNodeCount int `json:"totalNodeCount"`	
 }
