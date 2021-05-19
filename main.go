@@ -499,7 +499,7 @@ func main() {
 
 	mcksRegGroup := e.Group("/operation/manages/mcksmng/regform", mcksRegTemplate)
 	mcksRegGroup.GET("", controller.McksRegForm)                 // MCKS 생성 + Node생성 form
-	mcksMngGroup.GET("/:clusteruid", controller.McksNodeRegForm) // MCKS의 Node생성
+	mcksRegGroup.GET("/:clusteruID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성
 
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
 	e.POST("/operation/manages/mcksmng/:clusteruid/reg/proc", controller.NodeRegProc)

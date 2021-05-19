@@ -188,7 +188,7 @@ func McksNodeRegForm(c echo.Context) error {
 	ndeList, _ := service.GetNodeList(defaultNameSpaceID, clusteruid)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/mcksmng/McksCreate", // 파일명
+		"operation/manages/mcksmng/NodeCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,

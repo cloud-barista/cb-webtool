@@ -12,8 +12,9 @@ function clickListOfMcks(uid, mcksIndex){
             $(this).removeClass("on")
         }
     })
-
-    $("#mcks_uid").val(uid);
+										
+    $("#mcks_uid").val($("#mcksUID" + mcksIndex).val());
+    $("#mcks_name").val($("#mcksName" + mcksIndex).val());
 
     // MCIS Info area set
     showServerListAndStatusArea(uid,mcksIndex);
@@ -34,10 +35,11 @@ function showServerListAndStatusArea(uid, mcksIndex){
     $(".server_status").addClass("view")
     $("#mcks_info_txt").text("[ "+ mcksName +" ]");
     $("#mcks_server_info_status").empty();
-    $("#mcks_server_info_status").append('<strong>Server List </strong>  <span class="stxt">[ '+mcksName+' ]</span>  Server('+nodeTotalCountOfMcks+')')
+    $("#mcks_server_info_status").append('<strong>Node List </strong>  <span class="stxt">[ '+mcksName+' ]</span>  Node('+nodeTotalCountOfMcks+')')
 
     //
     $("#mcks_info_name").val(mcksName+" / "+mcksUID)
+    $("#mcks_info_Status").val(mcksStatus)
     $("#mcks_info_cloud_connection").val(mcksConfig) 
     
     $("#mcks_name").val(mcksName)
@@ -82,4 +84,20 @@ function showServerListAndStatusArea(uid, mcksIndex){
             });
         });
     }); 
+}
+
+// 해당 mcks에 node 추가
+// mcks가 경로에 들어가야 함. node 등록 form으로 이동
+function addNewNode(){
+    var clusterId = $("#mcks_uid").val();
+    var clusterName = $("#mcks_name").val();
+
+    if( clusterId == ""){
+        commonAlert("MCKS 정보가 올바르지 않습니다.");
+        return;
+    }
+    alert(clusterId);
+    var url = "/operation/manages/mcksmng/regform/" + clusterId + "/" + clusterName;
+    alert(url);
+    location.href = url;
 }

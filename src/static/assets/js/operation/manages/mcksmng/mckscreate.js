@@ -1,5 +1,5 @@
 function deploy_btn(){
-    var mcksName = $("#mcks_name").val();
+    var mcksName = $("#mcksreg_name").val();
 
     var kubernatesNetworkCni = $("#kubernatesNetworkCni").val();
     var kubernatesPodCidr = $("#kubernatesPodCidr").val();
