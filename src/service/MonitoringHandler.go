@@ -4,8 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+
+	// "io/ioutil"
 	"log"
 	"net/http"
+
 	// "strconv"
 	// "os"
 	model "github.com/cloud-barista/cb-webtool/src/model"
@@ -268,9 +271,9 @@ func PutMonigoringConfig(monitoringConfigReg *dragonfly.MonitoringConfigReg) (*d
 
 	urlValues, convertErr := util.StructToMapByJson(monitoringConfigReg)
 	if convertErr != nil {
-		log.Println(convertErr);
+		log.Println(convertErr)
 	}
-	
+
 	fmt.Println(urlValues)
 	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
 	// resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
@@ -419,26 +422,35 @@ func UnInstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.Vm
 // 알람 목록 조회
 // List monitoring alert
 func GetMonitoringAlertList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
+	fmt.Print("#########GetMonitoringAlertList############")
 	var originalUrl = "/alert/tasks"
 	// {{ip}}:{{port}}/dragonfly/alert/tasks
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/tasks"
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, _ := util.CommonHttp(url, nil, http.MethodGet)
 
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	// vmMonitoringAlertInfoList := dragonfly.VmMonitoringAlertInfo{}
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return vmMonitoringAlertInfoList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	// }
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	vmMonitoringAlertInfoList := map[string][]dragonfly.VmMonitoringAlertInfo{}
+	vmMonitoringAlertInfoList := []dragonfly.VmMonitoringAlertInfo{}
 	json.NewDecoder(respBody).Decode(&vmMonitoringAlertInfoList)
 
-	return vmMonitoringAlertInfoList["mcis"], model.WebStatus{StatusCode: respStatus}
+	// robots, _ := ioutil.ReadAll(resp.Body)
+	// log.Println(fmt.Print(string(robots)))
+
+	// json.NewDecoder(respBody).Decode(&vmMonitoringAlertInfoList)
+	// fmt.Println(vmMonitoringAlertInfoList)
+
+	return vmMonitoringAlertInfoList, model.WebStatus{StatusCode: respStatus}
 }
 
 // 알람  조회
@@ -479,9 +491,17 @@ func RegMonitoringAlert(vmMonitoringAlertInfo *dragonfly.VmMonitoringAlertInfo) 
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/task"
 
-	pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
-	fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	// pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
+	// fmt.Println(string(pbytes))
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertInfo)
+	if convertErr != nil {
+		log.Println(convertErr)
+	}
+
+	fmt.Println(urlValues)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
 
 	resultVmMonitoringAlertInfo := dragonfly.VmMonitoringAlertInfo{}
 	if err != nil {
