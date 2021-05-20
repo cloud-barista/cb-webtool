@@ -73,6 +73,11 @@ func McksMngForm(c echo.Context) error {
 	nsList, _ := service.GetNameSpaceList()
 	log.Println(" nsList  ", nsList)
 
+	// provider 별 연결정보 count
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
+	totalConnectionCount := len(cloudConnectionConfigInfoList)
+
 	// 모든 MCKS 조회
 	clusterList, _ := service.GetClusterList(defaultNameSpaceID)
 
@@ -82,24 +87,34 @@ func McksMngForm(c echo.Context) error {
 	}
 
 	totalMcksStatusCountMap := service.GetMcksStatusCountMap(clusterList)
-	
-	nodeKindCountMapByMcks := make(map[string]map[string]int)   // MCKS UID 별 KindCountMap
 	////////////// return value 에 set
-	mcksSimpleInfoList := []ladybug.ClusterSimpleInfo{}	// 표에 뿌려줄 정보
+	mcksSimpleInfoList := []ladybug.ClusterSimpleInfo{} // 표에 뿌려줄 정보
 	for _, mcksInfo := range clusterList {
 		mcksSimpleInfo := ladybug.ClusterSimpleInfo{}
 		mcksSimpleInfo.UID = mcksInfo.UID
 		mcksSimpleInfo.Status = mcksInfo.Status
-		mcksSimpleInfo.McisStatus = util.GetMcksStatus(mcksInfo.Status)
+		mcksSimpleInfo.McksStatus = util.GetMcksStatus(mcksInfo.Status)
 		mcksSimpleInfo.Name = mcksInfo.Name
+		mcksSimpleInfo.ClusterConfig = mcksInfo.ClusterConfig
+		mcksSimpleInfo.CpLeader = mcksInfo.CpLeader
+		mcksSimpleInfo.Kind = mcksInfo.Kind
+		mcksSimpleInfo.Mcis = mcksInfo.Mcis
+		mcksSimpleInfo.NameSpace = mcksInfo.NameSpace
+		mcksSimpleInfo.NetworkCni = mcksInfo.NetworkCni
 
-		resultSimpleNodeList, resultSimpleNodeKindCountMap := service.GetSimpleNodeCountMap(mcksInfo)
+		resultSimpleNodeList, resultSimpleNodeRoleCountMap := service.GetSimpleNodeCountMap(mcksInfo)
 
 		mcksSimpleInfo.Nodes = resultSimpleNodeList
 		mcksSimpleInfo.TotalNodeCount = len(resultSimpleNodeList) // 해당 mcks의 모든 node 갯수
-		nodeKindCountMapByMcks[mcksInfo.UID] = resultSimpleNodeKindCountMap // MCIS 내 vm 상태별 cnt
+		//nodeKindCountMapByMcks[mcksInfo.UID] = resultSimpleNodeKindCountMap // MCIS 내 vm 상태별 cnt
+		mcksSimpleInfo.NodeCountMap = resultSimpleNodeRoleCountMap // MCKS UID 별 KindCountMap
 		// mcksSimpleInfo.NodeSimpleList = resultSimpleNodeList
-		
+
+		// log.Println("**************")
+		// mapValues, _ := util.StructToMapByJson(mcksSimpleInfo)
+		// log.Println(mapValues)
+		// log.Println("**************")
+
 		mcksSimpleInfoList = append(mcksSimpleInfoList, mcksSimpleInfo)
 	}
 
@@ -111,11 +126,15 @@ func McksMngForm(c echo.Context) error {
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
 
+			// cp count 영역
+			"TotalProviderCount":         providerCount,
+			"TotalConnectionConfigCount": totalConnectionCount,     // 총 connection 갯수
+			"ConnectionConfigCountMap":   connectionConfigCountMap, // provider별 connection 수
+
 			// "ClusterList": clusterList,
-			"ClusterList": mcksSimpleInfoList,
+			"ClusterList":             mcksSimpleInfoList,
 			"TotalMcksStatusCountMap": totalMcksStatusCountMap,
-			"NodeKindCountMapByMcks": nodeKindCountMapByMcks,
-			"TotalClusterCount": totalClusterCount,
+			"TotalClusterCount":       totalClusterCount,
 		})
 }
 
@@ -158,6 +177,36 @@ func McksRegProc(c echo.Context) error {
 	})
 }
 
+// MCKS 삭제처리
+func McksDelProc(c echo.Context) error {
+	log.Println("McksDelProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+
+	clusteruID := c.Param("clusteruID")
+	log.Println("clusteruID= " + clusteruID)
+
+	resultStatusInfo, respStatus := service.DelCluster(defaultNameSpaceID, clusteruID)
+	log.Println("DelMCKS service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":    "success",
+		"status":     respStatus.StatusCode,
+		"StatusInfo": resultStatusInfo,
+	})
+}
+
 // Node 등록 form
 func McksNodeRegForm(c echo.Context) error {
 	fmt.Println("McksNodeRegForm ************ : ")
@@ -168,7 +217,8 @@ func McksNodeRegForm(c echo.Context) error {
 	}
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	clusteruid := c.Param("clusteruid")
+	clusterUID := c.Param("clusterUID")
+	clusterName := c.Param("clusterName")
 
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
@@ -185,7 +235,9 @@ func McksNodeRegForm(c echo.Context) error {
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
 	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
 
-	ndeList, _ := service.GetNodeList(defaultNameSpaceID, clusteruid)
+	nodeList, _ := service.GetNodeList(defaultNameSpaceID, clusterName)
+	nodeListLength := len(nodeList)
+	log.Println("---------------------- nodeListLength ", nodeListLength)
 
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manages/mcksmng/NodeCreate", // 파일명
@@ -197,8 +249,9 @@ func McksNodeRegForm(c echo.Context) error {
 			"RegionList":         regionList,
 
 			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
-			"NodeList":                      ndeList,
-			"ClusterUid":                    clusteruid,
+			"NodeList":                      nodeList,
+			"McksID":                        clusterUID,
+			"McksName":                      clusterName,
 		})
 }
 
@@ -210,7 +263,8 @@ func NodeRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	clusteruid := c.Param("clusteruid")
+	clusteruID := c.Param("clusteruID")
+	clusterName := c.Param("clusterName")
 
 	nodeRegReq := &ladybug.NodeRegReq{}
 	if err := c.Bind(nodeRegReq); err != nil {
@@ -224,7 +278,7 @@ func NodeRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	nodeInfo, respStatus := service.RegNode(defaultNameSpaceID, clusteruid, nodeRegReq)
+	nodeInfo, respStatus := service.RegNode(defaultNameSpaceID, clusterName, nodeRegReq)
 	log.Println("RegMcis service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -236,7 +290,7 @@ func NodeRegProc(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
 		"status":     respStatus.StatusCode,
-		"Clusteruid": clusteruid,
+		"ClusteruID": clusteruID,
 		"NodeInfo":   nodeInfo,
 	})
 }

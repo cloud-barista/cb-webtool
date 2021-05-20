@@ -43,7 +43,8 @@ function getSpecInfo(configName, targetObjId){
 // mcks , node deploy
 // 우선 mcks 부터
 function nodeDone_btn(){
-    var clusteruid = $("#clusteruid").val();
+    var mcksID = $("#mcksID").val();
+    var mcksName = $("#mcksName").val();
     
     var controlPlaneLength = $("input[name='controlPlaneCount']").length;
     console.log("controlPlaneLength1 " + controlPlaneLength)
@@ -101,7 +102,7 @@ function nodeDone_btn(){
 
     try{
         // configurer 는 mcks 선택하고 들어옴. : TODO : MCKS create 와 node create는 버튼 액션을 달리해야
-        var url = "/operation/manages/mcksmng/reg/proc" 
+        var url = "/operation/manages/mcksmng/" + mcksID + "/" + mcksName + "/reg/proc";
         axios.post(url,new_obj,{
             headers :{
                 },
