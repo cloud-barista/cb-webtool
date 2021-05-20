@@ -157,6 +157,8 @@ function commonConfirmOpen(targetAction){
             ["DifferentConnection", "Do you want to set different connectionName?"],
             ["DifferentConnectionAtSecurityGroup", "Do you want to set different connectionName?"],
 
+            ["AddMonitoringAlertPolicy", "Would you like to register Threshold ?"],
+            ["DeleteMonitoringAlertPolicy", "Are you sure to delete this Threshold ?"],
             ["AddNewMcks", "Would you like to create MCKS ?"],
             ["AddNewNodeOfMcks", "Would you like to add a new Node to this MCKS ?"],
         ]
@@ -330,6 +332,10 @@ function commonConfirmOk(){
         setAndClearByDifferentConnectionName();
     }else if ( targetAction == "DifferentConnectionAtSecurityGroup"){
         uncheckDifferentConnectionAtSecurityGroup();
+    }else if ( targetAction == "AddMonitoringAlertPolicy"){
+        addMonitoringAlertPolicy();
+    }else if ( targetAction == "DeleteMonitoringAlertPolicy"){
+        deleteMonitoringAlertPolicy();
     }else if ( targetAction == "AddNewMcks"){
         var targetUrl = "/operation/manages/mcksmng/regform";
         changePage(targetUrl)
@@ -389,6 +395,10 @@ function commonPromptOpen(targetAction, targetObjId){
             ["NSFltName", "필터링할 단어를 입력하세요"],
             ["NSFltId", "필터링할 단어를 입력하세요"],
             ["NSFltDescription", "필터링할 단어를 입력하세요"],
+            ["AlertPolicyName", "필터링할 단어를 입력하세요"],
+            ["AlertPolicyMeasurement", "필터링할 단어를 입력하세요"],
+            ["AlertPolicyTargetType", "필터링할 단어를 입력하세요"],
+            ["AlertPolicyEventType", "필터링할 단어를 입력하세요"],
             ["Config", "Would you like to set Cloud config ?"],
         ]
     );
@@ -488,6 +498,22 @@ function commonPromptOk(){
     }else if( targetAction == 'NSFltDescription'){// Name이라는 Column을 Filtering
         if( targetValue ){
             filterTable(targetObjId, "description", targetValue)
+        }       
+    }else if( targetAction == 'AlertPolicyName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }       
+    }else if( targetAction == 'AlertPolicyMeasurement'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Measurement", targetValue)
+        }       
+    }else if( targetAction == 'AlertPolicyTargetType'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Target Type", targetValue)
+        }       
+    }else if( targetAction == 'AlertPolicyEventType'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Alert Event Type", targetValue)
         }       
     }
     
