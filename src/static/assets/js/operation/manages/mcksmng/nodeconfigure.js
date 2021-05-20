@@ -131,3 +131,41 @@ function nodeDone_btn(){
         
     }
 }
+
+// WorkNode 추가
+function addWorkNode(){
+    // 마지막 name의 index 추출
+    var lastWorkerId = "";
+    $("input[name='controlPlaneCount']").each(function (i) {
+        lastWorkerId = $(this).attr('id');
+        //alert( i + "번째  : " + $("input[name='controlPlaneCount']").eq(i).attr("value") );
+   });
+   var lastIndex = lastWorkerId.split ("_")[1]  
+
+    var addWorkerIndex = Number(lastIndex) +1;
+
+    var addWorkerHtml = $('#hidden_mcks_Worker_list').clone();
+    // console.log(addWorkerHtml);
+    // console.log("--1")
+    // console.log(addWorkerHtml.html());
+    // console.log("--2")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_mcks_Worker_list', 'mcks_Worker_list_' + addWorkerIndex);
+    // console.log("--3")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerProvider', 'workerProvider_' + addWorkerIndex);
+    // console.log("--4")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerConnectionName', 'workerConnectionName_' + addWorkerIndex);
+    // console.log("--5")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerCount', 'workerCount_' + addWorkerIndex);
+    // console.log("--6")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerSpecId', 'workerSpecId_' + addWorkerIndex);
+    // console.log("--7")
+
+    $("#mcks_Worker_list").append(addWorkerHtml); 
+    $("#mcks_Worker_list_" + addWorkerIndex).css("display", "block");
+    //$("#aa").css("display", "block");
+
+    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
+    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
+    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
+    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
+}
