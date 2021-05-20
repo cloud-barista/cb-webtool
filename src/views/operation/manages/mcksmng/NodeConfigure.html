@@ -3,7 +3,8 @@
 <!-- server 추가 form -->
 <div class="servers_config node_config" id="nodeConfig" style="display:block">
 	<form id="node_form">
-		<input type="hidden" name="clusteruid"  value="{{ .ClusterUid}}" id="clusteruid" />
+		<input type="hidden" name="mcksID"  value="{{ .McksID}}" id="mcksID" />
+		<input type="hidden" name="mcksName"  value="{{ .McksName}}" id="mcksName" />
 
 		<div class="top_box">
 			<div class="titbox_sc">
@@ -49,8 +50,7 @@
 									<option value="1">Select Spec</option>
 								</select>
 							</li>
-						</ul>
-						<!-- 추가버튼은 향후 사용시 개발. 현재 Array로 받기는 하나 실제로는 1개만 사용 됨.  -->
+						</ul>					
 					</div>
 				</div>
 				<!-- //controlPlane -->
