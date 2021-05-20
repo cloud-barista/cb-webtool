@@ -93,22 +93,6 @@ function commonErrorAlert(statusCode, message){
 // confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정
 function commonConfirmOpen(targetAction){
     console.log("commonConfirmOpen : " + targetAction)
-    // var targetText = "";
-    // if( targetAction == "logout"){
-    //     targetText = "Would you like to logout?";
-    // }else if ( targetAction == "Config"){
-    //     targetText = "Would you like to set Cloud config ?";
-    // }else if ( targetAction == "SDK"){
-    //     targetText = "Would you like to set Cloud Driver SDK ?";
-    // }else if ( targetAction == "Credential"){
-    //     targetText = "Would you like to set Credential ?";
-    // }else if ( targetAction == "Region"){
-    //     targetText = "Would you like to set Region ?";
-    // }else if ( targetAction == "Provider"){
-    //     targetText = "Would you like to set Cloud Provider ?";
-    // }else if ( targetAction == "required"){//-- IdPassRequired
-    //     targetText = "ID/Password required !";
-    // }
 
     //  [ id , 문구]
     let confirmModalTextMap = new Map(
@@ -175,6 +159,8 @@ function commonConfirmOpen(targetAction){
 
             ["AddMonitoringAlertPolicy", "Would you like to register Threshold ?"],
             ["DeleteMonitoringAlertPolicy", "Are you sure to delete this Threshold ?"],
+            ["AddNewMcks", "Would you like to create MCKS ?"],
+            ["AddNewNodeOfMcks", "Would you like to add a new Node to this MCKS ?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -350,6 +336,11 @@ function commonConfirmOk(){
         addMonitoringAlertPolicy();
     }else if ( targetAction == "DeleteMonitoringAlertPolicy"){
         deleteMonitoringAlertPolicy();
+    }else if ( targetAction == "AddNewMcks"){
+        var targetUrl = "/operation/manages/mcksmng/regform";
+        changePage(targetUrl)
+    }else if ( targetAction == "AddNewNodeOfMcks"){
+        addNewNode();
     }else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }

@@ -2,7 +2,9 @@
 
 <!-- server 추가 form -->
 <div class="servers_config node_config" id="nodeConfig" style="display:block">
-	<form id="node_form">	
+	<form id="node_form">
+		<input type="hidden" name="clusteruid"  value="{{ .ClusterUid}}" id="clusteruid" />
+
 		<div class="top_box">
 			<div class="titbox_sc">
 				<div class="tit">Node Configuration</div>
@@ -90,17 +92,7 @@
 				</div>
 				<!-- //worker -->	
 			</div>
-			<!-- button -->
-			<div class="btnbox spec_select_box">
-				<div class="btnbox spec_select_box">
-					<div class="btn_right">
-						<!-- <button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="nodeDone_btn();"><span>DONE</span></button> 
-						<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button>  -->
-						<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="deploy_btn();"><span>Deploy</span></button> 						
-					</div>
-				</div>
-			</div>
-			<!-- //button -->
+			
 		</div>
 	</form>
 </div>

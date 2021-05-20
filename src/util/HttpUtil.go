@@ -179,63 +179,28 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 // Put/Post 등을 formData 형태로 호출할 때
 // https://minwook-shin.github.io/go-decode-encode-url-values-form/ 참조할 것
 //func CommonHttpFormData(targetUrl string, formParam url.Values, httpMethod string) (*http.Response, error) {
-func CommonHttpFormData(targetUrl string, formParam map[string]string, httpMethod string) (*http.Response, error) {
+// func CommonHttpFormData(targetUrl string, formParam map[string]string, httpMethod string) (*http.Response, error) {
+func CommonHttpFormData(targetUrl string, formParam map[string]interface{}, httpMethod string) (*http.Response, error) {
 	//m := structs.Map(s)
 	authInfo := AuthenticationHandler()
 
-	// log.Println("CommonHttp "+httpMethod+", ", url)
-	// log.Println("authInfo ", authInfo)
-	// client := &http.Client{}
-	// req, err := client.PostForm(url, formParam)
-	// // resp, err := http.PostForm(url, formParam)
-	// if err != nil {
-	// 	fmt.Println("CommonHttpFormData error")
-	// 	fmt.Println(err)
-	// 	panic(err)
-	// }
-
-	// //return resp, err
-	// req.Header.Add("Authorization", authInfo)
-	// // resp, err := client.Do(req)
-	// return client.Do(req)
-	log.Println(formParam)
-	// formParam2 := url.Values{}
-	// formParam2.Set("AgentInterval", "5")
-	// formParam2.Set("AgentTTL", "6")
-	// formParam2.Set("CollectorInterval", "7")
-	// formParam2.Set("MaxHostCount", "3")
-	// formParam2.Set("ScheduleInterval", "4")
-	// log.Println(formParam2)
-	// client := &http.Client{}
-
-	// response, err := client.PostForm(targetUrl, formParam2)  -> method not allowed
-
-	// req, err1 := http.NewRequest(httpMethod, targetUrl, strings.NewReader(formParam2.Encode()))
-
 	payload := &bytes.Buffer{}
 	writer := multipart.NewWriter(payload)
-	for key, val := range formParam {
 
-		_ = writer.WriteField(key, val)
+	log.Println(formParam)
+
+	// writer.WriteField 는 int 등으로는 전송이 안됨.... string으로 변환 후 전송
+	for key, val := range formParam {
+		_ = writer.WriteField(key, fmt.Sprintf("%v", val))
 	}
 	err := writer.Close()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
 
 	client := &http.Client{}
 	req, _ := http.NewRequest(httpMethod, targetUrl, payload)
 
-	// req, err1 := http.NewRequest(httpMethod, targetUrl, strings.NewReader(formParam.Encode()))
-	// if err1 != nil {
-	// 	panic(err1)
-	// }
-
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	req.Header.Add("Authorization", authInfo)
-	// //req.Header.Set("Content-Type", "multipart/form-data; charset=utf-8") // 사용에 주의할 것.
-	// req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
 	resp, err := client.Do(req)
 	return resp, err
 }
