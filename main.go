@@ -446,6 +446,7 @@ func main() {
 	e.GET("/operation/policies/monitoringalertpolicy/list", controller.GetMonitoringAlertPolicyList)
 	e.GET("/operation/policies/monitoringalertpolicy/:alertName", controller.GetMonitoringAlertPolicyData)
 	e.POST("/operation/policies/monitoringalertpolicy/reg/proc", controller.MonitoringAlertPolicyRegProc)
+	e.DELETE("/operation/policies/monitoringalertpolicy/del/:alertName", controller.MonitoringAlertPolicyDelProc)
 
 	policyPlacementGroup := e.Group("/operation/policies/placementpolicy/mngform", policyPlacementTemplate)
 	policyPlacementGroup.GET("", controller.PlacementPolicyMngForm)
@@ -501,7 +502,7 @@ func main() {
 	mcksMngGroup.GET("", controller.McksMngForm)
 
 	mcksRegGroup := e.Group("/operation/manages/mcksmng/regform", mcksRegTemplate)
-	mcksRegGroup.GET("", controller.McksRegForm)                 // MCKS 생성 + Node생성 form
+	mcksRegGroup.GET("", controller.McksRegForm)                              // MCKS 생성 + Node생성 form
 	mcksRegGroup.GET("/:clusteruID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성
 
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)

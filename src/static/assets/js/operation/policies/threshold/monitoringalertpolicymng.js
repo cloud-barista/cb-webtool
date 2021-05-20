@@ -6,8 +6,8 @@ function addMonitoringAlertPolicy(){
     $(".dashboard .status_list tbody tr").removeClass("on");
     //ok 위치이동
     // $('#RegistBox').on('hidden.bs.modal', function () {
-        var offset = $("#CreateBox").offset();
-        $("#wrap").animate({scrollTop : offset.top}, 300);        
+    var offset = $("#CreateBox").offset();
+    $("#wrap").animate({scrollTop : offset.top}, 300);        
     // })
 
     // 등록 폼 초기화
@@ -26,6 +26,51 @@ function addMonitoringAlertPolicy(){
 
 function deleteMonitoringAlertPolicy(){
     console.log("##########DeleteMonitoringAlertPolicy")
+
+    var monitoringAlertId = "";
+    var count = 0;
+
+    $( "input[name='chk']:checked" ).each( function () {
+        count++;
+        monitoringAlertId = monitoringAlertId + $(this).val()+",";
+    });
+
+    monitoringAlertId = monitoringAlertId.substring(0,monitoringAlertId.lastIndexOf( ","));
+    
+    console.log("monitoringAlertId : ", monitoringAlertId);
+    console.log("count : ", count);
+
+    if(monitoringAlertId == ''){
+        commonAlert("삭제할 대상을 선택하세요.");
+        return false;
+    }
+
+    if(count != 1){
+        commonAlert("삭제할 대상을 하나만 선택하세요.");
+        return false;
+    }
+
+    var url = "/operation/policies/monitoringalertpolicy/del/" + monitoringAlertId
+    console.log("del monitoringAlertPolicy url : ", url);
+
+    axios.delete(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        var data = result.data;
+        console.log(data);
+        if (result.status == 200 || result.status == 201) {
+           commonAlert("Success Delete Threshold")
+           displayMonitoringAlertPolicyInfo("DEL_SUCCESS")
+        }else{
+            commonAlert(data)
+        }
+    }).catch(function(error){
+        commonAlert(error)
+        console.log("Threshold delete error : ",error);        
+    });
 }
 
 
@@ -79,6 +124,14 @@ function createMonitoringAlertPolicy(){
             console.log("result Threshold : ", result);
             var data = result.data;
             console.log(data);
+
+            if (data.status == 200 || data.status == 201) {
+                commonAlert("Success Create Threshold!!")
+                
+                displayMonitoringAlertPolicyInfo("REG_SUCCESS")
+            } else {
+                commonAlert("Fail Create Threshold " + data.message)
+            }
         }).catch(function(error){
             var data = error.data;
             console.log(data);
@@ -148,4 +201,135 @@ function showMonitoringAlertPolicyInfo(monitoringAlertName) {
         console.log("Threshold detail error : ",error);        
     });
     
+}
+
+
+function displayMonitoringAlertPolicyInfo(targetAction) {
+    if( targetAction == "REG_SUCCESS" ) {
+        console.log("##########AddMonitoringAlertPolicy REG_SUCCESS")
+        $(".dashboard.register_cont").removeClass("active");
+        $(".dashboard.server_status").removeClass("view");
+        $(".dashboard .status_list tbody tr").addClass("on");
+        
+        var offset = $("#CreateBox").offset();
+        $("#wrap").animate({scrollTop : offset.top}, 0);        
+        
+        // 등록 폼 초기화
+        $("#regMonitoringAlertName").val('');				 
+        $("#regMonitoringAlertMeasure").val('');            
+        $("#regMonitoringAlertTargetType").val('');         
+        $("#regMonitoringAlertTargetID").val('');           
+        $("#regMonitoringAlertEventDuration").val('');      
+        $("#regMonitoringAlertMetric").val('');             
+        $("#regMonitoringAlertAlertMathExpression").val('');
+        $("#regMonitoringAlertAlertThreshold").val('');     
+        $("#regMonitoringAlertWarnEventCount").val('');     
+        $("#regMonitoringAlertCriticEventCount").val('');  
+        
+        getMonitoringAlertPolicyList("alertName");
+    } else if ( targetAction == "DEL_SUCCESS" ) {
+        console.log("##########AddMonitoringAlertPolicy DEL_SUCCESS")
+        $(".dashboard.register_cont").removeClass("active");
+        $(".dashboard.server_status").removeClass("view");
+        $(".dashboard .status_list tbody tr").addClass("on");
+
+        var offset = $("#CreateBox").offset();
+        $("#wrap").animate({scrollTop : offset.top}, 0);
+
+        getMonitoringAlertPolicyList("alertName");
+    }
+}
+
+
+function getMonitoringAlertPolicyList(sortType) {
+    console.log("#####################getMonitoringAlertPolicyList : ", sortType);
+
+    var url = "/operation/policies/monitoringalertpolicy/list"
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Threshold List : ", result.data);
+        var data = result.data.MonitoringAlertPolicyList;
+        console.log("$$$Alert DATA$$$");
+        console.log(data);
+
+        var html = ""
+        var cnt = 0;
+
+        if (data.length) {
+            if (sortType) {
+                cnt++;
+                console.log("check2 : ", sortType);
+                data.filter(list => list.Name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
+                    html += addMonitoringAlertRow(item, index)
+                ))
+            } else {
+                console.log("check3 : ", sortType);
+                data.filter((list) => list.Name !== "").map((item, index) => (
+                    html += addMonitoringAlertRow(item, index)
+                ))
+            }
+
+            $("#alertList").empty();
+            $("#alertList").append(html)
+
+            ModalDetail();
+        }
+    }).catch(function(error){
+        console.log("Threshold list error : ", error);        
+    })    
+}
+
+
+// Threshold목록에 Item 추가
+function addMonitoringAlertRow(item, index){
+    console.log("addMonitoringAlertRow " + index);
+    console.log(item)
+    var html = ""
+    html += '<tr onclick="showMonitoringAlertPolicyInfo(\'' + item.name + '\');">'
+        + '<td class="overlay hidden" data-th="">'
+        + '<input type="hidden" id="alertpolicy_info_' + index + '" value="' + item.name + '"/>'
+        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
+        + '<td class="overlay hidden" data-th="Name">' + item.name + '</td>'
+        + '<td class="overlay hidden" data-th="Measurement">' + item.measurement + '</td>'
+        + '<td class="overlay hidden" data-th="TargetType">' + item.target_type + '</td>'
+        + '<td class="overlay hidden" data-th="TargetId">' + item.target_id + '</td>'
+        + '<td class="overlay hidden" data-th="AlertEventType">' + item.alert_event_type + '</td>'
+        + '<td class="overlay hidden" data-th="AlertEventName">' + item.alert_event_name + '</td>'
+        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>'
+        + '</tr>'	
+    return html;
+}
+
+
+function ModalDetail() {
+    $(".dashboard .status_list tbody tr").each(function () {
+        var $td_list = $(this),
+            $status = $(".server_status"),
+            $detail = $(".server_info");
+        $td_list.off("click").click(function () {
+            $td_list.addClass("on");
+            $td_list.siblings().removeClass("on");
+            $status.addClass("view");
+            $status.siblings().removeClass("on");
+            $(".dashboard.register_cont").removeClass("active");
+            $td_list.off("click").click(function () {
+                if ($(this).hasClass("on")) {
+                    console.log("reg ok button click")
+                    $td_list.removeClass("on");
+                    $status.removeClass("view");
+                    $detail.removeClass("active");
+                } else {
+                    $td_list.addClass("on");
+                    $td_list.siblings().removeClass("on");
+                    $status.addClass("view");
+
+                    $status.siblings().removeClass("view");
+                    $(".dashboard.register_cont").removeClass("active");
+                }
+            });
+        });
+    });
 }

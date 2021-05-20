@@ -491,9 +491,17 @@ func RegMonitoringAlert(vmMonitoringAlertInfo *dragonfly.VmMonitoringAlertInfo) 
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/task"
 
-	pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
-	fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	// pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
+	// fmt.Println(string(pbytes))
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertInfo)
+	if convertErr != nil {
+		log.Println(convertErr)
+	}
+
+	fmt.Println(urlValues)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
 
 	resultVmMonitoringAlertInfo := dragonfly.VmMonitoringAlertInfo{}
 	if err != nil {

@@ -226,6 +226,7 @@ func GetMonitoringAlertPolicyList(c echo.Context) error {
 	})
 }
 
+// Monitoring Threshold 단건 조회
 func GetMonitoringAlertPolicyData(c echo.Context) error {
 	fmt.Println("GetMonitoringAlertPolicyData ************ : ")
 
@@ -297,6 +298,37 @@ func MonitoringAlertPolicyRegProc(c echo.Context) error {
 		"MonitoringConfig": resultMonitoringAlertInfo,
 	})
 
+}
+
+// Monitoring Threshold 삭제
+func MonitoringAlertPolicyDelProc(c echo.Context) error {
+	log.Println("MonitoringAlertPolicyDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	//defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramMonitoringAlertID := c.Param("alertName")
+
+	// 글로벌한 설정이라 namespace 없이 호출
+	respBody, respStatus := service.DelMonitoringAlert(paramMonitoringAlertID)
+	fmt.Println("=============respBody =============", respBody)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+	})
 }
 
 //
