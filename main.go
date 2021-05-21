@@ -476,6 +476,7 @@ func main() {
 
 	e.GET("/operation/manages/mcismng/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
 	e.POST("/operation/manages/mcismng/reg/proc", controller.McisRegProc)
+	e.DELETE("/operation/manages/mcismng/:mcisID", controller.McisDelProc)
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
 	e.GET("/operation/manages/mcismng/:mcisID", controller.GetMcisInfoData)
@@ -503,10 +504,11 @@ func main() {
 
 	mcksRegGroup := e.Group("/operation/manages/mcksmng/regform", mcksRegTemplate)
 	mcksRegGroup.GET("", controller.McksRegForm)                              // MCKS 생성 + Node생성 form
-	mcksRegGroup.GET("/:clusteruID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성
+	mcksRegGroup.GET("/:clusteruID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성 : name까지 주는 이유는 별도처리하지 않고 node추가화면으로 바로 보내기 때문
 
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
-	e.POST("/operation/manages/mcksmng/:clusteruid/reg/proc", controller.NodeRegProc)
+	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName", controller.McksDelProc)
+	e.POST("/operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc", controller.NodeRegProc)
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)

@@ -144,6 +144,8 @@ function commonConfirmOpen(targetAction){
             ["McisManagement", "Would you like to manage MCIS ?"],// 해당 function 없음...
             ["MoveToMcisManagement", "Would you like to manage MCIS ?"],            
             ["AddNewMcis", "Would you like to create MCIS ?"],
+            ["DeleteMcis", "Are you sure to delete this MCIS? "],
+            
             ["AddNewVmOfMcis", "Would you like to add a new VM to this MCIS ?"],
 
             ["VmLifeCycle", "Would you like to view Server ?"],
@@ -160,6 +162,7 @@ function commonConfirmOpen(targetAction){
             ["AddMonitoringAlertPolicy", "Would you like to register Threshold ?"],
             ["DeleteMonitoringAlertPolicy", "Are you sure to delete this Threshold ?"],
             ["AddNewMcks", "Would you like to create MCKS ?"],
+            ["DeleteMcks", "Are you sure to delete this MCKS? "],
             ["AddNewNodeOfMcks", "Would you like to add a new Node to this MCKS ?"],
         ]
     );
@@ -234,7 +237,8 @@ function commonConfirmOk(){
     }else if ( targetAction == "ManageNS"){//-- ManageNS
         console.log("commonConfirmOk " + targetAction);
     }else if ( targetAction == "NewNS"){//-- NewNS
-        console.log("commonConfirmOk " + targetAction);
+        var targetUrl = "/setting/namespaces/namespace/mngform"
+        changePage(targetUrl)
     }else if ( targetAction == "ChangeNameSpace"){//-- ChangeNameSpace
         var changeNameSpaceID = $("#tempSelectedNameSpaceID").val();
         setDefaultNameSpace(changeNameSpaceID)
@@ -308,6 +312,8 @@ function commonConfirmOk(){
         // location.href ="/operation/manages/mcis/regform/";
         var targetUrl = "/operation/manages/mcismng/regform";
         changePage(targetUrl)
+    }else if ( targetAction == "DeleteMcis"){
+        deleteMCIS();
     }else if ( targetAction == "VmLifeCycle"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "VmLifeCycleReboot"){
@@ -341,6 +347,8 @@ function commonConfirmOk(){
         changePage(targetUrl)
     }else if ( targetAction == "AddNewNodeOfMcks"){
         addNewNode();
+    }else if ( targetAction == "DeleteMcks"){
+        deleteMCKS();
     }else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
