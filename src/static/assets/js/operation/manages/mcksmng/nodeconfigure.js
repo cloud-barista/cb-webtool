@@ -46,49 +46,56 @@ function nodeDone_btn(){
     var mcksID = $("#mcksID").val();
     var mcksName = $("#mcksName").val();
     
-    var controlPlaneLength = $("input[name='controlPlaneCount']").length;
-    console.log("controlPlaneLength1 " + controlPlaneLength)
-    var controlPlaneConnectionData = new Array(controlPlaneLength);
-    var controlPlaneCountData = new Array(controlPlaneLength);
-    var controlPlaneSpecIdData = new Array(controlPlaneLength);
-    for(var i=0; i<controlPlaneLength; i++){                          
-        controlPlaneConnectionData[i] = $("select[name='controlPlaneConnectionName']")[i].value;
-        controlPlaneCountData[i] = $("input[name='controlPlaneCount']")[i].value;
-        controlPlaneSpecIdData[i] = $("select[name='controlPlaneSpecId']")[i].value;
-    }
-    console.log(controlPlaneConnectionData)
-    console.log(controlPlaneCountData)
-    console.log(controlPlaneSpecIdData)
-    
     var workerCountLength = $("input[name='workerCount']").length;
     console.log("workerCountLength1 " + workerCountLength)
-    var workerConnectionData = new Array(workerCountLength);
-    var workerCountData = new Array(workerCountLength);
-    var workerSpecIdData = new Array(workerCountLength);
-    for(var i=0; i<workerCountLength; i++){                          
-        workerConnectionData[i] = $("select[name='workerConnectionName']")[i].value;
-        workerCountData[i] = $("input[name='controlPlaneCount']")[i].value;
-        workerSpecIdData[i] = $("select[name='workerSpecId']")[i].value;
+    var workerConnectionData = new Array();
+    var workerCountData = new Array();
+    var workerSpecIdData = new Array();
+    for(var i=0; i<workerCountLength; i++){   
+        var workerId = $("input[name='workerCount']").eq(i).attr("id");
+        console.log("workerId " + workerId)
+        if( workerId.indexOf("hidden_worker") > -1) continue;// 복사를 위한 영역이 있으므로
+        console.log("aa " + workerId)
+        workerConnectionData.push($("select[name='workerConnectionName']")[i].value);
+        workerCountData.push($("input[name='workerCount']")[i].value);
+        workerSpecIdData.push($("select[name='workerSpecId']")[i].value);
+
+        if( !workerConnectionData[i]){
+            commonAlert("Please Select Connection " + i)
+            return;
+        }
+
+        if( !workerCountData[i]){
+            commonAlert("Please Input Worker Count" + i)
+            return;
+        }
+
+        if( !workerSpecIdData[i]){
+            commonAlert("Please Select Worker Spec" + i)
+            return;
+        }
     }
     console.log(workerConnectionData)
     console.log(workerCountData)
     console.log(workerSpecIdData)
+
     var new_obj = {}
     
-    var controlPlanes = new Array(controlPlaneLength);
-    console.log("controlPlaneConnectionLength " + controlPlaneLength)
-    for(var i=0; i<controlPlaneLength; i++){
-        console.log("controlPlane " + i)
-        var new_controlPlane = {}
-        new_controlPlane['connection'] = controlPlaneConnectionData[i];
-        new_controlPlane['count'] = Number(controlPlaneCountData[i])
-        new_controlPlane['spec'] = controlPlaneSpecIdData[i]
-        controlPlanes[i] = new_controlPlane
-    }
-    new_obj['controlPlane'] = controlPlanes;
+    // VM추가시에는 controlPlane 없음.
+    // var controlPlanes = new Array(controlPlaneLength);
+    // console.log("controlPlaneConnectionLength " + controlPlaneLength)
+    // for(var i=0; i<controlPlaneLength; i++){
+    //     console.log("controlPlane " + i)
+    //     var new_controlPlane = {}
+    //     new_controlPlane['connection'] = controlPlaneConnectionData[i];
+    //     new_controlPlane['count'] = Number(controlPlaneCountData[i])
+    //     new_controlPlane['spec'] = controlPlaneSpecIdData[i]
+    //     controlPlanes[i] = new_controlPlane
+    // }
+    // new_obj['controlPlane'] = controlPlanes;
 
-    var workers = new Array(workerCountLength);
-    for(var i=0; i<workerCountLength; i++){
+    var workers = new Array(workerCountData.length);
+    for(var i=0; i<workerCountData.length; i++){
         console.log("workerCountLength " + i)
         var new_worker = {}
         new_worker['connection'] = workerConnectionData[i];
@@ -134,33 +141,34 @@ function nodeDone_btn(){
 
 // WorkNode 추가
 function addWorkNode(){
+    console.log("addWorkNode start");
+    try{
     // 마지막 name의 index 추출
     var lastWorkerId = "";
-    $("input[name='controlPlaneCount']").each(function (i) {
+    var nameCount = 0;
+    $("input[name='workerCount']").each(function (i) {
         lastWorkerId = $(this).attr('id');
-        //alert( i + "번째  : " + $("input[name='controlPlaneCount']").eq(i).attr("value") );
+        //console.log( i + "번째  : " + $("input[name='workerCount']").eq(i).attr("value") );
+        console.log("lastWorkerId=" + lastWorkerId)
+        nameCount++;
    });
-   var lastIndex = lastWorkerId.split ("_")[1]  
-
-    var addWorkerIndex = Number(lastIndex) +1;
-
+//    var lastIndexArr = lastWorkerId.split ("_")
+//    var lastIndex = lastIndexArr[lastIndexArr.length-1];
+//    console.log("lastIndex=" + lastIndex)
+    // var addWorkerIndex = Number(lastIndex) +1;
+    var addWorkerIndex = Number(nameCount) +1;
+    
+    console.log("addWorkerIndex=" + addWorkerIndex)
     var addWorkerHtml = $('#hidden_mcks_Worker_list').clone();
-    // console.log(addWorkerHtml);
-    // console.log("--1")
-    // console.log(addWorkerHtml.html());
-    // console.log("--2")
-    // addWorkerHtml = addWorkerHtml.html().replace('hidden_mcks_Worker_list', 'mcks_Worker_list_' + addWorkerIndex);
-    // console.log("--3")
-    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerProvider', 'workerProvider_' + addWorkerIndex);
-    // console.log("--4")
-    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerConnectionName', 'workerConnectionName_' + addWorkerIndex);
-    // console.log("--5")
-    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerCount', 'workerCount_' + addWorkerIndex);
-    // console.log("--6")
-    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerSpecId', 'workerSpecId_' + addWorkerIndex);
-    // console.log("--7")
-
-    $("#mcks_Worker_list").append(addWorkerHtml); 
+    var addW = "";
+    // 최초 1번만 .html() 이 먹고 다음부터는 string으로 인식함.
+    addW = addWorkerHtml.html().replace('hidden_mcks_Worker_list', 'mcks_Worker_list_' + addWorkerIndex);
+    addW = addW.replace(/hidden_workerProvider/gi, 'workerProvider_' + addWorkerIndex);
+    addW = addW.replace(/hidden_workerConnectionName/gi, 'workerConnectionName_' + addWorkerIndex);
+    addW = addW.replace(/hidden_workerCount/gi, 'workerCount_' + addWorkerIndex);
+    addW = addW.replace(/hidden_workerSpecId/gi, 'workerSpecId_' + addWorkerIndex);
+    
+    $("#mcks_Worker_list").append(addW); 
     $("#mcks_Worker_list_" + addWorkerIndex).css("display", "block");
     //$("#aa").css("display", "block");
 
@@ -168,4 +176,9 @@ function addWorkNode(){
     // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
     // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
     // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
+
+    console.log($("#mcks_Worker_list").html())
+    }catch(e){
+        console.log(e);
+    }
 }

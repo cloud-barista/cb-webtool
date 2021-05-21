@@ -22,13 +22,17 @@ function deploy_btn(){
     
     var workerCountLength = $("input[name='workerCount']").length;
     console.log("workerCountLength1 " + workerCountLength)
-    var workerConnectionData = new Array(workerCountLength);
-    var workerCountData = new Array(workerCountLength);
-    var workerSpecIdData = new Array(workerCountLength);
-    for(var i=0; i<workerCountLength; i++){                          
-        workerConnectionData[i] = $("select[name='workerConnectionName']")[i].value;
-        workerCountData[i] = $("input[name='controlPlaneCount']")[i].value;
-        workerSpecIdData[i] = $("select[name='workerSpecId']")[i].value;
+    var workerConnectionData = new Array();
+    var workerCountData = new Array();
+    var workerSpecIdData = new Array();
+    for(var i=0; i<workerCountLength; i++){      
+        var workerId = $("input[name='workerCount']").eq(i).attr("id");
+        console.log("workerId " + workerId)
+        if( workerId.indexOf("hidden_worker") > -1) continue;// 복사를 위한 영역이 있으므로
+
+        workerConnectionData.push($("select[name='workerConnectionName']")[i].value);
+        workerCountData.push($("input[name='controlPlaneCount']")[i].value);
+        workerSpecIdData.push($("select[name='workerSpecId']")[i].value);
     }
     console.log(workerConnectionData)
     console.log(workerCountData)
@@ -58,8 +62,8 @@ function deploy_btn(){
     }
     new_obj['controlPlane'] = controlPlanes;
 
-    var workers = new Array(workerCountLength);
-    for(var i=0; i<workerCountLength; i++){
+    var workers = new Array(workerCountData.length);
+    for(var i=0; i<workerCountData.length; i++){
         console.log("workerCountLength " + i)
         var new_worker = {}
         new_worker['connection'] = workerConnectionData[i];

@@ -179,22 +179,32 @@ func MonitoringAlertPolicyMngForm(c echo.Context) error {
 	nsList, _ := service.GetNameSpaceList()
 	log.Println(" nsList  ", nsList)
 
-	monitoringAlertPolicyList, respStatus := service.GetMonitoringAlertList()
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+	monitoringAlertPolicyList, _ := service.GetMonitoringAlertList()
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
+
+	// Monitoring Alert Event Handler 호출
+	monitoringAlertEventHandlerList, _ := service.GetMonitoringAlertEventHandlerList()
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
 		"/operation/policies/threshold/MonitoringAlertPolicyMng", // 파일명
 		map[string]interface{}{
-			"LoginInfo":                 loginInfo,
-			"DefaultNameSpaceID":        defaultNameSpaceID,
-			"NameSpaceList":             nsList,
-			"MonitoringAlertPolicyList": monitoringAlertPolicyList,
+			"LoginInfo":                       loginInfo,
+			"DefaultNameSpaceID":              defaultNameSpaceID,
+			"NameSpaceList":                   nsList,
+			"MonitoringAlertPolicyList":       monitoringAlertPolicyList,
+			"MonitoringAlertEventHandlerList": monitoringAlertEventHandlerList,
 		})
 }
 
@@ -331,7 +341,112 @@ func MonitoringAlertPolicyDelProc(c echo.Context) error {
 	})
 }
 
-//
+// Monitoring Alert Event-Handler 목록 조회
+func GetMonitoringAlertEventHandlerList(c echo.Context) error {
+	fmt.Println("GetMonitoringAlertEventHandlerList ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	// Monitoring Alert Event Handler 호출
+	monitoringAlertEventHandlerList, respStatus := service.GetMonitoringAlertEventHandlerList()
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":                         "success",
+		"status":                          respStatus.StatusCode,
+		"DefaultNameSpaceID":              defaultNameSpaceID,
+		"MonitoringAlertEventHandlerList": monitoringAlertEventHandlerList,
+	})
+}
+
+// Monitoring Alert Event-Handler 등록 처리
+func MonitoringAlertEventHandlerRegProc(c echo.Context) error {
+	log.Println("MonitoringAlertEventHandlerRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// _, respStatus := service.RegMonitoringPolicy(defaultNameSpaceID, mCISInfo)
+	// log.Println("MonitoringPolicyReg service returned")
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
+
+	monitoringAlertEventHandlerRegInfo := &dragonfly.VmMonitoringAlertEventHandlerInfoReg{}
+	if err := c.Bind(monitoringAlertEventHandlerRegInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(monitoringAlertEventHandlerRegInfo)
+
+	resultMonitoringAlertEventHandlerInfo, respStatus := service.RegMonitoringAlertEventHandler(monitoringAlertEventHandlerRegInfo)
+	log.Println("MonitoringAlertEventHandlerReg service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":                "success",
+		"status":                 respStatus.StatusCode,
+		"MonitoringEventHandler": resultMonitoringAlertEventHandlerInfo,
+	})
+
+}
+
+// Monitoring Alert Event-Handler 삭제
+func MonitoringAlertEventHandlerDelProc(c echo.Context) error {
+	log.Println("MonitoringAlertEventHandlerDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	//defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramMonitoringAlertEvantHandlerType := c.Param("type")
+	paramMonitoringAlertEvantHandlerName := c.Param("name")
+
+	// 글로벌한 설정이라 namespace 없이 호출
+	respBody, respStatus := service.DelMonitoringAlertEventHandler(paramMonitoringAlertEvantHandlerType, paramMonitoringAlertEvantHandlerName)
+	fmt.Println("=============respBody =============", respBody)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+	})
+}
+
 // PolicyPlacement 등록화면
 func PlacementPolicyRegForm(c echo.Context) error {
 	fmt.Println("PolicyPlacementRegForm ************ : ")

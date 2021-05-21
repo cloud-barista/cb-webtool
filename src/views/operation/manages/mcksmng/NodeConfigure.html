@@ -21,8 +21,9 @@
 				</div>
 
 				<!-- controlPlane -->
-				<div class="servers_box">
+				<div class="servers_box" id="mcks_controlPlane_area">
 					<div class="title">Control Plane</div>
+					
 					<div class="list">
 						<ul id="mcks_ControlPlane_list">															
 							<li>
@@ -56,8 +57,12 @@
 				<!-- //controlPlane -->
 
 				<!-- worker -->
-				<div class="servers_box" id="mcks_Worker_list_0">
+				<div class="btn_tab">
+					<a href="javascript:void(0);" onclick="addWorkNode()">Add</a>
+				</div>
+				<div class="servers_box" id="mcks_Worker_list">
 					<div class="title">Worker</div>
+						
 					<div class="list">
 						<ul>															
 							<li>
@@ -89,9 +94,7 @@
 					</div>
 				</div>
 				<!-- //worker -->
-				<div class="btn_tab">
-					<a href="javascript:void(0);" onclick="addWorkNode()">Add</a>
-				</div>	
+				
 
 				<!-- hidden worker 추가시 사용하는 것으로 hidden-->
 				<div class="servers_box" id="hidden_mcks_Worker_list" style="display:none">
@@ -100,7 +103,7 @@
 						<ul>															
 							<li>
 								<label><span class="ch">*</span>Provider</label>
-								<select  class="selectbox white pline sel_4"  name="workerProvider"  id="hidden_workerProvider" onchange="getConnectionListForSelectbox(this.value, this.id);">
+								<select  class="selectbox white pline sel_4"  name="workerProvider"  id="hidden_workerProvider" onchange="getConnectionListForSelectbox(this.value, 'hidden_workerConnectionName');">
 									<option value="">Select Provider</option>
 									{{ range $item := .CloudOSList}}	
 									<option value="{{ $item }}">{{ $item }}</option>
@@ -109,13 +112,13 @@
 							</li>
 							<li>
 								<label><span class="ch">*</span>Connection Name</label>
-								<select class="selectbox white pline sel_4" name="workerConnectionName" id="hidden_workerConnectionName" onchange="changeConnectionInfo(this.value, this.id);">
+								<select class="selectbox white pline sel_4" name="workerConnectionName" id="hidden_workerConnectionName" onchange="changeConnectionInfo(this.value, 'hidden_workerSpecId');">
 									<option value="">Select Connection</option>
 								</select>
 							</li>
 							<li>
 								<label>Count</label>
-								<input type="text" name="workerCount" value="" id="hidden_workerCount" placeholder="Input Count" class="pline ip_1" title="" />
+								<input type="text" name="workerCount" value="" id="hidden_workerCount_0" placeholder="Input Count" class="pline ip_1" title="" />
 							</li>
 							<li>
 								<label><span class="ch">*</span>Spec</label>

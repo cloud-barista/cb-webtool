@@ -3,7 +3,15 @@
 // 요청 인터셉터
 axios.interceptors.request.use(function (config) {
         console.log("axios.interceptors.request")
+        // console.log(config)
         // 요청 전에 로딩 오버레이 띄우기
+        // var offset = $("#" + target+"").offset();
+        // console.log("FnMove offset : ",offset)        
+        var sstop = $(document).scrollTop();
+        console.log("sstop = " + sstop);
+        var sstop2 = $(window).scroll();
+        console.log("sstop2 = ");
+        console.log(sstop2);
         $('#loadingContainer').show();
         return config;
     }, function (error) {
@@ -164,6 +172,9 @@ function commonConfirmOpen(targetAction){
             ["AddNewMcks", "Would you like to create MCKS ?"],
             ["DeleteMcks", "Are you sure to delete this MCKS? "],
             ["AddNewNodeOfMcks", "Would you like to add a new Node to this MCKS ?"],
+
+            ["AddMonitoringAlertEventHandler", "Would you like to add<br />Monitoring Alert Event-Handler ?"],
+            ["deleteMonitoringAlertEventHandler", "Are you sure to delete<br />this Monitoring Alert Event-Handler?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -347,6 +358,11 @@ function commonConfirmOk(){
         changePage(targetUrl)
     }else if ( targetAction == "AddNewNodeOfMcks"){
         addNewNode();
+
+    }else if ( targetAction == "AddMonitoringAlertEventHandler"){
+        addMonitoringAlertEventHandler();
+    }else if ( targetAction == "deleteMonitoringAlertEventHandler"){
+        deleteMonitoringAlertEventHandler();
     }else if ( targetAction == "DeleteMcks"){
         deleteMCKS();
     }else {
