@@ -3,7 +3,15 @@
 // 요청 인터셉터
 axios.interceptors.request.use(function (config) {
         console.log("axios.interceptors.request")
+        // console.log(config)
         // 요청 전에 로딩 오버레이 띄우기
+        // var offset = $("#" + target+"").offset();
+        // console.log("FnMove offset : ",offset)        
+        var sstop = $(document).scrollTop();
+        console.log("sstop = " + sstop);
+        var sstop2 = $(window).scroll();
+        console.log("sstop2 = ");
+        console.log(sstop2);
         $('#loadingContainer').show();
         return config;
     }, function (error) {
