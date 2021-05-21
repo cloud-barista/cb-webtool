@@ -347,6 +347,7 @@ func main() {
 			"templates/Header",
 			"templates/MenuLeft",
 			"templates/Footer",
+			"operation/policies/threshold/modal/MonitoringAlertEventHandlerModal",
 		},
 		DisableCache: true,
 	})
@@ -447,6 +448,11 @@ func main() {
 	e.GET("/operation/policies/monitoringalertpolicy/:alertName", controller.GetMonitoringAlertPolicyData)
 	e.POST("/operation/policies/monitoringalertpolicy/reg/proc", controller.MonitoringAlertPolicyRegProc)
 	e.DELETE("/operation/policies/monitoringalertpolicy/del/:alertName", controller.MonitoringAlertPolicyDelProc)
+
+	// Monitoring Alert Event-handler
+	e.GET("/operation/policies/monitoringalerteventhandler/list", controller.GetMonitoringAlertEventHandlerList)
+	e.POST("/operation/policies/monitoringalerteventhandler/reg/proc", controller.MonitoringAlertEventHandlerRegProc)
+	e.DELETE("/operation/policies/monitoringalerteventhandler/del/type/:type/event/:name", controller.MonitoringAlertEventHandlerDelProc)
 
 	policyPlacementGroup := e.Group("/operation/policies/placementpolicy/mngform", policyPlacementTemplate)
 	policyPlacementGroup.GET("", controller.PlacementPolicyMngForm)

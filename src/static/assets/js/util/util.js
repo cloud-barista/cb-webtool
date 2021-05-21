@@ -161,6 +161,9 @@ function commonConfirmOpen(targetAction){
             ["DeleteMonitoringAlertPolicy", "Are you sure to delete this Threshold ?"],
             ["AddNewMcks", "Would you like to create MCKS ?"],
             ["AddNewNodeOfMcks", "Would you like to add a new Node to this MCKS ?"],
+
+            ["AddMonitoringAlertEventHandler", "Would you like to add<br />Monitoring Alert Event-Handler ?"],
+            ["deleteMonitoringAlertEventHandler", "Are you sure to delete<br />this Monitoring Alert Event-Handler?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -341,6 +344,10 @@ function commonConfirmOk(){
         changePage(targetUrl)
     }else if ( targetAction == "AddNewNodeOfMcks"){
         addNewNode();
+    }else if ( targetAction == "AddMonitoringAlertEventHandler"){
+        addMonitoringAlertEventHandler();
+    }else if ( targetAction == "deleteMonitoringAlertEventHandler"){
+        deleteMonitoringAlertEventHandler();
     }else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }

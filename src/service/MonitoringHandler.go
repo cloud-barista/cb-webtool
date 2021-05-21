@@ -429,19 +429,19 @@ func GetMonitoringAlertList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatu
 
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/tasks"
-	resp, _ := util.CommonHttp(url, nil, http.MethodGet)
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
 	// vmMonitoringAlertInfoList := dragonfly.VmMonitoringAlertInfo{}
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return vmMonitoringAlertInfoList, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	// }
+	vmMonitoringAlertInfoList := []dragonfly.VmMonitoringAlertInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return vmMonitoringAlertInfoList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	vmMonitoringAlertInfoList := []dragonfly.VmMonitoringAlertInfo{}
+	//vmMonitoringAlertInfoList := []dragonfly.VmMonitoringAlertInfo{}
 	json.NewDecoder(respBody).Decode(&vmMonitoringAlertInfoList)
 
 	// robots, _ := ioutil.ReadAll(resp.Body)
@@ -625,9 +625,35 @@ func GetMonitoringAlertEventHandlerData(eventHandlerType string, eventName strin
 	return vmMonitoringAlertInfo, model.WebStatus{StatusCode: respStatus}
 }
 
+// 알람 이벤트 핸들러 목록 조회
+// List monitoring alert event handler
+func GetMonitoringAlertEventHandlerList() ([]dragonfly.VmMonitoringAlertEventHandlerInfo, model.WebStatus) {
+	fmt.Print("#########GetMonitoringAlertEventHandlerList############")
+	var originalUrl = "/alert/eventhandlers?eventType=slack"
+	// {{ip}}:{{port}}/dragonfly/alert/eventhandlers?eventType=smtp
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/eventhandlers" + "?eventType=smtp"
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	vmMonitoringAlertEventHandlerInfoList := []dragonfly.VmMonitoringAlertEventHandlerInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return vmMonitoringAlertEventHandlerInfoList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	json.NewDecoder(respBody).Decode(&vmMonitoringAlertEventHandlerInfoList)
+
+	return vmMonitoringAlertEventHandlerInfoList, model.WebStatus{StatusCode: respStatus}
+}
+
 // 알람 이벤트 핸들러 생성
 // Create monitoring alert event-handler
-func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfo *dragonfly.VmMonitoringAlertEventHandlerInfo) (*dragonfly.VmMonitoringAlertEventHandlerInfo, model.WebStatus) {
+func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfoReg *dragonfly.VmMonitoringAlertEventHandlerInfoReg) (*dragonfly.VmMonitoringAlertEventHandlerInfoReg, model.WebStatus) {
 	fmt.Println("RegMonitoringAlertEventHandler ************ : ")
 	var originalUrl = "/alert/eventhandler"
 	// {{ip}}:{{port}}/dragonfly/alert/eventhandler
@@ -636,14 +662,22 @@ func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfo *dragonfly
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/eventhandler"
 
-	pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfo)
-	fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	// pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfoReg)
+	// fmt.Println(string(pbytes))
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	resultVmMonitoringAlertEventHandlerInfo := dragonfly.VmMonitoringAlertEventHandlerInfo{}
+	urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertEventHandlerInfoReg)
+	if convertErr != nil {
+		log.Println(convertErr)
+	}
+
+	fmt.Println(urlValues)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
+
+	resultVmMonitoringAlertEventHandlerInfoReg := dragonfly.VmMonitoringAlertEventHandlerInfoReg{}
 	if err != nil {
 		fmt.Println(err)
-		return &resultVmMonitoringAlertEventHandlerInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &resultVmMonitoringAlertEventHandlerInfoReg, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
@@ -656,12 +690,12 @@ func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfo *dragonfly
 		fmt.Println("respStatus != 200 reason ", errorInfo)
 		returnStatus.Message = errorInfo.Message
 	} else {
-		json.NewDecoder(respBody).Decode(&resultVmMonitoringAlertEventHandlerInfo)
-		fmt.Println(resultVmMonitoringAlertEventHandlerInfo)
+		json.NewDecoder(respBody).Decode(&resultVmMonitoringAlertEventHandlerInfoReg)
+		fmt.Println(resultVmMonitoringAlertEventHandlerInfoReg)
 	}
 	returnStatus.StatusCode = respStatus
 
-	return &resultVmMonitoringAlertEventHandlerInfo, returnStatus
+	return &resultVmMonitoringAlertEventHandlerInfoReg, returnStatus
 }
 
 // 알람 이벤트 핸들러 수정( handlerType=slack)
