@@ -164,6 +164,9 @@ function commonConfirmOpen(targetAction){
             ["AddNewMcks", "Would you like to create MCKS ?"],
             ["DeleteMcks", "Are you sure to delete this MCKS? "],
             ["AddNewNodeOfMcks", "Would you like to add a new Node to this MCKS ?"],
+
+            ["AddMonitoringAlertEventHandler", "Would you like to add<br />Monitoring Alert Event-Handler ?"],
+            ["deleteMonitoringAlertEventHandler", "Are you sure to delete<br />this Monitoring Alert Event-Handler?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -347,6 +350,11 @@ function commonConfirmOk(){
         changePage(targetUrl)
     }else if ( targetAction == "AddNewNodeOfMcks"){
         addNewNode();
+
+    }else if ( targetAction == "AddMonitoringAlertEventHandler"){
+        addMonitoringAlertEventHandler();
+    }else if ( targetAction == "deleteMonitoringAlertEventHandler"){
+        deleteMonitoringAlertEventHandler();
     }else if ( targetAction == "DeleteMcks"){
         deleteMCKS();
     }else {
