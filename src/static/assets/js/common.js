@@ -148,6 +148,9 @@ function lnb_on(){
 	// console.log('target1=' + target1)
 	// console.log('target2=' + target2)
 	console.log('target3=' + target3)
+	if( target1 == undefined || target1 == "main"){
+		target1 = "operation";
+	}
 
 	$("#tab_" + target1).addClass("active")
 

@@ -601,7 +601,13 @@ function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedInd
     $("#" + targetTabObjId).val(selectedInfo);
     $("#" + targetTabConnectionNameObjId).val(selectedConnectionName);
     $("#" + targetObjId).val(selectedId);
-    $("#e_connectionName").val(selectedConnectionName);
+    $("#e_connectionName").val();
+
+    var esSelectedConnectionName = $("#es_regConnectionName option:selected").val()
+    if( esSelectedConnectionName == ""){// 선택한 connectionName이 없으면 set
+      $("#es_regConnectionName").val(selectedConnectionName);
+    }
+
     // 값이 설정된 후에는 table 안보이게
     document.getElementById(tableId).style.display = "none";
   }  

@@ -95,9 +95,63 @@ function addNewNode(){
     if( clusterId == ""){
         commonAlert("MCKS 정보가 올바르지 않습니다.");
         return;
-    }
-    alert(clusterId);
-    var url = "/operation/manages/mcksmng/regform/" + clusterId + "/" + clusterName;
-    alert(url);
+    }    
+    var url = "/operation/manages/mcksmng/regform/" + clusterId + "/" + clusterName;    
     location.href = url;
+}
+
+// MCKS 삭제
+function deleteMCKS(){
+    var checkedCount = 0;
+    var mcksID = "";
+    var mcksName = "";
+    $("[id^='td_ch_']").each(function(){
+       var checkedIndex = $(this).val();
+        if($(this).is(":checked")){
+            checkedCount++;
+            console.log("checked")
+            mcksID = $("#mcksUID" + checkedIndex).val();
+            mcksName = $("#mcksName" + checkedIndex).val();
+            // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
+        }else{
+            console.log("checked nothing")
+           
+        }
+    })
+
+    if(checkedCount == 0){
+        commonAlert("Please Select MCKS!!")
+        return;
+    }else if( checkedCount > 1){
+        commonAlert("Please Select One MCKS at a time")
+        return;
+    }
+
+    // TODO : 삭제 호출부분 function으로 뺼까?
+    var url = "/operation/manages/mcksmng/" + mcksID + "/" + mcksName;               
+    axios.delete(url,{})
+        .then(result=>{
+            console.log("get  Data : ",result.data);
+            //StatusInfo.code
+            //StatusInfo.kind
+            //StatusInfo.message
+            var statusCode = result.data.status;
+            var message = result.data.message;
+            
+            if( statusCode != 200 && statusCode != 201) {
+                commonAlert(message +"(" + statusCode + ")");
+                return;
+            }else{
+                commonAlert(message);
+                // TODO : MCIS List 조회
+                location.reload();
+            }
+            
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            commonErrorAlert(statusCode, errorMessage) 
+        });
+
 }

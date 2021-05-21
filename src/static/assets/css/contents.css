@@ -32,6 +32,8 @@
 .titlebox .location span { font-weight:200; display:inline-block; margin:0 10px; }
 .titlebox .location strong { font-weight:400; }
 
+.btn_search { position:absolute; top:-2px; right:1px; width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat; }
+
 .dashboard { margin:33px 0 0 0; }
 .dashboard:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .d_box { float:left; min-height:260px; margin:0 0 0 2.5%; background-color:#fff; border-radius:8px; box-shadow:5px 5px 8px 0 #d7dcde,0 -5px 8px 0 #d7dcde; } 

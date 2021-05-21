@@ -410,6 +410,35 @@ func McisRegProc(c echo.Context) error {
 	})
 }
 
+// MCIS 삭제
+func McisDelProc(c echo.Context) error {
+	log.Println("McisDelProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+
+	mcisID := c.Param("mcisID")
+	log.Println("mcisID= " + mcisID)
+	_, respStatus := service.DelMcis(defaultNameSpaceID, mcisID)
+	log.Println("RegMcis service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+	})
+}
+
 // server instance 등록
 
 // func McisListFormWithParam(c echo.Context) error {

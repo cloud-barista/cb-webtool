@@ -40,8 +40,13 @@ $(document).ready(function(){
                         
                         // location.href = "/setting/connections/cloudconnectionconfig/mngform" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
                         // location.href = "/main" // --> TODO : Dashboard로 보낼 것, namespace 없을 때만 connection으로
-                        var targetUrl = "/main"
-					    changePage(targetUrl)
+
+                        // var targetUrl = "/main"
+					    // changePage(targetUrl)
+
+                        $("#popLogin").modal();
+                        getCloudConnectionConfig();// getConfig() 이름 변경함.
+                        getNameSpace();
                  }else{
                      alert("ID or PASSWORKD MISMATCH!!Check yourself!")
                     //  location.reload(true); 
@@ -128,14 +133,14 @@ function enterKeyForLogin() {
 
 // 커넥션 정보 조회 : getConfig() -> getCloudConnectionConfig 로 변경
 function getCloudConnectionConfig(){
-    var connectionURL = "/connections/cloudconnectionconfig/list"
-    axios.get(connectionURL,{
+    var url = "/setting/connections/cloudconnectionconfig/list"
+    axios.get(url,{
     }).then(result=>{
         console.log("get Connection config Data : ",result.data);
         // console.log("get Connection config Data : ",result);
-        var data = result.data.connectionconfig;
+        //var data = result.data.connectionconfig;
+        var data = result.data.ConnectionConfig;
         var html = ""
-        
         if(data){
             data.map(item=>(
                 html += '<div class="list">'
@@ -147,6 +152,19 @@ function getCloudConnectionConfig(){
             $("#cloudList").append(html)
            configModal()
         }
+    }).catch(function (error) {
+        if (error.response) {
+            // 서버가 2xx 외의 상태 코드를 리턴한 경우        
+            alert("There is a problem communicating with cb-tumblebug server\nCheck the cb-tumblebug server\nCall Url : " + url + "\nStatus Code : " + error.response.status);
+        }
+        else if (error.request) {
+            // 응답을 못 받음
+            alert("No response was received from the cb-tumblebug server.\nCheck the cb-tumblebug server\nCall Url : " + url);
+        }
+        else {
+            alert("Error communicating with cb-tumblebug server.\n" + error.message);
+        }
+        console.log(error);
     })
 }
 
@@ -173,20 +191,22 @@ function getUserNamespace(namespaceList){
 }
 // 유저의 namespace 목록 조회
 function getNameSpace(){
-    var url = "/ns";
+    //var url = "/ns";
+    var url = "/setting/namespaces/namespace/list";
     // token
     axios.get(url,{
         headers:{
-            'Authorization': "{{ .apiInfo}}",
+            // 'Authorization': "{{ .apiInfo}}",
             'Content-Type' : "application/json"
         }
     }).then(result=>{
         console.log("get NameSpace Data : ",result.data);        
-        var data = result.data.ns;
+        //var data = result.data.ns;
+        var data = result.data;
         var html = ""
-
+        
         //최초 로그인시에는 호출되지 않도록 버그 수정
-        if(!isEmpty(data) && data.length){
+        if(!isEmpty(data) && data.length){            
             data.filter((list)=> list.name !== "" ).map((item,index)=>(
                 html += '<div class="list" onclick="selectNS(\''+item.id+'\');">'
                     +'<div class="stit">'+item.name+'</div>'
@@ -195,6 +215,7 @@ function getNameSpace(){
             ))
             $("#nsList").empty();
             $("#nsList").append(html);
+            nsModal()     
         }
     }) .catch(function (error) {
         if (error.response) {
@@ -220,8 +241,8 @@ function nsModal(){
     $(".popboxNS .cloudlist .list").each(function () {
         $(this).click(function () {
             var $list = $(this);
-            // var $ok = $(".btn_ok");// --class 말고 id로
-            var $ok = $("#select_ns_ok_btn");
+            var $ok = $(".btn_ok");// --class 말고 id로
+            //var $ok = $("#select_ns_ok_btn");
                 $ok.fadeIn();
             $list.addClass('selected');
             $list.siblings().removeClass("selected");
@@ -338,7 +359,8 @@ function clickOK(){
 
 function setNS(nsid){
     if(nsid){
-        reqUrl = "/setting/namespaces/"+nsid;
+        //reqUrl = "/setting/namespaces/"+nsid;
+        reqUrl = "/setting/namespaces/namespace/set/"+nsid;
         console.log(reqUrl);
         axios.get(reqUrl,{
             headers:{
@@ -347,7 +369,8 @@ function setNS(nsid){
         }).then(result=>{
             var data = result.data
             console.log(data);
-            location.href = "/Dashboard/NS"
+            //location.href = "/Dashboard/NS"
+            location.href = "/main"
         }).catch(function (error) {
             if (error.response) {
                 console.log(error.response)              

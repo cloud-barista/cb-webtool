@@ -43,6 +43,58 @@ function callbackMcisLifeCycle(resultStatus, resultData, type){
         commonAlert("MCIS " + type + " failed!");
     }
 }
+
+// list에 선택된 MCIS 제거. 1개씩
+function deleteMCIS(){
+    var checkedCount = 0;
+    var mcisID = "";
+    $("[id^='td_ch_']").each(function(){
+       
+        if($(this).is(":checked")){
+            checkedCount++;
+            console.log("checked")
+            mcisID = $(this).val();
+            // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
+        }else{
+            console.log("checked nothing")
+           
+        }
+    })
+
+    if(checkedCount == 0){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }else if( checkedCount > 1){
+        commonAlert("Please Select One MCIS at a time")
+        return;
+    }
+
+    // TODO : 삭제 호출부분 function으로 뺼까?
+    var url = "/operation/manages/mcismng/" + mcisID;               
+    axios.delete(url,{})
+        .then(result=>{
+            console.log("get  Data : ",result.data);
+
+            var statusCode = result.data.status;
+            var message = result.data.message;
+            
+            if( statusCode != 200 && statusCode != 201) {
+                commonAlert(message +"(" + statusCode + ")");
+                return;
+            }else{
+                commonAlert(message);
+                // TODO : MCIS List 조회
+                location.reload();
+            }
+            
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            commonErrorAlert(statusCode, errorMessage) 
+        });
+
+}
 ////////////// MCIS Handling end //////////////// 
 
 

@@ -1,6 +1,6 @@
 {{define "NodeConfigure"}}
 
-<!-- server 추가 form -->
+<!-- Node 추가 form : worker only -->
 <div class="servers_config node_config" id="nodeConfig" style="display:block">
 	<form id="node_form">
 		<input type="hidden" name="mcksID"  value="{{ .McksID}}" id="mcksID" />
@@ -19,41 +19,6 @@
 						</ul>
 					</div>
 				</div>
-
-				<!-- controlPlane -->
-				<div class="servers_box">
-					<div class="title">Control Plane</div>
-					<div class="list">
-						<ul id="mcks_ControlPlane_list">															
-							<li>
-								<label><span class="ch">*</span>Provider</label>
-								<select  class="selectbox white pline sel_4"  name="controlPlaneProvider"  id="controlPlaneProvider_0" onchange="getConnectionListForSelectbox(this.value, 'controlPlaneConnectionName_0');">
-									<option value="">Select Provider</option>
-									{{ range $item := .CloudOSList}}	
-									<option value="{{ $item }}">{{ $item }}</option>
-									{{ end }}
-								</select>
-							</li>
-							<li>
-								<label><span class="ch">*</span>Connection Name</label>
-								<select class="selectbox white pline sel_4" name="controlPlaneConnectionName" id="controlPlaneConnectionName_0" onchange="changeConnectionInfo(this.value, 'controlPlaneSpecId_0');">
-									<option value="">Select Connection</option>
-								</select>
-							</li>
-							<li>
-								<label>Count</label>
-								<input type="text" name="controlPlaneCount" value="" id="controlPlaneCount_0" placeholder="Input Count" class="pline ip_1" value="3" />
-							</li>
-							<li>
-								<label><span class="ch">*</span>Spec</label>
-								<select class="selectbox white pline sel_4" name="controlPlaneSpecId" id="controlPlaneSpecId_0">
-									<option value="1">Select Spec</option>
-								</select>
-							</li>
-						</ul>					
-					</div>
-				</div>
-				<!-- //controlPlane -->
 
 				<!-- worker -->
 				<div class="servers_box" id="mcks_Worker_list_0">
