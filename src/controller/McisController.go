@@ -207,6 +207,9 @@ func McisMngForm(c echo.Context) error {
 		mcisSimpleInfo.Name = mcisInfo.Name
 		mcisSimpleInfo.Description = mcisInfo.Description
 
+		mcisSimpleInfo.InstallMonAgent = mcisInfo.InstallMonAgent
+		mcisSimpleInfo.Label = mcisInfo.Label
+
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
 		mcisSimpleInfo.VmSimpleList = resultSimpleVmList
 		mcisSimpleInfo.VmStatusNames = resultVmStatusNames

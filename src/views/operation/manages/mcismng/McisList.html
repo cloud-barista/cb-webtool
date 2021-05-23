@@ -52,6 +52,7 @@
 															<ul>
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('AddNewMcis')">New / Extend</a></li>
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('DeleteMcis')">Delete</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('ExportScriptOfMcis')">Export</a></li>
 															</ul>
 														</li>
 													</ul>
@@ -129,7 +130,39 @@
 													<input type="hidden" name="vmID" id="mcisVmID_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmID}}" />
 													<input type="hidden" name="vmName" id="mcisVmName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmName}}" />
 													<input type="hidden" name="vmStatus" id="mcisVmStatus_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmStatus}}" />
+
+
+													<!-- vm export 용 m_ 는 mcis의 첫글자 m-->
+													<input type="hidden" name="m_vmConnectionName" id="m_vmConnectionName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmConnectionName}}" />
+													<input type="hidden" name="m_vmDescription" id="m_vmDescription_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmDescription}}" />
+													<input type="hidden" name="m_vmImageId" id="m_vmImageId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmImageId}}" />
+													<input type="hidden" name="m_vmLabel" id="m_vmLabel_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmLabel}}" />
+													<input type="hidden" name="m_vmName" id="m_vmName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmName}}" />
+													<input type="hidden" name="m_vmSecurityGroupIds" id="m_vmSecurityGroupIds_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmSecurityGroupIds}}" />
+													<input type="hidden" name="m_vmSpecId" id="m_vmSpecId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmSpecId}}" />
+													<input type="hidden" name="m_vmSshKeyId" id="m_vmSshKeyId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmSshKeyId}}" />
+													<input type="hidden" name="m_vmSubnetId" id="m_vmSubnetId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmSubnetId}}" />
+													<input type="hidden" name="m_vmVnetId" id="m_vmVnetId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmVnetId}}" />
+													<input type="hidden" name="m_vmGroupSize" id="m_vmGroupSize_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmGroupSize}}" />
+													<input type="hidden" name="m_vmUserAccount" id="m_vmUserAccount_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmUserAccount}}" />
+													<input type="hidden" name="m_vmUserPassword" id="m_vmUserPassword_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmUserPassword}}" />
+
+													<input type="hidden" name="vmStatus" id="m_exportFileName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="" />
+													<input type="hidden" name="vmStatus" id="m_vmExportScript_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="" />
+													
 													{{ end }}
+
+													<!-- mcis export용 -->
+													<input type="hidden" name="m_mcisDescription" id="m_mcisDescription_{{ $index}}" value="{{$item.Description}}" />
+													<input type="hidden" name="m_mcisID" id="m_mcisID_{{ $index}}" value="{{$item.ID}}" />
+													<input type="hidden" name="m_mcisInstallMonAgent" id="m_mcisInstallMonAgent_{{ $index}}" value="{{$item.InstallMonAgent}}" />
+													<input type="hidden" name="m_mcisLabel" id="m_mcisLabel_{{ $index}}" value="{{$item.Label}}" />
+													<input type="hidden" name="m_mcisName" id="m_mcisName_{{ $index}}" value="{{$item.Name}}" />
+													<input type="hidden" name="m_mcisStatus" id="m_mcisStatus_{{ $index}}" value="{{$item.Status}}" />
+
+
+													<input type="hidden" name="m_exportFileName" id="m_exportFileName_{{ $index}}" value="" />
+													<input type="hidden" name="m_mcisExportScript" id="m_mcisExportScript_{{ $index}}" value="" />
 
 												</td>
 										

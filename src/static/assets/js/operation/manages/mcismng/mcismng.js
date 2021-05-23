@@ -220,6 +220,8 @@ function clickListOfMcis(id,index){
 
     // MCIS Info area set
     showServerListAndStatusArea(id,index);
+
+    exportMcisScript(index);// export를 위한 script 준비
 }
 
 const mcisInfoDataList = new Array()// test_arr : mcisInfo 1개 전체, pageLoad될 때, refresh 할때 data를 set. mcis클릭시 상세내용 보여주기용 조회
@@ -687,3 +689,121 @@ function showVmMonitoring(mcisID, vmID){
  
 
 // getVMMetric 는 mcis.chart.js로 이동 
+
+////////////////
+
+// mcis를 선택하면 해당 mcis를 export할 준비를 함
+// lifecycle 의 ExportScriptOfMcis 를 통해 선택한 mcis script를 file로 저장
+function exportMcisScript(mcisIndex){
+    var vms = 'mcisVmID_' + mcisIndex + "_";
+    var vmIndex = 0;
+    // vmScript 먼저 생성
+    $("[id^='" + vms +"']").each(function(){
+        exportVmScript(mcisIndex, vmIndex);
+        vmIndex++;
+     });
+
+	var mcisIDVal = $("#m_mcisID_" + vmIndex).val();
+    var mcisNameVal = $("#m_mcisName_" + vmIndex).val();
+	var mcisLabelVal = $("#m_mcisLabel_" + vmIndex).val();
+	var mcisDescriptionVal = $("#m_mcisDescription_" + vmIndex).val();
+	var mcisInstallMonAgentVal = $("#m_mcisInstallMonAgent_" + vmIndex).val();
+	
+
+    var paramValueAppend = '"';
+    var mcisCreateScript = "";
+	mcisCreateScript += '{	';
+	mcisCreateScript += paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + mcisNameVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + mcisDescriptionVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + mcisLabelVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'installMonAgent' + paramValueAppend + ' : ' + paramValueAppend + mcisInstallMonAgentVal + paramValueAppend;
+	
+    // vmScript 가져오기
+    mcisCreateScript += "vm:[";
+    for( var i = 0; i < vmIndex -1; i++){
+        if( i > 0)mcisCreateScript += ",";
+        var vmScript = $("#m_vmExportScript_"+i).val();// 여기에 담겨있음.(위에서 먼저 호출해서 생성 해 둠)
+        mcisCreateScript += vmScript;
+    }
+    mcisCreateScript += "]";
+    mcisCreateScript += '}';
+
+    $("#m_exportFileName_" + mcisIndex).val(mcisNameVal);
+	$("#m_vmExportScript_" + mcisIndex).val(mcisCreateScript);
+    console.log("mcisCreateScript============");
+    console.log(mcisCreateScript);
+}
+
+// vm을 선택하면 해당 vm을 export할 준비를 함
+function exportVmScript(mcisIndex, vmIndex){
+	
+	var connectionNameVal = $("#m_connectionName_" + mcisIndex + "_" + vmIndex).val();
+	var descriptionVal = $("#m_description_" + mcisIndex + "_" + vmIndex).val();
+	var imageIdVal = $("#m_imageId_" + mcisIndex + "_" + vmIndex).val();
+	var labelVal = $("#m_label_" + mcisIndex + "_" + vmIndex).val();
+	var nameVal = $("#m_name_" + mcisIndex + "_" + vmIndex).val();
+	var securityGroupIdsVal = $("#m_securityGroupIds_" + mcisIndex + "_" + vmIndex).val();
+	var specIdVal = $("#m_specId_" + mcisIndex + "_" + vmIndex).val();
+	var sshKeyIdVal = $("#m_sshKeyId_" + mcisIndex + "_" + vmIndex).val();
+	var subnetIdVal = $("#m_subnetId_" + mcisIndex + "_" + vmIndex).val();
+	var vNetIdVal = $("#m_vNetId_" + mcisIndex + "_" + vmIndex).val();
+	var vmGroupSizeVal = $("#m_vmGroupSize_" + mcisIndex + "_" + vmIndex).val();
+	var vmUserAccountVal = $("#m_vmUserAccount_" + mcisIndex + "_" + vmIndex).val();
+	var vmUserPasswordVal = $("#m_vmUserPassword_" + mcisIndex + "_" + vmIndex).val();
+
+	var paramValueAppend = '"';
+	var vmCreateScript = "";
+	vmCreateScript += '{	';
+	vmCreateScript += paramValueAppend + 'connectionName' + paramValueAppend + ' : ' + paramValueAppend + connectionNameVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + descriptionVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'imageId' + paramValueAppend + ' : ' + paramValueAppend + imageIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + labelVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + nameVal + paramValueAppend;
+	// vmCreateScript += ',securityGroupIds: ';
+    // vmCreateScript += '	' + paramValueAppend + securityGroupIdsVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'specId' + paramValueAppend + ' : ' + paramValueAppend + specIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
+	vmCreateScript += '}';
+
+	
+	$("#m_exportFileName_" + mcisIndex + "_"+ vmIndex).val(nameVal);
+	$("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
+    console.log("vmCreateScript============" + mcisIndex + ":" + vmIndex);
+    console.log(vmCreateScript);
+}
+
+// json 파일로 저장
+function saveToMcisAsJsonFile(mcisIndex){
+	var fileName = $("#m_exportFileName_" + mcisIndex).val();
+	var exportScript = $("#m_mcisExportScript_" + mcisIndex).val();
+	
+    saveFileProcess(fileName, exportScript);
+}
+function saveToVmAsJsonFile(mcisIndex, vmIndex){
+	var fileName = $("#m_exportFileName_" + mcisIndex + "_" + vmIndex).val();
+	var exportScript = $("#m_vmExportScript_" + mcisIndex + "_"  + vmIndex).val();
+													
+    saveFileProcess(fileName, exportScript);
+}
+
+// 파일명, script대로 파일 생성
+function saveFileProcess(fileName, exportScript){
+
+	var element = document.createElement('a');
+	// element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
+	element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
+	// element.setAttribute('download', fileName);
+	element.setAttribute('download', fileName + ".json");
+
+	element.style.display = 'none';
+	document.body.appendChild(element);
+
+	element.click();
+
+	document.body.removeChild(element);
+}

@@ -14,6 +14,9 @@ type McisSimpleInfo struct {
 	McisStatus  string `json:"mcisStatus"`
 	Description string `json:"description"`
 
+	InstallMonAgent string `json:"installMonAgent"`
+	Label           string `json:"label"`
+
 	ConnectionCount int `json:"connectionCount"`
 
 	// vm_cnt : 해당 mcis의 vm cnt
