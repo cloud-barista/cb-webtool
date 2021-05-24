@@ -127,8 +127,15 @@
 													<input type="hidden" name="mcksStatus" value="{{$clusterItem.Status}}" id="mcksStatus{{$clusterIndex}}"/>
 													<input type="hidden" name="mcksConfig" value="{{$clusterItem.ClusterConfig}}" id="mcksConfig{{$clusterIndex}}"/>
 													
+													<!-- MCIS의 VM들 이름, ID, 상태-->
+													{{range $nIndex, $nodeItem := $clusterItem.Nodes}}
+													<input type="hidden" name="nodeUID" id="mcksNodeUID_{{ $clusterIndex}}_{{ $nIndex}}" value="{{$nodeItem.NodeUID}}" />
+													<input type="hidden" name="nodeName" id="mcksNodeName_{{ $clusterIndex}}_{{ $nIndex}}" value="{{$nodeItem.NodeName}}" />
+													<input type="hidden" name="nodeKind" id="mcksNodeKind_{{ $clusterIndex}}_{{ $nIndex}}" value="{{$nodeItem.NodeKind}}" />
+													<input type="hidden" name="nodeRole" id="mcksNodeRole_{{ $clusterIndex}}_{{ $nIndex}}" value="{{$nodeItem.NodeRole}}" />
+													{{ end }}
 												</td>
-										
+												
 											</tr>
 											{{ end }}
 										</tbody>

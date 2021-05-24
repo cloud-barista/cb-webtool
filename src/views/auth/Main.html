@@ -59,8 +59,11 @@
 
 
 $(document).ready(function () {
-  
+	$("#guideArea").modal();
 });                   
 
+function guideAreaHide(){
+	$("#guideArea").modal("hide");
+}
 </script>
 {{template "Footer" .}}

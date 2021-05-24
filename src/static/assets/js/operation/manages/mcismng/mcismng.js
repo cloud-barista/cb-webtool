@@ -220,6 +220,8 @@ function clickListOfMcis(id,index){
 
     // MCIS Info area set
     showServerListAndStatusArea(id,index);
+
+    makeMcisScript(index);// export를 위한 script 준비
 }
 
 const mcisInfoDataList = new Array()// test_arr : mcisInfo 1개 전체, pageLoad될 때, refresh 할때 data를 set. mcis클릭시 상세내용 보여주기용 조회
@@ -687,3 +689,235 @@ function showVmMonitoring(mcisID, vmID){
  
 
 // getVMMetric 는 mcis.chart.js로 이동 
+
+////////////////
+
+// MCIS script export
+function mcisScriptExport(){
+    
+    // var mcisID = $("#mcis_id").val();
+    var vmID = $("#vm_id").val();
+    var vmName = $("#vm_name").val();
+
+    var checkedCount = 0;
+    var mcisID = "";
+    $("[id^='td_ch_']").each(function(){
+       
+        if($(this).is(":checked")){
+            checkedCount++;
+            console.log("checked")
+            mcisID = $(this).val();
+            // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
+        }else{
+            console.log("checked nothing")
+           
+        }
+    })
+
+    if(checkedCount == 0){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }else if( checkedCount > 1){
+        commonAlert("Please Select One MCIS at a time")
+        return;
+    }
+
+    // 위 값으로 mcisIndex, vmIndex 를 찾자
+    var mcisIndex = 0;
+    var vmIndex = 0;
+    //mcisID{{$index}}
+    console.log("mcisScriptExport start")
+    $("[id^='mcisID']").each(function(){
+        if( mcisID == $(this).val()){
+            mcisIndex = $(this).attr("id").replace("mcisID", "")
+            return false;
+        }
+    });
+    console.log("index " + mcisIndex)
+    if( $("#m_mcisExportScript_" + mcisIndex).val() == ""){
+        makeMcisScript(mcisIndex);
+    }
+    console.log("mcisscript")
+    console.log($("#m_mcisExportScript_" + mcisIndex).val())
+    saveToMcisAsJsonFile(mcisIndex, vmIndex);
+}
+
+// vm script export
+function vmScriptExport(){
+    
+    var mcisID = $("#mcis_id").val();
+    var vmID = $("#vm_id").val();
+    var vmName = $("#vm_name").val();
+    console.log("vmScriptExport start")
+    // 위 값으로 mcisIndex, vmIndex 를 찾자
+    var mcisIndex = 0;
+    var vmIndex = 0;
+    $("[id^='mcisVmID_']").each(function(){
+        if( vmID == $(this).val()){
+            var mcisVm = $(this).attr("id").split("_")
+            mcisIndex = mcisVm[1]
+            vmIndex = mcisVm[2]
+            return false;
+        }
+    });
+
+    if(!mcisID){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }
+    if(!vmID){
+        commonAlert("Please Select VM!!")
+        return;
+    }
+    
+    console.log("index " + mcisIndex + " , " + vmIndex)
+    if( $("#m_vmExportScript_" + mcisIndex + "_" + vmIndex).val() == ""){
+        makeVmScript(mcisIndex, vmIndex);
+    }
+    console.log("vmscript")
+    console.log($("#m_vmExportScript_" + mcisIndex + "_" + vmIndex).val())
+    saveToVmAsJsonFile(mcisIndex, vmIndex);
+}
+// mcis를 선택하면 해당 mcis를 export할 준비를 함
+// lifecycle 의 ExportScriptOfMcis 를 통해 선택한 mcis script를 file로 저장
+function makeMcisScript(mcisIndex){
+    var vms = 'mcisVmID_' + mcisIndex + "_";
+    var vmIndex = 0;
+    // vmScript 먼저 생성
+    console.log("in makeMcisScript " + mcisIndex + " vms : " + vms);
+    $("[id^='" + vms +"']").each(function(){
+        makeVmScript(mcisIndex, vmIndex);
+        vmIndex++;
+    });
+    console.log(" gogo mcis script");
+	var mcisIDVal = $("#m_mcisID_" + mcisIndex).val();
+    var mcisNameVal = $("#m_mcisName_" + mcisIndex).val();
+	var mcisLabelVal = $("#m_mcisLabel_" + mcisIndex).val();
+	var mcisDescriptionVal = $("#m_mcisDescription_" + mcisIndex).val();
+	var mcisInstallMonAgentVal = $("#m_mcisInstallMonAgent_" + mcisIndex).val();
+	
+
+    var paramValueAppend = '"';
+    var mcisCreateScript = "";
+    console.log(" gogo mcis script2 ");
+	mcisCreateScript += '{	';
+	mcisCreateScript += paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + mcisNameVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + mcisDescriptionVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + mcisLabelVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'installMonAgent' + paramValueAppend + ' : ' + paramValueAppend + mcisInstallMonAgentVal + paramValueAppend;
+	console.log(mcisCreateScript);
+    // vmScript 가져오기
+    console.log("vm Size =" + vmIndex);
+    mcisCreateScript += ',' + paramValueAppend + 'vm' + paramValueAppend + ':[';
+    var addedVmIndex = 0;
+    for( var i = 0; i < vmIndex; i++){
+        var vmScript = $("#m_vmExportScript_" + mcisIndex + "_" + i).val();// 여기에 담겨있음.(위에서 먼저 호출해서 생성 해 둠)
+
+        console.log(i );
+        console.log(vmScript);
+
+        if( vmScript == undefined) continue;// VM이 Terminated 된 경우 등에서는 vmScript가 정상적으로 생성되지 않음.
+
+        if( addedVmIndex > 0) mcisCreateScript += ",";        
+        
+        mcisCreateScript += vmScript;
+        addedVmIndex++;
+    }
+    mcisCreateScript += ']';
+    mcisCreateScript += '}';
+
+    $("#m_exportFileName_" + mcisIndex).val(mcisNameVal);
+	$("#m_mcisExportScript_" + mcisIndex).val(mcisCreateScript);
+
+    console.log("mcisCreateScript============");
+    console.log(mcisCreateScript);
+}
+
+// vm을 선택하면 해당 vm을 export할 준비를 함
+function makeVmScript(mcisIndex, vmIndex){
+	console.log("in makeVmScript" +  mcisIndex + " : " + vmIndex)
+	var connectionNameVal = $("#m_vmConnectionName_" + mcisIndex + "_" + vmIndex).val();
+	var descriptionVal = $("#m_vmDescription_" + mcisIndex + "_" + vmIndex).val();
+	var imageIdVal = $("#m_vmImageId_" + mcisIndex + "_" + vmIndex).val();
+	var labelVal = $("#m_vmLabel_" + mcisIndex + "_" + vmIndex).val();
+	var nameVal = $("#m_vmName_" + mcisIndex + "_" + vmIndex).val();
+	var securityGroupIdsVal = $("#m_vmSecurityGroupIds_" + mcisIndex + "_" + vmIndex).val();
+	var specIdVal = $("#m_vmSpecId_" + mcisIndex + "_" + vmIndex).val();
+	var sshKeyIdVal = $("#m_vmSshKeyId_" + mcisIndex + "_" + vmIndex).val();
+	var subnetIdVal = $("#m_vmSubnetId_" + mcisIndex + "_" + vmIndex).val();
+	var vNetIdVal = $("#m_vmVnetId_" + mcisIndex + "_" + vmIndex).val();
+	var vmGroupSizeVal = $("#m_vmGroupSize_" + mcisIndex + "_" + vmIndex).val();
+	var vmUserAccountVal = $("#m_vmUserAccount_" + mcisIndex + "_" + vmIndex).val();
+	var vmUserPasswordVal = $("#m_vmUserPassword_" + mcisIndex + "_" + vmIndex).val();
+
+	var paramValueAppend = '"';
+	var vmCreateScript = "";
+	vmCreateScript += '{	';
+	vmCreateScript += paramValueAppend + 'connectionName' + paramValueAppend + ' : ' + paramValueAppend + connectionNameVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + descriptionVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'imageId' + paramValueAppend + ' : ' + paramValueAppend + imageIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + labelVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + nameVal + paramValueAppend;
+	
+    //vmCreateScript += ',' + paramValueAppend + 'securityGroupIds' + paramValueAppend + ' : ' + paramValueAppend + securityGroupIdsVal + paramValueAppend;
+
+    console.log(securityGroupIdsVal);
+    var sgVal = securityGroupIdsVal.replace(/\[/gi, "");
+    sgVal = sgVal.replace(/\]/gi, "");
+    var sgArr = sgVal.split(",");
+
+    vmCreateScript += ',' + paramValueAppend + 'securityGroupIds' + paramValueAppend + ' : [';
+    
+    for( var i = 0; i < sgArr.length; i++){
+        if( i > 0) vmCreateScript += ','
+        vmCreateScript += paramValueAppend + sgArr[i] + paramValueAppend;
+        console.log("securityGroupIdsVal [" + i + "] =" + sgArr[i]);
+    }
+    vmCreateScript += ']';
+    
+	vmCreateScript += ',' + paramValueAppend + 'specId' + paramValueAppend + ' : ' + paramValueAppend + specIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
+	vmCreateScript += '}';
+
+	
+	$("#m_exportFileName_" + mcisIndex + "_"+ vmIndex).val(nameVal);
+	$("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
+    console.log("vmCreateScript============" + mcisIndex + ":" + vmIndex);
+    console.log(vmCreateScript);
+}
+
+// json 파일로 저장
+function saveToMcisAsJsonFile(mcisIndex){
+	var fileName = "MCIS_" + $("#m_exportFileName_" + mcisIndex).val();
+	var exportScript = $("#m_mcisExportScript_" + mcisIndex).val();
+	
+    saveFileProcess(fileName, exportScript);
+}
+function saveToVmAsJsonFile(mcisIndex, vmIndex){
+	var fileName = "VM_" + $("#m_exportFileName_" + mcisIndex + "_" + vmIndex).val();
+	var exportScript = $("#m_vmExportScript_" + mcisIndex + "_"  + vmIndex).val();
+													
+    saveFileProcess(fileName, exportScript);
+}
+
+// 파일명, script대로 파일 생성
+function saveFileProcess(fileName, exportScript){
+
+	var element = document.createElement('a');
+	// element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
+	element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
+	// element.setAttribute('download', fileName);
+	element.setAttribute('download', fileName + ".json");
+
+	element.style.display = 'none';
+	document.body.appendChild(element);
+
+	element.click();
+
+	document.body.removeChild(element);
+}

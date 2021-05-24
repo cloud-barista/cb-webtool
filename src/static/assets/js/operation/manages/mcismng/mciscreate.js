@@ -130,6 +130,107 @@ function deployMcis(){
     }
 }
 
+// MCIS Create 와 VM Create의 function이름이 같음
+function displayMcisImportServerFormByImport(){
+    var $SimpleServers = $("#simpleServerConfig");
+    var $ExpertServers = $("#expertServerConfig");
+    var $ImportServers = $("#importServerConfig");
+    var check = $(".switch .ch").is(":checked");
+    console.log("check=" + check);
+    if( check){
+        $SimpleServers.removeClass("active");
+        $ExpertServers.removeClass("active");            
+        $ImportServers.addClass("active");
+
+        importMCISInfoFromFile();// import창 띄우기 
+    }
+}
+
+// mcis export한 파일 선택하여 읽기
+function importMCISInfoFromFile() {
+    var input = document.createElement("input");
+    input.type = "file";
+    // input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
+	input.accept = ".json";
+    input.onchange = function (event) {
+        importMcisFileProcess(event.target.files[0]);
+    };
+    input.click();
+}
+
+// 선택한 MCIS 파일을 읽어 화면에 보여줌
+function importMcisFileProcess(file) {
+	try{
+		var reader = new FileReader();
+		reader.onload = function () {
+			console.log(reader.result);
+			console.log("---1")
+			// $("#fileContent").val(reader.result);
+			
+			var jsonStr = JSON.stringify(reader.result)
+			console.log(JSON.stringify(jsonStr));
+
+			var newJ= $.parseJSON(reader.result);
+
+			setMcisInfoToForm(newJ);
+			//mcisTojsonFormatter(newJ)
+			
+		};
+		//reader.readAsText(file, /* optional */ "euc-kr");
+		reader.readAsText(file);
+	}catch(error){
+		commonAlert("File Load Failed");
+		console.log(error);
+	}
+}
+
+// json 객체를 textarea에 표시할 때 예쁘게
+function mcisTojsonFormatter(mcisInfoObj){
+	var fmt = JSON.stringify(mcisInfoObj, null, 4);    // stringify with 4 spaces at each level
+	$("#mcisImportScriptPretty").val(fmt);	
+}
+
+// 선택한 파일을 읽어 form에 Set
+function setMcisInfoToForm(mcisInfoObj){
+	// 수신한 obj를 바로 deploy로 던질까?
+
+    var url = "/operation/manages/mcismng/reg/proc"
+    try{        
+        axios.post(url,mcisInfoObj,{
+            headers :{
+                'Content-type': 'application/json',
+                // 'Authorization': apiInfo,
+                },
+        }).then(result=>{
+            console.log("MCIR Register data : ",result);
+            console.log("Result Status : ",result.status); 
+            if(result.status == 201 || result.status == 200){
+                commonAlert("Register Success")
+                // location.href = "/Manage/MCIS/list";
+                // $('#loadingContainer').show();
+                // location.href = "/operation/manages/mcismng/mngform/"
+                var targetUrl = "/operation/manages/mcismng/mngform"
+                changePage(targetUrl)
+            }else{
+                commonAlert("Register Fail")
+                //location.reload(true);
+            }
+        }).catch((error) => {
+            // console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage) 
+            
+        })
+    }finally{
+        // AjaxLoadingShow(false);
+    }  
+
+	
+}
+
+
 $(document).ready(function() {
     //OS_HW popup table scrollbar
 //   $('#OS_HW .btn_spec').on('click', function() {

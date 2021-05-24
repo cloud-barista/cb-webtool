@@ -128,6 +128,9 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 		mcisSimpleInfo.Name = mcisInfo.Name
 		mcisSimpleInfo.Description = mcisInfo.Description
 
+		mcisSimpleInfo.InstallMonAgent = mcisInfo.InstallMonAgent
+		mcisSimpleInfo.Label = mcisInfo.Label
+
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
 
 		mcisSimpleInfo.VmSimpleList = resultSimpleVmList
@@ -278,6 +281,9 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
 		mcisSimpleInfo.Name = mcisInfo.Name
 		mcisSimpleInfo.Description = mcisInfo.Description
+
+		mcisSimpleInfo.InstallMonAgent = mcisInfo.InstallMonAgent
+		mcisSimpleInfo.Label = mcisInfo.Label
 
 		mcisSimpleInfo.VmCount = totalVmCountByMcis // 해당 mcis의 모든 vm 갯수
 

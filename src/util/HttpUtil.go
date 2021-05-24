@@ -72,7 +72,7 @@ func MappingUrlParameter(originalUrl string, paramMapper map[string]string) stri
 	if paramMapper != nil {
 		for key, replaceValue := range paramMapper {
 			returnUrl = strings.Replace(returnUrl, key, replaceValue, -1)
-			fmt.Println("Key:", key, "=>", "Element:", replaceValue+":"+returnUrl)
+			// fmt.Println("Key:", key, "=>", "Element:", replaceValue+":"+returnUrl)
 		}
 	}
 	log.Println("returnUrl= ", returnUrl)

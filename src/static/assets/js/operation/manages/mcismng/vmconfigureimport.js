@@ -4,13 +4,13 @@ function importVmInfoFromFile() {
     // input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
 	input.accept = ".json";
     input.onchange = function (event) {
-        processFile(event.target.files[0]);
+        importFileProcess(event.target.files[0]);
     };
     input.click();
 }
 
 // 선택한 파일을 읽어 화면에 보여줌
-function processFile(file) {
+function importFileProcess(file) {
 	try{
 		var reader = new FileReader();
 		reader.onload = function () {
@@ -77,7 +77,7 @@ function setVmInfoToForm(vmInfoObj){
 	var addServerCnt = vmInfoObj.vmGroupSize == "" ? 0: vmInfoObj.vmGroupSize;
 	$("#i_vm_add_cnt").val(addServerCnt);
 
-	$("#vmImportScript").val(JSON.stringify(vmInfoObj));
+	$("#i_vmImportScript").val(JSON.stringify(vmInfoObj));
 	
 }
 

@@ -110,7 +110,7 @@ func GetVmMonitoring(vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitor
 	paramMapper[":ns_id"] = nameSpaceID
 	paramMapper[":mcis_id"] = mcisID
 	paramMapper[":vm_id"] = vmID
-	paramMapper["{metric}"] = metric
+	paramMapper[":metric_name"] = metric
 	paramMapper["{periodType}"] = periodType
 	paramMapper["{statisticsCriteria}"] = statisticsCriteria
 	paramMapper["{duration}"] = duration

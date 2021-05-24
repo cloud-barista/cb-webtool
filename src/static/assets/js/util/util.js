@@ -1,18 +1,19 @@
+jQuery.fn.center = function () {
 
+    this.css('top', Math.max(0,(($(window).height()-$(this).outerHeight())/2) + $(window).scrollTop())+'px');
+    return this;
+}
+    
 // div id = Ajax_Loading 이 있어야 함.
 // 요청 인터셉터
 axios.interceptors.request.use(function (config) {
-        console.log("axios.interceptors.request")
-        // console.log(config)
-        // 요청 전에 로딩 오버레이 띄우기
-        // var offset = $("#" + target+"").offset();
-        // console.log("FnMove offset : ",offset)        
-        var sstop = $(document).scrollTop();
-        console.log("sstop = " + sstop);
-        var sstop2 = $(window).scroll();
-        console.log("sstop2 = ");
-        console.log(sstop2);
+        console.log("axios.interceptors.request")      
+        
+        $('#loadingContainer').css('position', 'fixed');
+
         $('#loadingContainer').show();
+        // $('#loadingContainer').modal();
+
         return config;
     }, function (error) {
         console.log("axios.interceptors.request error")
@@ -153,6 +154,8 @@ function commonConfirmOpen(targetAction){
             ["MoveToMcisManagement", "Would you like to manage MCIS ?"],            
             ["AddNewMcis", "Would you like to create MCIS ?"],
             ["DeleteMcis", "Are you sure to delete this MCIS? "],
+            ["ImportScriptOfMcis", "Would you like to import MCIS script? "],            
+            ["ExportScriptOfMcis", "Would you like to export MCIS script? "],
             
             ["AddNewVmOfMcis", "Would you like to add a new VM to this MCIS ?"],
 
@@ -163,6 +166,8 @@ function commonConfirmOpen(targetAction){
             ["VmLifeCycleTerminate", "Would you like to terminate MCIS ?"], // onclick="vm_life_cycle('terminate')"
             ["VmManagement", "Would you like to manage VM ?"], // 해당 function 없음
             ["AddNewVm", "Would you like to add VM ?"], //onclick="vm_add()"
+            ["ExportVmScriptOfMcis", "Would you like to export VM script ?"], //onclick="vm_add()"
+            
 
             ["DifferentConnection", "Do you want to set different connectionName?"],
             ["DifferentConnectionAtSecurityGroup", "Do you want to set different connectionName?"],
@@ -281,6 +286,8 @@ function commonConfirmOk(){
     }else if ( targetAction == "AddNewVmSpec"){
         displayVmSpecInfo("REG")
         goFocus('vmSpecCreateBox');
+    }else if ( targetAction == "ExportVmScriptOfMcis"){
+        vmScriptExport();
     }else if ( targetAction == "DeleteVmSpec"){
         deleteVmSpec()   
     }else if ( targetAction == "GotoMonitoringPerformance"){
@@ -325,6 +332,11 @@ function commonConfirmOk(){
         changePage(targetUrl)
     }else if ( targetAction == "DeleteMcis"){
         deleteMCIS();
+        
+    }else if ( targetAction == "ImportScriptOfMcis"){
+        mcisScriptImport();
+    }else if ( targetAction == "ExportScriptOfMcis"){
+        mcisScriptExport();
     }else if ( targetAction == "VmLifeCycle"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "VmLifeCycleReboot"){
@@ -341,6 +353,8 @@ function commonConfirmOk(){
         addNewVirtualMachine()
     }else if ( targetAction == "AddNewVmOfMcis"){
         addNewVirtualMachine()
+    }else if ( targetAction == "ExportVmScriptOfMcis"){
+        vmScriptExport();
     }else if ( targetAction == "--"){
         addNewVirtualMachine()
     }else if ( targetAction == "monitoringConfigPolicyConfig"){
@@ -602,6 +616,7 @@ function getConnectionListForSelectbox(provider, targetSelectBoxID){
         console.warn(error);
         console.log(error.response)
         var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage) 
     });
 }

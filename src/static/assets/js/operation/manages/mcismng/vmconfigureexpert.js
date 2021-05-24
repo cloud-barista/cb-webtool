@@ -549,12 +549,10 @@ function filterTableByMultipleHiddenColumn(tableId, multipleColumnMap){
           trs.eq(i).css("display", "");
         }else { 
           trs.eq(i).css("display", "none");
-        }
-        
+        }        
     }    
 
-  $.each(multipleColumnMap, function(key, value) { 
-    
+  $.each(multipleColumnMap, function(key, value) {     
     console.log(key + ': ' + value); 
   });    
 }
