@@ -895,6 +895,8 @@ func DelMcis(nameSpaceID string, mcisID string) (io.ReadCloser, model.WebStatus)
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam

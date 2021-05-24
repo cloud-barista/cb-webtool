@@ -3,7 +3,7 @@ package ladybug
 // ladybug
 type ClusterInfo struct {
 	ClusterConfig string     `json:"clusterConfig"`
-	CpLeader      int        `json:"cpLeader"`
+	CpLeader      string     `json:"cpLeader"`
 	Kind          int        `json:"kind"`
 	Mcis          string     `json:"mcis"`
 	Name          string     `json:"name"`

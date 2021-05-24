@@ -51,8 +51,8 @@ func GetMcisStatus(mcisStatus string) string {
 	return returnStatus
 }
 
-func GetMcksStatus(mcisStatus string) string {
-	statusArr := strings.Split(mcisStatus, "-")
+func GetMcksStatus(mcksStatus string) string {
+	statusArr := strings.Split(mcksStatus, "-")
 	returnStatus := strings.ToLower(statusArr[0])
 
 	if returnStatus == MCKS_STATUS_RUNNING {
@@ -105,12 +105,12 @@ func GetVmConnectionName(vmConnectionName string) string {
 func StructToMapByJson(obj interface{}) (newMap map[string]interface{}, err error) {
 	data, err := json.Marshal(obj) // Convert to a json
 
-    if err != nil {
-        return
-    }
+	if err != nil {
+		return
+	}
 
-    err = json.Unmarshal(data, &newMap) // Convert to a map
-    return
+	err = json.Unmarshal(data, &newMap) // Convert to a map
+	return
 }
 
 // func StructToMap(i interface{}) (values url.Values) {

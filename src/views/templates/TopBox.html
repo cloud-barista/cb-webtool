@@ -17,15 +17,14 @@
                                     {{range .}}
                                 <li><a href="javascript:void(0);" onclick="selectDefaultNameSpace('TobBox', '{{.ID}}')" data-toggle="modal" data-target="#NameSpace">{{.Name}}</a></li>    
                                     {{end}}
-                                {{end}}                          
-                             
+                                {{end}}
                             </ul>	
                         </li>
                         <li>
                             <a href="javascript:void(0);">Manage NameSpace</a>
                             <ul>
-                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NewNS">new NS</a></li>
-                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#ManageNS">Manage NS</a></li>
+                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NewNS" onClick="commonConfirmOpen('NewNS')">new NS</a></li>
+                                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#ManageNS" onClick="commonConfirmOpen('MoveToMcisManagement')">Manage NS</a></li>
                             </ul>	
                         </li>
                         <input type="hidden" id="select_namespace" />

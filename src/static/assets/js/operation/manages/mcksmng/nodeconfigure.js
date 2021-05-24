@@ -43,7 +43,8 @@ function getSpecInfo(configName, targetObjId){
 // mcks , node deploy
 // 우선 mcks 부터
 function nodeDone_btn(){
-    var clusteruid = $("#clusteruid").val();
+    var mcksID = $("#mcksID").val();
+    var mcksName = $("#mcksName").val();
     
     var controlPlaneLength = $("input[name='controlPlaneCount']").length;
     console.log("controlPlaneLength1 " + controlPlaneLength)
@@ -101,7 +102,7 @@ function nodeDone_btn(){
 
     try{
         // configurer 는 mcks 선택하고 들어옴. : TODO : MCKS create 와 node create는 버튼 액션을 달리해야
-        var url = "/operation/manages/mcksmng/reg/proc" 
+        var url = "/operation/manages/mcksmng/" + mcksID + "/" + mcksName + "/reg/proc";
         axios.post(url,new_obj,{
             headers :{
                 },
@@ -129,4 +130,42 @@ function nodeDone_btn(){
     }finally{
         
     }
+}
+
+// WorkNode 추가
+function addWorkNode(){
+    // 마지막 name의 index 추출
+    var lastWorkerId = "";
+    $("input[name='controlPlaneCount']").each(function (i) {
+        lastWorkerId = $(this).attr('id');
+        //alert( i + "번째  : " + $("input[name='controlPlaneCount']").eq(i).attr("value") );
+   });
+   var lastIndex = lastWorkerId.split ("_")[1]  
+
+    var addWorkerIndex = Number(lastIndex) +1;
+
+    var addWorkerHtml = $('#hidden_mcks_Worker_list').clone();
+    // console.log(addWorkerHtml);
+    // console.log("--1")
+    // console.log(addWorkerHtml.html());
+    // console.log("--2")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_mcks_Worker_list', 'mcks_Worker_list_' + addWorkerIndex);
+    // console.log("--3")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerProvider', 'workerProvider_' + addWorkerIndex);
+    // console.log("--4")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerConnectionName', 'workerConnectionName_' + addWorkerIndex);
+    // console.log("--5")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerCount', 'workerCount_' + addWorkerIndex);
+    // console.log("--6")
+    // addWorkerHtml = addWorkerHtml.html().replace('hidden_workerSpecId', 'workerSpecId_' + addWorkerIndex);
+    // console.log("--7")
+
+    $("#mcks_Worker_list").append(addWorkerHtml); 
+    $("#mcks_Worker_list_" + addWorkerIndex).css("display", "block");
+    //$("#aa").css("display", "block");
+
+    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
+    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
+    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
+    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
 }

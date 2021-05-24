@@ -106,6 +106,7 @@ function deploy_btn(){
             console.log(error);
             console.log(error.response)
             var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
             commonErrorAlert(statusCode, errorMessage) 
         })
     }finally{
