@@ -10,6 +10,15 @@
 .layerpopup .modal-content .btnbox button { margin:0 0 0 2px; display:inline-block; vertical-align:middle; cursor:pointer; width:145px; padding:12px 0; line-height:18px; border:none; font-size:18px; font-weight:300; color:#fff; outline:none; border-radius:5px; background-color:#06a9b7; }
 .layerpopup .modal-content .btnbox button.btn_cancel { background-color:#999ea7; }
 
+#guideArea .modal-dialog { max-width:100%; width:auto; display:block; top:50%; transform:translateY(-50%);  padding:0 !important; }
+#guideArea .modal-content { background:none; border:none; width:100%; margin:0 auto; padding:0 !important; }
+#guideArea .modal-content > div { position:relative; margin:0 !important; padding:0 !important; }
+#guideArea .modal-content > div > div { position:relative; width:100%; }
+#guideArea .modal-content .wbox { position:relative; width:70%; margin-left:80px; min-height:598px; }
+#guideArea .modal-content .wbox .img { position:relative; width:100%; margin-left:280px;  }
+#guideArea .modal-content .wbox .tit{ margin-left:280px;  width:100%; background-color:#999ea7; }
+#guideArea .modal-content .btnbox button { margin-left:380px; display:inline-block; vertical-align:middle; cursor:pointer; width:145px; padding:12px 0; line-height:18px; border:none; font-size:18px; font-weight:300; color:#fff; outline:none; border-radius:5px; background-color:#06a9b7; }
+
 @media screen and (max-width:480px){
 	.layerpopup .modal-content { width:300px; }
 	.layerpopup .modal-content > div { min-height:170px; }
