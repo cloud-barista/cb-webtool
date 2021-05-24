@@ -363,23 +363,24 @@ func GetSimpleVmWithStatusCountMap(mcisInfo tumblebug.McisInfo) ([]tumblebug.VmS
 
 			// export용 추가
 			VmConnectionName: vmInfo.ConnectionName,
-			VmDescription: vmInfo.Description,
-			VmImageId: vmInfo.ImageID,
-			VmLabel: vmInfo.Label,
+			VmDescription:    vmInfo.Description,
+			VmImageId:        vmInfo.ImageID,
+			VmLabel:          vmInfo.Label,
 			// TODO : securityGroupId는 []string 이므로 변환작업 필요
-			//VmSecurityGroupIds: vmInfo.SecurityGroupIDs,//"securityGroupIIds": [		{		  "nameId": "string",		  "systemId": "string"		}	  ],
-			VmSpecId: vmInfo.SpecID,
-			VmSshKeyId: vmInfo.SshKeyID,
-			VmSubnetId: vmInfo.SubnetID,
-			VmVnetId: vmInfo.VNetID,
-			VmGroupSize: 1,	//? 는 없는데.. vmGroupId만 있는데... 1로 기본 setting
-			VmUserAccount: vmInfo.VmUserAccount,
-			VmUserPassword: vmInfo.VmUserPassword,
+			VmSecurityGroupIds: vmInfo.SecurityGroupIDs, //"securityGroupIIds": [		{		  "nameId": "string",		  "systemId": "string"		}	  ],
+			VmSpecId:           vmInfo.SpecID,
+			VmSshKeyId:         vmInfo.SshKeyID,
+			VmSubnetId:         vmInfo.SubnetID,
+			VmVnetId:           vmInfo.VNetID,
+			VmGroupSize:        1, //? 는 없는데.. vmGroupId만 있는데... 1로 기본 setting
+			VmUserAccount:      vmInfo.VmUserAccount,
+			VmUserPassword:     vmInfo.VmUserPassword,
 		}
 
 		vmSimpleList = append(vmSimpleList, vmSimpleObj)
 
 		log.Println("vmStatus " + vmStatus + ", Status " + vmInfo.Status)
+		log.Println(vmInfo.SecurityGroupIDs)
 		vmStatusCount := 0
 		val, exists := vmStatusCountMap[vmStatus]
 		if exists {
@@ -537,6 +538,7 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tumblebug
 	respStatus := resp.StatusCode
 
 	json.NewDecoder(respBody).Decode(&vmInfo)
+	fmt.Println("respStatus = ", respStatus)
 	fmt.Println(vmInfo)
 
 	return &vmInfo, model.WebStatus{StatusCode: respStatus}

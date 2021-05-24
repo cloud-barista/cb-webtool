@@ -52,6 +52,11 @@
 															<ul>
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('AddNewMcis')">New / Extend</a></li>
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('DeleteMcis')">Delete</a></li>
+															</ul>
+														</li>
+														<li>
+															<strong>Export</strong>
+															<ul>																
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('ExportScriptOfMcis')">Export</a></li>
 															</ul>
 														</li>
@@ -133,22 +138,22 @@
 
 
 													<!-- vm export 용 m_ 는 mcis의 첫글자 m-->
-													<input type="hidden" name="m_vmConnectionName" id="m_vmConnectionName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmConnectionName}}" />
-													<input type="hidden" name="m_vmDescription" id="m_vmDescription_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmDescription}}" />
-													<input type="hidden" name="m_vmImageId" id="m_vmImageId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmImageId}}" />
-													<input type="hidden" name="m_vmLabel" id="m_vmLabel_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmLabel}}" />
-													<input type="hidden" name="m_vmName" id="m_vmName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmName}}" />
-													<input type="hidden" name="m_vmSecurityGroupIds" id="m_vmSecurityGroupIds_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmSecurityGroupIds}}" />
-													<input type="hidden" name="m_vmSpecId" id="m_vmSpecId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmSpecId}}" />
-													<input type="hidden" name="m_vmSshKeyId" id="m_vmSshKeyId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmSshKeyId}}" />
-													<input type="hidden" name="m_vmSubnetId" id="m_vmSubnetId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmSubnetId}}" />
-													<input type="hidden" name="m_vmVnetId" id="m_vmVnetId_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmVnetId}}" />
-													<input type="hidden" name="m_vmGroupSize" id="m_vmGroupSize_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmGroupSize}}" />
-													<input type="hidden" name="m_vmUserAccount" id="m_vmUserAccount_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmUserAccount}}" />
-													<input type="hidden" name="m_vmUserPassword" id="m_vmUserPassword_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmUserPassword}}" />
+													<input type="hidden" name="m_vmConnectionName" id="m_vmConnectionName_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmConnectionName}}" />
+													<input type="hidden" name="m_vmDescription" id="m_vmDescription_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmDescription}}" />
+													<input type="hidden" name="m_vmImageId" id="m_vmImageId_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmImageId}}" />
+													<input type="hidden" name="m_vmLabel" id="m_vmLabel_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmLabel}}" />
+													<input type="hidden" name="m_vmName" id="m_vmName_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmName}}" />
+													<input type="hidden" name="m_vmSecurityGroupIds" id="m_vmSecurityGroupIds_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmSecurityGroupIds}}" />
+													<input type="hidden" name="m_vmSpecId" id="m_vmSpecId_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmSpecId}}" />
+													<input type="hidden" name="m_vmSshKeyId" id="m_vmSshKeyId_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmSshKeyId}}" />
+													<input type="hidden" name="m_vmSubnetId" id="m_vmSubnetId_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmSubnetId}}" />
+													<input type="hidden" name="m_vmVnetId" id="m_vmVnetId_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmVnetId}}" />
+													<input type="hidden" name="m_vmGroupSize" id="m_vmGroupSize_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmGroupSize}}" />
+													<input type="hidden" name="m_vmUserAccount" id="m_vmUserAccount_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmUserAccount}}" />
+													<input type="hidden" name="m_vmUserPassword" id="m_vmUserPassword_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmUserPassword}}" />
 
-													<input type="hidden" name="vmStatus" id="m_exportFileName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="" />
-													<input type="hidden" name="vmStatus" id="m_vmExportScript_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="" />
+													<input type="hidden" name="vmStatus" id="m_exportFileName_{{ $index}}_{{ $vmStatusIndex}}" value="" />
+													<input type="hidden" name="vmStatus" id="m_vmExportScript_{{ $index}}_{{ $vmStatusIndex}}" value="" />
 													
 													{{ end }}
 

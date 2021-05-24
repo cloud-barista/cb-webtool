@@ -555,6 +555,7 @@ function getDriverList(){
         console.warn(error);
         console.log(error.response)
         var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage) 
     });
 }
@@ -669,6 +670,7 @@ function saveNewRegion(){
         console.warn(error);
         console.log(error.response)
         var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage) 
     });
 }
@@ -705,6 +707,7 @@ function deleteRegion(){
             console.warn(error);
             console.log(error.response)
             var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
             commonErrorAlert(statusCode, errorMessage) 
         });
 }
@@ -778,6 +781,7 @@ function saveNewCredential(){
         console.warn(error);
         console.log(error.response)
         var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage) 
     });
 }
@@ -813,6 +817,7 @@ function deleteCredential(){
             console.warn(error);
             console.log(error.response)
             var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
             commonErrorAlert(statusCode, errorMessage) 
         });
 }
@@ -897,6 +902,7 @@ function deleteDriver(){
             console.warn(error);
             console.log(error.response)
             var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
             commonErrorAlert(statusCode, errorMessage) 
         });
 }
