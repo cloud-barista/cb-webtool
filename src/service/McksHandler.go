@@ -299,7 +299,7 @@ func GetNodeData(nameSpaceID string, clusterName string, node string) (*ladybug.
 }
 
 // Node 생성
-func RegNode(nameSpaceID string, clusterName string, nodeRegReq *ladybug.NodeReq) (*ladybug.NodeInfo, model.WebStatus) {
+func RegNode(nameSpaceID string, clusterName string, nodeRegReq *ladybug.NodeOnlyRegReq) (*ladybug.NodeInfo, model.WebStatus) {
 
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes"
 

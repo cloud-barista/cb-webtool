@@ -98,22 +98,22 @@ function nodeDone_btn(){
     for(var i=0; i<workerCountData.length; i++){
         console.log("workerCountLength " + i)
         var new_worker = {}
-        // new_worker['connection'] = workerConnectionData[i];
-        // new_worker['count'] = Number(workerCountData[i])
-        // new_worker['spec'] = workerSpecIdData[i]
+        new_worker['connection'] = workerConnectionData[i];
+        new_worker['count'] = Number(workerCountData[i])
+        new_worker['spec'] = workerSpecIdData[i]
         
         // new_worker['config'] = workerConnectionData[i];
         // new_worker['workerNodeCount'] = Number(workerCountData[i])
         // new_worker['workerNodeSpec'] = workerSpecIdData[i]
 
-        //orkers[i] = new_worker
+        orkers[i] = new_worker
         // new_obj = new_worker;
 
-        new_obj['config'] = workerConnectionData[i];
-        new_obj['workerNodeCount'] = Number(workerCountData[i])
-        new_obj['workerNodeSpec'] = workerSpecIdData[i]
+        // new_obj['config'] = workerConnectionData[i];
+        // new_obj['workerNodeCount'] = Number(workerCountData[i])
+        // new_obj['workerNodeSpec'] = workerSpecIdData[i]
     }
-    //new_obj['worker'] = workers;
+    new_obj['worker'] = workers;
     // new_obj = workers;
    
     console.log(new_obj);
