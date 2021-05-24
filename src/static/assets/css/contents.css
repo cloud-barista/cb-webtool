@@ -1208,6 +1208,7 @@
 .dashboard .register_box li label span.ch { color:#ff0000; display:inline-block; margin:0 4px 0 0;}
 .dashboard .register_box li label span.txt_sb { display:block; font-size:15px; font-weight:300; }
 .dashboard .register_box li .selectbox { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
+.dashboard .register_box li .selectbox2 { width:53.4%; display:inline-block; vertical-align:middle; text-align:left; }
 .dashboard .register_box li input[type="text"],
 .dashboard .register_box li input[type="password"] { display:inline-block; vertical-align:middle; height:38px; padding:15px 12px; border:1px solid #e1e1e1; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
 .dashboard .register_box li input.pline { border:1px dashed #ccc; }
