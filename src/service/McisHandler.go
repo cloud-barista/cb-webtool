@@ -360,7 +360,23 @@ func GetSimpleVmWithStatusCountMap(mcisInfo tumblebug.McisInfo) ([]tumblebug.VmS
 			VmStatus:  vmStatus,
 			Latitude:  vmLatitude,
 			Longitude: vmLongitude,
+
+			// export용 추가
+			VmConnectionName: vmInfo.ConnectionName,
+			VmDescription: vmInfo.Description,
+			VmImageId: vmInfo.ImageID,
+			VmLabel: vmInfo.Label,
+			// TODO : securityGroupId는 []string 이므로 변환작업 필요
+			//VmSecurityGroupIds: vmInfo.SecurityGroupIDs,//"securityGroupIIds": [		{		  "nameId": "string",		  "systemId": "string"		}	  ],
+			VmSpecId: vmInfo.SpecID,
+			VmSshKeyId: vmInfo.SshKeyID,
+			VmSubnetId: vmInfo.SubnetID,
+			VmVnetId: vmInfo.VNetID,
+			VmGroupSize: 1,	//? 는 없는데.. vmGroupId만 있는데... 1로 기본 setting
+			VmUserAccount: vmInfo.VmUserAccount,
+			VmUserPassword: vmInfo.VmUserPassword,
 		}
+
 		vmSimpleList = append(vmSimpleList, vmSimpleObj)
 
 		log.Println("vmStatus " + vmStatus + ", Status " + vmInfo.Status)
@@ -895,6 +911,8 @@ func DelMcis(nameSpaceID string, mcisID string) (io.ReadCloser, model.WebStatus)
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam

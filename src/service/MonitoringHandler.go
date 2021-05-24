@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+
+	// "io/ioutil"
 	"log"
 	"net/http"
 
+	// "strconv"
 	// "os"
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	// "github.com/cloud-barista/cb-webtool/src/model/spider"
@@ -254,7 +257,7 @@ func GetMonitoringConfig() (*dragonfly.MonitoringConfig, model.WebStatus) {
 }
 
 // 모니터링 정책 설정
-func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonfly.MonitoringConfig, model.WebStatus) {
+func PutMonigoringConfig(monitoringConfigReg *dragonfly.MonitoringConfigReg) (*dragonfly.MonitoringConfig, model.WebStatus) {
 	var originalUrl = "/config"
 	//{{ip}}:{{port}}/dragonfly/config
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -262,11 +265,18 @@ func PutMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*dragonf
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/config"
 
-	fmt.Println("UpdateMonigoringConfig : ")
+	fmt.Println("Update MonigoringConfigReg : ", url)
 
-	pbytes, _ := json.Marshal(monitoringConfig)
-	fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	fmt.Println(monitoringConfigReg)
+
+	urlValues, convertErr := util.StructToMapByJson(monitoringConfigReg)
+	if convertErr != nil {
+		log.Println(convertErr)
+	}
+
+	fmt.Println(urlValues)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 	resultMonitoringConfig := dragonfly.MonitoringConfig{}
 	if err != nil {
 		log.Println("-----")
@@ -412,6 +422,7 @@ func UnInstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.Vm
 // 알람 목록 조회
 // List monitoring alert
 func GetMonitoringAlertList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
+	fmt.Print("#########GetMonitoringAlertList############")
 	var originalUrl = "/alert/tasks"
 	// {{ip}}:{{port}}/dragonfly/alert/tasks
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -420,18 +431,26 @@ func GetMonitoringAlertList() ([]dragonfly.VmMonitoringAlertInfo, model.WebStatu
 	// url := util.DRAGONFLY + "/alert/tasks"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
+	// vmMonitoringAlertInfoList := dragonfly.VmMonitoringAlertInfo{}
+	vmMonitoringAlertInfoList := []dragonfly.VmMonitoringAlertInfo{}
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return vmMonitoringAlertInfoList, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	vmMonitoringAlertInfoList := map[string][]dragonfly.VmMonitoringAlertInfo{}
+	//vmMonitoringAlertInfoList := []dragonfly.VmMonitoringAlertInfo{}
 	json.NewDecoder(respBody).Decode(&vmMonitoringAlertInfoList)
 
-	return vmMonitoringAlertInfoList["mcis"], model.WebStatus{StatusCode: respStatus}
+	// robots, _ := ioutil.ReadAll(resp.Body)
+	// log.Println(fmt.Print(string(robots)))
+
+	// json.NewDecoder(respBody).Decode(&vmMonitoringAlertInfoList)
+	// fmt.Println(vmMonitoringAlertInfoList)
+
+	return vmMonitoringAlertInfoList, model.WebStatus{StatusCode: respStatus}
 }
 
 // 알람  조회
@@ -472,9 +491,17 @@ func RegMonitoringAlert(vmMonitoringAlertInfo *dragonfly.VmMonitoringAlertInfo) 
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/task"
 
-	pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
-	fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	// pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
+	// fmt.Println(string(pbytes))
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertInfo)
+	if convertErr != nil {
+		log.Println(convertErr)
+	}
+
+	fmt.Println(urlValues)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
 
 	resultVmMonitoringAlertInfo := dragonfly.VmMonitoringAlertInfo{}
 	if err != nil {
@@ -598,9 +625,35 @@ func GetMonitoringAlertEventHandlerData(eventHandlerType string, eventName strin
 	return vmMonitoringAlertInfo, model.WebStatus{StatusCode: respStatus}
 }
 
+// 알람 이벤트 핸들러 목록 조회
+// List monitoring alert event handler
+func GetMonitoringAlertEventHandlerList() ([]dragonfly.VmMonitoringAlertEventHandlerInfo, model.WebStatus) {
+	fmt.Print("#########GetMonitoringAlertEventHandlerList############")
+	var originalUrl = "/alert/eventhandlers?eventType=slack"
+	// {{ip}}:{{port}}/dragonfly/alert/eventhandlers?eventType=smtp
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.DRAGONFLY + urlParam
+	// url := util.DRAGONFLY + "/alert/eventhandlers" + "?eventType=smtp"
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	vmMonitoringAlertEventHandlerInfoList := []dragonfly.VmMonitoringAlertEventHandlerInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return vmMonitoringAlertEventHandlerInfoList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	json.NewDecoder(respBody).Decode(&vmMonitoringAlertEventHandlerInfoList)
+
+	return vmMonitoringAlertEventHandlerInfoList, model.WebStatus{StatusCode: respStatus}
+}
+
 // 알람 이벤트 핸들러 생성
 // Create monitoring alert event-handler
-func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfo *dragonfly.VmMonitoringAlertEventHandlerInfo) (*dragonfly.VmMonitoringAlertEventHandlerInfo, model.WebStatus) {
+func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfoReg *dragonfly.VmMonitoringAlertEventHandlerInfoReg) (*dragonfly.VmMonitoringAlertEventHandlerInfoReg, model.WebStatus) {
 	fmt.Println("RegMonitoringAlertEventHandler ************ : ")
 	var originalUrl = "/alert/eventhandler"
 	// {{ip}}:{{port}}/dragonfly/alert/eventhandler
@@ -609,14 +662,22 @@ func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfo *dragonfly
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/eventhandler"
 
-	pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfo)
-	fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	// pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfoReg)
+	// fmt.Println(string(pbytes))
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	resultVmMonitoringAlertEventHandlerInfo := dragonfly.VmMonitoringAlertEventHandlerInfo{}
+	urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertEventHandlerInfoReg)
+	if convertErr != nil {
+		log.Println(convertErr)
+	}
+
+	fmt.Println(urlValues)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
+
+	resultVmMonitoringAlertEventHandlerInfoReg := dragonfly.VmMonitoringAlertEventHandlerInfoReg{}
 	if err != nil {
 		fmt.Println(err)
-		return &resultVmMonitoringAlertEventHandlerInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &resultVmMonitoringAlertEventHandlerInfoReg, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
@@ -629,12 +690,12 @@ func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfo *dragonfly
 		fmt.Println("respStatus != 200 reason ", errorInfo)
 		returnStatus.Message = errorInfo.Message
 	} else {
-		json.NewDecoder(respBody).Decode(&resultVmMonitoringAlertEventHandlerInfo)
-		fmt.Println(resultVmMonitoringAlertEventHandlerInfo)
+		json.NewDecoder(respBody).Decode(&resultVmMonitoringAlertEventHandlerInfoReg)
+		fmt.Println(resultVmMonitoringAlertEventHandlerInfoReg)
 	}
 	returnStatus.StatusCode = respStatus
 
-	return &resultVmMonitoringAlertEventHandlerInfo, returnStatus
+	return &resultVmMonitoringAlertEventHandlerInfoReg, returnStatus
 }
 
 // 알람 이벤트 핸들러 수정( handlerType=slack)

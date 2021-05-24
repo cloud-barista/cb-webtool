@@ -1,10 +1,19 @@
+jQuery.fn.center = function () {
 
+    this.css('top', Math.max(0,(($(window).height()-$(this).outerHeight())/2) + $(window).scrollTop())+'px');
+    return this;
+}
+    
 // div id = Ajax_Loading 이 있어야 함.
 // 요청 인터셉터
 axios.interceptors.request.use(function (config) {
-        console.log("axios.interceptors.request")
-        // 요청 전에 로딩 오버레이 띄우기
+        console.log("axios.interceptors.request")      
+        
+        $('#loadingContainer').css('position', 'fixed');
+
         $('#loadingContainer').show();
+        // $('#loadingContainer').modal();
+
         return config;
     }, function (error) {
         console.log("axios.interceptors.request error")
@@ -93,22 +102,6 @@ function commonErrorAlert(statusCode, message){
 // confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정
 function commonConfirmOpen(targetAction){
     console.log("commonConfirmOpen : " + targetAction)
-    // var targetText = "";
-    // if( targetAction == "logout"){
-    //     targetText = "Would you like to logout?";
-    // }else if ( targetAction == "Config"){
-    //     targetText = "Would you like to set Cloud config ?";
-    // }else if ( targetAction == "SDK"){
-    //     targetText = "Would you like to set Cloud Driver SDK ?";
-    // }else if ( targetAction == "Credential"){
-    //     targetText = "Would you like to set Credential ?";
-    // }else if ( targetAction == "Region"){
-    //     targetText = "Would you like to set Region ?";
-    // }else if ( targetAction == "Provider"){
-    //     targetText = "Would you like to set Cloud Provider ?";
-    // }else if ( targetAction == "required"){//-- IdPassRequired
-    //     targetText = "ID/Password required !";
-    // }
 
     //  [ id , 문구]
     let confirmModalTextMap = new Map(
@@ -160,15 +153,29 @@ function commonConfirmOpen(targetAction){
             ["McisManagement", "Would you like to manage MCIS ?"],// 해당 function 없음...
             ["MoveToMcisManagement", "Would you like to manage MCIS ?"],            
             ["AddNewMcis", "Would you like to create MCIS ?"],
+            ["DeleteMcis", "Are you sure to delete this MCIS? "],
+            
             ["AddNewVmOfMcis", "Would you like to add a new VM to this MCIS ?"],
 
             ["VmLifeCycle", "Would you like to view Server ?"],
             ["VmLifeCycleReboot", "Would you like to reboot MCIS ?"], //onclick="vm_life_cycle('reboot')"
             ["VmLifeCycleSuspend", "Would you like to suspend MCIS ?"], // onclick="vm_life_cycle('suspend')"
             ["VmLifeCycleResume", "Would you like to resume MCIS ?"], // onclick="vm_life_cycle('resume')"
-            ["VmLifeCycleTerminate", ">Would you like to terminate MCIS ?"], // onclick="vm_life_cycle('terminate')"
+            ["VmLifeCycleTerminate", "Would you like to terminate MCIS ?"], // onclick="vm_life_cycle('terminate')"
             ["VmManagement", "Would you like to manage VM ?"], // 해당 function 없음
             ["AddNewVm", "Would you like to add VM ?"], //onclick="vm_add()"
+
+            ["DifferentConnection", "Do you want to set different connectionName?"],
+            ["DifferentConnectionAtSecurityGroup", "Do you want to set different connectionName?"],
+
+            ["AddMonitoringAlertPolicy", "Would you like to register Threshold ?"],
+            ["DeleteMonitoringAlertPolicy", "Are you sure to delete this Threshold ?"],
+            ["AddNewMcks", "Would you like to create MCKS ?"],
+            ["DeleteMcks", "Are you sure to delete this MCKS? "],
+            ["AddNewNodeOfMcks", "Would you like to add a new Node to this MCKS ?"],
+
+            ["AddMonitoringAlertEventHandler", "Would you like to add<br />Monitoring Alert Event-Handler ?"],
+            ["deleteMonitoringAlertEventHandler", "Are you sure to delete<br />this Monitoring Alert Event-Handler?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -183,6 +190,21 @@ function commonConfirmOpen(targetAction){
             // data-target="#Add_Region_Register"
             // TODO : confirm 으로 물어본 뒤 OK버튼 클릭 시 targetDIV 지정하도록
         }
+        $('#confirmArea').modal(); 
+    }catch(e){
+        console.log(e);
+        alert(e);
+    }
+}
+
+// confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정, text 내용 전송
+function commonConfirmMsgOpen(targetAction, message){
+    console.log("commonConfirmMsgOpen : " + targetAction)
+    
+    try{
+        $('#confirmText').html(message);
+        $('#confirmOkAction').val(targetAction);
+                
         $('#confirmArea').modal(); 
     }catch(e){
         console.log(e);
@@ -227,7 +249,8 @@ function commonConfirmOk(){
     }else if ( targetAction == "ManageNS"){//-- ManageNS
         console.log("commonConfirmOk " + targetAction);
     }else if ( targetAction == "NewNS"){//-- NewNS
-        console.log("commonConfirmOk " + targetAction);
+        var targetUrl = "/setting/namespaces/namespace/mngform"
+        changePage(targetUrl)
     }else if ( targetAction == "ChangeNameSpace"){//-- ChangeNameSpace
         var changeNameSpaceID = $("#tempSelectedNameSpaceID").val();
         setDefaultNameSpace(changeNameSpaceID)
@@ -264,22 +287,22 @@ function commonConfirmOk(){
     }else if ( targetAction == "GotoMonitoringPerformance"){
         // alert("모니터링으로 이동 GotoMonitoringPerformance")
         // location.href ="";//../operation/Monitoring_Mcis.html
-        var targetUrl = "/operation/monitorings/mcis/mngform"
+        var targetUrl = "/operation/monitorings/mcismng/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringFault"){
         // alert("모니터링으로 이동 GotoMonitoringFault")
         // location.href ="";//../operation/Monitoring_Mcis.html
-        var targetUrl = "/operation/monitorings/mcis/mngform"
+        var targetUrl = "/operation/monitorings/mcismng/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringCost"){
         // alert("모니터링으로 이동 GotoMonitoringCost")
         // location.href ="";//../operation/Monitoring_Mcis.html
-        var targetUrl = "/operation/monitorings/mcis/mngform"
+        var targetUrl = "/operation/monitorings/mcismng/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "GotoMonitoringUtilize"){
         // alert("모니터링으로 이동 GotoMonitoringUtilize")
         // location.href ="";//../operation/Monitoring_Mcis.html    
-        var targetUrl = "/operation/monitorings/mcis/mngform"
+        var targetUrl = "/operation/monitorings/mcismng/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "McisLifeCycleReboot"){
         callMcisLifeCycle('reboot')
@@ -294,13 +317,15 @@ function commonConfirmOk(){
     }else if ( targetAction == "MoveToMcisManagement"){
         // $('#loadingContainer').show();
         // location.href ="/operation/manages/mcis/mngform/";
-        var targetUrl = "/operation/manages/mcis/mngform";
+        var targetUrl = "/operation/manages/mcismng/mngform";
         changePage(targetUrl)
     }else if ( targetAction == "AddNewMcis"){
         // $('#loadingContainer').show();
         // location.href ="/operation/manages/mcis/regform/";
-        var targetUrl = "/operation/manages/mcis/regform";
+        var targetUrl = "/operation/manages/mcismng/regform";
         changePage(targetUrl)
+    }else if ( targetAction == "DeleteMcis"){
+        deleteMCIS();
     }else if ( targetAction == "VmLifeCycle"){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "VmLifeCycleReboot"){
@@ -319,6 +344,28 @@ function commonConfirmOk(){
         addNewVirtualMachine()
     }else if ( targetAction == "--"){
         addNewVirtualMachine()
+    }else if ( targetAction == "monitoringConfigPolicyConfig"){
+        regMonitoringConfigPolicy()
+    }else if ( targetAction == "DifferentConnection"){
+        setAndClearByDifferentConnectionName();
+    }else if ( targetAction == "DifferentConnectionAtSecurityGroup"){
+        uncheckDifferentConnectionAtSecurityGroup();
+    }else if ( targetAction == "AddMonitoringAlertPolicy"){
+        addMonitoringAlertPolicy();
+    }else if ( targetAction == "DeleteMonitoringAlertPolicy"){
+        deleteMonitoringAlertPolicy();
+    }else if ( targetAction == "AddNewMcks"){
+        var targetUrl = "/operation/manages/mcksmng/regform";
+        changePage(targetUrl)
+    }else if ( targetAction == "AddNewNodeOfMcks"){
+        addNewNode();
+
+    }else if ( targetAction == "AddMonitoringAlertEventHandler"){
+        addMonitoringAlertEventHandler();
+    }else if ( targetAction == "deleteMonitoringAlertEventHandler"){
+        deleteMonitoringAlertEventHandler();
+    }else if ( targetAction == "DeleteMcks"){
+        deleteMCKS();
     }else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
@@ -327,11 +374,15 @@ function commonConfirmOk(){
 }
 
 //confirm modal창에서 cancel 버튼 클릭시 수행할 method 지정. 그냥 창만 듣을 경우에는 commonModalClose() 호출
+var rollbackObjArr = [];
 function commonConfirmCancel(targetAction){
     console.log("commonConfirmCancel : " + targetAction)
     //
-    if( targetAction == ''){
-        
+    if( targetAction == 'DifferentConnection'){
+        // set 했던것들 초기화.
+        for( var i = 0; i < rollbackObjArr.length; i++){
+            $("#" + rollbackObjArr[i]).val('');
+        }
     }
     commonConfirmClose();
 }
@@ -369,6 +420,10 @@ function commonPromptOpen(targetAction, targetObjId){
             ["NSFltName", "필터링할 단어를 입력하세요"],
             ["NSFltId", "필터링할 단어를 입력하세요"],
             ["NSFltDescription", "필터링할 단어를 입력하세요"],
+            ["AlertPolicyName", "필터링할 단어를 입력하세요"],
+            ["AlertPolicyMeasurement", "필터링할 단어를 입력하세요"],
+            ["AlertPolicyTargetType", "필터링할 단어를 입력하세요"],
+            ["AlertPolicyEventType", "필터링할 단어를 입력하세요"],
             ["Config", "Would you like to set Cloud config ?"],
         ]
     );
@@ -469,6 +524,22 @@ function commonPromptOk(){
         if( targetValue ){
             filterTable(targetObjId, "description", targetValue)
         }       
+    }else if( targetAction == 'AlertPolicyName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }       
+    }else if( targetAction == 'AlertPolicyMeasurement'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Measurement", targetValue)
+        }       
+    }else if( targetAction == 'AlertPolicyTargetType'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Target Type", targetValue)
+        }       
+    }else if( targetAction == 'AlertPolicyEventType'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Alert Event Type", targetValue)
+        }       
     }
     
     commonPromptClose();
@@ -513,7 +584,7 @@ function getConnectionListForSelectbox(provider, targetSelectBoxID){
         if(count == 0){
             commonAlert("해당 Provider에 등록된 Connection 정보가 없습니다.")            
         }
-        
+        console.log("targetSelectBoxID = " + targetSelectBoxID)
         $("#" + targetSelectBoxID).empty();
         $("#" + targetSelectBoxID).append(html);
 
@@ -723,10 +794,11 @@ function filterTable(tableId, filterColumnName, filterKeyword){
     }
 }
 
+// table에서 hidden으로 설정된 obj를 기준으로 filterling. 보이고 안보이고
 function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword){
 
-    var filter = filterKeyword.toUpperCase();
-	console.log("filter=" + filter);
+    var keyword = filterKeyword.toUpperCase();
+	console.log("filter=" + keyword);
 
     var trs = $('#' + tableId + ' tr');
     console.log(trs);
@@ -736,9 +808,9 @@ function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword){
         var hiddenval = trs.eq(i).find('input:hidden[name="' + hiddenColumnName + '"]').val();
         // console.log("hiddenval " + hiddenval);
 
-        if(filter == "ALL") {
+        if(keyword == "ALL") {
             trs.eq(i).css("display", "");
-        }else if (hiddenval.toUpperCase().indexOf(filter) > -1) {
+        }else if (hiddenval.toUpperCase().indexOf(keyword) > -1) {
             trs.eq(i).css("display", "");
         }else {
             trs.eq(i).css("display", "none");

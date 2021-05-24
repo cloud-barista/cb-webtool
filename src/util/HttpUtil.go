@@ -7,7 +7,9 @@ import (
 	// "io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
+	// "net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -172,6 +174,35 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 	req.Header.Add("Authorization", authInfo)
 	// resp, err := client.Do(req)
 	return client.Do(req)
+}
+
+// Put/Post 등을 formData 형태로 호출할 때
+// https://minwook-shin.github.io/go-decode-encode-url-values-form/ 참조할 것
+//func CommonHttpFormData(targetUrl string, formParam url.Values, httpMethod string) (*http.Response, error) {
+// func CommonHttpFormData(targetUrl string, formParam map[string]string, httpMethod string) (*http.Response, error) {
+func CommonHttpFormData(targetUrl string, formParam map[string]interface{}, httpMethod string) (*http.Response, error) {
+	//m := structs.Map(s)
+	authInfo := AuthenticationHandler()
+
+	payload := &bytes.Buffer{}
+	writer := multipart.NewWriter(payload)
+
+	log.Println(formParam)
+
+	// writer.WriteField 는 int 등으로는 전송이 안됨.... string으로 변환 후 전송
+	for key, val := range formParam {
+		_ = writer.WriteField(key, fmt.Sprintf("%v", val))
+	}
+	err := writer.Close()
+
+	client := &http.Client{}
+	req, _ := http.NewRequest(httpMethod, targetUrl, payload)
+
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	req.Header.Add("Authorization", authInfo)
+
+	resp, err := client.Do(req)
+	return resp, err
 }
 
 // return message 확인용

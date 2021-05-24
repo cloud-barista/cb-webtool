@@ -69,7 +69,7 @@ function selectMonitoringMcis(mcisId){
     // var nsid = NAMESPACE
     // var url = "{{ .comURL.TumbleBugURL}}"+"/ns/"+nsid+"/mcis/"+mcis_id;
     // var apiInfo = "{{ .apiInfo}}";
-    var url = "/operation/manages/mcis/" + mcisId
+    var url = "/operation/manages/mcismng/" + mcisId
     axios.get(url,{
         headers:{
             // 'Authorization': apiInfo,

@@ -87,29 +87,30 @@ func MainForm(c echo.Context) error {
 		// return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
+	// default Namespace 를 선택하도록
 	// cloudOsList , _ := service.GetCloudOSList()
-	if len(nameSpaceInfoList) == 1 { // namespace가 1개이면 mcis 체크
-		defaultNameSpace := nameSpaceInfoList[0]
-		// mcis가 있으면 dashboard로 ( dashboard에서 mcis가 없으면 mcis 생성화면으로 : TODO 현재 미완성으로 MCIS관리화면으로 이동)
-		mcisList, _ := service.GetMcisList(defaultNameSpace.ID)
-		if len(mcisList) > 0 {
-			log.Println(" mcisList  ", len(mcisList))
-			return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/mngform")
-		} else {
-			log.Println(" mcisList is null ", mcisList)
-			return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcis/regform")
-		}
-	} else {
-		return echotemplate.Render(c, http.StatusOK,
-			"auth/Main", // 파일명
-			map[string]interface{}{
-				"LoginInfo": loginInfo,
-				// "CloudOSList":               cloudOsList,
-				"NameSpaceList": nameSpaceInfoList,
-				"message":       nsStatus.Message,
-				"status":        nsStatus.StatusCode,
-			})
-	}
+	// if len(nameSpaceInfoList) == 1 { // namespace가 1개이면 mcis 체크
+	// 	defaultNameSpace := nameSpaceInfoList[0]
+	// 	// mcis가 있으면 dashboard로 ( dashboard에서 mcis가 없으면 mcis 생성화면으로 : TODO 현재 미완성으로 MCIS관리화면으로 이동)
+	// 	mcisList, _ := service.GetMcisList(defaultNameSpace.ID)
+	// 	if len(mcisList) > 0 {
+	// 		log.Println(" mcisList  ", len(mcisList))
+	// 		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/mngform")
+	// 	} else {
+	// 		log.Println(" mcisList is null ", mcisList)
+	// 		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/regform")
+	// 	}
+	// } else {
+	return echotemplate.Render(c, http.StatusOK,
+		"auth/Main", // 파일명
+		map[string]interface{}{
+			"LoginInfo": loginInfo,
+			// "CloudOSList":               cloudOsList,
+			"NameSpaceList": nameSpaceInfoList,
+			"message":       nsStatus.Message,
+			"status":        nsStatus.StatusCode,
+		})
+	// }
 }
 
 func ApiTestMngForm(c echo.Context) error {
@@ -389,16 +390,16 @@ func LoginProc(c echo.Context) error {
 		})
 	}
 	if len(nsList) == 0 {
-		nameSpaceInfo, createNameSpaceStatus := service.CreateDefaultNamespace()
-		if createNameSpaceStatus.StatusCode == 500 {
-			log.Println(" default namespace create failed  ", createNameSpaceStatus)
-			// login은 되었으므 main 화면까지는 보내야되지 않을까?
-		} else {
-			nsList = append(nsList)
-			storedUser["defaultnamespacename"] = nameSpaceInfo.Name
-			storedUser["defaultnamespaceid"] = nameSpaceInfo.Name
-			// storedUser["defaultnamespaceid"] = nameSpaceInfo.ID
-		}
+		// nameSpaceInfo, createNameSpaceStatus := service.CreateDefaultNamespace()
+		// if createNameSpaceStatus.StatusCode == 500 {
+		// 	log.Println(" default namespace create failed  ", createNameSpaceStatus)
+		// 	// login은 되었으므 main 화면까지는 보내야되지 않을까?
+		// } else {
+		// 	nsList = append(nsList)
+		// 	storedUser["defaultnamespacename"] = nameSpaceInfo.Name
+		// 	storedUser["defaultnamespaceid"] = nameSpaceInfo.Name
+		// 	// storedUser["defaultnamespaceid"] = nameSpaceInfo.ID
+		// }
 	} else if len(nsList) == 1 {
 		for i, nameSpaceInfo := range nsList {
 			log.Println(i, nameSpaceInfo)
