@@ -166,7 +166,6 @@
 													<select class="selectbox w2">
 														<option value="1">Selected Region</option>
 													</select> -->
-
 												</li>
 												<li>
 													<label>Measurement</label>
@@ -204,15 +203,14 @@
 													<label>Critic Event Count</label>
 													<input type="text" id="dtlMonitoringAlertCriticEventCount" name="dtlMonitoringAlertCriticEventCount" value="" placeholder="" class="gray" title="" readonly />
 												</li>
-												<!--
 												<li>
-													<label>Subnet</label>
-													<span class="sbox">
-														<input type="text" id="dtlSubnet" name="dtlSubnet" value="" placeholder="" class="gray" title="" readonly />
-														<button name="" value="" class="btn_edit btn_register">Edit</button> 
-													</span>
+													<label>Monitoring Alert Event Handler Type</label>
+													<input type="text" id="dtlMonitoringAlertEventHandlerModalType" name="dtlMonitoringAlertEventHandlerModalType" value="" placeholder="" class="gray" title="" readonly />
 												</li>
-												-->
+												<li>
+													<label>Monitoring Alert Event Handler Name</label>
+													<input type="text" id="dtlMonitoringAlertEventHandlerModalName" name="dtlMonitoringAlertEventHandlerModalName" value="" placeholder="" class="gray" title="" readonly />
+												</li>
 											</ul>
 										</div>
 									</div>
@@ -263,11 +261,23 @@
 												</li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Measurement</label>
-                                                    <input type="text" name="" value="" placeholder="cpu | mem | disk" class="pline" title="" id="regMonitoringAlertMeasure"/>
+													<select id="regMonitoringAlertMeasure" class="selectbox2 white pline w_ip1" required>
+														<option value="" selected>Select Measurement</option>
+														<option value="cpu">cpu</option>
+														<option value="mem">memory</option>
+														<option value="disk">disk</option>															
+													</select> 
+                                                    <!-- <input type="text" name="" value="" placeholder="cpu | mem | disk" class="pline" title="" id="regMonitoringAlertMeasure"/> -->
                                                 </li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Target Type</label>
-                                                    <input type="text" name="" value="" placeholder="NS | MCIS | VM" class="pline" title="" id="regMonitoringAlertTargetType"/>
+													<select id="regMonitoringAlertTargetType" class="selectbox2 white pline w_ip1" required>
+														<option value="" selected>Select Target Type</option>
+														<option value="NS">NS</option>
+														<option value="MCIS">MCIS</option>
+														<option value="VM">VM</option>															
+													</select> 
+                                                    <!-- <input type="text" name="" value="" placeholder="NS | MCIS | VM" class="pline" title="" id="regMonitoringAlertTargetType"/> -->
                                                 </li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Target ID</label>
@@ -283,7 +293,15 @@
                                                 </li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Alert Math Expression</label>
-                                                    <input type="text" name="" value="" placeholder="equal | greater | equalgreater | less | equalless" class="pline" title="" id="regMonitoringAlertAlertMathExpression"/>
+													<select id="regMonitoringAlertAlertMathExpression" class="selectbox2 white pline w_ip1" required>
+														<option value="" selected>Select Alert Math Expression</option>
+														<option value="equal">equal</option>
+														<option value="greater">greater</option>
+														<option value="equalgreater">equalgreater</option>
+														<option value="less">less</option>
+														<option value="equalless">equalless</option>															
+													</select>
+                                                    <!-- <input type="text" name="" value="" placeholder="equal | greater | equalgreater | less | equalless" class="pline" title="" id="regMonitoringAlertAlertMathExpression"/> -->
                                                 </li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Alert Threshold</label>
@@ -342,8 +360,9 @@
 																<label for="td_ch1"></label> <span class="ov off"></span>
 															</td>
 															<td class="btn_mtd ovm" data-th="Type">{{ $item.Type }}<span class="ov"></span>
-															<input type="hidden" id="monitoringAlertEventHandler_info_{{ $index }}" value="{{ $item.Type }}"/>
+															<!-- <input type="hidden" id="monitoringAlertEventHandler_info_{{ $index }}" value="{{ $item.Type }}"/> -->
 															<td class="overlay hidden" data-th="Name">{{ $item.Name }}</td>
+															<!-- <input type="hidden" id="monitoringAlertEventHandlerName_info_{{ $index }}" value="{{ $item.Name }}"/> -->
 														</tr>
 														{{ end }}	
 													</tbody>

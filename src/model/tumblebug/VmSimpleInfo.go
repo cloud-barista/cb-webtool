@@ -15,17 +15,16 @@ type VmSimpleInfo struct {
 	Longitude string `json:"longitude"`
 
 	// export 를 위한 param들 추가
-	VmConnectionName string `json:"vmConnectionName"`
-	VmDescription string `json:"vmDescription"`
-	VmImageId string `json:"vmImageId"`
-	VmLabel string `json:"vmLabel"`
-	VmSecurityGroupIds string `json:"vmSecurityGroupIds"`	//"securityGroupIIds": [		{		  "nameId": "string",		  "systemId": "string"		}	  ],
-	VmSpecId string `json:"vmSpecId"`
-	VmSshKeyId string `json:"vmSshKeyId"`
-	VmSubnetId string `json:"vmSubnetId"`
-	VmVnetId string `json:"vmVnetId"`
-	VmGroupSize int `json:"vmGroupSize"`	//? 는 없는데.. vmGroupId만 있는데...
-	VmUserAccount string `json:"vmUserAccount"`
-	VmUserPassword string `json:"vmUserPassword"`
-	
+	VmConnectionName   string   `json:"vmConnectionName"`
+	VmDescription      string   `json:"vmDescription"`
+	VmImageId          string   `json:"vmImageId"`
+	VmLabel            string   `json:"vmLabel"`
+	VmSecurityGroupIds []string `json:"vmSecurityGroupIds"` //"securityGroupIIds": [		{		  "nameId": "string",		  "systemId": "string"		}	  ],
+	VmSpecId           string   `json:"vmSpecId"`
+	VmSshKeyId         string   `json:"vmSshKeyId"`
+	VmSubnetId         string   `json:"vmSubnetId"`
+	VmVnetId           string   `json:"vmVnetId"`
+	VmGroupSize        int      `json:"vmGroupSize"` //? 는 없는데.. vmGroupId만 있는데...
+	VmUserAccount      string   `json:"vmUserAccount"`
+	VmUserPassword     string   `json:"vmUserPassword"`
 }

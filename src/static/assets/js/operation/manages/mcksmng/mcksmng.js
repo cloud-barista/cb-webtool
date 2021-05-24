@@ -14,8 +14,8 @@ function clickListOfMcks(uid, mcksIndex){
     })
 										
     $("#mcks_uid").val($("#mcksUID" + mcksIndex).val());
-    $("#mcks_name").val($("#mcksName" + mcksIndex).val());
-
+    $("#mcks_name").val($("#mcksName" + mcksIndex).val());    
+    
     // MCIS Info area set
     showServerListAndStatusArea(uid,mcksIndex);
 }
@@ -44,19 +44,24 @@ function showServerListAndStatusArea(uid, mcksIndex){
     
     $("#mcks_name").val(mcksName)
 
-    var mcks_badge = "";
-    var mcksStatusIcon = "";
-    if(mcksStatus == "running"){ mcksStatusIcon = "icon_running_db.png"        
-    }else if(mcksStatus == "include" ){ mcksStatusIcon = "icon_stop_db.png"
-    }else if(mcksStatus == "suspended"){mcksStatusIcon = "icon_stop_db.png"
-    }else if(mcksStatus == "terminate"){mcksStatusIcon = "icon_terminate_db.png"
-    }else{
-        mcksStatusIcon = "icon_stop_db.png"
-    }
-    mcks_badge = '<img src="/assets/img/contents/' + mcksStatusIcon +'" alt=""/> '
-    $("#service_status_icon").empty();
-    $("#service_status_icon").append(mcks_badge)
+    var mcksNodes = "";
+    //var mcksStatusIcon = "";
+    $("[id^='mcksNodeUID_']").each(function(){		
+        var mcksNode = $(this).attr("id").split("_")
+        thisMcksIndex = mcksNode[1]
+        nodeIndexOfMcis = mcksNode[2]
 
+        if( thisMcksIndex == mcksIndex){
+            var nodeID = $("#mcksNodeUID_" + thisMcksIndex + "_" + nodeIndexOfMcis).val();
+            var nodeName = $("#mcksNodeName_" + thisMcksIndex + "_" + nodeIndexOfMcis).val();
+                
+            nodeStatusIcon ="bgbox_g"
+            // node 목록 표시
+            mcksNodes += '<li class="sel_cr ' + nodeStatusIcon + '"><a href="javascript:void(0);" onclick="nodeDetailInfo(\''+mcksUID+'\',\''+mcksName+'\',\''+nodeID+'\')"><span class="txt">'+nodeName+'</span></a></li>';
+        }
+    });
+    $("#mcks_server_info_box").empty();
+    $("#mcks_server_info_box").append(mcksNodes);
         
 
     //Manage MCKS Server List on/off : table을 클릭하면 해당 Row 에 active style로 보여주기

@@ -173,6 +173,7 @@ function deleteNameSpace () {
             console.warn(error);
             console.log(error.response)
             var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
             commonErrorAlert(statusCode, errorMessage) 
         });
     }else{

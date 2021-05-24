@@ -98,8 +98,8 @@ function displayNewServerForm(){
     //     $ImportServers.removeClass("active");
     // }
 }
-// Expert Mode에 Import 버튼 클릭 시 해당 form display
-function displayImportServerFormByImport(){
+// Expert Mode에 Import 버튼 클릭 시 해당 form display  // MCIS Create 와 VM Create의 function이름이 같음
+function displayVmImportServerFormByImport(){
     var $SimpleServers = $("#simpleServerConfig");
     var $ExpertServers = $("#expertServerConfig");
     var $ImportServers = $("#importServerConfig");

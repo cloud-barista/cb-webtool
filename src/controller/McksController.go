@@ -266,7 +266,8 @@ func NodeRegProc(c echo.Context) error {
 	clusteruID := c.Param("clusteruID")
 	clusterName := c.Param("clusterName")
 
-	nodeRegReq := &ladybug.NodeRegReq{}
+	nodeRegReq := &ladybug.NodeOnlyRegReq{}
+	// nodeRegReq := &ladybug.NodeReq{}
 	if err := c.Bind(nodeRegReq); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
