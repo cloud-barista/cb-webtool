@@ -1,6 +1,11 @@
 function deploy_btn(){
     var mcksName = $("#mcksreg_name").val();
-
+    if( !validateMcksName(mcksName) ){
+        console.log("here")
+        commonAlert("Small letter, number, hipen(-) only ");
+        return;
+    }
+    
     var kubernatesNetworkCni = $("#kubernatesNetworkCni").val();
     var kubernatesPodCidr = $("#kubernatesPodCidr").val();
     var kubernatesServiceCidr = $("#kubernatesServiceCidr").val();
@@ -31,7 +36,7 @@ function deploy_btn(){
         if( workerId.indexOf("hidden_worker") > -1) continue;// 복사를 위한 영역이 있으므로
 
         workerConnectionData.push($("select[name='workerConnectionName']")[i].value);
-        workerCountData.push($("input[name='controlPlaneCount']")[i].value);
+        workerCountData.push($("input[name='workerCount']")[i].value);
         workerSpecIdData.push($("select[name='workerSpecId']")[i].value);
     }
     console.log(workerConnectionData)
@@ -116,4 +121,12 @@ function deploy_btn(){
     }finally{
         
     }
+}
+
+
+// 이름 Validation : 소문자, 숫자, 하이프(-)만 가능
+function validateMcksName(elementValue){
+    //var charsPattern = /^[a-zA-Z0-9-]*$/;
+    var charsPattern = /^[a-z0-9-]*$/;
+    return charsPattern.test(elementValue);
 }
