@@ -36,7 +36,7 @@ function deploy_btn(){
         if( workerId.indexOf("hidden_worker") > -1) continue;// 복사를 위한 영역이 있으므로
 
         workerConnectionData.push($("select[name='workerConnectionName']")[i].value);
-        workerCountData.push($("input[name='controlPlaneCount']")[i].value);
+        workerCountData.push($("input[name='workerCount']")[i].value);
         workerSpecIdData.push($("select[name='workerSpecId']")[i].value);
     }
     console.log(workerConnectionData)
