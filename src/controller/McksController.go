@@ -188,10 +188,11 @@ func McksDelProc(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
-	clusteruID := c.Param("clusteruID")
-	log.Println("clusteruID= " + clusteruID)
+	//clusteruID := c.Param("clusteruID")
+	clusterName := c.Param("clusterName")
+	log.Println("clusterName= " + clusterName)
 
-	resultStatusInfo, respStatus := service.DelCluster(defaultNameSpaceID, clusteruID)
+	resultStatusInfo, respStatus := service.DelCluster(defaultNameSpaceID, clusterName)
 	log.Println("DelMCKS service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{

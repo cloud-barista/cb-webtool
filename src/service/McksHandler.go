@@ -143,16 +143,16 @@ func RegCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*ladybug
 }
 
 // Cluster 삭제
-func DelCluster(nameSpaceID string, clusterID string) (*ladybug.StatusInfo, model.WebStatus) {
+func DelCluster(nameSpaceID string, clusterName string) (*ladybug.StatusInfo, model.WebStatus) {
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{namespace}"] = nameSpaceID
-	paramMapper["{cluster}"] = clusterID
+	paramMapper["{cluster}"] = clusterName
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.LADYBUG + urlParam
 
-	if clusterID == "" {
+	if clusterName == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
 	}
 

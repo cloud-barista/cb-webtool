@@ -149,7 +149,7 @@ function deleteMCKS(){
             }else{
                 commonAlert(message);
                 // TODO : MCIS List 조회
-                location.reload();
+                //location.reload();
             }
             
         }).catch((error) => {
