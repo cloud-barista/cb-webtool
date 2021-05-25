@@ -120,13 +120,13 @@ func RegCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*ladybug
 	returnClusterInfo := ladybug.ClusterInfo{}
 	returnStatus := model.WebStatus{}
 
-	respBody := resp.Body
-	respStatus := resp.StatusCode
-
 	if err != nil {
 		fmt.Println(err)
 		return &returnClusterInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
 
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
 		errorInfo := model.ErrorInfo{}
