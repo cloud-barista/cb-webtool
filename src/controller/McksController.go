@@ -237,7 +237,7 @@ func McksNodeRegForm(c echo.Context) error {
 	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
 
 	nodeList, _ := service.GetNodeList(defaultNameSpaceID, clusterName)
-	nodeListLength := len(nodeList)
+	nodeListLength := len(nodeList.Items)
 	log.Println("---------------------- nodeListLength ", nodeListLength)
 
 	return echotemplate.Render(c, http.StatusOK,
@@ -267,7 +267,7 @@ func NodeRegProc(c echo.Context) error {
 	clusteruID := c.Param("clusteruID")
 	clusterName := c.Param("clusterName")
 
-	nodeRegReq := &ladybug.NodeOnlyRegReq{}
+	nodeRegReq := &ladybug.NodeRegReq{}
 	// nodeRegReq := &ladybug.NodeReq{}
 	if err := c.Bind(nodeRegReq); err != nil {
 		log.Println(err)
@@ -294,5 +294,36 @@ func NodeRegProc(c echo.Context) error {
 		"status":     respStatus.StatusCode,
 		"ClusteruID": clusteruID,
 		"NodeInfo":   nodeInfo,
+	})
+}
+
+// Node 삭제 처리
+func NodeDelProc(c echo.Context) error {
+	log.Println("NodeRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	//clusteruID := c.Param("clusteruID")
+	clusterName := c.Param("clusterName")
+	//nodeID := c.Param("nodeID")
+	nodeName := c.Param("nodeName")
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	resultStatusInfo, respStatus := service.DelNode(defaultNameSpaceID, clusterName, nodeName)
+	log.Println("DelMCKS service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":    "success",
+		"status":     respStatus.StatusCode,
+		"StatusInfo": resultStatusInfo,
 	})
 }

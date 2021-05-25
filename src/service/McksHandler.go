@@ -236,7 +236,7 @@ func GetSimpleNodeCountMap(cluster ladybug.ClusterInfo) ([]ladybug.NodeSimpleInf
 ////////
 
 // Node 목록 조회
-func GetNodeList(nameSpaceID string, clusterName string) ([]ladybug.NodeList, model.WebStatus) {
+func GetNodeList(nameSpaceID string, clusterName string) (ladybug.NodeList, model.WebStatus) {
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes"
 
 	var paramMapper = make(map[string]string)
@@ -249,7 +249,7 @@ func GetNodeList(nameSpaceID string, clusterName string) ([]ladybug.NodeList, mo
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
-	nodeList := []ladybug.NodeList{} // 이름은 List이나 1개의 객체임
+	nodeList := ladybug.NodeList{} // 이름은 List이나 1개의 객체임
 	if err != nil {
 		fmt.Println(err)
 		return nodeList, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -299,7 +299,7 @@ func GetNodeData(nameSpaceID string, clusterName string, node string) (*ladybug.
 }
 
 // Node 생성
-func RegNode(nameSpaceID string, clusterName string, nodeRegReq *ladybug.NodeOnlyRegReq) (*ladybug.NodeInfo, model.WebStatus) {
+func RegNode(nameSpaceID string, clusterName string, nodeRegReq *ladybug.NodeRegReq) (*ladybug.NodeInfo, model.WebStatus) {
 
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes"
 

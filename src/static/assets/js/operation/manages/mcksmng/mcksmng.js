@@ -57,7 +57,7 @@ function showServerListAndStatusArea(uid, mcksIndex){
                 
             nodeStatusIcon ="bgbox_g"
             // node 목록 표시
-            mcksNodes += '<li class="sel_cr ' + nodeStatusIcon + '"><a href="javascript:void(0);" onclick="nodeDetailInfo(\''+mcksUID+'\',\''+mcksName+'\',\''+nodeID+'\')"><span class="txt">'+nodeName+'</span></a></li>';
+            mcksNodes += '<li class="sel_cr ' + nodeStatusIcon + '"><a href="javascript:void(0);" onclick="nodeDetailInfo(\''+thisMcksIndex+'\',\''+nodeIndexOfMcis+'\')"><span class="txt">'+nodeName+'</span></a></li>';
         }
     });
     $("#mcks_server_info_box").empty();
@@ -148,7 +148,7 @@ function deleteMCKS(){
                 return;
             }else{
                 commonAlert(message);
-                // TODO : MCIS List 조회
+                // TODO : MCKS List 조회
                 //location.reload();
             }
             
@@ -156,7 +156,72 @@ function deleteMCKS(){
             console.warn(error);
             console.log(error.response)
             var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
             commonErrorAlert(statusCode, errorMessage) 
         });
+
+}
+
+function deleteNodeOfMcks(){
+    // worker만 삭제
+    // 1개씩 삭제
+
+    var selectedMcksUid = $("#mcks_uid").val();
+    var selectedMcksName = $("#mcks_name").val();
+    var selectedNodeUid = $("#node_uid").val();
+    var selectedNodeName = $("#node_name").val();
+    var selectedNodeRole = $("#mcks_node_role").val();
+    
+    if( selectedNodeRole.toLowerCase() != "worker"){
+        commonAlert("Only worker node can be deleted")
+        return;
+    }
+    
+    var url = "/setting/resources/vmspec/del/" + selSpecId;
+    console.log("URL : ",url)
+    axios.delete(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        // var data = result.data;
+        // if (result.status == 200 || result.status == 201) {
+        var statusCode = result.data.status;
+        if( statusCode == 200 || statusCode == 201) {
+            commonAlert("Success Delete Node.");
+            
+        } else {
+            var message = result.data.message;
+            commonAlert("Fail Delete Node : " + message +"(" + statusCode + ")");
+         
+        }
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+    });
+}
+
+// 선택한 Node의 상세정보 표시
+function nodeDetailInfo(mcksIndex, nodeIndex){
+    var nodeUID = $("#mcksNodeUID_" + mcksIndex + "_" + nodeIndex).val();
+    var nodeName = $("#mcksNodeName_" + mcksIndex + "_" + nodeIndex).val();
+    var nodeKind = $("#mcksNodeKind_" + mcksIndex + "_" + nodeIndex).val();
+    var nodeRole = $("#mcksNodeRole_" + mcksIndex + "_" + nodeIndex).val();
+
+    // hidden 값 setting. 삭제 등에서 사용
+    $("#node_uid").val(nodeUID);
+    $("#node_name").val(nodeName);
+
+    $("#mcks_node_txt").text(nodeName + " / " + nodeUID);
+    
+    $("#mcks_node_name").val(nodeName);
+    $("#mcks_node_kind").val(nodeKind);
+    $("#mcks_node_role").val(nodeRole);
+
+    $("#mcks_node_detail").css("display", "block");
 
 }
