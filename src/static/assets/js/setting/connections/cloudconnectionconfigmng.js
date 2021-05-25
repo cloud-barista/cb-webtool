@@ -78,7 +78,7 @@ function getCloudConnectionList(sort_type){
     // 원래는 목록을 조회해서 filterling 하는 function
     // 이미 목록을 가져왔으므로 
     // TODO : 가져온 것을 filtering 하는 것으로 변경 필요
-    alert(sort_type + "만 filtering 하자.")
+    // alert(sort_type + "만 filtering 하자.")
     // var url = "{{ .comURL.SpiderURL}}"+"/connectionconfig";
     // axios.get(url,{
     //     headers:{

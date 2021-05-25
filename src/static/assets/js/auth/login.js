@@ -312,11 +312,11 @@ function createNameSpace(){
             console.log(result);
             if(result.status == 200 || result.status == 201){
                 var namespaceList = result.data.nsList;
-                getUserNamespace(namespaceList)
+                //getUserNamespace(namespaceList)
                 
-                alert("Success Create NameSpace")
+                commonAlert("Success Create NameSpace")
 
-                // getNameSpace();
+                getNameSpace();// 생성 후 namespace목록 조회
                 $("#btnToggleNamespace").click()
                 $("#namespace").val('')
                 $("#nsDesc").val('')
