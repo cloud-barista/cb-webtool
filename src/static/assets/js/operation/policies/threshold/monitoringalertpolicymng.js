@@ -77,6 +77,30 @@ function deleteMonitoringAlertPolicy(){
 function createMonitoringAlertPolicy(){
     console.log("##########CreateMonitoringAlertPolicy")
 
+    var monitoringAlertEventHandlerType = "";
+    var monitoringAlertEventHandlerName = "";
+    var count = 0;
+
+    $( "input[name='chk']:checked" ).each( function () {
+        count++;
+        var selectedIndex = $(this).attr('id').split("_")[1]; // raw_1  [0] = raw, [1] = 1
+        monitoringAlertEventHandlerType = $("#monitoringAlertEventHandlerType_info_" + selectedIndex).val();
+        monitoringAlertEventHandlerName = $("#monitoringAlertEventHandlerName_info_" + selectedIndex).val();
+    });
+
+   
+    console.log("count : ", count);
+
+    if(monitoringAlertEventHandlerType == ''){
+        commonAlert("입력할 대상을 선택하세요.");
+        return false;
+    }
+
+    if(count != 1){
+        commonAlert("입력할 대상을 하나만 선택하세요.");
+        return false;
+    }
+
     var monitoringAlertName = $("#regMonitoringAlertName").val();				 
     var monitoringAlertMeasure = $("#regMonitoringAlertMeasure").val();            
     var monitoringAlertTargetType = $("#regMonitoringAlertTargetType").val();         
@@ -94,6 +118,57 @@ function createMonitoringAlertPolicy(){
         return;
     }
 
+    if(monitoringAlertMeasure == "") {
+        commonAlert("Select New Measurement")
+        return;
+    }
+
+    if(monitoringAlertTargetType == "") {
+        commonAlert("Select New Target Type")
+        return;
+    }
+
+    if(!monitoringAlertTargetID) {
+        commonAlert("Input New Target ID")
+        $("#regMonitoringAlertTargetID").focus()
+        return;
+    }
+
+    if(!monitoringAlertEventDuration) {
+        commonAlert("Input New Event Duration")
+        $("#regMonitoringAlertEventDuration").focus()
+        return;
+    }
+
+    if(!monitoringAlertMetric) {
+        commonAlert("Input New Metric")
+        $("#regMonitoringAlertMetric").focus()
+        return;
+    }
+    
+    if(monitoringAlertAlertMathExpression == "") {
+        commonAlert("Select New Alert Math Expression")
+        return;
+    }
+
+    if(!monitoringAlertAlertThreshold) {
+        commonAlert("Input New Alert Threshold")
+        $("#regMonitoringAlertAlertThreshold").focus()
+        return;
+    }
+    
+    if(!monitoringAlertWarnEventCount) {
+        commonAlert("Input Warn Event Count")
+        $("#regMonitoringAlertWarnEventCount").focus()
+        return;
+    }
+
+    if(!monitoringAlertCriticEventCount) {
+        commonAlert("Input New Critic Event Count")
+        $("#regMonitoringAlertCriticEventCount").focus()
+        return;
+    }
+
     var url = "/operation/policies/monitoringalertpolicy/reg/proc"
     console.log("Threshold Reg URL : ", url)
     var obj = {
@@ -107,8 +182,8 @@ function createMonitoringAlertPolicy(){
         alert_threshold         : Number(monitoringAlertAlertThreshold),     
         warn_event_cnt          : Number(monitoringAlertWarnEventCount),     
         critic_event_cnt        : Number(monitoringAlertCriticEventCount),
-        alert_event_type        : "slack",
-        alert_event_name        : "slackHandler",
+        alert_event_type        : monitoringAlertEventHandlerType,
+        alert_event_name        : monitoringAlertEventHandlerName,
         alert_event_message     : monitoringAlertName
     }
 
@@ -174,6 +249,8 @@ function showMonitoringAlertPolicyInfo(monitoringAlertName) {
         var dtlMonitoringAlertAlertThreshold       = data.alert_threshold
         var dtlMonitoringAlertWarnEventCount       = data.warn_event_cnt
         var dtlMonitoringAlertCriticEventCount     = data.critic_event_cnt
+        var dtlMonitoringAlertEventHandlerModalType = data.alert_event_type
+        var dtlMonitoringAlertEventHandlerModalName = data.alert_event_name
 
         $("#dtlMonitoringAlertName").empty();				 
         $("#dtlMonitoringAlertMeasure").empty();            
@@ -185,6 +262,8 @@ function showMonitoringAlertPolicyInfo(monitoringAlertName) {
         $("#dtlMonitoringAlertAlertThreshold").empty();     
         $("#dtlMonitoringAlertWarnEventCount").empty();     
         $("#dtlMonitoringAlertCriticEventCount").empty();
+        $("#dtlMonitoringAlertEventHandlerModalType").empty();
+        $("#dtlMonitoringAlertEventHandlerModalName").empty();
 
         $("#dtlMonitoringAlertName").val(dtlMonitoringAlertName);				 
         $("#dtlMonitoringAlertMeasure").val(dtlMonitoringAlertMeasure);               
@@ -196,6 +275,8 @@ function showMonitoringAlertPolicyInfo(monitoringAlertName) {
         $("#dtlMonitoringAlertAlertThreshold").val(dtlMonitoringAlertAlertThreshold);     
         $("#dtlMonitoringAlertWarnEventCount").val(dtlMonitoringAlertWarnEventCount);     
         $("#dtlMonitoringAlertCriticEventCount").val(dtlMonitoringAlertCriticEventCount);
+        $("#dtlMonitoringAlertEventHandlerModalType").val(dtlMonitoringAlertEventHandlerModalType);
+        $("#dtlMonitoringAlertEventHandlerModalName").val(dtlMonitoringAlertEventHandlerModalName);
         
     }) .catch(function(error){
         console.log("Threshold detail error : ",error);        
@@ -216,12 +297,12 @@ function displayMonitoringAlertPolicyInfo(targetAction) {
         
         // 등록 폼 초기화
         $("#regMonitoringAlertName").val('');				 
-        $("#regMonitoringAlertMeasure").val('');            
-        $("#regMonitoringAlertTargetType").val('');         
+        // $("#regMonitoringAlertMeasure").val('');            
+        // $("#regMonitoringAlertTargetType").val('');         
         $("#regMonitoringAlertTargetID").val('');           
         $("#regMonitoringAlertEventDuration").val('');      
         $("#regMonitoringAlertMetric").val('');             
-        $("#regMonitoringAlertAlertMathExpression").val('');
+        // $("#regMonitoringAlertAlertMathExpression").val('');
         $("#regMonitoringAlertAlertThreshold").val('');     
         $("#regMonitoringAlertWarnEventCount").val('');     
         $("#regMonitoringAlertCriticEventCount").val('');  
@@ -369,6 +450,8 @@ function saveNewMonitoringAlertEventHandler() {
         name: monitoringAlertEventHandlerModalName,
         url: "https://hooks.slack.com/services/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",
         channel: "#kapacitor-alert"
+        // url: "https://cloud-barista.slack.com/archives/C022PB8K7NG",
+        // channel: "#monitoring-alert-event-handler"
     }
 
     console.log(monitoringAlertEventHandlerInfo);
@@ -418,7 +501,7 @@ function saveNewMonitoringAlertEventHandler() {
 function deleteMonitoringAlertEventHandler() {
     console.log("##########deleteMonitoringAlertEventHandler")
 
-    var count = 0;
+    var counts = 0;
 
     var selectedIndex = "";
     var selectedType = "";
@@ -427,22 +510,23 @@ function deleteMonitoringAlertEventHandler() {
     // var chkIdArr = $(this).attr('id').split("_");// 0번째와 2번째를 합치면 id 추출가능  ex) securityGroup_Raw_0
     //   if( $(this).is(":checked")){
     $( "input[name='chk']:checked" ).each( function () {
-        count++;
+        counts++;
         selectedIndex = $(this).attr('id').split("_")[1]; // raw_1  [0] = raw, [1] = 1
         selectedType = $("#monitoringAlertEventHandlerType_info_" + selectedIndex).val();
         selectedName = $("#monitoringAlertEventHandlerName_info_" + selectedIndex).val();
     });
 
+    console.log("selectedIndex", selectedIndex)
     console.log("selectedType : ", selectedType);
     console.log("selectedName : ", selectedName);
-    console.log("count : ", count);
+    console.log("count : ", counts);
 
     if(selectedIndex == ''){
         commonAlert("삭제할 대상을 선택하세요.");
         return false;
     }
 
-    if(count != 1){
+    if(counts != 1){
         commonAlert("삭제할 대상을 하나만 선택하세요.");
         return false;
     }
@@ -479,7 +563,7 @@ function displayMonitoringAlertEventHandlerInfo(targetAction) {
     } else if ( targetAction == "REG_SUCCESS" ) {
         console.log("##########MonitoringAlertEventHandler REG_SUCCESS")
         
-        $("#regMonitoringAlertEventHandlerModalType").val('');  
+        // $("#regMonitoringAlertEventHandlerModalType").val('');  
         $("#regMonitoringAlertEventHandlerModalName").val('');  
 
         getMonitoringAlertEventHandlerList();

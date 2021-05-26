@@ -258,6 +258,7 @@ func main() {
 			"operation/manages/mcksmng/McksStatus",
 			"operation/manages/mcksmng/McksList",
 			"operation/manages/mcksmng/McksInfo",
+			"operation/manages/mcksmng/McksNodeInfo",
 		},
 		DisableCache: true,
 	})
@@ -515,6 +516,7 @@ func main() {
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
 	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName", controller.McksDelProc)
 	e.POST("/operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc", controller.NodeRegProc)
+	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName", controller.NodeDelProc)
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)

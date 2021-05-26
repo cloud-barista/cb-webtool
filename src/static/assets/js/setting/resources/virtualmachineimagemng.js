@@ -412,11 +412,12 @@ function createVirtualMachineImage() {
 function showVirtualMachinImageInfo(target) {
     console.log("target showInfo : ", target);
     // var apiInfo = "{{ .apiInfo}}";
-    var imageId = encodeURIComponent(target);
+    //var imageId = encodeURIComponent(target);
     $('.stxt').html(target);
     
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+ imageId;
-    var url = "/setting/resources" + "/machineimage/" + imageId
+    // var url = "/setting/resources/machineimage/" + imageId
+    var url = "/setting/resources/machineimage/" + target
     console.log("image detail URL : ",url)
 
     return axios.get(url,{

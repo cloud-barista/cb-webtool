@@ -120,13 +120,13 @@ func RegCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*ladybug
 	returnClusterInfo := ladybug.ClusterInfo{}
 	returnStatus := model.WebStatus{}
 
-	respBody := resp.Body
-	respStatus := resp.StatusCode
-
 	if err != nil {
 		fmt.Println(err)
 		return &returnClusterInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
 
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
 		errorInfo := model.ErrorInfo{}
@@ -143,16 +143,16 @@ func RegCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*ladybug
 }
 
 // Cluster 삭제
-func DelCluster(nameSpaceID string, clusterID string) (*ladybug.StatusInfo, model.WebStatus) {
+func DelCluster(nameSpaceID string, clusterName string) (*ladybug.StatusInfo, model.WebStatus) {
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{namespace}"] = nameSpaceID
-	paramMapper["{cluster}"] = clusterID
+	paramMapper["{cluster}"] = clusterName
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.LADYBUG + urlParam
 
-	if clusterID == "" {
+	if clusterName == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
 	}
 
@@ -236,7 +236,7 @@ func GetSimpleNodeCountMap(cluster ladybug.ClusterInfo) ([]ladybug.NodeSimpleInf
 ////////
 
 // Node 목록 조회
-func GetNodeList(nameSpaceID string, clusterName string) ([]ladybug.NodeList, model.WebStatus) {
+func GetNodeList(nameSpaceID string, clusterName string) (ladybug.NodeList, model.WebStatus) {
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes"
 
 	var paramMapper = make(map[string]string)
@@ -249,7 +249,7 @@ func GetNodeList(nameSpaceID string, clusterName string) ([]ladybug.NodeList, mo
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
-	nodeList := []ladybug.NodeList{} // 이름은 List이나 1개의 객체임
+	nodeList := ladybug.NodeList{} // 이름은 List이나 1개의 객체임
 	if err != nil {
 		fmt.Println(err)
 		return nodeList, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -299,7 +299,7 @@ func GetNodeData(nameSpaceID string, clusterName string, node string) (*ladybug.
 }
 
 // Node 생성
-func RegNode(nameSpaceID string, clusterName string, nodeRegReq *ladybug.NodeOnlyRegReq) (*ladybug.NodeInfo, model.WebStatus) {
+func RegNode(nameSpaceID string, clusterName string, nodeRegReq *ladybug.NodeRegReq) (*ladybug.NodeInfo, model.WebStatus) {
 
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes"
 

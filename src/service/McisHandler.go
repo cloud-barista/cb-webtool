@@ -44,12 +44,22 @@ func GetMcisList(nameSpaceID string) ([]tumblebug.McisInfo, model.WebStatus) {
 	respStatus := resp.StatusCode
 
 	mcisList := map[string][]tumblebug.McisInfo{}
-	json.NewDecoder(respBody).Decode(&mcisList)
-	fmt.Println(mcisList["mcis"])
+	returnStatus := model.WebStatus{}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&mcisList)
+		fmt.Println(mcisList["mcis"])
+	}
+	returnStatus.StatusCode = respStatus
 	log.Println(respBody)
 	// util.DisplayResponse(resp) // 수신내용 확인
 
-	return mcisList["mcis"], model.WebStatus{StatusCode: respStatus}
+	return mcisList["mcis"], returnStatus
 }
 
 // 특정 MCIS 조회
