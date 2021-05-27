@@ -490,8 +490,34 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 
 	fmt.Println("RegCredential : ", credentialInfo)
 
+	// // GCP의 경우 value에 \n 이 포함되어 있기 때문에 이것이 넘어올 때는 \\n 형태로 넘어온다.  이것을 \으로 replace 해야
+	// //
+	// if credentialInfo.ProviderName == "GCP" {
+	// 	for _, keyValueInfo := range credentialInfo.KeyValueInfoList {
+	// 		gcpKey := keyValueInfo.Key
+	// 		gcpValue := keyValueInfo.Value
+	// 		replacedValue := gcpValue
+	// 		if gcpKey == "PrivateKey" {
+	// 			fmt.Println(gcpValue)
+	// 			fmt.Println(keyValueInfo)
+	// 			fmt.Println("--------- before / after -----------------")
+	// 			gcpValue = strings.Replace(gcpValue, "\\n", "\n", -1)
+	// 			keyValueInfo.Value = replacedValue
+	// 			fmt.Println(replacedValue)
+	// 			fmt.Println(keyValueInfo)
+
+	// 		}
+	// 	}
+	// 	fmt.Println("GCP RegCredential : ", credentialInfo)
+	// }
+
 	// body, err := util.CommonHttpPost(url, regionInfo)
-	pbytes, _ := json.Marshal(credentialInfo)
+	pbytes, marshalErr := json.Marshal(credentialInfo)
+	if marshalErr != nil {
+		fmt.Println(" ------------------ ")
+		fmt.Println(marshalErr)
+	}
+	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	// if err != nil {
 	// 	fmt.Println(err)

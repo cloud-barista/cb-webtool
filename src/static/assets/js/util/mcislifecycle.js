@@ -4,13 +4,14 @@
 // callAAA -> mcisLifeCycle 호출 -> callBackAAA로 결과값전달
 function mcisLifeCycle(mcisID, type){
     
-    var url = "/operation/manages" + "/mcismng/proc/mcislifecycle";
+    var url = "/operation/manages/mcismng/proc/mcislifecycle";
     
     console.log("life cycle3 url : ",url);
     var message = "MCIS "+type+ " complete!."
-           
+    var namespaceID = $('#topboxDefaultNameSpaceID').val();     
     axios.post(url,{
         headers: { },
+        namespaceID:namespaceID,
         mcisID:mcisID,
         lifeCycleType:type
     }).then(result=>{

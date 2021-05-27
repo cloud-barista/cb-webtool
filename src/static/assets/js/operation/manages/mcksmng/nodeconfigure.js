@@ -106,7 +106,7 @@ function nodeDone_btn(){
         // new_worker['workerNodeCount'] = Number(workerCountData[i])
         // new_worker['workerNodeSpec'] = workerSpecIdData[i]
 
-        orkers[i] = new_worker
+        workers[i] = new_worker
         // new_obj = new_worker;
 
         // new_obj['config'] = workerConnectionData[i];

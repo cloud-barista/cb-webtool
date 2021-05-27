@@ -94,8 +94,19 @@ func McisMngForm(c echo.Context) error {
 	totalConnectionCount := len(cloudConnectionConfigInfoList)
 
 	// 모든 MCIS 조회
-	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
-	log.Println(" mcisList  ", mcisList)
+	mcisList, mcisErr := service.GetMcisList(defaultNameSpaceID)
+	log.Println(" mcisList  ", mcisList, mcisErr.StatusCode)
+	if mcisErr.StatusCode != 200 && mcisErr.StatusCode != 201 {
+		//return render(c, "ErrorPage.html", map[string]interface{}{"Message": mcisErr.Message, "StatusCode": mcisErr.StatusCode, "PageUrl": "/main"})
+		//return render(c, "ErrorPage.html", map[string]interface{}{"Message": messages, "StatusCode": msgtype, "PageUrl": template.HTML(pageHtml)})
+		//return c.Render(http.StatusNotFound, tmpl.ErrNotFoundTpl, tmpl.NotFoundMessage)
+
+		errPage := fmt.Sprintf("%d.html", mcisErr.StatusCode)
+		if err := c.File(errPage); err != nil {
+			log.Println("Return error page")
+			return c.HTML(mcisErr.StatusCode, "Return Error page Message : "+mcisErr.Message)
+		}
+	}
 
 	totalMcisCount := len(mcisList) // mcis 갯수
 	totalVmCount := 0               // 모든 vm 갯수
@@ -679,7 +690,6 @@ func McisLifeCycle(c echo.Context) error {
 		})
 	}
 
-	mcisLifeCycle.NameSpaceID = defaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
 	log.Println("McisLifeCycle service returned")
