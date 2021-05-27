@@ -177,11 +177,16 @@ function deleteNodeOfMcks(){
         return;
     }
     
-    var url = "/setting/resources/vmspec/del/" + selSpecId;
+    var orgUrl = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";
+    var urlParamMap = new Map();
+    urlParamMap.set(":clusteruID", selectedMcksUid)
+    urlParamMap.set(":clusterName", selectedMcksName)
+    urlParamMap.set(":nodeID", selectedNodeUid)
+    urlParamMap.set(":nodeName", selectedNodeName)
+    var url = setUrlByParam(orgUrl, urlParamMap)
     console.log("URL : ",url)
     axios.delete(url, {
         headers: {
-            // 'Authorization': "{{ .apiInfo}}",
             'Content-Type': "application/json"
         }
     }).then(result => {

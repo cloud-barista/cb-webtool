@@ -9,7 +9,7 @@
 // url에는 main.go 에서 사용하는 path를 넣는다.
 function setUrlByParam(url, urlParamMap){
     //resultVmCreateMap.set(resultVmKey, resultStatus)
-    // var url = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";
+    // var url = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";    
     var returnUrl = url;
     for (let key of urlParamMap.keys()) { 
         console.log("urlParamMap " + key + " : " + urlParamMap.get(key) );
@@ -18,4 +18,19 @@ function setUrlByParam(url, urlParamMap){
         returnUrl = returnUrl.replace(key, urlParamValue);        
     }
     return returnUrl;
+}
+
+// conteroller의 methodName으로 main.go에 정의된 url값을 가져온다.
+function getWetToolUrl(controllerKeyName){
+    // ex ) monitoringGroup.GET("/operation/monitorings/mcismonitoring/mngform", controller.McisMonitoringMngForm)    
+    let controllerMethodNameMap = new Map(
+        [
+            ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
+            ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
+        ]
+    );
+
+    var webtoolUrl = controllerMethodNameMap.get(controllerKeyName);
+    
+    return webtoolUrl;
 }
