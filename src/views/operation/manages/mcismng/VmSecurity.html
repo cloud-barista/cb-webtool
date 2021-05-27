@@ -118,8 +118,8 @@
 
 							{{range $sshKeyIndex, $sshKeyItem := .SshKeyList}}	
 							<tr onclick="setValueToFormObj('es_sshKeyList', 'tab_sshKey', 'sshKey', '{{$sshKeyIndex}}', 'e_sshKeyId');">
-								<input type="hidden" id="sshKey_id_{{$sshKeyIndex}}" value="{{$sshKeyItem.ID}}"/>
-								<input type="hidden" id="sshKey_connectionName_{{$sshKeyIndex}}" value="{{$sshKeyItem.ConnectionName}}"/>
+								<input type="hidden" name="sshKey_id" id="sshKey_id_{{$sshKeyIndex}}" value="{{$sshKeyItem.ID}}"/>
+								<input type="hidden" name="sshKey_connectionName" id="sshKey_connectionName_{{$sshKeyIndex}}" value="{{$sshKeyItem.ConnectionName}}"/>
 								<input type="hidden" name="sshKey_info" id="sshKey_info_{{$sshKeyIndex}}" value="{{$sshKeyItem.Name}}|{{$sshKeyItem.ConnectionName}}|{{$sshKeyItem.Description}}"/>
 								
 								<td class="overlay hidden" data-th="Name">{{$sshKeyItem.Name}}</td>
