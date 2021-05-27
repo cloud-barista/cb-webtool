@@ -633,3 +633,7 @@ function getCommonSecurityGroupList(targetKey, sortType) {
         }        
     }
 
+	// this.value -> 특정 obj 에 넣을 때 사용
+	function copyValue(targetValue, targetObjId){
+		$("#" + targetObjId).val(targetValue);
+	}

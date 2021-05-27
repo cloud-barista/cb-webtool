@@ -313,7 +313,7 @@ function expertDone_btn(){
   if( $("#e_sshKeyId").val() == ""){ commonAlert("SSH Key is required"); return;}
   if( $("#e_imageId").val() == ""){ commonAlert("VM Image is required"); return;}
   if( $("#e_specId").val() == ""){ commonAlert("VM Spec is required"); return;}
-  if( $("#e_connectionName").val() == ""){ commonAlert("ConnectionName is required"); return;}
+  
 
   var expert_form = $("#expert_form").serializeObject()
   var server_name = expert_form.name
@@ -363,18 +363,18 @@ function expertDone_btn(){
 // 조회조건인 connection 변경시 호출.
 // TODO : 실제 connectionVal이 바뀌는것이 아니라. 다른 것들의 조회 조건 filter의 기본값으로 set.
 function setConnectionValue(connName){
-  // console.log(" connection change")
-  // var connectionObj = $("#e_connectionName");
-  // if( connectionObj.val() == "" ){// 비어있으면 그냥 set
-  //   console.log(" initial connName")
-  //   connectionObj.val(connName);
-  // } else if( connectionObj.val() != connName){
-  //   console.log(" diff connName " + connName + " : " + connectionObj.val())
-  //   $("#t_connectionName").val(connName);
-  //   commonConfirmOpen("DifferentConnection")
-  // } else {
+  console.log(" connection change")
+  var connectionObj = $("#e_connectionName");
+  if( connectionObj.val() == "" ){// 비어있으면 그냥 set
+    console.log(" initial connName")
+    connectionObj.val(connName);
+  } else if( connectionObj.val() != connName){
+    console.log(" diff connName " + connName + " : " + connectionObj.val())
+    $("#t_connectionName").val(connName);
+    commonConfirmOpen("DifferentConnection")
+  } else {
     
-  // }
+  }
 }
 
 // 다른 connectinName으로 set 할 때 기존에 있던 것들 중 connectionName이 다른 것들은 초기화
@@ -599,13 +599,12 @@ function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedInd
     $("#" + targetTabObjId).val(selectedInfo);
     $("#" + targetTabConnectionNameObjId).val(selectedConnectionName);
     $("#" + targetObjId).val(selectedId);
-    $("#e_connectionName").val();
-
+    
     var esSelectedConnectionName = $("#es_regConnectionName option:selected").val()
     if( esSelectedConnectionName == ""){// 선택한 connectionName이 없으면 set
       $("#es_regConnectionName").val(selectedConnectionName);
     }
-
+    $("#e_connectionName").val(selectedConnectionName);
     // 값이 설정된 후에는 table 안보이게
     document.getElementById(tableId).style.display = "none";
   }  
