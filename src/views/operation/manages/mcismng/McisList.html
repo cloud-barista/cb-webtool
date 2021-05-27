@@ -132,9 +132,9 @@
 													
 													<!-- MCIS의 VM들 이름, ID, 상태-->
 													{{range $vmStatusIndex, $vmStatusObj := $item.VmSimpleList}}													
-													<input type="hidden" name="vmID" id="mcisVmID_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmID}}" />
-													<input type="hidden" name="vmName" id="mcisVmName_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmName}}" />
-													<input type="hidden" name="vmStatus" id="mcisVmStatus_{{ $index}}_{{ $vmStatusObj.VmIndex}}" value="{{$vmStatusObj.VmStatus}}" />
+													<input type="hidden" name="vmID" id="mcisVmID_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmID}}" />
+													<input type="hidden" name="vmName" id="mcisVmName_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmName}}" />
+													<input type="hidden" name="vmStatus" id="mcisVmStatus_{{ $index}}_{{ $vmStatusIndex}}" value="{{$vmStatusObj.VmStatus}}" />
 
 
 													<!-- vm export 용 m_ 는 mcis의 첫글자 m-->

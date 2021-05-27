@@ -301,31 +301,12 @@ func ServerCall(c echo.Context) error {
 func LoginForm(c echo.Context) error {
 	fmt.Println("============== Login Form ===============")
 
-	user := os.Getenv("LoginUser")
-	email := os.Getenv("LoginEmail")
-	pass := os.Getenv("LoginPassword")
-
-	store := echosession.FromContext(c)
-	obj := map[string]string{
-		"userid":           user,
-		"username":         user,
-		"email":            email,
-		"password":         pass,
-		"defaultnamespage": "",
-		"accesstoken":      "",
-		"refreshtoken":     "",
-	}
-	store.Set(user, obj)
-	store.Save() // 사용자정보를 따로 저장하지 않으므로 설정파일에 유저를 set.
-	fmt.Println("user : ", user)
-
 	return echotemplate.Render(c, http.StatusOK, "auth/Login", nil)
 	//return c.Render(http.StatusOK, "Login.html", map[string]interface{}{})
 }
 
 func LoginProc(c echo.Context) error {
 	fmt.Println("============== Login proc ===============")
-	store := echosession.FromContext(c) // store내 param은 모두 소문자.
 
 	// reqInfo := new(model.ReqInfo)
 	// if err := c.Bind(reqInfo); err != nil {
@@ -344,7 +325,8 @@ func LoginProc(c echo.Context) error {
 	fmt.Println("paramUser & getPass : ", paramUserID, paramPass)
 
 	// echoSession에서 가져오기
-	result, ok := store.Get(paramUserID)
+	storedUser, ok := util.GerUserInfo(c, paramUserID)
+	// result, ok := store.Get(paramUserID)
 
 	if !ok {
 		log.Println(" login proc err  ", ok)
@@ -353,7 +335,7 @@ func LoginProc(c echo.Context) error {
 			"status":  "fail",
 		})
 	}
-	storedUser := result.(map[string]string)
+	// storedUser := result.(map[string]string)
 	fmt.Println("Stored USER:", storedUser)
 	if paramUserID != storedUser["userid"] && paramUserID != storedUser["password"] {
 		log.Println(" invalid id or pass  ")
@@ -413,12 +395,14 @@ func LoginProc(c echo.Context) error {
 		storedUser["defaultnamespaceid"] = ""
 	}
 
-	store.Set("namespacelist", nsList)
+	//store.Set("namespacelist", nsList)
+	util.SetStore(c, "namespacelist", nsList)
 	///////
 
 	/////// connectionconfig 목록 조회 ////////
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	store.Set("connectionconfig", cloudConnectionConfigInfoList)
+	// store.Set("connectionconfig", cloudConnectionConfigInfoList)
+	util.SetStore(c, "connectionconfig", cloudConnectionConfigInfoList)
 	/////// connectionconfig 목록 조회 끝 ////////
 
 	// // result := map[string]string{}
@@ -434,8 +418,9 @@ func LoginProc(c echo.Context) error {
 	// 	DefaultNameSpaceID:   storedUser["defaultnamespaceid"],
 	// 	DefaultNameSpaceName: storedUser["defaultnameSpacename"],
 
-	store.Set(paramUserID, storedUser)
-	store.Save()
+	// store.Set(paramUserID, storedUser)
+	// store.Save()
+	util.SetStore(c, paramUserID, storedUser)
 
 	loginInfo := model.LoginInfo{
 		UserID:      paramUserID,

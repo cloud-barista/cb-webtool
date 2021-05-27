@@ -6,10 +6,10 @@ import (
 	// "fmt"
 	// "io"
 	// "io/ioutil"
-	// "log"
+	"log"
 	// "net/http"
 	// "net/url"
-	// "os"
+	"os"
 	// "reflect"
 	// "strconv"
 	"strings"
@@ -18,10 +18,48 @@ import (
 	"encoding/json"
 	// "math"
 	// "io/ioutil"
-	// echosession "github.com/go-session/echo-session"
-	// "github.com/labstack/echo"
+	echosession "github.com/go-session/echo-session"
+	"github.com/labstack/echo"
 	// "github.com/cloud-barista/cb-webtool/src/model"
 )
+
+func GerUserInfo(c echo.Context, userID string) (map[string]string, bool) {
+	store := echosession.FromContext(c) // store내 param은 모두 소문자.
+	result, ok := store.Get(userID)
+	if !ok && userID == "admin" { // admin일 때 해당 정보가 없으면 admin정보를 다시 set.
+		setAdminUser(c)
+		result, ok = store.Get(userID)
+	}
+	return result.(map[string]string), ok
+}
+
+// 관리자 정보 set.
+func setAdminUser(c echo.Context) {
+
+	user := os.Getenv("LoginUser")
+	email := os.Getenv("LoginEmail")
+	pass := os.Getenv("LoginPassword")
+
+	store := echosession.FromContext(c) // store내 param은 모두 소문자.
+	obj := map[string]string{
+		"userid":           user,
+		"username":         user,
+		"email":            email,
+		"password":         pass,
+		"defaultnamespage": "",
+		"accesstoken":      "",
+		"refreshtoken":     "",
+	}
+	store.Set(user, obj)
+	store.Save() // 사용자정보를 따로 저장하지 않으므로 설정파일에 유저를 set.
+	log.Println("Set Admin")
+}
+
+func SetStore(c echo.Context, storeKeyName string, storeKeyValue interface{}) {
+	store := echosession.FromContext(c) // store내 param은 모두 소문자.
+	store.Set(storeKeyName, storeKeyValue)
+	store.Save()
+}
 
 // providerName 소문자로
 func GetProviderName(provider string) string {

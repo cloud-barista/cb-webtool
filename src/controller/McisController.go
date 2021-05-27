@@ -690,7 +690,6 @@ func McisLifeCycle(c echo.Context) error {
 		})
 	}
 
-	mcisLifeCycle.NameSpaceID = defaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
 	log.Println("McisLifeCycle service returned")
