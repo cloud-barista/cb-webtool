@@ -1,11 +1,10 @@
 function deploy_btn(){
     var mcksName = $("#mcksreg_name").val();
-    if( !validateMcksName(mcksName) ){
-        console.log("here")
-        commonAlert("Small letter, number, hipen(-) only ");
+    if( !validateCloudbaristaKeyName(mcksName, 11) ){
+        commonAlert("first letter = small letter <br/> middle letter = small letter, number, hipen(-) only <br/> last letter = small letter ");
         return;
     }
-    
+   
     var kubernatesNetworkCni = $("#kubernatesNetworkCni").val();
     var kubernatesPodCidr = $("#kubernatesPodCidr").val();
     var kubernatesServiceCidr = $("#kubernatesServiceCidr").val();
@@ -123,10 +122,3 @@ function deploy_btn(){
     }
 }
 
-
-// 이름 Validation : 소문자, 숫자, 하이프(-)만 가능
-function validateMcksName(elementValue){
-    //var charsPattern = /^[a-zA-Z0-9-]*$/;
-    var charsPattern = /^[a-z0-9-]*$/;
-    return charsPattern.test(elementValue);
-}
