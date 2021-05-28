@@ -21,7 +21,7 @@ function setUrlByParam(url, urlParamMap){
 }
 
 // conteroller의 methodName으로 main.go에 정의된 url값을 가져온다.
-function getWetToolUrl(controllerKeyName){
+function getWebToolUrl(controllerKeyName){
     // ex ) monitoringGroup.GET("/operation/monitorings/mcismonitoring/mngform", controller.McisMonitoringMngForm)    
     let controllerMethodNameMap = new Map(
         [
@@ -33,4 +33,16 @@ function getWetToolUrl(controllerKeyName){
     var webtoolUrl = controllerMethodNameMap.get(controllerKeyName);
     
     return webtoolUrl;
+}
+
+// main 화면인 경우에는 apitest로 보내고
+// 그 외에는 helpArea를 보여준다.
+// helpKey가 있는 경우에는 해당 key에 맞는 help 정보를 보여준다.
+function showHelp(helpKey){
+    var path = window.location.pathname;
+    if( path == "/main"){
+        location.href="/main/apitestmng"
+    }else{
+        $("#helpArea").modal()
+    }
 }

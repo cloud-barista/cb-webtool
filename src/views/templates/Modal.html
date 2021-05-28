@@ -63,33 +63,38 @@
 	<div class="modal fade" id="guideArea" tabindex="-1" role="dialog" aria-hidden="true">
            
 		<div class="modal-dialog popupBody">
-			<div class="modal-content">
-				
-				<div class="modal-body scrollbar-inner">
-						
-					<div class="wbox">	
-						
-						
+			<div class="modal-content">				
+				<div class="modal-body scrollbar-inner">						
+					<div class="wbox">
 						<div class="titlebox">
 							<div class="tit"><span>Help : click or press OK button to disappear.</div>							
 						</div>				
-						<img src="/assets/img/common/bg_login.jpg" class="img" onclick="guideAreaHide()" />			
-					
+						<img src="/assets/img/common/bg_login.jpg" class="img" onclick="guideAreaHide()" />								
 						
 					</div>
 					<div class="btnbox">
 						<button name="" value="" class="btn_ok" data-dismiss="modal" >OK</button> 
 					</div>			
-					
-					
+				</div>				
+			</div>
+		</div>
+	</div>
+	<!-- //popup Guide -->
+
+	<!-- popup Help -->
+	<div class="modal fade layerpopup" id="helpArea" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				
+				<div class="modal-body">
+					<div class="txt"><span id="helpText">How To Use</div>
+					<div class="btnbox">						
+						<button type="button" class="btn_ok" data-dismiss="modal">OK</button>
+					</div>
 				</div>
 				
 			</div>
-			
-			
 		</div>
-		
 	</div>
-	
-	<!-- //popup Guide -->
+	<!-- //popup Help -->
 {{end}}
