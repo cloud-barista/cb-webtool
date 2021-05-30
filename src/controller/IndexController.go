@@ -337,7 +337,7 @@ func LoginProc(c echo.Context) error {
 	}
 	// storedUser := result.(map[string]string)
 	fmt.Println("Stored USER:", storedUser)
-	if paramUserID != storedUser["userid"] && paramUserID != storedUser["password"] {
+	if paramUserID != storedUser["userid"] || paramPass != storedUser["password"] {
 		log.Println(" invalid id or pass  ")
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{ //401
 			"message": "invalid user or password",
