@@ -660,3 +660,13 @@ function getCommonSecurityGroupList(targetKey, sortType) {
 		return regex.test(elementValue);
 		//return charsPattern.test(elementValue);
 	}
+
+
+	// 해당 table 의 limit를 초과하면 scroll이 생기도록
+	// width는 colgroup이 없는 채로 ht, td 에 width class를 추가한다.
+    function setTableHeightForScroll(tableId, limitHeight){
+		var tableHeight = $("#" + tableId).height();
+		if ( tableHeight > limitHeight ) {
+			$("#" + tableId).css({ height: limitHeight });
+		}
+    }

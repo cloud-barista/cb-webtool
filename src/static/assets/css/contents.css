@@ -186,10 +186,7 @@
 .dashboard.dashboard_cont .ds_cont .areabox .btn_add:before { content:''; display:block; width:64px; height:12px; background-color:rgba(0,0,0, .5); position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); border-radius:10px; }
 .dashboard.dashboard_cont .ds_cont .areabox .btn_add span { overflow:hidden; text-indent:-9999em; display:block; }
 
-# 세로 스크롤이 필요한 경우 class="table-container", 첫번째 칼럼에 체크박스가 있는경우 해당 칼럼에  style="width:50px" 추가
-.table-container {
-    height: 25em;
-}
+/* Table scroll추가. table이 보여지는 시점에 table 높이를 지정하면 세로 스크롤이 생김(id로 제어) */
 table {
     display: flex;
     flex-flow: column;
@@ -221,6 +218,15 @@ table tbody tr {
 }
 .column-60px {
     width: 60px;
+}
+.column-80px {
+    width: 80px;
+}
+.column-100px {
+    width: 100px;
+}
+.column-120px {
+    width: 120px;
 }
 .column-14percent {
     width: 14%;
