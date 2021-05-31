@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	// "math"
 	"net/http"
@@ -490,26 +491,26 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 
 	fmt.Println("RegCredential : ", credentialInfo)
 
-	// // GCP의 경우 value에 \n 이 포함되어 있기 때문에 이것이 넘어올 때는 \\n 형태로 넘어온다.  이것을 \으로 replace 해야
-	// //
-	// if credentialInfo.ProviderName == "GCP" {
-	// 	for _, keyValueInfo := range credentialInfo.KeyValueInfoList {
-	// 		gcpKey := keyValueInfo.Key
-	// 		gcpValue := keyValueInfo.Value
-	// 		replacedValue := gcpValue
-	// 		if gcpKey == "PrivateKey" {
-	// 			fmt.Println(gcpValue)
-	// 			fmt.Println(keyValueInfo)
-	// 			fmt.Println("--------- before / after -----------------")
-	// 			gcpValue = strings.Replace(gcpValue, "\\n", "\n", -1)
-	// 			keyValueInfo.Value = replacedValue
-	// 			fmt.Println(replacedValue)
-	// 			fmt.Println(keyValueInfo)
+	// GCP의 경우 value에 \n 이 포함되어 있기 때문에 이것이 넘어올 때는 \\n 형태로 넘어온다.  이것을 \으로 replace 해야
+	//
+	if credentialInfo.ProviderName == "GCP" {
+		for _, keyValueInfo := range credentialInfo.KeyValueInfoList {
+			gcpKey := keyValueInfo.Key
+			gcpValue := keyValueInfo.Value
+			replacedValue := gcpValue
+			if gcpKey == "PrivateKey" {
+				fmt.Println(gcpValue)
+				fmt.Println(keyValueInfo)
+				fmt.Println("--------- before / after -----------------")
+				gcpValue = strings.Replace(gcpValue, "\\n", "\n", -1)
+				keyValueInfo.Value = replacedValue
+				fmt.Println(replacedValue)
+				fmt.Println(keyValueInfo)
 
-	// 		}
-	// 	}
-	// 	fmt.Println("GCP RegCredential : ", credentialInfo)
-	// }
+			}
+		}
+		fmt.Println("GCP RegCredential : ", credentialInfo)
+	}
 
 	// body, err := util.CommonHttpPost(url, regionInfo)
 	pbytes, marshalErr := json.Marshal(credentialInfo)

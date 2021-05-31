@@ -275,3 +275,104 @@
 
 			}
 			
+			function displayNewServerForm(){
+				var $SimpleServers = $("#simpleServerConfig");
+				var $ExpertServers = $("#expertServerConfig");
+				var $ImportServers = $("#importServerConfig");
+			
+				var check = $(".switch .ch").is(":checked");
+				console.log("check=" + check);
+				if( check){
+					$SimpleServers.removeClass("active");
+					$ExpertServers.addClass("active");            
+					$ImportServers.removeClass("active");
+				}else{
+					$SimpleServers.addClass("active");
+					$ExpertServers.removeClass("active");            
+					$ImportServers.removeClass("active");
+				}
+			
+				// var vmFormType = $("input[name='vmInfoType']:checked").val();
+				// console.log("vmFormType = " + vmFormType)
+				// if( vmFormType == "expert"){
+				//     $SimpleServers.removeClass("active");
+				//     $ExpertServers.addClass("active");            
+				//     $ImportServers.removeClass("active");
+				// }else if( vmFormType == "import"){
+				//     $SimpleServers.removeClass("active");
+				//     $ExpertServers.removeClass("active");            
+				//     $ImportServers.addClass("active");
+				// }else{// simple
+				//     $SimpleServers.addClass("active");
+				//     $ExpertServers.removeClass("active");            
+				//     $ImportServers.removeClass("active");
+				// }
+			}
+			// Expert Mode에 Import 버튼 클릭 시 해당 form display  // MCIS Create 와 VM Create의 function이름이 같음
+			function displayVmImportServerFormByImport(){
+				var $SimpleServers = $("#simpleServerConfig");
+				var $ExpertServers = $("#expertServerConfig");
+				var $ImportServers = $("#importServerConfig");
+				var check = $(".switch .ch").is(":checked");
+				console.log("check=" + check);
+				if( check){
+					$SimpleServers.removeClass("active");
+					$ExpertServers.removeClass("active");            
+					$ImportServers.addClass("active");
+			
+					importVmInfoFromFile();// import창 띄우기 
+				}
+			}
+			
+
+			function importVmInfoFromFile() {
+				var input = document.createElement("input");
+				input.type = "file";
+				// input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
+				input.accept = ".json";
+				input.onchange = function (event) {
+					importFileProcess(event.target.files[0]);
+				};
+				input.click();
+			}
+			
+			// 선택한 파일을 읽어 화면에 보여줌
+			function importFileProcess(file) {
+				try{
+					var reader = new FileReader();
+					reader.onload = function () {
+						console.log(reader.result);
+						console.log("---1")
+						// $("#fileContent").val(reader.result);
+						
+						var jsonStr = JSON.stringify(reader.result)
+						console.log(JSON.stringify(jsonStr));
+			
+						// 요거는 string으로만 나오네... 
+						// console.log("---2")
+						// var jsonObj = JSON.parse(reader.result);
+						// var jsonObj = JSON.parse(jsonStr);
+						// console.log(jsonObj);
+						// console.log(jsonObj[0]);
+						// console.log(jsonObj[10]);
+						// console.log(jsonObj.name);
+						// console.log("---3")
+			
+						// 요거 작동 하네.  param, value 모두 따옴표로 묶여진 json 형태여야 함.
+						var newJ= $.parseJSON(reader.result);
+			
+						console.log(newJ.name);
+						console.log(newJ.imageId);
+						console.log(newJ.connectionName);
+						console.log(newJ.securityGroupIds);
+						setVmInfoToForm(newJ);
+						jsonFormatter(newJ)
+						//securityGroupIds: [ 	"sg-mz-aws-us-east-01"	],
+					};
+					//reader.readAsText(file, /* optional */ "euc-kr");
+					reader.readAsText(file);
+				}catch(error){
+					commonAlert("File Load Failed");
+					console.log(error);
+				}
+			}

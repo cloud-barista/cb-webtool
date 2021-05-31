@@ -173,6 +173,11 @@ function prevTab(elem) {
   $(elem).parent().prev().find('a[data-toggle="tab"]').click();
 }
 
+// 조회결과 table hide 시키기
+function hideFilterResultTable(targetObjId){
+  document.getElementById(targetObjId).style.display = "none";
+}
+
 // TODO : util.js로 옮길 것
 // select box의 option text에 compareText가 있으면 show 없으면 hide
 function selectBoxFilterByText(targetObject, compareText){

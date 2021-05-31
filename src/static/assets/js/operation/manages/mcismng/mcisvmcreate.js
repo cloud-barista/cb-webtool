@@ -65,54 +65,6 @@ $(document).ready(function(){
 //   });
 });
 
-function displayNewServerForm(){
-    var $SimpleServers = $("#simpleServerConfig");
-    var $ExpertServers = $("#expertServerConfig");
-    var $ImportServers = $("#importServerConfig");
-
-    var check = $(".switch .ch").is(":checked");
-    console.log("check=" + check);
-    if( check){
-        $SimpleServers.removeClass("active");
-        $ExpertServers.addClass("active");            
-        $ImportServers.removeClass("active");
-    }else{
-        $SimpleServers.addClass("active");
-        $ExpertServers.removeClass("active");            
-        $ImportServers.removeClass("active");
-    }
-
-    // var vmFormType = $("input[name='vmInfoType']:checked").val();
-    // console.log("vmFormType = " + vmFormType)
-    // if( vmFormType == "expert"){
-    //     $SimpleServers.removeClass("active");
-    //     $ExpertServers.addClass("active");            
-    //     $ImportServers.removeClass("active");
-    // }else if( vmFormType == "import"){
-    //     $SimpleServers.removeClass("active");
-    //     $ExpertServers.removeClass("active");            
-    //     $ImportServers.addClass("active");
-    // }else{// simple
-    //     $SimpleServers.addClass("active");
-    //     $ExpertServers.removeClass("active");            
-    //     $ImportServers.removeClass("active");
-    // }
-}
-// Expert Mode에 Import 버튼 클릭 시 해당 form display  // MCIS Create 와 VM Create의 function이름이 같음
-function displayVmImportServerFormByImport(){
-    var $SimpleServers = $("#simpleServerConfig");
-    var $ExpertServers = $("#expertServerConfig");
-    var $ImportServers = $("#importServerConfig");
-    var check = $(".switch .ch").is(":checked");
-    console.log("check=" + check);
-    if( check){
-        $SimpleServers.removeClass("active");
-        $ExpertServers.removeClass("active");            
-        $ImportServers.addClass("active");
-
-        importVmInfoFromFile();// import창 띄우기 
-    }
-}
 
 var totalDeployServerCount = 0;
 function btn_deploy(){
