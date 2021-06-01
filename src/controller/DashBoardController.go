@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	// "sync"
 
 	// model "github.com/cloud-barista/cb-webtool/src/model"
@@ -53,9 +54,9 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 	totalVmCount := 0               // 모든 vm 갯수
 
 	// 등록된 mcis가 없으면 mcis생성화면으로 이동한다.
-	// if len(mcisList) == 0{
-	// 	// redirect
-	// }
+	if len(mcisList) == 0 {
+		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/regform")
+	}
 
 	totalMcisStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
