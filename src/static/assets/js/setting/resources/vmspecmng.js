@@ -322,17 +322,19 @@ function deleteVmSpec() {
             'Content-Type': "application/json"
         }
     }).then(result => {
-        // var data = result.data;
+        var data = result.data;
+        console.log(data);
         // if (result.status == 200 || result.status == 201) {
         var statusCode = result.data.status;
         if( statusCode == 200 || statusCode == 201) {
-            commonAlert("Success Delete Spec.");
+            // commonAlert("Success Delete Spec.");
+            commonAlert(data.message);
             // location.reload(true);
             getVmSpecList("name");
             
             displayVmSpecInfo("DEL_SUCCESS")
         } else {
-            var message = result.data.message;
+            var message = data.message;
             commonAlert("Fail Create Spec : " + message +"(" + statusCode + ")");
             // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
         }

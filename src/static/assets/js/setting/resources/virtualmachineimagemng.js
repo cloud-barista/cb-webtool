@@ -156,12 +156,15 @@ function deleteVirtualMachineImage() {
             'Content-Type': "application/json"
         }
     }).then(result => {
-        var data = result.data
+        var data = result.data;
+        console.log(data);
         if (result.status == 200 || result.status == 201) {
-            commonAlert("Success Delete Image.");
-            
+            // commonAlert("Success Delete Image.");
+            commonAlert(data.message);
             displayVirtualMachineImageInfo("DEL_SUCCESS")
             // location.reload(true);
+        }else{
+            commonAlert(data.error);
         }
     // }).catch(function(error){
     //     console.log("image delete error : ",error);        

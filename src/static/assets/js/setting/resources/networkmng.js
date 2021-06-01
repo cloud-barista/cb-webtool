@@ -86,15 +86,17 @@ function deleteVPC(){
         }
     }).then(result => {
         var data = result.data;
+        console.log(result);
         console.log(data);
         if (result.status == 200 || result.status == 201) {
-           commonAlert("Success Delete Network")
+           //commonAlert("Success Delete Network")
+           commonAlert(result.message)
             // location.reload(true);
             //vNetInfoBox 안보이게
             displayVNetInfo("DEL_SUCCESS")
             // getVpcList("name");
         }else{
-            commonAlert(data)
+            commonAlert(result.data.error)
         }
     // }).catch(function(error){
     //     commonAlert(error)

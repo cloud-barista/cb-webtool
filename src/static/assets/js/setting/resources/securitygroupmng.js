@@ -131,10 +131,14 @@ function deleteSecurityGroup() {
         }
     }).then(result => {
         var data = result.data
+        console.log(result);
+        console.log(data);
         if (result.status == 200 || result.status == 201) {
-            commonAlert("Success Delete Image.");
+            commonAlert(data.message);
             // location.reload(true);
             displaySecurityGroupInfo("DEL_SUCCESS")
+        }else{
+            commonAlert(data.error);
         }
     // }).catch(function(error){
     //     console.log("sg del error : ",error);        
