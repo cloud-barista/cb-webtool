@@ -90,11 +90,13 @@ function deployMcis(){
     var vm_len = 0;
 
     if(IsImport){
-        ImportedMcisScript.name = mcis_name;
-        ImportedMcisScript.description = mcis_desc;
-        ImportedMcisScript.installMonAgent = installMonAgent;
-        console.log(ImportedMcisScript);
-        new_obj = ImportedMcisScript;
+        // ImportedMcisScript.name = mcis_name;
+        // ImportedMcisScript.description = mcis_desc;
+        // ImportedMcisScript.installMonAgent = installMonAgent;
+        // console.log(ImportedMcisScript);
+        //var theJson = jQuery.parseJSON($(this).val())
+        //$("#mcisImportScriptPretty").val(fmt);	
+        new_obj = $("#mcisImportScriptPretty").val();
     }else{
 //         console.log(Simple_Server_Config_Arr)
         
@@ -123,7 +125,7 @@ function deployMcis(){
             new_obj['vm'] = TotalServerConfigArr;
             console.log("new obj is : ",new_obj);
         }else{
-            alert("Please Input Servers");
+            commonAlert("Please Input Servers");
             $(".simple_servers_config").addClass("active");
             $("#s_name").focus();
         }
@@ -142,7 +144,7 @@ function deployMcis(){
             if(result.status == 201 || result.status == 200){
                 commonAlert("Register Success")                
                 var targetUrl = "/operation/manages/mcismng/mngform"
-                changePage(targetUrl)
+                //changePage(targetUrl)
             }else{
                 commonAlert("Register Fail")
                 //location.reload(true);
