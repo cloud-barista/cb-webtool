@@ -90,19 +90,19 @@
 								
 								<div class="dataTable status_list" id="monitoringAlertListTable">
 									<table cellpadding="0" cellspacing="0" border="1" summary="" id="monitoringAlertPolicyList">
-										<colgroup>
+										<!-- <colgroup>
 											<col width="50px"><col width="14%"><col width="16%"><col width="15%"><col width="15%"><col width="15%"><col width=""><col width="60px">
-										</colgroup>
+										</colgroup> -->
 										<thead>
 											<tr>
-												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
-                                                <th>Name</th>
-                                                <th>Measurement</th>
-                                                <th>Target Type</th>
-                                                <th>Target ID</th>
-                                                <th>Alert Event Type</th>
+												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+                                                <th class="column-14percent">Name</th>
+                                                <th class="column-16percent">Measurement</th>
+                                                <th class="column-15percent">Target Type</th>
+                                                <th class="column-15percent">Target ID</th>
+                                                <th class="column-15percent">Alert Event Type</th>
                                                 <th>Alert Event Name</th>
-                                                <th></th>
+                                                <th class="column-60px"></th>
 											</tr>
 										</thead>
 										<tbody id="alertList">
@@ -115,18 +115,18 @@
 
 											{{range $index, $item := .MonitoringAlertPolicyList}}	
 											<tr onclick="showMonitoringAlertPolicyInfo('{{$item.AlertName}}');">
-												<td class="overlay hidden" data-th="">
+												<td class="overlay hidden column-50px" data-th="">
 													<input type="hidden" id="alertpolicy_info_{{$index}}" value="{{$item.AlertName}}"/>
 													<input type="checkbox" name="chk" value="{{$item.AlertName}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span>
 												</td>
-												<td class="overlay hidden" data-th="Name">{{$item.AlertName}}</td>
-												<td class="overlay hidden" data-th="Measurement">{{$item.Measurement}}</td>
-												<td class="overlay hidden" data-th="TargetType">{{$item.TargetType}}</td>
-												<td class="overlay hidden" data-th="TargetId">{{$item.TargetID}}</td>
-												<td class="overlay hidden" data-th="AlertEventType">{{$item.AlertEventType}}</td>
+												<td class="overlay hidden column-14percent" data-th="Name">{{$item.AlertName}}</td>
+												<td class="overlay hidden column-16percent" data-th="Measurement">{{$item.Measurement}}</td>
+												<td class="overlay hidden column-15percent" data-th="TargetType">{{$item.TargetType}}</td>
+												<td class="overlay hidden column-15percent" data-th="TargetId">{{$item.TargetID}}</td>
+												<td class="overlay hidden column-15percent" data-th="AlertEventType">{{$item.AlertEventType}}</td>
 												<td class="overlay hidden" data-th="AlertEventName">{{$item.AlertEventName}}</td>
-												<td class="overlay hidden" data-th="">
+												<td class="overlay hidden column-60px" data-th="">
 													<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
 												</td>
 											</tr>											
@@ -332,7 +332,7 @@
 												<!-- <button class="btn_delete" value="" name="" data-toggle="modal" data-target="#Del_Region">delete</button> -->
 											</div>
 											<div class="dataTable first_over">
-												<table cellpadding="0" cellspacing="0" border="1" summary="">
+												<table cellpadding="0" cellspacing="0" border="1" summary="" id="maEventHandlerList">
 													<colgroup>
 														<col width="50px"><col width="30%"><col width="%">
 													</colgroup>

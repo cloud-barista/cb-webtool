@@ -22,8 +22,8 @@ $(document).ready(function(){
     // }
     // })
     
-    // //table 스크롤바 제한
-    // $(window).on("load resize",function(){
+    //table 스크롤바 제한
+    $(window).on("load resize",function(){
     //     var vpwidth = $(window).width();
     //   if (vpwidth > 768 && vpwidth < 1800) {
     //     $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
@@ -31,7 +31,10 @@ $(document).ready(function(){
     //   } else {
     //     $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
     //   }
-    // });
+
+      setTableHeightForScroll('securityGroupList', 300)
+      
+    });
 });
 
 $(document).ready(function () {
@@ -42,6 +45,7 @@ $(document).ready(function () {
 
     //firewallRegisterBox
 })
+
 
 // add/delete 시 area 표시
 function displaySecurityGroupInfo(targetAction){
@@ -208,33 +212,34 @@ function getSecurityGroupList(sortType) {
 }
 
 function setSecurityGroupListAtServerImage(data, sortType){
+    console.log("여기까지 왔다!!!")
     var html = ""
     console.log("Data : ", data);
     if (data.length) { // null exception if not exist
-        if (sort_type) {
-            console.log("check : ", sort_type);
-            data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+        if (sortType) {
+            console.log("check : ", sortType);
+            data.filter(list => list.name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
                 html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
-                    + '<td class="overlay hidden" data-th="">' 
+                    + '<td class="overlay hidden column-50px" data-th="">' 
                     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
                     + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                     + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
                     + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
                     + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
-                    + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                     + '</tr>'
             ))
         } else {
             data.filter((list) => list.name !== "").map((item, index) => (
                 html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
-                    + '<td class="overlay hidden" data-th="">' 
+                    + '<td class="overlay hidden column-50px" data-th="">' 
                     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName  + '"/>'
                     + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                     + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
                     + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-                    + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                     + '</tr>'
             ))
 
@@ -358,6 +363,8 @@ function showSecurityGroupInfo(sgName) {
 // Inbound / Outbound Modal 표시
 function displayInOutBoundRegModal(isShow){
     if(isShow){
+        setTableHeightForScroll('firewallRSlistTbl', 300);
+
         $("#firewallRegisterBox").modal();
         $('.dtbox.scrollbar-inner').scrollbar();
     }else{
@@ -608,9 +615,9 @@ var fwrsJsonList = "";// firewallRuleSet 담을 array
 function getStaffText(){
     var addStaffText = 
     '<tr class="ip" name="tr_Input">'+
-        '<td class="btn_mtd" data-th="fromPort"><input type="text" name="fromport" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'+
-        '<td class="overlay" data-th="toPort"><input type="text" name="toport" value="" placeholder="" class="pline" title="" /></td>'+
-        '<td class="overlay" data-th="ipProtocol">'+
+        '<td class="btn_mtd column-20percent" data-th="fromPort"><input type="text" name="fromport" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'+
+        '<td class="overlay column-20percent" data-th="toPort"><input type="text" name="toport" value="" placeholder="" class="pline" title="" /></td>'+
+        '<td class="overlay column-20percent" data-th="ipProtocol">'+
                 '<select class="selectbox white pline" name="ipprotocol">'+
                     '<option value="tcp">TCP</option>'+
                     '<option value="udp">UDP</option>'+
@@ -622,7 +629,7 @@ function getStaffText(){
                     '<option value="outbound">Outbound</option>'+
                 '</select>'+
         '</td>'+
-        '<td class="overlay">'+
+        '<td class="overlay column-100px">'+
             '<button class="btn btn_add" name="btn_add" value="">add</button>'+
             '<button class="btn btn_del" name="delInput" value="">del</button>'+
         '</td>'+

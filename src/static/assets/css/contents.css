@@ -237,6 +237,9 @@ table tbody tr {
 .column-16percent {
     width: 16%;
 }
+.column-20percent {
+    width: 20%;
+}
 
 #popNameSpace { }
 #popNameSpace .modal-dialog { max-width:100%; width:auto; display:block; top:50%; transform:translateY(-50%);  padding:0 !important; }
