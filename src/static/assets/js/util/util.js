@@ -1,6 +1,8 @@
 jQuery.fn.center = function () {
-
+    console.log("height");
     this.css('top', Math.max(0,(($(window).height()-$(this).outerHeight())/2) + $(window).scrollTop())+'px');
+    
+    console.log($(window).height() + " - " + $(this).outerHeight() + " : " + (($(window).height()-$(this).outerHeight())/2));
     return this;
 }
     
@@ -8,12 +10,14 @@ jQuery.fn.center = function () {
 // 요청 인터셉터
 axios.interceptors.request.use(function (config) {
         console.log("axios.interceptors.request")      
-        
-        $('#loadingContainer').css('position', 'fixed');
-
+        try{
+        // $('#loadingContainer').css('position', 'fixed');
+        $("#loadingContainer").center();
         $('#loadingContainer').show();
         // $('#loadingContainer').modal();
-
+        }catch(e){
+            console.log(e);
+        }
         return config;
     }, function (error) {
         console.log("axios.interceptors.request error")
