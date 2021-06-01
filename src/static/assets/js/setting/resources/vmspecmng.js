@@ -23,7 +23,7 @@ $(document).ready(function(){
     //     }
     // })
         
-    //     //table 스크롤바 제한
+    // //table 스크롤바 제한
     // $(window).on("load resize",function(){
     //         var vpwidth = $(window).width();
     //     if (vpwidth > 768 && vpwidth < 1800) {
@@ -33,6 +33,8 @@ $(document).ready(function(){
     //         $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
     //     }
     // });
+
+    setTableHeightForScroll('serverSpecList', 300)
 });
 
 $(document).ready(function () {
@@ -77,10 +79,14 @@ function displayVmSpecInfo(targetAction){
         $('#vmSpecCreateBox').removeClass("active");
         $('#vmSpecInfoBox').removeClass("view");
         $('#vmSpecListTable').addClass("on");
-        
+        var html = '<option selected>Select Configname</option>';
         // form 초기화
-        $("#regSpecName").val('')
-        $("#regCspSpecName").val('')
+        $("#regSpecName").val('');
+        $("#regProvider").val('');	
+        // $("#regConnectionName").empty();
+        //$("#regConnectionName").append(html);
+        $("#regConnectionName").val('');
+        $("#regCspSpecName").val('');
         
         var offset = $("#vmSpecCreateBox").offset();
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
@@ -95,6 +101,7 @@ function displayVmSpecInfo(targetAction){
     	$("#TopWrap").animate({scrollTop : offset.top}, 300);
 
     }else if ( targetAction == "DEL_SUCCESS"){
+        console.log("$$$$$$$$$DelSuccess$$$$$$$$$$$");
         $('#vmSpecCreateBox').removeClass("active");
         $('#vmSpecInfoBox').removeClass("view");
         $('#vmSpecListTable').addClass("on");
@@ -126,25 +133,25 @@ function getVmSpecList(sort_type) {
                 console.log("check : ", sort_type);
                 data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
                     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
+                        + '<td class="overlay hidden column-50px" data-th="">' 
                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSpecName + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                         + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                         + '<td class="overlay hidden" data-th="cspSpecName">' + item.cspSpecName + '</td>'  
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
             } else {
                 data.filter((list) => list.name !== "").map((item, index) => (
                     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
+                        + '<td class="overlay hidden column-50px" data-th="">' 
                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                         + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                         + '<td class="overlay hidden" data-th="cspSpecName">' + item.cspSpecName + '</td>'  
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
             }
@@ -152,40 +159,56 @@ function getVmSpecList(sort_type) {
             $("#specList").empty()
             $("#specList").append(html)
             
-            ModalDetail()
+            // displayVmSpecInfo("REG_SUCCESS");
         }
     })
 }
 
-function ModalDetail() {
-    $(".dashboard .status_list tbody tr").each(function () {
-        var $td_list = $(this),
-            $status = $(".server_status"),
-            $detail = $(".server_info");
-        $td_list.off("click").click(function () {
-            $td_list.addClass("on");
-            $td_list.siblings().removeClass("on");
-            $status.addClass("view");
-            $status.siblings().removeClass("on");
-            $(".dashboard.register_cont").removeClass("active");
-            $td_list.off("click").click(function () {
-                if ($(this).hasClass("on")) {
-                    console.log("reg ok button click")
-                    $td_list.removeClass("on");
-                    $status.removeClass("view");
-                    $detail.removeClass("active");
-                } else {
-                    $td_list.addClass("on");
-                    $td_list.siblings().removeClass("on");
-                    $status.addClass("view");
+// function ModalDetail(targetAction) {
+//     if( targetAction == "REG_SUCCESS" ) {
+//         console.log("##########VM SPEC REG_SUCCESS")
+//         $(".dashboard.register_cont").removeClass("active");
+//         $(".dashboard.server_status").removeClass("view");
+//         $(".dashboard .status_list tbody tr").addClass("on");
+        
+//         var offset = $("#vmSpecCreateBox").offset();
+//         $("#wrap").animate({scrollTop : offset.top}, 0);        
+        
+//         // 등록 폼 초기화
+//         $("#regSpecName").val('');	
+//         $("#regProvider").val('');	
+//         $("#regConnectionName").val('');	     
+//         $("#regCspSpecName").val('');             
+//     }
+    
+//     // $(".dashboard .status_list tbody tr").each(function () {
+//     //     var $td_list = $(this),
+//     //         $status = $(".server_status"),
+//     //         $detail = $(".server_info");
+//     //     // $td_list.off("click").click(function () {
+//     //     //     $td_list.addClass("on");
+//     //     //     $td_list.siblings().removeClass("on");
+//     //     //     $status.addClass("view");
+//     //     //     $status.siblings().removeClass("on");
+//     //     //     $(".dashboard.register_cont").removeClass("active");
+//     //         $td_list.off("click").click(function () {
+//     //             if ($(this).hasClass("on")) {
+//     //                 console.log("reg ok button click")
+//     //                 $td_list.removeClass("on");
+//     //                 $status.removeClass("view");
+//     //                 $detail.removeClass("active");
+//     //             } else {
+//     //                 $td_list.addClass("on");
+//     //                 $td_list.siblings().removeClass("on");
+//     //                 $status.addClass("view");
 
-                    $status.siblings().removeClass("view");
-                    $(".dashboard.register_cont").removeClass("active");
-                }
-            });
-        });
-    });
-}
+//     //                 $status.siblings().removeClass("view");
+//     //                 $(".dashboard.register_cont").removeClass("active");
+//     //             }
+//     //         });
+//     //     });
+//     // });
+// }
 
 function showVmSpecInfo(target) {
     console.log("target showVMSpecInfo : ", target);
@@ -261,7 +284,8 @@ function createVmSpec() {
             // if (result.status == 200 || result.status == 201) {
                 commonAlert("Success Create Image!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getVmSpecList("name");
+                displayVmSpecInfo("REG_SUCCESS");
+                //getVmSpecList("name");
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
                 // $("#btn_add2").click()

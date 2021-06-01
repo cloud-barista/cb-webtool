@@ -1,3 +1,17 @@
+$(window).on("load resize",function(){
+    var vpwidth = $(window).width();
+    if (vpwidth > 768 && vpwidth < 1800) {
+    $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
+        $(".dataTable.scrollbar-inner").scrollbar();
+    } else {
+    $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
+    }
+
+    // Table 높이 조절, hidden인 상태인 Table은 show 될 때 set 하도록
+    setTableHeightForScroll('monitoringAlertPolicyList', 300)
+});
+
+
 // 원래는 confirm창이었으나 입력form에 물어볼 필요 없으므로 config Area만 show
 function addMonitoringAlertPolicy(){
     console.log("##########AddMonitoringAlertPolicy")
@@ -21,6 +35,8 @@ function addMonitoringAlertPolicy(){
     $("#regMonitoringAlertAlertThreshold").val('');     
     $("#regMonitoringAlertWarnEventCount").val('');     
     $("#regMonitoringAlertCriticEventCount").val('');  
+
+    setTableHeightForScroll('maEventHandlerList', 300)
 }
 
 
