@@ -3,7 +3,6 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 
 	// "math"
@@ -121,11 +120,12 @@ func RegVpc(nameSpaceID string, vnetRegInfo *tumblebug.VNetRegInfo) (*tumblebug.
 }
 
 // vpc 삭제
-func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, model.WebStatus) {
+func DelVpc(nameSpaceID string, vNetID string) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
 	// if ValidateString(vNetID) != nil {
 	if len(vNetID) == 0 {
 		log.Println("vNetID 가 없으면 해당 namespace의 모든 vpc가 삭제되므로 처리할 수 없습니다.")
-		return nil, model.WebStatus{StatusCode: 4040, Message: "vNetID 가 없으면 해당 namespace의 모든 vpc가 삭제되므로 처리할 수 없습니다."}
+		return webStatus, model.WebStatus{StatusCode: 4040, Message: "vNetID 가 없으면 해당 namespace의 모든 vpc가 삭제되므로 처리할 수 없습니다."}
 	}
 	var originalUrl = "/ns/{nsId}/resources/vNet/{vNetId}"
 	var paramMapper = make(map[string]string)
@@ -142,25 +142,23 @@ func DelVpc(nameSpaceID string, vNetID string) (io.ReadCloser, model.WebStatus) 
 
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	// respStatus := resp.Status
-	// log.Println("respStatusCode = ", respStatusCode)
-	// log.Println("respStatus = ", respStatus)
+	resultInfo := model.ResultInfo{}
 
-	// resultBody, err := ioutil.ReadAll(respBody)
-	// if err == nil {
-	// 	str := string(resultBody)
-	// 	println(str)
-	// }
-	// pbytes, _ := json.Marshal(respBody)
-	// fmt.Println(string(pbytes))
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
-
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
 }
 
 // 해당 namespace의 SecurityGroup 목록 조회
@@ -269,7 +267,7 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *tumblebug.Securi
 }
 
 // 해당 Namespace의 모든 SecurityGroup 삭제
-func DelAllSecurityGroup(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+func DelAllSecurityGroup(nameSpaceID string) (model.WebStatus, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/securityGroup"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -278,24 +276,37 @@ func DelAllSecurityGroup(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup/"
 
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
-
+	webStatus := model.WebStatus{}
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+
+	//return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // SecurityGroup 삭제
-func DelSecurityGroup(nameSpaceID string, securityGroupID string) (io.ReadCloser, model.WebStatus) {
+func DelSecurityGroup(nameSpaceID string, securityGroupID string) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
 	// if ValidateString(vNetID) != nil {
 	if len(securityGroupID) == 0 {
 		log.Println("securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다.")
-		return nil, model.WebStatus{StatusCode: 4040, Message: "securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다."}
+		return webStatus, model.WebStatus{StatusCode: 4040, Message: "securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다."}
 	}
 
 	var originalUrl = "/ns/{nsId}/resources/securityGroup/{securityGroupId}"
@@ -313,17 +324,28 @@ func DelSecurityGroup(nameSpaceID string, securityGroupID string) (io.ReadCloser
 
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
 	// respStatus := resp.Status
 	// log.Println("respStatusCode = ", respStatusCode)
 	// log.Println("respStatus = ", respStatus)
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
-
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // SSHKey 목록 조회 : /ns/{nsId}/resources/sshKey
@@ -408,9 +430,10 @@ func RegSshKey(nameSpaceID string, sshKeyRegInfo *tumblebug.SshKeyRegInfo) (*tum
 		fmt.Println(err)
 		return &sshKeyInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-
+	log.Println("resp = ", resp)
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	log.Println("respBody = ", respBody)
 	// respStatus := resp.Status
 	// log.Println("respStatusCode = ", respStatusCode)
 	// log.Println("respStatus = ", respStatus)
@@ -424,11 +447,12 @@ func RegSshKey(nameSpaceID string, sshKeyRegInfo *tumblebug.SshKeyRegInfo) (*tum
 }
 
 // sshKey 삭제
-func DelSshKey(nameSpaceID string, sshKeyID string) (io.ReadCloser, model.WebStatus) {
+func DelSshKey(nameSpaceID string, sshKeyID string) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
 	// if ValidateString(sshKeyID) != nil {
 	if len(sshKeyID) == 0 {
 		log.Println("securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다.")
-		return nil, model.WebStatus{StatusCode: 4040, Message: "securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다."}
+		return webStatus, model.WebStatus{StatusCode: 4040, Message: "securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다."}
 	}
 
 	var originalUrl = "/ns/{nsId}/resources/sshKey/{sshKeyId}"
@@ -446,13 +470,26 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (io.ReadCloser, model.WebSta
 
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
+	fmt.Println("resp : ", resp)
+
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // VirtualMachineImage 목록 조회
@@ -563,7 +600,7 @@ func RegVirtualMachineImage(nameSpaceID string, registType string, virtualMachin
 }
 
 // 해당 namespace의 모든 VirtualMachineImage 삭제
-func DelAllVirtualMachineImage(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+func DelAllVirtualMachineImage(nameSpaceID string) (model.WebStatus, model.WebStatus) {
 	// if ValidateString(VirtualMachineImageID) != nil {
 	var originalUrl = "/ns/{nsId}/resources/image"
 	var paramMapper = make(map[string]string)
@@ -574,24 +611,36 @@ func DelAllVirtualMachineImage(nameSpaceID string) (io.ReadCloser, model.WebStat
 
 	// resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodDelete)
-
+	webStatus := model.WebStatus{}
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // 해당 namespace의 특정 VirtualMachineImage 삭제
-func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (io.ReadCloser, model.WebStatus) {
+func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
 	// if ValidateString(VirtualMachineImageID) != nil {
 	if len(virtualMachineImageID) == 0 {
 		log.Println("ImageID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다.")
-		return nil, model.WebStatus{StatusCode: 4040, Message: "ImageID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다."}
+		return webStatus, model.WebStatus{StatusCode: 4040, Message: "ImageID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다."}
 	}
 
 	var originalUrl = "/ns/{nsId}/resources/image/{imageId}"
@@ -607,13 +656,24 @@ func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (i
 
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // 자신의 provider에 등록된 resource 조회
@@ -894,7 +954,7 @@ func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *tumblebug.VmSpecRegInfo) (*
 }
 
 // 해당 namespace의 모든 VMSpec 삭제 : TODO : 로그인 유저의 동일 namespace일 때만 삭제가능하도록
-func DelAllVMSpec(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+func DelAllVMSpec(nameSpaceID string) (model.WebStatus, model.WebStatus) {
 	fmt.Println("DelAllVMSpec ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/spec"
 	var paramMapper = make(map[string]string)
@@ -904,27 +964,37 @@ func DelAllVMSpec(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
 
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
-
+	webStatus := model.WebStatus{}
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	// respStatus := resp.Status
-	// log.Println("respStatusCode = ", respStatusCode)
-	// log.Println("respStatus = ", respStatus)
+	resultInfo := model.ResultInfo{}
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // VMSpec 삭제
-func DelVMSpec(nameSpaceID string, vmSpecID string) (io.ReadCloser, model.WebStatus) {
+func DelVMSpec(nameSpaceID string, vmSpecID string) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
 	// if ValidateString(VMSpecID) != nil {
 	if len(vmSpecID) == 0 {
 		log.Println("specID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다.")
-		return nil, model.WebStatus{StatusCode: 4040, Message: "specID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다."}
+		return webStatus, model.WebStatus{StatusCode: 4040, Message: "specID 가 없으면 해당 namespace의 모든 image가 삭제되므로 처리할 수 없습니다."}
 	}
 
 	var originalUrl = "/ns/{nsId}/resources/spec/{specId}"
@@ -940,13 +1010,24 @@ func DelVMSpec(nameSpaceID string, vmSpecID string) (io.ReadCloser, model.WebSta
 
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 func LookupVmSpecInfoList() ([]tumblebug.VmSpecInfo, model.WebStatus) {

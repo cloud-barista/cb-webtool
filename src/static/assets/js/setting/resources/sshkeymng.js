@@ -209,11 +209,18 @@ function deleteSshKey(){
         }
     }).then(result => {
         var data = result.data;
+        console.log(data);
         if (result.status == 200 || result.status == 201) {
-            commonAlert("Success Delete SSH Key.");
+            // commonAlert("Success Delete SSH Key.");
+            commonAlert(data.message);
             // location.reload(true);
+          
             displaySshKeyInfo("DEL_SUCCESS");
             //getSshKeyList("name");
+
+            getSshKeyList("name");
+        }else{
+            commonAlert(data.error);
         }
     // }).catch(function(error){
     //     console.log("get delete error : ",error);        

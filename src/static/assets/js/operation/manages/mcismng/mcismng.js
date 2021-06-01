@@ -90,7 +90,8 @@ function deleteMCIS(){
         }).catch((error) => {
             console.warn(error);
             console.log(error.response)
-            var errorMessage = error.response.data.error;
+            var errorMessage = error.response.statusText;
+            var statusCode = error.response.status;
             commonErrorAlert(statusCode, errorMessage) 
         });
 
@@ -574,7 +575,8 @@ function vmDetailInfo(mcisID, mcisName, vmID){
     ).catch((error) => {
         console.warn(error);
         console.log(error.response)
-        var errorMessage = error.response.data.error;
+        var errorMessage = error.response.statusText;
+        var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage) 
     });
 

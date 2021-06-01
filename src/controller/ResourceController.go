@@ -3,14 +3,17 @@ package controller
 import (
 	// "encoding/json"
 	"fmt"
+
 	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	service "github.com/cloud-barista/cb-webtool/src/service"
+
 	// util "github.com/cloud-barista/cb-webtool/src/util"
 
 	"github.com/labstack/echo"
 	// "io/ioutil"
 	"log"
 	"net/http"
+
 	//"github.com/davecgh/go-spew/spew"
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
@@ -187,9 +190,10 @@ func VpcDelProc(c echo.Context) error {
 
 	paramVNetID := c.Param("vNetID")
 
-	respBody, respStatus := service.DelVpc(defaultNameSpaceID, paramVNetID)
-	fmt.Println("=============respBody =============", respBody)
-
+	respMessage, respStatus := service.DelVpc(defaultNameSpaceID, paramVNetID)
+	fmt.Println("=============respMessage =============", respMessage)
+	log.Println("respStatus : ", respStatus)
+	log.Println("respMessage : ", respMessage)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
@@ -198,8 +202,8 @@ func VpcDelProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  respStatus.StatusCode,
+		"message": respMessage.Message,
+		"status":  respMessage.StatusCode,
 	})
 }
 
@@ -347,8 +351,9 @@ func SecirityGroupDelProc(c echo.Context) error {
 
 	paramSecurityGroupID := c.Param("securityGroupID")
 
-	respBody, respStatus := service.DelSecurityGroup(defaultNameSpaceID, paramSecurityGroupID)
-	fmt.Println("=============respBody =============", respBody)
+	// respBody, respStatus := service.DelSecurityGroup(defaultNameSpaceID, paramSecurityGroupID)
+	respMessage, respStatus := service.DelSecurityGroup(defaultNameSpaceID, paramSecurityGroupID)
+	fmt.Println("=============respMessage =============", respMessage)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -358,7 +363,7 @@ func SecirityGroupDelProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
+		"message": respMessage.Message,
 		"status":  respStatus.StatusCode,
 	})
 }
@@ -509,8 +514,9 @@ func SshKeyDelProc(c echo.Context) error {
 
 	paramSshKeyID := c.Param("sshKeyID")
 
-	respBody, respStatus := service.DelSshKey(defaultNameSpaceID, paramSshKeyID)
-	fmt.Println("=============respBody =============", respBody)
+	//respBody, respStatus := service.DelSshKey(defaultNameSpaceID, paramSshKeyID)
+	respMessage, respStatus := service.DelSshKey(defaultNameSpaceID, paramSshKeyID)
+	fmt.Println("=============respMessage =============", respMessage)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -520,7 +526,7 @@ func SshKeyDelProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
+		"message": respMessage.Message,
 		"status":  respStatus.StatusCode,
 	})
 }
@@ -674,8 +680,9 @@ func VirtualMachineImageDelProc(c echo.Context) error {
 
 	paramVirtualMachineImageID := c.Param("imageID")
 
-	respBody, respStatus := service.DelVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageID)
-	fmt.Println("=============respBody =============", respBody)
+	// respBody, respStatus := service.DelVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageID)
+	respMessage, respStatus := service.DelVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageID)
+	fmt.Println("=============respMessage =============", respMessage)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -684,7 +691,7 @@ func VirtualMachineImageDelProc(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
+		"message": respMessage.Message,
 		"status":  respStatus.StatusCode,
 	})
 }
@@ -711,8 +718,9 @@ func AllVirtualMachineImageDelProc(c echo.Context) error {
 		})
 	}
 
-	respBody, respStatus := service.DelAllVirtualMachineImage(defaultNameSpaceID)
-	fmt.Println("=============respBody =============", respBody)
+	//respBody, respStatus := service.DelAllVirtualMachineImage(defaultNameSpaceID)
+	respMessage, respStatus := service.DelAllVirtualMachineImage(defaultNameSpaceID)
+	fmt.Println("=============respMessage =============", respMessage)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -721,7 +729,7 @@ func AllVirtualMachineImageDelProc(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
+		"message": respMessage.Message,
 		"status":  respStatus.StatusCode,
 	})
 }
@@ -999,8 +1007,9 @@ func VmSpecDelProc(c echo.Context) error {
 
 	paramVMSpecID := c.Param("vmSpecID")
 
-	respBody, respStatus := service.DelVMSpec(defaultNameSpaceID, paramVMSpecID)
-	fmt.Println("=============respBody =============", respBody)
+	//respBody, respStatus := service.DelVMSpec(defaultNameSpaceID, paramVMSpecID)
+	respMessage, respStatus := service.DelVMSpec(defaultNameSpaceID, paramVMSpecID)
+	fmt.Println("=============respMessage =============", respMessage)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -1010,7 +1019,7 @@ func VmSpecDelProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
+		"message": respMessage.Message,
 		"status":  respStatus.StatusCode,
 	})
 }
