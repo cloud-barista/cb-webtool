@@ -968,6 +968,9 @@ body {
 .bgbox_stopped {
   background-color: #ffc800;
 }
+.bgbox_suspended {
+  background-color: #ffc800;
+}
 .bgbox_terminated {
   background-color: #fc1656;
 }
