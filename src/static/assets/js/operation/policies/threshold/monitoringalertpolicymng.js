@@ -355,25 +355,35 @@ function getMonitoringAlertPolicyList(sortType) {
         var html = ""
         var cnt = 0;
 
-        if (data.length) {
-            if (sortType) {
-                cnt++;
-                console.log("check2 : ", sortType);
-                data.filter(list => list.Name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
-                    html += addMonitoringAlertRow(item, index)
-                ))
-            } else {
-                console.log("check3 : ", sortType);
-                data.filter((list) => list.Name !== "").map((item, index) => (
-                    html += addMonitoringAlertRow(item, index)
-                ))
-            }
+        if (data == null) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="3">No Data</td></tr>'
 
             $("#alertList").empty();
             $("#alertList").append(html)
-
+    
             ModalDetail();
+        } else {
+            if (data.length) {
+                if (sortType) {
+                    cnt++;
+                    console.log("check2 : ", sortType);
+                    data.filter(list => list.Name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
+                        html += addMonitoringAlertRow(item, index)
+                    ))
+                } else {
+                    console.log("check3 : ", sortType);
+                    data.filter((list) => list.Name !== "").map((item, index) => (
+                        html += addMonitoringAlertRow(item, index)
+                    ))
+                }
+    
+                $("#alertList").empty();
+                $("#alertList").append(html)
+    
+                ModalDetail();
+            }
         }
+        
     }).catch(function(error){
         console.log("Threshold list error : ", error);        
     })    
@@ -386,16 +396,16 @@ function addMonitoringAlertRow(item, index){
     console.log(item)
     var html = ""
     html += '<tr onclick="showMonitoringAlertPolicyInfo(\'' + item.name + '\');">'
-        + '<td class="overlay hidden" data-th="">'
+        + '<td class="overlay hidden column-50px" data-th="">'
         + '<input type="hidden" id="alertpolicy_info_' + index + '" value="' + item.name + '"/>'
         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
-        + '<td class="overlay hidden" data-th="Name">' + item.name + '</td>'
-        + '<td class="overlay hidden" data-th="Measurement">' + item.measurement + '</td>'
-        + '<td class="overlay hidden" data-th="TargetType">' + item.target_type + '</td>'
-        + '<td class="overlay hidden" data-th="TargetId">' + item.target_id + '</td>'
-        + '<td class="overlay hidden" data-th="AlertEventType">' + item.alert_event_type + '</td>'
+        + '<td class="overlay hidden column-14percent" data-th="Name">' + item.name + '</td>'
+        + '<td class="overlay hidden column-16percent" data-th="Measurement">' + item.measurement + '</td>'
+        + '<td class="overlay hidden column-15percent" data-th="TargetType">' + item.target_type + '</td>'
+        + '<td class="overlay hidden column-15percent" data-th="TargetId">' + item.target_id + '</td>'
+        + '<td class="overlay hidden column-15percent" data-th="AlertEventType">' + item.alert_event_type + '</td>'
         + '<td class="overlay hidden" data-th="AlertEventName">' + item.alert_event_name + '</td>'
-        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>'
+        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>'
         + '</tr>'	
     return html;
 }

@@ -128,7 +128,15 @@ function getVmSpecList(sort_type) {
         var data = result.data.VmSpecList;
         var html = ""
         
-        if (data.length) {
+        console.log("data.length : ", data);
+
+        if (data == null) {
+            console.log("################여기##############");
+            html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
+            $("#specList").empty()
+            $("#specList").append(html)
+        } else {
             if (sort_type) {
                 console.log("check : ", sort_type);
                 data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
@@ -158,7 +166,7 @@ function getVmSpecList(sort_type) {
         
             $("#specList").empty()
             $("#specList").append(html)
-            
+
             // displayVmSpecInfo("REG_SUCCESS");
         }
     })
