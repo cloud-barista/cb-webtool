@@ -1372,6 +1372,9 @@ table tbody tr {
 .dashboard .register_box .graybox .logicbox .txtbox .logic_tbox .txt { color:#fff; font-size:16px; line-height:20px; padding:15px 10px; border-radius:15px; background-color:#06a9b7; }
 .dashboard .register_box .graybox .logicbox .txtbox .line { position:relative; float:left; height:2px; background-color:#5e636c; }
 .dashboard .register_box .graybox .logicbox .txtbox .line_a:after { content:''; display:block; position:absolute; right:0; top:50%; transform:translateY(-50%); width:9px; height:10px; background:url(../img/contents/icon_arr_lg.png) center center no-repeat; }
+.dashboard .register_box .graybox .logicbox .txtbox .line.line_space { background-color:#fff; width:35px; margin:120px 0 0 0; }
+.dashboard .register_box .graybox .logicbox .txtbox .line.line_p0 { margin:0 0 0 70px; height:42px; width:2px; }
+.dashboard .register_box .graybox .logicbox .txtbox .line.line_p0_1 { width:90px; margin:40px 0 0 0; }
 .dashboard .register_box .graybox .logicbox .txtbox .line.line_p1 { width:35px; margin:60px 0 0 0; }
 .dashboard .register_box .graybox .logicbox .txtbox .line.line_p2_1 { width:180px; margin:60px 0 0 0; }
 .dashboard .register_box .graybox .logicbox .txtbox .line.line_p3 { margin:0 0 0 270px; height:42px; width:2px; }

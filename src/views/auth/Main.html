@@ -25,25 +25,224 @@
 		{{template "Modal" .}}
 				
 				<!-- contents -->
-				<div class="contbox" id="popNameSpace">
+				<div class="contbox" id="mainNameSpace">
 					
 					<div class="titlebox">
 						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Main</strong></div>
 						<div class="location">Home  <span>></span> <strong>Main</strong></div>
 					</div>
  
-                    <div>&nbsp;</div>
-
-					<!-- list -->
-					<div class="modal-content">
-						<div class="popbox">
+					<div class="dashboard dashboard_cont">
+						<div>
 							<div class="titlebox">
                                     <div>&nbsp;</div>
                                     <div class="tit">&nbsp;<span>Main</span> 화면</div>
                             </div>
                             
                             <div class="ds_cont">
-                               
+								<div class="register_box">								    
+									<div class="graybox">
+										<div class="g_box">
+											
+											<div class="logicbox">
+												
+												<div class="txtbox">
+													
+													<div class="logic_tbox lg_1">
+														<div class="tit">Step 1. NameSpace</div>
+														<div class="txt" id="infoNamePrs">
+															{{if eq .WorkingStep.NAMESPACE "PASS" }} NAMESPACE <br> 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/namespaces/namespace/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+													<!-- <div class="line line_a line_p1"></div> -->
+													<div class="line line_space"></div>
+													<div class="logic_tbox lg_2">
+														<div class="tit">Step 2. Connection</div>
+														<div class="txt" style="min-height: 70px;" > Connection <br/> 생성																												
+														</div>														
+													</div>
+												</div>
+
+												<div class="txtbox">
+
+													<div class="line line_p3"></div>
+													<div class="line line_a line_p3_1"></div>
+													
+													<div class="logic_tbox lg_4">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > Credential	<br/>														
+															{{if eq .WorkingStep.CREDENTIAL "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
+															{{ end }}															
+														</div>			
+													</div>
+													
+												</div>
+												<!-- sub 단계 -->
+												<div class="txtbox">	
+													
+													<div class="line line_p3"></div>
+													<div class="line line_a line_p3_1"></div>
+													
+													<div class="logic_tbox lg_4">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > Driver <br/>
+															{{if eq .WorkingStep.DRIVER "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+
+													<div class="line line_p3"></div>
+													<div class="line line_a line_p3_1"></div>
+
+													<div class="logic_tbox lg_4">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > Region <br/>
+															{{if eq .WorkingStep.REGION "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+												</div>
+												
+												<div class="txtbox">	
+													<div class="logic_tbox lg_1">
+														<div class="tit">Step 3. Resource</div>
+														<div class="txt" id="infoNamePrs">
+															Resource 생성
+														</div>
+													</div>
+													<!-- <div class="line line_a line_p1"></div>
+													<div class="logic_tbox lg_2">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > Network	<br/>														
+															{{if eq .WorkingStep.VNET "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/network/mngform')"> [생성하러 가기]</a>
+															{{ end }}													
+														</div>														
+													</div> -->
+													<div class="line line_space"></div>
+													<div class="line line_space"></div>
+													<div class="line line_space"></div>
+													
+													<div class="logic_tbox lg_1">
+														<div class="tit">Step 4-1. MCIS </div>
+														<div class="txt" id="infoNamePrs">
+															{{if eq .WorkingStep.MCIS "PASS" }}  <br> 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/operation/manages/mcismng/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+													<div class="line line_space"></div>
+													<div class="logic_tbox lg_2">
+														<div class="tit">Step 4-2. MCKS </div>
+														<div class="txt" id="infoNamePrs">
+															{{if eq .WorkingStep.MCKS "PASS" }}  <br> 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/operation/manages/mcksmng/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+
+												</div>
+												<!-- sub단계-->
+												<div class="txtbox">	
+													<div class="line line_p0"></div>
+													<div class="line line_a line_p0_1"></div>
+
+													<div class="logic_tbox lg_1">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > Network	<br/>														
+															{{if eq .WorkingStep.VNET "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/network/mngform')"> [생성하러 가기]</a>
+															{{ end }}													
+														</div>														
+													</div>
+												</div>
+												<div class="txtbox">
+													<!-- 
+													<div class="line line_p3"></div>
+													<div class="line line_a line_p3_1"></div> -->
+													<div class="line line_p0"></div>
+													<div class="line line_a line_p0_1"></div>
+													
+													<div class="logic_tbox lg_4">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > Security <br/>
+															{{if eq .WorkingStep.SECURITY "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/securitygroup/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+												</div>
+												<div class="txtbox">
+													<div class="line line_p0"></div>
+													<div class="line line_a line_p0_1"></div>
+	
+													<div class="logic_tbox lg_4">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > SSH Key <br/>
+															{{if eq .WorkingStep.SSHKEY "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/sshkey/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+												</div>
+												<div class="txtbox">
+													<div class="line line_p0"></div>
+													<div class="line line_a line_p0_1"></div>
+
+													<div class="logic_tbox lg_4">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > (Server) Image <br/>
+															{{if eq .WorkingStep.IMAGE "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/machineimage/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+												</div>
+												<div class="txtbox">
+													<div class="line line_p0"></div>
+													<div class="line line_a line_p0_1"></div>
+	
+													<div class="logic_tbox lg_4">
+														<div class="tit">&nbsp;</div>
+														<div class="txt" style="min-height: 70px;" > (Server) Spec <br/>
+															{{if eq .WorkingStep.SPEC "PASS" }} 생성
+															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/vmspec/mngform')"> [생성하러 가기]</a>
+															{{ end }}
+														</div>
+													</div>
+												</div>
+																							
+												<!-- <div class="txtbox">													
+													<div class="logic_tbox lg_1">
+														<div class="tit">Step 4-1. MCIS </div>
+														<div class="txt" id="infoNamePrs">
+															{ {if eq .WorkingStep.MCIS "PASS" } }  <br> 생성
+															{ { else } } 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/namespaces/namespace/mngform')"> [생성하러 가기]</a>
+															{ { end } }
+														</div>
+													</div>
+													<div class="line line_space"></div>
+													<div class="line line_space"></div>
+													<div class="line line_space"></div>
+													<div class="logic_tbox lg_2">
+														<div class="tit">Step 4-2. MCKS </div>
+														<div class="txt" id="infoNamePrs">
+															{ {if eq .WorkingStep.MCKS "PASS" }}  <br> 생성
+															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/namespaces/namespace/mngform')"> [생성하러 가기]</a>
+															{ { end }}
+														</div>
+													</div>
+												</div> -->
+											</div>
+										</div>
+									</div>    								
+								</div>
+
                             </div>                            
                         
                         </div>                    
@@ -61,21 +260,20 @@
 	<div class="modal fade" id="guideArea" tabindex="-1" role="dialog" aria-hidden="true">           
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
-				<div class="modal-body" style="width: 70%;background-color: brown; left:10%;right:10%;">
+				<div class="modal-body" style="width: 75%;left:10%;right:10%;">
 					
 					<div class="pop-body">
 						
 						<div class="titbox">
-							<div class="tit"><span class="ch">Help : click or press OK button to disappear.</span></div>
+							<div class="tit" ><span class="ch">Help : click or press OK button to disappear.</span></div>
 						</div>
-						<img src="/assets/img/common/bg_login.jpg" class="img" onclick="guideAreaHide()" />								
-						<div class="pop-cont" style="width: 90%; bottom: 150px; position: absolute; border: 1px solid #000 ;float: right;">
-							<div>처음 MCIS 서비스 생성하는 방법</div>
-							<div class="pop_ip ip1" style="padding: 40px;border: 1px solid white; float: right;">
+						<img src="/assets/img/bg_guide.png" class="img" style="width: 100%;" onclick="guideAreaHide()" />								
+						<!-- <div class="pop-cont" style="width: 100%;top: 100px; bottom: 150px; position: absolute; float: right;" >
+							<div class="pop_ip ip1" style="width: 40%;padding: 10px;border: 1px solid rgb(29, 25, 25); background-color: lightblue; float: right;">
 								<ul>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; color:white;text-align:left;">STEP1 NameSpace</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP1 NameSpace</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.NAMESPACE "PASS" }} NAMESPACE 가 생성되어 있습니다.
 										{{ else }} NameSpace가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/namespaces/namespace/mngform')"> [생성하러 가기]</a>
@@ -83,8 +281,8 @@
 										</span>
 									</li>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP2 Connection - Credential</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP2 Connection - Credential</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.CREDENTIAL "PASS" }} Credential이 생성되어 있습니다.
 										{{ else }} Credential이 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
@@ -92,8 +290,8 @@
 										</span>
 									</li>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP2 Connection - Driver</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP2 Connection - Driver</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.DRIVER "PASS" }} Driver가 생성되어 있습니다.
 										{{ else }} Driver가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
@@ -101,8 +299,8 @@
 										</span>										
 									</li>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP2 Connection - Region</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP2 Connection - Region</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.REGION "PASS" }} Region이 생성되어 있습니다.
 										{{ else }} Region이 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
@@ -111,8 +309,8 @@
 									</li>
 
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP3 Resource - Network</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - Network</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.REGION "PASS" }} Network가 생성되어 있습니다.
 										{{ else }} Network가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/network/mngform')"> [생성하러 가기]</a>
@@ -120,8 +318,8 @@
 										</span>
 									</li>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP3 Resource - Security</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - Security</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.REGION "PASS" }} Security가 생성되어 있습니다.
 										{{ else }} Security가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/securitygroup/mngform')"> [생성하러 가기]</a>
@@ -129,8 +327,8 @@
 										</span>
 									</li>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP3 Resource - SSH key</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - SSH key</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.REGION "PASS" }} SSH key가 생성되어 있습니다.
 										{{ else }} SSH key가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/sshkey/mngform')"> [생성하러 가기]</a>
@@ -138,8 +336,8 @@
 										</span>
 									</li>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP3 Resource - (Server) Image</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - (Server) Image</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.REGION "PASS" }} (Server) Image가 생성되어 있습니다.
 										{{ else }} (Server) Image가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/machineimage/mngform')"> [생성하러 가기]</a>
@@ -147,8 +345,8 @@
 										</span>
 									</li>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP3 Resource - (Server) Spec</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - (Server) Spec</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.REGION "PASS" }} (Server) Spec이 생성되어 있습니다.
 										{{ else }} (Server) Spec이 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/vmspec/mngform')"> [생성하러 가기]</a>
@@ -157,8 +355,8 @@
 									</li>
 
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP4 Manage - MCIS</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em;">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP4 Manage - MCIS</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.MCIS "PASS" }} MCIS가 생성되어 있습니다.
 										{{ else }} MCIS가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/operation/manages/mcismng/mngform')"> [생성하러 가기]</a>
@@ -166,8 +364,8 @@
 										</span>									
 									</li>
 									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 2.2em; font-weight: bold; text-align:left;">STEP4 Manage - MCKS</span>
-										<span style="margin-left:30px; text-align:right; font-size: 1.5em; ">
+										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP4 Manage - MCKS</span>
+										<span style="margin-left:30px; text-align:right; font-size: 0.7em; ">
 										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										{{if eq .WorkingStep.MCKS "PASS" }} MCKS가 생성되어 있습니다.
 										{{ else }} MCKS가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/operation/manages/mcksmng/mngform')"> [생성하러 가기]</a>
@@ -176,7 +374,7 @@
 									</li>									
 								</ul>
 							</div>
-						</div>
+						</div> -->
 
 					</div>
 					<div class="btnbox">

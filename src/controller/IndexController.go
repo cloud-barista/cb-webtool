@@ -133,6 +133,46 @@ func MainForm(c echo.Context) error {
 	}
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
+	store.Set("vnet", vNetInfoList)
+	if len(vNetInfoList) > 0 {
+		workingStep["VNET"] = "PASS"
+	} else {
+		workingStep["VNET"] = "FAIL"
+	}
+
+	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
+	store.Set("security", securityGroupInfoList)
+	if len(securityGroupInfoList) > 0 {
+		workingStep["SECURITY"] = "PASS"
+	} else {
+		workingStep["SECURITY"] = "FAIL"
+	}
+
+	sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
+	store.Set("sshkey", sshKeyInfoList)
+	if len(sshKeyInfoList) > 0 {
+		workingStep["SSHKEY"] = "PASS"
+	} else {
+		workingStep["SSHKEY"] = "FAIL"
+	}
+
+	virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
+	store.Set("image", virtualMachineImageInfoList)
+	if len(virtualMachineImageInfoList) > 0 {
+		workingStep["IMAGE"] = "PASS"
+	} else {
+		workingStep["IMAGE"] = "FAIL"
+	}
+	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
+	store.Set("spec", vmSpecInfoList)
+	if len(vmSpecInfoList) > 0 {
+		workingStep["SPEC"] = "PASS"
+	} else {
+		workingStep["SPEC"] = "FAIL"
+	}
+
 	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
 	if len(mcisList) > 0 {
 		workingStep["MCIS"] = "PASS"
