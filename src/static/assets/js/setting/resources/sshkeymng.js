@@ -34,6 +34,8 @@ $(document).ready(function () {
     //         $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
     //     }
     // });
+
+    setTableHeightForScroll('sshkeyList', 300)
 });
 
 $(document).ready(function () {
@@ -64,10 +66,9 @@ function displaySshKeyInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 300);
 
         // form 초기화
-        $("#regVpcName").val('')
-        $("#regDescription").val('')
-        $("#regCidrBlock").val('')
-        $("#regSubnet").val('')
+        $("#regCspSshKeyName").val('');
+        //$("#regProvider").val('');
+        //$("#regCregConnectionNameidrBlock").val('');
 
     }else if ( targetAction == "REG_SUCCESS"){
         $('#sshKeyCreateBox').removeClass("active");
@@ -78,14 +79,9 @@ function displaySshKeyInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         // form 초기화
-        $("#regCspSecurityGroupName").val('')
-        $("#regDescription").val('')
-        $("#regProvider").val('')
-        $("#regConnectionName").val('')
-
-        $("#regVNetId").val('')
-        $("#regInbound").val('')
-        $("#regOutbound").val('')
+        $("#regCspSshKeyName").val('');
+        $("#regProvider").val('');
+        $("#regCregConnectionNameidrBlock").val('');
 
         getSshKeyList("name");
     }else if ( targetAction == "DEL"){
@@ -127,26 +123,26 @@ function getSshKeyList(sort_type) {
                 console.log("check : ", sort_type);
                 data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
                     html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
+                        + '<td class="overlay hidden column-50px" data-th="">' 
                         + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSshKeyName + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                         + '<td class="btn_mtd ovm" data-th="Name">' + item.id 
                         + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                         + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'  
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
             } else {
                 data.filter((list) => list.name !== "").map((item, index) => (
                     html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">' 
-                        + '<td class="overlay hidden" data-th="">' 
+                        + '<td class="overlay hidden column-50px" data-th="">' 
                         + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name  + '"/>'
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                         + '<td class="btn_mtd ovm" data-th="id">' + item.id + '<span class="ov"></span></td>' 
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                         + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>' 
-                        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
 
@@ -213,10 +209,18 @@ function deleteSshKey(){
         }
     }).then(result => {
         var data = result.data;
+        console.log(data);
         if (result.status == 200 || result.status == 201) {
-            commonAlert("Success Delete SSH Key.");
+            // commonAlert("Success Delete SSH Key.");
+            commonAlert(data.message);
             // location.reload(true);
+          
+            displaySshKeyInfo("DEL_SUCCESS");
+            //getSshKeyList("name");
+
             getSshKeyList("name");
+        }else{
+            commonAlert(data.error);
         }
     // }).catch(function(error){
     //     console.log("get delete error : ",error);        
@@ -322,7 +326,8 @@ function createSSHKey() {
             if (result.status == 200 || result.status == 201) {
                 commonAlert("Success Create SSH Key")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getSshKeyList("name");
+                displaySshKeyInfo("REG_SUCCESS");
+                //getSshKeyList("name");
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
                 // $("#btn_add2").click()

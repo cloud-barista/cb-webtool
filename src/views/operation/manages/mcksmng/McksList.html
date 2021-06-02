@@ -60,7 +60,7 @@
 										<colgroup>
 											<col width="">
 											<col width="15%">
-											<col width="12%">
+											<col width="8%">
 											<col width="12%">
 											<col width="12%">
 											<col width="17%">
@@ -112,9 +112,9 @@
 												<td class="btn_mtd ovm" data-th="NetworkCni">{{$clusterItem.NetworkCni}}<span class="ov"></span></td>
 												<td class="btn_mtd ovm" data-th="CpLeader">{{$clusterItem.CpLeader}}<span class="ov"></span></td>
 												<td class="overlay hidden" data-th="Cloud Connection">
-													ClusterConfig: {{ $clusterItem.ClusterConfig}} <br>													
+													<!-- ClusterConfig: { { $clusterItem.ClusterConfig} } <br> -->
 													<!-- Kind: {{ $clusterItem.Kind}} <br> -->
-													Mcis: {{ $clusterItem.Mcis}} <br>
+													Mcis : {{ $clusterItem.Mcis}} <br>
 												</td>
 												
 												<td class="overlay hidden" data-th="">

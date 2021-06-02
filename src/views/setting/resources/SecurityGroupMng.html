@@ -123,20 +123,20 @@
 								
 								<div class="dataTable status_list" id="securityGroupListTable">
 									<table cellpadding="0" cellspacing="0" border="1" summary="" id="securityGroupList">
-                                        <colgroup>
+                                        <!-- <colgroup>
                                             <col width="50px">
                                             <col width="">
                                             <col width="">
                                             <col width="">
                                             <col width="60px">
-                                        </colgroup>
+                                        </colgroup> -->
 										<thead>
 											<tr>
-												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 												<th>SecurityGroup Name</th>
 												<th>Connection Name</th>
 												<th>Description</th>
-												<th></th>
+												<th class="column-60px"></th>
 											</tr>
 										</thead>
 										<tbody id="sgList">
@@ -149,14 +149,14 @@
 
 											{{range $index, $item := .SecurityGroupList}}														
 											<tr onclick="showSecurityGroupInfo('{{$item.CspSecurityGroupName }}');">
-												<td class="overlay hidden" data-th="">
+												<td class="overlay hidden column-50px" data-th="">
 													<input type="hidden" id="sg_info_{{$index }}" value="{{$item.CspSecurityGroupName}}"/>
 													<input type="checkbox" name="chk" value="{{$item.CspSecurityGroupName}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span></td>
 												<td class="btn_mtd ovm" data-th="cspSecurityGroupName">{{$item.CspSecurityGroupName }}<span class="ov"></span></td>
 												<td class="overlay hidden" data-th="connectionName">{{$item.ConnectionName }}</td>
 												<td class="overlay hidden" data-th="description">{{$item.Description }}</td>
-												<td class="overlay hidden" data-th=""><a href="javascript:void(0);">
+												<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);">
 													<img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
 												</td>
 											</tr>
@@ -353,28 +353,28 @@
 											<!-- table scrollbar -->
 											<div class="dtbox scrollbar-inner">
 												<div class="dataTable dt_overlay">
-													<table cellpadding="0" cellspacing="0" border="1" summary="">
-														<colgroup><col width="20%"><col width="20%"><col width="20%"><col width=""><col width="100px"></colgroup>
+													<table cellpadding="0" cellspacing="0" border="1" summary="" id="firewallRSlistTbl">
+														<!-- <colgroup><col width="20%"><col width="20%"><col width="20%"><col width=""><col width="100px"></colgroup> -->
 														<thead>
 															<tr>
-																<th>FromPort</th>
-																<th>ToPort</th>
-																<th>IPProtocol</th>
+																<th class="column-20percent">FromPort</th>
+																<th class="column-20percent">ToPort</th>
+																<th class="column-20percent">IPProtocol</th>
 																<th>Direction</th>
-																<th></th>
+																<th class="column-100px"></th>
 															</tr>
 														</thead>
 														<tbody id="fwrsList">
                                                     
 															<tr class="ip" name="tr_Input">
-																<td class="btn_mtd" data-th="fromPort">
+																<td class="btn_mtd column-20percent" data-th="fromPort">
 																	<input type="text" value="" name="fromport" placeholder="" class="pline" title="" /> 
 																	<span class="ov off"></span>
 																</td>
-																<td class="overlay hidden" data-th="toPort">
+																<td class="overlay hidden column-20percent" data-th="toPort">
 																	<input type="text" name="toport" value="" placeholder="" class="pline" title="" />
 																</td>
-																<td class="overlay hidden" data-th="ipProtocol">
+																<td class="overlay hidden column-20percent" data-th="ipProtocol">
 																	<select class="selectbox white pline" name="ipprotocol">
 																		<option value="tcp">TCP</option>
 																		<option value="udp">UDP</option>
@@ -386,7 +386,7 @@
 																		<option value="outbound">Outbound</option>
 																	</select>
 																</td>
-																<td class="overlay hidden" data-th="">
+																<td class="overlay hidden column-100px" data-th="">
 																	<button class="btn btn_add" name="btn_add">add</button>
 																	<button class="btn btn_del" name="delInput">del</button>
 																</td>

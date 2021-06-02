@@ -48,6 +48,9 @@ $(document).ready(function(){
         } else {
         $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
         }
+
+        // Table 높이 조절, hidden인 상태인 Table은 show 될 때 set 하도록
+        setTableHeightForScroll('connectionListTable', 300)
     });
 
     //Create popup - Region / Credential / Driver
@@ -145,6 +148,10 @@ function addCloudConnectionConfirm(){
         var offset = $("#CreateBox").offset();
         $("#wrap").animate({scrollTop : offset.top}, 300);        
     // })
+
+    setTableHeightForScroll("regionListTable", 300);
+    setTableHeightForScroll("credentialListTable", 300);
+    setTableHeightForScroll("driverListTable", 300);
 }
 
 // connection 클릭시 나타남.

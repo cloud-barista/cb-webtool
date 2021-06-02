@@ -42,10 +42,10 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterName', 'connectionList')">Name</a></li>
-														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterCloudProvider', 'connectionList')">Provider</a></li>
-														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterDriver', 'connectionList')">Driver</a></li>
-														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterCredential', 'connectionList')">Credential</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterName', 'connectionListTable')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterCloudProvider', 'connectionListTable')">Provider</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterDriver', 'connectionListTable')">Driver</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterCredential', 'connectionListTable')">Credential</a></li>
 													</ul>
 												</div>
 											</div>
@@ -55,10 +55,10 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);" onclick="tableSort('connectionList', 'Name')">Name</a></li>
-														<li><a href="javascript:void(0);" onclick="tableSort('connectionList', 'Cloud Provider')">Provider</a></li>
-														<li><a href="javascript:void(0);" onclick="tableSort('connectionList', 'Driver')">Driver</a></li>
-														<li><a href="javascript:void(0);" onclick="tableSort('connectionList', 'Credential')">Credential</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('connectionListTable', 'Name')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('connectionListTable', 'Cloud Provider')">Provider</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('connectionListTable', 'Driver')">Driver</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('connectionListTable', 'Credential')">Credential</a></li>
 
 														<!-- <li><a href="javascript:void(0);">Date</a></li> -->
 													</ul>
@@ -86,20 +86,22 @@
 							<div class="ds_cont">
 								
 								<div class="dataTable status_list">
-									<table cellpadding="0" cellspacing="0" border="1" summary="" id="connectionList">
-										<colgroup>
-											<col width="50px"><col width="16%"><col width="14%"><col width="15%"><col width="15%"><col width="15%"><col width=""><col width="60px">
-										</colgroup>
+									<table cellpadding="0" cellspacing="0" border="1" summary="" id="connectionListTable">
+										<!-- <colgroup>
+											<col width="50px"><col width="56%">
+											<col width="column-120px"><col width="column-120px"><col width="column-120px">
+											<col width="column-120px"><col width=""><col width="60px">
+										</colgroup> -->
 										<thead>
 											<tr>
-												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
-                                                <th>Name</th>
-                                                <th>Cloud Provider</th>
-                                                <th>Region</th>
-                                                <th>Zone</th>
-                                                <th>Credential</th>
-                                                <th>Driver</th>
-                                                <th></th>
+												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+                                                <th class="column-15percent">Name</th>
+                                                <th class="column-80px">Cloud Provider</th>
+                                                <th class="column-120px">Region</th>
+                                                <th class="column-120px">Zone</th>
+                                                <th class="column-120px">Credential</th>
+                                                <th class="column-120px">Driver</th>
+                                                <th class="column-60px"></th>
 											</tr>
 										</thead>
 										<tbody id="cList">
@@ -112,20 +114,20 @@
 
 											{{range $index, $item := .CloudConnectionConfigList}}	
 											<tr onclick="showConnectionConfigInfo('cc_info_{{$index}}');">
-												<td class="overlay hidden" data-th="">
+												<td class="overlay hidden column-50px" data-th="">
 													<input type="hidden" id="cc_info_{{$index}}" value="{{$item.ConfigName}}|{{$item.ProviderName}}|{{$item.RegionName}}|{{$item.CredentialName}}|{{$item.DriverName}}"/>
 													<input type="checkbox" name="cloudconnection_chk" value="{{$item.ConfigName}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span>
 												</td>
-												<td class="btn_mtd ovm td_left" data-th="Name">
+												<td class="btn_mtd ovm td_left column-15percent" data-th="Name">
 													{{$item.ConfigName}}<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span>
 												</td>
-												<td class="overlay hidden" data-th="Cloud Provider">{{$item.ProviderName}}</td>
-												<td class="overlay hidden" data-th="Region">{{$item.RegionName}}</td>
-												<td class="overlay hidden" data-th="Zone">{{$item.RegionName}}</td>
-												<td class="overlay hidden" data-th="Credential">{{$item.CredentialName}}</td>
-												<td class="overlay hidden" data-th="Driver">{{$item.DriverName}}</td>
-												<td class="overlay hidden" data-th="">
+												<td class="column-80px" data-th="Cloud Provider">{{$item.ProviderName}}</td>
+												<td class="overlay hidden column-120px" data-th="Region">{{$item.RegionName}}</td>
+												<td class="overlay hidden column-120px" data-th="Zone">{{$item.RegionName}}</td>
+												<td class="overlay hidden column-120px" data-th="Credential">{{$item.CredentialName}}</td>
+												<td class="overlay hidden column-120px" data-th="Driver">{{$item.DriverName}}</td>
+												<td class="overlay hidden column-60px" data-th="">
 													<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
 												</td>
 											</tr>											
@@ -324,7 +326,7 @@
 												<!-- <button class="btn_delete" value="" name="" data-toggle="modal" data-target="#Del_Region">delete</button> -->
 											</div>
 											<div class="dataTable first_over">
-												<table cellpadding="0" cellspacing="0" border="1" summary="">
+												<table cellpadding="0" cellspacing="0" border="1" summary="" id="regionListTable">
 													<colgroup>
 														<col width="28%"><col width="28%">
 														<col width="28%"><col width="%">
@@ -388,7 +390,7 @@
 												<!-- <button class="btn_add" value="" name="">add</button> -->
 											</div>
 											<div class="dataTable first_over">
-												<table cellpadding="0" cellspacing="0" border="1" summary="">
+												<table cellpadding="0" cellspacing="0" border="1" summary="" id="credentialListTable">
 													<colgroup>
 														<col width="38%"><col width="38%"><col width="">
 													</colgroup>

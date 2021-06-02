@@ -33,6 +33,7 @@ $(document).ready(function(){
     //     $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
     //     }
     // });
+    setTableHeightForScroll('serverImageList', 300)
 });
 
 $(document).ready(function() {
@@ -97,6 +98,8 @@ function displayVirtualMachineImageInfo(targetAction){
         $("#regCspImgId").val('')
         $("#regCspImgName").val('')
         $("#regGuestOS").val('')
+        $("#regProvider").val('')
+        $("#regConnectionName").val('')
         $("#regDescription").val('')
         
         var offset = $("#virtualMachineImageCreateBox").offset();
@@ -156,12 +159,15 @@ function deleteVirtualMachineImage() {
             'Content-Type': "application/json"
         }
     }).then(result => {
-        var data = result.data
+        var data = result.data;
+        console.log(data);
         if (result.status == 200 || result.status == 201) {
-            commonAlert("Success Delete Image.");
-            
+            // commonAlert("Success Delete Image.");
+            commonAlert(data.message);
             displayVirtualMachineImageInfo("DEL_SUCCESS")
             // location.reload(true);
+        }else{
+            commonAlert(data.error);
         }
     // }).catch(function(error){
     //     console.log("image delete error : ",error);        
@@ -237,32 +243,32 @@ function setVirtualMachineImageListAtServerImage(data, sortType){
             console.log("check : ", sortType);
             data.filter(list => list.name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
                 html += '<tr onclick="showVirtualMachinImageInfo(\'' + item.name + '\');">' 
-                    + '<td class="overlay hidden" data-th="">' 
+                    + '<td class="overlay hidden column-50px" data-th="">' 
                     + '<input type="hidden" id="img_info_' + index + '" value="' + item.name + '|' + item.cspImageId + '"/>' 
                     + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                     + '<td class="btn_mtd ovm" data-th="cspImageId ">' + item.cspImageId  + '<span class="ov"></span></td>'
                     + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
-                    + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                     + '</tr>'
             ))
         } else {
             data.filter((list) => list.name !== "").map((item, index) => (
                 html += '<tr onclick="showVirtualMachinImageInfo(\'' + item.name + '\');">' 
-                    + '<td class="overlay hidden" data-th="">' 
+                    + '<td class="overlay hidden column-50px" data-th="">' 
                     + '<input type="hidden" id="img_info_' + index + '" value="' + item.name  + '"/>'
                     + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                     + '<td class="btn_mtd ovm" data-th="cspImageId">' + item.cspImageId + '<span class="ov"></span></td>' 
                     + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-                    + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                    + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                     + '</tr>'
             ))
         }
     
         $("#imgList").empty()
         $("#imgList").append(html)
-        console.log("setVirtualMachineImageListAtServerImage completed")
+        console.log("setVirtualMachineImageListAtServerImage completed");
         ModalDetail()
     }
 }
@@ -426,7 +432,7 @@ function showVirtualMachinImageInfo(target) {
         }
     
     }).then(result=>{
-        var data = result.data.VirtualMachineImageInfo
+        var data = result.data.VirtualMachineImageInfo;
         console.log("Show Data : ",data);
         var dtlImageName = data.name;
         var dtlConnectionName = data.connectionName;

@@ -1277,11 +1277,13 @@ select.pline {
 
 /* loading size */
 .loading-container {
-  position: relative;
+  /* position: relative; */
+  position: fixed; 
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   display: table;
+  z-index: 1000;
 }
 
 .loading-container,

@@ -40,7 +40,10 @@
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox line_none">
-								<div class="tit initial"><strong>Create MCIS</strong></div>
+								<div class="tit initial">
+									<strong>Create MCIS</strong>
+									&nbsp;|&nbsp;<a href="javascript:void(0);" onclick="displayMcisImportServerFormByImport(true);">Mcis Import</a>			
+								</div>
 								
 								<div class="step_box">
 									<div class="on">STEP 1 <div class="bar"></div></div>
@@ -66,11 +69,11 @@
 														<ul>
 															<li>
 																<label>Name</label>
-																<input type="text" name="mcis_name" value="" id="mcis_name" placeholder="Input Name" class="pline ip_1" title="" />
+																<input type="text" name="mcis_name" value="" id="mcis_name" placeholder="Input Name" class="pline ip_1" title="" onkeyup="setMcisValue(this.id, this.value)"/>
 															</li>
 															<li>
 																<label>Description</label>
-																<textarea  cols="" rows="" id="mcis_desc" placeholder="type Description" name="mcis_desc" class="pline ta_1" title="" ></textarea>
+																<textarea cols="" rows="" id="mcis_desc" placeholder="type Description" name="mcis_desc" class="pline ta_1" title="" onkeyup="setMcisValue(this.id, this.value)"></textarea>
 															</li>
 														</ul>
 													</div>
@@ -87,14 +90,15 @@
 												</div>
 												
 												<!-- servers -->
-												<div class="servers_box">
+												<div class="servers_box" id="addVmList">
 													<div class="title">Servers</div>
 													<div class="switch">
 														<span class="txt">Expert <span class="txt_c on d_none">ON</span>
 														<span class="txt_c off ">OFF</span></span>
 														<label>
 															<input type="checkbox" name="consent" class="ch" id="isExpert" />
-															<span></span></label>
+															<span></span>
+														</label>
 													</div>
 													
 													<div class="list">
@@ -111,7 +115,26 @@
 												</div>
 												<!-- //servers -->
 												
-												
+												<!-- import scripts-->
+												<div class="servers_box" id="addMcisByScript" style="display:none;">
+													<div class="title">Import MCIS by Script
+													&nbsp;|&nbsp;<a href="javascript:void(0);" onclick="displayMcisImportServerFormByImport(true);">Import Mcis Script</a>
+													&nbsp;|&nbsp;<a href="javascript:void(0);" onclick="displayMcisImportServerFormByImport(false);">Go to Vm Add</a>
+													</div>
+													
+													<div class="list">
+														<p>&nbsp;</p><br><p>&nbsp;</p>
+														<input type="hidden" name="mcisImportScript" id="mcisImportScript" />
+														
+														<div class="svc_ipbox">
+															<div class="ipbox ipbox3">
+																<textarea  style="width:100%" rows="50" placeholder="Display imported MCIS Script" class="pline ta_1" id="mcisImportScriptPretty"></textarea>																	
+															</div>
+														</div>												
+													</div>
+												</div>
+												<!-- import scripts-->
+
 												<div class="btnbox">
 													<div class="btn_right">
 														<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="deployMcis();"><span>DEPLOY</span></button> 
@@ -126,6 +149,10 @@
 												{{template "VmConfigureExpert" .}}
 												<!-- //New Server Config -->
 						
+												<!-- Import Server Config -->
+												{{template "VmConfigureImport" .}}
+												<!-- //Import Server Config -->
+												
 												{{template "VmAssistPopup" .}}
 
 											</div>

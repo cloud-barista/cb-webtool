@@ -637,3 +637,36 @@ function getCommonSecurityGroupList(targetKey, sortType) {
 	function copyValue(targetValue, targetObjId){
 		$("#" + targetObjId).val(targetValue);
 	}
+
+	
+	// 이름 Validation : 소문자, 숫자, 하이프(-)만 가능   [a-z]([-a-z0-9]*[a-z0-9])?
+	function validateCloudbaristaKeyName(elementValue, maxLength){
+		//var charsPattern = /^[a-zA-Z0-9-]*$/;
+		//var charsPattern = /^[a-z0-9-]*$/;
+		//var charsPattern = /^[a-z]([-a-z0-9]*[a-z0-9])$/;
+		//var regex = new RegExp('^[0-9]*\\.[0-9]{'+b+'}$') ;
+
+		// min = 3 이므로 4자이상. maxlength + 1 이하 ex( 3, 12) 면 4자~13자 까지 허용
+		var regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9])$') ;
+		if( maxLength != undefined && maxLength > 0){
+			console.log(" maxleng is defined " + maxLength + " : " + elementValue.length)
+			// regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9]){' + maxLength+'}$') ;
+			//regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9]){ 5,' + maxLength+'}$') ;
+
+			regex = new RegExp("^[a-z][a-z0-9-]{3," + maxLength+"}$","g"); 
+
+		}
+
+		return regex.test(elementValue);
+		//return charsPattern.test(elementValue);
+	}
+
+
+	// 해당 table 의 limit를 초과하면 scroll이 생기도록
+	// width는 colgroup이 없는 채로 ht, td 에 width class를 추가한다.
+    function setTableHeightForScroll(tableId, limitHeight){
+		var tableHeight = $("#" + tableId).height();
+		if ( tableHeight > limitHeight ) {
+			$("#" + tableId).css({ height: limitHeight });
+		}
+    }

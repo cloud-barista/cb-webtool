@@ -130,20 +130,20 @@
 
                 <div class="dataTable status_list">
                     <table cellpadding="0" cellspacing="0" border="1" summary="" id="sshkeyList">
-                        <colgroup>
+                        <!-- <colgroup>
                             <col width="50px">
                             <col width="">
                             <col width="">
                             <col width="">
                             <col width="60px">
-                        </colgroup>
+                        </colgroup> -->
                         <thead>
                             <tr>
-                                <th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+                                <th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
                                 <th>Name</th>
                                 <th>Connection Name</th>
                                 <th>SSH KEY Name</th>
-                                <th></th>
+                                <th class="column-60px"></th>
                             </tr>
                         </thead>
                         <tbody id="sList">
@@ -156,7 +156,7 @@
 
                             {{range $index, $item := .SshKeyList}}
                             <tr onclick="showSshKeyInfo('{{$item.CspSshKeyName}}');">
-                                <td class="overlay hidden" data-th="">
+                                <td class="overlay hidden column-50px" data-th="">
                                     <input type="hidden" id="ssh_info_{{$index}}" value="{{$item.Name}}|{{$item.ConnectionName}}|{{$item.CspSshKeyName}}"/>
                                     <input type="checkbox" name="chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
                                     <label for="td_ch1"></label> <span class="ov off"></span>
@@ -167,7 +167,7 @@
                                 </td>
                                 <td class="overlay hidden" data-th="connectionName">{{$item.ConnectionName}}</td>
                                 <td class="overlay hidden" data-th="cspSshKeyName">{{$item.CspSshKeyName}}</td> 
-                                <td class="overlay hidden" data-th=""><a href="javascript:void(0);">
+                                <td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);">
                                     <img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
                                 </td>
                             </tr>
@@ -303,7 +303,7 @@
                                     <label>Cloud Provider</label>
                                     <!-- <input type="text" name="" value="" placeholder="AWS, AZURE, GCP, ALIBABA / Region" class="pline" title="" /> -->
                                     <select class="selectbox white pline w3" name="ProviderName" id="regProvider" onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
-                                        <option selected>Select Cloud Provider</option>
+                                        <option value="" selected>Select Cloud Provider</option>
                                         {{ range $item := .CloudOSList}}	
                                         <option value="{{ $item }}">{{ $item }}</option>
                                         {{ end }}
@@ -316,7 +316,7 @@
                                     <!-- <input type="text" name="" value="" placeholder="Select / Input fingerprint" class="pline ip_w1" title="" /> -->
                                     <!-- <textarea cols="" rows="" placeholder="Description" class="pline ip_w1" title="" readonly></textarea> -->
                                     <select class="selectbox white pline w3" name="reg_connectionName" id="regConnectionName" >
-                                        <option selected>Select Connection Name</option>
+                                        <option value="" selected>Select Connection Name</option>
                                     </select>
                                 </li>
                             </ul>

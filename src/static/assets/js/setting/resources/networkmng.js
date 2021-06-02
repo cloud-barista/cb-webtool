@@ -18,6 +18,8 @@ $(document).ready(function(){
         } else {
             $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
         }
+
+        setTableHeightForScroll('vpcListTable', 300);
     });
 });
 
@@ -86,15 +88,17 @@ function deleteVPC(){
         }
     }).then(result => {
         var data = result.data;
+        console.log(result);
         console.log(data);
         if (result.status == 200 || result.status == 201) {
-           commonAlert("Success Delete Network")
+           //commonAlert("Success Delete Network")
+           commonAlert(result.message)
             // location.reload(true);
             //vNetInfoBox 안보이게
             displayVNetInfo("DEL_SUCCESS")
             // getVpcList("name");
         }else{
-            commonAlert(data)
+            commonAlert(result.data.error)
         }
     // }).catch(function(error){
     //     commonAlert(error)
@@ -181,13 +185,13 @@ function addVNetRow(item, index){
     console.log(item)
     var html = ""
     html += '<tr onclick="showVNetInfo(\'' + item.name + '\');">' 
-        + '<td class="overlay hidden" data-th="">' 
+        + '<td class="overlay hidden column-50px" data-th="">' 
         + '<input type="hidden" id="sg_info_' + index + '" value="' + item.name  + '"/>'
         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>' 
         + '<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>' 
         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-        + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
         + '</tr>'
     return html;
 }
