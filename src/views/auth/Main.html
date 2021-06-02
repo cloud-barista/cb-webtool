@@ -388,13 +388,151 @@
 
 <script >
 
-
-$(document).ready(function () {
-	$("#guideArea").modal();
-});                   
-
 function guideAreaHide(){
 	$("#guideArea").modal("hide");
+}
+
+$(document).ready(function () {
+	// namespace
+	getCommonNameSpaceList("namespace")
+
+	// connection
+	// credential
+	getCommonCredentialList("credential");
+	// region
+	getCommonRegionList("region");
+	// driver
+
+	// resource
+	// network(vnet)
+	getCommonNetworkList("vnet")
+	// securitygroup
+	getCommonSecurityGroupList("securitygroup")
+	// sshkey
+	getCommonSshKeyList("sshkey")
+	// spec
+	
+	// image
+	getCommonVirtualMachineImageList("image")
+	
+	//$("#guideArea").modal();
+});                   
+
+let guideMap = new Map();
+// TODO : 가져온 결과로 어떻게 처리할 것인지
+function processMap(){
+	guideMap.forEach( (value, key, map) => {
+		// alert(`${key}: ${value}`); // cucumber: 500 ...
+		if( key == "namespace" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
+
+		if( key == "credential" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
+
+		if( key == "region" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
+
+		if( key == "driver" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
+	});
+}
+
+function getNameSpaceListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1);
+		processMap();
+	}
+}
+function getNameSpaceListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap();
+}
+
+function getCredentialListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1)
+		processMap();
+	}
+}
+function getCredentialListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap();
+}
+
+function getRegionListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1)
+		processMap();
+	}
+}
+function getRegionListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap();
+}
+
+function getDriverListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1)
+		processMap();
+	}
+}
+function getDriverListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap();
+}
+
+function getNetworkListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1)
+		processMap();
+	}
+}
+function getNetworkListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap();
+}
+
+function getSecurityGroupListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1)
+		processMap();
+	}
+}
+function getSecurityGroupListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap();
+}
+
+function getSshKeyListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1)
+		processMap();
+	}
+}
+function getSshKeyListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap();
+}
+
+//getCommonVirtualMachineImageList
+function getImageListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1)
+		processMap();
+	}
+}
+
+function getImageListCallbackFail(caller, error){	
+	guideMap.set(caller, 1)
+	processMap();
 }
 </script>
 {{template "Footer" .}}
