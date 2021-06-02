@@ -131,42 +131,53 @@ function getVpcList(sort_type) {
         var html = ""
         var cnt = 0;
         
-        if (data.length) {
-            if (sort_type) {
-                cnt++;
-                console.log("check : ", sort_type);
-                data.filter(list => list.Name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                    html += addVNetRow(item, index)
-                    // html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
-                    //     + '<td class="overlay hidden" data-th="">' 
-                    //     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name + '|' + item.CidrBlock + '"/>' 
-                    //     + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                    //     + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '</td>'
-                    //     + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
-                    //     + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>'  
-                    //     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                    //     + '</tr>'
-                ))
-            } else {
-                data.filter((list) => list.Name !== "").map((item, index) => (
-                    html += addVNetRow(item, index)
-                    // html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
-                    //     + '<td class="overlay hidden" data-th="">' 
-                    //     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name  + '"/>'
-                    //     + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                    //     + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '<span class="ov"></span></td>' 
-                    //     + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
-                    //     + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>' 
-                    //     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                    //     + '</tr>'
-                ))
-            }
-            
+        if (data == null) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
             $("#vpcList").empty()
             $("#vpcList").append(html)
-            
+                
             ModalDetail()
+        } else {
+            if (data.length) {
+                if (sort_type) {
+                    cnt++;
+                    console.log("check : ", sort_type);
+                    data.filter(list => list.Name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+                        html += addVNetRow(item, index)
+                        // html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
+                        //     + '<td class="overlay hidden" data-th="">' 
+                        //     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name + '|' + item.CidrBlock + '"/>' 
+                        //     + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                        //     + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '</td>'
+                        //     + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
+                        //     + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>'  
+                        //     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        //     + '</tr>'
+                    ))
+                } else {
+                    data.filter((list) => list.Name !== "").map((item, index) => (
+                        html += addVNetRow(item, index)
+                        // html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
+                        //     + '<td class="overlay hidden" data-th="">' 
+                        //     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name  + '"/>'
+                        //     + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                        //     + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '<span class="ov"></span></td>' 
+                        //     + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
+                        //     + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>' 
+                        //     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        //     + '</tr>'
+                    ))
+                }
+                
+                $("#vpcList").empty()
+                $("#vpcList").append(html)
+                
+                ModalDetail()
+            }
         }
+
+        
     // }).catch(function(error){
     //     console.log("Network list error : ",error);        
     // });

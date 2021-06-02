@@ -118,42 +118,53 @@ function getSshKeyList(sort_type) {
         console.log("get SSH Data : ", result.data);
         var data = result.data.SshKeyList; // exception case : if null 
         var html = ""
-        if (data.length) { // null exception if not exist
-            if (sort_type) {
-                console.log("check : ", sort_type);
-                data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                    html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">' 
-                        + '<td class="overlay hidden column-50px" data-th="">' 
-                        + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSshKeyName + '"/>' 
-                        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="Name">' + item.id 
-                        + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
-                        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
-                        + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'  
-                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        + '</tr>'
-                ))
-            } else {
-                data.filter((list) => list.name !== "").map((item, index) => (
-                    html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">' 
-                        + '<td class="overlay hidden column-50px" data-th="">' 
-                        + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name  + '"/>'
-                        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        + '<td class="btn_mtd ovm" data-th="id">' + item.id + '<span class="ov"></span></td>' 
-                        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
-                        + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>' 
-                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        + '</tr>'
-                ))
 
-            }
-
+        if (data == null) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+            
             $("#sList").empty();
             $("#sList").append(html);
-            
+                
             ModalDetail()
-
+        } else {
+            if (data.length) { // null exception if not exist
+                if (sort_type) {
+                    console.log("check : ", sort_type);
+                    data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+                        html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">' 
+                            + '<td class="overlay hidden column-50px" data-th="">' 
+                            + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSshKeyName + '"/>' 
+                            + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                            + '<td class="btn_mtd ovm" data-th="Name">' + item.id 
+                            + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+                            + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+                            + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'  
+                            + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                            + '</tr>'
+                    ))
+                } else {
+                    data.filter((list) => list.name !== "").map((item, index) => (
+                        html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">' 
+                            + '<td class="overlay hidden column-50px" data-th="">' 
+                            + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name  + '"/>'
+                            + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                            + '<td class="btn_mtd ovm" data-th="id">' + item.id + '<span class="ov"></span></td>' 
+                            + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+                            + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>' 
+                            + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                            + '</tr>'
+                    ))
+    
+                }
+    
+                $("#sList").empty();
+                $("#sList").append(html);
+                
+                ModalDetail()
+    
+            }
         }
+        
     // }).catch(function(error){
     //     console.log("get sshKeyList error : ",error);        
     // });

@@ -215,41 +215,52 @@ function setSecurityGroupListAtServerImage(data, sortType){
     console.log("여기까지 왔다!!!")
     var html = ""
     console.log("Data : ", data);
-    if (data.length) { // null exception if not exist
-        if (sortType) {
-            console.log("check : ", sortType);
-            data.filter(list => list.name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
-                html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
-                    + '<td class="overlay hidden column-50px" data-th="">' 
-                    + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
-                    + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                    + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
-                    + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
-                    + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
-                    + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
-                    + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                    + '</tr>'
-            ))
-        } else {
-            data.filter((list) => list.name !== "").map((item, index) => (
-                html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
-                    + '<td class="overlay hidden column-50px" data-th="">' 
-                    + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName  + '"/>'
-                    + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                    + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
-                    + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
-                    + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-                    + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                    + '</tr>'
-            ))
 
-        }
+    if (data == null) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
 
         $("#sgList").empty();
         $("#sgList").append(html);
-        
+            
         ModalDetail()
+    } else {
+        if (data.length) { // null exception if not exist
+            if (sortType) {
+                console.log("check : ", sortType);
+                data.filter(list => list.name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
+                    html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
+                        + '<td class="overlay hidden column-50px" data-th="">' 
+                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
+                        + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                        + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
+                        + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+                        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+                        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
+                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        + '</tr>'
+                ))
+            } else {
+                data.filter((list) => list.name !== "").map((item, index) => (
+                    html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
+                        + '<td class="overlay hidden column-50px" data-th="">' 
+                        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName  + '"/>'
+                        + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                        + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
+                        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+                        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
+                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        + '</tr>'
+                ))
+    
+            }
+    
+            $("#sgList").empty();
+            $("#sgList").append(html);
+            
+            ModalDetail()
+        }
     }
+    
 }
 
 function ModalDetail() {
