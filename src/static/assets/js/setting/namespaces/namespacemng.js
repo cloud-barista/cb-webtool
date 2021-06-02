@@ -25,38 +25,49 @@ function getNameSpaceList(sort_type){
         // var data = result.data.ns;
         var data = result.data;
         var html = ""
-        if(data.length){ 
-            if(sort_type){            
-                data.filter(list=> list.name !=="" ).sort((a,b) => ( a[sort_type] < b[sort_type] ? -1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item,index)=>(
-                    html +='<tr onclick="showNameSpaceInfo(\'ns_info_'+index+'\');">'
-                        +'<td class="overlay hidden column-50px" data-th="">'
-                        +'<input type="hidden" id="ns_info_'+index+'" value="'+item.id+'|'+item.name+'|'+item.description+'"/>'
-                        +'<input type="checkbox" name="chk" value="'+item.name+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
-                        +'<td class="btn_mtd ovm column-20percent" data-th="Name">'+item.name+'<span class="ov"></span></td>'
-                        +'<td class="overlay hidden column-20percent" data-th="ID">'+item.id+'</td>'
-                        +'<td class="overlay hidden td_left" data-th="description">'+item.description+'</td>'
-                        +'<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        +'</tr>' 
-                ))
-            }else{
-                data.filter((list)=> list.name !== "" ).map((item,index)=>(
-                    html +='<tr onclick="showNameSpaceInfo(\'ns_info_'+index+'\');">'
-                        +'<td class="overlay hidden column-50px" data-th="">'
-                        +'<input type="hidden" id="ns_info_'+index+'" value="'+item.id+'|'+item.name+'|'+item.description+'"/>'
-                        +'<input type="checkbox" name="chk" value="'+item.name+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
-                        +'<td class="btn_mtd ovm column-20percent" data-th="Name">'+item.name+'<span class="ov"></span></td>'
-                        +'<td class="overlay hidden column-20percent" data-th="ID">'+item.id+'</td>'
-                        +'<td class="overlay hidden td_left" data-th="description">'+item.description+'</td>'
-                        +'<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        +'</tr>'        
-                ))
-
-            }		
+        
+        if(data == null) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="8">No Data</td></tr>'
+            
             $("#nsList").empty();
             $("#nsList").append(html);
-                       
-            ModalDetail()        
-        }//end of data length
+                           
+            ModalDetail() 
+        } else {
+            if(data.length){ 
+                if(sort_type){            
+                    data.filter(list=> list.name !=="" ).sort((a,b) => ( a[sort_type] < b[sort_type] ? -1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item,index)=>(
+                        html +='<tr onclick="showNameSpaceInfo(\'ns_info_'+index+'\');">'
+                            +'<td class="overlay hidden column-50px" data-th="">'
+                            +'<input type="hidden" id="ns_info_'+index+'" value="'+item.id+'|'+item.name+'|'+item.description+'"/>'
+                            +'<input type="checkbox" name="chk" value="'+item.name+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
+                            +'<td class="btn_mtd ovm column-20percent" data-th="Name">'+item.name+'<span class="ov"></span></td>'
+                            +'<td class="overlay hidden column-20percent" data-th="ID">'+item.id+'</td>'
+                            +'<td class="overlay hidden td_left" data-th="description">'+item.description+'</td>'
+                            +'<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                            +'</tr>' 
+                    ))
+                }else{
+                    data.filter((list)=> list.name !== "" ).map((item,index)=>(
+                        html +='<tr onclick="showNameSpaceInfo(\'ns_info_'+index+'\');">'
+                            +'<td class="overlay hidden column-50px" data-th="">'
+                            +'<input type="hidden" id="ns_info_'+index+'" value="'+item.id+'|'+item.name+'|'+item.description+'"/>'
+                            +'<input type="checkbox" name="chk" value="'+item.name+'" id="raw_'+index+'" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
+                            +'<td class="btn_mtd ovm column-20percent" data-th="Name">'+item.name+'<span class="ov"></span></td>'
+                            +'<td class="overlay hidden column-20percent" data-th="ID">'+item.id+'</td>'
+                            +'<td class="overlay hidden td_left" data-th="description">'+item.description+'</td>'
+                            +'<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                            +'</tr>'        
+                    ))
+    
+                }		
+                $("#nsList").empty();
+                $("#nsList").append(html);
+                           
+                ModalDetail()        
+            }//end of data length
+        }
+        
     })
 }
 
