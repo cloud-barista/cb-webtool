@@ -90,20 +90,20 @@
 								
 								<div class="dataTable status_list" id="virtualMachineImageListTable">
 									<table cellpadding="0" cellspacing="0" border="1" summary="" id="serverImageList">
-                                        <colgroup>
+                                        <!-- <colgroup>
                                             <col width="50px">
                                             <col width="">
                                             <col width="">
                                             <col width="">
                                             <col width="60px">
-                                        </colgroup>
+                                        </colgroup> -->
 										<thead>
 											<tr>
-												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
                                                 <th>Image ID</th>
 												<th>Image Name</th>
 												<th>Description</th>
-												<th></th>
+												<th class="column-60px"></th>
 											</tr>
 										</thead>
 										<tbody id="imgList">
@@ -130,7 +130,7 @@
 
 											{{range $index, $item := .VirtualMachineImageList}}		
 											<tr onclick="showVirtualMachinImageInfo('{{$item.Name}}');">
-												<td class="overlay hidden" data-th="">
+												<td class="overlay hidden column-50px" data-th="">
 													<input type="hidden" id="img_info_{{$index}}" value="{{$item.Name }}"/>
 													<input type="checkbox" name="chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span>
@@ -138,7 +138,7 @@
 												<td class="btn_mtd ovm" data-th="cspImageId">{{$item.CspImageId}}<span class="ov"></span></td>
 												<td class="overlay hidden" data-th="name">{{$item.Name}}</td>
 												<td class="overlay hidden" data-th="description">{{$item.Description}}</td>
-												<td class="overlay hidden" data-th="">
+												<td class="overlay hidden column-60px" data-th="">
 													<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
 												</td>
 											</tr>
@@ -344,7 +344,7 @@
 												<li class="reg_1">
 													<label>Cloud Provider</label>
 													<select class="selectbox white pline w3" name="ProviderName" id="regProvider" onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
-														<option selected>Select Cloud Provider</option>
+														<option value="" selected>Select Cloud Provider</option>
 														<!--
 														<option selected>Select Cloud Provider</option>
 														<option value="AWS">AWS</option>
@@ -364,12 +364,12 @@
 												<li class="reg_1">
 													<label><span class="ch">*</span>Connection Name</label>
 													<select class="selectbox white pline w3"  name="reg_connectionName" id="regConnectionName">
-														<option selected>Selected ConnectionName</option>
+														<option value="" selected>Selected ConnectionName</option>
 													</select>
                                                 </li>
                                                 <li>
 														<label>Description</label>
-														<textarea  id="regDescription" name="reg_description" cols="" rows="" placeholder="Description" class="pline" title=""></textarea>
+														<textarea id="regDescription" name="reg_description" cols="" rows="" placeholder="Description" class="pline" title=""></textarea>
 												</li>
                                                 <!--
 												<li class="reg_2">

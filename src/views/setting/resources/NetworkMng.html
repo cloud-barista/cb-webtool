@@ -124,20 +124,20 @@
 								
 								<div class="dataTable status_list" id="vNetListTable">
 									<table cellpadding="0" cellspacing="0" border="1" summary=""  id="vpcListTable">
-										<colgroup>
+										<!-- <colgroup>
 											<col width="50px">
 											<col width="">
 											<col width="">
 											<col width="">
 											<col width="60px">
-										</colgroup>
+										</colgroup> -->
 										<thead>
 											<tr>
-												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 												<th>VPC Name</th>
 												<th>CIDR Block</th>
 												<th>Description</th>
-												<th></th>
+												<th class="column-60px"></th>
 											</tr>
 										</thead>
 										<tbody id="vpcList">
@@ -149,7 +149,7 @@
 											{{ end }}
 											{{range $index, $item := .VNetList}}
 											<tr onclick="showVNetInfo('{{$item.Name}}');">
-												<td class="overlay hidden" data-th="">
+												<td class="overlay hidden column-50px" data-th="">
 													<input type="hidden" id="sg_info_{{$index}}" value="{{$item.Name}}"/>
 													<input type="checkbox" name="chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span>
@@ -157,7 +157,7 @@
 												<td class="btn_mtd ovm" data-th="name">{{$item.Name}}<span class="ov"></span></td>
 												<td class="overlay hidden" data-th="cidrBlock">{{$item.CidrBlock}}</td>
 												<td class="overlay hidden" data-th="description">{{$item.Description}} :: {{$item.ConnectionName}}</td>
-												<td class="overlay hidden" data-th=""><a href="javascript:void(0);">
+												<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);">
 													<img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
 												</td>
 											</tr>
@@ -353,19 +353,19 @@
 											<div class="dtbox scrollbar-inner">
 												<div class="dataTable dt_overlay">
 													<table cellpadding="0" cellspacing="0" border="1" summary="">
-														<colgroup><col width=""><col width=""><col width="100px"></colgroup>
+														<!-- <colgroup><col width=""><col width=""><col width="100px"></colgroup> -->
 														<thead>
 															<tr>
 																<th>Subnet Name</th>
 																<th>CIDR Block</th>
-																<th></th>
+																<th class="column-100px"></th>
 															</tr>
 														</thead>
 														<tbody id="subnetList">
 															<tr name="tr_Input">
 																<td class="btn_mtd" data-th="subnet Name"><input type="text" id="regSubnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov off"></span></td>
-																<td class="overlay hidden" data-th="cidrBlock"><input type="text" id="regSubnetCidrBlock" name="reg_subnetCidrBlock" value="ex) 10.0.0.0/24" placeholder="" class="pline" title="" /></td>
-																<td class="overlay hidden" data-th="">
+																<td class="overlay hidden" data-th="cidrBlock"><input type="text" id="regSubnetCidrBlock" name="reg_subnetCidrBlock" value="" placeholder="ex) 10.0.0.0/24" class="pline" title="" /></td>
+																<td class="overlay hidden column-100px" data-th="">
 																	<button class="btn btn_add" name="addSubnet">add</button>
 																	<!-- <button class="btn btn_del" name="delInput">del</button> 처음 한개는 놔 둘 것 -->
 																</td>
