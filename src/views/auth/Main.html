@@ -111,7 +111,7 @@
 												<div class="txtbox">	
 													<div class="logic_tbox lg_1">
 														<div class="tit">Step 3. Resource</div>
-														<div class="txt" id="infoNamePrs">
+														<div class="txt">
 															Resource 생성
 														</div>
 													</div>
@@ -130,7 +130,7 @@
 													
 													<div class="logic_tbox lg_1">
 														<div class="tit">Step 4-1. MCIS </div>
-														<div class="txt" id="infoNamePrs">
+														<div class="txt">
 															{{if eq .WorkingStep.MCIS "PASS" }}  <br> 생성
 															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/operation/manages/mcismng/mngform')"> [생성하러 가기]</a>
 															{{ end }}
@@ -139,7 +139,7 @@
 													<div class="line line_space"></div>
 													<div class="logic_tbox lg_2">
 														<div class="tit">Step 4-2. MCKS </div>
-														<div class="txt" id="infoNamePrs">
+														<div class="txt" >
 															{{if eq .WorkingStep.MCKS "PASS" }}  <br> 생성
 															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/operation/manages/mcksmng/mngform')"> [생성하러 가기]</a>
 															{{ end }}
@@ -152,7 +152,7 @@
 													<div class="line line_p0"></div>
 													<div class="line line_a line_p0_1"></div>
 
-													<div class="logic_tbox lg_1">
+													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
 														<div class="txt" style="min-height: 70px;" > Network	<br/>														
 															{{if eq .WorkingStep.VNET "PASS" }} 생성
@@ -405,7 +405,7 @@ $(document).ready(function () {
 
 	// resource
 	// network(vnet)
-	getCommonNetworkList("vnet")
+	getCommonNetworkList("network")
 	// securitygroup
 	getCommonSecurityGroupList("mainsecuritygroup")
 	// sshkey
@@ -421,6 +421,8 @@ $(document).ready(function () {
 let guideMap = new Map();
 // TODO : 가져온 결과로 어떻게 처리할 것인지
 function processMap(){
+	console.log("GUIDE----------")
+	console.log(guideMap)
 	guideMap.forEach( (value, key, map) => {
 		// alert(`${key}: ${value}`); // cucumber: 500 ...
 		if( key == "namespace" && value == 0 ){
@@ -442,14 +444,41 @@ function processMap(){
 			$("#guideArea").modal();
 			return;
 		}
+
+		if( key == "network" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
+
+		if( key == "securitygroup" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
+
+		if( key == "sshkey" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
+
+		if( key == "image" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
+
+		if( key == "spec" && value == 0 ){
+			$("#guideArea").modal();
+			return;
+		}
 	});
 }
 
 function getNameSpaceListCallbackSuccess(caller, data){
 	if ( data != null){
-		guideMap.set(caller, 1);
-		processMap();
+		guideMap.set(caller, 1)
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
 	}
+	processMap();
 }
 function getNameSpaceListCallbackFail(caller, error){
 	guideMap.set(caller, 0)
@@ -459,8 +488,10 @@ function getNameSpaceListCallbackFail(caller, error){
 function getCredentialListCallbackSuccess(caller, data){
 	if ( data != null){
 		guideMap.set(caller, 1)
-		processMap();
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
 	}
+	processMap();
 }
 function getCredentialListCallbackFail(caller, error){
 	guideMap.set(caller, 0)
@@ -470,8 +501,10 @@ function getCredentialListCallbackFail(caller, error){
 function getRegionListCallbackSuccess(caller, data){
 	if ( data != null){
 		guideMap.set(caller, 1)
-		processMap();
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
 	}
+	processMap();
 }
 function getRegionListCallbackFail(caller, error){
 	guideMap.set(caller, 0)
@@ -481,8 +514,10 @@ function getRegionListCallbackFail(caller, error){
 function getDriverListCallbackSuccess(caller, data){
 	if ( data != null){
 		guideMap.set(caller, 1)
-		processMap();
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
 	}
+	processMap();
 }
 function getDriverListCallbackFail(caller, error){
 	guideMap.set(caller, 0)
@@ -491,6 +526,7 @@ function getDriverListCallbackFail(caller, error){
 
 function getNetworkListCallbackSuccess(caller, data){
 	if ( data != null){
+		console.log("getNetworkListCallbackSuccess : " + caller)
 		guideMap.set(caller, 1)
 		processMap();
 	}
@@ -503,8 +539,10 @@ function getNetworkListCallbackFail(caller, error){
 function getSecurityGroupListCallbackSuccess(caller, data){
 	if ( data != null){
 		guideMap.set(caller, 1)
-		processMap();
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
 	}
+	processMap();
 }
 function getSecurityGroupListCallbackFail(caller, error){
 	guideMap.set(caller, 0)
@@ -514,8 +552,10 @@ function getSecurityGroupListCallbackFail(caller, error){
 function getSshKeyListCallbackSuccess(caller, data){
 	if ( data != null){
 		guideMap.set(caller, 1)
-		processMap();
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
 	}
+	processMap();
 }
 function getSshKeyListCallbackFail(caller, error){
 	guideMap.set(caller, 0)
@@ -526,8 +566,10 @@ function getSshKeyListCallbackFail(caller, error){
 function getImageListCallbackSuccess(caller, data){
 	if ( data != null){
 		guideMap.set(caller, 1)
-		processMap();
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
 	}
+	processMap();
 }
 
 function getImageListCallbackFail(caller, error){	

@@ -72,7 +72,7 @@ function displayNewServerForm(){
 
 // 서버정보 입력 area에서 'DONE'버튼 클릭시 array에 담고 form을 초기화
 
-
+var TotalServerConfigArr = new Array();
 // deploy 버튼 클릭시 등록한 서버목록을 배포.
 // function btn_deploy(){
 function deployMcis(){
@@ -86,7 +86,7 @@ function deployMcis(){
     var installMonAgent = $("#installMonAgent").val();
 
     var new_obj = {}
-    var TotalServerConfigArr = {}
+    
     var vm_len = 0;
 
     if(IsImport){
