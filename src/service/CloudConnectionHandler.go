@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"strings"
 
 	// "math"
@@ -557,7 +558,9 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 }
 
 // Credential 삭제
-func DelCredential(credentialName string) (io.ReadCloser, model.WebStatus) {
+func DelCredential(credentialName string) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
+
 	var originalUrl = "/credential/{{credential_name}}"
 
 	var paramMapper = make(map[string]string)
@@ -576,12 +579,24 @@ func DelCredential(credentialName string) (io.ReadCloser, model.WebStatus) {
 
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	resultInfo := model.ResultInfo{}
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+	//return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // 현재 설정된 Driver 목록

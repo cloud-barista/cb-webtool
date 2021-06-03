@@ -211,6 +211,13 @@ function getSecurityGroupList(sortType) {
     // });
 }
 
+
+function getSecurityGroupListCallbackFail(error){
+	var errorMessage = error.response.data.error;
+    var statusCode = error.response.status;
+    commonErrorAlert(statusCode, errorMessage);
+}
+
 function setSecurityGroupListAtServerImage(data, sortType){
     console.log("여기까지 왔다!!!")
     var html = ""
