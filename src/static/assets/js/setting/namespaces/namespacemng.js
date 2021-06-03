@@ -64,8 +64,8 @@ function getNameSpaceListCallbackFail(caller, error){
 // function getNSList(sort_type){
 function getNameSpaceList(sort_type){
     clearNamespaceInfo();
-
-    getCommonNameSpaceList("")
+    
+    getCommonNameSpaceList("namespacemng")
     // var url = "/setting/namespaces"+"/namespace/list";
     // axios.get(url,{
     //     headers:{
