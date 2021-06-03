@@ -46,3 +46,201 @@ function showHelp(helpKey){
         $("#helpArea").modal()
     }
 }
+
+//////////////// api -> local server -> target api  호출 ///////////////
+// 한 화면에서 서로다른 형태로 호출이 가능하므로 caller(호출자) 를 callback에 같이 넘겨서 구분할 수 있게 함.
+function getCommonNameSpaceList(caller){
+    var url = "/setting/namespaces/namespace/list";
+    axios.get(url,{
+        headers:{
+            'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get NameSpace Data : ",result.data);
+        // var data = result.data.ns;
+        var data = result.data;
+        
+        getNameSpaceListCallbackSuccess(caller, data);
+            
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        // commonErrorAlert(statusCode, errorMessage) 
+        
+        getNameSpaceListCallbackFail(caller, error);
+        
+    });
+}
+
+function getCommonCredentialList(caller){
+    var url = "/setting/connections/credential";
+    axios.get(url,{
+        headers:{
+                'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get Credential Data : ",result.data);
+        var data = result.data.Credential;
+        getCredentialListCallbackSuccess(caller, data);
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        getCredentialListCallbackFail(caller, error);
+    });
+}
+
+
+function getCommonRegionList(caller){
+    var url = "/setting/connections/region"
+    axios.get(url,{
+
+    }).then(result=>{
+        console.log("get Region Data : ",result.data);
+        var data = result.data.Region;
+        getRegionListCallbackSuccess(caller, data);
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        // var errorMessage = error.response.data.error;
+        // commonErrorAlert(statusCode, errorMessage) 
+        getRegionListCallbackFail(caller, error);
+    });
+}
+
+
+function getCommonDriverList(caller){
+    var url = "/setting/connections"+"/driver";
+    axios.get(url,{
+        // headers:{
+        //     'Authorization': "{{ .apiInfo}}",
+        //     'Content-Type' : "application/json"
+        // }
+    }).then(result=>{
+        console.log("get Driver Data : ",result.data);
+        var data = result.data.Driver;
+        getDriverListCallbackSuccess(caller, data);
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        // var errorMessage = error.response.data.error;
+        // var statusCode = error.response.status;
+        // commonErrorAlert(statusCode, errorMessage) 
+        getDriverListCallbackFail(caller, error);
+    });
+}
+
+function getCommonNetworkList(caller){
+    console.log("vnet : ");
+    
+    var url = "/setting/resources/network/list"
+    var html = "";
+    axios.get(url,{
+        headers:{
+            // 'Authorization': apiInfo
+        }
+    }).then(result=>{
+        data = result.data.VNetList;
+        console.log("vNetwork Info : ",result);
+        console.log("vNetwork data : ",data);
+        getNetworkListCallbackSuccess(caller, data);
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        // var errorMessage = error.response.data.error;
+        // var statusCode = error.response.status;
+        // commonErrorAlert(statusCode, errorMessage) 
+        getNetworkListCallbackFail(caller, error);
+    });
+}
+
+
+function getCommonSecurityGroupList(caller, sortType) {
+    var url = "/setting/resources/securitygroup/list";
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get SG Data : ", result.data);
+        var data = result.data.SecurityGroupList; // exception case : if null 
+        
+        console.log("Data : ", data);
+        if( caller == "securitygroupmng"){
+			console.log("return get Data securitygroupmng")
+			setSecurityGroupListAtServerImage(data, sortType)			
+		}else if( caller == "mcissimpleconfigure"){
+			console.log("return get Data")
+			setSecurityGroupListAtSimpleConfigure(data)			
+		}else if( caller == "mainsecuritygroup"){
+			console.log("return get Data")
+			getSecurityGroupListCallbackSuccess(data)			
+		}
+
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response) 
+        getSecurityGroupListCallbackFail(error)
+	});
+}
+
+function getCommonSshKeyList(caller) {
+    var url = "/setting/resources/sshkey/list"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get SSH Data : ", result.data);
+        var data = result.data.SshKeyList; // exception case : if null 
+        getSshKeyListCallbackSuccess(caller, data)
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        // commonErrorAlert(statusCode, errorMessage);
+        getSshKeyListCallbackFail(caller, error)
+    });
+}
+
+
+
+// connection 정보가 바뀔 때 해당 connection에 등록 된 vmi(virtual machine image) 목록 조회.
+// 공통으로 사용해야하므로 호출후 결과만 리턴... 그러나, ajax로 호출이라 결과 받기 전에 return되므로 해결방안 필요
+function getCommonVirtualMachineImageList(caller) {
+    // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
+    var url = "/setting/resources" + "/machineimage/list"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.VirtualMachineImageList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( caller == "virtualmachineimagemng"){
+			console.log("return get Data")
+			setVirtualMachineImageListAtServerImage(data, sortType)			
+		}else if( caller == "mcissimpleconfigure"){
+			console.log("return get Data")
+			setVirtualMachineImageListAtSimpleConfigure(data, sortType)			
+		}else if( caller == "image"){
+			console.log("return get Data")
+			getImageListCallbackSuccess(caller, data)		
+		}
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response) 
+	});
+}

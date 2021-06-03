@@ -421,8 +421,8 @@ func CredentialDelProc(c echo.Context) error {
 	paramCredential := c.Param("credential")
 	log.Println(paramCredential)
 
-	respBody, respStatus := service.DelCredential(paramCredential)
-	fmt.Println("=============respBody =============", respBody)
+	respMessage, respStatus := service.DelCredential(paramCredential)
+	fmt.Println("=============respMessage =============", respMessage)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -432,8 +432,8 @@ func CredentialDelProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  respStatus.StatusCode,
+		"message": respMessage.Message,
+		"status":  respMessage.StatusCode,
 	})
 }
 

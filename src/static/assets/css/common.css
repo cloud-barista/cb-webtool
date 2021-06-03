@@ -968,6 +968,9 @@ body {
 .bgbox_stopped {
   background-color: #ffc800;
 }
+.bgbox_suspended {
+  background-color: #ffc800;
+}
 .bgbox_terminated {
   background-color: #fc1656;
 }
@@ -1289,7 +1292,7 @@ select.pline {
 .loading-container,
 .loading {
   height: 80px;
-  position: relative;
+  /* position: relative; */
   width: 80px;
   border-radius: 100%;
 }
