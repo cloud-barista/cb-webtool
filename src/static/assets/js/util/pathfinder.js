@@ -157,7 +157,7 @@ function getCommonNetworkList(caller){
 }
 
 
-function getCommonSecurityGroupList(caller) {
+function getCommonSecurityGroupList(caller, sortType) {
     var url = "/setting/resources/securitygroup/list";
     axios.get(url, {
         headers: {
@@ -170,12 +170,12 @@ function getCommonSecurityGroupList(caller) {
         
         console.log("Data : ", data);
         if( caller == "securitygroupmng"){
-			console.log("return get Data")
+			console.log("return get Data securitygroupmng")
 			setSecurityGroupListAtServerImage(data, sortType)			
 		}else if( caller == "mcissimpleconfigure"){
 			console.log("return get Data")
-			setSecurityGroupListAtSimpleConfigure(data, sortType)			
-		}else if( caller == "securitygroup"){
+			setSecurityGroupListAtSimpleConfigure(data)			
+		}else if( caller == "mainsecuritygroup"){
 			console.log("return get Data")
 			getSecurityGroupListCallbackSuccess(data)			
 		}
@@ -183,7 +183,7 @@ function getCommonSecurityGroupList(caller) {
 	}).catch((error) => {
 		console.warn(error);
 		console.log(error.response) 
-        getSecurityGroupListCallbackFail(caller, error)
+        getSecurityGroupListCallbackFail(error)
 	});
 }
 
