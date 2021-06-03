@@ -1030,15 +1030,17 @@ func DelVMSpec(nameSpaceID string, vmSpecID string) (model.WebStatus, model.WebS
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
-func LookupVmSpecInfoList() ([]tumblebug.VmSpecInfo, model.WebStatus) {
+func LookupVmSpecInfoList(connectionName *tumblebug.TbConnectionName) ([]tumblebug.SpiderSpecInfo, model.WebStatus) {
 	fmt.Println("LookupVmSpecInfoList ************ : ")
-	var originalUrl = "/lookupSpec"
+	var originalUrl = "/lookupSpecs"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/lookupSpec"
 
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-
+	pbytes, _ := json.Marshal(connectionName)
+	// fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 	if err != nil {
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -1048,11 +1050,11 @@ func LookupVmSpecInfoList() ([]tumblebug.VmSpecInfo, model.WebStatus) {
 	respStatus := resp.StatusCode
 
 	// return respBody, respStatus
-	log.Println(respBody)
-	vmSpecList := map[string][]tumblebug.VmSpecInfo{}
+	// log.Println(respBody)
+	vmSpecList := map[string][]tumblebug.SpiderSpecInfo{}
 
 	json.NewDecoder(respBody).Decode(&vmSpecList)
-	fmt.Println(vmSpecList["vmspec"])
+	// fmt.Println(vmSpecList["vmspec"])
 
 	return vmSpecList["vmspec"], model.WebStatus{StatusCode: respStatus}
 
