@@ -144,6 +144,7 @@ function commonConfirmOpen(targetAction){
 
             ["AddNewVmSpec", "Would you like to register Spec <br />Resource ?"],
             ["DeleteVmSpec", "Would you like to un-register Spec <br />Resource ?"],  
+            ["FetchSpecs", "Would you like to fetch Spec <br /> to this NameSpace ?"],  
 
             ["GotoMonitoringPerformance", "Would you like to view performance <br />for MCIS ?"],
             ["GotoMonitoringFault", "Would you like to view fault <br />for MCIS ?"],
@@ -295,7 +296,10 @@ function commonConfirmOk(){
     }else if ( targetAction == "ExportVmScriptOfMcis"){
         vmScriptExport();
     }else if ( targetAction == "DeleteVmSpec"){
-        deleteVmSpec()   
+        deleteVmSpec();  
+    }else if ( targetAction == "FetchSpecs"){
+        var connectionName = $("#regConnectionName").val();
+        putFetchSpecs(connectionName);         
     }else if ( targetAction == "GotoMonitoringPerformance"){
         // alert("모니터링으로 이동 GotoMonitoringPerformance")
         // location.href ="";//../operation/Monitoring_Mcis.html

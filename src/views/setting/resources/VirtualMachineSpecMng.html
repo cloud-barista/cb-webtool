@@ -241,6 +241,7 @@
 												<li class="reg_1">
 													<label><span class="ch">*</span>CSP Spec Name</label>
 													<input type="text" id="regCspSpecName" name="reg_cspSpecName" value="" placeholder="input csp spec name" class="pline ip_w1" title="" />
+													<a href="javascript:void(0);" class="btn_assist">Assist</a>
 												</li>
 											</ul>
 										</div>
@@ -261,6 +262,66 @@
 					</div>
 					<!-- //Register Spec -->
 
+					<!-- Spec Assist popup -->
+					<div class="modal fade popup_editBox" id="specAssist" tabindex="-1" role="dialog" aria-hidden="true">
+						
+						<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-content">
+								
+								<div class="modal-body">
+									<div class="pop-body">
+										
+										<div class="title_box">
+											<div class="title">CSP Spec List</div>
+										</div>
+										
+										<div class="pop-cont">
+											
+											<div class="toptxt">
+												<label>Spec List : <span id="lookupSpecCount"></span></label>
+												<button type="button" class="btn btn-sm btn-dark" onclick="commonConfirmOpen('FetchSpecs')">Fetch Specs</button>
+											</div>
+											
+											<!-- table scrollbar -->
+											<div class="dtbox scrollbar-inner">
+												<div class="dataTable dt_overlay">
+													<table cellpadding="0" cellspacing="0" summary="" id="popCloudConnection">
+														<colgroup><col width="35%"><col width="25%"><col width=""></colgroup>
+														<thead>
+															<tr>
+																<th>Region</th>
+																<th>Name</th>																
+																<th>Memory</th>
+																<th>VCPC Info</th>
+																<th>GPU</th>
+															</tr>
+														</thead>
+														<tbody id="assistSpecList">
+															
+														</tbody>
+													</table>
+												</div>
+											</div>	
+											<!-- //table scrollbar -->
+											
+										</div>
+										
+									</div>
+									
+									<div class="btnbox">
+										<div class="btn_right">
+											<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button> 
+											<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button> 
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							
+						</div>
+													
+					</div>
+					<!-- //Deployment Target popup -->
 				</div>
 				<!-- //contents -->
 

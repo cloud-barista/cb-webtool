@@ -10,10 +10,7 @@ $(document).ready(function(){
     //         $("#wrap").animate({scrollTop : offset.top}, 300);
     //     })		
     // });
-});
 
-/* scroll */
-$(document).ready(function(){
     //checkbox all
     // $("#th_chall").click(function() {
     //     if ($("#th_chall").prop("checked")) {
@@ -35,6 +32,10 @@ $(document).ready(function(){
     // });
 
     setTableHeightForScroll('serverSpecList', 300)
+
+    $('.btn_assist').on('click', function() {
+        lookupSpecList()
+    });
 });
 
 $(document).ready(function () {
@@ -369,14 +370,7 @@ function deleteVmSpec() {
             var message = data.message;
             commonAlert("Fail Create Spec : " + message +"(" + statusCode + ")");
             // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
-        }
-    // }).catch(function(error){
-
-    //     var statusCode = error.response.data.status;
-    //     var message = error.response.data.message;
-    //     commonErrorAlert(statusCode, message)
-        
-    // });
+        }    
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
@@ -385,3 +379,108 @@ function deleteVmSpec() {
         commonErrorAlert(statusCode, errorMessage);
     });
 }                                                  
+
+// 공통함수 호출
+function lookupSpecList(){
+    $("#assistSpecList").empty()
+    var connectionName = $("#regConnectionName").val();
+    if( !connectionName){
+        commonAlert("connection name required")
+        return;
+    }
+
+    $("#specAssist").modal();
+    $('.dtbox.scrollbar-inner').scrollbar();
+
+    getCommonLookupSpecList("vmspecmng", connectionName);
+}
+// 성공 callback
+function lookupSpecListCallbackSuccess(caller, data){
+    var html="";
+    if (data == null) {
+        console.log("################여기##############");
+        html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
+        $("#specList").empty()
+        $("#specList").append(html)
+    } else {
+        
+        // data.filter((list) => list.name !== "").map((item, index) => (
+           
+        //     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
+        //         + '<td class="overlay hidden column-50px" data-th="name">' + item.name + '</td>' 
+        //         + '<td class="btn_mtd ovm" data-th="region ">' + item.region  + '<span class="ov"></span></td>'
+        //         + '<td class="overlay hidden" data-th="mem">' + item.mem + '</td>' 
+        //         + '<td class="overlay hidden" data-th="info">' 
+        //         // + item.keyValueList(keyValueMap => ( keyValueMap.InstanceType))
+        //         + '</td>'  
+        //         + '</tr>'
+               
+        // ));
+        // data.map((item, index) => (
+           
+        //     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
+        //         + '<td class="overlay hidden column-50px" data-th="name">' + item.name + '</td>' 
+        //         + '<td class="btn_mtd ovm" data-th="region ">' + item.region  + '<span class="ov"></span></td>'
+        //         + '<td class="overlay hidden" data-th="mem">' + item.mem + '</td>' 
+        //         + '<td class="overlay hidden" data-th="info">' 
+        //         // + item.keyValueList(keyValueMap => ( keyValueMap.InstanceType))
+        //         + '</td>'  
+        //         + '</tr>'
+               
+        // ));
+
+        $.each(data, function(index, item){
+            console.log('index:' + index + ' / ' + 'item:' + item);
+            console.log(item);
+            // keyValueMap = item.keyValueList;
+            // console.log(keyValueMap);
+            // var mapValue = ""
+            // keyValueMap.map( (mapObj, mapIndex) => {
+            //     // console.log("mapIndex = " + mapIndex);
+            //     // console.log(mapObj);
+            //     // console.log(mapIndex);
+            //     mapValue += mapObj.Key + " : " + mapObj.Value + " <br/>";
+            // });
+            var vpc = item.vcpc;
+            var vcpcValue = "";
+            if(vpc){
+                vcpcValue = 'Clock : ' + vpc.clock + '<br/> count :' + vpc.count
+            }
+            var gpu = item.gpu;
+            var gpuValue = "";
+            if(gpu){
+                gpuValue += 'count : ' + (gpu.count == undefined ? "" :  gpu.count);
+                gpuValue += '<br/> mem :' + (gpu.mem == undefined ? "" :  gpu.mem);
+                gpuValue += '<br/> mfr :' + (gpu.mfr == undefined ? "" :  gpu.mfr);
+                gpuValue += '<br/> model :' + (gpu.model == undefined ? "" :  gpu.model);
+            }
+
+            html += '<tr onclick="setCspSpecName(\'' + item.name + '\');">' 
+                + '<td class="overlay hidden" data-th="region">' + item.region + '</td>' 
+                + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
+                + '<td class="btn_mtd ovm" data-th="mem ">' + item.mem  + '<span class="ov"></span></td>'
+                + '<td class="overlay hidden" data-th="vcpc">' + vcpcValue + '</td>' 
+                + '<td class="overlay hidden" data-th="gpu">'  + gpuValue + '</td>' 
+                + '</tr>'
+        });
+        
+        
+        $("#assistSpecList").empty()
+        $("#assistSpecList").append(html)
+        $("#lookupSpecCount").text(data.length);
+        // displayVmSpecInfo("REG_SUCCESS");
+    }
+}
+// popup에서 main의 txtbox로 specName set
+function setCspSpecName(cspSpecName){
+    $("#regCspSpecName").val(cspSpecName);
+    $("#specAssist").modal("hide");
+}
+
+// 조회 실패
+function lookupSpecListCallbackFail(error){
+    var errorMessage = error.response.data.error;
+    var statusCode = error.response.status;
+    commonErrorAlert(statusCode, errorMessage);
+}
