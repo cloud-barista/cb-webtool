@@ -1032,10 +1032,19 @@ func LookupVmSpecList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
+	// paramConnectionName := c.Param("connectionName")
+	connectionName := &tumblebug.TbConnectionName{}
+	if err := c.Bind(connectionName); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	vmSpecInfoList, respStatus := service.LookupVmSpecInfoList()
+	cspVmSpecInfoList, respStatus := service.LookupVmSpecInfoList(connectionName)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
@@ -1047,7 +1056,7 @@ func LookupVmSpecList(c echo.Context) error {
 		"message":            "success",
 		"status":             respStatus.StatusCode,
 		"DefaultNameSpaceID": defaultNameSpaceID,
-		"VmSpecList":         vmSpecInfoList,
+		"CspVmSpecList":      cspVmSpecInfoList,
 	})
 }
 

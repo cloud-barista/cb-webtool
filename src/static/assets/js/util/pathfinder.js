@@ -157,7 +157,7 @@ function getCommonNetworkList(caller){
 }
 
 
-function getCommonSecurityGroupList(caller) {
+function getCommonSecurityGroupList(caller, sortType) {
     var url = "/setting/resources/securitygroup/list";
     axios.get(url, {
         headers: {
@@ -170,12 +170,12 @@ function getCommonSecurityGroupList(caller) {
         
         console.log("Data : ", data);
         if( caller == "securitygroupmng"){
-			console.log("return get Data")
+			console.log("return get Data securitygroupmng")
 			setSecurityGroupListAtServerImage(data, sortType)			
 		}else if( caller == "mcissimpleconfigure"){
 			console.log("return get Data")
-			setSecurityGroupListAtSimpleConfigure(data, sortType)			
-		}else if( caller == "securitygroup"){
+			setSecurityGroupListAtSimpleConfigure(data)			
+		}else if( caller == "mainsecuritygroup"){
 			console.log("return get Data")
 			getSecurityGroupListCallbackSuccess(data)			
 		}
@@ -183,7 +183,7 @@ function getCommonSecurityGroupList(caller) {
 	}).catch((error) => {
 		console.warn(error);
 		console.log(error.response) 
-        getSecurityGroupListCallbackFail(caller, error)
+        getSecurityGroupListCallbackFail(error)
 	});
 }
 
@@ -242,5 +242,65 @@ function getCommonVirtualMachineImageList(caller) {
 	}).catch((error) => {
 		console.warn(error);
 		console.log(error.response) 
+	});
+}
+
+
+// /lookupSpecs
+function getCommonLookupSpecList(caller, connectionName) {    
+    var url = "/setting/resources/vmspec/lookupvmspec"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        },
+        params: {
+            connectionName: connectionName
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.CspVmSpecList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( caller == "vmspecmng"){
+			console.log("return get Data")			
+			lookupSpecListCallbackSuccess(caller, data)		
+		}
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response) 
+        lookupSpecListCallbackSuccess(error)
+	});
+}
+
+// 현재 선택 된 
+function putFetchSpecs(connectionName){
+    var url = "/setting/resources/vmspec/fetchvmspec"
+    axios.post(url, {
+        headers: {
+            'Content-Type': "application/json"
+        },
+        params: {
+            connectionName: connectionName
+        }      
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            commonAlert("Spec Fetched");                
+            // Region 갱신 
+            getRegionList();   
+        }else{
+            commonAlert("Fail to Spec Fetched");
+        }
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
 	});
 }

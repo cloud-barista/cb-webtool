@@ -1,3 +1,13 @@
+$(document).ready(function(){
+    // MCIS List의 상단 의 checkbox 클릭시 전체 선택하도록 
+    $("#th_chall").click(function() {
+        if ($("#th_chall").prop("checked")) {
+            $("input[name=chk]").prop("checked", true);
+        } else {
+            $("input[name=chk]").prop("checked", false);
+        }
+    })
+});
 ///////////// MCIS Handling //////////////
 
 // 등록 form으로 이동
