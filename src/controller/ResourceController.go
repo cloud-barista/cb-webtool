@@ -579,6 +579,7 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 		})
 }
 
+// 해당 namespace에 등록된 Spec목록 조회
 func GetVirtualMachineImageList(c echo.Context) error {
 	log.Println("GetVirtualMachineImageList : ")
 	loginInfo := service.CallLoginInfo(c)

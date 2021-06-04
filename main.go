@@ -209,6 +209,7 @@ func main() {
 			"operation/manages/mcismng/McisConnectionView",
 			"operation/manages/mcismng/McisMonitoring",
 			"operation/manages/mcismng/McisMonitoringView",
+			"operation/manages/mcismng/VmMonitoringSetPop",
 		},
 		DisableCache: true,
 	})
@@ -435,6 +436,8 @@ func main() {
 	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
 	monitoringGroup.GET("/mcismonitoring/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
 
+	e.POST("/operation/manages/mcismng/agent/install", controller.MonitoringAgentInstallProc)
+
 	monitoringGroup.GET("/mcksmonitoring/mngform", controller.McksMonitoringMngForm)
 
 	// Policy Control
@@ -612,7 +615,7 @@ func main() {
 
 	resourcesGroup.GET("/vmspec/lookupvmspec", controller.LookupVmSpecList)             // TODO : Image 전체목록인가? 확인필요
 	resourcesGroup.GET("/vmspec/lookupvmspec/:vmSpecName", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
-	resourcesGroup.GET("/vmspec/fetchvmspec", controller.FetchVmSpecList)               // TODO : Image 정보 갱신인가? 확인필요
+	resourcesGroup.POST("/vmspec/fetchvmspec", controller.FetchVmSpecList)              // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
 	// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
 
