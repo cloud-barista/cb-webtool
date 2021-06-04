@@ -436,7 +436,8 @@ func main() {
 	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
 	monitoringGroup.GET("/mcismonitoring/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
 
-	e.POST("/operation/manages/mcismng/agent/install", controller.MonitoringAgentInstallProc)
+	// TODO : installagent dragonfly 에 form방식으로 호출 추가할 것
+	e.POST("/operation/manages/mcismonitoring/agent/install", controller.MonitoringAgentInstallProc)
 
 	monitoringGroup.GET("/mcksmonitoring/mngform", controller.McksMonitoringMngForm)
 
