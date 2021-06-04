@@ -114,33 +114,23 @@ function displayVmSpecInfo(targetAction){
     }
 }
 
-function getVmSpecList(sort_type) {
-    console.log(sort_type);
-    var url = "/setting/resources"+"/vmspec/list"
-    console.log("URL : ",url)
-    axios.get(url, {
-        headers: {
-            // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
-        }
-    }).then(result => {
-        console.log("get Spec List : ", result.data);
-        
-        var data = result.data.VmSpecList;
-        var html = ""
-        
-        console.log("data.length : ", data);
+function virtualMachineSpecListCallbackSuccess(caller, data, sortType) {
+// function setVirtualMachineSpecListAtServerSpec(data, sort_type) {
+    var html = ""
+    console.log("Caller : ", caller);
+    console.log("Data : ", data);
+    console.log("SortType : ", sortType);
 
-        if (data == null) {
-            console.log("################여기##############");
-            html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+    if (data == null) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
 
-            $("#specList").empty()
-            $("#specList").append(html)
-        } else {
-            if (sort_type) {
-                console.log("check : ", sort_type);
-                data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+        $("#specList").empty()
+        $("#specList").append(html)
+    } else {
+        if (data.length) {
+            if (sortType) {
+                console.log("check : ", sortType);
+                data.filter(list => list.name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
                     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
                         + '<td class="overlay hidden column-50px" data-th="">' 
                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSpecName + '"/>' 
@@ -164,13 +154,79 @@ function getVmSpecList(sort_type) {
                         + '</tr>'
                 ))
             }
-        
+
             $("#specList").empty()
             $("#specList").append(html)
-
-            // displayVmSpecInfo("REG_SUCCESS");
+            console.log("setVirtualMachineImageSpecAtServerSpec completed");
         }
-    })
+    }
+}
+
+function virtualMachineSpecListCallbackFail(error) {
+    var errorMessage = error.response.data.error;
+    var statusCode = error.response.status;
+    commonErrorAlert(statusCode, errorMessage);
+}
+
+function getVmSpecList(sort_type) {
+    getCommonVirtualMachineSpecList("virtualmachinespecmng", sort_type);
+
+//     console.log(sort_type);
+//     var url = "/setting/resources"+"/vmspec/list"
+//     console.log("URL : ",url)
+//     axios.get(url, {
+//         headers: {
+//             // 'Authorization': "{{ .apiInfo}}",
+//             'Content-Type': "application/json"
+//         }
+//     }).then(result => {
+//         console.log("get Spec List : ", result.data);
+        
+//         var data = result.data.VmSpecList;
+//         var html = ""
+        
+//         console.log("data.length : ", data);
+
+//         if (data == null) {
+//             console.log("################여기##############");
+//             html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
+//             $("#specList").empty()
+//             $("#specList").append(html)
+//         } else {
+//             if (sort_type) {
+//                 console.log("check : ", sort_type);
+//                 data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+//                     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
+//                         + '<td class="overlay hidden column-50px" data-th="">' 
+//                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSpecName + '"/>' 
+//                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+//                         + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
+//                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+//                         + '<td class="overlay hidden" data-th="cspSpecName">' + item.cspSpecName + '</td>'  
+//                         + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+//                         + '</tr>'
+//                 ))
+//             } else {
+//                 data.filter((list) => list.name !== "").map((item, index) => (
+//                     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
+//                         + '<td class="overlay hidden column-50px" data-th="">' 
+//                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '"/>' 
+//                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+//                         + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
+//                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+//                         + '<td class="overlay hidden" data-th="cspSpecName">' + item.cspSpecName + '</td>'  
+//                         + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+//                         + '</tr>'
+//                 ))
+//             }
+        
+//             $("#specList").empty()
+//             $("#specList").append(html)
+
+//             // displayVmSpecInfo("REG_SUCCESS");
+//         }
+//     })
 }
 
 // function ModalDetail(targetAction) {
