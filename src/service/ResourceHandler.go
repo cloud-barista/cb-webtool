@@ -9,7 +9,7 @@ import (
 	"net/http"
 	// "strconv"
 	// "sync"
-	"io/ioutil"
+
 	//"github.com/davecgh/go-spew/spew"
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	// "github.com/cloud-barista/cb-webtool/src/model/spider"
@@ -579,11 +579,11 @@ func RegVirtualMachineImage(nameSpaceID string, registType string, virtualMachin
 		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%s\n", string(data))
+	// data, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf("%s\n", string(data))
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode

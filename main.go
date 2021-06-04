@@ -433,12 +433,12 @@ func main() {
 	monitoringGroup := e.Group("/operation/monitorings", monitoringTemplate)
 	monitoringGroup.GET("/mcismonitoring/mngform", controller.McisMonitoringMngForm)
 	monitoringGroup.GET("/mcismonitoring/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
-	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
 	monitoringGroup.GET("/mcismonitoring/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
 
 	// TODO : installagent dragonfly 에 form방식으로 호출 추가할 것
-	e.POST("/operation/manages/mcismonitoring/agent/install", controller.MonitoringAgentInstallProc)
 
+	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.RegBenchmarkAgentInVm) // benchmark agent 설치
+	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc)
 	monitoringGroup.GET("/mcksmonitoring/mngform", controller.McksMonitoringMngForm)
 
 	// Policy Control
