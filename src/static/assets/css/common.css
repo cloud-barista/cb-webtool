@@ -159,12 +159,6 @@ body {
   line-height: 14px;
   font-weight: 400;
 }
-#lnb .topbox .info .txt_2 .infobox .box > ul > li > a {
-  color: #06a9b7;
-  font-size: 14px;
-  line-height: 14px;
-  font-weight: 400;
-}
 #lnb .topbox .info .txt_2 .infobox .box > ul > li > ul {
   padding: 0 0 0 12px;
 }
@@ -181,7 +175,11 @@ body {
   line-height: 14px;
   font-weight: 100;
 }
-
+#lnb .topbox .info .txt_2 .infobox .box > ul > li > ul > li > a:hover {
+  color:#dad73d; 
+  font-weight:400; 
+  background-color:#535757;
+}
 #lnb .leftmenu {
   position: relative;
   border-top: 1px solid #fff;
