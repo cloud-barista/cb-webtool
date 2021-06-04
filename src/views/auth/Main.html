@@ -34,18 +34,17 @@
  
 					<div class="dashboard dashboard_cont">
 						<div>
-							<div class="titlebox">
+							<!-- <div class="titlebox">
                                     <div>&nbsp;</div>
                                     <div class="tit">&nbsp;<span>Main</span> 화면</div>
                             </div>
-                            
+                             -->
                             <div class="ds_cont">
 								<div class="register_box">								    
 									<div class="graybox">
 										<div class="g_box">
 											
-											<div class="logicbox">
-												
+											<div class="logicbox">												
 												<div class="txtbox">
 													
 													<div class="logic_tbox lg_1">
@@ -56,19 +55,23 @@
 															{{ end }}
 														</div>
 													</div>
-													<!-- <div class="line line_a line_p1"></div> -->
-													<div class="line line_space"></div>
-													<div class="logic_tbox lg_2">
+												</div>
+											</div>
+
+											<!-- step2 -->
+											<div class="logicbox">												
+												<div class="txtbox">
+													
+													<div class="logic_tbox lg_1">
 														<div class="tit">Step 2. Connection</div>
-														<div class="txt" style="min-height: 70px;" > Connection <br/> 생성																												
+														<div class="txt"> Connection 																											
 														</div>														
 													</div>
 												</div>
-
-												<div class="txtbox">
-
-													<div class="line line_p3"></div>
-													<div class="line line_a line_p3_1"></div>
+												
+												<div class="txtbox">	
+													<div class="line line_p0"></div>
+													<div class="line line_a line_p0_1"></div>
 													
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
@@ -78,13 +81,7 @@
 															{{ end }}															
 														</div>			
 													</div>
-													
-												</div>
-												<!-- sub 단계 -->
-												<div class="txtbox">	
-													
-													<div class="line line_p3"></div>
-													<div class="line line_a line_p3_1"></div>
+													<div class="line line_space"></div>
 													
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
@@ -95,8 +92,7 @@
 														</div>
 													</div>
 
-													<div class="line line_p3"></div>
-													<div class="line line_a line_p3_1"></div>
+													<div class="line line_space"></div>
 
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
@@ -107,13 +103,11 @@
 														</div>
 													</div>
 												</div>
-												
+												<!-----------Step3 ---------------->
 												<div class="txtbox">	
 													<div class="logic_tbox lg_1">
 														<div class="tit">Step 3. Resource</div>
-														<div class="txt">
-															Resource 생성
-														</div>
+														<div class="txt">Resource 생성</div>
 													</div>
 													<!-- <div class="line line_a line_p1"></div>
 													<div class="logic_tbox lg_2">
@@ -124,27 +118,7 @@
 															{{ end }}													
 														</div>														
 													</div> -->
-													<div class="line line_space"></div>
-													<div class="line line_space"></div>
-													<div class="line line_space"></div>
 													
-													<div class="logic_tbox lg_1">
-														<div class="tit">Step 4-1. MCIS </div>
-														<div class="txt">
-															{{if eq .WorkingStep.MCIS "PASS" }}  <br> 생성
-															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/operation/manages/mcismng/mngform')"> [생성하러 가기]</a>
-															{{ end }}
-														</div>
-													</div>
-													<div class="line line_space"></div>
-													<div class="logic_tbox lg_2">
-														<div class="tit">Step 4-2. MCKS </div>
-														<div class="txt" >
-															{{if eq .WorkingStep.MCKS "PASS" }}  <br> 생성
-															{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/operation/manages/mcksmng/mngform')"> [생성하러 가기]</a>
-															{{ end }}
-														</div>
-													</div>
 
 												</div>
 												<!-- sub단계-->
@@ -160,13 +134,11 @@
 															{{ end }}													
 														</div>														
 													</div>
-												</div>
-												<div class="txtbox">
+												
 													<!-- 
 													<div class="line line_p3"></div>
 													<div class="line line_a line_p3_1"></div> -->
-													<div class="line line_p0"></div>
-													<div class="line line_a line_p0_1"></div>
+													<div class="line line_space"></div>
 													
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
@@ -176,10 +148,8 @@
 															{{ end }}
 														</div>
 													</div>
-												</div>
-												<div class="txtbox">
-													<div class="line line_p0"></div>
-													<div class="line line_a line_p0_1"></div>
+												
+													<div class="line line_space"></div>
 	
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
@@ -189,10 +159,8 @@
 															{{ end }}
 														</div>
 													</div>
-												</div>
-												<div class="txtbox">
-													<div class="line line_p0"></div>
-													<div class="line line_a line_p0_1"></div>
+												
+													<div class="line line_space"></div>
 
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
@@ -202,10 +170,8 @@
 															{{ end }}
 														</div>
 													</div>
-												</div>
-												<div class="txtbox">
-													<div class="line line_p0"></div>
-													<div class="line line_a line_p0_1"></div>
+												
+													<div class="line line_space"></div>
 	
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
@@ -216,7 +182,33 @@
 														</div>
 													</div>
 												</div>
-																							
+												<div class="logicbox">												
+													<div class="txtbox">
+														
+														<div class="logic_tbox lg_1">
+															<div class="tit">Step 4-1. MCIS </div>
+															<div class="txt">MCIS 
+																{{if eq .WorkingStep.MCIS "PASS" }}  <br> 생성
+																{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/operation/manages/mcismng/mngform')"> [생성하러 가기]</a>
+																{{ end }}
+															</div>
+														</div>
+
+														<div class="line line_space"></div>
+														<div class="line line_space"></div>
+														<div class="line line_space"></div>
+														<div class="line line_space"></div>
+														
+														<div class="logic_tbox lg_2">
+															<div class="tit">Step 4-2. MCKS </div>
+															<div class="txt" >MCKS 
+																{{if eq .WorkingStep.MCKS "PASS" }}  <br> 생성
+																{{ else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/operation/manages/mcksmng/mngform')"> [생성하러 가기]</a>
+																{{ end }}
+															</div>
+														</div>
+													</div>
+												</div>											
 												<!-- <div class="txtbox">													
 													<div class="logic_tbox lg_1">
 														<div class="tit">Step 4-1. MCIS </div>
