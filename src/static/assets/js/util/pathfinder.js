@@ -246,6 +246,34 @@ function getCommonVirtualMachineImageList(caller) {
 }
 
 
+function getCommonVirtualMachineSpecList(caller, sortType) {
+    console.log("CommonSpecCaller : " + caller);
+    console.log("CommonSpecSortType : " + sortType);
+    // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
+    var url = "/setting/resources" + "/vmspec/list"
+
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Spec List : ", result.data);
+        
+        var data = result.data.VmSpecList;
+
+        if ( caller == "virtualmachinespecmng") {
+            console.log("return get Data");
+            virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
+            // setVirtualMachineSpecListAtServerSpec(data, sortType);
+        }
+    }).catch((error) => {
+		console.warn(error);
+		console.log(error.response) 
+        virtualMachineSpecListCallbackFail(error)
+	});
+}
+
 // /lookupSpecs
 function getCommonLookupSpecList(caller, connectionName) {    
     var url = "/setting/resources/vmspec/lookupvmspec"
