@@ -34,6 +34,10 @@ $(document).ready(function(){
     //     }
     // });
     setTableHeightForScroll('serverImageList', 300)
+
+    $('.btn_assist').on('click', function() {
+        lookupVmImageList()
+    });
 });
 
 $(document).ready(function() {
@@ -425,6 +429,7 @@ function createVirtualMachineImage() {
     }
 }
 
+// vmImage의 상세정보 표시.
 function showVirtualMachinImageInfo(target) {
     console.log("target showInfo : ", target);
     // var apiInfo = "{{ .apiInfo}}";
@@ -501,3 +506,79 @@ function showVirtualMachinImageInfo(target) {
 //     })        
 // }
 
+// connection에 등록된 spec목록 조회(공통함수 호출)
+function lookupVmImageList(){
+    $("#assistSpecList").empty()
+    var connectionName = $("#regConnectionName").val();
+    if( !connectionName){
+        commonAlert("connection name required")
+        return;
+    }
+
+    $("#specAssist").modal();
+    $('.dtbox.scrollbar-inner').scrollbar();
+
+    getCommonLookupImageList("vmspecmng", connectionName);
+}
+// 성공 callback
+function lookupVmImageListCallbackSuccess(caller, data){
+    var html="";
+    if (data == null) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
+        $("#assistVmImageList").empty()
+        $("#assistVmImageList").append(html)
+    } else {
+        
+        $.each(data, function(index, item){
+            console.log('index:' + index + ' / ' + 'item:' + item);
+            console.log(item);
+            // keyValueMap = item.keyValueList;
+            // console.log(keyValueMap);
+            // var mapValue = ""
+            // keyValueMap.map( (mapObj, mapIndex) => {
+            //     // console.log("mapIndex = " + mapIndex);
+            //     // console.log(mapObj);
+            //     // console.log(mapIndex);
+            //     mapValue += mapObj.Key + " : " + mapObj.Value + " <br/>";
+            // });
+
+            var iid = item.iid;
+            var iidNameID = "";
+            var iidSystemID = "";
+            if(iid){
+                iidNameID = (iid.nameId == undefined ? "" :  iid.nameId);
+                iidSystemID = (iid.systemId == undefined ? "" :  iid.systemId);
+            }
+
+            html += '<tr onclick="setCspSpecName(\'' + item.name + '\');">' 
+                + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
+                + '<td class="btn_mtd ovm" data-th="status ">' + item.status  + '<span class="ov"></span></td>'
+                + '<td class="btn_mtd ovm" data-th="guestOS ">' + item.guestOS  + '<span class="ov"></span></td>'
+                + '<td class="overlay hidden" data-th="vcpc">' + iidNameID + '</td>' 
+                + '<td class="overlay hidden" data-th="gpu">'  + iidSystemID + '</td>' 
+                + '</tr>'
+        });
+        
+        
+        $("#assistVmImageList").empty()
+        $("#assistVmImageList").append(html)
+        $("#lookupVmImageCount").text(data.length);
+    }
+}
+// popup에서 main의 txtbox로 set
+function setCspVmImageInfo(cspImage){
+    $("#regCspImgId").val(cspImage.nameId);
+    $("#regCspImgName").val(cspImage.name);
+    $("#regGuestOS").val(cspImage.guestOS);
+
+    $("#imageAssist").modal("hide");
+
+}
+
+// 조회 실패
+function lookupVmImageListCallbackFail(error){
+    var errorMessage = error.response.data.error;
+    var statusCode = error.response.status;
+    commonErrorAlert(statusCode, errorMessage);
+}

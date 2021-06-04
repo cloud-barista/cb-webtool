@@ -380,7 +380,7 @@ function deleteVmSpec() {
     });
 }                                                  
 
-// 공통함수 호출
+// connection에 등록된 spec목록 조회(공통함수 호출)
 function lookupSpecList(){
     $("#assistSpecList").empty()
     var connectionName = $("#regConnectionName").val();
@@ -398,11 +398,10 @@ function lookupSpecList(){
 function lookupSpecListCallbackSuccess(caller, data){
     var html="";
     if (data == null) {
-        console.log("################여기##############");
         html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
 
-        $("#specList").empty()
-        $("#specList").append(html)
+        $("#assistSpecList").empty()
+        $("#assistSpecList").append(html)
     } else {
         
         // data.filter((list) => list.name !== "").map((item, index) => (

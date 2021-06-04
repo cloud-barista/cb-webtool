@@ -209,6 +209,7 @@ func main() {
 			"operation/manages/mcismng/McisConnectionView",
 			"operation/manages/mcismng/McisMonitoring",
 			"operation/manages/mcismng/McisMonitoringView",
+			"operation/manages/mcismng/VmMonitoringSetPop",
 		},
 		DisableCache: true,
 	})
@@ -434,6 +435,8 @@ func main() {
 	monitoringGroup.GET("/mcismonitoring/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
 	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
 	monitoringGroup.GET("/mcismonitoring/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
+
+	e.POST("/operation/manages/mcismng/agent/install", controller.MonitoringAgentInstallProc)
 
 	monitoringGroup.GET("/mcksmonitoring/mngform", controller.McksMonitoringMngForm)
 
