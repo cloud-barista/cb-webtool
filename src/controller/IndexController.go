@@ -93,108 +93,110 @@ func MainForm(c echo.Context) error {
 		workingStep["NAMESPACE"] = "FAIL"
 	}
 
-	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	store.Set("cloudconnectionconfig", cloudConnectionConfigInfoList)
-	// log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
-	if len(cloudConnectionConfigInfoList) > 0 {
-		workingStep["CONNECTION"] = "PASS"
-	} else {
+	// cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	// store.Set("cloudconnectionconfig", cloudConnectionConfigInfoList)
+	// // log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
+	// if len(cloudConnectionConfigInfoList) > 0 {
+	// 	workingStep["CONNECTION"] = "PASS"
+	// } else {
 		workingStep["CONNECTION"] = "FAIL"
-	}
+	// }
 
-	// regionList 가져오기
-	regionList, _ := service.GetRegionList()
-	store.Set("region", regionList)
-	// log.Println(" regionList  ", regionList)
-	if len(regionList) > 0 {
-		workingStep["REGION"] = "PASS"
-	} else {
+	// // regionList 가져오기
+	// regionList, _ := service.GetRegionList()
+	// store.Set("region", regionList)
+	// // log.Println(" regionList  ", regionList)
+	// if len(regionList) > 0 {
+	// 	workingStep["REGION"] = "PASS"
+	// } else {
 		workingStep["REGION"] = "FAIL"
-	}
+	// }
 
-	// credentialList 가져오기
-	credentialList, _ := service.GetCredentialList()
-	store.Set("credential", credentialList)
-	// log.Println(" credentialList  ", credentialList)
-	if len(credentialList) > 0 {
-		workingStep["CREDENTIAL"] = "PASS"
-	} else {
+	// // credentialList 가져오기
+	// credentialList, _ := service.GetCredentialList()
+	// store.Set("credential", credentialList)
+	// // log.Println(" credentialList  ", credentialList)
+	// if len(credentialList) > 0 {
+	// 	workingStep["CREDENTIAL"] = "PASS"
+	// } else {
 		workingStep["CREDENTIAL"] = "FAIL"
-	}
+	// }
 
-	// driverList 가져오기
-	driverList, _ := service.GetDriverList()
-	store.Set("driver", driverList)
-	// log.Println(" driverList  ", driverList)
-	if len(driverList) > 0 {
-		workingStep["DRIVER"] = "PASS"
-	} else {
+	// // driverList 가져오기
+	// driverList, _ := service.GetDriverList()
+	// store.Set("driver", driverList)
+	// // log.Println(" driverList  ", driverList)
+	// if len(driverList) > 0 {
+	// 	workingStep["DRIVER"] = "PASS"
+	// } else {
 		workingStep["DRIVER"] = "FAIL"
-	}
+	// }
 
-	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
-	store.Set("vnet", vNetInfoList)
-	if len(vNetInfoList) > 0 {
-		workingStep["VNET"] = "PASS"
-	} else {
+	// vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
+	// store.Set("vnet", vNetInfoList)
+	// if len(vNetInfoList) > 0 {
+	// 	workingStep["VNET"] = "PASS"
+	// } else {
 		workingStep["VNET"] = "FAIL"
-	}
+	// }
 
-	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
-	store.Set("security", securityGroupInfoList)
-	if len(securityGroupInfoList) > 0 {
-		workingStep["SECURITY"] = "PASS"
-	} else {
+	// securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
+	// store.Set("security", securityGroupInfoList)
+	// if len(securityGroupInfoList) > 0 {
+	// 	workingStep["SECURITY"] = "PASS"
+	// } else {
 		workingStep["SECURITY"] = "FAIL"
-	}
+	// }
 
-	sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
-	store.Set("sshkey", sshKeyInfoList)
-	if len(sshKeyInfoList) > 0 {
-		workingStep["SSHKEY"] = "PASS"
-	} else {
+	// sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
+	// store.Set("sshkey", sshKeyInfoList)
+	// if len(sshKeyInfoList) > 0 {
+	// 	workingStep["SSHKEY"] = "PASS"
+	// } else {
 		workingStep["SSHKEY"] = "FAIL"
-	}
+	// }
 
-	virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
-	store.Set("image", virtualMachineImageInfoList)
-	if len(virtualMachineImageInfoList) > 0 {
-		workingStep["IMAGE"] = "PASS"
-	} else {
+	// virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
+	// store.Set("image", virtualMachineImageInfoList)
+	// if len(virtualMachineImageInfoList) > 0 {
+	// 	workingStep["IMAGE"] = "PASS"
+	// } else {
 		workingStep["IMAGE"] = "FAIL"
-	}
-	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
-	store.Set("spec", vmSpecInfoList)
-	if len(vmSpecInfoList) > 0 {
-		workingStep["SPEC"] = "PASS"
-	} else {
+	// }
+	// vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
+	// store.Set("spec", vmSpecInfoList)
+	// if len(vmSpecInfoList) > 0 {
+	// 	workingStep["SPEC"] = "PASS"
+	// } else {
 		workingStep["SPEC"] = "FAIL"
-	}
+	// }
 
-	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
-	if len(mcisList) > 0 {
-		workingStep["MCIS"] = "PASS"
-	} else {
+	// mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	// if len(mcisList) > 0 {
+	// 	workingStep["MCIS"] = "PASS"
+	// } else {
 		workingStep["MCIS"] = "FAIL"
-	}
+	// }
 
-	clusterList, _ := service.GetClusterList(defaultNameSpaceID)
-	if len(clusterList) > 0 {
-		workingStep["MCKS"] = "PASS"
-	} else {
+	// clusterList, _ := service.GetClusterList(defaultNameSpaceID)
+	// if len(clusterList) > 0 {
+	// 	workingStep["MCKS"] = "PASS"
+	// } else {
 		workingStep["MCKS"] = "FAIL"
-	}
+	// }
 
-	mapTotalCount := 0
-	mapPassCount := 0
-	for _, stepValue := range workingStep {
-		mapTotalCount++
-		if stepValue == "PASS" {
-			mapPassCount++
-		}
-	}
+	// mapTotalCount := 0
+	// mapPassCount := 0
+	// for _, stepValue := range workingStep {
+	// 	mapTotalCount++
+	// 	if stepValue == "PASS" {
+	// 		mapPassCount++
+	// 	}
+	// }
+
+
 	// workingStep의 모든 Step == "PASS" 면 monitoring으로 이동?? 반대로 해당 화면에서 Data가 없으면 Main으로 이동.?
 	// if mapTotalCount == mapPassCount {
 	// 	return c.Redirect(http.StatusTemporaryRedirect, "/operation/dashboards/dashboardnamespace/mngform")
