@@ -9,6 +9,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/http/httputil"
 	// "net/url"
 	"os"
 	"strconv"
@@ -85,7 +86,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	authInfo := AuthenticationHandler()
 
 	log.Println("CommonHttp "+httpMethod+", ", url)
-	log.Println("authInfo ", authInfo)
+	// log.Println("authInfo ", authInfo)
 	client := &http.Client{}
 	req, err1 := http.NewRequest(httpMethod, url, bytes.NewBuffer(json))
 	if err1 != nil {
@@ -99,6 +100,72 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 	// req.Header.Set("Content-Type", "application/json")
 
 	req.Header.Add("Authorization", authInfo)
+
+	requestDump, err := httputil.DumpRequest(req, true)
+	if err != nil {
+	  fmt.Println(err)
+	}
+	fmt.Println(string(requestDump))
+	resp, err := client.Do(req) // err 자체는 nil 이고 resp 내에 statusCode가 500임...
+
+	return resp, err
+}
+
+// Json 형태의 bytes.Buffer 면 그대로 사용
+func CommonHttpBytes(url string, jsonBytesBuffer *bytes.Buffer ,httpMethod string) (*http.Response, error) {
+	authInfo := AuthenticationHandler()
+
+
+	// payload := strings.NewReader(`{
+	// 	"CredentialName": "test-gcp-webtool21",
+	// 	"ProviderName": "GCP",
+	// 	"KeyValueInfoList": [
+	// 		{
+	// 			"Key": "project_id",
+	// 			"Value": "megazone-for-yhnoh"
+	// 		},
+	// 		{
+	// 			"Key": "client_email",
+	// 			"Value": "yhnoh-704@megazone-for-yhnoh.iam.gserviceaccount.com"
+	// 		},
+	// 		{
+	// 			"Key": "private_key",
+	// 			"Value": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDcbgpvhNXoYvq+\nVKtfcH/s0NL9Shmn8aSMd0eXGMMQ1b/VQ2HGUMxSgoOa0fHXOzIhpEKHtnIdv1uf\nad+AGmkQOUTRvmmcBUuh3JFuZpSoGH1InBZUowvzqaJvIrhPkAzuu+0el9kHdqRu\nwgCZaZXar0jXji3CvdTeAKtKnC1UgxTUrPAsfTiRh2ZkXDsIsrnA8kL8oIqEGm/g\ncx681KoRpbVb3LPt2BMXwZkEt9x1x+ExEBMjfrr6PEMkvzDlMrY8TcGSNXCHUAmN\no5o8Rsy88Rphd6viOxNuiQA7MacKBB3cR4fl12tfEzxbQUtGPFJB4doKE7AVb+EP\nCD3M6S1XAgMBAAECggEAUjBli7dH2uItBBKl42wbBr3GLdMXRdt/szA2bUw6T2ij\nom0BY+R0ir9HOs7VEZ9szcZlWBza5+SV0Ra00xsF2ZrA4kPRNO90h+GqCDQPca3P\n6ObqHJy+tBeoDTAw8NmROOKxQxrzPSkrnnCPsKQB0AxTaKwGu/n0COLO+37IGB4m\noOGtGIG+hPfLWGUegtZ9WM9m+widM+WXCeWmEORZ+k5hxE82XFH8ayWgj22FG+ys\n+kI8FjdZX4DNmSzrAl6v/KKlvPgqsEksSllRf/409XPGWSO/NK1th+3wsk69NS3Q\nbQzyZyWD99ubA50I5YAhpimmPFS3NGwOdiPKRa4moQKBgQD6CbsZAfK+Lf9nf14l\nrrKhPZTqNjOFpB+yPFgOhWgPVS+BVEXqcOOJ5H21hla6hYEJvhPAZcWGh9uq2xtX\nVieyuy3DhHXXHy3xaTnimTcxMR5KrD/4R/dB2S0qPmMdWDOZKYRN5PYA4PECtt+b\nURltqmC/spQxZ2BWVVlKfA+oGwKBgQDhr5PIulSZE7gZi1oefMV32vBlHJZrSUzi\n8TRVKoixYQ/0DcffSKdWpoaFcmoi+JjiBT5iKFYvzqwOEB6WuiVY9OHHqh6PeG+S\nQnE4UI1lyP9mmX8FWwXmuz8qghJjRKlHMW2engbOC6cTudYt0JWDWOeu4CmX+pZy\ncGjBLnubdQKBgFJXDgQoPhYe87LToN9r7mtm6jlO7BygdceuU5lEmYYjGWfPps6T\nqnrogfVbbggymtHohHyhhzDMYKydRx21w5D6TxHJ9zyGigysCGH07tYGROF2ZAKR\nQH2w1UzKCr3JJATWRTmZouGbMgMg0fZF+MfCieXXGzJBxtnndWYwAL/tAoGAKIyC\nUftgfcx0NGq8O2QRmrJEpPYY9JfL766Ex5SH0M7urdvYAH8uSbxLyShAd54Q4fMt\nPTegHKDWewRcappxYWVGN7iSGxb5fN7hNswKS7JsaQPFNbIgAk+8TqfmI93PSFJS\nLsCX2mdvknS+Tab/ZgUQQ3RVJNBKPa+CssrmPI0CgYEAv/Vi7HFjv0ozCaBR7cVm\n+n4J2L7nVw44tYuzhIYM1b82FU1OywGl7101m2TliJKV4nJEUaOvW4zUp1YEx+Uj\n2FkO/v2ZRRAqbebovw7+fium+Xjcipw7zjKTKJ9mAs87A3JABahvyUeGyZSw6xyX\no4fl0OvwIH9WjjayOEeriDk=\n-----END PRIVATE KEY-----\n"
+	// 		}
+	// 	]
+	// }`)
+	log.Println("CommonHttp "+httpMethod+", ", url)
+	//[]byte(creds.PrivateKey)
+	// log.Println("authInfo ", authInfo)
+	client := &http.Client{}
+	req, err1 := http.NewRequest(httpMethod, url, jsonBytesBuffer)
+	// ppp := make([]byte, len(payload))
+	// req, err1 := http.NewRequest(httpMethod, url, payload)
+	if err1 != nil {
+		panic(err1)
+	}
+
+	// url = "http://54.248.3.145:1323/tumblebug/ns/ns-01/resources/vNet"
+
+	// set the request header Content-Type for json
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	// req.Header.Set("Content-Type", "application/json")
+
+	req.Header.Add("Authorization", authInfo)
+
+	// getBody := req.GetBody
+	// copyBody, err := getBody()
+	// if err == nil {
+	// 	log.Println("------stert");
+	// 	log.Println(copyBody);
+	// 	log.Println("------end");
+	// }
+	requestDump, err := httputil.DumpRequest(req, true)
+	if err != nil {
+	  fmt.Println(err)
+	}
+	fmt.Println(string(requestDump))
+	
 	resp, err := client.Do(req) // err 자체는 nil 이고 resp 내에 statusCode가 500임...
 
 	return resp, err
@@ -160,7 +227,7 @@ func CommonHttpWithoutParam(url string, httpMethod string) (*http.Response, erro
 	authInfo := AuthenticationHandler()
 
 	log.Println("CommonHttpWithoutParam "+httpMethod+", ", url)
-	log.Println("authInfo ", authInfo)
+	// log.Println("authInfo ", authInfo)
 	client := &http.Client{}
 	req, err := http.NewRequest(httpMethod, url, nil)
 	if err != nil {
