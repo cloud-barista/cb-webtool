@@ -333,6 +333,38 @@ function putFetchSpecs(connectionName){
 	});
 }
 
+function getCommonFilterSpecsByRange(caller, searchObj){
+    var url = "/setting/resources/vmspec/filterspecsbyrange"
+
+    axios.post(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }, searchObj       
+    }).then(result => {
+        console.log(result);
+        // if(result.data.status == 200 || result.data.status == 201){
+        //     var data = result.data.VmSpec
+        //     // commonAlert("Spec Searched");                            
+        // }else{
+        //     // commonAlert("Fail to Spec Searched");
+        // }
+        var data = result.data.VmSpecList;
+
+        if ( caller == "virtualmachinespecmng") {
+            console.log("return get Data");
+            virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
+            // setVirtualMachineSpecListAtServerSpec(data, sortType);
+        }
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+	});
+
+}
+
 // /lookupImages
 function getCommonLookupImageList(caller, connectionName) {    
     //var url = "/setting/resources/vmimage/lookupvmimagelist"
