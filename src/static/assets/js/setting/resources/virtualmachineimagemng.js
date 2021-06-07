@@ -508,17 +508,18 @@ function showVirtualMachinImageInfo(target) {
 
 // connection에 등록된 spec목록 조회(공통함수 호출)
 function lookupVmImageList(){
-    $("#assistSpecList").empty()
+    $("#assistVmImageList").empty()
+    // connection과 상관없이 조회 가능
     var connectionName = $("#regConnectionName").val();
     if( !connectionName){
         commonAlert("connection name required")
         return;
     }
 
-    $("#specAssist").modal();
+    $("#imageAssist").modal();
     $('.dtbox.scrollbar-inner').scrollbar();
 
-    getCommonLookupImageList("vmspecmng", connectionName);
+    getCommonLookupImageList("vmimagemng", connectionName);
 }
 // 성공 callback
 function lookupVmImageListCallbackSuccess(caller, data){
@@ -533,26 +534,38 @@ function lookupVmImageListCallbackSuccess(caller, data){
         $.each(data, function(index, item){
             console.log('index:' + index + ' / ' + 'item:' + item);
             console.log(item);
-            // keyValueMap = item.keyValueList;
+            keyValueMap = item.keyValueList;
             // console.log(keyValueMap);
-            // var mapValue = ""
-            // keyValueMap.map( (mapObj, mapIndex) => {
-            //     // console.log("mapIndex = " + mapIndex);
-            //     // console.log(mapObj);
-            //     // console.log(mapIndex);
-            //     mapValue += mapObj.Key + " : " + mapObj.Value + " <br/>";
-            // });
+            var mapValue = ""
+            var mapName = "";
+            keyValueMap.map( (mapObj, mapIndex) => {
+                if( mapObj.Key == "Name"){
+                    mapName = mapObj.Value
+                    return
+                }
+                // console.log("mapIndex = " + mapIndex);
+                // console.log(mapObj);
+                // console.log(mapIndex);
+                // mapValue += mapObj.Key + " : " + mapObj.Value + " <br/>";
+            });
 
+            var imageName = ""
             var iid = item.iid;
             var iidNameID = "";
             var iidSystemID = "";
-            if(iid){
-                iidNameID = (iid.nameId == undefined ? "" :  iid.nameId);
-                iidSystemID = (iid.systemId == undefined ? "" :  iid.systemId);
-            }
 
-            html += '<tr onclick="setCspSpecName(\'' + item.name + '\');">' 
-                + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
+            if( item.name == undefined || item.name == ""){
+                imageName = mapName;
+            }else{
+                imageName = item.name;
+            }
+            if(iid){
+                iidNameID = (iid.NameId == undefined || item.NameId == "" ? "" :  iid.NameId);
+                iidSystemID = (iid.SystemId == undefined || item.SystemId == "" ? "" :  iid.SystemId);
+            }
+//cspImageNameID, cspImageName, cspImageGuestOS
+            html += '<tr onclick="setCspVmImageInfo(\''+iidNameID+'\',\''+imageName+'\',\''+item.guestOS+'\');">'            
+                + '<td class="overlay hidden" data-th="name">' + imageName + '</td>' 
                 + '<td class="btn_mtd ovm" data-th="status ">' + item.status  + '<span class="ov"></span></td>'
                 + '<td class="btn_mtd ovm" data-th="guestOS ">' + item.guestOS  + '<span class="ov"></span></td>'
                 + '<td class="overlay hidden" data-th="vcpc">' + iidNameID + '</td>' 
@@ -566,19 +579,27 @@ function lookupVmImageListCallbackSuccess(caller, data){
         $("#lookupVmImageCount").text(data.length);
     }
 }
-// popup에서 main의 txtbox로 set
-function setCspVmImageInfo(cspImage){
-    $("#regCspImgId").val(cspImage.nameId);
-    $("#regCspImgName").val(cspImage.name);
-    $("#regGuestOS").val(cspImage.guestOS);
 
-    $("#imageAssist").modal("hide");
-
-}
 
 // 조회 실패
 function lookupVmImageListCallbackFail(error){
     var errorMessage = error.response.data.error;
     var statusCode = error.response.status;
     commonErrorAlert(statusCode, errorMessage);
+}
+
+// popup에서 main의 txtbox로 set
+function setCspVmImageInfo(cspImageNameID, cspImageName, cspImageGuestOS){
+    $("#regCspImgId").val(cspImageNameID);
+    $("#regCspImgName").val(cspImageName);
+    $("#regGuestOS").val(cspImageGuestOS);
+
+    $("#imageAssist").modal("hide");
+}
+
+// connection 정보가 바뀌면 image 정보도 초기화 시킨다.
+function clearCspImageInfo(){
+    $("#regCspImgId").val();
+    $("#regCspImgName").val();
+    $("#regGuestOS").val();
 }

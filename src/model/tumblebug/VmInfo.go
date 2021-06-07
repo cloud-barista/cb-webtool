@@ -24,8 +24,8 @@ type VmInfo struct {
 	Description string `json:"description"`
 	Label       string `json:"label"`
 
-	Location   LocationInfo     `json:"location"`
-	RegionZone NameSystemIdInfo `json:"region"` // tumblebug에서 결과에 region에 region/zone을 같이보내는가?
+	Location   LocationInfo   `json:"location"`
+	RegionZone RegionZoneInfo `json:"region"` // tumblebug에서 결과에 region에 region/zone을 같이보내는가?
 
 	PublicIP   string `json:"publicIP"`
 	PublicDNS  string `json:"publicDNS"`
@@ -66,8 +66,8 @@ type CspViewVmDetailInfo struct {
 	SecurityGroupIIDs []NameSystemIdInfo `json:"securityGroupIIds"`
 	KeyPairIID        NameSystemIdInfo   `json:"keyPairIId"`
 
-	StartTime  time.Time        `json:"startTime"`
-	RegionZone NameSystemIdInfo `json:"region"`
+	StartTime  time.Time      `json:"startTime"`
+	RegionZone RegionZoneInfo `json:"region"`
 
 	NetworkInterface string `json:"networkInterface"`
 
@@ -96,4 +96,9 @@ type LocationInfo struct {
 type NameSystemIdInfo struct {
 	NameID   string `json:"nameId"`
 	SystemID string `json:"systemId"`
+}
+
+type RegionZoneInfo struct {
+	Region string `json:"Region"`
+	Zone   string `json:"Zone"`
 }

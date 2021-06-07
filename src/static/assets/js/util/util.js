@@ -141,7 +141,8 @@ function commonConfirmOpen(targetAction){
             
             ["AddNewVirtualMachineImage", "Would you like to register Image <br />Resource ?"],
             ["DeleteVirtualMachineImage", "Would you like to un-register Image <br />Resource ?"],  
-
+            ["FetchImages", "Would you like to fetch images <br /> to this NameSpace ?"],  
+            
             ["AddNewVmSpec", "Would you like to register Spec <br />Resource ?"],
             ["DeleteVmSpec", "Would you like to un-register Spec <br />Resource ?"],  
             ["FetchSpecs", "Would you like to fetch Spec <br /> to this NameSpace ?"],  
@@ -290,6 +291,8 @@ function commonConfirmOk(){
         goFocus('virtualMachineImageCreateBox');
     }else if ( targetAction == "DeleteVirtualMachineImage"){
         deleteVirtualMachineImage()
+    }else if ( targetAction == "FetchImages"){
+        getCommonFetchImages();         
     }else if ( targetAction == "AddNewVmSpec"){
         displayVmSpecInfo("REG")
         goFocus('vmSpecCreateBox');

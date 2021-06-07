@@ -705,14 +705,18 @@ func GetInspectResourceList(inspectResource *tumblebug.InspectResourcesRequest) 
 // VM Image 조회
 func LookupVirtualMachineImageList(connectionName string) ([]tumblebug.VirtualMachineLookupImageInfo, model.WebStatus) {
 	fmt.Println("LookupVirtualMachineImageList ************ : ", connectionName)
-	var originalUrl = "/lookupImage"
+	var originalUrl = "/lookupImages"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/lookupImage"
 
 	// body, err := util.CommonHttpGet(url)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	pbytes, _ := json.Marshal(connectionName)
+
+	paramMap := map[string]string{"connectionName": connectionName}
+
+	pbytes, _ := json.Marshal(paramMap)
+	log.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 	log.Println("LookupVirtualMachineImageList called 1 ")
 	if err != nil {
@@ -768,8 +772,8 @@ func FetchVirtualMachineImageList(nameSpaceID string) ([]tumblebug.VirtualMachin
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/fetchImages"
 
-	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	resp, err := util.CommonHttp(url, nil, http.MethodPost)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodPost)
 	if err != nil {
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -1141,7 +1145,8 @@ func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *tumblebug.VmSpecReg
 }
 
 // resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)
-func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebug.RangeMinMax) ([]tumblebug.VmSpecInfo, model.WebStatus) {
+func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebug.RangeMinMax) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
 	fmt.Println("FilterVmSpecInfoListByRange ************ : ", nameSpaceID)
 	var originalUrl = "/ns/{nsId}/resources/filterSpecsByRange"
 	var paramMapper = make(map[string]string)
@@ -1156,15 +1161,21 @@ func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebu
 
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	fetchVmSpecList := map[string][]tumblebug.VmSpecInfo{}
+	resultInfo := model.ResultInfo{}
 
-	json.NewDecoder(respBody).Decode(&fetchVmSpecList)
-	log.Println("FilterVmSpecInfoListByRange called ")
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
 
-	return fetchVmSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
 }
