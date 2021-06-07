@@ -552,7 +552,7 @@ function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statis
             return;
         }
 
-        var data = result.data.VmMonitoringInfo
+        var data = result.data.VMMonitoringInfo
         console.log("Get Monitoring Data : ",data)
         console.log("info items : ", target);
         console.log("======== start mapping data ======");
