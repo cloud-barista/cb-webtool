@@ -21,7 +21,7 @@ import (
 
 // VM 에 모니터링 Agent 설치
 ///ns/{nsId}/monitoring/install/mcis/{mcisId}
-func RegBenchmarkAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *tumblebug.VmMonitoringAgentReg) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
+func RegBenchmarkAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *tumblebug.McisCmdReq) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
 	fmt.Println("RegBenchmarkAgentInVm ************ : ")
 	var originalUrl = "/ns/{nsId}/monitoring/install/mcis/{mcisId}"
 
@@ -61,11 +61,17 @@ func RegBenchmarkAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentR
 	return &vmMonitoringAgentInfo, returnStatus
 }
 
-func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *tumblebug.VmMonitoringAgentReg) (*model.WebStatus, model.WebStatus) {
-	fmt.Println("RegBenchmarkAgentInVm ************ : ")
+func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *dragonfly.VmMonitoringInstallReg) (*model.WebStatus, model.WebStatus) {
+	fmt.Println("RegMonitoringAgentInVm ************ : ")
 	var originalUrl = "/agent/install"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
+	// Command  string `json:"command"`
+	// PublicIp string `json:"ip"`
+	// McisID   string `json:"mcis_id"`
+	// SshKey   string `json:"ssh_key"`
+	// UserName string `json:"user_name"`
+	// VmID     string `json:"vm_id"`
 	url := util.DRAGONFLY + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/monitoring/install/mcis/"
 	// _ = writer.WriteField("mcis_id", "7e3130a0-a811-47b8-a82c-b155267edef5")
@@ -89,7 +95,7 @@ func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgent
 	}
 
 	fmt.Println(urlValues)
-	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
 
 	webStatus := model.WebStatus{}
 	if err != nil {

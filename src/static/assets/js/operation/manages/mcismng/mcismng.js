@@ -400,14 +400,15 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var vmStatus = data.status;
             var vmDescription = data.description;
             var vmPublicIp = data.publicIP === undefined ? "" : data.publicIP;
+            var vmSshKeyID = data.sshKeyId;
             //vm info
             $("#vm_id").val(vmId);   
             $("#vm_name").val(vmName);
-            console.log("vm_id " + vmId + ", vm_name " + vmName)
+            console.log("vm_id " + vmId + ", vm_name " + vmName + ", vm_SshKeyID " + vmSshKeyID)
 
             $("#manage_mcis_popup_vm_id").val(vmId)
             $("#manage_mcis_popup_mcis_id").val(mcisID)
-
+            $("#manage_mcis_popup_sshkey_name").val(vmSshKeyID)
             
             $("#server_info_text").text('['+vmName+'/'+mcisName+']')
             $("#server_detail_info_text").text('['+vmName+'/'+mcisName+']')

@@ -437,8 +437,8 @@ func main() {
 
 	// TODO : installagent dragonfly 에 form방식으로 호출 추가할 것
 
-	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.RegBenchmarkAgentInVm) // benchmark agent 설치
-	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc)
+	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/benchmarkagent/reg/proc", controller.RegBenchmarkAgentInVm) // benchmark agent 설치
+	e.POST("/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc)
 	monitoringGroup.GET("/mcksmonitoring/mngform", controller.McksMonitoringMngForm)
 
 	// Policy Control

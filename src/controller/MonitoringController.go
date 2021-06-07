@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/cloud-barista/cb-webtool/src/model/dragonfly"
 	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/cloud-barista/cb-webtool/src/util"
@@ -99,7 +100,7 @@ func RegBenchmarkAgentInVm(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	vmMonitoringAgentReg := &tumblebug.VmMonitoringAgentReg{}
+	vmMonitoringAgentReg := &tumblebug.McisCmdReq{}
 	if err := c.Bind(vmMonitoringAgentReg); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
@@ -199,7 +200,7 @@ func VmMonitoringAgentRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	vmMonitoringAgentReg := &tumblebug.VmMonitoringAgentReg{}
+	vmMonitoringAgentReg := &dragonfly.VmMonitoringInstallReg{}
 	if err := c.Bind(vmMonitoringAgentReg); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
@@ -213,7 +214,15 @@ func VmMonitoringAgentRegProc(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	vmMonitoringAgentReg.NameSpaceID = defaultNameSpaceID
 
+	sshKeyName := vmMonitoringAgentReg.SshKeyName
+	//var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
+	//privateKey
+	sshKeyInfo, sshKeyStatus := service.GetSshKeyData(defaultNameSpaceID, sshKeyName)
+	if sshKeyStatus.StatusCode == 200 || sshKeyStatus.StatusCode == 201 {
+		vmMonitoringAgentReg.SshKey = sshKeyInfo.PrivateKey
+	}
 	mcisID := c.Param("mcisID")
 	resultVmMonitoringAgentInfo, respStatus := service.RegMonitoringAgentInVm(defaultNameSpaceID, mcisID, vmMonitoringAgentReg)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
