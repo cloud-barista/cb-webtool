@@ -691,9 +691,9 @@ function showVmMonitoring(mcisID, vmID){
     var metric_arr = ["cpu","memory","disk","network"];
     var statisticsCriteria = "last";
     // TODO : Analytics View 는 안보이게 
-    // for(var i in metric_arr){
-    //     getVmMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
-    // }    
+    for(var i in metric_arr){
+        getVmMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
+    }    
  }
  
 
