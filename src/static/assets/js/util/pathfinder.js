@@ -212,7 +212,8 @@ function getCommonSshKeyList(caller) {
 
 // connection 정보가 바뀔 때 해당 connection에 등록 된 vmi(virtual machine image) 목록 조회.
 // 공통으로 사용해야하므로 호출후 결과만 리턴... 그러나, ajax로 호출이라 결과 받기 전에 return되므로 해결방안 필요
-function getCommonVirtualMachineImageList(caller) {
+function getCommonVirtualMachineImageList(caller, sortType) {
+    var sortType = sortType;
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/machineimage/list"
     axios.get(url, {
@@ -224,8 +225,7 @@ function getCommonVirtualMachineImageList(caller) {
         console.log("get Image List : ", result.data);
         
         var data = result.data.VirtualMachineImageList;
-        
-		// Data가져온 뒤 set할 method 호출
+        // Data가져온 뒤 set할 method 호출
 		if( caller == "virtualmachineimagemng"){
 			console.log("return get Data")
 			setVirtualMachineImageListAtServerImage(data, sortType)			

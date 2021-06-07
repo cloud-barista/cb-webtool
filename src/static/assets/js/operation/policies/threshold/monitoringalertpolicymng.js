@@ -200,7 +200,7 @@ function createMonitoringAlertPolicy(){
         critic_event_cnt        : Number(monitoringAlertCriticEventCount),
         alert_event_type        : monitoringAlertEventHandlerType,
         alert_event_name        : monitoringAlertEventHandlerName,
-        alert_event_message     : monitoringAlertName
+        alert_event_message     : "Threshold Alert!!!"
     }
 
     console.log("info Threshold obj Data : ", obj);
@@ -474,10 +474,10 @@ function saveNewMonitoringAlertEventHandler() {
     var monitoringAlertEventHandlerInfo = {         
         type: monitoringAlertEventHandlerModalType,
         name: monitoringAlertEventHandlerModalName,
-        url: "https://hooks.slack.com/services/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",
-        channel: "#kapacitor-alert"
-        // url: "https://cloud-barista.slack.com/archives/C022PB8K7NG",
-        // channel: "#monitoring-alert-event-handler"
+        // url: "https://hooks.slack.com/services/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",
+        // channel: "#kapacitor-alert"
+        url: "https://hooks.slack.com/services/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",
+        channel: "#monitoring-alert-event-handler"
     }
 
     console.log(monitoringAlertEventHandlerInfo);

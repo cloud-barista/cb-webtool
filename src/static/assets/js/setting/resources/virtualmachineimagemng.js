@@ -186,7 +186,11 @@ function deleteVirtualMachineImage() {
 }                                                  
 
 function getVirtualMachineImageList(sort_type) {
-    getCommonVirtualMachineImageList("virtualmachineimagemng", sort_type)
+    console.log("여기 : ", sort_type);
+    var sortType = sort_type;
+    console.log("sortType : ", sortType);
+
+    getCommonVirtualMachineImageList("virtualmachineimagemng", sortType)
     // console.log(sort_type);
     // // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     // var url = "/setting/resources" + "/machineimage/list"
@@ -242,6 +246,7 @@ function getVirtualMachineImageList(sort_type) {
 function setVirtualMachineImageListAtServerImage(data, sortType){
     var html = "";
     console.log(data);// TODO : no Data 일 때 (ex. 모든 이미지 삭제 등) data.length에서 오류 남.
+    console.log("here Set : ", sortType);
     
     if (data == null) {
         html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
