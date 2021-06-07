@@ -24,13 +24,13 @@ type VmInfo struct {
 	Description string `json:"description"`
 	Label       string `json:"label"`
 
-	Location   LocationInfo     `json:"location"`
-	RegionZone NameSystemIdInfo `json:"region"` // tumblebug에서 결과에 region에 region/zone을 같이보내는가?
+	Location   LocationInfo   `json:"location"`
+	RegionZone RegionZoneInfo `json:"region"` // tumblebug에서 결과에 region에 region/zone을 같이보내는가?
 
-	publicIP   string `json:"publicIP"`
-	publicDNS  string `json:"publicDNS"`
-	privateIP  string `json:"privateIP"`
-	privateDNS string `json:"privateDNS"`
+	PublicIP   string `json:"publicIP"`
+	PublicDNS  string `json:"publicDNS"`
+	PrivateIP  string `json:"privateIP"`
+	PrivateDNS string `json:"privateDNS"`
 
 	VmBootDisk  string `json:"vmBootDisk"`
 	VmBlockDisk string `json:"vmBlockDisk"`
@@ -64,17 +64,17 @@ type CspViewVmDetailInfo struct {
 	VpcIID            NameSystemIdInfo   `json:"vpcIID"`
 	SubnetIID         NameSystemIdInfo   `json:"subnetIID"`
 	SecurityGroupIIDs []NameSystemIdInfo `json:"securityGroupIIds"`
-	keyPairIID        NameSystemIdInfo   `json:"keyPairIId"`
+	KeyPairIID        NameSystemIdInfo   `json:"keyPairIId"`
 
-	StartTime  time.Time        `json:"startTime"`
-	RegionZone NameSystemIdInfo `json:"region"`
+	StartTime  time.Time      `json:"startTime"`
+	RegionZone RegionZoneInfo `json:"region"`
 
 	NetworkInterface string `json:"networkInterface"`
 
-	publicIP   string `json:"publicIP"`
-	publicDNS  string `json:"publicDNS"`
-	privateIP  string `json:"privateIP"`
-	privateDNS string `json:"privateDNS"`
+	PublicIP   string `json:"publicIP"`
+	PublicDNS  string `json:"publicDNS"`
+	PrivateIP  string `json:"privateIP"`
+	PrivateDNS string `json:"privateDNS"`
 
 	VmbootDisk  string `json:"vmbootDisk"`
 	VmblockDisk string `json:"vmblockDisk"`
@@ -96,4 +96,9 @@ type LocationInfo struct {
 type NameSystemIdInfo struct {
 	NameID   string `json:"nameId"`
 	SystemID string `json:"systemId"`
+}
+
+type RegionZoneInfo struct {
+	Region string `json:"Region"`
+	Zone   string `json:"Zone"`
 }

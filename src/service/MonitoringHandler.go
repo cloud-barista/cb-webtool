@@ -21,8 +21,8 @@ import (
 
 // VM 에 모니터링 Agent 설치
 ///ns/{nsId}/monitoring/install/mcis/{mcisId}
-func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *tumblebug.VmMonitoringAgentReg) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
-	fmt.Println("RegMonitoringAgentInVm ************ : ")
+func RegBenchmarkAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *tumblebug.McisCmdReq) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
+	fmt.Println("RegBenchmarkAgentInVm ************ : ")
 	var originalUrl = "/ns/{nsId}/monitoring/install/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
@@ -59,6 +59,64 @@ func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgent
 	returnStatus.StatusCode = respStatus
 
 	return &vmMonitoringAgentInfo, returnStatus
+}
+
+func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *dragonfly.VmMonitoringInstallReg) (*model.WebStatus, model.WebStatus) {
+	fmt.Println("RegMonitoringAgentInVm ************ : ")
+	var originalUrl = "/agent/install"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	// Command  string `json:"command"`
+	// PublicIp string `json:"ip"`
+	// McisID   string `json:"mcis_id"`
+	// SshKey   string `json:"ssh_key"`
+	// UserName string `json:"user_name"`
+	// VmID     string `json:"vm_id"`
+	url := util.DRAGONFLY + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/monitoring/install/mcis/"
+	// _ = writer.WriteField("mcis_id", "7e3130a0-a811-47b8-a82c-b155267edef5")
+	// _ = writer.WriteField("vm_id", "c9f01668-4db4-4521-8d54-14501e31d2c7")
+	// _ = writer.WriteField("public_ip", "0.0.0.0")
+	// _ = writer.WriteField("user_name", "cbuser")
+	// _ = writer.WriteField("ssh_key", "-----BEGIN RSA PRIVATE KEY-----\n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\n-----END RSA PRIVATE KEY-----\n")
+	// _ = writer.WriteField("cspType", "test")
+
+	// pbytes, _ := json.Marshal(vmMonitoringAgentReg)
+	// fmt.Println(string(pbytes))
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	fmt.Println("RegMonitoringAgentInVm : ", url)
+
+	fmt.Println(vmMonitoringAgentReg)
+
+	urlValues, convertErr := util.StructToMapByJson(vmMonitoringAgentReg)
+	if convertErr != nil {
+		log.Println(convertErr)
+	}
+
+	fmt.Println(urlValues)
+	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
+
+	webStatus := model.WebStatus{}
+	if err != nil {
+		fmt.Println(err)
+		return &webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return &model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return &webStatus, model.WebStatus{StatusCode: respStatus}
 }
 
 // Get Monitoring Data

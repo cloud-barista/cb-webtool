@@ -581,6 +581,7 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 	
 	// 이름 Validation : 소문자, 숫자, 하이프(-)만 가능   [a-z]([-a-z0-9]*[a-z0-9])?
 	function validateCloudbaristaKeyName(elementValue, maxLength){
+		var returnStr = "first letter = small letter \n middle letter = small letter, number, hipen(-) only \n last letter = small letter";
 		//var charsPattern = /^[a-zA-Z0-9-]*$/;
 		//var charsPattern = /^[a-z0-9-]*$/;
 		//var charsPattern = /^[a-z]([-a-z0-9]*[a-z0-9])$/;
@@ -588,16 +589,30 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 
 		// min = 3 이므로 4자이상. maxlength + 1 이하 ex( 3, 12) 면 4자~13자 까지 허용
 		var regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9])$') ;
-		if( maxLength != undefined && maxLength > 0){
-			console.log(" maxleng is defined " + maxLength + " : " + elementValue.length)
+
+		if( maxLength == undefined){
+			if ( !regex.test(elementValue) ){
+				return returnStr;
+			}
+		}
+		
+		if( maxLength > 0){
+			if( elementValue.length > maxLength){
+				returnStr = "maxLength is " + maxLength
+				return returnStr;
+			}
+
+			console.log(" maxlength is defined " + maxLength + " : " + elementValue.length)
 			// regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9]){' + maxLength+'}$') ;
 			//regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9]){ 5,' + maxLength+'}$') ;
 
-			regex = new RegExp("^[a-z][a-z0-9-]{3," + maxLength+"}$","g"); 
-
+			regex = new RegExp("^[a-z]([-a-z0-9]*[a-z0-9]){3," + maxLength+"}$","g"); 
+			if ( !regex.test(elementValue) ){
+				return returnStr;
+			}
 		}
 
-		return regex.test(elementValue);
+		return "";
 		//return charsPattern.test(elementValue);
 	}
 

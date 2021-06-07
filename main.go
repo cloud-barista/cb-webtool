@@ -209,6 +209,7 @@ func main() {
 			"operation/manages/mcismng/McisConnectionView",
 			"operation/manages/mcismng/McisMonitoring",
 			"operation/manages/mcismng/McisMonitoringView",
+			"operation/manages/mcismng/VmMonitoringSetPop",
 		},
 		DisableCache: true,
 	})
@@ -432,9 +433,12 @@ func main() {
 	monitoringGroup := e.Group("/operation/monitorings", monitoringTemplate)
 	monitoringGroup.GET("/mcismonitoring/mngform", controller.McisMonitoringMngForm)
 	monitoringGroup.GET("/mcismonitoring/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
-	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
 	monitoringGroup.GET("/mcismonitoring/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
 
+	// TODO : installagent dragonfly 에 form방식으로 호출 추가할 것
+
+	monitoringGroup.POST("/mcismonitoring/:mcisID/vm/:vmID/benchmarkagent/reg/proc", controller.RegBenchmarkAgentInVm) // benchmark agent 설치
+	e.POST("/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc)
 	monitoringGroup.GET("/mcksmonitoring/mngform", controller.McksMonitoringMngForm)
 
 	// Policy Control
@@ -596,10 +600,10 @@ func main() {
 	resourcesGroup.POST("/machineimage/reg", controller.VirtualMachineImageRegProc)            // RegProc _ SshKey 같이 앞으로 넘길까
 	resourcesGroup.DELETE("/machineimage/del/:imageID", controller.VirtualMachineImageDelProc) // DelProc + SskKey 같이 앞으로 넘길까
 
-	resourcesGroup.GET("/machineimage/lookupimages", controller.LookupCspVirtualMachineImageList) // TODO : Image 전체목록인가? 확인필요
+	e.GET("/setting/resources/machineimage/lookupimages", controller.LookupCspVirtualMachineImageList) // TODO : Image 전체목록인가? 확인필요
 	//resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)          // TODO : Image 전체목록인가? 확인필요
 	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
-	resourcesGroup.GET("/machineimage/fetchimage", controller.FetchVirtualMachineImageList)            // TODO : Image 정보 갱신인가? 확인필요
+	e.POST("/setting/resources/machineimage/fetchimages", controller.FetchVirtualMachineImageList)     // TODO : Image 정보 갱신인가? 확인필요
 
 	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
 
@@ -612,7 +616,7 @@ func main() {
 
 	resourcesGroup.GET("/vmspec/lookupvmspec", controller.LookupVmSpecList)             // TODO : Image 전체목록인가? 확인필요
 	resourcesGroup.GET("/vmspec/lookupvmspec/:vmSpecName", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
-	resourcesGroup.GET("/vmspec/fetchvmspec", controller.FetchVmSpecList)               // TODO : Image 정보 갱신인가? 확인필요
+	resourcesGroup.POST("/vmspec/fetchvmspec", controller.FetchVmSpecList)              // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
 	// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
 

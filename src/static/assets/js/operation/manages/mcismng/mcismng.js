@@ -1,3 +1,13 @@
+$(document).ready(function(){
+    // MCIS List의 상단 의 checkbox 클릭시 전체 선택하도록 
+    $("#th_chall").click(function() {
+        if ($("#th_chall").prop("checked")) {
+            $("input[name=chk]").prop("checked", true);
+        } else {
+            $("input[name=chk]").prop("checked", false);
+        }
+    })
+});
 ///////////// MCIS Handling //////////////
 
 // 등록 form으로 이동
@@ -390,14 +400,15 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var vmStatus = data.status;
             var vmDescription = data.description;
             var vmPublicIp = data.publicIP === undefined ? "" : data.publicIP;
+            var vmSshKeyID = data.sshKeyId;
             //vm info
             $("#vm_id").val(vmId);   
             $("#vm_name").val(vmName);
-            console.log("vm_id " + vmId + ", vm_name " + vmName)
+            console.log("vm_id " + vmId + ", vm_name " + vmName + ", vm_SshKeyID " + vmSshKeyID)
 
             $("#manage_mcis_popup_vm_id").val(vmId)
             $("#manage_mcis_popup_mcis_id").val(mcisID)
-
+            $("#manage_mcis_popup_sshkey_name").val(vmSshKeyID)
             
             $("#server_info_text").text('['+vmName+'/'+mcisName+']')
             $("#server_detail_info_text").text('['+vmName+'/'+mcisName+']')
@@ -441,7 +452,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
 
 
             //////vm detail tab////
-            var vmDetail = data.cspViewVmDetail
+            var vmDetail = data.cspViewVmDetail;
             //    //cspvmdetail
             var vmDetailKeyValueList = vmDetail.KeyValueList
             var architecture = "";   
@@ -463,21 +474,16 @@ function vmDetailInfo(mcisID, mcisName, vmID){
                 $("#server_detail_view_archi").val(architecture)
             }
             //    // server spec
-            // var vmSecName = data.VmSpecName
-            var vmSecName = data.vmspecName// TODO : 바로 return하는 경우인가?? 이름이 모두 소문자네
-            $("#server_info_vmspec_name").val(vmSecName)
-            $("#server_detail_view_server_spec_text").text(vmSecName)
+            // var vmSecName = data.VmSpecName            
+            var vmSpecName = vmDetail.vmspecName;
+            $("#server_info_vmspec_name").val(vmSpecName)
+            $("#server_detail_view_server_spec").text(vmSpecName)
             //var spec_id = data.specId
             var specId = data.specId
             // set_vmSpecInfo(spec_id);// memory + cpu  : TODO : spec정보는 자주변경되는것이 아닌데.. 매번 통신할 필요있나...
            
             var startTime = vmDetail.StartTime
             $("#server_info_start_time").val(startTime)
-
-            //    // server spec
-            var vmSpecName = vmDetail.VmSpecName
-            $("#server_info_vmspec_name").val(vmSpecName)
-            $("#server_detail_view_server_spec_text").text(vmSpecName)
             
             var cloudType = data.location.cloudType
             var cspIcon = ""
@@ -684,9 +690,10 @@ function showVmMonitoring(mcisID, vmID){
     var period_type = "m"
     var metric_arr = ["cpu","memory","disk","network"];
     var statisticsCriteria = "last";
-    for(var i in metric_arr){
-        getVmMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
-    }    
+    // TODO : Analytics View 는 안보이게 
+    // for(var i in metric_arr){
+    //     getVmMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
+    // }    
  }
  
 

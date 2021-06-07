@@ -10,10 +10,7 @@ $(document).ready(function(){
     //         $("#wrap").animate({scrollTop : offset.top}, 300);
     //     })		
     // });
-});
 
-/* scroll */
-$(document).ready(function(){
     //checkbox all
     // $("#th_chall").click(function() {
     //     if ($("#th_chall").prop("checked")) {
@@ -35,6 +32,10 @@ $(document).ready(function(){
     // });
 
     setTableHeightForScroll('serverSpecList', 300)
+
+    $('.btn_assist').on('click', function() {
+        lookupSpecList()
+    });
 });
 
 $(document).ready(function () {
@@ -113,33 +114,23 @@ function displayVmSpecInfo(targetAction){
     }
 }
 
-function getVmSpecList(sort_type) {
-    console.log(sort_type);
-    var url = "/setting/resources"+"/vmspec/list"
-    console.log("URL : ",url)
-    axios.get(url, {
-        headers: {
-            // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
-        }
-    }).then(result => {
-        console.log("get Spec List : ", result.data);
-        
-        var data = result.data.VmSpecList;
-        var html = ""
-        
-        console.log("data.length : ", data);
+function virtualMachineSpecListCallbackSuccess(caller, data, sortType) {
+// function setVirtualMachineSpecListAtServerSpec(data, sort_type) {
+    var html = ""
+    console.log("Caller : ", caller);
+    console.log("Data : ", data);
+    console.log("SortType : ", sortType);
 
-        if (data == null) {
-            console.log("################여기##############");
-            html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+    if (data == null) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
 
-            $("#specList").empty()
-            $("#specList").append(html)
-        } else {
-            if (sort_type) {
-                console.log("check : ", sort_type);
-                data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+        $("#specList").empty()
+        $("#specList").append(html)
+    } else {
+        if (data.length) {
+            if (sortType) {
+                console.log("check : ", sortType);
+                data.filter(list => list.name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
                     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
                         + '<td class="overlay hidden column-50px" data-th="">' 
                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSpecName + '"/>' 
@@ -163,13 +154,79 @@ function getVmSpecList(sort_type) {
                         + '</tr>'
                 ))
             }
-        
+
             $("#specList").empty()
             $("#specList").append(html)
-
-            // displayVmSpecInfo("REG_SUCCESS");
+            console.log("setVirtualMachineImageSpecAtServerSpec completed");
         }
-    })
+    }
+}
+
+function virtualMachineSpecListCallbackFail(error) {
+    var errorMessage = error.response.data.error;
+    var statusCode = error.response.status;
+    commonErrorAlert(statusCode, errorMessage);
+}
+
+function getVmSpecList(sort_type) {
+    getCommonVirtualMachineSpecList("virtualmachinespecmng", sort_type);
+
+//     console.log(sort_type);
+//     var url = "/setting/resources"+"/vmspec/list"
+//     console.log("URL : ",url)
+//     axios.get(url, {
+//         headers: {
+//             // 'Authorization': "{{ .apiInfo}}",
+//             'Content-Type': "application/json"
+//         }
+//     }).then(result => {
+//         console.log("get Spec List : ", result.data);
+        
+//         var data = result.data.VmSpecList;
+//         var html = ""
+        
+//         console.log("data.length : ", data);
+
+//         if (data == null) {
+//             console.log("################여기##############");
+//             html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
+//             $("#specList").empty()
+//             $("#specList").append(html)
+//         } else {
+//             if (sort_type) {
+//                 console.log("check : ", sort_type);
+//                 data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+//                     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
+//                         + '<td class="overlay hidden column-50px" data-th="">' 
+//                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSpecName + '"/>' 
+//                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+//                         + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
+//                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+//                         + '<td class="overlay hidden" data-th="cspSpecName">' + item.cspSpecName + '</td>'  
+//                         + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+//                         + '</tr>'
+//                 ))
+//             } else {
+//                 data.filter((list) => list.name !== "").map((item, index) => (
+//                     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
+//                         + '<td class="overlay hidden column-50px" data-th="">' 
+//                         + '<input type="hidden" id="spec_info_' + index + '" value="' + item.name + '"/>' 
+//                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+//                         + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
+//                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
+//                         + '<td class="overlay hidden" data-th="cspSpecName">' + item.cspSpecName + '</td>'  
+//                         + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+//                         + '</tr>'
+//                 ))
+//             }
+        
+//             $("#specList").empty()
+//             $("#specList").append(html)
+
+//             // displayVmSpecInfo("REG_SUCCESS");
+//         }
+//     })
 }
 
 // function ModalDetail(targetAction) {
@@ -369,14 +426,7 @@ function deleteVmSpec() {
             var message = data.message;
             commonAlert("Fail Create Spec : " + message +"(" + statusCode + ")");
             // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
-        }
-    // }).catch(function(error){
-
-    //     var statusCode = error.response.data.status;
-    //     var message = error.response.data.message;
-    //     commonErrorAlert(statusCode, message)
-        
-    // });
+        }    
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
@@ -385,3 +435,107 @@ function deleteVmSpec() {
         commonErrorAlert(statusCode, errorMessage);
     });
 }                                                  
+
+// connection에 등록된 spec목록 조회(공통함수 호출)
+function lookupSpecList(){
+    $("#assistSpecList").empty()
+    var connectionName = $("#regConnectionName").val();
+    if( !connectionName){
+        commonAlert("connection name required")
+        return;
+    }
+
+    $("#specAssist").modal();
+    $('.dtbox.scrollbar-inner').scrollbar();
+
+    getCommonLookupSpecList("vmspecmng", connectionName);
+}
+// 성공 callback
+function lookupSpecListCallbackSuccess(caller, data){
+    var html="";
+    if (data == null) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
+        $("#assistSpecList").empty()
+        $("#assistSpecList").append(html)
+    } else {
+        
+        // data.filter((list) => list.name !== "").map((item, index) => (
+           
+        //     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
+        //         + '<td class="overlay hidden column-50px" data-th="name">' + item.name + '</td>' 
+        //         + '<td class="btn_mtd ovm" data-th="region ">' + item.region  + '<span class="ov"></span></td>'
+        //         + '<td class="overlay hidden" data-th="mem">' + item.mem + '</td>' 
+        //         + '<td class="overlay hidden" data-th="info">' 
+        //         // + item.keyValueList(keyValueMap => ( keyValueMap.InstanceType))
+        //         + '</td>'  
+        //         + '</tr>'
+               
+        // ));
+        // data.map((item, index) => (
+           
+        //     html += '<tr onclick="showVmSpecInfo(\'' + item.name + '\');">' 
+        //         + '<td class="overlay hidden column-50px" data-th="name">' + item.name + '</td>' 
+        //         + '<td class="btn_mtd ovm" data-th="region ">' + item.region  + '<span class="ov"></span></td>'
+        //         + '<td class="overlay hidden" data-th="mem">' + item.mem + '</td>' 
+        //         + '<td class="overlay hidden" data-th="info">' 
+        //         // + item.keyValueList(keyValueMap => ( keyValueMap.InstanceType))
+        //         + '</td>'  
+        //         + '</tr>'
+               
+        // ));
+
+        $.each(data, function(index, item){
+            console.log('index:' + index + ' / ' + 'item:' + item);
+            console.log(item);
+            // keyValueMap = item.keyValueList;
+            // console.log(keyValueMap);
+            // var mapValue = ""
+            // keyValueMap.map( (mapObj, mapIndex) => {
+            //     // console.log("mapIndex = " + mapIndex);
+            //     // console.log(mapObj);
+            //     // console.log(mapIndex);
+            //     mapValue += mapObj.Key + " : " + mapObj.Value + " <br/>";
+            // });
+            var vpc = item.vcpc;
+            var vcpcValue = "";
+            if(vpc){
+                vcpcValue = 'Clock : ' + vpc.clock + '<br/> count :' + vpc.count
+            }
+            var gpu = item.gpu;
+            var gpuValue = "";
+            if(gpu){
+                gpuValue += 'count : ' + (gpu.count == undefined ? "" :  gpu.count);
+                gpuValue += '<br/> mem :' + (gpu.mem == undefined ? "" :  gpu.mem);
+                gpuValue += '<br/> mfr :' + (gpu.mfr == undefined ? "" :  gpu.mfr);
+                gpuValue += '<br/> model :' + (gpu.model == undefined ? "" :  gpu.model);
+            }
+
+            html += '<tr onclick="setCspSpecName(\'' + item.name + '\');">' 
+                + '<td class="overlay hidden" data-th="region">' + item.region + '</td>' 
+                + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
+                + '<td class="btn_mtd ovm" data-th="mem ">' + item.mem  + '<span class="ov"></span></td>'
+                + '<td class="overlay hidden" data-th="vcpc">' + vcpcValue + '</td>' 
+                + '<td class="overlay hidden" data-th="gpu">'  + gpuValue + '</td>' 
+                + '</tr>'
+        });
+        
+        
+        $("#assistSpecList").empty()
+        $("#assistSpecList").append(html)
+        $("#lookupSpecCount").text(data.length);
+        // displayVmSpecInfo("REG_SUCCESS");
+    }
+}
+// popup에서 main의 txtbox로 specName set
+function setCspSpecName(cspSpecName){
+    $("#regCspSpecName").val(cspSpecName);
+    $("#specAssist").modal("hide");
+}
+
+// 조회 실패
+function lookupSpecListCallbackFail(error){
+    var errorMessage = error.response.data.error;
+    var statusCode = error.response.status;
+    commonErrorAlert(statusCode, errorMessage);
+}

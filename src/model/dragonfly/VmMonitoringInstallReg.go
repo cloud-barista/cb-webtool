@@ -8,6 +8,7 @@ type VmMonitoringInstallReg struct {
 	PublicIp    string `json:"public_ip"` // VM의 퍼블릭 아이피
 	UserName    string `json:"user_name"` // VM의 SSH 접속 계정(cb-user)
 	SshKey      string `json:"ssh_key"`   // VM의 SSH 접근 키
-	CspType     string `json:"cspType"`   // VM의 CSP 정보 (aws ... 등)
+	SshKeyName  string `json:"ssh_key_name"`
+	CspType     string `json:"cspType"` // VM의 CSP 정보 (aws ... 등)
 	Port        int    `json:"port"`
 }
