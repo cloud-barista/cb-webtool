@@ -600,10 +600,10 @@ func main() {
 	resourcesGroup.POST("/machineimage/reg", controller.VirtualMachineImageRegProc)            // RegProc _ SshKey 같이 앞으로 넘길까
 	resourcesGroup.DELETE("/machineimage/del/:imageID", controller.VirtualMachineImageDelProc) // DelProc + SskKey 같이 앞으로 넘길까
 
-	resourcesGroup.GET("/machineimage/lookupimages", controller.LookupCspVirtualMachineImageList) // TODO : Image 전체목록인가? 확인필요
+	e.GET("/setting/resources/machineimage/lookupimages", controller.LookupCspVirtualMachineImageList) // TODO : Image 전체목록인가? 확인필요
 	//resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)          // TODO : Image 전체목록인가? 확인필요
 	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
-	resourcesGroup.GET("/machineimage/fetchimage", controller.FetchVirtualMachineImageList)            // TODO : Image 정보 갱신인가? 확인필요
+	e.POST("/setting/resources/machineimage/fetchimages", controller.FetchVirtualMachineImageList)     // TODO : Image 정보 갱신인가? 확인필요
 
 	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
 
