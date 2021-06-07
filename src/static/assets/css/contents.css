@@ -1374,7 +1374,7 @@ table tbody tr {
 .dashboard .register_box .graybox .logicbox .txtbox .logic_tbox .txt { color:#fff; font-size:16px; line-height:20px; padding:15px 10px; border-radius:15px; background-color:#06a9b7; }
 .dashboard .register_box .graybox .logicbox .txtbox .line { position:relative; float:left; height:2px; background-color:#5e636c; }
 .dashboard .register_box .graybox .logicbox .txtbox .line_a:after { content:''; display:block; position:absolute; right:0; top:50%; transform:translateY(-50%); width:9px; height:10px; background:url(../img/contents/icon_arr_lg.png) center center no-repeat; }
-.dashboard .register_box .graybox .logicbox .txtbox .line.line_space { background-color:#fff; width:35px; margin:120px 0 0 0; }
+.dashboard .register_box .graybox .logicbox .txtbox .line.line_space { background-color:#fff; width:5px; margin:20px 0 0 0; }
 .dashboard .register_box .graybox .logicbox .txtbox .line.line_p0 { margin:0 0 0 70px; height:42px; width:2px; }
 .dashboard .register_box .graybox .logicbox .txtbox .line.line_p0_1 { width:90px; margin:40px 0 0 0; }
 .dashboard .register_box .graybox .logicbox .txtbox .line.line_p1 { width:35px; margin:60px 0 0 0; }
@@ -2305,6 +2305,22 @@ table tbody tr {
 .popup_editBox .modal-body .pop-body .pop-cont .dataTable .btn_add { padding:0; margin:0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_add_s.png) center center no-repeat; }
 .popup_editBox .modal-body .pop-body .pop-cont .dataTable .btn_del { padding:0; margin:0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_del_s.png) center center no-repeat; }
 .popup_editBox .modal-body .pop-body .pop-cont .dataTable tr.bottom_line  { overflow:hidden; text-indent:-9999em; }
+
+
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox { display:none; position:absolute; left:50%; top:23px; transform:translateX(-50%); background-color:#5e636c; border-radius:8px; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box { padding:20px 24px 21px 24px; min-width:156px; text-align:left; background:none; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box p { margin:0 0 5px 0; color:#06a9b7;font-size:14px; line-height:14px; font-weight:400; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li { margin:8px 0 2px 0; color:#fff;font-size:14px; line-height:14px; font-weight:100; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li:first-child { margin:0; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li > a { color:#fff;font-size:14px; line-height:14px; font-weight:100; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li > a:hover { color:#dad73d; font-weight:400; background-color:#535757;}
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li > strong { color:#06a9b7;font-size:14px; line-height:14px; font-weight:400; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li > ul { padding:0 0 0 12px; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li > ul > li { margin:8px 0 0 0; color:#fff;font-size:14px; line-height:14px; font-weight:100; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li > ul > li > a { color:#fff;font-size:14px; line-height:14px; font-weight:100; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li > ul > li > a:hover { color:#dad73d; font-weight:400; background-color:#535757;}
+
+
 @media screen and (max-width:1800px){
 	.popup_editBox .modal-body .pop-body .pop-cont .dataTable.scrollbar-inner { max-width:100%; overflow:auto; }
 	.popup_editBox .modal-body .pop-body .pop-cont .dataTable.scrollbar-inner table { width:auto; }

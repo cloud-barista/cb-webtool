@@ -146,7 +146,7 @@ function getCommonNetworkList(caller){
         console.log("vNetwork Info : ",result);
         console.log("vNetwork data : ",data);
         getNetworkListCallbackSuccess(caller, data);
-    }).catch((error) => {
+    }).catch(error => {
         console.warn(error);
         console.log(error.response)
         // var errorMessage = error.response.data.error;
@@ -180,7 +180,7 @@ function getCommonSecurityGroupList(caller, sortType) {
 			getSecurityGroupListCallbackSuccess(data)			
 		}
 
-	}).catch((error) => {
+	}).catch(error => {
 		console.warn(error);
 		console.log(error.response) 
         getSecurityGroupListCallbackFail(error)
@@ -198,7 +198,7 @@ function getCommonSshKeyList(caller) {
         console.log("get SSH Data : ", result.data);
         var data = result.data.SshKeyList; // exception case : if null 
         getSshKeyListCallbackSuccess(caller, data)
-    }).catch((error) => {
+    }).catch(error => {
         console.warn(error);
         console.log(error.response)
         var errorMessage = error.response.data.error;
@@ -239,7 +239,7 @@ function getCommonVirtualMachineImageList(caller) {
     // }).catch(function(error){
     //     console.log("list error : ",error);        
     // });
-	}).catch((error) => {
+	}).catch(error => {
 		console.warn(error);
 		console.log(error.response) 
 	});
@@ -267,7 +267,7 @@ function getCommonVirtualMachineSpecList(caller, sortType) {
             virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
         }
-    }).catch((error) => {
+    }).catch(error => {
 		console.warn(error);
 		console.log(error.response) 
         virtualMachineSpecListCallbackFail(error)
@@ -298,7 +298,7 @@ function getCommonLookupSpecList(caller, connectionName) {
     // }).catch(function(error){
     //     console.log("list error : ",error);        
     // });
-	}).catch((error) => {
+	}).catch(error => {
 		console.warn(error);
 		console.log(error.response) 
         lookupSpecListCallbackSuccess(error)
@@ -324,7 +324,63 @@ function putFetchSpecs(connectionName){
         }else{
             commonAlert("Fail to Spec Fetched");
         }
-	}).catch((error) => {
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+	});
+}
+
+// /lookupImages
+function getCommonLookupImageList(caller, connectionName) {    
+    //var url = "/setting/resources/vmimage/lookupvmimagelist"
+    var url = "/setting/resources/machineimage/lookupimages"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        },
+        params: {
+            connectionName: connectionName
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.VirtualMachineImageList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( caller == "vmimagemng"){
+			console.log("return get Data")			
+			lookupVmImageListCallbackSuccess(caller, data)		
+		}
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        lookupVmImageListCallbackFail(error)
+	});
+}
+
+//
+///ns/{nsId}/resources/fetchImages
+function getCommonFetchImages(caller, connectionName) {
+    var url = "/setting/resources/machineimage/fetchimages"
+    axios.post(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }        
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            commonAlert("Image Fetched");                            
+        }else{
+            commonAlert("Fail to Image Fetched");
+        }
+	}).catch(error => {
 		console.warn(error);
 		console.log(error.response) 
         var errorMessage = error.response.data.error;

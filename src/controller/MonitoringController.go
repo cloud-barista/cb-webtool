@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/cloud-barista/cb-webtool/src/model/dragonfly"
 	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/cloud-barista/cb-webtool/src/util"
@@ -91,15 +92,15 @@ func VmMonitoringAgentRegForm(c echo.Context) error {
 
 }
 
-// VM에 모니터링 Agent 설치
+// 모니터링 BenchmarkAgent 설치
 // /ns/{nsId}/monitoring/install/mcis/{mcisId}
-func VmMonitoringAgentRegProc(c echo.Context) error {
+func RegBenchmarkAgentInVm(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	vmMonitoringAgentReg := &tumblebug.VmMonitoringAgentReg{}
+	vmMonitoringAgentReg := &tumblebug.McisCmdReq{}
 	if err := c.Bind(vmMonitoringAgentReg); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
@@ -115,7 +116,7 @@ func VmMonitoringAgentRegProc(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	mcisID := c.Param("mcisID")
-	vmMonitoringAgentInfo, respStatus := service.RegMonitoringAgentInVm(defaultNameSpaceID, mcisID, vmMonitoringAgentReg)
+	vmMonitoringAgentInfo, respStatus := service.RegBenchmarkAgentInVm(defaultNameSpaceID, mcisID, vmMonitoringAgentReg)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
@@ -191,4 +192,49 @@ func McksMonitoringMngForm(c echo.Context) error {
 			"McisList":           mcisList,
 		})
 
+}
+
+func VmMonitoringAgentRegProc(c echo.Context) error {
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	vmMonitoringAgentReg := &dragonfly.VmMonitoringInstallReg{}
+	if err := c.Bind(vmMonitoringAgentReg); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(vmMonitoringAgentReg)
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	vmMonitoringAgentReg.NameSpaceID = defaultNameSpaceID
+
+	sshKeyName := vmMonitoringAgentReg.SshKeyName
+	//var url2 = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
+	//privateKey
+	sshKeyInfo, sshKeyStatus := service.GetSshKeyData(defaultNameSpaceID, sshKeyName)
+	if sshKeyStatus.StatusCode == 200 || sshKeyStatus.StatusCode == 201 {
+		vmMonitoringAgentReg.SshKey = sshKeyInfo.PrivateKey
+	}
+	mcisID := c.Param("mcisID")
+	resultVmMonitoringAgentInfo, respStatus := service.RegMonitoringAgentInVm(defaultNameSpaceID, mcisID, vmMonitoringAgentReg)
+	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": resultVmMonitoringAgentInfo.Message,
+		"status":  respStatus.StatusCode,
+	})
 }
