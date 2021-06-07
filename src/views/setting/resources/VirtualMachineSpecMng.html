@@ -281,7 +281,37 @@
 												<label>Spec List : <span id="lookupSpecCount"></span></label>
 												<button type="button" class="btn btn-sm btn-dark" onclick="commonConfirmOpen('FetchSpecs')">Fetch Specs</button>
 											</div>
-											
+
+											<div class="top_info">
+												<ul>
+													<li>
+														<a href="javascript:void(0);">Filter</a>
+														<div class="infobox">
+															<div class="box">
+																<ul>
+																	<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image ID</a></li>
+																	<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image Name</a></li>
+																</ul>
+															</div>
+														</div>
+													</li>
+													<li>
+														<a href="javascript:void(0);">Sort</a>
+														<div class="infobox">
+															<div class="box">
+																<ul>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'Name')">Region</a></li>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'Name')">Name</a></li>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'Memory')">Memory</a></li>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'VCPC Info')">VCPC Info</a></li>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'GPU')">GPU</a></li>
+																</ul>
+															</div>
+														</div>
+													</li>													
+												</ul>
+											</div>
+
 											<!-- table scrollbar -->
 											<div class="dtbox scrollbar-inner">
 												<div class="dataTable dt_overlay">

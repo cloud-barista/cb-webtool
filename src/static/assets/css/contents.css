@@ -42,6 +42,7 @@
 .titlebox .location strong { font-weight:400; }
 
 .btn_search { position:absolute; top:-2px; right:1px; width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat; }
+.btn_hide { position:relative; top:-2px; right:1px; width:100%; right:51px; text-align:right; outline:none; border:none; background:none; padding:0; margin:0; float : right;}
 
 .dashboard { margin:33px 0 0 0; }
 .dashboard:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
@@ -201,7 +202,8 @@ table thead {
     /* head takes the height it requires, 
     and it's not scaled when table is resized */
     flex: 0 0 auto;
-    width: calc(100% - 0.91em);
+    /* width: calc(100% - 0.91em); */
+	width: calc(100% - 1.4em);
 }
 table tbody {
     /* body takes all the remaining available space */    
@@ -217,6 +219,9 @@ table tbody tr {
     table-layout: fixed;
 }
 
+.column-40px {
+    width: 40px;
+}
 .column-50px {
     width: 50px;
 }

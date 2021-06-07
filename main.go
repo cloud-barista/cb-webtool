@@ -88,7 +88,21 @@ func main() {
 		DisableCache: true,
 	})
 
-	defaultTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// defaultTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// 	Root:      "src/views",
+	// 	Extension: ".html",
+	// 	// Master:    "auth/Login",
+	// 	Partials: []string{
+	// 		"templates/Top",
+	// 		"templates/TopBox",
+	// 		"templates/MenuLeft",
+	// 		"templates/Header",
+	// 		"templates/Footer",
+	// 	},
+	// 	DisableCache: true,
+	// })
+
+	aboutTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
 		// Master:    "auth/Login",
@@ -98,6 +112,7 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Header",
 			"templates/Footer",
+			"auth/UserGuide",
 		},
 		DisableCache: true,
 	})
@@ -115,6 +130,7 @@ func main() {
 			"templates/Header",
 			"templates/MenuLeft",
 			"templates/Footer",
+			"auth/UserGuide",
 		}, //
 		DisableCache: true,
 	})
@@ -392,7 +408,8 @@ func main() {
 	// handler : 1개일때 controller명 + Data, List일 때 controller method명 DataList
 
 	e.GET("/", controller.Index)
-	defaultGroup := e.Group("/operation/about", defaultTemplate)
+
+	defaultGroup := e.Group("/operation/about", aboutTemplate)
 	defaultGroup.GET("/about", controller.About)
 
 	//e.GET("/apicall", controller.ApiCall)

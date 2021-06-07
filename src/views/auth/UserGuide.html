@@ -1,36 +1,6 @@
-{{ template "Top" .}}
-	
-		<div id="lnb">
-			
-			<div class="bg"></div>
-				
-			<div class="m_box">
-				
-                {{template "TopBox" .}}
-
-                {{template "LNBPopup" .}}
-        
-                {{template "MenuLeft" .}}
-                
-
-			</div>
-			
-			<div class="bottom"></div>
-			<a href="javascript:;" id="m_close"></a>
-			
-		</div>
-			
-		{{template "Header" .}}
-	
-		{{template "Modal" .}}
-				
-				<!-- contents -->
-				<div class="contbox" id="mainNameSpace">
+{{define "UserGuide"}}
 					
-					<div class="titlebox">
-						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>서비스 생성 Guide</strong></div>
-						<div class="location">Home  <span>></span> <strong>Main</strong></div>
-					</div>
+
  
 					<div class="dashboard dashboard_cont">
 						<div>
@@ -290,139 +260,254 @@
 					<!-- //list -->
 					
 					
-
-				</div>
-				<!-- //contents -->
-
 			
-	<!-- popup Guide -->
-	<div class="modal fade" id="guideArea" tabindex="-1" role="dialog" aria-hidden="true">           
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-body" style="width: 75%;left:10%;right:10%;">
-					
-					<div class="pop-body">
-						
-						<div class="titbox">
-							<div class="tit" ><span class="ch">Help : click or press OK button to disappear.</span></div>
-						</div>
-						<img src="/assets/img/bg_guide.png" class="img" style="width: 100%;" onclick="guideAreaHide()" />								
-						<!-- <div class="pop-cont" style="width: 100%;top: 100px; bottom: 150px; position: absolute; float: right;" >
-							<div class="pop_ip ip1" style="width: 40%;padding: 10px;border: 1px solid rgb(29, 25, 25); background-color: lightblue; float: right;">
-								<ul>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP1 NameSpace</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.NAMESPACE "PASS" }} NAMESPACE 가 생성되어 있습니다.
-										{{ else }} NameSpace가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/namespaces/namespace/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>
-									</li>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP2 Connection - Credential</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.CREDENTIAL "PASS" }} Credential이 생성되어 있습니다.
-										{{ else }} Credential이 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>
-									</li>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP2 Connection - Driver</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.DRIVER "PASS" }} Driver가 생성되어 있습니다.
-										{{ else }} Driver가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>										
-									</li>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP2 Connection - Region</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.REGION "PASS" }} Region이 생성되어 있습니다.
-										{{ else }} Region이 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>
-									</li>
 
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - Network</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.REGION "PASS" }} Network가 생성되어 있습니다.
-										{{ else }} Network가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/network/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>
-									</li>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - Security</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.REGION "PASS" }} Security가 생성되어 있습니다.
-										{{ else }} Security가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/securitygroup/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>
-									</li>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - SSH key</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.REGION "PASS" }} SSH key가 생성되어 있습니다.
-										{{ else }} SSH key가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/sshkey/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>
-									</li>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - (Server) Image</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.REGION "PASS" }} (Server) Image가 생성되어 있습니다.
-										{{ else }} (Server) Image가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/machineimage/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>
-									</li>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP3 Resource - (Server) Spec</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.REGION "PASS" }} (Server) Spec이 생성되어 있습니다.
-										{{ else }} (Server) Spec이 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/setting/resources/vmspec/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>									
-									</li>
 
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP4 Manage - MCIS</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em;">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.MCIS "PASS" }} MCIS가 생성되어 있습니다.
-										{{ else }} MCIS가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/operation/manages/mcismng/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>									
-									</li>
-									<li>
-										<span style="margin-left:1px; padding-right: 50px;; font-size: 1.1em; font-weight: bold; text-align:left;">STEP4 Manage - MCKS</span>
-										<span style="margin-left:30px; text-align:right; font-size: 0.7em; ">
-										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										{{if eq .WorkingStep.MCKS "PASS" }} MCKS가 생성되어 있습니다.
-										{{ else }} MCKS가 생성되어 있지 않습니다. <a href="javascript:void(0);" onclick="changePage('/operation/manages/mcksmng/mngform')"> [생성하러 가기]</a>
-										{{ end }}
-										</span>									
-									</li>									
-								</ul>
-							</div>
-						</div> -->
+<script >
 
-					</div>
-					<div class="btnbox">
-						<button name="" value="" class="btn_ok" data-dismiss="modal" >OK</button> 
-					</div>			
-				</div>				
-			</div>
-		</div>
-	</div>
-	<!-- //popup Guide -->
+function guideAreaHide(){
+	$("#guideArea").modal("hide");
+}
 
-{{template "Footer" .}}
+$(document).ready(function () {
+	// namespace
+	getCommonNameSpaceList("namespace")
+
+	// connection
+	// credential
+	getCommonCredentialList("credential");
+	// region
+	getCommonRegionList("region");
+	// driver
+
+	// resource
+	// network(vnet)
+	getCommonNetworkList("network")
+	// securitygroup
+	getCommonSecurityGroupList("mainsecuritygroup")
+	// sshkey
+	getCommonSshKeyList("sshkey")
+	// spec
+	
+	// image
+	getCommonVirtualMachineImageList("image")
+	
+	//$("#guideArea").modal();
+});                   
+
+let guideMap = new Map();
+// TODO : 가져온 결과로 어떻게 처리할 것인지
+function processMap(caller){
+	console.log("GUIDE---------- " + caller)
+	console.log(guideMap)
+	try{
+	var keyValue = guideMap.get(caller);
+	if( keyValue > 0){
+		$("#goto" + caller).html("")
+		console.log(" gogogogo ")
+		$("#goto" + caller).html("생성완료")
+		console.log(" gogogogo22 ")
+	}else{
+		console.log("-- goto" + caller)
+		document.getElementById("goto" + caller).style.display = "";
+	}
+}catch(e){console.log(e)}
+	console.log("goto" + caller)
+	// guideMap.forEach( (value, key, map) => {
+	// 	// alert(`${key}: ${value}`); // cucumber: 500 ...
+	// 	console.log(key + " : " + value);
+	// 	if( key == "namespace" && value == 0 ){
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}
+
+	// 	if( key == "credential" && value == 0 ){
+	// 		document.getElementById("gotoCredential").style.display = "";
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}else{
+	// 		$("#gotoCredential").html("생성완료")
+	// 		document.getElementById("gotoCredential").style.display = "";
+	// 		return;
+	// 	}
+
+	// 	if( key == "region" && value == 0 ){
+	// 		document.getElementById("gotoRegion").style.display = "";
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}else{
+	// 		$("#gotoRegion").text("생성완료")
+	// 		document.getElementById("gotoRegion").style.display = "";
+	// 		return;
+	// 	}
+
+	// 	if( key == "driver" && value == 0 ){
+	// 		document.getElementById("gotoDriver").style.display = "";
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}else{
+	// 		$("#gotoDriver").text("생성완료")
+	// 		document.getElementById("gotoDriver").style.display = "";
+	// 		return;
+	// 	}
+
+	// 	if( key == "network" && value == 0 ){
+	// 		document.getElementById("gotoNetwork").style.display = "";
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}else{
+	// 		$("#gotoNetwork").text("생성완료")
+	// 		document.getElementById("gotoNetwork").style.display = "";
+	// 		return;
+	// 	}
+
+	// 	if( key == "securitygroup" && value == 0 ){
+	// 		document.getElementById("gotoSecurity").style.display = "";
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}else{
+	// 		$("#gotoSecurity").text("생성완료")
+	// 		document.getElementById("gotoSecurity").style.display = "";
+	// 		return;
+	// 	}
+
+	// 	if( key == "sshkey" && value == 0 ){
+	// 		document.getElementById("gotoSshKey").style.display = "";
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}else{
+	// 		$("#gotoSshKey").text("생성완료")
+	// 		document.getElementById("gotoSshKey").style.display = "";
+	// 		return;
+	// 	}
+
+	// 	if( key == "image" && value == 0 ){
+	// 		document.getElementById("gotoServerImage").style.display = "";
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}else{
+	// 		$("#gotoServerImage").text("생성완료")
+	// 		document.getElementById("gotoServerImage").style.display = "";
+	// 		return;
+	// 	}
+
+	// 	if( key == "spec" && value == 0 ){
+	// 		document.getElementById("gotoServerSpec").style.display = "";
+	// 		$("#guideArea").modal();
+	// 		return;
+	// 	}else{
+	// 		$("#gotoServerSpec").text("생성완료")
+	// 		document.getElementById("gotoServerSpec").style.display = "";
+	// 		return;
+	// 	}
+	// });
+}
+
+function getNameSpaceListCallbackSuccess(caller, data){
+	if ( data != null && data != undefined ){
+		guideMap.set(caller, 1)
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
+	}
+	processMap(caller);
+}
+function getNameSpaceListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+function getCredentialListCallbackSuccess(caller, data){
+	if ( data != null && data != undefined ){
+		guideMap.set(caller, 1)
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
+	}
+	processMap(caller);
+}
+function getCredentialListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+function getRegionListCallbackSuccess(caller, data){
+	if ( data != null && data != undefined ){
+		guideMap.set(caller, 1)
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
+	}
+	processMap(caller);
+}
+function getRegionListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+function getDriverListCallbackSuccess(caller, data){
+	if ( data != null && data != undefined ){
+		guideMap.set(caller, 1)
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
+	}
+	processMap(caller);
+}
+function getDriverListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+function getNetworkListCallbackSuccess(caller, data){
+	if ( data != null && data != undefined ){
+		console.log("getNetworkListCallbackSuccess : " + caller)
+		guideMap.set(caller, 1)
+		processMap(caller);
+	}
+}
+function getNetworkListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+function getSecurityGroupListCallbackSuccess(caller, data){
+	if ( data != null && data != undefined ){
+		guideMap.set("securitygroup", 1)
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set("securitygroup", 0)
+	}
+	processMap(caller);
+}
+function getSecurityGroupListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+function getSshKeyListCallbackSuccess(caller, data){
+	console.log(data);
+	if ( data != null && data != undefined){
+		guideMap.set(caller, 1)
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
+	}
+	// console.log(data);
+	processMap(caller);
+}
+function getSshKeyListCallbackFail(caller, error){
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+//getCommonVirtualMachineImageList
+function getImageListCallbackSuccess(caller, data){
+	if ( data != null){
+		guideMap.set(caller, 1)
+	}else{// 아직 data가 1건도 없을 수 있음
+		guideMap.set(caller, 0)
+	}
+	processMap(caller);
+}
+
+function getImageListCallbackFail(caller, error){	
+	guideMap.set(caller, 1)
+	processMap(caller);
+}
+</script>
+{{end}}
