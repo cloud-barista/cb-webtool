@@ -332,3 +332,59 @@ function putFetchSpecs(connectionName){
         commonErrorAlert(statusCode, errorMessage);
 	});
 }
+
+// /lookupImages
+function getCommonLookupImageList(caller, connectionName) {    
+    //var url = "/setting/resources/vmimage/lookupvmimagelist"
+    var url = "/setting/resources/machineimage/lookupimages"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        },
+        params: {
+            connectionName: connectionName
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.VirtualMachineImageList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( caller == "vmimagemng"){
+			console.log("return get Data")			
+			lookupVmImageListCallbackSuccess(caller, data)		
+		}
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        lookupVmImageListCallbackFail(error)
+	});
+}
+
+//
+///ns/{nsId}/resources/fetchImages
+function getCommonFetchImages(caller, connectionName) {
+    var url = "/setting/resources/machineimage/fetchimages"
+    axios.post(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }        
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            commonAlert("Image Fetched");                            
+        }else{
+            commonAlert("Fail to Image Fetched");
+        }
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+	});
+}

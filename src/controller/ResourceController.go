@@ -778,6 +778,7 @@ func LookupCspVirtualMachineImageList(c echo.Context) error {
 
 	log.Println("paramConnectionName : ", paramConnectionName)
 	virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList(paramConnectionName)
+
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,

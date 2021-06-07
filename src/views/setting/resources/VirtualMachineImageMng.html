@@ -326,7 +326,8 @@
                                                 </li>
                                                 <li class="reg_2">
 													<label><span class="ch">*</span>CSP Image ID</label>
-													<input type="text" id="regCspImgId" name="reg_cspImgId" value="" placeholder="Input CSP Image Id" class="pline ip_w1" title="" />
+													<input type="text" id="regCspImgId" name="reg_cspImgId" value="" placeholder="Input CSP Image Id" class="pline ip_w1" title="" />													
+													<a href="javascript:void(0);" class="btn_assist">Assist</a>
                                                 </li>
                                                 <li class="reg_2">
                                                     <label>CSP Image Name</label>
@@ -364,7 +365,7 @@
 												</li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Connection Name</label>
-													<select class="selectbox white pline w3"  name="reg_connectionName" id="regConnectionName">
+													<select class="selectbox white pline w3"  name="reg_connectionName" id="regConnectionName" onchange="clearCspImageInfo()">
 														<option value="" selected>Selected ConnectionName</option>
 													</select>
                                                 </li>
@@ -484,8 +485,38 @@
 											
 											<div class="toptxt">
 												<label>Image List : <span id="lookupVmImageCount"></span></label>
-												<button type="button" class="btn btn-sm btn-dark" onclick="commonConfirmOpen('FetchImages')">Fetch Specs</button>
+												<button type="button" class="btn btn-sm btn-dark" onclick="commonConfirmOpen('FetchImages')">Fetch Images</button>
 											</div>
+
+											<div class="top_info">
+												<ul>
+													<li>
+														<a href="javascript:void(0);">Filter</a>
+														<div class="infobox">
+															<div class="box">
+																<ul>
+																	<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image ID</a></li>
+																	<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image Name</a></li>
+																</ul>
+															</div>
+														</div>
+													</li>
+													<li>
+														<a href="javascript:void(0);">Sort</a>
+														<div class="infobox">
+															<div class="box">
+																<ul>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'Name')">Name</a></li>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'Status')">Status</a></li>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'GuestOS')">GuestOS</a></li>
+																	<li><a href="javascript:void(0);" onclick="tableSort('assistSpecList', 'IID nameId')">IID nameId</a></li>
+																</ul>
+															</div>
+														</div>
+													</li>													
+												</ul>
+											</div>
+										
 											
 											<!-- table scrollbar -->
 											<div class="dtbox scrollbar-inner">
