@@ -534,6 +534,7 @@ func main() {
 	mcksRegGroup.GET("", controller.McksRegForm)                              // MCKS 생성 + Node생성 form
 	mcksRegGroup.GET("/:clusteruID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성 : name까지 주는 이유는 별도처리하지 않고 node추가화면으로 바로 보내기 때문
 
+	e.GET("/operation/manages/mcksmng/list", controller.GetMcisList)
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
 	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName", controller.McksDelProc)
 	e.POST("/operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc", controller.NodeRegProc)
@@ -635,7 +636,7 @@ func main() {
 	resourcesGroup.GET("/vmspec/lookupvmspec/:vmSpecName", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
 	resourcesGroup.POST("/vmspec/fetchvmspec", controller.FetchVmSpecList)              // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
-	e.POST("/setting/resources/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
+	e.POST("/setting/resources/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange) // TODO : post방식의 filterspec 생성필요
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)
