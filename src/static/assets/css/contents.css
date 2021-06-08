@@ -443,6 +443,7 @@ table tbody tr {
 }
 
 .dataTable { padding:0 0 0 1%; }
+.dataTable a { margin:6px 0 0 0; color: #06a9b7; }
 .dataTable table { width:100%; border-collapse:collapse; background-color:#fff; }
 .dataTable thead th { padding:14px 5px; color:#fff; font-size:18px; font-weight:300; text-align:center; border-right:1px solid #ccc; background-color:#5e636c; }
 .dataTable thead th:last-child { border-right:none; }
@@ -2271,7 +2272,7 @@ table tbody tr {
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box.d_block .spec_box { padding:20px 0 0 0; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box { float:left; width:50%; }
-.popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box > ul { padding-right:145px; text-align:right; }
+.popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box > ul { padding-right:125px; text-align:right; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box.d_block .spec_box .s_box > ul { padding-right:0;}
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box li { margin:5px 0 0 0; min-height:37px; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box li label { display:inline-block; text-align:right; margin:0 14px 0 0; vertical-align:middle; font-size:16px; font-weight:500; color:#5e636c; }
