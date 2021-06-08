@@ -174,8 +174,11 @@ function prevTab(elem) {
 }
 
 // 조회결과 table hide 시키기
-function hideFilterResultTable(targetObjId){
+function hideFilterResultTable(targetObjId, hideButtonObj){
   document.getElementById(targetObjId).style.display = "none";
+  if(hideButtonObj != undefined){
+    document.getElementById(hideButtonObj).style.display = "none";
+  }
 }
 
 // TODO : util.js로 옮길 것
@@ -474,6 +477,10 @@ function filterToHidden(keywordObjId, filterColumnName, tableId){
   
   // target Table이 display:none이면 보이도록
   document.getElementById(tableId).style.display = "";
+  if(document.getElementById(tableId + "Hide")){// Hide button이 있는 경우
+    document.getElementById(tableId + "Hide").style.display = "";
+  }
+  
 }
 
 function filterEnterVnetGroupToHidden(keywordObjId){

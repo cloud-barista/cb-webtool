@@ -225,7 +225,7 @@
 															<!-- { {if eq .WorkingStep.MCKS "PASS" }}  <br> 생성
 															{ { else }} 미생성 <br/>[생성하러 가기]
 															{ { end }} -->
-															<span id="gotomainmcis" style="display:none">
+															<span id="gotomainmcks" style="display:none">
 																미생성 <br/>[생성하러 가기]
 															</span>
 														</div>
@@ -285,6 +285,7 @@ $(document).ready(function () {
 	// region
 	getCommonRegionList("mainregion");
 	// driver
+	getCommonDriverList("maindriver");
 
 	// resource
 	// network(vnet)
@@ -300,6 +301,9 @@ $(document).ready(function () {
 
 	getCommonVirtualMachineSpecList("mainspec")
 	
+	getCommonMcisList("mainmcis")
+
+	getCommonMcksList("mainmcks")
 	//$("#guideArea").modal();
 });                   
 
@@ -417,7 +421,9 @@ function getNameSpaceListCallbackSuccess(caller, data){
 		guideMap.set(caller, 0)
 		$("#guideArea").modal();
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
@@ -433,7 +439,9 @@ function getCredentialListCallbackSuccess(caller, data){
 		guideMap.set(caller, 0)
 		$("#guideArea").modal();
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
@@ -449,7 +457,9 @@ function getRegionListCallbackSuccess(caller, data){
 		guideMap.set(caller, 0)
 		$("#guideArea").modal();
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
@@ -465,7 +475,9 @@ function getDriverListCallbackSuccess(caller, data){
 		guideMap.set(caller, 0)
 		$("#guideArea").modal();
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
@@ -480,7 +492,9 @@ function getNetworkListCallbackSuccess(caller, data){
 	if ( data == null || data == undefined || data == "null"){
 		guideMap.set(caller, 0)
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
@@ -495,7 +509,9 @@ function getSecurityGroupListCallbackSuccess(caller, data){
 	if ( data == null || data == undefined || data == "null"){
 		guideMap.set(caller, 0)
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
@@ -510,7 +526,9 @@ function getSshKeyListCallbackSuccess(caller, data){
 	if ( data == null || data == undefined || data == "null"){
 		guideMap.set(caller, 0)
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
@@ -526,14 +544,16 @@ function getImageListCallbackSuccess(caller, data){
 	if ( data == null || data == undefined || data == "null"){
 		guideMap.set(caller, 0)
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
 }
 
 function getImageListCallbackFail(caller, error){	
-	guideMap.set(caller, 1)
+	guideMap.set(caller, 0)
 	processMap(caller);
 }
 
@@ -542,14 +562,54 @@ function getSpecListCallbackSuccess(caller, data){
 	if ( data == null || data == undefined || data == "null"){
 		guideMap.set(caller, 0)
 	}else{// 아직 data가 1건도 없을 수 있음
-		guideMap.set(caller, 1)
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
 	}
 	// console.log(data);
 	processMap(caller);
 }
 
 function getSpecListCallbackFail(caller, error){	
-	guideMap.set(caller, 1)
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+function getMcisListCallbackSuccess(caller, data){
+	console.log(data);
+	if ( data == null || data == undefined || data == "null"){
+		guideMap.set(caller, 0)
+	}else{// 아직 data가 1건도 없을 수 있음
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
+	}
+	// console.log(data);
+	processMap(caller);
+}
+
+function getMcisListCallbackFail(caller, error){	
+	guideMap.set(caller, 0)
+	processMap(caller);
+}
+
+
+function getMcksListCallbackSuccess(caller, data){
+	console.log("getMcksListCallbackSuccess--" + caller);
+	console.log(data);
+	if ( data == null || data == undefined || data == "null"){
+		guideMap.set(caller, 0)
+	}else{// 아직 data가 1건도 없을 수 있음
+		if( data.length > 0){
+			guideMap.set(caller, 1)
+		}
+	}
+	// console.log(data);
+	processMap(caller);
+}
+
+function getMcksListCallbackFail(caller, error){	
+	guideMap.set(caller, 0)
 	processMap(caller);
 }
 </script>
