@@ -423,3 +423,74 @@ function getCommonFetchImages(caller, connectionName) {
         commonErrorAlert(statusCode, errorMessage);
 	});
 }
+
+
+// MCIS 목록 존재여부
+function getCommonMcisList(caller) {
+    var url = "/operation/manages/mcismng/list"
+
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Mcis List : ", result.data);
+        
+        var data = result.data.McisList;
+
+        // if ( caller == "mainmcis") {
+            console.log("return get Data");            
+			getMcisListCallbackSuccess(caller, data)		
+		// }
+    }).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        getMcisListCallbackFail(error)
+	});
+}
+
+function getCommonMcisList(caller) {
+    var url = "/operation/manages/mcismng/list"
+
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Mcis List : ", result.data);
+        
+        var data = result.data.McisList;
+
+        // if ( caller == "mainmcis") {
+            console.log("return get Data");            
+			getMcisListCallbackSuccess(caller, data)		
+		// }
+    }).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        getMcisListCallbackFail(error)
+	});
+}
+
+function getCommonMcksList(caller) {
+    var url = "/operation/manages/mcksmng/list"
+
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Mcks List : ", result.data);
+        
+        var data = result.data.McksList;
+
+        // if ( caller == "mainmcis") {
+            console.log("return get Data");            
+			getMcksListCallbackSuccess(caller, data)		
+		// }
+    }).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        getMcksListCallbackFail(error)
+	});
+}

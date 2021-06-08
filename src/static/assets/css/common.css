@@ -126,6 +126,7 @@ body {
   transform: translateX(-50%);
   background-color: #5e636c;
   border-radius: 8px;
+  cursor: default;
 }
 #lnb .topbox .info .txt_2 .infobox:after {
   content: "";
@@ -142,6 +143,12 @@ body {
   padding: 20px 20px 21px 24px;
   min-width: 136px;
   text-align: left;
+}
+#lnb .topbox .info .txt_2 .infobox .box .divider {
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+  background-color: #999ea7;
 }
 #lnb .topbox .info .txt_2 .infobox .box > ul > li {
   margin: 8px 0 2px 0;

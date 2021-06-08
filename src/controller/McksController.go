@@ -138,6 +138,33 @@ func McksMngForm(c echo.Context) error {
 		})
 }
 
+// MCKS 목록 조회
+func GetMcksList(c echo.Context) error {
+	log.Println("GetMcksList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+	mcksList, respStatus := service.GetClusterList(defaultNameSpaceID)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":            "success",
+		"status":             respStatus.StatusCode,
+		"DefaultNameSpaceID": defaultNameSpaceID,
+		"McksList":           mcksList,
+	})
+}
+
 // Cluster 등록 처리
 func McksRegProc(c echo.Context) error {
 	log.Println("McksRegProc : ")
