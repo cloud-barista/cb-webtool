@@ -299,17 +299,17 @@ func GetMonitoringConfig() (*dragonfly.MonitoringConfig, model.WebStatus) {
 
 	// defer body.Close()
 	monitoringConfig := dragonfly.MonitoringConfig{}
+
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return &monitoringConfig, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// util.DisplayResponse(resp) // 수신내용 확인
-
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
 	json.NewDecoder(respBody).Decode(&monitoringConfig)
-	fmt.Println(monitoringConfig)
+	log.Println(monitoringConfig)
 
 	return &monitoringConfig, model.WebStatus{StatusCode: respStatus}
 }

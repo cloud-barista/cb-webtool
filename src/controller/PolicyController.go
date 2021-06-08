@@ -64,7 +64,6 @@ func MonitoringConfigPolicyMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	//MonitoringConfig
-
 	monitoringConfig, _ := service.GetMonitoringConfig()
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
