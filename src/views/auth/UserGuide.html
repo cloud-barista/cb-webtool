@@ -322,6 +322,9 @@ function processMap(caller){
 	}else{
 		console.log("-- goto" + caller)
 		document.getElementById("goto" + caller).style.display = "";
+		if( caller.indexOf("credential") > 0 || caller.indexOf("driver") > 0 || caller.indexOf("region") > 0){
+			$("#guideArea").modal();
+		}
 	}
 }catch(e){console.log(e)}
 	console.log("goto" + caller)
@@ -419,7 +422,6 @@ function getNameSpaceListCallbackSuccess(caller, data){
 	console.log(data);
 	if ( data == null || data == undefined || data == "null"){
 		guideMap.set(caller, 0)
-		$("#guideArea").modal();
 	}else{// 아직 data가 1건도 없을 수 있음
 		if( data.length > 0){
 			guideMap.set(caller, 1)
@@ -437,7 +439,6 @@ function getCredentialListCallbackSuccess(caller, data){
 	console.log(data);
 	if ( data == null || data == undefined || data == "null"){
 		guideMap.set(caller, 0)
-		$("#guideArea").modal();
 	}else{// 아직 data가 1건도 없을 수 있음
 		if( data.length > 0){
 			guideMap.set(caller, 1)
@@ -455,7 +456,6 @@ function getRegionListCallbackSuccess(caller, data){
 	console.log(data);
 	if ( data == null || data == undefined || data == "null"){
 		guideMap.set(caller, 0)
-		$("#guideArea").modal();
 	}else{// 아직 data가 1건도 없을 수 있음
 		if( data.length > 0){
 			guideMap.set(caller, 1)
@@ -472,8 +472,7 @@ function getRegionListCallbackFail(caller, error){
 function getDriverListCallbackSuccess(caller, data){
 	console.log(data);
 	if ( data == null || data == undefined || data == "null"){
-		guideMap.set(caller, 0)
-		$("#guideArea").modal();
+		guideMap.set(caller, 0)		
 	}else{// 아직 data가 1건도 없을 수 있음
 		if( data.length > 0){
 			guideMap.set(caller, 1)
