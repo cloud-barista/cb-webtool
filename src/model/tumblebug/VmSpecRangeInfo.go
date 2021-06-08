@@ -1,7 +1,7 @@
 package tumblebug
 
 // Spec filterling 할 때 range로 조회하기 위함
-type VMSpecRangeInfo struct {
+type VmSpecRangeInfo struct {
 	CostPerHour        RangeMinMax `json:"cost_per_hour"`
 	EbsBwMbps          RangeMinMax `json:"ebs_bw_Mbps"`
 	GpumemGiB          RangeMinMax `json:"gpumem_GiB"`

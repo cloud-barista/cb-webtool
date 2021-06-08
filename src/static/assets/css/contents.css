@@ -42,6 +42,7 @@
 .titlebox .location strong { font-weight:400; }
 
 .btn_search { position:absolute; top:-2px; right:1px; width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat; }
+.btn_hide { position:relative; top:-2px; right:1px; width:100%; right:51px; text-align:right; outline:none; border:none; background:none; padding:0; margin:0; float : right;}
 
 .dashboard { margin:33px 0 0 0; }
 .dashboard:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
@@ -98,6 +99,30 @@
 .dashboard .box_cont .rbox .numbox .num span { color:#fff; font-size:60px; line-height:60px; font-weight:400; display:inline-block; padding:36px 0 0 0; letter-spacing:-1px; }
 .dashboard .box_cont .rbox .numbox .num span.txt_3n { font-size:40px; line-height:75px; }
 .dashboard .box_cont .rbox .txt { margin:8px 0 0 0; text-align:right; color:#888;font-size:14px; line-height:14px; font-weight:200; }
+.dashboard .box_cont .rbox .sc_box { float:right; height:128px;}
+.dashboard .box_cont .rbox .tcbox { padding:0 0 8px 0 !important; }
+
+.dashboard .box_cont .rbox ul { padding:0; }
+.dashboard .box_cont .rbox ul:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
+.dashboard .box_cont .rbox li { float:left; margin:0 15px 8px 0; width:88px; height:56px; text-align:center; color:#fff;font-size:16px; line-height:16px; font-weight:400; }
+.dashboard .box_cont .rbox li span { padding:28px 0 0 0; color:#fff;font-size:16px; line-height:16px; font-weight:400; display:inline-block; }
+.dashboard .box_cont .rbox li a { display:block; }
+.dashboard .box_cont .rbox li.bg_b {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_y {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_r {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_g {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_n {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+
+.dashboard .box_cont .rbox li.bg_aws {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_azure {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_ali {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_gcp {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_clit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_ops {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_mock {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_cloudtwin {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_etc {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+
 .dashboard .box_cont .cbox { float:left; width:calc(100% - 190px); margin:0 0 0 40px; vertical-align:top; }
 .dashboard .box_cont .cbox .sc_box { float:right; height:128px;}
 .dashboard .box_cont .cbox .tcbox { padding:0 0 8px 0 !important; }
@@ -201,7 +226,8 @@ table thead {
     /* head takes the height it requires, 
     and it's not scaled when table is resized */
     flex: 0 0 auto;
-    width: calc(100% - 0.91em);
+    /* width: calc(100% - 0.91em); */
+	width: calc(100% - 1.4em);
 }
 table tbody {
     /* body takes all the remaining available space */    
@@ -217,6 +243,9 @@ table tbody tr {
     table-layout: fixed;
 }
 
+.column-40px {
+    width: 40px;
+}
 .column-50px {
     width: 50px;
 }
@@ -414,6 +443,7 @@ table tbody tr {
 }
 
 .dataTable { padding:0 0 0 1%; }
+.dataTable a { margin:6px 0 0 0; color: #06a9b7; }
 .dataTable table { width:100%; border-collapse:collapse; background-color:#fff; }
 .dataTable thead th { padding:14px 5px; color:#fff; font-size:18px; font-weight:300; text-align:center; border-right:1px solid #ccc; background-color:#5e636c; }
 .dataTable thead th:last-child { border-right:none; }
@@ -2242,7 +2272,7 @@ table tbody tr {
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box.d_block .spec_box { padding:20px 0 0 0; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box { float:left; width:50%; }
-.popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box > ul { padding-right:145px; text-align:right; }
+.popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box > ul { padding-right:125px; text-align:right; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box.d_block .spec_box .s_box > ul { padding-right:0;}
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box li { margin:5px 0 0 0; min-height:37px; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box li label { display:inline-block; text-align:right; margin:0 14px 0 0; vertical-align:middle; font-size:16px; font-weight:500; color:#5e636c; }
@@ -2395,6 +2425,9 @@ table tbody tr {
 .btnbox .amount_add .add_box .a_box strong.t { color:#5e636c; font-size:15px; font-weight:400; }
 .btnbox .amount_add .add_box .a_box .s_slider_box { position:relative; padding:0; width:auto; }
 .btnbox .amount_add .add_box .a_box .a_slider { position:relative; padding:5px 80px 0 0; width:236px; }
+
+.btnbox button.btn_del { width:26px; height:26px; position:relative; cursor:pointer; border:none; background:url(../img/contents/btn_del_s.png); outline:none;  } 
+
 
 @media screen and (max-width:525px){
 	.btnbox .amount_add .add_box .a_box .a_slider { padding:5px 60px 0 0; width:100%; }

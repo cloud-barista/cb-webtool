@@ -88,7 +88,21 @@ func main() {
 		DisableCache: true,
 	})
 
-	defaultTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// defaultTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// 	Root:      "src/views",
+	// 	Extension: ".html",
+	// 	// Master:    "auth/Login",
+	// 	Partials: []string{
+	// 		"templates/Top",
+	// 		"templates/TopBox",
+	// 		"templates/MenuLeft",
+	// 		"templates/Header",
+	// 		"templates/Footer",
+	// 	},
+	// 	DisableCache: true,
+	// })
+
+	aboutTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
 		// Master:    "auth/Login",
@@ -98,6 +112,7 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Header",
 			"templates/Footer",
+			"auth/UserGuide",
 		},
 		DisableCache: true,
 	})
@@ -115,6 +130,7 @@ func main() {
 			"templates/Header",
 			"templates/MenuLeft",
 			"templates/Footer",
+			"auth/UserGuide",
 		}, //
 		DisableCache: true,
 	})
@@ -392,7 +408,8 @@ func main() {
 	// handler : 1개일때 controller명 + Data, List일 때 controller method명 DataList
 
 	e.GET("/", controller.Index)
-	defaultGroup := e.Group("/operation/about", defaultTemplate)
+
+	defaultGroup := e.Group("/operation/about", aboutTemplate)
 	defaultGroup.GET("/about", controller.About)
 
 	//e.GET("/apicall", controller.ApiCall)
@@ -618,7 +635,7 @@ func main() {
 	resourcesGroup.GET("/vmspec/lookupvmspec/:vmSpecName", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
 	resourcesGroup.POST("/vmspec/fetchvmspec", controller.FetchVmSpecList)              // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
-	// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
+	e.POST("/setting/resources/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)

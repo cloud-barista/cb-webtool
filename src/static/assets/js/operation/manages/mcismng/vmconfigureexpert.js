@@ -451,8 +451,9 @@ function filterEnterToHidden(keywordObjId, filterColumnName, targetTableId){
 function filterToHidden(keywordObjId, filterColumnName, tableId){
   var keyword = $("#" + keywordObjId).val();
   if( keyword == ''){
-    commonAlert("검색할 단어를 입력하세요")
-    return;
+    // commonAlert("검색할 단어를 입력하세요")
+    // return;
+    keyword = "ALL";
   }
 
   var selectedConnectionName = $("#es_regConnectionName option:selected").val()
