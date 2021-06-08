@@ -99,6 +99,30 @@
 .dashboard .box_cont .rbox .numbox .num span { color:#fff; font-size:60px; line-height:60px; font-weight:400; display:inline-block; padding:36px 0 0 0; letter-spacing:-1px; }
 .dashboard .box_cont .rbox .numbox .num span.txt_3n { font-size:40px; line-height:75px; }
 .dashboard .box_cont .rbox .txt { margin:8px 0 0 0; text-align:right; color:#888;font-size:14px; line-height:14px; font-weight:200; }
+.dashboard .box_cont .rbox .sc_box { float:right; height:128px;}
+.dashboard .box_cont .rbox .tcbox { padding:0 0 8px 0 !important; }
+
+.dashboard .box_cont .rbox ul { padding:0; }
+.dashboard .box_cont .rbox ul:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
+.dashboard .box_cont .rbox li { float:left; margin:0 15px 8px 0; width:88px; height:56px; text-align:center; color:#fff;font-size:16px; line-height:16px; font-weight:400; }
+.dashboard .box_cont .rbox li span { padding:28px 0 0 0; color:#fff;font-size:16px; line-height:16px; font-weight:400; display:inline-block; }
+.dashboard .box_cont .rbox li a { display:block; }
+.dashboard .box_cont .rbox li.bg_b {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_y {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_r {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_g {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_n {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+
+.dashboard .box_cont .rbox li.bg_aws {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_azure {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_ali {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_gcp {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_clit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_ops {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_mock {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_cloudtwin {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_etc {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+
 .dashboard .box_cont .cbox { float:left; width:calc(100% - 190px); margin:0 0 0 40px; vertical-align:top; }
 .dashboard .box_cont .cbox .sc_box { float:right; height:128px;}
 .dashboard .box_cont .cbox .tcbox { padding:0 0 8px 0 !important; }
@@ -2400,6 +2424,9 @@ table tbody tr {
 .btnbox .amount_add .add_box .a_box strong.t { color:#5e636c; font-size:15px; font-weight:400; }
 .btnbox .amount_add .add_box .a_box .s_slider_box { position:relative; padding:0; width:auto; }
 .btnbox .amount_add .add_box .a_box .a_slider { position:relative; padding:5px 80px 0 0; width:236px; }
+
+.btnbox button.btn_del { width:26px; height:26px; position:relative; cursor:pointer; border:none; background:url(../img/contents/btn_del_s.png); outline:none;  } 
+
 
 @media screen and (max-width:525px){
 	.btnbox .amount_add .add_box .a_box .a_slider { padding:5px 60px 0 0; width:100%; }
