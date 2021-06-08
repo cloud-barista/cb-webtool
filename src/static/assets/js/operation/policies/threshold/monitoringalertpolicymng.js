@@ -9,6 +9,7 @@ $(window).on("load resize",function(){
 
     // Table 높이 조절, hidden인 상태인 Table은 show 될 때 set 하도록
     setTableHeightForScroll('monitoringAlertPolicyList', 300)
+    setTableHeightForScroll('maEventHandlerList', 300)
 });
 
 

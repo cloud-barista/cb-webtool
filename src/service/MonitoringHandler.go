@@ -292,27 +292,24 @@ func GetMonitoringConfig() (*dragonfly.MonitoringConfig, model.WebStatus) {
 	var originalUrl = "/config"
 	//{{ip}}:{{port}}/dragonfly/config
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
-	log.Println("!")
+
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/config"
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	log.Println("!!!")
+
 	// defer body.Close()
 	monitoringConfig := dragonfly.MonitoringConfig{}
-	log.Println("monitoringConfig #######  ", monitoringConfig)
 
 	if err != nil {
 		log.Println(err)
-		log.Println("!!!!!")
 		return &monitoringConfig, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// util.DisplayResponse(resp) // 수신내용 확인
-	log.Println("@@@@@")
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	log.Println("#####")
+
 	json.NewDecoder(respBody).Decode(&monitoringConfig)
-	log.Println("1234 : ", monitoringConfig)
+	log.Println(monitoringConfig)
 
 	return &monitoringConfig, model.WebStatus{StatusCode: respStatus}
 }
