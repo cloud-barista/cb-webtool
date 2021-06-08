@@ -232,7 +232,7 @@ function getCommonVirtualMachineImageList(caller, sortType) {
 		}else if( caller == "mcissimpleconfigure"){
 			console.log("return get Data")
 			setVirtualMachineImageListAtSimpleConfigure(data, sortType)			
-		}else if( caller == "image"){
+		}else if( caller == "mainimage"){
 			console.log("return get Data")
 			getImageListCallbackSuccess(caller, data)		
 		}
@@ -266,11 +266,14 @@ function getCommonVirtualMachineSpecList(caller, sortType) {
             console.log("return get Data");
             virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
-        }
+        }else if( caller == "mainspec"){
+			console.log("return get Data")
+			getSpecListCallbackSuccess(caller, data)		
+		}
     }).catch(error => {
 		console.warn(error);
 		console.log(error.response) 
-        virtualMachineSpecListCallbackFail(error)
+        getSpecListCallbackFail(error)
 	});
 }
 
