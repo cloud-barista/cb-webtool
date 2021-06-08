@@ -177,7 +177,7 @@ function getCommonSecurityGroupList(caller, sortType) {
 			setSecurityGroupListAtSimpleConfigure(data)			
 		}else if( caller == "mainsecuritygroup"){
 			console.log("return get Data")
-			getSecurityGroupListCallbackSuccess(data)			
+			getSecurityGroupListCallbackSuccess(caller, data)			
 		}
 
 	}).catch(error => {
