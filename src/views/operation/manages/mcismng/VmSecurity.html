@@ -15,7 +15,6 @@
 							<input type="text" name="es_securityGroupFilterKeyword" placeholder="Security Group Name, description, subnet keyword" class="pline ip_1 search_ip" id="filter_securityGroup" onkeydown="filterEnterToHidden(this.id, 'securityGroup_info', 'e_securityGroupList');"/>
 							<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_securityGroup', 'securityGroup_info', 'e_securityGroupList')"/>							
 						</span>
-						<a href="javascript:void(0);" class="btn_hide" onclick="hideFilterResultTable('e_securityGroupList')">Hide</a>
 						<input type="text" name="tab_securityGroupInfo" placeholder="" class="gray ip_2"  id="tab_securityGroupInfo" readonly />
 						<input type="hidden" name="tab_securityGroupConnectionName" id="tab_securityGroupConnectionName"/>						
 					</li>
@@ -23,7 +22,8 @@
 				</ul>
 
 				<div class="dataTable status_list" >
-					<table cellpadding="0" cellspacing="0" id="e_securityGroupList" style="display:none;">				
+					<a href="javascript:void(0);" id="e_securityGroupListHide" class="btn_hide" onclick="hideFilterResultTable('e_securityGroupList', 'e_securityGroupListHide')">Hide</a>
+					<table cellpadding="0" cellspacing="0" id="e_securityGroupList" style="height:300px; display:none;">				
 						<!-- <colgroup>
 							<col width="50px">
 							<col width="30%">
@@ -91,14 +91,14 @@
 							<input type="text" name="es_sshKeyFilterKeyword" placeholder="SSH Key Name, description, connection keyword" class="pline ip_1 search_ip" id="filter_sshKey" onkeydown="filterEnterToHidden(this.id, 'sshKey_info', 'es_sshKeyList');"/>
 							<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_sshKey', 'sshKey_info', 'es_sshKeyList')"/>
 						</span>
-						<a href="javascript:void(0);" class="btn_hide" onclick="hideFilterResultTable('es_sshKeyList')">Hide</a>
 						<input type="text" name="tab_sshKeyInfo" placeholder="" class="gray ip_2"  id="tab_sshKeyInfo" readonly />
 						<input type="hidden" name="tab_sshKeyConnectionName" id="tab_sshKeyConnectionName"/>
 					</li>
 				</ul>
 				
 				<div class="dataTable status_list" >
-					<table cellpadding="0" cellspacing="0" id="es_sshKeyList" style="display:none;">				
+					<a href="javascript:void(0);" id="es_sshKeyListHide" class="btn_hide" onclick="hideFilterResultTable('es_sshKeyList', 'es_sshKeyListHide')">Hide</a>
+					<table cellpadding="0" cellspacing="0" id="es_sshKeyList" style="height:300px; display:none;">				
 						<colgroup>
 							<col width="30%">
 							<col width="30%">

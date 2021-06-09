@@ -1,6 +1,6 @@
 {{define "McksStatus"}}
 					<div class="dashboard">
-						<div class="d_box box_m box_m4 box_3m">
+						<div class="d_box box_m box_1 box_1m">
 							<div class="titbox">
 								<div class="tit"><strong>Mcks</strong></div>
 								<div class="state color_r"></div>
@@ -27,7 +27,7 @@
 						</div>
 						
 					
-						<div class="d_box box_m box_m4 box_3m">
+						<div class="d_box box_m box_3 box_2m">
 							<div class="titbox">
 								<div class="tit"><strong>CP</strong> <span>/</span> connection</div>
 								<div class="state color_r"></div>
@@ -39,7 +39,8 @@
 									<span>/</span>
 									<span title="Number connection" id="connectionCount">{{ .TotalConnectionConfigCount }}</span>
 								</div>
-								<div class="cbox">
+
+								<div class="rbox">
 									<div class="tcbox">
 										<div class="sc_box scrollbar-inner">
 											<ul id="cpConnectionDetail">
@@ -49,7 +50,7 @@
 												</li>
 												{{ end }}
 											</ul>
-										</div>
+										</div>										
 									</div>
 									<div class="txt">Status of Infra Service</div>
 								</div>

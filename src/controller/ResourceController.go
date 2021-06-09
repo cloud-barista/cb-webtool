@@ -778,6 +778,7 @@ func LookupCspVirtualMachineImageList(c echo.Context) error {
 
 	log.Println("paramConnectionName : ", paramConnectionName)
 	virtualMachineImageInfoList, respStatus := service.LookupVirtualMachineImageList(paramConnectionName)
+
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
@@ -1034,7 +1035,7 @@ func LookupVmSpecList(c echo.Context) error {
 	}
 
 	// paramConnectionName := c.Param("connectionName")
-	connectionName := &tumblebug.TbConnectionName{}
+	connectionName := new(tumblebug.TbConnectionName)
 	if err := c.Bind(connectionName); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -1108,6 +1109,47 @@ func FetchVmSpecList(c echo.Context) error {
 // resourcesGroup.PUT("/vmspec/put/:specID", controller.VMSpecPutProc)	// RegProc _ SshKey 같이 앞으로 넘길까
 // resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVMSpecList)
 // resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVMSpecListByRange)
+
+// Spec Range search
+func FilterVmSpecListByRange(c echo.Context) error {
+	log.Println("FilterVmSpecListByRange : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	vmSpecRange := new(tumblebug.VmSpecRangeInfo)
+	if err := c.Bind(vmSpecRange); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(vmSpecRange)
+	resultVmSpecInfo, respStatus := service.FilterVmSpecInfoListByRange(defaultNameSpaceID, vmSpecRange)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		// 호출은 정상: http.StatusOK, 결과는 정상이 아님. (statusCode != 200,201)
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+	// respBody := resp.Body
+	// respStatusCode := resp.StatusCode
+	// respStatus := resp.Status
+	// log.Println("respStatusCode = ", respStatusCode)
+	// log.Println("respStatus = ", respStatus)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
+		"VmSpecList":  resultVmSpecInfo,
+	})
+}
 
 func GetInspectResourceList(c echo.Context) error {
 	log.Println("GetInspectResourceList : ")

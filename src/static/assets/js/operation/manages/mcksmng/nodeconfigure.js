@@ -152,26 +152,49 @@ function nodeDone_btn(){
 }
 
 // WorkNode 추가
+var lastWorkerId = "";
 function addWorkNode(){
     console.log("addWorkNode start");
     try{
     // 마지막 name의 index 추출
-    var lastWorkerId = "";
+    var maxWorkerId = "";
     var nameCount = 0;
     $("input[name='workerCount']").each(function (i) {
-        lastWorkerId = $(this).attr('id');
-        //console.log( i + "번째  : " + $("input[name='workerCount']").eq(i).attr("value") );
-        console.log("lastWorkerId=" + lastWorkerId)
-        nameCount++;
+        var currentWorkCountID = $(this).attr('id');
+        console.log("::: " + currentWorkCountID)
+        if( currentWorkCountID.indexOf("hidden") == -1){
+            //console.log( i + "번째  : " + $("input[name='workerCount']").eq(i).attr("value") );
+            console.log("currentWorkCountID=" + currentWorkCountID)
+            maxWorkerId = currentWorkCountID;
+            nameCount++;
+        }
    });
+
+    if( lastWorkerId == "" ){
+        lastWorkerId = maxWorkerId;
+    }
+
+    var lastIndexArr = lastWorkerId.split ("_")
+    var lastIndex = lastIndexArr[lastIndexArr.length-1];
+
+    var maxIndexArr = maxWorkerId.split ("_")
+    var maxIndex = maxIndexArr[maxIndexArr.length-1];
+    console.log( lastWorkerId + " <> " + maxWorkerId)
+    console.log(maxIndexArr)
+    console.log( lastIndex + " : " + maxIndex + " : " + nameCount)
+    if( lastIndex <= maxIndex){
+        nameCount = Number(maxIndex) + 1;
+        lastWorkerId = maxWorkerId;
+    }
 //    var lastIndexArr = lastWorkerId.split ("_")
 //    var lastIndex = lastIndexArr[lastIndexArr.length-1];
 //    console.log("lastIndex=" + lastIndex)
     // var addWorkerIndex = Number(lastIndex) +1;
-    var addWorkerIndex = Number(nameCount) +1;
+    var addWorkerIndex = Number(nameCount);
     
     console.log("addWorkerIndex=" + addWorkerIndex)
-    var addWorkerHtml = $('#hidden_mcks_Worker_list').clone();
+    var addWorkerHtml = $('#hidden_work_area').clone();
+    // console.log(addWorkerHtml.html());    
     var addW = "";
     // 최초 1번만 .html() 이 먹고 다음부터는 string으로 인식함.
     addW = addWorkerHtml.html().replace('hidden_mcks_Worker_list', 'mcks_Worker_list_' + addWorkerIndex);
@@ -179,8 +202,12 @@ function addWorkNode(){
     addW = addW.replace(/hidden_workerConnectionName/gi, 'workerConnectionName_' + addWorkerIndex);
     addW = addW.replace(/hidden_workerCount/gi, 'workerCount_' + addWorkerIndex);
     addW = addW.replace(/hidden_workerSpecId/gi, 'workerSpecId_' + addWorkerIndex);
+    addW = addW.replace(/hidden_workerRemove/gi, 'workerRemove_' + addWorkerIndex);
+    addW = addW.replace(/hidden_workerAddCount/gi, 'workerAddCount_' + addWorkerIndex);
     
-    $("#mcks_Worker_list").append(addW); 
+
+    //$("#mcks_Worker_list").append(addW); 
+    $("#mcksNodeArea").append(addW);    
     $("#mcks_Worker_list_" + addWorkerIndex).css("display", "block");
     //$("#aa").css("display", "block");
 
@@ -189,8 +216,20 @@ function addWorkNode(){
     // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
     // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
 
-    console.log($("#mcks_Worker_list").html())
+    // console.log($("#mcks_Worker_list").html())
+
+    $("#workerAddCount_" + addWorkerIndex).text(addWorkerIndex);
     }catch(e){
         console.log(e);
     }
+}
+
+function removeWorkerNode(removeWorkerId){
+    console.log("removeWorkerId " + removeWorkerId)
+    
+    var workerArr = removeWorkerId.split("_");
+    console.log(workerArr)
+    var workerIndex = workerArr[workerArr.length-1];
+    console.log("removeWorkerNode " + workerIndex)
+    $("#mcks_Worker_list_" + workerIndex).remove();
 }

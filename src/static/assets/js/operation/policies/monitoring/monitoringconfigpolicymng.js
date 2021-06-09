@@ -31,7 +31,8 @@ function regMonitoringConfigPolicy() {
         }).then(result => {
             console.log("result Monitoring Policy : ", result);
             var data = result.data;
-                console.log(data);
+            console.log("모니터링 : ", data);
+            
             if (data.status == 200 || data.status == 201) {
                 commonAlert("Success Setting Monitoring Policy!!")
                 var resultData = data.MonitoringConfig;

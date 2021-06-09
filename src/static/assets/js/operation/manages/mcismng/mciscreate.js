@@ -180,11 +180,12 @@ function displayMcisImportServerFormByImport(importType){
 
     var addMcisByScriptArea = $("#addMcisByScript");
     var addVmListArea = $("#addVmList");
+    var mcisInfoboxArea = $("#mcisInfobox");
     
     if( importType){
         addMcisByScriptArea.css("display", "block");
         addVmListArea.css("display", "none");
-        
+        mcisInfoboxArea.css("display", "none");
         // addMcisByScriptArea.addClass("active");
         // addVmListArea.removeClass("active");
 
@@ -193,6 +194,7 @@ function displayMcisImportServerFormByImport(importType){
         $("#mcisImportScriptPretty").val("");	
         addMcisByScriptArea.css("display", "none");
         addVmListArea.css("display", "block");
+        mcisInfoboxArea.css("display", "block");
     }
     IsImport = importType;// 전역으로 set
 }

@@ -679,6 +679,7 @@ func DelVirtualMachineImage(nameSpaceID string, virtualMachineImageID string) (m
 // 자신의 provider에 등록된 resource 조회
 func GetInspectResourceList(inspectResource *tumblebug.InspectResourcesRequest) (*tumblebug.InspectResourcesResponse, model.WebStatus) {
 	fmt.Println("GetInspectResourceList ************ : ")
+	//https://www.javaer101.com/ko/article/5704925.html 참조 : 값이 있는 것만 넘기기
 	var originalUrl = "/inspectResources"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 	url := util.TUMBLEBUG + urlParam
@@ -1145,8 +1146,9 @@ func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *tumblebug.VmSpecReg
 }
 
 // resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)
-func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebug.RangeMinMax) (model.WebStatus, model.WebStatus) {
+func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebug.VmSpecRangeInfo) (tumblebug.VmSpecRangeInfo, model.WebStatus) {
 	webStatus := model.WebStatus{}
+	vmSpecInfo := tumblebug.VmSpecRangeInfo{}
 	fmt.Println("FilterVmSpecInfoListByRange ************ : ", nameSpaceID)
 	var originalUrl = "/ns/{nsId}/resources/filterSpecsByRange"
 	var paramMapper = make(map[string]string)
@@ -1161,21 +1163,24 @@ func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebu
 
 	if err != nil {
 		fmt.Println(err)
-		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	resultInfo := model.ResultInfo{}
-
-	json.NewDecoder(respBody).Decode(&resultInfo)
-	log.Println(resultInfo)
-	log.Println("ResultMessage : " + resultInfo.Message)
-
+	
 	if respStatus != 200 && respStatus != 201 {
-		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+		resultInfo := model.ResultInfo{}
+
+		json.NewDecoder(respBody).Decode(&resultInfo)
+		log.Println(resultInfo)
+		log.Println("ResultMessage : " + resultInfo.Message)
+		return vmSpecInfo, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
 	}
+
+	json.NewDecoder(respBody).Decode(&vmSpecInfo)
+	log.Println(vmSpecInfo)
 	webStatus.StatusCode = respStatus
-	webStatus.Message = resultInfo.Message
-	return webStatus, model.WebStatus{StatusCode: respStatus}
+	
+	return vmSpecInfo, model.WebStatus{StatusCode: respStatus}
 }

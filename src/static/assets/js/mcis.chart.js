@@ -594,11 +594,11 @@ function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statis
         try{
             var statusCode = error.response.data.status;
             var errorMessage = error.response.data.error;
-            commonErrorAlert(statusCode, errorMessage) 
+            commonErrorAlert(statusCode, errorMessage + " " + metric + " 조회실패") 
         }catch(e){
             var statusCode1 = error.response.status;
             var errorMessage1 = error.response.statusText;
-            commonErrorAlert(statusCode1, errorMessage1) 
+            commonErrorAlert(statusCode1, errorMessage1 + " " + metric + " 조회실패") 
         }
     });
 	

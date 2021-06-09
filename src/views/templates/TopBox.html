@@ -11,7 +11,7 @@
                 <div class="box">
                     <ul>
                         <li>
-                            <a href="javascript:void(0);">Change NameSpace</a>
+                            <a href="javascript:void(0);" style="cursor:default;">Change NameSpace</a>
                             <ul id="menuNameSpaceList">      
                                 {{with .NameSpaceList}}
                                     {{range .}}
@@ -20,8 +20,9 @@
                                 {{end}}
                             </ul>	
                         </li>
+                        <li class="divider"></li>
                         <li>
-                            <a href="javascript:void(0);">Manage NameSpace</a>
+                            <a href="javascript:void(0);" style="cursor:default;">Manage NameSpace</a>
                             <ul>
                                 <li><a href="javascript:void(0);" data-toggle="modal" data-target="#NewNS" onClick="commonConfirmOpen('NewNS')">new NS</a></li>
                                 <li><a href="javascript:void(0);" data-toggle="modal" data-target="#ManageNS" onClick="commonConfirmOpen('MoveToMcisManagement')">Manage NS</a></li>

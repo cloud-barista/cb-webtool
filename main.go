@@ -88,7 +88,21 @@ func main() {
 		DisableCache: true,
 	})
 
-	defaultTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// defaultTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	// 	Root:      "src/views",
+	// 	Extension: ".html",
+	// 	// Master:    "auth/Login",
+	// 	Partials: []string{
+	// 		"templates/Top",
+	// 		"templates/TopBox",
+	// 		"templates/MenuLeft",
+	// 		"templates/Header",
+	// 		"templates/Footer",
+	// 	},
+	// 	DisableCache: true,
+	// })
+
+	aboutTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
 		// Master:    "auth/Login",
@@ -98,6 +112,7 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Header",
 			"templates/Footer",
+			"auth/UserGuide",
 		},
 		DisableCache: true,
 	})
@@ -115,6 +130,7 @@ func main() {
 			"templates/Header",
 			"templates/MenuLeft",
 			"templates/Footer",
+			"auth/UserGuide",
 		}, //
 		DisableCache: true,
 	})
@@ -392,7 +408,8 @@ func main() {
 	// handler : 1개일때 controller명 + Data, List일 때 controller method명 DataList
 
 	e.GET("/", controller.Index)
-	defaultGroup := e.Group("/operation/about", defaultTemplate)
+
+	defaultGroup := e.Group("/operation/about", aboutTemplate)
 	defaultGroup.GET("/about", controller.About)
 
 	//e.GET("/apicall", controller.ApiCall)
@@ -453,6 +470,8 @@ func main() {
 	e.GET("/operation/policies/monitoringalertpolicy/:alertName", controller.GetMonitoringAlertPolicyData)
 	e.POST("/operation/policies/monitoringalertpolicy/reg/proc", controller.MonitoringAlertPolicyRegProc)
 	e.DELETE("/operation/policies/monitoringalertpolicy/del/:alertName", controller.MonitoringAlertPolicyDelProc)
+
+	e.GET("/operation/policies/monitoringalertpolicy/alert/task/:task_name/events/:level", controller.GetMonitoringAlertLogList)
 
 	// Monitoring Alert Event-handler
 	e.GET("/operation/policies/monitoringalerteventhandler/list", controller.GetMonitoringAlertEventHandlerList)
@@ -517,6 +536,7 @@ func main() {
 	mcksRegGroup.GET("", controller.McksRegForm)                              // MCKS 생성 + Node생성 form
 	mcksRegGroup.GET("/:clusteruID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성 : name까지 주는 이유는 별도처리하지 않고 node추가화면으로 바로 보내기 때문
 
+	e.GET("/operation/manages/mcksmng/list", controller.GetMcisList)
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
 	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName", controller.McksDelProc)
 	e.POST("/operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc", controller.NodeRegProc)
@@ -618,7 +638,7 @@ func main() {
 	resourcesGroup.GET("/vmspec/lookupvmspec/:vmSpecName", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
 	resourcesGroup.POST("/vmspec/fetchvmspec", controller.FetchVmSpecList)              // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
-	// resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)// TODO : post방식의 filterspec 생성필요
+	e.POST("/setting/resources/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange) // TODO : post방식의 filterspec 생성필요
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)

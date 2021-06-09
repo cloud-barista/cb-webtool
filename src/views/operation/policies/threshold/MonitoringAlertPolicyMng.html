@@ -24,6 +24,7 @@
 				<script>
 			
 				</script>
+				<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 				<!-- contents -->
 				<div class="contbox">
 					
@@ -211,6 +212,28 @@
 													<label>Monitoring Alert Event Handler Name</label>
 													<input type="text" id="dtlMonitoringAlertEventHandlerModalName" name="dtlMonitoringAlertEventHandlerModalName" value="" placeholder="" class="gray" title="" readonly />
 												</li>
+												<li>
+													<label>Monitoring Alert Event Message</label>
+													<input type="text" id="dtlMonitoringAlertEventMessage" name="dtlMonitoringAlertEventMessage" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+											</ul>
+										</div>
+										<div class="ipbox ipbox1 ipbox2">
+											<ul>
+												<li class="reg_2">
+                                                    <label>Monitoring Alert Event</label>
+													<span class="sbox">
+														<select id="selectMonitoringAlertEvent" class="selectbox2 white pline w_ip1" required>
+															<option value="" selected>Select Alert Event Level</option>
+															<option value="ok">OK</option>
+															<option value="warning">Warning</option>
+															<option value="critical">Critical</option>															
+														</select>
+														<input type="submit" name="" class="btn_search2" value="" title="" onclick="searchAlertEvent('selectMonitoringAlertEvent')"/>
+													</span>
+													<textarea  cols="" rows="" placeholder="Monitoring Alert Event List Area" id="mAlertEventList" title="" class="gray" title="" readonly></textarea>
+                                                    <!-- <input type="text" id="dtlProvider" name="dtlProvider" value="" placeholder="" class="gray" title="" readonly /> -->
+												</li>                                               
 											</ul>
 										</div>
 									</div>
@@ -289,7 +312,13 @@
                                                 </li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Metric</label>
-                                                    <input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertMetric"/>
+													<select id="regMonitoringAlertMetric" class="selectbox2 white pline w_ip1" required>
+														<option value="" selected>Select Metric</option>
+														<option value="usage_utilization">[CPU] usage_utilization</option>
+														<option value="used_percent">[Memory] used_percent</option>
+														<option value="used_percent">[Disk] used_percent</option>														
+													</select>
+                                                    <!-- <input type="text" name="" value="" placeholder="" class="pline" title="" id=""/> -->
                                                 </li>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Alert Math Expression</label>
@@ -322,6 +351,7 @@
 											</ul>
 										</div>
 									</div>
+
 									<div class="iptable_box2">
 										<div class="table_plist">
 											<div class="tit"><label><span class="ch">*</span>Monitoring Alert Event-Handler</label></div>
@@ -332,14 +362,14 @@
 												<!-- <button class="btn_delete" value="" name="" data-toggle="modal" data-target="#Del_Region">delete</button> -->
 											</div>
 											<div class="dataTable first_over">
-												<table cellpadding="0" cellspacing="0" border="1" summary="" id="maEventHandlerList">
-													<colgroup>
+												<table cellpadding="0" cellspacing="0" border="1" summary="" id="maEventHandlerList" style="width: auto;">
+													<!-- <colgroup>
 														<col width="50px"><col width="30%"><col width="%">
-													</colgroup>
+													</colgroup> -->
 													<thead>
 														<tr>
-															<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
-															<th>Type</th>
+															<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+															<th class="column-30percent">Type</th>
 															<th>Name</th>
 														</tr>
 													</thead>
@@ -353,13 +383,13 @@
 														
 														{{ range $index, $item := .MonitoringAlertEventHandlerList }}
 														<tr>
-															<td class="overlay hidden" data-th="">
+															<td class="overlay hidden  column-50px" data-th="">
 																<input type="hidden" id="monitoringAlertEventHandlerType_info_{{$index}}" value="{{$item.Type}}"/>
 																<input type="hidden" id="monitoringAlertEventHandlerName_info_{{$index}}" value="{{$item.Name}}"/>
 																<input type="checkbox" name="chk" value="{{$item.Type}}" id="raw_{{$index}}" title="" />
 																<label for="td_ch1"></label> <span class="ov off"></span>
 															</td>
-															<td class="btn_mtd ovm" data-th="Type">{{ $item.Type }}<span class="ov"></span>
+															<td class="btn_mtd ovm column-30percent" data-th="Type">{{ $item.Type }}<span class="ov"></span>
 															<!-- <input type="hidden" id="monitoringAlertEventHandler_info_{{ $index }}" value="{{ $item.Type }}"/> -->
 															<td class="overlay hidden" data-th="Name">{{ $item.Name }}</td>
 															<!-- <input type="hidden" id="monitoringAlertEventHandlerName_info_{{ $index }}" value="{{ $item.Name }}"/> -->
@@ -367,7 +397,18 @@
 														{{ end }}	
 													</tbody>
 												</table>
-											</div>
+											</div>											
+										</div>
+									</div>
+
+									<div class="top_ipbox">
+										<div class="ipbox ipbox1">
+											<ul>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Monitoring Alert Event Message</label>
+													<input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertEventMessage"/>
+												</li>
+											</ul>
 										</div>
 									</div>
 

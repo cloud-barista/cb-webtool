@@ -94,6 +94,34 @@
 																				</div>
 																				<span class="stxt">Unit</span>
 																			</li>
+																			<li>
+																				<label>Cost Per Hour  (min)</label>
+																				<div class="s_slider_box">
+																					<div class="slider_ip">
+																						<button class="btn_s btn_s_minus">-</button>
+																						<div>
+																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+																						</div>
+																						<button class="btn_s btn_s_plus">+</button>
+																					</div>
+																					<input type="text" id="assist_cost_per_hour_min" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																				</div>
+																				<span class="stxt">Unit</span>
+																			</li>
+																			<li>
+																				<label>Cost Per Hour  (max)</label>
+																				<div class="s_slider_box">
+																					<div class="slider_ip">
+																						<button class="btn_s btn_s_minus">-</button>
+																						<div>
+																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+																						</div>
+																						<button class="btn_s btn_s_plus">+</button>
+																					</div>
+																					<input type="text" id="assist_cost_per_hour_max" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																				</div>
+																				<span class="stxt">Unit</span>
+																			</li>
 																		</ul>
 																	</div>
 																	
@@ -865,30 +893,31 @@ function assistFilterSpec(){
 	var conditionArr = new Array();
 	conditionArr.push("cost_per_hour");
 	conditionArr.push("ebs_bw_Mbps");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
-	conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
+	// conditionArr.push("evaluationScore_01");
 
-	conditionArr.push("gpumem_GiB");
+	// conditionArr.push("gpumem_GiB");
 	conditionArr.push("max_num_storage");
-	conditionArr.push("max_total_storage_TiB");
-	conditionArr.push("mem_GiB");
-	conditionArr.push("net_bw_Gbps");
-	conditionArr.push("num_core");
-	conditionArr.push("num_gpu");
-	conditionArr.push("num_storage");
+	// conditionArr.push("max_total_storage_TiB");
+	// conditionArr.push("mem_GiB");
+	// conditionArr.push("net_bw_Gbps");
+	// conditionArr.push("num_core");
+	// conditionArr.push("num_gpu");
+	// conditionArr.push("num_storage");
 	conditionArr.push("num_vCPU");
-	conditionArr.push("storage_GiB");
+	// conditionArr.push("storage_GiB");
 	
 	// 
 	var searchObj = {}
+	searchObj['connectionName'] = "";
 	// var condition_CostPerHour = {}
 	// condition_CostPerHour['max'] = Number(costPerHourMax)
 	// condition_CostPerHour['min'] = Number(costPerHourMin)
@@ -913,9 +942,17 @@ function assistFilterSpec(){
 	}
 	console.log(searchObj);
 	// axios 전송
+	getCommonFilterSpecsByRange("vmassistpopup", searchObj);
 	// assist_specList 에 append
+}
 
-
+// Spec Range 조회 성공
+function filterSpecsByRangeCallbackSuccess(caller, data){
+	console.log(data)
+}
+// Spec Range 조회 실패
+function filterSpecsByRangeCallbackFail(){
+	
 }
 </script>
 

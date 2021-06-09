@@ -47,6 +47,7 @@
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Terminate" onClick="commonConfirmOpen('McisLifeCycleTerminate')">Terminate</a></li>
 															</ul>
 														</li>
+														<li class="divider"></li>
 														<li>
 															<strong>Manage</strong>
 															<ul>
@@ -54,10 +55,11 @@
 																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('DeleteMcis')">Delete</a></li>
 															</ul>
 														</li>
+														<li class="divider"></li>
 														<li>
 															<strong>Export</strong>
 															<ul>																
-																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('ExportScriptOfMcis')">Export</a></li>
+																<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New" onClick="commonConfirmOpen('ExportScriptOfMcis')">Export Json</a></li>
 															</ul>
 														</li>
 													</ul>
@@ -73,17 +75,18 @@
 								
 								<div class="dataTable status_list">
 									<table cellpadding="0" cellspacing="0" border="1" summary="">
-										<colgroup><col width=""><col width=""><col width="15%"><col width="15%"><col width="17%"><col width="18%"><col width="50px"></colgroup>
+										<!-- <colgroup><col width=""><col width=""><col width="15%"><col width="15%"><col width="17%"><col width="18%"><col width="50px"></colgroup> -->
 										<thead>
 											<tr>
-												<th>Status</th>
-												<th>Name</th>
-												<th>Cloud Connection</th>
-												<th>Total Infras <span>Count of Total Servers</span></th>
-												<th># of Servers <span>Count of Run / Stop / Terminate / etc</span></th>
+												<th class="column-14percent">Status</th>
+												<th class="column-14percent">Name</th>
+												<th class="column-14percent">Cloud Connection</th>
+												<th class="column-14percent">Total Infras <span>Count of Total Servers</span></th>
+												<th class="column-14percent"># of Servers <span>Count of Run / Stop / Terminate / etc</span></th>
 												<th>Description</th>
-												<th><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+												<th class="column-60px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 											</tr>
+
 										</thead>
 										<tbody id="mcisList">
 											<!-- //
@@ -97,28 +100,28 @@
 											{{range $index, $item := .McisList}}
 
 											<tr onclick="clickListOfMcis('{{$item.ID}}', '{{$index}}' );" id="server_info_tr_{{$index}}" item="{{$item.ID}}|{{$index}}">
-												<td class="overlay hidden td_left" data-th="Status">
+												<td class="overlay hidden td_left column-14percent" data-th="Status">
 													<img src="/assets/img/contents/icon_{{$item.McisStatus}}.png" class="icon" alt=""/>{{$item.Status}}<span class="ov off"></span>
 													
 												</td>
 												<!-- <td class="overlay hidden td_left" data-th="Status">
 													<img src="/assets/img/contents/icon_stop.png" class="icon" alt=""/> '+sta+' <span class="ov off"></span>
 												</td> -->
-												<td class="btn_mtd ovm" data-th="Name">{{$item.Name}}<span class="ov"></span></td>
+												<td class="btn_mtd ovm column-14percent" data-th="Name">{{$item.Name}}<span class="ov"></span></td>
 												
-												<td class="overlay hidden" data-th="Cloud Connection">
+												<td class="overlay hidden column-14percent" data-th="Cloud Connection">
 													{{ $item.ConnectionConfigProviderNames}}
 												</td>
 												{{ $vmStatusCountMap := $item.VmStatusCountMap}}
-												<td class="overlay hidden" data-th="Total Infras">{{$vmStatusCountMap.TOTAL}}</td>
-												<td class="overlay hidden" data-th="# of Servers">
+												<td class="overlay hidden column-14percent" data-th="Total Infras">{{$vmStatusCountMap.TOTAL}}</td>
+												<td class="overlay hidden column-14percent" data-th="# of Servers">
 													<span class="bar" ></span> <span title="running">{{$vmStatusCountMap.running}}</span>
 													<span class="bar" >/</span> <span title="stopped">{{$vmStatusCountMap.stopped}}</span>
 													<span class="bar" >/</span> <span title="terminated">{{$vmStatusCountMap.terminated}}</span>
 													<span class="bar" >/</span> <span title="etc">{{$vmStatusCountMap.etc}}</span>
 												</td>
 												<td class="overlay hidden" data-th="Description">{{$item.Description}}</td>
-												<td class="overlay hidden" data-th="">
+												<td class="overlay hidden column-60px"  data-th="">
 													<input type="checkbox" name="chk" value="{{$item.ID}}" id="td_ch_{{$index}}" title="" />
 													<label for="td_ch_{{$index}}"></label>
 

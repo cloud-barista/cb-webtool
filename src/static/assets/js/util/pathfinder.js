@@ -177,7 +177,7 @@ function getCommonSecurityGroupList(caller, sortType) {
 			setSecurityGroupListAtSimpleConfigure(data)			
 		}else if( caller == "mainsecuritygroup"){
 			console.log("return get Data")
-			getSecurityGroupListCallbackSuccess(data)			
+			getSecurityGroupListCallbackSuccess(caller, data)			
 		}
 
 	}).catch(error => {
@@ -212,7 +212,8 @@ function getCommonSshKeyList(caller) {
 
 // connection 정보가 바뀔 때 해당 connection에 등록 된 vmi(virtual machine image) 목록 조회.
 // 공통으로 사용해야하므로 호출후 결과만 리턴... 그러나, ajax로 호출이라 결과 받기 전에 return되므로 해결방안 필요
-function getCommonVirtualMachineImageList(caller) {
+function getCommonVirtualMachineImageList(caller, sortType) {
+    var sortType = sortType;
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/machineimage/list"
     axios.get(url, {
@@ -224,15 +225,14 @@ function getCommonVirtualMachineImageList(caller) {
         console.log("get Image List : ", result.data);
         
         var data = result.data.VirtualMachineImageList;
-        
-		// Data가져온 뒤 set할 method 호출
+        // Data가져온 뒤 set할 method 호출
 		if( caller == "virtualmachineimagemng"){
 			console.log("return get Data")
 			setVirtualMachineImageListAtServerImage(data, sortType)			
 		}else if( caller == "mcissimpleconfigure"){
 			console.log("return get Data")
 			setVirtualMachineImageListAtSimpleConfigure(data, sortType)			
-		}else if( caller == "image"){
+		}else if( caller == "mainimage"){
 			console.log("return get Data")
 			getImageListCallbackSuccess(caller, data)		
 		}
@@ -266,11 +266,14 @@ function getCommonVirtualMachineSpecList(caller, sortType) {
             console.log("return get Data");
             virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
-        }
+        }else if( caller == "mainspec"){
+			console.log("return get Data")
+			getSpecListCallbackSuccess(caller, data)		
+		}
     }).catch(error => {
 		console.warn(error);
 		console.log(error.response) 
-        virtualMachineSpecListCallbackFail(error)
+        getSpecListCallbackFail(error)
 	});
 }
 
@@ -333,6 +336,38 @@ function putFetchSpecs(connectionName){
 	});
 }
 
+function getCommonFilterSpecsByRange(caller, searchObj){
+    var url = "/setting/resources/vmspec/filterspecsbyrange"
+
+    axios.post(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }, searchObj       
+    }).then(result => {
+        console.log(result);
+        // if(result.data.status == 200 || result.data.status == 201){
+        //     var data = result.data.VmSpec
+        //     // commonAlert("Spec Searched");                            
+        // }else{
+        //     // commonAlert("Fail to Spec Searched");
+        // }
+        var data = result.data.VmSpecList;
+
+        if ( caller == "virtualmachinespecmng") {
+            console.log("return get Data");
+            virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
+            // setVirtualMachineSpecListAtServerSpec(data, sortType);
+        }
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+	});
+
+}
+
 // /lookupImages
 function getCommonLookupImageList(caller, connectionName) {    
     //var url = "/setting/resources/vmimage/lookupvmimagelist"
@@ -386,5 +421,76 @@ function getCommonFetchImages(caller, connectionName) {
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage);
+	});
+}
+
+
+// MCIS 목록 존재여부
+function getCommonMcisList(caller) {
+    var url = "/operation/manages/mcismng/list"
+
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Mcis List : ", result.data);
+        
+        var data = result.data.McisList;
+
+        // if ( caller == "mainmcis") {
+            console.log("return get Data");            
+			getMcisListCallbackSuccess(caller, data)		
+		// }
+    }).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        getMcisListCallbackFail(error)
+	});
+}
+
+function getCommonMcisList(caller) {
+    var url = "/operation/manages/mcismng/list"
+
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Mcis List : ", result.data);
+        
+        var data = result.data.McisList;
+
+        // if ( caller == "mainmcis") {
+            console.log("return get Data");            
+			getMcisListCallbackSuccess(caller, data)		
+		// }
+    }).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        getMcisListCallbackFail(error)
+	});
+}
+
+function getCommonMcksList(caller) {
+    var url = "/operation/manages/mcksmng/list"
+
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Mcks List : ", result.data);
+        
+        var data = result.data.McksList;
+
+        // if ( caller == "mainmcis") {
+            console.log("return get Data");            
+			getMcksListCallbackSuccess(caller, data)		
+		// }
+    }).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        getMcksListCallbackFail(error)
 	});
 }
