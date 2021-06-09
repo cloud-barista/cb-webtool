@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
@@ -49,6 +50,18 @@ func init() {
 
 }
 
+func customHTTPErrorHandler(err error, c echo.Context) {
+	code := http.StatusInternalServerError
+	if he, ok := err.(*echo.HTTPError); ok {
+		code = he.Code
+	}
+	errorPage := fmt.Sprintf("%d.html", code)
+	if err := c.File(errorPage); err != nil {
+		c.Logger().Error(err)
+	}
+	c.Logger().Error(err)
+}
+
 func main() {
 	e := echo.New()
 
@@ -63,6 +76,8 @@ func main() {
 	// 	AllowOrigins: []string{"http://210.207.104.150"},
 	// 	AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	// }))
+
+	// e.HTTPErrorHandler = customHTTPErrorHandler
 
 	e.Static("/assets", "./src/static/assets")
 
@@ -532,7 +547,7 @@ func main() {
 
 	mcksRegGroup := e.Group("/operation/manages/mcksmng/regform", mcksRegTemplate)
 	mcksRegGroup.GET("", controller.McksRegForm)                              // MCKS 생성 + Node생성 form
-	mcksRegGroup.GET("/:clusteruID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성 : name까지 주는 이유는 별도처리하지 않고 node추가화면으로 바로 보내기 때문
+	mcksRegGroup.GET("/:clusterUID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성 : name까지 주는 이유는 별도처리하지 않고 node추가화면으로 바로 보내기 때문
 
 	e.GET("/operation/manages/mcksmng/list", controller.GetMcisList)
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
