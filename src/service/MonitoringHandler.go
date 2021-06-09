@@ -899,5 +899,8 @@ func GetMonitoringAlertLogList(taskName string, logLevel string) ([]dragonfly.Vm
 	vmMonitoringAlertLogList := []dragonfly.VmMonitoringAlertLog{}
 	json.NewDecoder(respBody).Decode(&vmMonitoringAlertLogList)
 
+	// fmt.Println("check")
+	// fmt.Println(vmMonitoringAlertLogList)
+
 	return vmMonitoringAlertLogList, model.WebStatus{StatusCode: respStatus}
 }

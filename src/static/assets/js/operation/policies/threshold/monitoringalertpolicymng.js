@@ -671,7 +671,7 @@ function searchAlertEvent(alertEvent) {
     console.log("tast_name : ", task_name, ", level : ", level);
     
     if (level == "") {
-        level = "ok";
+        level = "warning";
     }
 
     var url = "/operation/policies/monitoringalertpolicy/alert/task/" + task_name + "/events/" + level
@@ -692,10 +692,12 @@ function searchAlertEvent(alertEvent) {
         // console.log(data);
         
         var html = ""
-        
-        for (var n = 0; n < data.length; n++ ) {
-            console.log(data[n].time);
-            html += data[n].time + "\n"
+        var datalen = data.length;
+
+        console.log(data.length);
+
+        for ( var n = datalen - 1; n >= 0; n-- ) {
+             html += moment(data[n].time).format('YYYY-MM-DD, hh:mm:ss a') + "\n"
         }
 
         $("#mAlertEventList").empty();
