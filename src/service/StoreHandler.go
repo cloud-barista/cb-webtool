@@ -48,6 +48,154 @@ func SetStoreNameSpaceList(c echo.Context, nameSpaceList []tumblebug.NameSpaceIn
 	return err
 }
 
+//GetCloudOSList
+func GetStoredCloudOSList(c echo.Context) ([]string, model.WebStatus) {
+	fmt.Println("====== GET STORED CloudOS ========")
+	cloudOSList := []string{}
+	cloudOsErr := model.WebStatus{}
+	store := echosession.FromContext(c)
+
+	storedCloudOSList, isExist := store.Get(util.STORE_CLOUDOSLIST)
+	if !isExist { // 존재하지 않으면 TB 조회
+		cloudOSList, cloudOsErr = GetCloudOSList()
+		setError := SetStoreCloudOSList(c, cloudOSList)
+		if setError != nil {
+			log.Println("Set cloudOS failed")
+		}
+	} else {
+		log.Println(storedCloudOSList)
+		cloudOSList = storedCloudOSList.([]string)
+		cloudOsErr.StatusCode = 200
+	}
+	return cloudOSList, cloudOsErr
+}
+
+func SetStoreCloudOSList(c echo.Context, cloudOSList []string) error {
+	fmt.Println("====== SET cloudOS ========")
+	store := echosession.FromContext(c)
+	store.Set(util.STORE_CLOUDOSLIST, cloudOSList)
+	err := store.Save()
+	return err
+}
+
+//GetRegionList
+func GetStoredRegionList(c echo.Context) ([]spider.RegionInfo, model.WebStatus) {
+	fmt.Println("====== GET STORED Region ========")
+	regionList := []string{}
+	regionErr := model.WebStatus{}
+	store := echosession.FromContext(c)
+
+	storedRegionList, isExist := store.Get(util.STORE_REGIONLIST)
+	if !isExist { // 존재하지 않으면 TB 조회
+		regionList, regionErr = GetCloudOSList()
+		setError := SetStoreRegionList(c, cloudregionListOSList)
+		if setError != nil {
+			log.Println("Set Region failed")
+		}
+	} else {
+		log.Println(storedRegionList)
+		regionList = storedRegionList
+		regionErr.StatusCode = 200
+	}
+	return regionList, regionErr
+}
+
+func SetStoreRegionList(c echo.Context, regionList []spider.RegionInfo) error {
+	fmt.Println("====== SET Region ========")
+	store := echosession.FromContext(c)
+	store.Set(util.STORE_REGIONLIST, regionList)
+	err := store.Save()
+	return err
+}
+
+// GetCredentialList
+func GetStoredCredentialList(c echo.Context) ([]spider.CredentialInfo, model.WebStatus) {
+	fmt.Println("====== GET STORED Region ========")
+	credentialList := []string{}
+	credentialErr := model.WebStatus{}
+	store := echosession.FromContext(c)
+
+	storedCredentialList, isExist := store.Get(util.STORE_CREDENTIALLIST)
+	if !isExist { // 존재하지 않으면 TB 조회
+		credentialList, credentialErr = GetCredentialList()
+		setError := SetStoreRegionList(c, credentialList)
+		if setError != nil {
+			log.Println("Set Credential failed")
+		}
+	} else {
+		log.Println(storedCredentialList)
+		credentialList = storedCredentialList
+		credentialErr.StatusCode = 200
+	}
+	return credentialList, credentialErr
+}
+
+func SetStoreCredentialList(c echo.Context, credentialList []spider.CredentialInfo) error {
+	fmt.Println("====== SET Credential ========")
+	store := echosession.FromContext(c)
+	store.Set(util.STORE_CREDENTIALLIST, credentialList)
+	err := store.Save()
+	return err
+}
+
+// GetDriverList
+func GetStoredDriverList(c echo.Context) ([]spider.DriverInfo, model.WebStatus) {
+	fmt.Println("====== GET STORED Region ========")
+	driverList := []string{}
+	driverErr := model.WebStatus{}
+	store := echosession.FromContext(c)
+
+	storedDriverList, isExist := store.Get(util.STORE_DRIVERLIST)
+	if !isExist { // 존재하지 않으면 TB 조회
+		driverList, driverErr = GetDriverList()
+		setError := SetStoreDriverList(c, driverList)
+		if setError != nil {
+			log.Println("Set Driver failed")
+		}
+	} else {
+		log.Println(storedDriverList)
+		driverList = storedDriverList
+		driverErr.StatusCode = 200
+	}
+	return driverList, driverErr
+}
+
+func SetStoreDriverList(c echo.Context, driverList []spider.DriverInfo) error {
+	fmt.Println("====== SET Driver ========")
+	store := echosession.FromContext(c)
+	store.Set(util.STORE_DRIVERLIST, driverList)
+	err := store.Save()
+	return err
+}
+//GetCloudConnectionConfigList
+func GetStoredCloudConnectionConfigList(c echo.Context) ([]spider.CloudConnectionConfigInfo, model.WebStatus) {
+	fmt.Println("====== GET STORED CloudConnectionConfigList ========")
+	connectionConfigList := []spider.CloudConnectionConfigInfo{}
+	connectionConfigErr := model.WebStatus{}
+	store := echosession.FromContext(c)
+
+	storedConnectionConfigList, isExist := store.Get(util.STORE_CLOUDCONNECTIONCONFIGLIST)
+	if !isExist { // 존재하지 않으면 TB 조회
+		connectionConfigList, connectionConfigErr = GetCloudConnectionConfigList()
+		setError := SetStoreCloudConnectionConfigList(c, connectionConfigList)
+		if setError != nil {
+			log.Println("Set ConnectionConfigList failed")
+		}
+	} else {
+		log.Println(storedConnectionConfigList)
+		connectionConfigList = storedConnectionConfigList.([]spider.CloudConnectionConfigInfo)
+		connectionConfigErr.StatusCode = 200
+	}
+	return connectionConfigList, connectionConfigErr
+}
+
+func SetStoreCloudConnectionConfigList(c echo.Context, connectionConfigList []spider.CloudConnectionConfigInfo) error {
+	fmt.Println("====== SET CloudConnectionConfigList ========")
+	store := echosession.FromContext(c)
+	store.Set(util.STORE_CLOUDCONNECTIONCONFIGLIST, connectionConfigList)
+	err := store.Save()
+	return err
+}
 // move to NameSpaceController.go
 // func GetNameSpace(c echo.Context) error {
 // 	fmt.Println("====== GET NAME SPACE ========")

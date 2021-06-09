@@ -60,3 +60,12 @@ var VM_STATUS_ETC = "etc"
 
 /////// Store 저장 용 Const
 var STORE_NAMESPACELIST = "namespacelist"
+var STORE_CLOUDOSLIST = "cloudoslist"
+var STORE_REGIONLIST = "regionlist"
+var STORE_CREDENTIALLIST = "credentiallist"
+var STORE_DRIVERLIST = "driverlist"
+var STORE_CLOUDCONNECTIONCONFIGLIST = "cloudconnectionconfiglist"
+
+
+var STORE_DEFAULT_NAMESPACENAME = "defaultnamespacename"
+var STORE_DEFAULT_NAMESPACEID = "defaultnamespaceid"

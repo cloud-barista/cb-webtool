@@ -84,8 +84,9 @@ func MainForm(c echo.Context) error {
 	workingStep := map[string]string{}
 
 	// 최신 namespacelist 가져오기
-	nameSpaceInfoList, nsStatus := service.GetNameSpaceList()
-	store.Set("namespace", nameSpaceInfoList)
+	// nameSpaceInfoList, nsStatus := service.GetNameSpaceList()
+	nameSpaceInfoList, nsStatus := service.GetStoredNameSpaceList(c)
+	// store.Set("namespace", nameSpaceInfoList)
 	// log.Println(" nsList  ", nsList)
 	if len(nameSpaceInfoList) > 0 {
 		workingStep["NAMESPACE"] = "PASS"
@@ -93,7 +94,7 @@ func MainForm(c echo.Context) error {
 		workingStep["NAMESPACE"] = "FAIL"
 	}
 
-	// cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
 	// store.Set("cloudconnectionconfig", cloudConnectionConfigInfoList)
 	// // log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
 	// if len(cloudConnectionConfigInfoList) > 0 {
@@ -503,24 +504,28 @@ func LoginProc(c echo.Context) error {
 	} else if len(nsList) == 1 {
 		for i, nameSpaceInfo := range nsList {
 			log.Println(i, nameSpaceInfo)
-			storedUser["defaultnameSpacename"] = nameSpaceInfo.Name
-			storedUser["defaultnamespaceid"] = nameSpaceInfo.Name
+
+			storedUser[util.STORE_DEFAULT_NAMESPACENAME] = nameSpaceInfo.Name
+			storedUser[util.STORE_DEFAULT_NAMESPACEID] = nameSpaceInfo.Name
 			// storedUser["defaultnamespaceid"] = nameSpaceInfo.ID
 			// defaultNameSpace = nameSpaceInfo.Name // ID로 handling 하려면 ID로
 		}
 	} else {
-		storedUser["defaultnameSpacename"] = ""
-		storedUser["defaultnamespaceid"] = ""
+		storedUser[util.STORE_DEFAULT_NAMESPACENAME] = ""
+		storedUser[util.STORE_DEFAULT_NAMESPACEID] = ""
 	}
 
+	_ := SetStoreNameSpaceList(c, nsList)
 	//store.Set("namespacelist", nsList)
-	util.SetStore(c, "namespacelist", nsList)
+	// util.SetStore(c, "namespacelist", nsList)
 	///////
 
 	/////// connectionconfig 목록 조회 ////////
+	// cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	// // store.Set("connectionconfig", cloudConnectionConfigInfoList)
+	// util.SetStore(c, "connectionconfig", cloudConnectionConfigInfoList)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	// store.Set("connectionconfig", cloudConnectionConfigInfoList)
-	util.SetStore(c, "connectionconfig", cloudConnectionConfigInfoList)
+	_ := SetStoreCredentialList(c, cloudConnectionConfigInfoList)
 	/////// connectionconfig 목록 조회 끝 ////////
 
 	// // result := map[string]string{}
