@@ -24,6 +24,7 @@
 				<script>
 			
 				</script>
+				<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 				<!-- contents -->
 				<div class="contbox">
 					
@@ -211,6 +212,28 @@
 													<label>Monitoring Alert Event Handler Name</label>
 													<input type="text" id="dtlMonitoringAlertEventHandlerModalName" name="dtlMonitoringAlertEventHandlerModalName" value="" placeholder="" class="gray" title="" readonly />
 												</li>
+												<li>
+													<label>Monitoring Alert Event Message</label>
+													<input type="text" id="dtlMonitoringAlertEventMessage" name="dtlMonitoringAlertEventMessage" value="" placeholder="" class="gray" title="" readonly />
+												</li>
+											</ul>
+										</div>
+										<div class="ipbox ipbox1 ipbox2">
+											<ul>
+												<li class="reg_2">
+                                                    <label>Monitoring Alert Event</label>
+													<span class="sbox">
+														<select id="selectMonitoringAlertEvent" class="selectbox2 white pline w_ip1" required>
+															<option value="" selected>Select Alert Event Level</option>
+															<option value="ok">OK</option>
+															<option value="warning">Warning</option>
+															<option value="critical">Critical</option>															
+														</select>
+														<input type="submit" name="" class="btn_search2" value="" title="" onclick="searchAlertEvent('selectMonitoringAlertEvent')"/>
+													</span>
+													<textarea  cols="" rows="" placeholder="Monitoring Alert Event List Area" id="mAlertEventList" title="" class="gray" title="" readonly></textarea>
+                                                    <!-- <input type="text" id="dtlProvider" name="dtlProvider" value="" placeholder="" class="gray" title="" readonly /> -->
+												</li>                                               
 											</ul>
 										</div>
 									</div>
@@ -328,6 +351,7 @@
 											</ul>
 										</div>
 									</div>
+
 									<div class="iptable_box2">
 										<div class="table_plist">
 											<div class="tit"><label><span class="ch">*</span>Monitoring Alert Event-Handler</label></div>
@@ -373,7 +397,18 @@
 														{{ end }}	
 													</tbody>
 												</table>
-											</div>
+											</div>											
+										</div>
+									</div>
+
+									<div class="top_ipbox">
+										<div class="ipbox ipbox1">
+											<ul>
+												<li class="reg_1">
+													<label><span class="ch">*</span>Monitoring Alert Event Message</label>
+													<input type="text" name="" value="" placeholder="" class="pline" title="" id="regMonitoringAlertEventMessage"/>
+												</li>
+											</ul>
 										</div>
 									</div>
 

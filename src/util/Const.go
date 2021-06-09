@@ -57,3 +57,6 @@ var VM_STATUS_TERMINATED = "terminated"
 // var VM_STATUS_UNDEFINED = "statusUndefined"
 // var VM_STATUS_PARTIAL = "partial"
 var VM_STATUS_ETC = "etc"
+
+/////// Store 저장 용 Const
+var STORE_NAMESPACELIST = "namespacelist"

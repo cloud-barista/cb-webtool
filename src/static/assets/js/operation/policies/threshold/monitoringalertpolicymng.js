@@ -128,6 +128,7 @@ function createMonitoringAlertPolicy(){
     var monitoringAlertAlertThreshold = $("#regMonitoringAlertAlertThreshold").val();     
     var monitoringAlertWarnEventCount = $("#regMonitoringAlertWarnEventCount").val();     
     var monitoringAlertCriticEventCount = $("#regMonitoringAlertCriticEventCount").val(); 
+    var monitoringAlertEventMessage = $("#regMonitoringAlertEventMessage").val(); 
 
     if(!monitoringAlertName) {
         commonAlert("Input New Threshold Name")
@@ -185,6 +186,12 @@ function createMonitoringAlertPolicy(){
         $("#regMonitoringAlertCriticEventCount").focus()
         return;
     }
+    
+    if(!monitoringAlertEventMessage) {
+        commonAlert("Input New Monitoring Alert Event Message")
+        $("#regMonitoringAlertEventMessage").focus()
+        return;
+    }
 
     var url = "/operation/policies/monitoringalertpolicy/reg/proc"
     console.log("Threshold Reg URL : ", url)
@@ -201,7 +208,7 @@ function createMonitoringAlertPolicy(){
         critic_event_cnt        : Number(monitoringAlertCriticEventCount),
         alert_event_type        : monitoringAlertEventHandlerType,
         alert_event_name        : monitoringAlertEventHandlerName,
-        alert_event_message     : "Threshold Alert!!!"
+        alert_event_message     : monitoringAlertEventMessage
     }
 
     console.log("info Threshold obj Data : ", obj);
@@ -268,6 +275,7 @@ function showMonitoringAlertPolicyInfo(monitoringAlertName) {
         var dtlMonitoringAlertCriticEventCount     = data.critic_event_cnt
         var dtlMonitoringAlertEventHandlerModalType = data.alert_event_type
         var dtlMonitoringAlertEventHandlerModalName = data.alert_event_name
+        var dtlMonitoringAlertEventMessage          = data.alert_event_message
 
         $("#dtlMonitoringAlertName").empty();				 
         $("#dtlMonitoringAlertMeasure").empty();            
@@ -281,6 +289,8 @@ function showMonitoringAlertPolicyInfo(monitoringAlertName) {
         $("#dtlMonitoringAlertCriticEventCount").empty();
         $("#dtlMonitoringAlertEventHandlerModalType").empty();
         $("#dtlMonitoringAlertEventHandlerModalName").empty();
+        $("#dtlMonitoringAlertEventMessage").empty();
+        $("#mAlertEventList").empty();
 
         $("#dtlMonitoringAlertName").val(dtlMonitoringAlertName);				 
         $("#dtlMonitoringAlertMeasure").val(dtlMonitoringAlertMeasure);               
@@ -294,6 +304,7 @@ function showMonitoringAlertPolicyInfo(monitoringAlertName) {
         $("#dtlMonitoringAlertCriticEventCount").val(dtlMonitoringAlertCriticEventCount);
         $("#dtlMonitoringAlertEventHandlerModalType").val(dtlMonitoringAlertEventHandlerModalType);
         $("#dtlMonitoringAlertEventHandlerModalName").val(dtlMonitoringAlertEventHandlerModalName);
+        $("#dtlMonitoringAlertEventMessage").val(dtlMonitoringAlertEventMessage);
         
     }) .catch(function(error){
         console.log("Threshold detail error : ",error);        
@@ -651,4 +662,80 @@ function addMonitoringAlertEventHandlerRow(item, index){
         + '<td class="overlay hidden" data-th="Name">' + item.name + '</td></tr>'
 	
     return html;
+}
+
+
+function searchAlertEvent(alertEvent) {
+    var level = $("#" + alertEvent + " option:selected").val();
+    var task_name = $("#dtlMonitoringAlertName").val();
+    console.log("tast_name : ", task_name, ", level : ", level);
+    
+    if (level == "") {
+        level = "warning";
+    }
+
+    var url = "/operation/policies/monitoringalertpolicy/alert/task/" + task_name + "/events/" + level
+               
+    // var url = "/operation/policies/monitoringalertpolicy/alert/task/:task_name/events?level=:level"
+    
+    // var obj = {
+    //     task_name   : task_name,
+    //     level       : level				 
+    // }
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Alert Event Log List : ", result.data);
+        var data = result.data.MonitoringAlertLogList;
+        // console.log(data);
+        
+        var html = ""
+        var datalen = data.length;
+
+        console.log(data.length);
+
+        for ( var n = datalen - 1; n >= 0; n-- ) {
+             html += moment(data[n].time).format('YYYY-MM-DD, hh:mm:ss a') + "\n"
+        }
+
+        $("#mAlertEventList").empty();
+        $("#mAlertEventList").append(html)
+
+        // var html = ""
+        // var cnt = 0;
+
+        // if (data == null) {
+        //     html += '<tr><td class="overlay hidden" data-th="" colspan="3">No Data</td></tr>'
+
+        //     $("#alertList").empty();
+        //     $("#alertList").append(html)
+    
+        //     ModalDetail();
+        // } else {
+        //     if (data.length) {
+        //         if (sortType) {
+        //             cnt++;
+        //             console.log("check2 : ", sortType);
+        //             data.filter(list => list.Name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
+        //                 html += addMonitoringAlertRow(item, index)
+        //             ))
+        //         } else {
+        //             console.log("check3 : ", sortType);
+        //             data.filter((list) => list.Name !== "").map((item, index) => (
+        //                 html += addMonitoringAlertRow(item, index)
+        //             ))
+        //         }
+    
+        //         $("#alertList").empty();
+        //         $("#alertList").append(html)
+    
+        //     }
+        // }
+        
+    }).catch(function(error){
+        console.log("Alert Event list error : ", error);        
+    })
+
 }

@@ -546,3 +546,33 @@ func PlacementPolicyRegProc(c echo.Context) error {
 		// "status":  respStatus.StatusCode,
 	})
 }
+
+// MonitoringPolicy 목록 조회
+func GetMonitoringAlertLogList(c echo.Context) error {
+	log.Println("GetMonitoringAlertLogList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramTaskName := c.Param("task_name")
+	paramLevel := c.Param("level")
+
+	monitoringAlertLogList, respStatus := service.GetMonitoringAlertLogList(paramTaskName, paramLevel)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		// "status":               respStatus.StatusCode,
+		"DefaultNameSpaceID":     defaultNameSpaceID,
+		"MonitoringAlertLogList": monitoringAlertLogList,
+	})
+}
