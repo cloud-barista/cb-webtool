@@ -873,7 +873,7 @@ func DelMonitoringAlertEventHandler(eventHandlerType string, eventName string) (
 
 // 알람 로그 정보 목록 조회
 // List monitoring alert event
-func GetMonitoringAlertLogList(taskName string, logLevel string) ([]dragonfly.VmMonitoringAlertInfo, model.WebStatus) {
+func GetMonitoringAlertLogList(taskName string, logLevel string) ([]dragonfly.VmMonitoringAlertLog, model.WebStatus) {
 	if logLevel == "" {
 		logLevel = "warning"
 	}
@@ -885,7 +885,8 @@ func GetMonitoringAlertLogList(taskName string, logLevel string) ([]dragonfly.Vm
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.DRAGONFLY + urlParam
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	resp, err := util.CommonHttpFormData(url, nil, http.MethodGet)
+	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
@@ -895,8 +896,11 @@ func GetMonitoringAlertLogList(taskName string, logLevel string) ([]dragonfly.Vm
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	vmMonitoringAlertInfoList := map[string][]dragonfly.VmMonitoringAlertInfo{}
-	json.NewDecoder(respBody).Decode(&vmMonitoringAlertInfoList)
+	vmMonitoringAlertLogList := []dragonfly.VmMonitoringAlertLog{}
+	json.NewDecoder(respBody).Decode(&vmMonitoringAlertLogList)
 
-	return vmMonitoringAlertInfoList["mcis"], model.WebStatus{StatusCode: respStatus}
+	// fmt.Println("check")
+	// fmt.Println(vmMonitoringAlertLogList)
+
+	return vmMonitoringAlertLogList, model.WebStatus{StatusCode: respStatus}
 }
