@@ -486,6 +486,8 @@ func main() {
 	e.POST("/operation/policies/monitoringalertpolicy/reg/proc", controller.MonitoringAlertPolicyRegProc)
 	e.DELETE("/operation/policies/monitoringalertpolicy/del/:alertName", controller.MonitoringAlertPolicyDelProc)
 
+	e.GET("/operation/policies/monitoringalertpolicy/alert/task/:task_name/events/:level", controller.GetMonitoringAlertLogList)
+
 	// Monitoring Alert Event-handler
 	e.GET("/operation/policies/monitoringalerteventhandler/list", controller.GetMonitoringAlertEventHandlerList)
 	e.POST("/operation/policies/monitoringalerteventhandler/reg/proc", controller.MonitoringAlertEventHandlerRegProc)
