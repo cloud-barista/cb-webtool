@@ -589,30 +589,36 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 
 		// min = 3 이므로 4자이상. maxlength + 1 이하 ex( 3, 12) 면 4자~13자 까지 허용
 		var regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9])$') ;
-
+		console.log("validation " + elementValue + " : " + maxLength)
 		if( maxLength == undefined){
 			if ( !regex.test(elementValue) ){
-				return returnStr;
+				return false;
 			}
 		}
-		
+		var str_length = elementValue.length; // 전체길이
+		try{
 		if( maxLength > 0){
-			if( elementValue.length > maxLength){
-				returnStr = "maxLength is " + maxLength
-				return returnStr;
+			if( Number(str_length) > Number(maxLength) ){
+				console.log(returnStr);
+				return false;
 			}
 
 			console.log(" maxlength is defined " + maxLength + " : " + elementValue.length)
 			// regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9]){' + maxLength+'}$') ;
 			//regex = new RegExp('^[a-z]([-a-z0-9]*[a-z0-9]){ 5,' + maxLength+'}$') ;
-
+			
 			regex = new RegExp("^[a-z]([-a-z0-9]*[a-z0-9]){3," + maxLength+"}$","g"); 
+				
 			if ( !regex.test(elementValue) ){
-				return returnStr;
-			}
+				console.log("return val " + elementValue)
+				return false;
+			}			
 		}
-
-		return "";
+		}catch(e){
+			console.log(e);
+		}
+		console.log("validate return")
+		return true;
 		//return charsPattern.test(elementValue);
 	}
 

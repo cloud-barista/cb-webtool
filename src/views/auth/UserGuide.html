@@ -46,7 +46,7 @@
 													
 													<div class="logic_tbox lg_1">
 														<div class="tit">Step 2. Connection</div>
-														<div class="txtmain" style="cursor:pointer;" > Connection 																											
+														<div class="txtmain" style="cursor:pointer;" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> Connection 																											
 														</div>														
 													</div>
 												</div>
@@ -58,7 +58,7 @@
 													
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
-														<div class="txt" style="min-height: 70px; cursor:pointer;" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')" > Credential	<br/>														
+														<div class="txt" style="min-height: 70px; cursor:pointer;" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')" > Credential	<br/>
 															<!-- { {if eq .WorkingStep.CREDENTIAL "PASS" }} 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [생성하러 가기]</a>
 															{ { end }}	-->
@@ -271,9 +271,7 @@
 
 <script >
 
-function guideAreaHide(){
-	$("#guideArea").modal("hide");
-}
+
 
 $(document).ready(function () {
 	// namespace

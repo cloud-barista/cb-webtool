@@ -87,6 +87,12 @@ function nvlDash(str){
     return str ;
 }
 
+function guideAreaHide(){
+	console.log("hide brfore")
+	$("#guideArea").modal("hide");
+	console.log("hide after")
+}
+
 // message를 표현할 alert 창
 function commonAlert(alertMessage){
     console.log(alertMessage);
@@ -157,7 +163,9 @@ function commonConfirmOpen(targetAction){
             ["McisLifeCycleResume", "Would you like to resume MCIS ?"],//onclick="mcis_life_cycle('resume')"
             ["McisLifeCycleTerminate", "Would you like to terminate MCIS ?"],//onclick="mcis_life_cycle('terminate')
             ["McisManagement", "Would you like to manage MCIS ?"],// 해당 function 없음...
-            ["MoveToMcisManagement", "Would you like to manage MCIS ?"],            
+            ["MoveToMcisManagement", "Would you like to manage MCIS ?"],
+            ["MoveToMcisManagementFromDashboard", "Would you like to manage MCIS ?"],
+            
             ["AddNewMcis", "Would you like to create MCIS ?"],
             ["DeleteMcis", "Are you sure to delete this MCIS? "],
             ["ImportScriptOfMcis", "Would you like to import MCIS script? "],            
@@ -333,9 +341,11 @@ function commonConfirmOk(){
         callMcisLifeCycle('terminate')
     }else if ( targetAction == "McisManagement"){
         alert("수행할 function 정의되지 않음");
+    }else if ( targetAction == "MoveToMcisManagementFromDashboard"){
+        var mcisID = $("#mcis_id").val();
+        var targetUrl = "/operation/manages/mcismng/mngform?" + mcisID;
+        changePage(targetUrl)
     }else if ( targetAction == "MoveToMcisManagement"){
-        // $('#loadingContainer').show();
-        // location.href ="/operation/manages/mcis/mngform/";
         var targetUrl = "/operation/manages/mcismng/mngform";
         changePage(targetUrl)
     }else if ( targetAction == "AddNewMcis"){

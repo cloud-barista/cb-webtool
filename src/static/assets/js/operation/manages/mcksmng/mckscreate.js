@@ -4,7 +4,7 @@ function deploy_btn(){
         commonAlert("first letter = small letter <br/> middle letter = small letter, number, hipen(-) only <br/> last letter = small letter ");
         return;
     }
-   
+    return;
     var kubernatesNetworkCni = $("#kubernatesNetworkCni").val();
     var kubernatesPodCidr = $("#kubernatesPodCidr").val();
     var kubernatesServiceCidr = $("#kubernatesServiceCidr").val();

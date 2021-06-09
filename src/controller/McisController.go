@@ -34,8 +34,9 @@ func McisRegForm(c echo.Context) error {
 	}
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	// 최신 namespacelist 가져오기
-	nsList, _ := service.GetNameSpaceList()
+	// namespacelist 가져오기
+	// nsList, _ := service.GetNameSpaceList()
+	nsList, _ := service.GetStoredNameSpaceList(c)
 	log.Println(" nsList  ", nsList)
 
 	// connectionconfigList 가져오기
@@ -758,14 +759,14 @@ func GetVmInfoData(c echo.Context) error {
 		})
 	}
 
-	connectionName := returnVmInfo.ConnectionName;
+	connectionName := returnVmInfo.ConnectionName
 	cloudConnectionConfigInfo, _ := service.GetCloudConnectionConfigData(connectionName)
 	// credential Info by connection
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": respStatus.Message,
-		"status":  respStatus.StatusCode,
-		"VmInfo":  returnVmInfo,
+		"message":              respStatus.Message,
+		"status":               respStatus.StatusCode,
+		"VmInfo":               returnVmInfo,
 		"ConnectionConfigInfo": cloudConnectionConfigInfo,
 	})
 }

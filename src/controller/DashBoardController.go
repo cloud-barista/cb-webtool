@@ -301,7 +301,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 	}
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/dashboards/DashboardByNameSpaceMng", // 파일명
+		"operation/dashboards/DashboardGlobalMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
