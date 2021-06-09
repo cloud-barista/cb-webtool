@@ -758,10 +758,15 @@ func GetVmInfoData(c echo.Context) error {
 		})
 	}
 
+	connectionName := returnVmInfo.ConnectionName;
+	cloudConnectionConfigInfo, _ := service.GetCloudConnectionConfigData(connectionName)
+	// credential Info by connection
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": respStatus.Message,
 		"status":  respStatus.StatusCode,
 		"VmInfo":  returnVmInfo,
+		"ConnectionConfigInfo": cloudConnectionConfigInfo,
 	})
 }
 

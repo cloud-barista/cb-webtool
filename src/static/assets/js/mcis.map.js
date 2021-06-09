@@ -259,6 +259,7 @@ function map_init(){
   return m;
 }
 function drawMap(map,long,lat,info){
+  console.log("in drawMap")
   var JZMap = map;
   console.log("JZMap : ",JZMap);
   
