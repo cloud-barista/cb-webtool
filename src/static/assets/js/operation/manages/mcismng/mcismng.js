@@ -7,6 +7,8 @@ $(document).ready(function(){
             $("input[name=chk]").prop("checked", false);
         }
     })
+
+    setRegionMap();
 });
 ///////////// MCIS Handling //////////////
 
@@ -394,6 +396,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
                 return;
             }
             var data = result.data.VmInfo;
+            var connectionConfig = result.data.ConnectionConfigInfo;
             
             var vmId = data.id;
             var vmName = data.name;
@@ -450,16 +453,16 @@ function vmDetailInfo(mcisID, mcisName, vmID){
         
             $("#manage_mcis_popup_public_ip").val(vmPublicIp)
 
-
             //////vm detail tab////
             var vmDetail = data.cspViewVmDetail;
             //    //cspvmdetail
-            var vmDetailKeyValueList = vmDetail.KeyValueList
+            // var vmDetailKeyValueList = vmDetail.KeyValueList
+            var vmDetailKeyValueList = vmDetail.keyValueList
             var architecture = "";   
             if(vmDetailKeyValueList){
-                for (var key in vmDetailKeyValueList) {
-                    if( key == "Architecture"){// ?? 이게 뭐지?
-                        architecture = architecture[key].Value  
+                for (var keyIndex in vmDetailKeyValueList) {
+                    if( vmDetailKeyValueList[keyIndex].Key == "Architecture"){// ?? 이게 뭐지?
+                        architecture = vmDetailKeyValueList[keyIndex].Value  
                         break;
                     }
                 }
@@ -469,7 +472,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
                 //     architecture = architecture[0].Value
                 //     console.log("architecture2 : ",architecture)                    
                 // }
-                console.log("architecture = " + architecture)
+                // console.log("architecture = " + architecture)
                 $("#server_info_archi").val(architecture)
                 $("#server_detail_view_archi").val(architecture)
             }
@@ -485,7 +488,8 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var startTime = vmDetail.StartTime
             $("#server_info_start_time").val(startTime)
             
-            var cloudType = data.location.cloudType
+            var locationInfo = data.location;
+            var cloudType = locationInfo.cloudType;
             var cspIcon = ""
             if(cloudType == "aws"){
                 cspIcon = "img_logo1"
@@ -507,19 +511,42 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             $("#server_connection_view_csp").val(cloudType)
             $("#manage_mcis_popup_csp").val(cloudType)
 
+            
+            var latitude = locationInfo.latitude;
+            var longitude = locationInfo.longitude;
+            var briefAddr = locationInfo.briefAddr;
+            var nativeRegion = locationInfo.nativeRegion;
+            // setRegionMap();
+            if( locationInfo){
+                // 지도에 표시
+                // $("#map").empty();
+                // map = map_init();
+                // var map = map_init_target('map2')
+                // console.log("map");
+                // let pointInfo = new Map();
+                // pointInfo.set("title", "111");
+                // pointInfo.set("vm_status", "222");
+                // pointInfo.set("vm_id", "333");
+                // pointInfo.set("id", "444");
+
+                // drawMap(map, longitude, latitude, pointInfo);
+                // console.log("drawMap");
+            }
             // region zone locate
-            var locate = data.location.briefAddr
-            var region = data.region.region
-            var zone = data.region.zone
+            
+            //var region = data.region.region
+            var region = data.region.Region            
+            // var zone = data.region.zone
+            var zone = data.region.Zone
             console.log(vmDetail.iid);
-            $("#server_info_region").val(locate +":"+region)
+            $("#server_info_region").val(briefAddr +":"+region)
             $("#server_info_zone").val(zone)
             $("#server_info_cspVMID").val("cspVMID : "+vmDetail.iid.nameId)
 
-            $("#server_detail_view_region").val(locate +":"+region)
+            $("#server_detail_view_region").val(briefAddr +" : "+region)
             $("#server_detail_view_zone").val(zone)
 
-            $("#server_connection_view_region").val(locate +"("+region+")")
+            $("#server_connection_view_region").val(briefAddr +"("+region+")")
             $("#server_connection_view_zone").val(zone)
 
             // connection name
@@ -528,19 +555,13 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             $("#server_connection_view_connection_name").val(connectionName)
 
             // credential and driver info
-            console.log("config arr2 : ",config_arr)
-            console.log("connection_name :",connectionName)
-            // var arr_config = config_arr
-            // console.log("arr_config : ",arr_config);
-            // if(arr_config){
-            //     var config_info = arr_config.filter(cred => cred.ConfigName === connection_name)[0]
-            //     console.log("inner config info : ",config_info)
-            //     console.log("config_info : ",config_info)
-            //     var credentialName = config_info.CredentialName
-            //     var driverName = config_info.DriverName
-            //     $("#server_connection_view_credential_name").val(credentialName)
-            //     $("#server_connection_view_driver_name").val(driverName)
-            // }
+            console.log("connectionConfig : ",connectionConfig)
+            if(connectionConfig){
+                var credentialName = connectionConfig.CredentialName
+                var driverName = connectionConfig.DriverName
+                $("#server_connection_view_credential_name").val(credentialName)
+                $("#server_connection_view_driver_name").val(driverName)
+            }
 
             // server id / system id
             $("#server_detail_view_server_id").val(data.id)
@@ -551,7 +572,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var imageIId = vmDetail.imageIId.nameId
             var imageId = data.imageId
             // set_vmImageInfo(imageId) // 
-            $("#server_detail_view_image_id_text").text(imageId+"("+imageIId+")")
+            $("#server_detail_view_image_id").text(imageId+"("+imageIId+")")
 
             //vpc subnet
             var vpcId = vmDetail.vpcIID.nameId
@@ -559,11 +580,16 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var subnetId = vmDetail.subnetIID.nameId
             var subnetSystemId = vmDetail.subnetIID.systemId
             var eth = vmDetail.networkInterface
-            $("#server_detail_view_vpc_id_text").text(vpcId+"("+vpcSystemId+")")
+            $("#server_detail_view_vpc_id").text(vpcId+"("+vpcSystemId+")")
             // set_vmVPCInfo(vpcId, subnetId);
 
-            $("#server_detail_view_subnet_id_text").text(subnetId+"("+subnetSystemId+")")
-            $("#server_detail_view_eth_text").val(eth)
+            $("#server_detail_view_subnet_id").text(subnetId+"("+subnetSystemId+")")
+            $("#server_detail_view_eth").val(eth)
+
+            // user account
+            $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId +"/ *** ")
+            $("#server_detail_view_user_id_pass").val(data.vmUserAccount +"/ *** ")
+            $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
 
             // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인 
             ////// vm connection tab //////
@@ -572,6 +598,8 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             // install Mon agent
             var installMonAgent = data.monAgentStatus
             showVmMonitoring(mcisID,vmID)
+
+            setRegionMap();
         }
     // ).catch(function(error){
     //     var statusCode = error.response.data.status;
@@ -929,4 +957,82 @@ function saveFileProcess(fileName, exportScript){
 	element.click();
 
 	document.body.removeChild(element);
+}
+
+// Region 을 지도에 표시
+function setRegionMap(){
+
+    var JZMap = map_init();
+
+    let pointInfo = new Map();
+    pointInfo.set("title", "111");
+    pointInfo.set("vm_status", "222");
+    pointInfo.set("vm_id", "333");
+    pointInfo.set("id", "444");
+
+    long = -78.4500
+    lat = 38.1300
+    // drawMap(JZMap, -78.4500, 38.1300, pointInfo);
+    var icon = new ol.style.Style({
+        image: new ol.style.Icon({
+            src:'/assets/img/marker/purple.png', // pin Image
+            anchor: [0.5, 1],
+            scale: 0.5
+        
+        })
+    })
+    var map_center = ol.proj.fromLonLat([long, lat]);
+    var point_gem = new ol.geom.Point(map_center);
+    var point_feature = new ol.Feature(point_gem);
+    point_feature.setStyle([icon])
+    //feature 에 set info
+    console.log("info : ",pointInfo)
+    point_feature.set('title',"aaaa")
+    point_feature.set('vm_status',"bbbb")
+    point_feature.set('vm_id',"cccc")
+    point_feature.set('id',"dddd")
+
+    var stackVectorMap = new ol.source.Vector({
+    features : [point_feature]
+    })
+
+    var stackLayer = new ol.layer.Vector({
+    source: stackVectorMap
+    })
+    JZMap.addLayer(stackLayer)
+
+
+    // //지도 그리기 관련
+    // var polyArr = new Array();
+
+    // // $("[id^='vmID_']").each(function(){
+    // $("input[name=vmID]").each(function(vmIndex, item){
+    //     // var vmID = $(this).attr("id");
+    //     // var vmIndex = vmID.split ("_")[1];
+    //     var vmIDValue = $("#vmID_" + vmIndex).val();
+    //     var vmNameValue = $("#vmName_" + vmIndex).val();
+    //     var vmStatusValue = $("#vmStatus_" + vmIndex).val();
+    //     var longitudeValue = $("#longitude_" + vmIndex).val();
+    //     var latitudeValue = $("#latitude_" + vmIndex).val();
+
+    //     var vms = new Object();
+    //     vms.id = vmIDValue;
+    //     vms.name = vmNameValue;
+    //     vms.longitudeValue = longitudeValue;
+    //     vms.latitudeValue = latitudeValue;
+    //     // vms.status = vmStatusValue;
+    //     // vms.status = vmStatusValue;
+
+    //     var fromLonLat = longitudeValue+" "+latitudeValue;
+    //     console.log(longitudeValue + " : " + latitudeValue);
+    //     if(longitudeValue && latitudeValue){
+    //         // polyArr.push(fromLonLat)
+    //         drawMap(JZMap,longitudeValue,latitudeValue,vms)
+
+    //         var polygon = "POLYGON(("+fromLonLat+"))";
+    //         // drawPoligon(JZMap,fromLonLat);
+    //         drawPoligon(JZMap,polygon);
+    //     }
+
+    // })
 }
