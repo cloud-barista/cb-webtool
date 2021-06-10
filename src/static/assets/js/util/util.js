@@ -267,7 +267,8 @@ function commonConfirmOk(){
     }else if ( targetAction == "idpwLost"){//-- 
         console.log("commonConfirmOk " + targetAction);
     }else if ( targetAction == "ManageNS"){//-- ManageNS
-        console.log("commonConfirmOk " + targetAction);
+        var targetUrl = "/setting/namespaces/namespace/mngform"
+        changePage(targetUrl)
     }else if ( targetAction == "NewNS"){//-- NewNS
         var targetUrl = "/setting/namespaces/namespace/mngform"
         changePage(targetUrl)
