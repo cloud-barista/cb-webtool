@@ -13,6 +13,7 @@ import (
 	"github.com/labstack/echo"
 
 	"github.com/cloud-barista/cb-webtool/src/model"
+	"github.com/cloud-barista/cb-webtool/src/model/spider"
 	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
@@ -31,6 +32,7 @@ func GetStoredNameSpaceList(c echo.Context) ([]tumblebug.NameSpaceInfo, model.We
 		setError := SetStoreNameSpaceList(c, nameSpaceList)
 		if setError != nil {
 			log.Println("Set Namespace failed")
+			nameSpaceErr.StatusCode = 4000
 		}
 	} else {
 		log.Println(storedNameSpaceList)
@@ -81,20 +83,20 @@ func SetStoreCloudOSList(c echo.Context, cloudOSList []string) error {
 //GetRegionList
 func GetStoredRegionList(c echo.Context) ([]spider.RegionInfo, model.WebStatus) {
 	fmt.Println("====== GET STORED Region ========")
-	regionList := []string{}
+	regionList := []spider.RegionInfo{}
 	regionErr := model.WebStatus{}
 	store := echosession.FromContext(c)
 
 	storedRegionList, isExist := store.Get(util.STORE_REGIONLIST)
 	if !isExist { // 존재하지 않으면 TB 조회
-		regionList, regionErr = GetCloudOSList()
-		setError := SetStoreRegionList(c, cloudregionListOSList)
+		regionList, regionErr = GetRegionList()
+		setError := SetStoreRegionList(c, regionList)
 		if setError != nil {
 			log.Println("Set Region failed")
 		}
 	} else {
 		log.Println(storedRegionList)
-		regionList = storedRegionList
+		regionList = storedRegionList.([]spider.RegionInfo)
 		regionErr.StatusCode = 200
 	}
 	return regionList, regionErr
@@ -111,20 +113,20 @@ func SetStoreRegionList(c echo.Context, regionList []spider.RegionInfo) error {
 // GetCredentialList
 func GetStoredCredentialList(c echo.Context) ([]spider.CredentialInfo, model.WebStatus) {
 	fmt.Println("====== GET STORED Region ========")
-	credentialList := []string{}
+	credentialList := []spider.CredentialInfo{}
 	credentialErr := model.WebStatus{}
 	store := echosession.FromContext(c)
 
 	storedCredentialList, isExist := store.Get(util.STORE_CREDENTIALLIST)
 	if !isExist { // 존재하지 않으면 TB 조회
 		credentialList, credentialErr = GetCredentialList()
-		setError := SetStoreRegionList(c, credentialList)
+		setError := SetStoreCredentialList(c, credentialList)
 		if setError != nil {
 			log.Println("Set Credential failed")
 		}
 	} else {
 		log.Println(storedCredentialList)
-		credentialList = storedCredentialList
+		credentialList = storedCredentialList.([]spider.CredentialInfo)
 		credentialErr.StatusCode = 200
 	}
 	return credentialList, credentialErr
@@ -140,8 +142,8 @@ func SetStoreCredentialList(c echo.Context, credentialList []spider.CredentialIn
 
 // GetDriverList
 func GetStoredDriverList(c echo.Context) ([]spider.DriverInfo, model.WebStatus) {
-	fmt.Println("====== GET STORED Region ========")
-	driverList := []string{}
+	fmt.Println("====== GET STORED Driver ========")
+	driverList := []spider.DriverInfo{}
 	driverErr := model.WebStatus{}
 	store := echosession.FromContext(c)
 
@@ -154,7 +156,7 @@ func GetStoredDriverList(c echo.Context) ([]spider.DriverInfo, model.WebStatus) 
 		}
 	} else {
 		log.Println(storedDriverList)
-		driverList = storedDriverList
+		driverList = storedDriverList.([]spider.DriverInfo)
 		driverErr.StatusCode = 200
 	}
 	return driverList, driverErr
@@ -167,6 +169,7 @@ func SetStoreDriverList(c echo.Context, driverList []spider.DriverInfo) error {
 	err := store.Save()
 	return err
 }
+
 //GetCloudConnectionConfigList
 func GetStoredCloudConnectionConfigList(c echo.Context) ([]spider.CloudConnectionConfigInfo, model.WebStatus) {
 	fmt.Println("====== GET STORED CloudConnectionConfigList ========")
@@ -196,6 +199,7 @@ func SetStoreCloudConnectionConfigList(c echo.Context, connectionConfigList []sp
 	err := store.Save()
 	return err
 }
+
 // move to NameSpaceController.go
 // func GetNameSpace(c echo.Context) error {
 // 	fmt.Println("====== GET NAME SPACE ========")

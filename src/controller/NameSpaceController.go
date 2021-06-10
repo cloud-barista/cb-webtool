@@ -3,15 +3,18 @@ package controller
 import (
 	// "encoding/json"
 	"fmt"
+
 	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	service "github.com/cloud-barista/cb-webtool/src/service"
+
 	// util "github.com/cloud-barista/cb-webtool/src/util"
+
+	"log"
+	"net/http"
 
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
-	"log"
-	"net/http"
 )
 
 // deprecated
@@ -91,8 +94,8 @@ func NameSpaceRegProc(c echo.Context) error {
 			"NameSpaceList": nil,
 		})
 	}
-	storeNameSpaceErr :=service.SetStoreNameSpaceList(c , nameSpaceList)
-	if(storeNameSpaceErr != nil){
+	storeNameSpaceErr := service.SetStoreNameSpaceList(c, nameSpaceList)
+	if storeNameSpaceErr != nil {
 		log.Println("Store NameSpace Err")
 	}
 	// return namespace 목록
@@ -138,8 +141,8 @@ func NameSpaceUpdateProc(c echo.Context) error {
 		})
 	}
 
-	storeNameSpaceErr :=service.SetStoreNameSpaceList(c , nameSpaceList)
-	if(storeNameSpaceErr != nil){
+	storeNameSpaceErr := service.SetStoreNameSpaceList(c, nameSpaceList)
+	if storeNameSpaceErr != nil {
 		log.Println("Store NameSpace Err")
 	}
 
@@ -195,8 +198,8 @@ func NameSpaceDelProc(c echo.Context) error {
 		})
 	}
 
-	storeNameSpaceErr :=service.SetStoreNameSpaceList(c , nameSpaceList)
-	if(storeNameSpaceErr != nil){
+	storeNameSpaceErr := service.SetStoreNameSpaceList(c, nameSpaceList)
+	if storeNameSpaceErr != nil {
 		log.Println("Store NameSpace Err")
 	}
 
@@ -228,8 +231,8 @@ func NameSpaceMngForm(c echo.Context) error {
 	nameSpaceList, _ := service.GetNameSpaceList()
 	fmt.Println("=============start GetNSList =============", nameSpaceList)
 
-	storeNameSpaceErr :=service.SetStoreNameSpaceList(c , nameSpaceList)
-	if(storeNameSpaceErr != nil){
+	storeNameSpaceErr := service.SetStoreNameSpaceList(c, nameSpaceList)
+	if storeNameSpaceErr != nil {
 		log.Println("Store NameSpace Err")
 	}
 
@@ -246,9 +249,9 @@ func NameSpaceMngForm(c echo.Context) error {
 // 사용자의 namespace 목록 조회
 func GetNameSpaceList(c echo.Context) error {
 	fmt.Println("====== GET NAMESPACE LIST ========")
-	store := echosession.FromContext(c)
+	// store := echosession.FromContext(c)
 	// nameSpaceInfoList, nsStatus := service.GetNameSpaceList()
-	nameSpaceInfoList, nsStatus := service.GetStoredNameSpaceList()
+	nameSpaceInfoList, nsStatus := service.GetStoredNameSpaceList(c)
 	if nsStatus.StatusCode == 500 {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": nsStatus.Message,
@@ -292,7 +295,7 @@ func SetNameSpace(c echo.Context) error {
 	// 		"status":  "403",
 	// 	})
 	nsList, nsStatus := service.GetStoredNameSpaceList(c)
-	if ( nsStatus.StatusCode != 200 & nsStatus.StatusCode != 201 ) {
+	if nsStatus.StatusCode != 200 && nsStatus.StatusCode != 201 {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "NameSpace 조회 오류.",
 			"status":  "403",
@@ -348,7 +351,7 @@ func GetNameSpace(c echo.Context) error {
 	// }
 	// nsId := getInfo.(string)
 
-	loginInfo := service.CallLoginInfo(c)	
+	loginInfo := service.CallLoginInfo(c)
 
 	res := map[string]string{
 		"message": "success",

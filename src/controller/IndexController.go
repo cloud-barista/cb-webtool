@@ -80,7 +80,7 @@ func MainForm(c echo.Context) error {
 		// Login 정보가 없으므로 login화면으로
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
-	store := echosession.FromContext(c)
+	// store := echosession.FromContext(c)
 	workingStep := map[string]string{}
 
 	// 최신 namespacelist 가져오기
@@ -94,13 +94,13 @@ func MainForm(c echo.Context) error {
 		workingStep["NAMESPACE"] = "FAIL"
 	}
 
-	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	// cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
 	// store.Set("cloudconnectionconfig", cloudConnectionConfigInfoList)
 	// // log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
 	// if len(cloudConnectionConfigInfoList) > 0 {
 	// 	workingStep["CONNECTION"] = "PASS"
 	// } else {
-		workingStep["CONNECTION"] = "FAIL"
+	workingStep["CONNECTION"] = "FAIL"
 	// }
 
 	// // regionList 가져오기
@@ -110,7 +110,7 @@ func MainForm(c echo.Context) error {
 	// if len(regionList) > 0 {
 	// 	workingStep["REGION"] = "PASS"
 	// } else {
-		workingStep["REGION"] = "FAIL"
+	workingStep["REGION"] = "FAIL"
 	// }
 
 	// // credentialList 가져오기
@@ -120,7 +120,7 @@ func MainForm(c echo.Context) error {
 	// if len(credentialList) > 0 {
 	// 	workingStep["CREDENTIAL"] = "PASS"
 	// } else {
-		workingStep["CREDENTIAL"] = "FAIL"
+	workingStep["CREDENTIAL"] = "FAIL"
 	// }
 
 	// // driverList 가져오기
@@ -130,7 +130,7 @@ func MainForm(c echo.Context) error {
 	// if len(driverList) > 0 {
 	// 	workingStep["DRIVER"] = "PASS"
 	// } else {
-		workingStep["DRIVER"] = "FAIL"
+	workingStep["DRIVER"] = "FAIL"
 	// }
 
 	// defaultNameSpaceID := loginInfo.DefaultNameSpaceID
@@ -140,7 +140,7 @@ func MainForm(c echo.Context) error {
 	// if len(vNetInfoList) > 0 {
 	// 	workingStep["VNET"] = "PASS"
 	// } else {
-		workingStep["VNET"] = "FAIL"
+	workingStep["VNET"] = "FAIL"
 	// }
 
 	// securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
@@ -148,7 +148,7 @@ func MainForm(c echo.Context) error {
 	// if len(securityGroupInfoList) > 0 {
 	// 	workingStep["SECURITY"] = "PASS"
 	// } else {
-		workingStep["SECURITY"] = "FAIL"
+	workingStep["SECURITY"] = "FAIL"
 	// }
 
 	// sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
@@ -156,7 +156,7 @@ func MainForm(c echo.Context) error {
 	// if len(sshKeyInfoList) > 0 {
 	// 	workingStep["SSHKEY"] = "PASS"
 	// } else {
-		workingStep["SSHKEY"] = "FAIL"
+	workingStep["SSHKEY"] = "FAIL"
 	// }
 
 	// virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
@@ -164,28 +164,28 @@ func MainForm(c echo.Context) error {
 	// if len(virtualMachineImageInfoList) > 0 {
 	// 	workingStep["IMAGE"] = "PASS"
 	// } else {
-		workingStep["IMAGE"] = "FAIL"
+	workingStep["IMAGE"] = "FAIL"
 	// }
 	// vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
 	// store.Set("spec", vmSpecInfoList)
 	// if len(vmSpecInfoList) > 0 {
 	// 	workingStep["SPEC"] = "PASS"
 	// } else {
-		workingStep["SPEC"] = "FAIL"
+	workingStep["SPEC"] = "FAIL"
 	// }
 
 	// mcisList, _ := service.GetMcisList(defaultNameSpaceID)
 	// if len(mcisList) > 0 {
 	// 	workingStep["MCIS"] = "PASS"
 	// } else {
-		workingStep["MCIS"] = "FAIL"
+	workingStep["MCIS"] = "FAIL"
 	// }
 
 	// clusterList, _ := service.GetClusterList(defaultNameSpaceID)
 	// if len(clusterList) > 0 {
 	// 	workingStep["MCKS"] = "PASS"
 	// } else {
-		workingStep["MCKS"] = "FAIL"
+	workingStep["MCKS"] = "FAIL"
 	// }
 
 	// mapTotalCount := 0
@@ -196,7 +196,6 @@ func MainForm(c echo.Context) error {
 	// 		mapPassCount++
 	// 	}
 	// }
-
 
 	// workingStep의 모든 Step == "PASS" 면 monitoring으로 이동?? 반대로 해당 화면에서 Data가 없으면 Main으로 이동.?
 	// if mapTotalCount == mapPassCount {
@@ -515,7 +514,10 @@ func LoginProc(c echo.Context) error {
 		storedUser[util.STORE_DEFAULT_NAMESPACEID] = ""
 	}
 
-	_ := SetStoreNameSpaceList(c, nsList)
+	setNameSpaceErr := service.SetStoreNameSpaceList(c, nsList)
+	if setNameSpaceErr != nil {
+		log.Println("setNameSpaceErr ", setNameSpaceErr)
+	}
 	//store.Set("namespacelist", nsList)
 	// util.SetStore(c, "namespacelist", nsList)
 	///////
@@ -525,7 +527,10 @@ func LoginProc(c echo.Context) error {
 	// // store.Set("connectionconfig", cloudConnectionConfigInfoList)
 	// util.SetStore(c, "connectionconfig", cloudConnectionConfigInfoList)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	_ := SetStoreCredentialList(c, cloudConnectionConfigInfoList)
+	cloudConnectionCinfigErr := service.SetStoreCloudConnectionConfigList(c, cloudConnectionConfigInfoList)
+	if cloudConnectionCinfigErr != nil {
+		log.Println(" cloudConnectionCinfigErr ", cloudConnectionCinfigErr)
+	}
 	/////// connectionconfig 목록 조회 끝 ////////
 
 	// // result := map[string]string{}

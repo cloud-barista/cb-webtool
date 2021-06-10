@@ -16,6 +16,7 @@ import (
 
 	"github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
+
 	//"github.com/davecgh/go-spew/spew"
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
@@ -67,26 +68,38 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 
 	// connectionconfigList 가져오기
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	cloudConnectionConfigStatus := SetStoreCloudConnectionConfigList(c , cloudConnectionConfigInfoList)
+	setCloudConnectionErr := service.SetStoreCloudConnectionConfigList(c, cloudConnectionConfigInfoList)
+	if setCloudConnectionErr != nil {
+		log.Println(" setCloudConnectionErr  ", setCloudConnectionErr)
+	}
 	// if ( cloudConnectionConfigStatus.StatusCode != 200 & cloudConnectionConfigStatus.StatusCode != 201 ) {
 	// store.Set("cloudconnectionconfig", cloudConnectionConfigInfoList)
 	// log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
 
 	// regionList 가져오기
 	regionList, _ := service.GetRegionList()
-	regionStatus := SetStoreRegionList(c , regionList)
+	setRegionErr := service.SetStoreRegionList(c, regionList)
+	if setRegionErr != nil {
+		log.Println(" setRegionErr  ", setRegionErr)
+	}
 	// store.Set("region", regionList)
 	log.Println(" regionList  ", regionList)
 
 	// credentialList 가져오기
 	credentialList, _ := service.GetCredentialList()
-	credentialStatus := SetStoreCredentialList(c , credentialList)
+	setCredentialErr := service.SetStoreCredentialList(c, credentialList)
+	if setCredentialErr != nil {
+		log.Println(" setCredentialErr  ", setCredentialErr)
+	}
 	// store.Set("credential", credentialList)
 	log.Println(" credentialList  ", credentialList)
 
 	// driverList 가져오기
 	driverList, _ := service.GetDriverList()
-	driverStatus := SetStoreDriverList(c , driverList)
+	setDriverErr := service.SetStoreDriverList(c, driverList)
+	if setDriverErr != nil {
+		log.Println(" setDriverErr  ", setDriverErr)
+	}
 	// store.Set("driver", driverList)
 	log.Println(" driverList  ", driverList)
 
@@ -118,7 +131,10 @@ func GetCloudConnectionConfigList(c echo.Context) error {
 	}
 
 	cloudConnectionConfigList, respStatus := service.GetCloudConnectionConfigList()
-	_ := service.SetStoreCloudConnectionConfigList(c, cloudConnectionConfigList)
+	setCloudConnectionConfigErr := service.SetStoreCloudConnectionConfigList(c, cloudConnectionConfigList)
+	if setCloudConnectionConfigErr != nil {
+		log.Println("setCloudConnectionConfigErr ", setCloudConnectionConfigErr)
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
 		"status":           respStatus,
@@ -168,7 +184,10 @@ func CloudConnectionConfigRegProc(c echo.Context) error {
 		})
 	}
 
-	_ := GetCloudConnectionConfigList(c)
+	cloudConnectionConfigErr := GetCloudConnectionConfigList(c)
+	if cloudConnectionConfigErr != nil {
+		log.Println(" cloudConnectionConfigErr ", cloudConnectionConfigErr)
+	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",

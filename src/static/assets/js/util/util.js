@@ -343,7 +343,7 @@ function commonConfirmOk(){
         alert("수행할 function 정의되지 않음");
     }else if ( targetAction == "MoveToMcisManagementFromDashboard"){
         var mcisID = $("#mcis_id").val();
-        var targetUrl = "/operation/manages/mcismng/mngform?" + mcisID;
+        var targetUrl = "/operation/manages/mcismng/mngform?mcisid=" + mcisID;
         changePage(targetUrl)
     }else if ( targetAction == "MoveToMcisManagement"){
         var targetUrl = "/operation/manages/mcismng/mngform";

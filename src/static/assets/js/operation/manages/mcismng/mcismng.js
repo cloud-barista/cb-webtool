@@ -1,3 +1,4 @@
+var selectedMcis = "";
 $(document).ready(function(){
     // MCIS List의 상단 의 checkbox 클릭시 전체 선택하도록 
     $("#th_chall").click(function() {
@@ -8,8 +9,19 @@ $(document).ready(function(){
         }
     })
 
-    // setRegionMap();
+    // 지도 표시
+    setRegionMap();
+
+    selectedMcisID = $("#selected_mcis_id").val();
+    
+    // console.log(selectedMcisID);
+    // Dashboard 등에서 선택한 MCIS Mng를 하면 해당 Mcis로만 보이도록 (전체에서 filter 기능만 수행)
+    if( selectedMcisID != undefined && selectedMcisID != ""){
+        // mcisList filter        
+        filterTable("mcisListTable", "Name", selectedMcisID);
+    }
 });
+
 ///////////// MCIS Handling //////////////
 
 // 등록 form으로 이동
@@ -958,6 +970,8 @@ function saveFileProcess(fileName, exportScript){
 	document.body.removeChild(element);
 }
 
+// 지도에 marker로 region 표시.  
+// TODO : default로 지도 표시한 뒤 location만 받아서 marker만 추가하도록 변경필요
 function setRegionMap(locationInfo){
 //         var lat            = 38.1300;
 //         var lon            = -78.4500;
@@ -965,16 +979,19 @@ function setRegionMap(locationInfo){
 
 //     lat = 37.413294;
 //     lon = 126.734086;// 서울
-
-    var latitude = locationInfo.latitude;
-    var longitude = locationInfo.longitude;
-    var briefAddr = locationInfo.briefAddr;
-    var nativeRegion = locationInfo.nativeRegion;
+    console.log(locationInfo);
+    
+    var latitude =  37.413294;;
+    var longitude = 126.734086;// 서울
+    var briefAddr = "seoul region"
+    var nativeRegion = "east asia";
     console.log("location is ===")
     console.log(locationInfo)
-    if( !locationInfo){
-        latitude = 37.413294;
-        longitude = 126.734086;// 서울
+    if( locationInfo){
+        latitude = locationInfo.latitude;
+        longitude = locationInfo.longitude;
+        briefAddr = locationInfo.briefAddr;
+        nativeRegion = locationInfo.nativeRegion;
     }
     console.log("latitude= " + latitude + ", longitude = " + longitude)
     const iconFeature = new ol.Feature({
