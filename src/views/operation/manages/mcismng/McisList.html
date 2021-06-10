@@ -11,12 +11,11 @@
 											<a href="javascript:void(0);">Filter</a>
 											<div class="infobox">
 												<div class="box">
-													<p>NS name</p>
+													<!-- <p>NS name</p> -->
 													<ul>
-														<li><a href="javascript:void(0);">name</a></li>
-														<li><a href="javascript:void(0);">status</a></li>
-														<li><a href="javascript:void(0);">Description</a></li>
-														<li><a href="javascript:void(0);">Server name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterMcisName', 'mcisListTable')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterMcisStatus', 'mcisListTable')">Status</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('FilterMcisDesc', 'mcisListTable')">Description</a></li>
 													</ul>
 												</div>
 											</div>
@@ -26,8 +25,10 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);">name</a></li>
-														<li><a href="javascript:void(0);">status</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('mcisListTable', 'Name')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('mcisListTable', 'Status')">Status</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('mcisListTable', 'Description')">Description</a></li>
+														
 													</ul>
 												</div>
 											</div>

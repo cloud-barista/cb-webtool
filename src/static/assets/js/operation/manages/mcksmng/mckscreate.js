@@ -4,7 +4,7 @@ function deploy_btn(){
         commonAlert("first letter = small letter <br/> middle letter = small letter, number, hipen(-) only <br/> last letter = small letter ");
         return;
     }
-    return;
+    
     var kubernatesNetworkCni = $("#kubernatesNetworkCni").val();
     var kubernatesPodCidr = $("#kubernatesPodCidr").val();
     var kubernatesServiceCidr = $("#kubernatesServiceCidr").val();
@@ -105,7 +105,9 @@ function deploy_btn(){
             console.log("Result message : ",message); 
 
             if(result.status == 201 || result.status == 200){
-                commonAlert("Clust Create Success")
+                commonAlert("MCKS Create Success")
+                var targetUrl = "/operation/manages/mcksmng/mngform"
+                changePage(targetUrl);
             
             }else{
                 commonErrorAlert(statusCode, message) 

@@ -135,16 +135,18 @@ function nodeDone_btn(){
             console.log("Result message : ",message); 
 
             if(result.status == 201 || result.status == 200){
-                
+                commonAlert("Node Add Success")
+                var targetUrl = "/operation/manages/mcksmng/mngform"
+                changePage(targetUrl);
             
             }else{
-                
+                commonErrorAlert(statusCode, message) 
             }
         }).catch((error) => {
             console.log(error);
             console.log(error.response)
             var errorMessage = error.response.data.error;
-            // commonErrorAlert(statusCode, errorMessage) 
+            commonErrorAlert(statusCode, errorMessage) 
         })
     }finally{
         
@@ -179,9 +181,9 @@ function addWorkNode(){
 
     var maxIndexArr = maxWorkerId.split ("_")
     var maxIndex = maxIndexArr[maxIndexArr.length-1];
-    console.log( lastWorkerId + " <> " + maxWorkerId)
-    console.log(maxIndexArr)
-    console.log( lastIndex + " : " + maxIndex + " : " + nameCount)
+    // console.log( lastWorkerId + " <> " + maxWorkerId)
+    // console.log(maxIndexArr)
+    // console.log( lastIndex + " : " + maxIndex + " : " + nameCount)
     if( lastIndex <= maxIndex){
         nameCount = Number(maxIndex) + 1;
         lastWorkerId = maxWorkerId;
@@ -192,7 +194,7 @@ function addWorkNode(){
     // var addWorkerIndex = Number(lastIndex) +1;
     var addWorkerIndex = Number(nameCount);
     
-    console.log("addWorkerIndex=" + addWorkerIndex)
+    // console.log("addWorkerIndex=" + addWorkerIndex)
     var addWorkerHtml = $('#hidden_work_area').clone();
     // console.log(addWorkerHtml.html());    
     var addW = "";
@@ -210,12 +212,6 @@ function addWorkNode(){
     $("#mcksNodeArea").append(addW);    
     $("#mcks_Worker_list_" + addWorkerIndex).css("display", "block");
     //$("#aa").css("display", "block");
-
-    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
-    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
-    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
-    // $("#ABC").attr('id', 'workerCount_' + addWorkerIndex)
-
     // console.log($("#mcks_Worker_list").html())
 
     $("#workerAddCount_" + addWorkerIndex).text(addWorkerIndex);
