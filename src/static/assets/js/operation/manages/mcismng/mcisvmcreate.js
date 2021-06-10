@@ -289,9 +289,10 @@ function vmCreateCallback(resultVmKey, resultStatus){
     }
 
     if( totalDeployServerCount == 0){
-        getVmList();
+        //getVmList();
         commonAlert($("#serverRegistResult").text());
-        // vm목록 조회
+        var targetUrl = "/operation/manages/mcis/mngform"
+        changePage(targetUrl)
     }
 }
 
