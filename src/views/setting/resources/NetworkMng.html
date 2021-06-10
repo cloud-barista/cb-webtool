@@ -37,7 +37,7 @@
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox">
-								<div class="tit initial"><strong>Network (vNet)</strong></div>
+								<div class="tit initial"><strong>Network (VPC)</strong></div>
 								<div class="top_info">
 									<ul>
 										<li>
@@ -258,7 +258,7 @@
 						
 						<div class="d_box box_m box_w100">
 							<div class="titbox_n">
-								<div class="tit initial cg"><strong>Register Network</strong></div>
+								<div class="tit initial cg"><strong>Create Network</strong></div>
 							</div>
 							
 							<div class="ds_cont">
@@ -297,7 +297,7 @@
 													</select>
 												</li>
 												<li>
-													<label><span class="ch">*</span>Connection Name</label>
+													<label><span class="ch">*</span>Connection</label>
 													<select class="selectbox white pline w3" id="regConnectionName" name="reg_connectionName">
 														<option selected>Selected ConnectionName</option>
 													</select>
@@ -319,7 +319,7 @@
 									
 									<div class="btnbox">
 										<div class="btn_center">
-											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
+											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel" onclick="displayVNetInfo('CLOSE')">Cancel</button> 
 											<button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="createVNet()">Ok</button> 
 										</div>
 									</div>

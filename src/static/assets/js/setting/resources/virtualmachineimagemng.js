@@ -127,6 +127,13 @@ function displayVirtualMachineImageInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         getVirtualMachineImageList("name");
+    }else if ( targetAction == "CLOSE"){
+        $('#virtualMachineImageCreateBox').removeClass("active");
+        $('#virtualMachineImageInfoBox').removeClass("view");
+        $('#virtualMachineImageListTable').addClass("on");
+
+        var offset = $("#virtualMachineImageInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
     }
 }
 

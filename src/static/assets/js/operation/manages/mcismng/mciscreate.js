@@ -144,7 +144,7 @@ function deployMcis(){
             if(result.status == 201 || result.status == 200){
                 commonAlert("Register Success")                
                 var targetUrl = "/operation/manages/mcismng/mngform"
-                //changePage(targetUrl)
+                changePage(targetUrl)
             }else{
                 commonAlert("Register Fail")
                 //location.reload(true);
