@@ -73,6 +73,18 @@ function changePage(url){
     location.href = url;
 }
 
+// 그런데 inputtype=text 를 password로 바꾸기만해도 해당기능이 동작 함.
+function showPassword(passwordObjId){
+    var passObj = document.getElementById(passwordObjId);
+    // var passObj = $("#" + passwordObjId);
+    console.log( passObj)
+    console.log( " pw obj tyle " + passObj.type)
+    if (passObj.type ==="password") {
+        passObj.type = "text";
+    }else{
+        passObj.type = "password"; 
+    }
+}
 // 문자열이 빈 경우 defaultString을 return
 function nvl(str, defaultStr){         
     if(typeof str == "undefined" || str == null || str == "")
@@ -136,14 +148,14 @@ function commonConfirmOpen(targetAction){
             ["ChangeNameSpace", "Would you like to move <br />selected NameSpace?"],
             ["DeleteNameSpace", "Would you like to delete <br />selected NameSpace?"],
 
-            ["AddNewVpc", "Would you like to register Network <br />Resource ?"],
+            ["AddNewVpc", "Would you like to create a new Network <br />Resource ?"],
             ["DeleteVpc", "Are you sure to delete this Network <br />Resource ?"],
 
-            ["AddNewSecurityGroup", "Would you like to register Security <br />Resource ?"],
-            ["DeleteSecurityGroup", "Would you like to un-register Security <br />Resource ?"],
+            ["AddNewSecurityGroup", "Would you like to create a new Security <br />Resource ?"],
+            ["DeleteSecurityGroup", "Would you like to delete Security <br />Resource ?"],
             
-            ["AddNewSshKey", "Would you like to register SSH key <br />Resource ?"],
-            ["DeleteSshKey", "Would you like to un-register SSH key <br />Resource ?"],     
+            ["AddNewSshKey", "Would you like to create a new SSH key <br />Resource ?"],
+            ["DeleteSshKey", "Would you like to delete SSH key <br />Resource ?"],     
             
             ["AddNewVirtualMachineImage", "Would you like to register Image <br />Resource ?"],
             ["DeleteVirtualMachineImage", "Would you like to un-register Image <br />Resource ?"],  
