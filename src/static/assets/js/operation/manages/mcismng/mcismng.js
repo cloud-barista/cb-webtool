@@ -1,3 +1,4 @@
+var selectedMcis = "";
 $(document).ready(function(){
     // MCIS List의 상단 의 checkbox 클릭시 전체 선택하도록 
     $("#th_chall").click(function() {
@@ -8,8 +9,19 @@ $(document).ready(function(){
         }
     })
 
+    // 지도 표시
     setRegionMap();
+
+    selectedMcisID = $("#selected_mcis_id").val();
+    
+    // console.log(selectedMcisID);
+    // Dashboard 등에서 선택한 MCIS Mng를 하면 해당 Mcis로만 보이도록 (전체에서 filter 기능만 수행)
+    if( selectedMcisID != undefined && selectedMcisID != ""){
+        // mcisList filter        
+        filterTable("mcisListTable", "Name", selectedMcisID);
+    }
 });
+
 ///////////// MCIS Handling //////////////
 
 // 등록 form으로 이동
@@ -516,7 +528,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var longitude = locationInfo.longitude;
             var briefAddr = locationInfo.briefAddr;
             var nativeRegion = locationInfo.nativeRegion;
-            // setRegionMap();
+           
             if( locationInfo){
                 // 지도에 표시
                 // $("#map").empty();
@@ -531,6 +543,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
 
                 // drawMap(map, longitude, latitude, pointInfo);
                 // console.log("drawMap");
+                setRegionMap(locationInfo);
             }
             // region zone locate
             
@@ -597,9 +610,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             ////// vm mornitoring tab //////
             // install Mon agent
             var installMonAgent = data.monAgentStatus
-            showVmMonitoring(mcisID,vmID)
-
-            setRegionMap();
+            showVmMonitoring(mcisID,vmID)            
         }
     // ).catch(function(error){
     //     var statusCode = error.response.data.status;
@@ -959,80 +970,63 @@ function saveFileProcess(fileName, exportScript){
 	document.body.removeChild(element);
 }
 
-// Region 을 지도에 표시
-function setRegionMap(){
+// 지도에 marker로 region 표시.  
+// TODO : default로 지도 표시한 뒤 location만 받아서 marker만 추가하도록 변경필요
+function setRegionMap(locationInfo){
+//         var lat            = 38.1300;
+//         var lon            = -78.4500;
+// //     var zoom           = 1;
 
-    var JZMap = map_init();
-
-    let pointInfo = new Map();
-    pointInfo.set("title", "111");
-    pointInfo.set("vm_status", "222");
-    pointInfo.set("vm_id", "333");
-    pointInfo.set("id", "444");
-
-    long = -78.4500
-    lat = 38.1300
-    // drawMap(JZMap, -78.4500, 38.1300, pointInfo);
-    var icon = new ol.style.Style({
-        image: new ol.style.Icon({
-            src:'/assets/img/marker/purple.png', // pin Image
-            anchor: [0.5, 1],
-            scale: 0.5
-        
+//     lat = 37.413294;
+//     lon = 126.734086;// 서울
+    console.log(locationInfo);
+    
+    var latitude =  37.413294;;
+    var longitude = 126.734086;// 서울
+    var briefAddr = "seoul region"
+    var nativeRegion = "east asia";
+    console.log("location is ===")
+    console.log(locationInfo)
+    if( locationInfo){
+        latitude = locationInfo.latitude;
+        longitude = locationInfo.longitude;
+        briefAddr = locationInfo.briefAddr;
+        nativeRegion = locationInfo.nativeRegion;
+    }
+    console.log("latitude= " + latitude + ", longitude = " + longitude)
+    const iconFeature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude])),
+        // geometry: new ol.geom.Point(ol.proj.fromLonLat([-2, 53])),
+        name: nativeRegion,
+      });
+      
+      const map = new ol.Map({
+        target: 'regionMap',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM(),
+          }),
+          new ol.layer.Vector({
+            source: new ol.source.Vector({
+              features: [iconFeature]
+            }),
+            style: new ol.style.Style({
+              image: new ol.style.Icon({
+                anchor: [0.5, 46],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'pixels',
+                src: '/assets/img/marker/black.png'
+              })
+            })
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([longitude, latitude]),
+        //   zoom: 1    //전 세계 표시
+        zoom: 4
+        // zoom: 6
         })
-    })
-    var map_center = ol.proj.fromLonLat([long, lat]);
-    var point_gem = new ol.geom.Point(map_center);
-    var point_feature = new ol.Feature(point_gem);
-    point_feature.setStyle([icon])
-    //feature 에 set info
-    console.log("info : ",pointInfo)
-    point_feature.set('title',"aaaa")
-    point_feature.set('vm_status',"bbbb")
-    point_feature.set('vm_id',"cccc")
-    point_feature.set('id',"dddd")
+      });
 
-    var stackVectorMap = new ol.source.Vector({
-    features : [point_feature]
-    })
-
-    var stackLayer = new ol.layer.Vector({
-    source: stackVectorMap
-    })
-    JZMap.addLayer(stackLayer)
-
-
-    // //지도 그리기 관련
-    // var polyArr = new Array();
-
-    // // $("[id^='vmID_']").each(function(){
-    // $("input[name=vmID]").each(function(vmIndex, item){
-    //     // var vmID = $(this).attr("id");
-    //     // var vmIndex = vmID.split ("_")[1];
-    //     var vmIDValue = $("#vmID_" + vmIndex).val();
-    //     var vmNameValue = $("#vmName_" + vmIndex).val();
-    //     var vmStatusValue = $("#vmStatus_" + vmIndex).val();
-    //     var longitudeValue = $("#longitude_" + vmIndex).val();
-    //     var latitudeValue = $("#latitude_" + vmIndex).val();
-
-    //     var vms = new Object();
-    //     vms.id = vmIDValue;
-    //     vms.name = vmNameValue;
-    //     vms.longitudeValue = longitudeValue;
-    //     vms.latitudeValue = latitudeValue;
-    //     // vms.status = vmStatusValue;
-    //     // vms.status = vmStatusValue;
-
-    //     var fromLonLat = longitudeValue+" "+latitudeValue;
-    //     console.log(longitudeValue + " : " + latitudeValue);
-    //     if(longitudeValue && latitudeValue){
-    //         // polyArr.push(fromLonLat)
-    //         drawMap(JZMap,longitudeValue,latitudeValue,vms)
-
-    //         var polygon = "POLYGON(("+fromLonLat+"))";
-    //         // drawPoligon(JZMap,fromLonLat);
-    //         drawPoligon(JZMap,polygon);
-    //     }
-
-    // })
+    //   $("#regionMap").css("display", "block");
 }
