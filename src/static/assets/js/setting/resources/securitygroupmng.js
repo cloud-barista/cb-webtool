@@ -99,6 +99,13 @@ function displaySecurityGroupInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         getSecurityGroupList("name");
+    }else if ( targetAction == "CLOSE"){
+        $('#securityGroupCreateBox').removeClass("active");
+        $('#securityGroupInfoBox').removeClass("view");
+        $('#securityGroupListTable').addClass("on");
+
+        var offset = $("#securityGroupInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
     }
 }
 
@@ -267,7 +274,7 @@ function setSecurityGroupListAtServerImage(data, sortType){
             ModalDetail()
         }
     }
-    
+    displaySecurityGroupInfo("REG_SUCCESS")
 }
 
 function ModalDetail() {
