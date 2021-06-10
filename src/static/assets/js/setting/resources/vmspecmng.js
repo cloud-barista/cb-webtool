@@ -111,6 +111,13 @@ function displayVmSpecInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         getVmSpecList("name");
+    }else if ( targetAction == "CLOSE"){
+        $('#vmSpecCreateBox').removeClass("active");
+        $('#vmSpecInfoBox').removeClass("view");
+        $('#vmSpecListTable').addClass("on");
+
+        var offset = $("#vmSpecInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
     }
 }
 

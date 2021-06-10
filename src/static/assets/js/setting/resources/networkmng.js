@@ -283,6 +283,13 @@ function displayVNetInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         getVpcList("name");
+    }else if ( targetAction == "CLOSE"){
+        $('#vnetCreateBox').removeClass("active");
+        $('#vNetInfoBox').removeClass("view");
+        $('#vNetListTable').addClass("on");
+
+        var offset = $("#vNetInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
     }
 
 
