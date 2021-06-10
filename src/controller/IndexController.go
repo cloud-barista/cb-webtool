@@ -64,12 +64,25 @@ func Index(c echo.Context) error {
 }
 
 func About(c echo.Context) error {
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		// Login 정보가 없으므로 login화면으로
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	nameSpaceInfoList, _ := service.GetStoredNameSpaceList(c)
 	// return c.Render(http.StatusOK, "About.html", map[string]interface{}{})
 	return echotemplate.Render(c, http.StatusOK,
 		"About", // 파일명
+		// map[string]interface{}{
+		// 	"message": "",
+		// 	"status":  200,
+		// })
 		map[string]interface{}{
-			"message": "",
-			"status":  200,
+			"LoginInfo":     loginInfo,
+			"NameSpaceList": nameSpaceInfoList,
+			"message":       "success",
+			"status":        200,
 		})
 }
 
