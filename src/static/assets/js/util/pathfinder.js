@@ -494,3 +494,27 @@ function getCommonMcksList(caller) {
         getMcksListCallbackFail(error)
 	});
 }
+
+
+function getCommonVmSecurityGroupInfo(caller, securityGroupId){
+    var url = "/setting/resources/securitygroup/" + securityGroupId
+    
+    axios.get(url,{
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get SecurityGroup List : ", result.data);
+        
+        var data = result.data.SecurityGroupInfo;
+
+        // if ( caller == "mainmcis") {
+            console.log("return get Data");            
+			getSecurityGroupCallbackSuccess(caller, data)		
+		// }
+    }).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        getSecurityGroupCallbackFail(error)
+	});
+}

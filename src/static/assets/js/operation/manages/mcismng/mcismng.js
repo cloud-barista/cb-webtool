@@ -604,6 +604,22 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             $("#server_detail_view_user_id_pass").val(data.vmUserAccount +"/ *** ")
             $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
 
+
+            var append_sg = ''
+
+            var sg_arr = vmDetail.securityGroupIIds
+            console.log(sg_arr);
+            if(sg_arr){
+                sg_arr.map((item,index)=>{           
+                    console.log("item index = " + index)
+                    append_sg +='<a href="javascript:void(0);" onclick="getCommonVmSecurityGroupInfo(\'mcisvm\',\''+item.nameId+'\');"title="'+item.nameId+'" >'+item.nameId+'</a> '
+                })
+            }  
+            console.log("append sg : ",append_sg)
+            
+            $("#server_detail_view_security_group").empty()
+            $("#server_detail_view_security_group").append(append_sg);
+
             // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인 
             ////// vm connection tab //////
 
@@ -968,6 +984,28 @@ function saveFileProcess(fileName, exportScript){
 	element.click();
 
 	document.body.removeChild(element);
+}
+
+function getSecurityGroupCallbackSuccess(caller, data){
+    var html = ""
+    var firewallRules = data
+    
+    $("#register_box").modal()
+    data.filter((list)=> list.name !== "" ).map((item,index)=>(
+    // firewallRules.map(item=>(
+        html +='<tr>'
+                +'<td class="btn_mtd" data-th="fromPort">'+item.fromPort+' <span class="ov off"></span></td>'
+                +'<td class="overlay hidden" data-th="toPort">'+item.toPort+'</td>'
+                +'<td class="overlay hidden" data-th="toProtocol">'+item.ipProtocol+'</td>'
+                +'<td class="overlay hidden " data-th="direction">'+item.direction+'</td>'
+                +'</tr>'
+    ))
+    $("#manage_mcis_popup_sg").empty()
+    $("#manage_mcis_popup_sg").append(html)
+}
+
+function getSecurityGroupCallbackFail(error){
+
 }
 
 // 지도에 marker로 region 표시.  
