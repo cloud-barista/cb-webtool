@@ -16,6 +16,7 @@ import (
 
 	"github.com/cloud-barista/cb-webtool/src/util"
 	"github.com/labstack/echo"
+
 	//"github.com/davecgh/go-spew/spew"
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
@@ -67,26 +68,44 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 
 	// connectionconfigList 가져오기
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	store.Set("cloudconnectionconfig", cloudConnectionConfigInfoList)
-	log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
+	setCloudConnectionErr := service.SetStoreCloudConnectionConfigList(c, cloudConnectionConfigInfoList)
+	if setCloudConnectionErr != nil {
+		log.Println(" setCloudConnectionErr  ", setCloudConnectionErr)
+	}
+	// if ( cloudConnectionConfigStatus.StatusCode != 200 & cloudConnectionConfigStatus.StatusCode != 201 ) {
+	// store.Set("cloudconnectionconfig", cloudConnectionConfigInfoList)
+	// log.Println(" cloudconnectionconfig  ", cloudConnectionConfigInfoList)
 
 	// regionList 가져오기
 	regionList, _ := service.GetRegionList()
-	store.Set("region", regionList)
+	setRegionErr := service.SetStoreRegionList(c, regionList)
+	if setRegionErr != nil {
+		log.Println(" setRegionErr  ", setRegionErr)
+	}
+	// store.Set("region", regionList)
 	log.Println(" regionList  ", regionList)
 
 	// credentialList 가져오기
 	credentialList, _ := service.GetCredentialList()
-	store.Set("credential", credentialList)
+	setCredentialErr := service.SetStoreCredentialList(c, credentialList)
+	if setCredentialErr != nil {
+		log.Println(" setCredentialErr  ", setCredentialErr)
+	}
+	// store.Set("credential", credentialList)
 	log.Println(" credentialList  ", credentialList)
 
 	// driverList 가져오기
 	driverList, _ := service.GetDriverList()
-	store.Set("driver", driverList)
+	setDriverErr := service.SetStoreDriverList(c, driverList)
+	if setDriverErr != nil {
+		log.Println(" setDriverErr  ", setDriverErr)
+	}
+	// store.Set("driver", driverList)
 	log.Println(" driverList  ", driverList)
 
 	// 최신 namespacelist 가져오기
-	nsList, _ := service.GetNameSpaceList()
+	// nsList, _ := service.GetNameSpaceList()
+	nsList, _ := service.GetStoredNameSpaceList(c)
 	store.Set("namespace", nsList)
 	log.Println(" nsList  ", nsList)
 
@@ -108,19 +127,18 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 func GetCloudConnectionConfigList(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
-		// Login 정보가 없으므로 login화면으로
-		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
-		// 	"message": "invalid tumblebug connection",
-		// 	"status":  "403",
-		// })
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	cloudConnectionConfigInfo, respStatus := service.GetCloudConnectionConfigList()
+	cloudConnectionConfigList, respStatus := service.GetCloudConnectionConfigList()
+	setCloudConnectionConfigErr := service.SetStoreCloudConnectionConfigList(c, cloudConnectionConfigList)
+	if setCloudConnectionConfigErr != nil {
+		log.Println("setCloudConnectionConfigErr ", setCloudConnectionConfigErr)
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
 		"status":           respStatus,
-		"ConnectionConfig": cloudConnectionConfigInfo,
+		"ConnectionConfig": cloudConnectionConfigList,
 	})
 }
 
@@ -128,11 +146,6 @@ func GetCloudConnectionConfigList(c echo.Context) error {
 func GetCloudConnectionConfigData(c echo.Context) error {
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
-		// Login 정보가 없으므로 login화면으로
-		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
-		// 	"message": "invalid tumblebug connection",
-		// 	"status":  "403",
-		// })
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -150,11 +163,6 @@ func CloudConnectionConfigRegProc(c echo.Context) error {
 	log.Println("ConnectionConfigRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
-		// Login 정보가 없으므로 login화면으로
-		// return c.JSON(http.StatusBadRequest, map[string]interface{}{
-		// 	"message": "invalid tumblebug connection",
-		// 	"status":  "403",
-		// })
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
@@ -174,6 +182,11 @@ func CloudConnectionConfigRegProc(c echo.Context) error {
 			"error":  respStatus.Message,
 			"status": respStatus.StatusCode,
 		})
+	}
+
+	cloudConnectionConfigErr := GetCloudConnectionConfigList(c)
+	if cloudConnectionConfigErr != nil {
+		log.Println(" cloudConnectionConfigErr ", cloudConnectionConfigErr)
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{

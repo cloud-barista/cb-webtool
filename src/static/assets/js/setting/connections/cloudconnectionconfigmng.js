@@ -731,6 +731,8 @@ function saveNewCredential(){
     var value1 = $("#CredentialModalValue1").val();	
     var key2 = $("#CredentialModalKey2").val();
     var value2 = $("#CredentialModalValue2").val();	
+    var key3 = $("#CredentialModalKey3").val();
+    var value3 = $("#CredentialModalValue3").val();	
 	// CredentialName string             `json:"CredentialName"`
 	// ProviderName   string             `json:"ProviderName"`
 	// KeyValueInfoList   []KeyValueInfoList `json:"KeyValueInfoList"`
@@ -748,6 +750,12 @@ function saveNewCredential(){
             ProviderName: providerName,
             KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2}]
         }
+    }else if (providerName == "AZURE") {    
+        credentialInfo = {            
+            CredentialName:credentialName,
+            ProviderName: providerName,
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2},{"Key":key3,"Value":value3}]
+        }       
     }else{
         credentialInfo = {            
             CredentialName:credentialName,
@@ -774,7 +782,8 @@ function saveNewCredential(){
             $("#CredentialModalValue1").val('');
             $("#CredentialModalKey2").val('');
             $("#CredentialModalValue2").val('');
-            
+            $("#CredentialModalKey3").val('');
+            $("#CredentialModalValue3").val('');
             // Credential table 갱신
             getCredentialList();
         }else{

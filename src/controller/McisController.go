@@ -34,8 +34,9 @@ func McisRegForm(c echo.Context) error {
 	}
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	// 최신 namespacelist 가져오기
-	nsList, _ := service.GetNameSpaceList()
+	// namespacelist 가져오기
+	// nsList, _ := service.GetNameSpaceList()
+	nsList, _ := service.GetStoredNameSpaceList(c)
 	log.Println(" nsList  ", nsList)
 
 	// connectionconfigList 가져오기
@@ -85,10 +86,12 @@ func McisMngForm(c echo.Context) error {
 	}
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	selectedMcisID := c.QueryParam("mcisid") // Dashboard 등에서 선택한 mcis가 있는경우 mng 화면에 해당 mcis만 보이기 위해(실제로는 filterling을 위해서만 사용)
 	store := echosession.FromContext(c)
 
 	// 최신 namespacelist 가져오기
-	nsList, _ := service.GetNameSpaceList()
+	//nsList, _ := service.GetNameSpaceList()
+	nsList, _ := service.GetStoredNameSpaceList(c)
 	log.Println(" nsList  ", nsList)
 
 	// provider 별 연결정보 count(MCIS 무관)
@@ -99,25 +102,18 @@ func McisMngForm(c echo.Context) error {
 	mcisList := []tumblebug.McisInfo{}
 	mcisErr := model.WebStatus{}
 
-	storedMcisList, ok := store.Get("MCIS_" + loginInfo.UserID)
-	if !ok {
-		mcisList, mcisErr = service.GetMcisList(defaultNameSpaceID)
-		log.Println(" mcisList  ", mcisList, mcisErr.StatusCode)
-		if mcisErr.StatusCode != 200 && mcisErr.StatusCode != 201 {
-			//return render(c, "ErrorPage.html", map[string]interface{}{"Message": mcisErr.Message, "StatusCode": mcisErr.StatusCode, "PageUrl": "/main"})
-			//return render(c, "ErrorPage.html", map[string]interface{}{"Message": messages, "StatusCode": msgtype, "PageUrl": template.HTML(pageHtml)})
-			//return c.Render(http.StatusNotFound, tmpl.ErrNotFoundTpl, tmpl.NotFoundMessage)
+	mcisList, mcisErr = service.GetMcisList(defaultNameSpaceID)
+	log.Println(" mcisList  ", mcisList, mcisErr.StatusCode)
+	if mcisErr.StatusCode != 200 && mcisErr.StatusCode != 201 {
+		//return render(c, "ErrorPage.html", map[string]interface{}{"Message": mcisErr.Message, "StatusCode": mcisErr.StatusCode, "PageUrl": "/main"})
+		//return render(c, "ErrorPage.html", map[string]interface{}{"Message": messages, "StatusCode": msgtype, "PageUrl": template.HTML(pageHtml)})
+		//return c.Render(http.StatusNotFound, tmpl.ErrNotFoundTpl, tmpl.NotFoundMessage)
 
-			errPage := fmt.Sprintf("%d.html", mcisErr.StatusCode)
-			if err := c.File(errPage); err != nil {
-				log.Println("Return error page")
-				return c.HTML(mcisErr.StatusCode, "Return Error page Message : "+mcisErr.Message)
-			}
+		errPage := fmt.Sprintf("%d.html", mcisErr.StatusCode)
+		if err := c.File(errPage); err != nil {
+			log.Println("Return error page")
+			return c.HTML(mcisErr.StatusCode, "Return Error page Message : "+mcisErr.Message)
 		}
-
-		store.Set("MCIS_"+loginInfo.UserID, mcisList)
-	} else {
-		mcisList = storedMcisList.([]tumblebug.McisInfo)
 	}
 
 	// 모든 MCIS 조회
@@ -336,7 +332,7 @@ func McisMngForm(c echo.Context) error {
 	storedRegionList, ok := store.Get("regionlist")
 	if !ok {
 		regionInfoList, regionErr = service.GetRegionList()
-		log.Println(" virtualMachineImageInfoList  ", regionInfoList, regionErr.StatusCode)
+		log.Println(" storedRegionList  ", regionInfoList, regionErr.StatusCode)
 
 		store.Set("regionlist", regionInfoList)
 	} else {
@@ -350,62 +346,62 @@ func McisMngForm(c echo.Context) error {
 
 	// VM Image 목록
 	virtualMachineImageInfoList := []tumblebug.VirtualMachineImageInfo{}
-	virtualMachineImageErr := model.WebStatus{}
+	// virtualMachineImageErr := model.WebStatus{}
 
-	storedvirtualMachineImageList, ok := store.Get("MCIS_VMIMAGE_" + defaultNameSpaceID)
-	if !ok {
-		virtualMachineImageInfoList, virtualMachineImageErr = service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
-		log.Println(" virtualMachineImageInfoList  ", virtualMachineImageInfoList, virtualMachineImageErr.StatusCode)
+	// storedvirtualMachineImageList, ok := store.Get("MCIS_VMIMAGE_" + defaultNameSpaceID)
+	// if !ok {
+	// 	virtualMachineImageInfoList, virtualMachineImageErr = service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
+	// 	log.Println(" virtualMachineImageInfoList  ", virtualMachineImageInfoList, virtualMachineImageErr.StatusCode)
 
-		store.Set("MCIS_VMIMAGE_"+defaultNameSpaceID, virtualMachineImageInfoList)
-	} else {
-		virtualMachineImageInfoList = storedvirtualMachineImageList.([]tumblebug.VirtualMachineImageInfo)
-	}
+	// 	store.Set("MCIS_VMIMAGE_"+defaultNameSpaceID, virtualMachineImageInfoList)
+	// } else {
+	// 	virtualMachineImageInfoList = storedvirtualMachineImageList.([]tumblebug.VirtualMachineImageInfo)
+	// }
 	// virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
 
 	// VMSpec 목록
 	vmSpecInfoList := []tumblebug.VmSpecInfo{}
-	vmSpecErr := model.WebStatus{}
+	// vmSpecErr := model.WebStatus{}
 
-	storedVmSpecList, ok := store.Get("MCIS_VMSPEC_" + defaultNameSpaceID)
-	if !ok {
-		vmSpecInfoList, vmSpecErr = service.GetVmSpecInfoList(defaultNameSpaceID)
-		log.Println(" virtualMachineImageInfoList  ", vmSpecInfoList, vmSpecErr.StatusCode)
+	// storedVmSpecList, ok := store.Get("MCIS_VMSPEC_" + defaultNameSpaceID)
+	// if !ok {
+	// 	vmSpecInfoList, vmSpecErr = service.GetVmSpecInfoList(defaultNameSpaceID)
+	// 	log.Println(" virtualMachineImageInfoList  ", vmSpecInfoList, vmSpecErr.StatusCode)
 
-		store.Set("MCIS_VMSPEC_"+defaultNameSpaceID, vmSpecInfoList)
-	} else {
-		vmSpecInfoList = storedVmSpecList.([]tumblebug.VmSpecInfo)
-	}
+	// 	store.Set("MCIS_VMSPEC_"+defaultNameSpaceID, vmSpecInfoList)
+	// } else {
+	// 	vmSpecInfoList = storedVmSpecList.([]tumblebug.VmSpecInfo)
+	// }
 	// vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
 
-	// VMSpec 목록
+	// vNet 목록
 	vNetInfoList := []tumblebug.VNetInfo{}
-	vNetErr := model.WebStatus{}
+	// vNetErr := model.WebStatus{}
 
-	storedVnetList, ok := store.Get("MCIS_VNET_" + defaultNameSpaceID)
-	if !ok {
-		vNetInfoList, vNetErr = service.GetVnetList(defaultNameSpaceID)
-		log.Println(" virtualMachineImageInfoList  ", vNetInfoList, vNetErr.StatusCode)
+	// storedVnetList, ok := store.Get("MCIS_VNET_" + defaultNameSpaceID)
+	// if !ok {
+	// 	vNetInfoList, vNetErr = service.GetVnetList(defaultNameSpaceID)
+	// 	log.Println(" vNetInfoList  ", vNetInfoList, vNetErr.StatusCode)
 
-		store.Set("MCIS_VNET_"+defaultNameSpaceID, vNetInfoList)
-	} else {
-		vNetInfoList = storedVnetList.([]tumblebug.VNetInfo)
-	}
+	// 	store.Set("MCIS_VNET_"+defaultNameSpaceID, vNetInfoList)
+	// } else {
+	// 	vNetInfoList = storedVnetList.([]tumblebug.VNetInfo)
+	// }
 	// vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
 
 	// SecurityGroup
 	securityGroupInfoList := []tumblebug.SecurityGroupInfo{}
-	securityGroupErr := model.WebStatus{}
+	// securityGroupErr := model.WebStatus{}
 
-	storedSecurityGroupList, ok := store.Get("MCIS_SECURITYGROUP_" + defaultNameSpaceID)
-	if !ok {
-		securityGroupInfoList, securityGroupErr = service.GetSecurityGroupList(defaultNameSpaceID)
-		log.Println(" virtualMachineImageInfoList  ", storedSecurityGroupList, securityGroupErr.StatusCode)
+	// storedSecurityGroupList, ok := store.Get("MCIS_SECURITYGROUP_" + defaultNameSpaceID)
+	// if !ok {
+	// 	securityGroupInfoList, securityGroupErr = service.GetSecurityGroupList(defaultNameSpaceID)
+	// 	log.Println(" securityGroupInfoList  ", storedSecurityGroupList, securityGroupErr.StatusCode)
 
-		store.Set("MCIS_SECURITYGROUP_"+defaultNameSpaceID, securityGroupInfoList)
-	} else {
-		securityGroupInfoList = storedSecurityGroupList.([]tumblebug.SecurityGroupInfo)
-	}
+	// 	store.Set("MCIS_SECURITYGROUP_"+defaultNameSpaceID, securityGroupInfoList)
+	// } else {
+	// 	securityGroupInfoList = storedSecurityGroupList.([]tumblebug.SecurityGroupInfo)
+	// }
 	// securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
 
 	// status, filepath, return params
@@ -414,6 +410,7 @@ func McisMngForm(c echo.Context) error {
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
+			"SelectedMcisID":     selectedMcisID, // 선택한 MCIS ID
 			"NameSpaceList":      nsList,
 			// "McisList":           mcisList,	// mcisSimpleInfoList 로 대체
 			// "McisIDList":         mcisIdArr,
@@ -618,6 +615,7 @@ func McisVmRegForm(c echo.Context) error {
 	log.Println("---------------------- GetRegionList ", defaultNameSpaceID)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
 	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
+
 	//// namespace에 등록 된 resource 정보들 //////
 	virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
 	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
@@ -758,14 +756,14 @@ func GetVmInfoData(c echo.Context) error {
 		})
 	}
 
-	connectionName := returnVmInfo.ConnectionName;
+	connectionName := returnVmInfo.ConnectionName
 	cloudConnectionConfigInfo, _ := service.GetCloudConnectionConfigData(connectionName)
 	// credential Info by connection
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": respStatus.Message,
-		"status":  respStatus.StatusCode,
-		"VmInfo":  returnVmInfo,
+		"message":              respStatus.Message,
+		"status":               respStatus.StatusCode,
+		"VmInfo":               returnVmInfo,
 		"ConnectionConfigInfo": cloudConnectionConfigInfo,
 	})
 }
