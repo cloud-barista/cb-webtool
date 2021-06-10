@@ -124,6 +124,8 @@ func main() {
 		Partials: []string{
 			"templates/Top",
 			"templates/TopBox",
+			"templates/LNB",
+			"templates/LNBPopup",
 			"templates/MenuLeft",
 			"templates/Header",
 			"templates/Footer",

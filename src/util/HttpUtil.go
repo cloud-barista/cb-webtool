@@ -3,6 +3,7 @@ package util
 import (
 	"encoding/base64"
 	"fmt"
+
 	// "reflect"
 	// "io"
 	"io/ioutil"
@@ -10,6 +11,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httputil"
+
 	// "net/url"
 	"os"
 	"strconv"
@@ -93,8 +95,6 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 		panic(err1)
 	}
 
-	// url = "http://54.248.3.145:1323/tumblebug/ns/ns-01/resources/vNet"
-
 	// set the request header Content-Type for json
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	// req.Header.Set("Content-Type", "application/json")
@@ -103,7 +103,7 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 
 	requestDump, err := httputil.DumpRequest(req, true)
 	if err != nil {
-	  fmt.Println(err)
+		fmt.Println(err)
 	}
 	fmt.Println(string(requestDump))
 	resp, err := client.Do(req) // err 자체는 nil 이고 resp 내에 statusCode가 500임...
@@ -112,9 +112,8 @@ func CommonHttp(url string, json []byte, httpMethod string) (*http.Response, err
 }
 
 // Json 형태의 bytes.Buffer 면 그대로 사용
-func CommonHttpBytes(url string, jsonBytesBuffer *bytes.Buffer ,httpMethod string) (*http.Response, error) {
+func CommonHttpBytes(url string, jsonBytesBuffer *bytes.Buffer, httpMethod string) (*http.Response, error) {
 	authInfo := AuthenticationHandler()
-
 
 	// payload := strings.NewReader(`{
 	// 	"CredentialName": "test-gcp-webtool21",
@@ -162,10 +161,10 @@ func CommonHttpBytes(url string, jsonBytesBuffer *bytes.Buffer ,httpMethod strin
 	// }
 	requestDump, err := httputil.DumpRequest(req, true)
 	if err != nil {
-	  fmt.Println(err)
+		fmt.Println(err)
 	}
 	fmt.Println(string(requestDump))
-	
+
 	resp, err := client.Do(req) // err 자체는 nil 이고 resp 내에 statusCode가 500임...
 
 	return resp, err

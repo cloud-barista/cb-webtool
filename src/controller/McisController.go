@@ -689,19 +689,28 @@ func VmRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	mcisID := c.Param("mcisID")
-	_, respStatus := service.RegVm(defaultNameSpaceID, mcisID, vmInfo)
-	log.Println("RegVM service returned")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+
+	// _, respStatus := service.RegVm(defaultNameSpaceID, mcisID, vmInfo)
+	// log.Println("RegVM service returned")
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
+
+	// return c.JSON(http.StatusOK, map[string]interface{}{
+	// 	"message": respStatus.Message,
+	// 	"status":  respStatus.StatusCode,
+	// })
+
+	go service.AsyncRegVm(defaultNameSpaceID, mcisID, vmInfo)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": respStatus.Message,
-		"status":  respStatus.StatusCode,
+		"message": "Call success",
+		"status":  200,
 	})
+
 }
 
 // MCIS 의 특정 VM의 정보를 가져온다. 단. 텀블벅 조회가 아니라 이미 저장되어 있는 store에서 꺼낸다.
