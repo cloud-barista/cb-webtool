@@ -143,7 +143,8 @@ function getSshKeyList(sort_type) {
                             + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSshKeyName + '"/>' 
                             + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                             + '<td class="btn_mtd ovm" data-th="Name">' + item.id 
-                            + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+                            // + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+                            + '</td>'
                             + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                             + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'  
                             + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 

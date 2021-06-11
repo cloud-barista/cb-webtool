@@ -101,7 +101,7 @@
                                                 <th class="column-120px">Zone</th>
                                                 <th class="column-120px">Credential</th>
                                                 <th class="column-120px">Driver</th>
-                                                <th class="column-60px"></th>
+                                                <!-- <th class="column-60px"></th> -->
 											</tr>
 										</thead>
 										<tbody id="cList">
@@ -120,16 +120,18 @@
 													<label for="td_ch1"></label> <span class="ov off"></span>
 												</td>
 												<td class="btn_mtd ovm td_left column-15percent" data-th="Name">
-													{{$item.ConfigName}}<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span>
+													{{$item.ConfigName}}
+													<!-- <a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> -->
+													 <span class="ov"></span>
 												</td>
 												<td class="column-80px" data-th="Cloud Provider">{{$item.ProviderName}}</td>
 												<td class="overlay hidden column-120px" data-th="Region">{{$item.RegionName}}</td>
 												<td class="overlay hidden column-120px" data-th="Zone">{{$item.RegionName}}</td>
 												<td class="overlay hidden column-120px" data-th="Credential">{{$item.CredentialName}}</td>
 												<td class="overlay hidden column-120px" data-th="Driver">{{$item.DriverName}}</td>
-												<td class="overlay hidden column-60px" data-th="">
+												<!-- <td class="overlay hidden column-60px" data-th="">
 													<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
-												</td>
+												</td> -->
 											</tr>											
 											{{end}}
 											
