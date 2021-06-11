@@ -518,3 +518,15 @@ function getCommonVmSecurityGroupInfo(caller, securityGroupId){
         getSecurityGroupCallbackFail(error)
 	});
 }
+
+
+// form 화면에서 조회에 문제가 있는 경우 표시
+// 모든 form 화면 시작할 때(onLoad 시) 체크하도록
+// Header.html 에 정의
+function checkLoadStatus(){
+    var returnMessage = $("#returnMessage").val();
+    var returnStatusCode = $("#returnStatusCode").val();
+    if( returnStatusCode != 200 && returnStatusCode != 201){
+        commonErrorAlert(returnStatusCode, returnMessage);
+    }
+}

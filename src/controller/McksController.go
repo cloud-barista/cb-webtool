@@ -68,6 +68,10 @@ func McksMngForm(c echo.Context) error {
 	}
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	
+	mcksSimpleInfoList := []ladybug.ClusterSimpleInfo{} // 표에 뿌려줄 정보
+	totalMcksStatusCountMap := make(map[string]int)   
+	totalClusterCount := 0;
 
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
@@ -78,17 +82,39 @@ func McksMngForm(c echo.Context) error {
 	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
 	totalConnectionCount := len(cloudConnectionConfigInfoList)
 
-	// 모든 MCKS 조회
-	clusterList, _ := service.GetClusterList(defaultNameSpaceID)
 
-	totalClusterCount := len(clusterList)
+	// 모든 MCKS 조회
+	clusterList, clusterErr := service.GetClusterList(defaultNameSpaceID)
+	if clusterErr.StatusCode != 200 && clusterErr.StatusCode != 201 {
+		echotemplate.Render(c, http.StatusOK,
+			"operation/manages/mcksmng/McksMng", // 파일명
+			map[string]interface{}{
+				"Message": clusterErr.Message,
+				"Status":  clusterErr.StatusCode,
+				"LoginInfo":          loginInfo,
+				"DefaultNameSpaceID": defaultNameSpaceID,
+				"NameSpaceList":      nsList,
+
+				// cp count 영역
+				"TotalProviderCount":         providerCount,
+				"TotalConnectionConfigCount": totalConnectionCount,     // 총 connection 갯수
+				"ConnectionConfigCountMap":   connectionConfigCountMap, // provider별 connection 수
+
+				// "ClusterList": clusterList,
+				"ClusterList":             mcksSimpleInfoList,
+				"TotalMcksStatusCountMap": totalMcksStatusCountMap,
+				"TotalClusterCount":       totalClusterCount,
+			})
+	}
+
+	totalClusterCount = len(clusterList)
 	if totalClusterCount == 0 {
 		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcksmng/regform")
 	}
 
-	totalMcksStatusCountMap := service.GetMcksStatusCountMap(clusterList)
+	totalMcksStatusCountMap = service.GetMcksStatusCountMap(clusterList)
 	////////////// return value 에 set
-	mcksSimpleInfoList := []ladybug.ClusterSimpleInfo{} // 표에 뿌려줄 정보
+	
 	for _, mcksInfo := range clusterList {
 		mcksSimpleInfo := ladybug.ClusterSimpleInfo{}
 		mcksSimpleInfo.UID = mcksInfo.UID

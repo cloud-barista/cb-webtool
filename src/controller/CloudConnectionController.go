@@ -67,7 +67,7 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	log.Println(" cloudOsList  ", cloudOsList)
 
 	// connectionconfigList 가져오기
-	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
+	cloudConnectionConfigInfoList, cloudConnectionConfigErr := service.GetCloudConnectionConfigList()
 	setCloudConnectionErr := service.SetStoreCloudConnectionConfigList(c, cloudConnectionConfigInfoList)
 	if setCloudConnectionErr != nil {
 		log.Println(" setCloudConnectionErr  ", setCloudConnectionErr)
@@ -113,6 +113,8 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	return echotemplate.Render(c, http.StatusOK,
 		"setting/connections/CloudConnectionConfigMng", // 파일명
 		map[string]interface{}{
+			"Message": cloudConnectionConfigErr.Message,
+			"Status":  cloudConnectionConfigErr.StatusCode,
 			"LoginInfo":                 loginInfo,
 			"CloudOSList":               cloudOsList,
 			"NameSpaceList":             nsList,

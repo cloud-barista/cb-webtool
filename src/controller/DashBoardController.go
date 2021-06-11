@@ -41,28 +41,61 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 
 	store := echosession.FromContext(c)
 
+	totalMcisStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
+	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
+	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
+	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
+	mcisSimpleInfoList := []tumblebug.McisSimpleInfo{}          // mics summary 정보
+
+	totalMcisCount := 0 // mcis 갯수
+	totalVmCount := 0               // 모든 vm 갯수
+	providerCount := 0
+	totalConnectionCount := 0
+	connectionConfigCountMap := make(map[string]int)
+	
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
 	log.Println(" nsList  ", nsList)
 
 	// 해당 Namespace의 모든 MCIS 조회
-	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	mcisList, mcisErr := service.GetMcisList(defaultNameSpaceID)
 	log.Println(" mcisList  ", mcisList)
 
-	totalMcisCount := len(mcisList) // mcis 갯수
-	totalVmCount := 0               // 모든 vm 갯수
+	if mcisErr.StatusCode != 200 && mcisErr.StatusCode != 201 {
+return echotemplate.Render(c, http.StatusOK,
+		"operation/dashboards/DashboardByNameSpaceMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":          loginInfo,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"NameSpaceList":      nsList,			
+			"TotalVmCount":          totalVmCount,
+			"TotalVmStatusCountMap": totalVmStatusCountMap, // 모든 VmStatus 별 count Map(MCIS 무관)
+
+			// cp count 영역
+			"TotalProviderCount":         providerCount,            // VM이 등록 된 provider 목록
+			"TotalConnectionConfigCount": totalConnectionCount,     // 총 connection 갯수
+			"ConnectionConfigCountMap":   connectionConfigCountMap, // provider별 connection 수
+
+			// mcis count 영역
+			"TotalMcisCount":          totalMcisCount,
+			"TotalMcisStatusCountMap": totalMcisStatusCountMap, // 모든 MCIS의 상태 Map
+
+			// mcis list
+			"McisList":               mcisSimpleInfoList,     // 표에 뿌려줄 mics summary 정보
+			"VmStatusCountMapByMcis": vmStatusCountMapByMcis, // MCIS ID 별 vmStatusMap
+		})
+	}
+
+	totalMcisCount = len(mcisList) // mcis 갯수
+	
 
 	// 등록된 mcis가 없으면 mcis생성화면으로 이동한다.
 	if len(mcisList) == 0 {
 		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/regform")
 	}
 
-	totalMcisStatusCountMap := make(map[string]int)             // 모든 MCIS의 상태 Map
-	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
-	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
-	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
-	mcisSimpleInfoList := []tumblebug.McisSimpleInfo{}          // mics summary 정보
+	
 
 	for _, mcisInfo := range mcisList {
 		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
@@ -147,8 +180,8 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 
 	// provider 별 연결정보 count(MCIS 무관)
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList()
-	connectionConfigCountMap, providerCount := service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
-	totalConnectionCount := len(cloudConnectionConfigInfoList)
+	connectionConfigCountMap, providerCount = service.GetCloudConnectionCountMap(cloudConnectionConfigInfoList)
+	totalConnectionCount = len(cloudConnectionConfigInfoList)
 
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/dashboards/DashboardByNameSpaceMng", // 파일명
