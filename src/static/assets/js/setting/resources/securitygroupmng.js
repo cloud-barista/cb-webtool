@@ -599,7 +599,8 @@ function createSecurityGroup() {
         }).then(result => {
             console.log("result sg : ", result);
             if (result.status == 200 || result.status == 201) {
-                commonAlert("Success Create Security Group!!")
+                commonAlert("Success Create Security Group!!");
+                //displaySecurityGroupInfo("REG_SUCCESS");
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 getSecurityGroupList("name");
                 //아니면 화면을 리로딩 시킬것인가?

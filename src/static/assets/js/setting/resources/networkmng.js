@@ -424,7 +424,7 @@ function createVNet() {
             var data = result.data;
                 console.log(data);
             if (data.status == 200 || data.status == 201) {
-                commonAlert("Success Create Network(vNet)!!")
+                commonAlert("Success Create Network(VPC)!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
                 // 등록 성공시 등록한 객체가 들어 옴. 일단 기존 List에 추가하는 것으로?
                 // var data = result.data;
@@ -441,7 +441,7 @@ function createVNet() {
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             } else {
-                commonAlert("Fail Create Network(vNet) " + data.message)
+                commonAlert("Fail Create Network(VPC) " + data.message)
             }
         // }).catch(function(error){
         //     var data = error.data;
@@ -590,9 +590,9 @@ function displaySubnetRegModal(isShow){
 // });
 var subnetJsonList = "";//저장시 subnet목록을 담을 array 
 var addStaffText = '<tr name="tr_Input">'
-        + '<td class="btn_mtd" data-th="subnet Name"><input type="text" id="regSubnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
+        + '<td class="btn_mtd column-40percent" data-th="subnet Name"><input type="text" id="regSubnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
         + '<td class="overlay" data-th="cidrBlock"><input type="text" id="regSubnetCidrBlock" name="reg_subnetCidrBlock" value="" placeholder="" class="pline" title="" /></td>'
-        + '<td class="overlay">'
+        + '<td class="overlay column-100px">'
         + '<button class="btn btn_add" name="addSubnet" value="">add</button>'
         + '<button class="btn btn_del" name="delSubnet" value="">del</button>'
         + '</td>'
