@@ -486,6 +486,9 @@ function commonPromptOpen(targetAction, targetObjId){
         $('#promptOkAction').val(targetAction);// Prompt입력창에서 OK버튼을 눌렀을 때 이동할 targetKey
                 
         $('#promptArea').modal();
+        $("#promptArea").on('shown.bs.modal', function () {
+            $(this).find('#promptText').focus();
+        });
     }catch(e){
         console.log(e);
         alert(e);

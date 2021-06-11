@@ -1358,6 +1358,7 @@ table tbody tr {
 .dashboard .register_box li.reg_2 input,
 .dashboard .register_box li.reg_2 textarea { width:60.5%; }
 .dashboard .register_box li.reg_3 input,
+.dashboard .register_box li.reg_3 input .upper_only {text-transform: uppercase;}
 .dashboard .register_box li.reg_3 textarea { width:50%; }
 .dashboard .register_box li.reg_1.reg_4 input,
 .dashboard .register_box li.reg_1.reg_4 textarea,

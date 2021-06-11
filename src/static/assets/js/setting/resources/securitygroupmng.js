@@ -273,8 +273,7 @@ function setSecurityGroupListAtServerImage(data, sortType){
             
             ModalDetail()
         }
-    }
-    displaySecurityGroupInfo("REG_SUCCESS")
+    }    
 }
 
 function ModalDetail() {
@@ -601,7 +600,7 @@ function createSecurityGroup() {
             if (result.status == 200 || result.status == 201) {
                 commonAlert("Success Create Security Group!!")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getSecurityGroupList("name");
+                displaySecurityGroupInfo("REG_SUCCESS")
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
                 // $("#btn_add2").click()
