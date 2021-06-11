@@ -264,6 +264,9 @@ function displayNameSpaceInfo(targetAction){
     }else if ( targetAction == "DEL_SUCCESS"){
         $('#ns_reg').removeClass("active");
         $('#info_box').removeClass("view");
+    }else if ( targetAction == "CLOSE"){
+        $('#ns_reg').removeClass("active");
+        $('#info_box').removeClass("view");
     }
 }
 function ModalDetail(){

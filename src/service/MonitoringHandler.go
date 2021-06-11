@@ -687,7 +687,8 @@ func GetMonitoringAlertEventHandlerData(eventHandlerType string, eventName strin
 // List monitoring alert event handler
 func GetMonitoringAlertEventHandlerList() ([]dragonfly.VmMonitoringAlertEventHandlerInfo, model.WebStatus) {
 	fmt.Print("#########GetMonitoringAlertEventHandlerList############")
-	var originalUrl = "/alert/eventhandlers?eventType=slack"
+	var originalUrl = "/alert/eventhandlers"
+	//var originalUrl = "/alert/eventhandlers?eventType=slack"
 	// {{ip}}:{{port}}/dragonfly/alert/eventhandlers?eventType=smtp
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
