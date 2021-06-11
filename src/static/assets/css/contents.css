@@ -1,5 +1,8 @@
 @charset "utf-8";
 
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */  color: #c7c7c7;  opacity: 1; /* Firefox */ }
+:-ms-input-placeholder { /* Internet Explorer 10-11 */  color: #c7c7c7; }
+::-ms-input-placeholder { /* Microsoft Edge */  color: #c7c7c7; }
 
 .layerpopup { z-index:9999999 }
 .layerpopup .modal-content { background:none; border:none; width:400px; margin:0 auto; padding:0 !important; }
@@ -118,8 +121,10 @@
 .dashboard .box_cont .rbox li.bg_aws {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_azure {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_ali {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_alibaba {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_gcp {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_clit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_cloudit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_ops {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_mock {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_cloudtwin {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
@@ -142,12 +147,14 @@
 
 .dashboard .box_cont .cbox li.bg_aws {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_azure {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_ali {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_gcp {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_ali {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_alibaba {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_gcp {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_clit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_cloudit {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_ops {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_mock {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_cloudtwin {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_mock {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_cloudtwin {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_etc {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 
 .dashboard .box_cont .cbox .txt { float:right; text-align:right; color:#888;font-size:14px; line-height:14px; font-weight:200; }
@@ -1362,6 +1369,7 @@ table tbody tr {
 .dashboard .register_box li.reg_2 textarea { width:60.5%; }
 .dashboard .register_box li.reg_3 input,
 .dashboard .register_box li.reg_3 input .upper_only {text-transform: uppercase;}
+.dashboard .register_box li.reg_3 input .lower_only {text-transform: lowercase;}
 .dashboard .register_box li.reg_3 textarea { width:50%; }
 .dashboard .register_box li.reg_1.reg_4 input,
 .dashboard .register_box li.reg_1.reg_4 textarea,
@@ -2113,7 +2121,12 @@ table tbody tr {
 .dashboard .create_tab .tab-content .tab_ipbox { margin:25px 0 0 0; }
 .dashboard .create_tab .tab-content .tab_ipbox .tab_ipbox_2 { margin:20px 0 0 0;}
 .dashboard .create_tab .tab-content .tab_ipbox:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
-.dashboard .create_tab .tab-content .tab_ipbox .ipbox { float:left; width:50%; }
+.dashboard .create_tab .tab-content .tab_ipbox .ipbox { float:left; }
+.dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox1 { width:50%; }
+.dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox2 { width:50%; }
+.dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox3,
+.dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox4 { width:100%; }
+
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox > ul { text-align:right; padding-right:42px; }
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox input.ip_1,
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox .selectbox.sel_1 { width:34%; }
@@ -2166,7 +2179,15 @@ table tbody tr {
 	.dashboard .create_tab .tab-content .btn_n_box.btn_ca { position:absolute; bottom:-35px; right:42px; }
 	.dashboard .create_tab .tab-content .btn_n_box .add { position:absolute; top:-70px; right:42px; }
 }
-@media screen and (max-width:1180px){
+
+@media screen and (max-width:1400px){
+	.dashboard .create_tab .tab-content .tab_ipbox .ipbox { width:100%; }
+	.dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox1 { width:100%; }
+	.dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox2 { width:100%; }
+	.dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox3,
+	.dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox4 { width:100%; }
+}
+@media screen and (max-width:1180px){	
 	.dashboard .create_tab .tab-content .tab_ipbox .ipbox input.ip_1,
 	.dashboard .create_tab .tab-content .tab_ipbox .ipbox .selectbox.sel_1 { width:29%; }
 	.dashboard .create_tab .tab-content .tab_ipbox .ipbox input.ip_2,

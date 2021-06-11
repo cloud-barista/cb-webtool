@@ -291,7 +291,7 @@ function vmCreateCallback(resultVmKey, resultStatus){
     if( totalDeployServerCount == 0){
         //getVmList();
         commonAlert($("#serverRegistResult").text());
-        var targetUrl = "/operation/manages/mcis/mngform"
+        var targetUrl = "/operation/manages/mcismng/mngform"
         changePage(targetUrl)
     }
 }

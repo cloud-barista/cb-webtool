@@ -1,3 +1,6 @@
+$(document).ready(function(){
+    jQuery('.sc_box.scrollbar-inner').scrollbar();
+})
 
 // dashboard 의 MCIS 목록에서 mcis 선택 : 색상반전, 선택한 mcis id set -> status변경에 사용
 function selectMcis(id,name,target, obj){

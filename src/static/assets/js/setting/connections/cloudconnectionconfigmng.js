@@ -751,6 +751,8 @@ function saveNewCredential(){
     var value2 = $("#CredentialModalValue2").val();	
     var key3 = $("#CredentialModalKey3").val();
     var value3 = $("#CredentialModalValue3").val();	
+    var key4 = $("#CredentialModalKey4").val();
+    var value4 = $("#CredentialModalValue4").val();	
 	// CredentialName string             `json:"CredentialName"`
 	// ProviderName   string             `json:"ProviderName"`
 	// KeyValueInfoList   []KeyValueInfoList `json:"KeyValueInfoList"`
@@ -762,7 +764,19 @@ function saveNewCredential(){
     var credentialInfo = "";
     // provider에 따라 사용하는 key가 불규칙적임.
     
-    if( providerName == "GCP"){// gcp는 Key가 3개
+    if( providerName == "AWS"){
+        credentialInfo = {            
+            CredentialName:credentialName,
+            ProviderName: providerName,
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+        }
+    }else if( providerName == "ALIBABA"){
+        credentialInfo = {            
+            CredentialName:credentialName,
+            ProviderName: providerName,
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+        }
+    }else if( providerName == "GCP"){// gcp는 Key가 3개
         credentialInfo = {            
             CredentialName:credentialName,
             ProviderName: providerName,
@@ -778,7 +792,7 @@ function saveNewCredential(){
         credentialInfo = {            
             CredentialName:credentialName,
             ProviderName: providerName,
-            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2},{"Key":key3,"Value":value3},{"Key":key4,"Value":value4}]
         }
     }
     //
@@ -802,6 +816,8 @@ function saveNewCredential(){
             $("#CredentialModalValue2").val('');
             $("#CredentialModalKey3").val('');
             $("#CredentialModalValue3").val('');
+            $("#CredentialModalKey4").val('');
+            $("#CredentialModalValue4").val('');
             // Credential table 갱신
             getCredentialList();
         }else{
@@ -941,3 +957,81 @@ function deleteDriver(){
         });
 }
 
+
+function selProvider(providerName){
+    
+    var liKey0 = $("#liKey0")
+    var liValue0 = $("#liValue0")
+    var liKey1 = $("#liKey1")
+    var liValue1 = $("#liValue1")
+    var liKey2 = $("#liKey2")
+    var liValue2 = $("#liValue2")
+    var liKey3 = $("#liKey3")
+    var liValue3 = $("#liValue3")
+    var liKey4 = $("#liKey4")
+    var liValue4 = $("#liValue4")
+    var key0 = $("#CredentialModalKey0")
+    var val0 = $("#CredentialModalValue0")
+    var key1 = $("#CredentialModalKey1")
+    var val1 = $("#CredentialModalValue1")
+    var key2 = $("#CredentialModalKey2")
+    var val2 = $("#CredentialModalValue2")
+    var key3 = $("#CredentialModalKey3")
+    var val3 = $("#CredentialModalValue3")
+    var key4 = $("#CredentialModalKey4")
+    var val4 = $("#CredentialModalValue4")
+
+    // 초기화 하고 시작
+    key0.val("");
+    val0.val("");
+    key1.val("");
+    val1.val("");
+    key2.val("");
+    val2.val("");
+    key3.val("");
+    val3.val("");    
+    
+    liKey0.css("display", "")
+    liValue0.css("display", "")
+    liKey1.css("display", "")
+    liValue1.css("display", "")
+    liKey2.css("display", "")
+    liValue2.css("display", "")
+    liKey3.css("display", "")
+    liValue3.css("display", "")
+    liKey4.css("display", "")
+    liValue4.css("display", "") 
+        
+    if( providerName == "AWS"){
+        key0.val("ClientId");
+        key1.val("ClientSecret");
+        
+        liKey2.css("display", "none")
+        liValue2.css("display", "none")
+        liKey3.css("display", "none")
+        liValue3.css("display", "none")
+        liKey4.css("display", "none")
+        liValue4.css("display", "none")    
+    }else if ( providerName == "GCP"){
+        key0.val("ClientEmail");
+        key1.val("ProjectID");
+        key2.val("PrivateKey");        
+        
+        liKey2.css("display", "")
+        liValue2.css("display", "")
+        liKey3.css("display", "none")
+        liValue3.css("display", "none")
+        liKey4.css("display", "none")
+        liValue4.css("display", "none")
+    }else if ( providerName == "ALIBABA"){
+        key0.val("ClientId");
+        key1.val("ClientSecret");
+        
+        liKey2.css("display", "none")
+        liValue2.css("display", "none")
+        liKey3.css("display", "none")
+        liValue3.css("display", "none")
+        liKey4.css("display", "none")
+        liValue4.css("display", "none")        
+    }
+}
