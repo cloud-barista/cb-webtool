@@ -629,6 +629,11 @@ function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedInd
   }  
 }	
 
+function setConnectionByAssist(providerName, regionName, configName){
+  // TODO : table 선택시 hidden에 값을 넣고  apply버튼을 눌렀을 때 hide 시키도록 변경할 것
+  // $("#" + targetObjId).val(setValue);
+  $("#Deployment_box").modal("hide");
+}
 // Textbox 값이 변경 된 경우 해당 값을 form obj에 set
 function setTextValueToFormObj(setValue, targetObjId){
   $("#" + targetObjId).val(setValue);

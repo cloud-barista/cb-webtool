@@ -121,8 +121,10 @@
 .dashboard .box_cont .rbox li.bg_aws {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_azure {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_ali {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_alibaba {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_gcp {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_clit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+.dashboard .box_cont .rbox li.bg_cloudit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_ops {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_mock {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_cloudtwin {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
@@ -145,12 +147,14 @@
 
 .dashboard .box_cont .cbox li.bg_aws {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_azure {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_ali {  background:url(../img/common/bg_db_3.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_gcp {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_ali {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_alibaba {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_gcp {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_clit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_cloudit {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_ops {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_mock {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_cloudtwin {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_mock {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_cloudtwin {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_etc {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 
 .dashboard .box_cont .cbox .txt { float:right; text-align:right; color:#888;font-size:14px; line-height:14px; font-weight:200; }

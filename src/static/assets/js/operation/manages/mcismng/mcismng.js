@@ -10,7 +10,7 @@ $(document).ready(function(){
     })
 
     // 지도 표시
-    setRegionMap();
+    // setRegionMap();
 
     selectedMcisID = $("#selected_mcis_id").val();
     
@@ -497,8 +497,9 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var specId = data.specId
             // set_vmSpecInfo(spec_id);// memory + cpu  : TODO : spec정보는 자주변경되는것이 아닌데.. 매번 통신할 필요있나...
            
-            var startTime = vmDetail.StartTime
+            var startTime = vmDetail.startTime
             $("#server_info_start_time").val(startTime)
+            
             
             var locationInfo = data.location;
             var cloudType = locationInfo.cloudType;
@@ -543,7 +544,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
 
                 // drawMap(map, longitude, latitude, pointInfo);
                 // console.log("drawMap");
-                setRegionMap(locationInfo);
+                // setRegionMap(locationInfo);
             }
             // region zone locate
             
@@ -620,8 +621,10 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             $("#server_detail_view_security_group").empty()
             $("#server_detail_view_security_group").append(append_sg);
 
+            $("#server_detail_view_keypair_name").val(vmDetail.keyPairIId.nameId)
             // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인 
             ////// vm connection tab //////
+
 
             ////// vm mornitoring tab //////
             // install Mon agent

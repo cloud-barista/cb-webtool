@@ -751,6 +751,8 @@ function saveNewCredential(){
     var value2 = $("#CredentialModalValue2").val();	
     var key3 = $("#CredentialModalKey3").val();
     var value3 = $("#CredentialModalValue3").val();	
+    var key4 = $("#CredentialModalKey4").val();
+    var value4 = $("#CredentialModalValue4").val();	
 	// CredentialName string             `json:"CredentialName"`
 	// ProviderName   string             `json:"ProviderName"`
 	// KeyValueInfoList   []KeyValueInfoList `json:"KeyValueInfoList"`
@@ -790,7 +792,7 @@ function saveNewCredential(){
         credentialInfo = {            
             CredentialName:credentialName,
             ProviderName: providerName,
-            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2},{"Key":key3,"Value":value3}]
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2},{"Key":key3,"Value":value3},{"Key":key4,"Value":value4}]
         }
     }
     //
@@ -814,6 +816,8 @@ function saveNewCredential(){
             $("#CredentialModalValue2").val('');
             $("#CredentialModalKey3").val('');
             $("#CredentialModalValue3").val('');
+            $("#CredentialModalKey4").val('');
+            $("#CredentialModalValue4").val('');
             // Credential table 갱신
             getCredentialList();
         }else{
@@ -964,6 +968,8 @@ function selProvider(providerName){
     var liValue2 = $("#liValue2")
     var liKey3 = $("#liKey3")
     var liValue3 = $("#liValue3")
+    var liKey4 = $("#liKey4")
+    var liValue4 = $("#liValue4")
     var key0 = $("#CredentialModalKey0")
     var val0 = $("#CredentialModalValue0")
     var key1 = $("#CredentialModalKey1")
@@ -972,6 +978,8 @@ function selProvider(providerName){
     var val2 = $("#CredentialModalValue2")
     var key3 = $("#CredentialModalKey3")
     var val3 = $("#CredentialModalValue3")
+    var key4 = $("#CredentialModalKey4")
+    var val4 = $("#CredentialModalValue4")
 
     // 초기화 하고 시작
     key0.val("");
@@ -990,7 +998,9 @@ function selProvider(providerName){
     liKey2.css("display", "")
     liValue2.css("display", "")
     liKey3.css("display", "")
-    liValue3.css("display", "")        
+    liValue3.css("display", "")
+    liKey4.css("display", "")
+    liValue4.css("display", "") 
         
     if( providerName == "AWS"){
         key0.val("ClientId");
@@ -999,7 +1009,9 @@ function selProvider(providerName){
         liKey2.css("display", "none")
         liValue2.css("display", "none")
         liKey3.css("display", "none")
-        liValue3.css("display", "none")        
+        liValue3.css("display", "none")
+        liKey4.css("display", "none")
+        liValue4.css("display", "none")    
     }else if ( providerName == "GCP"){
         key0.val("ClientEmail");
         key1.val("ProjectID");
@@ -1008,7 +1020,9 @@ function selProvider(providerName){
         liKey2.css("display", "")
         liValue2.css("display", "")
         liKey3.css("display", "none")
-        liValue3.css("display", "none")        
+        liValue3.css("display", "none")
+        liKey4.css("display", "none")
+        liValue4.css("display", "none")
     }else if ( providerName == "ALIBABA"){
         key0.val("ClientId");
         key1.val("ClientSecret");
@@ -1016,6 +1030,8 @@ function selProvider(providerName){
         liKey2.css("display", "none")
         liValue2.css("display", "none")
         liKey3.css("display", "none")
-        liValue3.css("display", "none")        
+        liValue3.css("display", "none")
+        liKey4.css("display", "none")
+        liValue4.css("display", "none")        
     }
 }
