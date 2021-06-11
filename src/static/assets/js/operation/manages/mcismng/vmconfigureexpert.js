@@ -31,20 +31,26 @@ $(document).ready(function(){
 
     //Server Configuration clear
     $(".btn_clear").click(function() {
-        $('.svc_ipbox').find('input, textarea').val('');
+        //$('.svc_ipbox').find('input, textarea').val('');
+        osHardwareClear();
+        vnetClear();
+        vmSecurityClear();
     });
     
     //OS_HW - Clear
     $("#OS_HW .btn_clear").click(function() {
-        $('#OS_HW .tab_ipbox').find('input, textarea').val('');
+        // $('#OS_HW .tab_ipbox').find('input, textarea').val('');
+        osHardwareClear();
     });
     //Network - Clear
     $("#Network .btn_clear").click(function() {
-        $('#Network .tab_ipbox').find('input, textarea').val('');
+        // $('#Network .tab_ipbox').find('input, textarea').val('');
+        vnetClear();
     });
     //Security - Clear
     $("#Security .btn_clear").click(function() {
-        $('#Security .tab_ipbox').find('input, textarea').val('');
+        // $('#Security .tab_ipbox').find('input, textarea').val('');
+        vmSecurityClear();
     });
     //Other - Clear
     $("#Other .btn_clear").click(function() {
@@ -144,8 +150,7 @@ function clearCheckboxByConnectionName(chkboxName, connectionName){
         console.log("체크 해제하자 = ");
         this.checked = false;// 체크 해제
         console.log("체크 해제완료 = ");
-      }
-      
+      }      
     }
   });
 }
@@ -494,8 +499,9 @@ function filterEnterVnetGroupToHidden(keywordObjId){
 function filterVnetGroupToHidden(keywordObjId){
   var keyword = $("#" + keywordObjId).val();
   if( keyword == ''){
-    commonAlert("검색할 단어를 입력하세요");
-    return;
+    // commonAlert("검색할 단어를 입력하세요");
+    // return;
+    keyword = "ALL";
   }
   
   let multipleColumnMap = new Map();

@@ -762,7 +762,19 @@ function saveNewCredential(){
     var credentialInfo = "";
     // provider에 따라 사용하는 key가 불규칙적임.
     
-    if( providerName == "GCP"){// gcp는 Key가 3개
+    if( providerName == "AWS"){
+        credentialInfo = {            
+            CredentialName:credentialName,
+            ProviderName: providerName,
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+        }
+    }else if( providerName == "ALIBABA"){
+        credentialInfo = {            
+            CredentialName:credentialName,
+            ProviderName: providerName,
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+        }
+    }else if( providerName == "GCP"){// gcp는 Key가 3개
         credentialInfo = {            
             CredentialName:credentialName,
             ProviderName: providerName,
@@ -778,7 +790,7 @@ function saveNewCredential(){
         credentialInfo = {            
             CredentialName:credentialName,
             ProviderName: providerName,
-            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1}]
+            KeyValueInfoList:[ {"Key":key0,"Value":value0},{"Key":key1,"Value":value1},{"Key":key2,"Value":value2},{"Key":key3,"Value":value3}]
         }
     }
     //
