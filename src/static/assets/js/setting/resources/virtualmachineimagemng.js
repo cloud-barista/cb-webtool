@@ -273,10 +273,11 @@ function setVirtualMachineImageListAtServerImage(data, sortType){
                         + '<td class="overlay hidden column-50px" data-th="">' 
                         + '<input type="hidden" id="img_info_' + index + '" value="' + item.name + '|' + item.cspImageId + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+                        + '<td class="btn_mtd ovm" data-th="connectionName ">' + item.connectionName  + '<span class="ov"></span></td>'
                         + '<td class="btn_mtd ovm" data-th="cspImageId ">' + item.cspImageId  + '<span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="name">' + item.name + '</td>' 
                         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
-                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
             } else {

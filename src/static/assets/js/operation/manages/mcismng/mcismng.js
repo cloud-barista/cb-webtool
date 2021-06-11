@@ -988,12 +988,10 @@ function saveFileProcess(fileName, exportScript){
 
 function getSecurityGroupCallbackSuccess(caller, data){
     var html = ""
-    var firewallRules = data
+    var firewallRules = data.firewallRules
     
-    $("#register_box").modal()
-    data.filter((list)=> list.name !== "" ).map((item,index)=>(
-    // firewallRules.map(item=>(
-        html +='<tr>'
+    $("#register_box").modal()    
+    firewallRules.map(item=>(        html +='<tr>'
                 +'<td class="btn_mtd" data-th="fromPort">'+item.fromPort+' <span class="ov off"></span></td>'
                 +'<td class="overlay hidden" data-th="toPort">'+item.toPort+'</td>'
                 +'<td class="overlay hidden" data-th="toProtocol">'+item.ipProtocol+'</td>'
