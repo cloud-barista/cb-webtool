@@ -159,6 +159,8 @@ function showConnectionConfigInfo(target){
     console.log("target : ",target);
     var infos = $("#"+target).val()
     infos = infos.split("|")
+
+    //현재는 modify를 하지 않으므로 숨김
     $("#infoName").val(infos[0])
     $("#infoProvider").val(infos[1])
     $("#infoRegion").val(infos[2])
