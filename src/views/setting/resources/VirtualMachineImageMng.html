@@ -104,7 +104,7 @@
                                                 <th>Image ID</th>
 												<th>Image Name</th>
 												<th>Description</th>
-												<th class="column-60px"></th>
+												<!-- <th class="column-60px"></th> -->
 											</tr>
 										</thead>
 										<tbody id="imgList">
@@ -140,9 +140,9 @@
 												<td class="btn_mtd ovm" data-th="cspImageId">{{$item.CspImageId}}<span class="ov"></span></td>
 												<td class="overlay hidden" data-th="name">{{$item.Name}}</td>
 												<td class="overlay hidden" data-th="description">{{$item.Description}}</td>
-												<td class="overlay hidden column-60px" data-th="">
+												<!-- <td class="overlay hidden column-60px" data-th="">
 													<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
-												</td>
+												</td> -->
 											</tr>
 											{{ end }}
 										</tbody>
@@ -208,7 +208,7 @@
 												<li class="reg_1">
 													<label>Connection Name</label>
 													<input type="text" id="dtlConnectionName" name="dtlConnectionName" value="" placeholder="" class="gray" title="" readonly />
-													<a href="javascript:void(0);" class="btn_assist">Assist</a>
+													<a href="javascript:void(0);" class="btn_assist" id="assistVmImage">Assist</a>
 													<!--
 													<select class="selectbox w3">
 														<option value="1">Selected ConnectionName</option>
