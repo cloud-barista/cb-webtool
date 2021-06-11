@@ -1432,9 +1432,9 @@ table tbody tr {
 .dashboard .register_box .graybox .logicbox .mainbox .logic_tbox.lg_4 { margin-top:-18px; }
 .dashboard .register_box .graybox .logicbox .mainbox .logic_tbox.lg_5 { margin-top:-38px; }
 .dashboard .register_box .graybox .logicbox .mainbox .logic_tbox .tit { color:#5e636c; font-size:16px; font-weight:500; letter-spacing:-0.5px; padding:0 0 10px 0; }
-.dashboard .register_box .graybox .logicbox .mainbox .logic_tbox .txtmain { color:#fff; font-size:16px; line-height:20px; padding:15px 10px; border-radius:15px; background-color:#055c64; }
-.dashboard .register_box .graybox .logicbox .mainbox .logic_tbox .txt { color:#fff; font-size:16px; line-height:20px; padding:15px 10px; border-radius:15px; background-color:#06a9b7; }
-.dashboard .register_box .graybox .logicbox .mainbox .line { position:relative; float:left; height:2px; background-color:#5e636c; }
+.dashboard .register_box .graybox .logicbox .mainbox .logic_tbox .txtmain { font-size:16px; line-height:20px; padding:15px 10px; border-radius:15px; width: 80%;}
+.dashboard .register_box .graybox .logicbox .mainbox .logic_tbox .txt { font-size:16px; line-height:20px; padding:15px 10px; border-radius:15px; width: 80%; }
+.dashboard .register_box .graybox .logicbox .mainbox .line { position:relative; float:left; height:2px; background-color:#ccc; }
 .dashboard .register_box .graybox .logicbox .mainbox .line_a:after { content:''; display:block; position:absolute; right:0; top:50%; transform:translateY(-50%); width:9px; height:10px; background:url(../img/contents/icon_arr_lg.png) center center no-repeat; }
 .dashboard .register_box .graybox .logicbox .mainbox .line.line_space { background-color:#fff; width:5px; margin:20px 0 0 0; }
 .dashboard .register_box .graybox .logicbox .mainbox .line.line_p0 { margin:0 0 0 70px; height:42px; width:2px; }
