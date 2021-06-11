@@ -99,6 +99,13 @@ function displaySecurityGroupInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         getSecurityGroupList("name");
+    }else if ( targetAction == "CLOSE"){
+        $('#securityGroupCreateBox').removeClass("active");
+        $('#securityGroupInfoBox').removeClass("view");
+        $('#securityGroupListTable').addClass("on");
+
+        var offset = $("#securityGroupInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
     }
 }
 
@@ -266,8 +273,7 @@ function setSecurityGroupListAtServerImage(data, sortType){
             
             ModalDetail()
         }
-    }
-    
+    }    
 }
 
 function ModalDetail() {
@@ -592,9 +598,10 @@ function createSecurityGroup() {
         }).then(result => {
             console.log("result sg : ", result);
             if (result.status == 200 || result.status == 201) {
-                commonAlert("Success Create Security Group!!")
+                commonAlert("Success Create Security Group!!");
+                //displaySecurityGroupInfo("REG_SUCCESS");
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getSecurityGroupList("name");
+                displaySecurityGroupInfo("REG_SUCCESS")
                 //아니면 화면을 리로딩 시킬것인가?
                 // location.reload();
                 // $("#btn_add2").click()

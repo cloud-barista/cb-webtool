@@ -153,40 +153,6 @@ func RegMcis(nameSpaceID string, mcisInfo *tumblebug.McisInfo) (*tumblebug.McisI
 
 	// return respBody, respStatusCode
 	return &returnMcisInfo, returnStatus
-
-	// resultMcisInfo := tumblebug.McisInfo{}
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return &resultMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	// }
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	// }
-
-	// respBody := resp.Body
-	// respStatus := resp.StatusCode
-
-	// return respBody, model.WebStatus{StatusCode: respStatus}
-
-	// respBody := resp.Body
-	// respStatus := resp.StatusCode
-	// // respStatus := resp.Status
-	// // log.Println("respStatusCode = ", respStatusCode)
-	// // log.Println("respStatus = ", respStatus)
-
-	// // 응답에 생성한 객체값이 옴
-
-	// json.NewDecoder(respBody).Decode(resultMcisInfo)
-	// fmt.Println(resultMcisInfo)
-
-	// // return body, err
-	// // respBody := resp.Body
-	// // respStatus := resp.StatusCode
-	// // return respBody, respStatus
-	// return &resultMcisInfo, model.WebStatus{StatusCode: respStatus}
-
 }
 
 // MCIS에 VM 추가 등록
@@ -245,6 +211,26 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) (*tumble
 	fmt.Println(respStatus)
 
 	return &returnVmInfo, returnStatus
+}
+
+// VM 등록
+func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	fmt.Println(originalUrl)
+	url := util.TUMBLEBUG + urlParam
+	// fmt.Println(vmList)
+	// pbytes, _ := json.Marshal(vmList)
+	fmt.Println(vmInfo)
+	pbytes, _ := json.Marshal(vmInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	fmt.Println("AsyncRegVm result ", err)
+	log.Println(resp)
 }
 
 // MCIS에 VM 추가 등록
@@ -513,11 +499,11 @@ func GetVmConnectionCountByMcis(mcisInfo tumblebug.McisInfo) map[string]int {
 			providerCount = 1
 			totalConnectionCount += 1
 		}
-		log.Println("GetProviderName ", locationInfo.CloudType)
+		// log.Println("GetProviderName ", locationInfo.CloudType)
 		mcisConnectionCountMap[util.GetProviderName(locationInfo.CloudType)] = providerCount
 	}
-	log.Println("GetVMConnectionCountByMcis map length ", len(mcisConnectionCountMap))
-	log.Println("GetVMConnectionCountByMcis map ", mcisConnectionCountMap)
+	// log.Println("GetVMConnectionCountByMcis map length ", len(mcisConnectionCountMap))
+	// log.Println("GetVMConnectionCountByMcis map ", mcisConnectionCountMap)
 	return mcisConnectionCountMap
 }
 

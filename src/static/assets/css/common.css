@@ -13,6 +13,14 @@ body {
   overflow: hidden !important;
   touch-action: none;
 }
+.logic_tbox > div > a:link {
+  color:#ffffff; 
+  font-weight:400; 
+}
+.logic_tbox > div > a:hover {
+  color:#dad73d; 
+  font-weight:400; 
+}
 
 #wrap {
   position: relative;

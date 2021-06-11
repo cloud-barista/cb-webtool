@@ -92,6 +92,8 @@ function displayVirtualMachineImageInfo(targetAction){
         $("#regGuestOS").val('')
         $("#regDescription").val('')
 
+        $("#assistVmImage").css("display", "block");
+
     }else if ( targetAction == "REG_SUCCESS"){
         $('#virtualMachineImageCreateBox').removeClass("active");
         $('#virtualMachineImageInfoBox').removeClass("view");
@@ -127,6 +129,13 @@ function displayVirtualMachineImageInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         getVirtualMachineImageList("name");
+    }else if ( targetAction == "CLOSE"){
+        $('#virtualMachineImageCreateBox').removeClass("active");
+        $('#virtualMachineImageInfoBox').removeClass("view");
+        $('#virtualMachineImageListTable').addClass("on");
+
+        var offset = $("#virtualMachineImageInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
     }
 }
 
@@ -440,6 +449,7 @@ function showVirtualMachinImageInfo(target) {
     // var apiInfo = "{{ .apiInfo}}";
     //var imageId = encodeURIComponent(target);
     $('.stxt').html(target);
+    $("#assistVmImage").css("display", "none");
     
     // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+ imageId;
     // var url = "/setting/resources/machineimage/" + imageId

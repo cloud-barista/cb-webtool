@@ -279,6 +279,9 @@ table tbody tr {
 .column-30percent {
     width: 30%;
 }
+.column-40percent {
+    width: 40%;
+}
 
 #popNameSpace { }
 #popNameSpace .modal-dialog { max-width:100%; width:auto; display:block; top:50%; transform:translateY(-50%);  padding:0 !important; }
@@ -1358,6 +1361,7 @@ table tbody tr {
 .dashboard .register_box li.reg_2 input,
 .dashboard .register_box li.reg_2 textarea { width:60.5%; }
 .dashboard .register_box li.reg_3 input,
+.dashboard .register_box li.reg_3 input .upper_only {text-transform: uppercase;}
 .dashboard .register_box li.reg_3 textarea { width:50%; }
 .dashboard .register_box li.reg_1.reg_4 input,
 .dashboard .register_box li.reg_1.reg_4 textarea,

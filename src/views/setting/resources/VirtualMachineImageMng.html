@@ -99,11 +99,12 @@
                                         </colgroup> -->
 										<thead>
 											<tr>
-												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></th>
+												<th>Connection</th>
                                                 <th>Image ID</th>
 												<th>Image Name</th>
 												<th>Description</th>
-												<th class="column-60px"></th>
+												<!-- <th class="column-60px"></th> -->
 											</tr>
 										</thead>
 										<tbody id="imgList">
@@ -135,12 +136,13 @@
 													<input type="checkbox" name="chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span>
 												</td>
+												<td class="btn_mtd ovm" data-th="connectionName">{{$item.ConnectionName}}<span class="ov"></span></td>
 												<td class="btn_mtd ovm" data-th="cspImageId">{{$item.CspImageId}}<span class="ov"></span></td>
 												<td class="overlay hidden" data-th="name">{{$item.Name}}</td>
 												<td class="overlay hidden" data-th="description">{{$item.Description}}</td>
-												<td class="overlay hidden column-60px" data-th="">
+												<!-- <td class="overlay hidden column-60px" data-th="">
 													<a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
-												</td>
+												</td> -->
 											</tr>
 											{{ end }}
 										</tbody>
@@ -206,7 +208,7 @@
 												<li class="reg_1">
 													<label>Connection Name</label>
 													<input type="text" id="dtlConnectionName" name="dtlConnectionName" value="" placeholder="" class="gray" title="" readonly />
-													<a href="javascript:void(0);" class="btn_assist">Assist</a>
+													<a href="javascript:void(0);" class="btn_assist" id="assistVmImage">Assist</a>
 													<!--
 													<select class="selectbox w3">
 														<option value="1">Selected ConnectionName</option>
@@ -455,7 +457,7 @@
 									-->
 									<div class="btnbox">
 										<div class="btn_center">
-											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
+											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel" onclick="displayVirtualMachineImageInfo('CLOSE')">Cancel</button> 
 											<button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="createVirtualMachineImage()">Ok</button> 
 										</div>
 									</div>

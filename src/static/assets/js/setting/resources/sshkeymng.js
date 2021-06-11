@@ -101,6 +101,13 @@ function displaySshKeyInfo(targetAction){
         $("#TopWrap").animate({scrollTop : offset.top}, 0);
 
         getSshKeyList("name");
+    }else if ( targetAction == "CLOSE"){
+        $('#sshKeyCreateBox').removeClass("active");
+        $('#sskKeyInfoBox').removeClass("view");
+        $('#sshKeyListTable').addClass("on");
+
+        var offset = $("#sskKeyInfoBox").offset();
+        $("#TopWrap").animate({scrollTop : offset.top}, 0);
     }
 }
 
