@@ -227,15 +227,31 @@ function createCloudConnection(){
     console.log("info param drivername : ",drivername);
 
     if(!configname){
-        alert("Input New Cloud Connection Name")
+        commonAlert("Input New Cloud Connection Name")
         $("#regConfigName").focus()
         return;
     }
     if(!providername){
-        alert("Input Provider Name")
+        commonAlert("Input Provider Name")
         $("#regProvider").focus()
         return;
     }
+
+    if(!drivername){
+        commonAlert("Select Driver")        
+        return;
+    }
+
+    if(!credentialname){
+        commonAlert("Select Credential")        
+        return;
+    }
+
+    if(!regionname){
+        commonAlert("Select Resion/Zone")        
+        return;
+    }
+    
     
     var url = "/setting/connections/cloudconnectionconfig" + "/reg/proc";
     var obj = {
