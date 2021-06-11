@@ -465,6 +465,8 @@ function saveNewMonitoringAlertEventHandler() {
     // valid check
     var monitoringAlertEventHandlerModalType = $("#regMonitoringAlertEventHandlerModalType").val();
     var monitoringAlertEventHandlerModalName = $("#regMonitoringAlertEventHandlerModalName").val();
+    var monitoringAlertEventHandlerModalUrl = $("#regMonitoringAlertEventHandlerModalUrl").val();
+    var monitoringAlertEventHandlerModalChannel = $("#regMonitoringAlertEventHandlerModalChannel").val();
 
     console.log(monitoringAlertEventHandlerModalType + ", " + monitoringAlertEventHandlerModalName);
 
@@ -488,9 +490,11 @@ function saveNewMonitoringAlertEventHandler() {
         name: monitoringAlertEventHandlerModalName,
         // url: "https://hooks.slack.com/services/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",
         // channel: "#kapacitor-alert"
-        //url: "https://hooks.slack.com/services/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",
-        url: "https://hooks.slack.com/services/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",
-        channel: "#monitoring-alert-event-handler"
+        // url: "https://hooks.slack.com/services/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",
+        // url: "https://hooks.slack.com/services/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",
+        // channel: "#monitoring-alert-event-handler"
+        url: monitoringAlertEventHandlerModalUrl,
+        channel: monitoringAlertEventHandlerModalChannel
     }
 
     console.log(monitoringAlertEventHandlerInfo);
@@ -528,11 +532,11 @@ function saveNewMonitoringAlertEventHandler() {
         return;
     }
 
-    if (monitoringAlertEventHandlerModalType == "smtp") {
+    // if (monitoringAlertEventHandlerModalType == "smtp") {
 
-    } else if (monitoringAlertEventHandlerModalType == "slack"){
+    // } else if (monitoringAlertEventHandlerModalType == "slack"){
 
-    }
+    // }
 
 }
 
