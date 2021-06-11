@@ -152,7 +152,7 @@
 										</thead>
 										<tbody>
 											{{ range $connectionConfigItem := .CloudConnectionConfigInfoList}}	
-											<tr>
+											<tr onclick="setConnectionByAssist('{{ $connectionConfigItem.ProviderName }}', '{{ $connectionConfigItem.RegionName }}', '{{ $connectionConfigItem.ConfigName }}');">
 												<td class="btn_mtd" data-th="Cloud Provide">{{ $connectionConfigItem.ProviderName }}<span class="ov off"></span></td>
 												<td class="overlay hidden" data-th="Region">{{ $connectionConfigItem.RegionName }}</td>
 												<td class="overlay hidden" data-th="Cloud Connections">{{ $connectionConfigItem.ConfigName }}</td>
