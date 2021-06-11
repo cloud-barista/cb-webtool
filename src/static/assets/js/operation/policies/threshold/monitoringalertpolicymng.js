@@ -417,7 +417,7 @@ function addMonitoringAlertRow(item, index){
         + '<td class="overlay hidden column-15percent" data-th="TargetId">' + item.target_id + '</td>'
         + '<td class="overlay hidden column-15percent" data-th="AlertEventType">' + item.alert_event_type + '</td>'
         + '<td class="overlay hidden" data-th="AlertEventName">' + item.alert_event_name + '</td>'
-        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>'
+        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>'
         + '</tr>'	
     return html;
 }

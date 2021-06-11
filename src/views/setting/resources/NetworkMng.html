@@ -47,7 +47,7 @@
 													<ul>
 														<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltVPCName', 'vpcListTable')">VPC Name</a></li>
 														<li><a href="javascript:void(0);" onclick="commonPromptOpen('RsFltCIDRBlock', 'vpcListTable')">CIDR Block</a></li>
-														<li>---------</li>
+														<li class="divider"></li>
 														<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox" onClick="getVpcList()">Clear</a></li>
 														
 													</ul>
@@ -140,7 +140,7 @@
 												<th>VPC Name</th>
 												<th>CIDR Block</th>
 												<th>Description</th>
-												<th class="column-60px"></th>
+												<!-- <th class="column-60px"></th> -->
 											</tr>
 										</thead>
 										<tbody id="vpcList">
@@ -160,9 +160,9 @@
 												<td class="btn_mtd ovm" data-th="name">{{$item.Name}}<span class="ov"></span></td>
 												<td class="overlay hidden" data-th="cidrBlock">{{$item.CidrBlock}}</td>
 												<td class="overlay hidden" data-th="description">{{$item.Description}} :: {{$item.ConnectionName}}</td>
-												<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);">
+												<!-- <td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);">
 													<img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
-												</td>
+												</td> -->
 											</tr>
 											{{ end }}
 										</tbody>

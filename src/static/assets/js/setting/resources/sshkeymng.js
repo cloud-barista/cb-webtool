@@ -147,7 +147,7 @@ function getSshKeyList(sort_type) {
                             + '</td>'
                             + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                             + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'  
-                            + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                            // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                             + '</tr>'
                     ))
                 } else {
@@ -159,7 +159,7 @@ function getSshKeyList(sort_type) {
                             + '<td class="btn_mtd ovm" data-th="id">' + item.id + '<span class="ov"></span></td>' 
                             + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                             + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>' 
-                            + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                            // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                             + '</tr>'
                     ))
     
