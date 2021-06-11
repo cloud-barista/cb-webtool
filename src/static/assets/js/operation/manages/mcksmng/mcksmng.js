@@ -1,3 +1,8 @@
+$(document).ready(function(){
+    checkLoadStatus();
+
+});
+
 function clickListOfMcks(uid, mcksIndex){
     console.log("click view mcks id :",uid)
     $(".server_status").addClass("view");
