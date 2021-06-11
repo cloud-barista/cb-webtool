@@ -690,26 +690,28 @@ func VmRegProc(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	mcisID := c.Param("mcisID")
 
-	// _, respStatus := service.RegVm(defaultNameSpaceID, mcisID, vmInfo)
-	// log.Println("RegVM service returned")
-	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
-	// 		"error":  respStatus.Message,
-	// 		"status": respStatus.StatusCode,
-	// 	})
-	// }
-
-	// return c.JSON(http.StatusOK, map[string]interface{}{
-	// 	"message": respStatus.Message,
-	// 	"status":  respStatus.StatusCode,
-	// })
-
-	go service.AsyncRegVm(defaultNameSpaceID, mcisID, vmInfo)
+	// 일반 호출 : return 값 수신방식
+	_, respStatus := service.RegVm(defaultNameSpaceID, mcisID, vmInfo)
+	log.Println("RegVM service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Call success",
-		"status":  200,
+		"message": respStatus.Message,
+		"status":  respStatus.StatusCode,
 	})
+
+	// go 루틴
+	// go service.AsyncRegVm(defaultNameSpaceID, mcisID, vmInfo)
+
+	// return c.JSON(http.StatusOK, map[string]interface{}{
+	// 	"message": "Call success",
+	// 	"status":  200,
+	// })
 
 }
 
