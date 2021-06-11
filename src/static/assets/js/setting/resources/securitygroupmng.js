@@ -340,11 +340,14 @@ function showSecurityGroupInfo(sgName) {
         var outbound = "";
         for (var i in dtlFirewall) {
             console.log("direc : ", dtlFirewall[i].direction);
-            if(dtlFirewall[i].direction == "inbound") {
+            if(dtlFirewall[i].direction == "inbound" || dtlFirewall[i].direction == "ingress") {
                 inbound += dtlFirewall[i].ipProtocol
                         + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
             } else if(dtlFirewall[i].direction == "outbound") {
                 outbound += dtlFirewall[i].ipProtocol
+                        + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
+            }else{// 정의되지 않은 항목은 inbound쪽에 몰아주기
+                inbound += dtlFirewall[i].ipProtocol
                         + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
             }
         }
