@@ -23,7 +23,7 @@ cb-webtool은 Multi-Cloud Project의 일환으로 다양한 클라우드를 cb-w
   - [[cb-webtool 실행-reflex 방식]](#cb-webtool-실행-reflex-방식)
 ***
 ## [설치 환경]
-cb-webtool은 1.15 이상의 Go 버전이 설치된 다양한 환경에서 실행 가능하지만 최종 동작을 검증한 OS는 Ubuntu 18.0.4입니다.
+cb-webtool은 1.16 이상의 Go 버전이 설치된 다양한 환경에서 실행 가능하지만 최종 동작을 검증한 OS는 Ubuntu 18.0.4입니다.
 
 <br>
 
