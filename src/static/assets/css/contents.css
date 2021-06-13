@@ -243,6 +243,7 @@ table tbody {
     /* body takes all the remaining available space */    
     display: block;
     overflow-y: scroll;
+	background-color: #fff;
 }
 table tbody tr {
     width: 100%;
@@ -288,6 +289,10 @@ table tbody tr {
 }
 .column-40percent {
     width: 40%;
+}
+
+@media screen and (max-width: 768px) { 
+    .column-30percent { width: 100%; }
 }
 
 #popNameSpace { }
@@ -460,7 +465,7 @@ table tbody tr {
 
 .dataTable { padding:0 0 0 1%; }
 .dataTable a { margin:6px 0 0 0; color: #06a9b7; }
-.dataTable table { width:100%; border-collapse:collapse; background-color:#fff; }
+.dataTable table { width:100%; border-collapse:collapse; background-color: #5e636c; }
 .dataTable thead th { padding:14px 5px; color:#fff; font-size:18px; font-weight:300; text-align:center; border-right:1px solid #ccc; background-color:#5e636c; }
 .dataTable thead th:last-child { border-right:none; }
 /*
@@ -506,7 +511,7 @@ table tbody tr {
 	.dataTable { width:100% !important; padding:0; border-top:1px solid #ccc; }
 	.dataTable.scrollbar-inner { max-width:100%; overflow:auto; }
 	.dataTable.scrollbar-inner table { width:100% }
-	.dataTable table { width:100% !important;; }
+	.dataTable table { width:100% !important; background-color: #fff; }
 	.dataTable col { width:100% !important; }
 	.dataTable colgroup { display:none; }
 	.dataTable th { display:none; }
@@ -1477,7 +1482,7 @@ table tbody tr {
 .dashboard .register_box .iptable_box .table_plist .btn_add { padding:0; margin:0 0 0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_add_s.png) center center no-repeat; }
 .dashboard .register_box .iptable_box .table_plist .btn_write { padding:0; margin:0 0 0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_write_s.png) center center no-repeat; }
 .dashboard .register_box .iptable_box .table_plist .btn_delete { padding:0; margin:0 0 0 2px; width:26px; height:26px; overflow:hidden; text-indent:-9999em; outline:none; border:none; box-sizing:border-box; background:url(../img/contents/btn_del_s.png) center center no-repeat; }
-.dashboard .register_box .iptable_box2 { margin:20px 0 0 -3.33%;}
+.dashboard .register_box .iptable_box2 { }
 .dashboard .register_box .iptable_box2:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .register_box .iptable_box2 .table_plist { position:relative; float:right; width:70%; margin:0 0 0 3.33%; }
 .dashboard .register_box .iptable_box2 .table_plist .tit { color:#5e636c; font-size:16px; line-height:16px; font-weight:500; padding:0 0 12px 0; }
