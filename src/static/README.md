@@ -55,3 +55,36 @@ catch 를 function 대신 object(error)로 변경
 console.warn(error);
 console.log(error.response)
 });
+
+
+---
+화면을 표시하는 controller의 method는
+return 시 Messate와 Status를 갖도록 한다.
+
+ex)
+return echotemplate.Render(c, http.StatusOK,
+		"xxxMngForm", // 파일명
+		map[string]interface{}{
+			"Message": "success",
+			"Status":  abc.StatusCode,	// 주요한 객체 return message 를 사용
+
+header에 정의된 hidden값에 set 
+<input type="hidden" id="returnMessage" value='{{ .Message }}'/>
+<input type="hidden" id="returnStatusCode" value='{{ .Status }}'/>
+
+
+화면 Load 시 오류인 경우 Message 표시
+$(document).ready(function(){
+    checkLoadStatus();
+});
+
+해당 check function은 pathfinder.js에 정의 됨.
+function checkLoadStatus(){
+    var returnMessage = $("#returnMessage").val();
+    var returnStatusCode = $("#returnStatusCode").val();    
+    if( returnStatusCode != 200 && returnStatusCode != 201){        
+        commonErrorAlert(returnStatusCode, returnMessage);
+    }
+}
+
+즉, form 화면 표시할 때 주요 기능의 오류로 정상적이 표현이 되지 않을 때 checkLoadStatus()를 onLoad에 포함시켜 오류 Message확인.
