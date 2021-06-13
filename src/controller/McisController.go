@@ -134,6 +134,8 @@ func McisMngForm(c echo.Context) error {
 		return echotemplate.Render(c, http.StatusOK,
 			"operation/manages/mcismng/McisMng", // 파일명
 			map[string]interface{}{
+				"Message": mcisErr.Message,
+				"Status":  mcisErr.StatusCode,
 				"LoginInfo":          loginInfo,
 				"DefaultNameSpaceID": defaultNameSpaceID,
 				"SelectedMcisID":     selectedMcisID, // 선택한 MCIS ID
@@ -450,6 +452,8 @@ func McisMngForm(c echo.Context) error {
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manages/mcismng/McisMng", // 파일명
 		map[string]interface{}{
+			"Message": mcisErr.Message,
+			"Status":  mcisErr.StatusCode,	// 주요한 객체 return message 를 사용
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"SelectedMcisID":     selectedMcisID, // 선택한 MCIS ID

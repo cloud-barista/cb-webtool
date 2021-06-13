@@ -31,7 +31,7 @@ function getNameSpaceListCallbackSuccess(caller, data){
                         +'<td class="btn_mtd ovm column-20percent" data-th="Name">'+item.name+'<span class="ov"></span></td>'
                         +'<td class="overlay hidden column-20percent" data-th="ID">'+item.id+'</td>'
                         +'<td class="overlay hidden td_left" data-th="description">'+item.description+'</td>'
-                        +'<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        // +'<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         +'</tr>' 
                 ))
             }else{
@@ -43,7 +43,7 @@ function getNameSpaceListCallbackSuccess(caller, data){
                         +'<td class="btn_mtd ovm column-20percent" data-th="Name">'+item.name+'<span class="ov"></span></td>'
                         +'<td class="overlay hidden column-20percent" data-th="ID">'+item.id+'</td>'
                         +'<td class="overlay hidden td_left" data-th="description">'+item.description+'</td>'
-                        +'<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        // +'<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         +'</tr>'        
                 ))
 
