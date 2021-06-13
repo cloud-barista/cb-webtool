@@ -350,59 +350,68 @@
                                                 </li>
 											</ul>
 										</div>
+										<div class="ipbox ipbox1">
+											<ul>
+												<li class="reg_1">
+												<!-- table class="table_plist" width: 100%; -->
+													<div class="iptable_box2">
+														<div class="table_plist" style="width:100%;">
+															<div class="tit"><label><span class="ch">*</span>Monitoring Alert Event-Handler</label></div>
+															<div class="btn_s">
+																<button class="btn_write" value="" name="" data-toggle="modal" data-target="#Add_MonitoringAlertEventHandler" onClick="commonConfirmOpen('AddMonitoringAlertEventHandler')">write</button>
+																<button class="btn_delete" value="" name="" onClick="commonConfirmOpen('deleteMonitoringAlertEventHandler')">delete</button>
+																<!-- <button class="btn_delete" value="" name="" onClick="deleteMonitoringAlertEventHandler()">delete</button> -->
+																<!-- <button class="btn_delete" value="" name="" data-toggle="modal" data-target="#Del_Region">delete</button> -->
+															</div>
+															<div class="dataTable first_over">
+																<table cellpadding="0" cellspacing="0" border="1" summary="" id="maEventHandlerList" style="width: auto;">
+																	<!-- <colgroup>
+																		<col width="50px"><col width="30%"><col width="%">
+																	</colgroup> -->
+																	<thead>
+																		<tr>
+																			<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+																			<th class="column-30percent">Type</th>
+																			<th>Name</th>
+																		</tr>
+																	</thead>
+																	<tbody id="monitoringAlertEventHandlerList">
+																		{{ $length := len .MonitoringAlertEventHandlerList }} 
+																		{{ if eq $length 0 }}
+																		<tr>
+																			<td class="overlay hidden" data-th="" colspan="3">No Data</td>
+																		</tr>
+																		{{ end }}
+																		
+																		{{ range $index, $item := .MonitoringAlertEventHandlerList }}
+																		<tr>
+																			<td class="overlay hidden  column-50px" data-th="">
+																				<input type="hidden" id="monitoringAlertEventHandlerType_info_{{$index}}" value="{{$item.Type}}"/>
+																				<input type="hidden" id="monitoringAlertEventHandlerName_info_{{$index}}" value="{{$item.Name}}"/>
+																				<input type="checkbox" name="chk" value="{{$item.Type}}" id="raw_{{$index}}" title="" />
+																				<label for="td_ch1"></label> <span class="ov off"></span>
+																			</td>
+																			<td class="btn_mtd ovm column-30percent" data-th="Type">{{ $item.Type }}<span class="ov"></span>
+																			<!-- <input type="hidden" id="monitoringAlertEventHandler_info_{{ $index }}" value="{{ $item.Type }}"/> -->
+																			<td class="overlay hidden" data-th="Name">{{ $item.Name }}</td>
+																			<!-- <input type="hidden" id="monitoringAlertEventHandlerName_info_{{ $index }}" value="{{ $item.Name }}"/> -->
+																		</tr>
+																		{{ end }}	
+																	</tbody>
+																</table>
+															</div>											
+														</div>
+													</div>
+												</li>										
+											</ul>
+										</div>
+										
 									</div>
 
-									<div class="iptable_box2">
-										<div class="table_plist">
-											<div class="tit"><label><span class="ch">*</span>Monitoring Alert Event-Handler</label></div>
-											<div class="btn_s">
-												<button class="btn_write" value="" name="" data-toggle="modal" data-target="#Add_MonitoringAlertEventHandler" onClick="commonConfirmOpen('AddMonitoringAlertEventHandler')">write</button>
-												<button class="btn_delete" value="" name="" onClick="commonConfirmOpen('deleteMonitoringAlertEventHandler')">delete</button>
-												<!-- <button class="btn_delete" value="" name="" onClick="deleteMonitoringAlertEventHandler()">delete</button> -->
-												<!-- <button class="btn_delete" value="" name="" data-toggle="modal" data-target="#Del_Region">delete</button> -->
-											</div>
-											<div class="dataTable first_over">
-												<table cellpadding="0" cellspacing="0" border="1" summary="" id="maEventHandlerList" style="width: auto;">
-													<!-- <colgroup>
-														<col width="50px"><col width="30%"><col width="%">
-													</colgroup> -->
-													<thead>
-														<tr>
-															<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
-															<th class="column-30percent">Type</th>
-															<th>Name</th>
-														</tr>
-													</thead>
-													<tbody id="monitoringAlertEventHandlerList">
-														{{ $length := len .MonitoringAlertEventHandlerList }} 
-														{{ if eq $length 0 }}
-														<tr>
-															<td class="overlay hidden" data-th="" colspan="3">No Data</td>
-														</tr>
-														{{ end }}
-														
-														{{ range $index, $item := .MonitoringAlertEventHandlerList }}
-														<tr>
-															<td class="overlay hidden  column-50px" data-th="">
-																<input type="hidden" id="monitoringAlertEventHandlerType_info_{{$index}}" value="{{$item.Type}}"/>
-																<input type="hidden" id="monitoringAlertEventHandlerName_info_{{$index}}" value="{{$item.Name}}"/>
-																<input type="checkbox" name="chk" value="{{$item.Type}}" id="raw_{{$index}}" title="" />
-																<label for="td_ch1"></label> <span class="ov off"></span>
-															</td>
-															<td class="btn_mtd ovm column-30percent" data-th="Type">{{ $item.Type }}<span class="ov"></span>
-															<!-- <input type="hidden" id="monitoringAlertEventHandler_info_{{ $index }}" value="{{ $item.Type }}"/> -->
-															<td class="overlay hidden" data-th="Name">{{ $item.Name }}</td>
-															<!-- <input type="hidden" id="monitoringAlertEventHandlerName_info_{{ $index }}" value="{{ $item.Name }}"/> -->
-														</tr>
-														{{ end }}	
-													</tbody>
-												</table>
-											</div>											
-										</div>
-									</div>
+
 
 									<div class="top_ipbox">
-										<div class="ipbox ipbox1">
+										<div class="ipbox ipbox1" style="width: 100%;">
 											<ul>
 												<li class="reg_1">
 													<label><span class="ch">*</span>Monitoring Alert Event Message</label>
