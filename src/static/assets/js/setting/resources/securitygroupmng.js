@@ -247,10 +247,11 @@ function setSecurityGroupListAtServerImage(data, sortType){
                         + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
                         + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
                         + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
-                        + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+                        // + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+                        + '</td>'
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
-                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
             } else {
@@ -262,7 +263,7 @@ function setSecurityGroupListAtServerImage(data, sortType){
                         + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
     
@@ -340,11 +341,14 @@ function showSecurityGroupInfo(sgName) {
         var outbound = "";
         for (var i in dtlFirewall) {
             console.log("direc : ", dtlFirewall[i].direction);
-            if(dtlFirewall[i].direction == "inbound") {
+            if(dtlFirewall[i].direction == "inbound" || dtlFirewall[i].direction == "ingress") {
                 inbound += dtlFirewall[i].ipProtocol
                         + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
             } else if(dtlFirewall[i].direction == "outbound") {
                 outbound += dtlFirewall[i].ipProtocol
+                        + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
+            }else{// 정의되지 않은 항목은 inbound쪽에 몰아주기
+                inbound += dtlFirewall[i].ipProtocol
                         + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
             }
         }

@@ -475,6 +475,10 @@ function commonPromptOpen(targetAction, targetObjId){
             ["AlertPolicyTargetType", "필터링할 단어를 입력하세요"],
             ["AlertPolicyEventType", "필터링할 단어를 입력하세요"],
             ["Config", "Would you like to set Cloud config ?"],
+            ["FilterMcisName", "필터링할 단어를 입력하세요"],
+            ["FilterMcisStatus", "필터링할 단어를 입력하세요"],
+            ["FilterMcisDesc", "필터링할 단어를 입력하세요"],
+            
         ]
     );
     console.log(promptModalTextMap.get(targetAction));
@@ -593,8 +597,20 @@ function commonPromptOk(){
         if( targetValue ){
             filterTable(targetObjId, "Alert Event Type", targetValue)
         }       
+    }else if( targetAction == 'FilterMcisName'){// Name이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }       
+    }else if( targetAction == 'FilterMcisStatus'){// Status이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Status", targetValue)
+        }       
+    }else if( targetAction == 'FilterMcisDesc'){// Description이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Description", targetValue)
+        }       
     }
-    
+   
     commonPromptClose();
 }
 

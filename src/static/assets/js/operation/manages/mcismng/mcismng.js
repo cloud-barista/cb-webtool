@@ -1,5 +1,9 @@
 var selectedMcis = "";
 $(document).ready(function(){
+    checkLoadStatus();
+
+    jQuery('.sc_box.scrollbar-inner').scrollbar();// CP / connectin의 구름 이미지들 창이 작아졌을 때 scroll 생기도록
+
     // MCIS List의 상단 의 checkbox 클릭시 전체 선택하도록 
     $("#th_chall").click(function() {
         if ($("#th_chall").prop("checked")) {

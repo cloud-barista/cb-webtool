@@ -145,7 +145,7 @@ function virtualMachineSpecListCallbackSuccess(caller, data, sortType) {
                         + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                         + '<td class="overlay hidden" data-th="cspSpecName">' + item.cspSpecName + '</td>'  
-                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
             } else {
@@ -157,7 +157,7 @@ function virtualMachineSpecListCallbackSuccess(caller, data, sortType) {
                         + '<td class="btn_mtd ovm" data-th="name ">' + item.name  + '<span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
                         + '<td class="overlay hidden" data-th="cspSpecName">' + item.cspSpecName + '</td>'  
-                        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                 ))
             }

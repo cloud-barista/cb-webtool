@@ -202,7 +202,7 @@ function addVNetRow(item, index){
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>' 
         + '<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>' 
         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-        + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
         + '</tr>'
     return html;
 }
