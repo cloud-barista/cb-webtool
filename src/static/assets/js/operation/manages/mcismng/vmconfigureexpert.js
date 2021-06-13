@@ -328,9 +328,12 @@ function expertDone_btn(){
   if( $("#e_specId").val() == ""){ commonAlert("VM Spec is required"); return;}
   
 
+  $("#e_vm_add_cnt").val($("#es_vm_add_cnt").val());// 추가수량 값을 form에 추가.
+
+  // expertForm에는 vm생성에 필요한 값들만 있음.
   var expert_form = $("#expert_form").serializeObject()
   var server_name = expert_form.name
-  var server_cnt = parseInt($("#e_vm_add_cnt").val())
+  var server_cnt = parseInt(expert_form.vmAddCount) // expert
   console.log('server_cnt : ',server_cnt)
   var add_server_html = "";
 
