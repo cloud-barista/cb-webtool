@@ -615,7 +615,8 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 			}			
 		}
 		}catch(e){
-			console.log(e);
+			return false;
+			// console.log(e);
 		}
 		console.log("validate return")
 		return true;

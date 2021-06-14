@@ -108,7 +108,8 @@ function guideAreaHide(){
 // message를 표현할 alert 창
 function commonAlert(alertMessage){
     console.log(alertMessage);
-    $('#alertText').text(alertMessage);
+    // $('#alertText').text(alertMessage);
+    $('#alertText').html(alertMessage);
     $("#alertArea").modal();
 }
 // alert창 닫기
