@@ -1,7 +1,7 @@
 function deploy_btn(){
     var mcksName = $("#mcksreg_name").val();
     if( !validateCloudbaristaKeyName(mcksName, 11) ){
-        commonAlert("first letter = small letter <br/> middle letter = small letter, number, hipen(-) only <br/> last letter = small letter ");
+        commonAlert("first letter = small letter <br/> middle letter = small letter, number, hipen(-) only <br/> last letter = small letter <br/> max length = 11 ");
         return;
     }
     
