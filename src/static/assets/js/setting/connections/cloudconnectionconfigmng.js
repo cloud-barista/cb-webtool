@@ -371,6 +371,17 @@ function getRegionDetail(target){
                     regionID = keyValueInfoList[0].Value
                     zoneID = keyValueInfoList[1].Value                    
                 }
+
+                if( data.ProviderName == "AZURE"){
+                    for(var ix = 0; ix < keyValueInfoList.length; ix++){
+                        if( keyValueInfoList[ix].Key == "location"){
+                            regionID = keyValueInfoList[ix].Value
+                        }
+                        if( keyValueInfoList[ix].Key == "ResourceGroup"){
+                            zoneID = keyValueInfoList[ix].Value
+                        }
+                    }
+                }
                 console.log("info Region Detail, regionName : ",target,", region : ",regionID, ", zone : ",zoneID)
                 setRegionDispInfo(regionID, zoneID)
             }
