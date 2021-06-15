@@ -21,7 +21,7 @@ function clickListOfMcks(uid, mcksIndex){
     $("#mcks_uid").val($("#mcksUID" + mcksIndex).val());
     $("#mcks_name").val($("#mcksName" + mcksIndex).val());    
     
-    // MCIS Info area set
+    // MCKS Info area set
     showServerListAndStatusArea(uid,mcksIndex);
 }
 
@@ -54,15 +54,15 @@ function showServerListAndStatusArea(uid, mcksIndex){
     $("[id^='mcksNodeUID_']").each(function(){		
         var mcksNode = $(this).attr("id").split("_")
         thisMcksIndex = mcksNode[1]
-        nodeIndexOfMcis = mcksNode[2]
+        nodeIndexOfMcks = mcksNode[2]
 
         if( thisMcksIndex == mcksIndex){
-            var nodeID = $("#mcksNodeUID_" + thisMcksIndex + "_" + nodeIndexOfMcis).val();
-            var nodeName = $("#mcksNodeName_" + thisMcksIndex + "_" + nodeIndexOfMcis).val();
+            var nodeID = $("#mcksNodeUID_" + thisMcksIndex + "_" + nodeIndexOfMcks).val();
+            var nodeName = $("#mcksNodeName_" + thisMcksIndex + "_" + nodeIndexOfMcks).val();
                 
             nodeStatusIcon ="bgbox_g"
             // node 목록 표시
-            mcksNodes += '<li class="sel_cr ' + nodeStatusIcon + '"><a href="javascript:void(0);" onclick="nodeDetailInfo(\''+thisMcksIndex+'\',\''+nodeIndexOfMcis+'\')"><span class="txt">'+nodeName+'</span></a></li>';
+            mcksNodes += '<li class="sel_cr ' + nodeStatusIcon + '"><a href="javascript:void(0);" onclick="nodeDetailInfo(\''+thisMcksIndex+'\',\''+nodeIndexOfMcks+'\')"><span class="txt">'+nodeName+'</span></a></li>';
         }
     });
     $("#mcks_server_info_box").empty();

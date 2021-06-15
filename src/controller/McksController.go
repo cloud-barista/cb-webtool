@@ -148,6 +148,8 @@ func McksMngForm(c echo.Context) error {
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/manages/mcksmng/McksMng", // 파일명
 		map[string]interface{}{
+			"Message": clusterErr.Message,
+			"Status":  clusterErr.StatusCode,
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
