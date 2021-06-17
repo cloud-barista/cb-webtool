@@ -256,7 +256,7 @@ function createCloudConnection(){
     var url = "/setting/connections/cloudconnectionconfig" + "/reg/proc";
     var obj = {
         ConfigName: configname,
-        ProviderName: providername,
+        ProviderName: providername.toUpperCase(),
         RegionName: regionname,
         CredentialName: credentialname,
         DriverName : drivername
@@ -653,17 +653,31 @@ function saveNewRegion(){
     var providerName = $("#RegionModalProviderName").val();
     var regionID = $("#RegionModalRegionID").val();
     var zoneID = $("#RegionModalZoneID").val();	
+
+    var locationID = $("#RegionModalAzureLocationID").val();
+    var resourceGroupID = $("#RegionModalAzureResourceGroupID").val();	
 	
-    if(!regionName || !providerName || !regionID){
-        $("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
-        return;
+    var keyName1 = "Region"
+    var keyName2 = "Zone"
+    if( providerName == "AZURE"){
+        if(!providerName || !locationID || !resourceGroupID){
+            $("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
+            return;
+        }
+        keyName1 = "locationID"
+        keyName2 = "resourceGroupID"
+    }else{
+        if(!regionName || !providerName || !regionID){
+            $("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
+            return;
+        }
     }
     //
     console.log("saveNewRegion popup");
     var regionInfo = {            
         RegionName:regionName,
         ProviderName: providerName,
-        KeyValueInfoList:[ {"Key":"Region","Value":regionID},{"Key":"Zone","Value":zoneID}]
+        KeyValueInfoList:[ {"Key":keyName1,"Value":regionID},{"Key":keyName2,"Value":zoneID}]
 
         // RegionKey: "Region",
         // RegionValue: regionID,
@@ -957,8 +971,52 @@ function deleteDriver(){
         });
 }
 
+function selRegionProvider(providerName){
+    console.log("1 " + providerName)
+    var regionId =$("#RegionModalRegionID");
+    var zoneId = $("#RegionModalZoneID");
+    var azureLocationId =$("#RegionModalAzureLocationID");
+    var azureResourceGroupId = $("RegionModalAzureResourceGroupID");
+    
+    var regionLiKey0 = $("#regionLikey0")
+    var regionLiKey1 = $("#regionLikey1")
+    var regionLiKey2 = $("#regionLikey2")
+    var regionLiKey3 = $("#regionLikey3")
+    
+    // var key0 = $("#CredentialModalKey0")
+    // var key1 = $("#CredentialModalKey1")
+    // var key2 = $("#CredentialModalKey2")
+    // var key3 = $("#CredentialModalKey3")
+    // var key4 = $("#CredentialModalKey4")
 
-function selProvider(providerName){
+    // 초기화 하고 시작
+    regionId.val("");
+    zoneId.val("");
+    azureLocationId.val("");
+    azureResourceGroupId.val("");
+    
+    regionLiKey0.css("display", "none")
+    regionLiKey1.css("display", "none")
+    regionLiKey2.css("display", "none")
+    regionLiKey3.css("display", "none")
+
+    if ( providerName == "AZURE"){
+    
+        regionLiKey0.css("display", "none");
+        regionLiKey1.css("display", "none");
+        regionLiKey2.css("display", "");
+        regionLiKey3.css("display", "");
+    
+    }else{
+        regionLiKey0.css("display", "")
+        regionLiKey1.css("display", "")
+        regionLiKey2.css("display", "none")
+        regionLiKey3.css("display", "none")    
+    }
+    
+}
+
+function selCredentialProvider(providerName){
     
     var liKey0 = $("#liKey0")
     var liValue0 = $("#liValue0")
