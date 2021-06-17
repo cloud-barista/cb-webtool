@@ -675,8 +675,10 @@ function saveNewRegion(){
             $("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
             return;
         }
-        keyName1 = "locationID"
-        keyName2 = "resourceGroupID"
+        keyName1 = "location"
+        keyName2 = "ResourceGroup"
+        regionID = locationID
+        zoneID = resourceGroupID
     }else{
         if(!regionName || !providerName || !regionID){
             $("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
@@ -710,7 +712,7 @@ function saveNewRegion(){
             // Region table 갱신
             getRegionList();
         }else{
-            alert("Fail Create Cloud Region")
+            commonAlert("Fail Create Cloud Region")
         }
   
     // }).catch(function(error){
@@ -993,12 +995,6 @@ function selRegionProvider(providerName){
     var regionLiKey1 = $("#regionLikey1")
     var regionLiKey2 = $("#regionLikey2")
     var regionLiKey3 = $("#regionLikey3")
-    
-    // var key0 = $("#CredentialModalKey0")
-    // var key1 = $("#CredentialModalKey1")
-    // var key2 = $("#CredentialModalKey2")
-    // var key3 = $("#CredentialModalKey3")
-    // var key4 = $("#CredentialModalKey4")
 
     // 초기화 하고 시작
     regionId.val("");
@@ -1070,7 +1066,8 @@ function selCredentialProvider(providerName){
     liValue3.css("display", "")
     liKey4.css("display", "")
     liValue4.css("display", "") 
-        
+    
+    // 기본은 모두 보이게 이므로 특정 provider일 때 control
     if( providerName == "AWS"){
         key0.val("ClientId");
         key1.val("ClientSecret");
@@ -1100,6 +1097,14 @@ function selCredentialProvider(providerName){
         liValue2.css("display", "none")
         liKey3.css("display", "none")
         liValue3.css("display", "none")
+        liKey4.css("display", "none")
+        liValue4.css("display", "none")        
+    }else if ( providerName == "AZURE"){
+        key0.val("ClientId");
+        key1.val("ClientSecret");
+        key2.val("SubscriptionId");
+        key3.val("TenantId");
+        
         liKey4.css("display", "none")
         liValue4.css("display", "none")        
     }
