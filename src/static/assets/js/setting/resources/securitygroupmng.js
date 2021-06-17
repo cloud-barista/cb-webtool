@@ -163,61 +163,10 @@ function deleteSecurityGroup() {
     });
 }          
 
+// Security Group 목록 조회
 function getSecurityGroupList(sortType) {
     getCommonSecurityGroupList("securitygroupmng", sortType)
-    // console.log(sort_type);
-    // // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/securityGroup";
-    // var url = "/setting/resources" + "/securitygroup/list";
-    // axios.get(url, {
-    //     headers: {
-    //         // 'Authorization': "{{ .apiInfo}}",
-    //         'Content-Type': "application/json"
-    //     }
-    // }).then(result => {
-    //     console.log("get SG Data : ", result.data);
-    //     var data = result.data.SecurityGroupList; // exception case : if null 
-    //     var html = ""
-    //     console.log("Data : ", data);
-    //     if (data.length) { // null exception if not exist
-    //         if (sort_type) {
-    //             console.log("check : ", sort_type);
-    //             data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-    //                 html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
-    //                     + '<td class="overlay hidden" data-th="">' 
-    //                     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>' 
-    //                     + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-    //                     + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName 
-    //                     + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
-    //                     + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
-    //                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'  
-    //                     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-    //                     + '</tr>'
-    //             ))
-    //         } else {
-    //             data.filter((list) => list.name !== "").map((item, index) => (
-    //                 html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">' 
-    //                     + '<td class="overlay hidden" data-th="">' 
-    //                     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName  + '"/>'
-    //                     + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-    //                     + '<td class="btn_mtd ovm" data-th="cspSecurityGroupName">' + item.cspSecurityGroupName + '<span class="ov"></span></td>' 
-    //                     + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>' 
-    //                     + '<td class="overlay hidden" data-th="description">' + item.description + '</td>' 
-    //                     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-    //                     + '</tr>'
-    //             ))
-
-    //         }
-
-    //         $("#sgList").empty();
-    //         $("#sgList").append(html);
-            
-    //         ModalDetail()
-    //     }
-    // }).catch(function(error){
-    //     console.log("get gsList error : ",error);        
-    // });
 }
-
 
 function getSecurityGroupListCallbackFail(error){
 	var errorMessage = error.response.data.error;
@@ -226,7 +175,6 @@ function getSecurityGroupListCallbackFail(error){
 }
 
 function setSecurityGroupListAtServerImage(data, sortType){
-    console.log("여기까지 왔다!!!")
     var html = ""
     console.log("Data : ", data);
 
@@ -337,21 +285,25 @@ function showSecurityGroupInfo(sgName) {
 
         var dtlFirewall = data.firewallRules;
         console.log("firefire : ", dtlFirewall);
-        var inbound = "";
-        var outbound = "";
+        var inbounds = "";
+        var outbounds = "";
+        var cidrs = "";
         for (var i in dtlFirewall) {
             console.log("direc : ", dtlFirewall[i].direction);
-            if(dtlFirewall[i].direction == "inbound" || dtlFirewall[i].direction == "ingress") {
-                inbound += dtlFirewall[i].ipProtocol
+            var firewallDirection = (dtlFirewall[i].direction).toLowerCase();
+            if(firewallDirection == "inbound" || firewallDirection == "ingress") {
+                inbounds += dtlFirewall[i].ipProtocol
                         + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
-            } else if(dtlFirewall[i].direction == "outbound") {
-                outbound += dtlFirewall[i].ipProtocol
-                        + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
+            } else if(firewallDirection == "outbound") {
+                outbounds += dtlFirewall[i].ipProtocol
+                        + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '            
             }else{// 정의되지 않은 항목은 inbound쪽에 몰아주기
                 inbound += dtlFirewall[i].ipProtocol
                         + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
             }
+            cidrs += dtlFirewall[i].cidr+ ' ';
         }
+        console.log(cidrs);
                                
         $('#dtlCspSecurityGroupName').empty();
         $('#dtlDescription').empty();
@@ -360,14 +312,17 @@ function showSecurityGroupInfo(sgName) {
         $('#dtlvNetId').empty();
         $('#dtlInbound').empty();
         $('#dtlOutbound').empty();
+        $('#dtlCidr').empty();
 
         $('#dtlCspSecurityGroupName').val(dtlCspSecurityGroupName);
         $('#dtlDescription').val(dtlDescription);
         //$('#dtlProvider').val(dtlProvider);
         $('#dtlConnectionName').val(dtlConnectionName);
         $('#dtlvNetId').val(dtlvNetId);
-        $('#dtlInbound').append(inbound);
-        $('#dtlOutbound').append(outbound);
+        $('#dtlInbound').append(inbounds);
+        $('#dtlOutbound').append(outbounds);
+        $('#dtlCidr').append(cidrs);
+        
         $('#dtlvNetId').val(dtlvNetId);
         
         getProviderNameByConnection(dtlConnectionName, 'dtlProvider')// provider는 connection 정보에서 가져옴
@@ -391,6 +346,12 @@ function showSecurityGroupInfo(sgName) {
 // Inbound / Outbound Modal 표시
 function displayInOutBoundRegModal(isShow){
     if(isShow){
+        var provider = $("#regProvider option:selected").val();
+        console.log("provider " + provider)
+        if ( provider == ""){
+            commonAlert("Please select a provider first");
+            return;
+        }
         setTableHeightForScroll('firewallRSlistTbl', 300);
 
         $("#firewallRegisterBox").modal();
@@ -500,15 +461,20 @@ $(document).ready(function() {
 });
 
 function applyFirewallRuleSet() {
+    var provider = $("#regProvider option:selected").val();    
     var fromPortValue = $("input[name='fromport']").length;
     var toPortValue = $("input[name='toport']").length;
     var ipprotocolValue = $("select[name='ipprotocol']").length;
     var directionValue = $("select[name='direction']").length;
+    var cidrValue = $("input[name='cidr']").length;
+    var isSameDirection = true;// direction이 하나만 선택해야하는 경우 사용
+    var isSameCidr = true;// cidr을 하나만 사용할 수 있는 경우 사용
     
     var fromPortData = new Array(fromPortValue);
     var toPortData = new Array(toPortValue);
     var ipprotocolData = new Array(ipprotocolValue);
     var directionData = new Array(directionValue);
+    var cidrData = new Array(cidrValue);
     
     for(var i=0; i<fromPortValue; i++){                          
         fromPortData[i] = $("input[name='fromport']")[i].value;
@@ -522,9 +488,52 @@ function applyFirewallRuleSet() {
         ipprotocolData[i] = $("select[name='ipprotocol']")[i].value;
         console.log("ipprotocolData" + [i] + " : ", ipprotocolData[i]);
     }
+    var firstDirectionValue = $("select[name='direction']")[0].value;
     for(var i=0; i<directionValue; i++){                          
         directionData[i] = $("select[name='direction']")[i].value;
         console.log("directionData" + [i] + " : ", directionData[i]);
+        if( firstDirectionValue != directionData[i]){
+            isSameDirection = false;
+        }
+    }
+
+    var firstCidrValue = $("input[name='cidr']")[0].value;
+    for(var i=0; i < cidrValue; i++){                                      
+        cidrData[i] = $("input[name='cidr']")[i].value;
+        
+        if( firstCidrValue != cidrData[i]){
+            isSameCidr = false;
+        }
+    }
+
+    if( provider == "GCP" ){
+        if ( isSameDirection == false ){
+            commonAlert("GCP allows only one direction");
+            return;
+        }
+        if( isSameCidr){
+            commonAlert("GCP CIDR Blocks must all be same");
+            return;
+        }
+        
+        var cidrSize = $("input[name='cidr']").length;        
+        if( cidrSize == 1){
+            var cidrValue = $("input[name='cidr']")[0].value;
+            if(!cidrValue){
+                commonAlert("GCP requires CIDR Block");
+                return;
+            }
+        }else{
+            for(var i=0; i < cidrValue; i++){                                      
+                cidrData[i] = $("input[name='cidr']")[i].value;
+                console.log("cidrData" + [i] + " : ", cidrData[i]);
+                if(!cidrData[i]){
+                    commonAlert("GCP requires CIDR Block");
+                    return;
+                }                
+            }
+        }
+        
     }
 
     fwrsJsonList = new Array();
@@ -536,6 +545,7 @@ function applyFirewallRuleSet() {
         RSData.fromPort = fromPortData[i];
         RSData.ipProtocol = ipprotocolData[i];
         RSData.toPort = toPortData[i];
+        RSData.cidr = cidrData[i];
         
         fwrsJsonList.push(RSData);
     }
@@ -565,7 +575,8 @@ function applyFirewallRuleSet() {
 
 function createSecurityGroup() {
     var cspSecurityGroupName = $("#regCspSecurityGroupName").val();
-    var description = $("#regDescription").val();
+    var description = $("#regDescription").val();    
+    var provider = $("#regProvider option:selected").val();
     var connectionName = $("#regConnectionName").val();
     var vNetId = $("#regVNetId").val();
     
@@ -575,8 +586,13 @@ function createSecurityGroup() {
         return;
     }
 
+    // connection 이 GCP인 경우 체크 : inbound/outbund는 1종류만 가능, cidrBlock 필수
+    // 여기에서도 check가 필요할 까? fwrsJsonList -> 돌아야 함.
+    
+
     console.log("cspSecurityGroupName : ", cspSecurityGroupName);
     console.log("description : ", description);
+    console.log("provider : ", provider);
     console.log("connectionName : ", connectionName);
     console.log("vNetId : ", vNetId);
     console.log("fwrsJsonList : ", fwrsJsonList);// TODO : 비어있으면 에러나므로 valid check 필요
@@ -644,9 +660,9 @@ var fwrsJsonList = "";// firewallRuleSet 담을 array
 function getStaffText(){
     var addStaffText = 
     '<tr class="ip" name="tr_Input">'+
-        '<td class="btn_mtd column-20percent" data-th="fromPort"><input type="text" name="fromport" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'+
-        '<td class="overlay column-20percent" data-th="toPort"><input type="text" name="toport" value="" placeholder="" class="pline" title="" /></td>'+
-        '<td class="overlay column-20percent" data-th="ipProtocol">'+
+        '<td class="btn_mtd column-16percent" data-th="fromPort"><input type="text" name="fromport" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'+
+        '<td class="overlay column-16percent" data-th="toPort"><input type="text" name="toport" value="" placeholder="" class="pline" title="" /></td>'+
+        '<td class="overlay column-16percent" data-th="ipProtocol">'+
                 '<select class="selectbox white pline" name="ipprotocol">'+
                     '<option value="tcp">TCP</option>'+
                     '<option value="udp">UDP</option>'+
@@ -658,7 +674,11 @@ function getStaffText(){
                     '<option value="outbound">Outbound</option>'+
                 '</select>'+
         '</td>'+
-        '<td class="overlay column-100px">'+
+        '<td class="btn_mtd column-16percent" data-th="cidr">'+
+            '<input type="text" value="" name="cidr" placeholder="" class="pline" title="" /> ' +
+            '<span class="ov off"></span>' +
+        '</td>' +
+        '<td class="overlay column-80px">'+
             '<button class="btn btn_add" name="btn_add" value="">add</button>'+
             '<button class="btn btn_del" name="delInput" value="">del</button>'+
         '</td>'+

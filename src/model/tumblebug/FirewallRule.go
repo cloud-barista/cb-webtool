@@ -5,4 +5,5 @@ type FirewallRule struct {
 	FromPort   string `json:"fromPort"`
 	IpProtocol string `json:"ipProtocol"`
 	ToPort     string `json:"toPort"`
+	CIDR     string `json:"cidr"`
 }
