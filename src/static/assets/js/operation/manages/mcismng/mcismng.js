@@ -573,7 +573,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             // image id
             var imageIId = vmDetail.imageIId.nameId
             var imageId = data.imageId
-            // set_vmImageInfo(imageId) // 
+            getCommonVmImageInfo('mcisvmdetail', imageId) // 
             $("#server_detail_view_image_id").text(imageId+"("+imageIId+")")
 
             //vpc subnet
@@ -1057,4 +1057,23 @@ function setRegionMap(locationInfo){
       });
 
     //   $("#regionMap").css("display", "block");
+}
+
+
+function getCommonVmImageInfoCallbackSuccess(caller, imageInfo){
+    // var imageInfo = data;
+    var html = ""
+    console.log("image info : ",imageInfo)
+    html +='<a href="javascript:void(0);" title="'+imageInfo.cspImageName+'">'+imageInfo.id+'</a>'
+          +'<div class="bb_info">Image Name : '+imageInfo.name+', GuestOS:'+imageInfo.guestOS+'</div>'
+   
+    $("#server_detail_view_image_id").empty();
+    $("#server_detail_view_image_id").append(html);
+    $("#server_info_os").val(imageInfo.guestOS);
+    $("#server_detail_view_os").val(imageInfo.guestOS);
+    bubble_box();
+}
+
+function getCommonVmImageInfoCallbackFail(caller, data){
+    // -- fail 나더라도 그냥 넘어감.
 }
