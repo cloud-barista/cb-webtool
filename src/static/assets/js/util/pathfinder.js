@@ -74,6 +74,24 @@ function getCommonNameSpaceList(caller){
     });
 }
 
+function getCommonCloudConnectionList(caller, sortType){
+    var url = "/setting/connections/cloudconnectionconfig/list";
+    axios.get(url,{
+        headers:{
+                'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get CloudConnection Data : ",result.data);
+        var data = result.data.ConnectionConfig;
+        getCloudConnectionListCallbackSuccess(caller, data, sortType);
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        getCloudConnectionListCallbackFail(caller, error);
+    });
+}
+
 function getCommonCredentialList(caller){
     var url = "/setting/connections/credential";
     axios.get(url,{
