@@ -137,7 +137,11 @@ function commonConfirmOpen(targetAction){
             ["Provider", "Would you like to set Cloud Provider ?"],
 
             ["MoveToConnection", "Would you like to set Cloud config ?"],
-            ["DeleteCloudConnection", "Woudl you like to delete <br /> Cloud connection? "],
+            ["DeleteCloudConnection", "Woudl you like to delete <br /> the Cloud connection? "],
+
+            ["DeleteCredential", "Woudl you like to delete <br /> the Credential? "],
+            ["DeleteDriver", "Woudl you like to delete <br /> the Driver? "],
+            ["DeleteRegion", "Woudl you like to delete <br /> the Region? "],
 
 
             // ["IdPassRequired", "ID/Password required !"],    --. 이거는 confirm이 아니잖아
@@ -259,13 +263,20 @@ function commonConfirmOk(){
         var targetUrl="/setting/connections/cloudconnectionconfig/mngform"
         changePage(targetUrl)
     }else if ( targetAction == "DeleteCloudConnection"){
-        deleteCloudConnection();        
+        deleteCloudConnection();    
     }else if ( targetAction == "Config"){
         //id="Config"
         console.log("commonConfirmOk " + targetAction);
     }else if ( targetAction == "SDK"){
         //id="SDK"
         console.log("commonConfirmOk " + targetAction);
+    }else if ( targetAction == "DeleteCredential"){
+        deleteCredential();
+    }else if ( targetAction == "DeleteDriver"){
+        deleteDriver();
+    }else if ( targetAction == "DeleteRegion"){
+        deleteRegion();
+
     }else if ( targetAction == "Credential"){
         //id="Credential"
         console.log("commonConfirmOk " + targetAction);
