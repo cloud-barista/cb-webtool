@@ -273,7 +273,8 @@ function getConnectionListFilterForTable(providerObj, regionObj, targetTableObj)
     var compareText = $(this).text().toLowerCase()
     var toggleStatus = true;
     if( providerVal == "" && regionVal == "" ){
-      return;
+      
+      //return;
     }else if( providerVal == "" && compareText.indexOf(regionVal.toLowerCase()) > -1 ){
       toggleStatus = true
     }else if( regionVal == "" && compareText.indexOf(providerVal.toLowerCase()) > -1 ){
@@ -632,11 +633,27 @@ function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedInd
   }  
 }	
 
+// Table에서 connection 선택시 hidden에 connection정보 set.
 function setConnectionByAssist(providerName, regionName, configName){
-  // TODO : table 선택시 hidden에 값을 넣고  apply버튼을 눌렀을 때 hide 시키도록 변경할 것
-  // $("#" + targetObjId).val(setValue);
-  $("#Deployment_box").modal("hide");
+  $("#assistConnectionConfigName").val(configName);
 }
+
+// assist에서 apply버튼 클릭 시
+function applyConnectionConfigName(){
+  var selectedConnectionName = $("#assistConnectionConfigName").val();
+  console.log("applyConnectionConfigName = " + selectedConnectionName);
+  $("#es_regConnectionName").val(selectedConnectionName);
+
+  $("#popProvider").val('');
+  $("#popRegion").val('');
+  $("#assistConnectionConfigName").val('');
+  
+  $("#Deployment_box").modal("hide");
+
+  getConnectionListFilterForTable('popProvider', 'popRegion', 'popCloudConnection');
+  console.log("getConnectionListFilterForTable = ");
+}
+
 // Textbox 값이 변경 된 경우 해당 값을 form obj에 set
 function setTextValueToFormObj(setValue, targetObjId){
   $("#" + targetObjId).val(setValue);
