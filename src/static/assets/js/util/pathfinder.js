@@ -537,6 +537,21 @@ function getCommonVmSecurityGroupInfo(caller, securityGroupId){
 	});
 }
 
+function getCommonVmImageInfo(caller, imageId){
+    
+    //var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+imageId
+    // var apiInfo = ApiInfo
+    var url = "/setting/resources/machineimage/" + imageId
+    axios.get(url,{
+        // headers:{
+        //     'Authorization': apiInfo
+        // }
+    }).then(result=>{
+        console.log(result);
+        getCommonVmImageInfoCallbackSuccess(caller, result.data.VirtualMachineImageInfo);        
+    })
+
+}
 
 // form 화면에서 조회에 문제가 있는 경우 표시
 // 모든 form 화면 시작할 때(onLoad 시) 체크하도록
