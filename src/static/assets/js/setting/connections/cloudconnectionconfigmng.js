@@ -256,7 +256,7 @@ function createCloudConnection(){
     var url = "/setting/connections/cloudconnectionconfig" + "/reg/proc";
     var obj = {
         ConfigName: configname,
-        ProviderName: providername,
+        ProviderName: providername.toUpperCase(),
         RegionName: regionname,
         CredentialName: credentialname,
         DriverName : drivername
@@ -270,20 +270,20 @@ function createCloudConnection(){
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                alert("Success Create Cloud Connection")
+                commonAlert("Success Create Cloud Connection")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                getCloudConnectionList();
+                //getCloudConnectionList();
                 //아니면 화면을 리로딩 시킬것인가?
                 location.reload();
                 // $("#btn_add2").click()
                 // $("#namespace").val('')
                 // $("#nsDesc").val('')
             }else{
-                alert("Fail Create Cloud Connection")
+                commonAlert("Fail Create Cloud Connection")
             }
         });
     }else{
-        alert("Input Cloud Connection Name")
+        commonAlert("Input Cloud Connection Name")
         $("#regConfigName").focus()
         return;
     }
@@ -370,6 +370,17 @@ function getRegionDetail(target){
                 }else if ( keyValueInfoList.length == 2){
                     regionID = keyValueInfoList[0].Value
                     zoneID = keyValueInfoList[1].Value                    
+                }
+
+                if( data.ProviderName == "AZURE"){
+                    for(var ix = 0; ix < keyValueInfoList.length; ix++){
+                        if( keyValueInfoList[ix].Key == "location"){
+                            regionID = keyValueInfoList[ix].Value
+                        }
+                        if( keyValueInfoList[ix].Key == "ResourceGroup"){
+                            zoneID = keyValueInfoList[ix].Value
+                        }
+                    }
                 }
                 console.log("info Region Detail, regionName : ",target,", region : ",regionID, ", zone : ",zoneID)
                 setRegionDispInfo(regionID, zoneID)
@@ -653,17 +664,35 @@ function saveNewRegion(){
     var providerName = $("#RegionModalProviderName").val();
     var regionID = $("#RegionModalRegionID").val();
     var zoneID = $("#RegionModalZoneID").val();	
+
+    var locationID = $("#RegionModalAzureLocationID").val();
+    var resourceGroupID = $("#RegionModalAzureResourceGroupID").val();	
 	
-    if(!regionName || !providerName || !regionID){
-        $("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
-        return;
+    var keyName1 = "Region"
+    var keyName2 = "Zone"
+    if( providerName == "AZURE"){
+        if(!providerName || !locationID || !resourceGroupID){
+            //$("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
+            commonAlert("Please enter the required items.")
+            return;
+        }
+        keyName1 = "location"
+        keyName2 = "ResourceGroup"
+        regionID = locationID
+        zoneID = resourceGroupID
+    }else{
+        if(!regionName || !providerName || !regionID){
+            // $("#modalRegionRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
+            commonAlert("Please enter the required items.")
+            return;
+        }
     }
     //
     console.log("saveNewRegion popup");
     var regionInfo = {            
         RegionName:regionName,
         ProviderName: providerName,
-        KeyValueInfoList:[ {"Key":"Region","Value":regionID},{"Key":"Zone","Value":zoneID}]
+        KeyValueInfoList:[ {"Key":keyName1,"Value":regionID},{"Key":keyName2,"Value":zoneID}]
 
         // RegionKey: "Region",
         // RegionValue: regionID,
@@ -676,7 +705,7 @@ function saveNewRegion(){
     }).then(result =>{
         console.log(result);
         if(result.status == 200 || result.status == 201){
-            alert("Success Save Cloud Region");
+            commonAlert("Success Save Cloud Region");
             // 성공하면 내용 초기화
             $("#RegionModalRegionName").val('');
             $("#RegionModalProviderName option:eq(0)").attr("selecte", "selected");
@@ -685,7 +714,7 @@ function saveNewRegion(){
             // Region table 갱신
             getRegionList();
         }else{
-            alert("Fail Create Cloud Region")
+            commonAlert("Fail Create Cloud Region")
         }
   
     // }).catch(function(error){
@@ -705,13 +734,14 @@ function deleteRegion(){
     var regionName = $("#regRegion").val()
 
     if(!regionName){
-        $("#requireMessage").text("선택된 Resion이 없습니다.")
-        $("#requiredCloudConnection").modal()
+        // $("#requireMessage").text("선택된 Resion이 없습니다.")
+        // $("#requiredCloudConnection").modal()
+        commonAlert("No Region selected")
         return;
     }
-    $("#requireMessage").text("")
+    // $("#requireMessage").text("")
     
-    alert(regionName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
+    //alert(regionName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
     
     var url = "/setting/connections/region/del/"+regionName;
     //axios.post("/setting/connections/region/reg/proc",regionInfo,{
@@ -719,11 +749,11 @@ function deleteRegion(){
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                alert("Deleted Cloud Region");                
+                commonAlert("Deleted Cloud Region");                
                 // Region 갱신 
                 getRegionList();   
             }else{
-                alert("Fail to delete the Cloud Region")
+                commonAlert("Fail to delete the Cloud Region")
             }
         // }).catch(function(error){
         //     console.log("delete error : ",error);        
@@ -821,7 +851,7 @@ function saveNewCredential(){
             // Credential table 갱신
             getCredentialList();
         }else{
-            alert("Fail Create Cloud Credential")
+            commonAlert("Fail Create Cloud Credential")
         }
   
     // }).catch(function(error){
@@ -841,24 +871,25 @@ function deleteCredential(){
     var credentialName = $("#regCredential").val()
 
     if(!credentialName){
-        $("#requireMessage").text("선택된 Credential key가 없습니다.")
-        $("#requiredCloudConnection").modal()
+        // $("#requireMessage").text("선택된 Credential key가 없습니다.")
+        // $("#requiredCloudConnection").modal()
+        commonAlert("No Credential selected")
         return;
     }
-    $("#requireMessage").text("")
+    // $("#requireMessage").text("")
     
-    alert(credentialName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
+    // alert(credentialName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함. -> confirm을 통해 오므로 필요없음.
     
     var url = "/setting/connections/credential/del/"+credentialName;
     axios.delete(url, {},{
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                alert("Deleted Cloud Credential");                
+                commonAlert("Deleted Cloud Credential");                
                 // Credential 갱신 
                 getCredentialList();   
             }else{
-                alert("Fail to delete the Cloud Credential")
+                commonAlert("Fail to delete the Cloud Credential")
             }
         // }).catch(function(error){
         //     console.log("delete error : ",error);        
@@ -881,7 +912,8 @@ function saveNewDriver(){
     var driverLibFilename = $("#DriverModalDriverLibFileName").val();
 	
     if(!driverlName || !providerName || !driverLibFilename ){
-        $("#modalDriverRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
+        // $("#modalDriverRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
+        commonAlert("Please enter the required items.")
         return;
     }
     //
@@ -898,7 +930,7 @@ function saveNewDriver(){
     }).then(result =>{
         console.log(result);
         if(result.status == 200 || result.status == 201){
-            alert("Success Save Cloud Driver");
+            commonAlert("Success Save Cloud Driver");
             // 성공하면 내용 초기화
             $("#DriverModalDriverName").val('');
             // $("#DriverModalProviderName option:eq(0)").attr("selecte", "selected");
@@ -907,7 +939,7 @@ function saveNewDriver(){
             // Driver table 갱신
             getDriverList();
         }else{
-            alert("Fail Create Cloud Driver")
+            commonAlert("Fail Create Cloud Driver")
         }
   
     // }).catch(function(error){
@@ -926,24 +958,25 @@ function deleteDriver(){
     var driverName = $("#regDriver").val()
 
     if(!driverName){
-        $("#requireMessage").text("선택된 Driver가 없습니다.")
-        $("#requiredCloudConnection").modal()
+        // $("#requireMessage").text("선택된 Driver가 없습니다.")
+        // $("#requiredCloudConnection").modal()
+        commonAlert("No driver selected")
         return;
     }
-    $("#requireMessage").text("")
+    // $("#requireMessage").text("")
     
-    alert(driverName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함.
+    // alert(driverName + " 을 삭제하겠습니까");//TODO : confirm으로 바꿔야 함. -> confirm으로 오므로 필요없음.
     
     var url = "/setting/connections/driver/del/"+driverName;
     axios.delete(url, {},{
         }).then(result =>{
             console.log(result);
             if(result.status == 200 || result.status == 201){
-                alert("Deleted Cloud Driver");                
+                commonAlert("Deleted Cloud Driver");                
                 // Driver 갱신 
                 getDriverList();   
             }else{
-                alert("Fail to delete the Cloud Driver")
+                commonAlert("Fail to delete the Cloud Driver")
             }
         // }).catch(function(error){
         //     console.log("delete error : ",error);        
@@ -957,8 +990,46 @@ function deleteDriver(){
         });
 }
 
+function selRegionProvider(providerName){
+    console.log("1 " + providerName)
+    var regionId =$("#RegionModalRegionID");
+    var zoneId = $("#RegionModalZoneID");
+    var azureLocationId =$("#RegionModalAzureLocationID");
+    var azureResourceGroupId = $("RegionModalAzureResourceGroupID");
+    
+    var regionLiKey0 = $("#regionLikey0")
+    var regionLiKey1 = $("#regionLikey1")
+    var regionLiKey2 = $("#regionLikey2")
+    var regionLiKey3 = $("#regionLikey3")
 
-function selProvider(providerName){
+    // 초기화 하고 시작
+    regionId.val("");
+    zoneId.val("");
+    azureLocationId.val("");
+    azureResourceGroupId.val("");
+    
+    regionLiKey0.css("display", "none")
+    regionLiKey1.css("display", "none")
+    regionLiKey2.css("display", "none")
+    regionLiKey3.css("display", "none")
+
+    if ( providerName == "AZURE"){
+    
+        regionLiKey0.css("display", "none");
+        regionLiKey1.css("display", "none");
+        regionLiKey2.css("display", "");
+        regionLiKey3.css("display", "");
+    
+    }else{
+        regionLiKey0.css("display", "")
+        regionLiKey1.css("display", "")
+        regionLiKey2.css("display", "none")
+        regionLiKey3.css("display", "none")    
+    }
+    
+}
+
+function selCredentialProvider(providerName){
     
     var liKey0 = $("#liKey0")
     var liValue0 = $("#liValue0")
@@ -1001,7 +1072,8 @@ function selProvider(providerName){
     liValue3.css("display", "")
     liKey4.css("display", "")
     liValue4.css("display", "") 
-        
+    
+    // 기본은 모두 보이게 이므로 특정 provider일 때 control
     if( providerName == "AWS"){
         key0.val("ClientId");
         key1.val("ClientSecret");
@@ -1031,6 +1103,14 @@ function selProvider(providerName){
         liValue2.css("display", "none")
         liKey3.css("display", "none")
         liValue3.css("display", "none")
+        liKey4.css("display", "none")
+        liValue4.css("display", "none")        
+    }else if ( providerName == "AZURE"){
+        key0.val("ClientId");
+        key1.val("ClientSecret");
+        key2.val("SubscriptionId");
+        key3.val("TenantId");
+        
         liKey4.css("display", "none")
         liValue4.css("display", "none")        
     }

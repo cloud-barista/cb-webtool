@@ -252,17 +252,17 @@ func McisMngForm(c echo.Context) error {
 		}
 		log.Println("after " + resultVmStatusNames)
 
-		// UI에서 보여 줄 STATUS로 Count. (가져온 Key중에 UI에서 보여줄 Key가 없을 수 있으므로)
-		for i, _ := range util.STATUS_ARRAY {
+		// UI에서 보여 줄 VM_STATUS로 Count. (가져온 Key중에 UI에서 보여줄 Key가 없을 수 있으므로)
+		for i, _ := range util.VM_STATUS_ARRAY {
 			// status_array는 고정값이므로 없는 경우 default로 '0'으로 set
-			_, exists := resultVmStatusCountMap[util.STATUS_ARRAY[i]]
+			_, exists := resultVmStatusCountMap[util.VM_STATUS_ARRAY[i]]
 			if !exists {
-				resultVmStatusCountMap[util.STATUS_ARRAY[i]] = 0
+				resultVmStatusCountMap[util.VM_STATUS_ARRAY[i]] = 0
 			}
-			totalVmStatusCountMap[util.STATUS_ARRAY[i]] += resultVmStatusCountMap[util.STATUS_ARRAY[i]]
+			totalVmStatusCountMap[util.VM_STATUS_ARRAY[i]] += resultVmStatusCountMap[util.VM_STATUS_ARRAY[i]]
 		}
 		// UI manage mcis > server 영역에서는 run/stopped/terminated 만 있음. etc를 stopped에 추가한다.
-		totalVmStatusCountMap["stopped"] = totalVmStatusCountMap["stopped"] + resultVmStatusCountMap[util.VM_STATUS_ETC]
+		totalVmStatusCountMap[util.VM_STATUS_ETC] = resultVmStatusCountMap[util.VM_STATUS_ETC]
 
 		totalVmCount += resultVmStatusCountMap["TOTAL"] // 모든 vm의 갯수
 

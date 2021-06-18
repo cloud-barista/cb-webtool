@@ -581,7 +581,7 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 	
 	// 이름 Validation : 소문자, 숫자, 하이프(-)만 가능   [a-z]([-a-z0-9]*[a-z0-9])?
 	function validateCloudbaristaKeyName(elementValue, maxLength){
-		var returnStr = "first letter = small letter \n middle letter = small letter, number, hipen(-) only \n last letter = small letter";
+		var returnStr = "first letter = small letter \n middle letter = small letter, number, hyphen(-) only \n last letter = small letter";
 		//var charsPattern = /^[a-zA-Z0-9-]*$/;
 		//var charsPattern = /^[a-z0-9-]*$/;
 		//var charsPattern = /^[a-z]([-a-z0-9]*[a-z0-9])$/;
@@ -615,7 +615,8 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 			}			
 		}
 		}catch(e){
-			console.log(e);
+			return false;
+			// console.log(e);
 		}
 		console.log("validate return")
 		return true;

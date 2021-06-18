@@ -228,22 +228,7 @@ const config_arr = new Array();
 // 해당 MCIS의 VM 상태목록 보여주는 함수 호출
 function clickListOfMcis(id,index){
     console.log("click view mcis id :",id)
-    $(".server_status").addClass("view");
     
-    // 다른 area가 활성화 되어 있으면 안보이게
-    $("#dashboard_detailBox").removeClass("active")
-
-    // List Of MCIS에서 선택한 row 외에는 안보이게
-    $("[id^='server_info_tr_']").each(function(){
-        var item = $(this).attr("item").split("|")
-        console.log(item)
-        if(id == item[0]){           
-            $(this).addClass("on")
-        }else{
-            $(this).removeClass("on")
-        }
-    })
-
     // MCIS Info 에 mcis id 표시
     $("#mcis_id").val(id);
 
@@ -268,7 +253,6 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
     var vmTotalCountOfMcis = $("#mcisVmTotalCount" + mcisIndex).val();
     var vms = $("#mcisVmStatusList" + mcisIndex).val();
 
-    $(".server_status").addClass("view")
     $("#mcis_info_txt").text("[ "+ mcisName +" ]");
     $("#mcis_server_info_status").empty();
     $("#mcis_server_info_status").append('<strong>Server List / Status</strong>  <span class="stxt">[ '+mcisName+' ]</span>  Server('+vmTotalCountOfMcis+')')
@@ -589,7 +573,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             // image id
             var imageIId = vmDetail.imageIId.nameId
             var imageId = data.imageId
-            // set_vmImageInfo(imageId) // 
+            getCommonVmImageInfo('mcisvmdetail', imageId) // 
             $("#server_detail_view_image_id").text(imageId+"("+imageIId+")")
 
             //vpc subnet
@@ -748,7 +732,8 @@ function showVmMonitoring(mcisID, vmID){
     $("#mcis_detail_info_check_monitoring").prop("checked",true)
     $("#mcis_detail_info_check_monitoring").attr("disabled",true)
     $("#Monitoring_tab").show();
-    var duration = "5m"
+    //var duration = "5m"
+    var duration = "30m"
     var period_type = "m"
     var metric_arr = ["cpu","memory","disk","network"];
     var statisticsCriteria = "last";
@@ -1072,4 +1057,23 @@ function setRegionMap(locationInfo){
       });
 
     //   $("#regionMap").css("display", "block");
+}
+
+
+function getCommonVmImageInfoCallbackSuccess(caller, imageInfo){
+    // var imageInfo = data;
+    var html = ""
+    console.log("image info : ",imageInfo)
+    html +='<a href="javascript:void(0);" title="'+imageInfo.cspImageName+'">'+imageInfo.id+'</a>'
+          +'<div class="bb_info">Image Name : '+imageInfo.name+', GuestOS:'+imageInfo.guestOS+'</div>'
+   
+    $("#server_detail_view_image_id").empty();
+    $("#server_detail_view_image_id").append(html);
+    $("#server_info_os").val(imageInfo.guestOS);
+    $("#server_detail_view_os").val(imageInfo.guestOS);
+    bubble_box();
+}
+
+function getCommonVmImageInfoCallbackFail(caller, data){
+    // -- fail 나더라도 그냥 넘어감.
 }

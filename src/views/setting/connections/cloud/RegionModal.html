@@ -40,15 +40,14 @@
 													</li>
 													<li class="p_ip1">
 														<label><span class="ch">*</span>Provider (CP)</label>
-														<select id="RegionModalProviderName" class="selectbox white pline w_ip1" required>
+														<select id="RegionModalProviderName" class="selectbox white pline w_ip1" required onchange="selRegionProvider(this.value)">
 															<option>Select Provider</option>
 															{{ range $item := .CloudOSList}}	
 															<option value="{{ $item }}">{{ $item }}</option>
 															{{ end }}															
-														</select>
-														<!-- <input type="text" name="" value="" placeholder="" class="pline w_ip1" title="" /> -->
+														</select>														
 													</li>
-													<li class="p_ip1">
+													<li class="p_ip1" id="regionLikey0">
 														<label><span class="ch">*</span>Region ID</label>
 														<input type="text" id="RegionModalRegionID"name="" value="" placeholder="input Region" class="pline w_ip1" title="" />
 														<!-- Provider의 실제 region id -->
@@ -57,7 +56,7 @@
 															<option value="1">Selected Region</option>
 														</select> -->
 													</li>
-													<li class="p_ip1">
+													<li class="p_ip1" id="regionLikey1">
 														<label><span class="ch">*</span>Zone ID</label>
 														<input type="text" id="RegionModalZoneID" name="" value="" placeholder="input Zone" class="pline w_ip1" title="" />
 														<!-- Provider의 실제 region의 zone id -->
@@ -65,6 +64,18 @@
 														<!-- <select class="selectbox white pline w_ip1">
 															<option value="1">Selected Zone</option>
 														</select> -->
+													</li>
+
+													<!-- Azure 의 경우 Key / value 로 입력받음-->
+													<li class="p_ip1" id="regionLikey2" style="display:none">
+														<label><span class="ch">*</span>Location</label>
+														<input type="text" id="RegionModalAzureLocationID"name="" value="" placeholder="input Location" class="pline w_ip1" title="" />
+														
+													</li>
+													<li class="p_ip1" id="regionLikey3" style="display:none">
+														<label><span class="ch">*</span>Resource Group</label>
+														<input type="text" id="RegionModalAzureResourceGroupID" name="" value="" placeholder="input Resource Group" class="pline w_ip1" title="" />
+														
 													</li>
 												</ul>
 											</div>
@@ -107,7 +118,7 @@
 					<!-- //popup add Region -->					
 
 					<!-- required modal -->
-					<div class="modal fade" id="modalRegionRequired" tabindex="-1" role="dialog" aria-hidden="true">
+					<!-- <div class="modal fade" id="modalRegionRequired" tabindex="-1" role="dialog" aria-hidden="true">
 						<div class="modal-dialog" role="document">
 							<div class="modal-content">
 								
@@ -119,7 +130,7 @@
 								</div>                    
 							</div>
 						</div>                    
-					</div>
+					</div> -->
 					<!-- //required -->
 
 {{end}}                    

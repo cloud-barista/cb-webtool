@@ -358,7 +358,8 @@ function checkDragonFly(mcis_id, vm_id){
             $("#mcis_detail_info_check_monitoring").prop("checked",true)
             $("#mcis_detail_info_check_monitoring").attr("disabled",true)
             $("#Monitoring_tab").show();
-            var duration = "5m"
+            //var duration = "5m"
+            var duration = "30m"
             var period_type = "m"
             var metric_arr = ["cpu","memory","disk","network"];
             var statisticsCriteria = "last";
@@ -594,11 +595,11 @@ function getVmMetric(chartTarget,target, mcisID, vmID, metric, periodType,statis
         try{
             var statusCode = error.response.data.status;
             var errorMessage = error.response.data.error;
-            commonErrorAlert(statusCode, errorMessage + " " + metric + " 조회실패") 
+            commonErrorAlert(statusCode, errorMessage + " " + " failed to get monitoring data : " + metric) 
         }catch(e){
             var statusCode1 = error.response.status;
             var errorMessage1 = error.response.statusText;
-            commonErrorAlert(statusCode1, errorMessage1 + " " + metric + " 조회실패") 
+            commonErrorAlert(statusCode1, errorMessage1 + " " + " failed to get monitoring data : " + metric) 
         }
     });
 	

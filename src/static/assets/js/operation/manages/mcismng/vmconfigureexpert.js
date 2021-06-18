@@ -273,7 +273,8 @@ function getConnectionListFilterForTable(providerObj, regionObj, targetTableObj)
     var compareText = $(this).text().toLowerCase()
     var toggleStatus = true;
     if( providerVal == "" && regionVal == "" ){
-      return;
+      
+      //return;
     }else if( providerVal == "" && compareText.indexOf(regionVal.toLowerCase()) > -1 ){
       toggleStatus = true
     }else if( regionVal == "" && compareText.indexOf(providerVal.toLowerCase()) > -1 ){
@@ -328,9 +329,12 @@ function expertDone_btn(){
   if( $("#e_specId").val() == ""){ commonAlert("VM Spec is required"); return;}
   
 
+  $("#e_vm_add_cnt").val($("#es_vm_add_cnt").val());// 추가수량 값을 form에 추가.
+
+  // expertForm에는 vm생성에 필요한 값들만 있음.
   var expert_form = $("#expert_form").serializeObject()
   var server_name = expert_form.name
-  var server_cnt = parseInt($("#e_vm_add_cnt").val())
+  var server_cnt = parseInt(expert_form.vmAddCount) // expert
   console.log('server_cnt : ',server_cnt)
   var add_server_html = "";
 
@@ -629,11 +633,27 @@ function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedInd
   }  
 }	
 
+// Table에서 connection 선택시 hidden에 connection정보 set.
 function setConnectionByAssist(providerName, regionName, configName){
-  // TODO : table 선택시 hidden에 값을 넣고  apply버튼을 눌렀을 때 hide 시키도록 변경할 것
-  // $("#" + targetObjId).val(setValue);
-  $("#Deployment_box").modal("hide");
+  $("#assistConnectionConfigName").val(configName);
 }
+
+// assist에서 apply버튼 클릭 시
+function applyConnectionConfigName(){
+  var selectedConnectionName = $("#assistConnectionConfigName").val();
+  console.log("applyConnectionConfigName = " + selectedConnectionName);
+  $("#es_regConnectionName").val(selectedConnectionName);
+
+  $("#popProvider").val('');
+  $("#popRegion").val('');
+  $("#assistConnectionConfigName").val('');
+  
+  $("#Deployment_box").modal("hide");
+
+  getConnectionListFilterForTable('popProvider', 'popRegion', 'popCloudConnection');
+  console.log("getConnectionListFilterForTable = ");
+}
+
 // Textbox 값이 변경 된 경우 해당 값을 form obj에 set
 function setTextValueToFormObj(setValue, targetObjId){
   $("#" + targetObjId).val(setValue);

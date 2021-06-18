@@ -92,7 +92,7 @@ function deleteVPC(){
         console.log(data);
         if (result.status == 200 || result.status == 201) {
            //commonAlert("Success Delete Network")
-           commonAlert(result.message)
+            commonAlert(data.message)
             // location.reload(true);
             //vNetInfoBox 안보이게
             displayVNetInfo("DEL_SUCCESS")

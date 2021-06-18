@@ -52,11 +52,14 @@ var VM_STATUS_RUNNING = "running"
 var VM_STATUS_INCLUDE = "include"
 
 var VM_STATUS_SUSPENDED = "suspended"
+var VM_STATUS_STOPPED = "stopped"
 var VM_STATUS_TERMINATED = "terminated"
 
 // var VM_STATUS_UNDEFINED = "statusUndefined"
 // var VM_STATUS_PARTIAL = "partial"
 var VM_STATUS_ETC = "etc"
+
+var VM_STATUS_ARRAY = []string{"running", "suspended", "terminated", "etc"}
 
 /////// Store 저장 용 Const
 var STORE_NAMESPACELIST = "namespacelist"

@@ -292,7 +292,12 @@ table tbody tr {
 }
 
 @media screen and (max-width: 768px) { 
+    .column-14percent { width: 100%; }
+    .column-15percent { width: 100%; }
+    .column-16percent { width: 100%; }
+    .column-20percent { width: 100%; }
     .column-30percent { width: 100%; }
+    .column-40percent { width: 100%; }
 }
 
 #popNameSpace { }
@@ -1311,6 +1316,8 @@ table tbody tr {
 	.ds_cont_mbox .mtbox .g_list .graph { margin-top:5%; }
 }
 
+.upper_only {text-transform: uppercase;}
+.lower_only {text-transform: lowercase;}
 
 .dashboard.register_cont { display:none; transition:all 0.4s ease-in-out; }
 .dashboard.register_cont.active { display:block; transition:all 0.4s ease-in-out; }
@@ -1373,8 +1380,8 @@ table tbody tr {
 .dashboard .register_box li.reg_2 input,
 .dashboard .register_box li.reg_2 textarea { width:60.5%; }
 .dashboard .register_box li.reg_3 input,
-.dashboard .register_box li.reg_3 input .upper_only {text-transform: uppercase;}
-.dashboard .register_box li.reg_3 input .lower_only {text-transform: lowercase;}
+/* .dashboard .register_box li.reg_3 input .upper_only {text-transform: uppercase;} */
+/* .dashboard .register_box li.reg_3 input .lower_only {text-transform: lowercase;} */
 .dashboard .register_box li.reg_3 textarea { width:50%; }
 .dashboard .register_box li.reg_1.reg_4 input,
 .dashboard .register_box li.reg_1.reg_4 textarea,

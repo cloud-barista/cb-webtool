@@ -126,6 +126,7 @@
 													<input type="hidden" name="mcksName" value="{{$clusterItem.Name}}" id="mcksName{{$clusterIndex}}"/>
 													<input type="hidden" name="mcksStatus" value="{{$clusterItem.Status}}" id="mcksStatus{{$clusterIndex}}"/>
 													<input type="hidden" name="mcksConfig" value="{{$clusterItem.ClusterConfig}}" id="mcksConfig{{$clusterIndex}}"/>
+													<input type="hidden" name="mcksNodeTotalCount" value="{{$clusterItem.TotalNodeCount}}" id="mcksNodeTotalCount{{$clusterIndex}}"/>
 													
 													<!-- MCIS의 VM들 이름, ID, 상태-->
 													{{range $nIndex, $nodeItem := $clusterItem.Nodes}}
