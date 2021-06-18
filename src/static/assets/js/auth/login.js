@@ -48,7 +48,7 @@ $(document).ready(function(){
                         getCloudConnectionConfig();// getConfig() 이름 변경함.
                         getNameSpace();
                  }else{
-                     alert("ID or PASSWORKD MISMATCH!!Check yourself!")
+                     commonAlert("ID or PASSWORKD MISMATCH!!Check yourself!")
                     //  location.reload(true); 
                  }
             //  }).catch(function(error){
@@ -76,7 +76,7 @@ $(document).ready(function(){
                 }
                 console.log(error.config);
                 console.log("login error : ",error);
-                alert("ID or PASSWORKD MISMATCH!!Check yourself!!")
+                commonAlert("ID or PASSWORKD MISMATCH!!Check yourself!!")
                 //  location.reload(true);
              })
          }catch(e){
@@ -91,7 +91,7 @@ $(document).ready(function(){
             //addNamespaceForm
             showHideByButton("btnToggleNamespace", "addNamespaceForm")
         }catch(e){
-            alert(e);
+            commonAlert(e);
         }
     })
  })
@@ -327,19 +327,19 @@ function createNameSpace(){
             if (error.response) {
                 // 서버가 2xx 외의 상태 코드를 리턴한 경우
             //error.response.headers / error.response.status / error.response.data
-                alert("There is a problem communicating with cb-tumblebug server\nCheck the cb-tumblebug server\nCall Url : " + url + "\nStatus Code : " + error.response.status);
+                commonAlert("There is a problem communicating with cb-tumblebug server\nCheck the cb-tumblebug server\nCall Url : " + url + "\nStatus Code : " + error.response.status);
             }
             else if (error.request) {
                 // 응답을 못 받음
-                alert("No response was received from the cb-tumblebug server.\nCheck the cb-tumblebug server\nCall Url : " + url);
+                commonAlert("No response was received from the cb-tumblebug server.\nCheck the cb-tumblebug server\nCall Url : " + url);
             }
             else {
-                alert("Error communicating with cb-tumblebug server.\n" + error.message);
+                commonAlert("Error communicating with cb-tumblebug server.\n" + error.message);
             }
             //console.log(error.config);
         });
     }else{
-        alert("Input NameSpace")
+        commonAlert("Input NameSpace")
         $("#addNamespace").focus()
         return;
     }
