@@ -470,29 +470,9 @@ function saveNewMonitoringAlertEventHandler() {
 
     console.log(monitoringAlertEventHandlerModalType + ", " + monitoringAlertEventHandlerModalName);
 
-    // if(!monitoringAlertEventHandlerModalType || !monitoringAlertEventHandlerModalName){
-    //     alert("!!!!");
-    //     $("#modalMonitoringAlertEventHandlerRequired").modal()// TODO : requiredCloudConnection 로 바꿔 공통으로 쓸까?
-    //     return;
-    // }
-
-    // var optionsVal = {};
-    // optionsVal['url'] = "https://cloud-barista.slack.com/archives/C022PB8K7NG";
-    // optionsVal['channel'] = "#monitoring-alert-event-handler";
-    // var monitoringAlertEventHandlerInfo = {         
-    //     type: monitoringAlertEventHandlerModalType,
-    //     name: monitoringAlertEventHandlerModalName,
-    //     options: optionsVal           
-    // }
-
     var monitoringAlertEventHandlerInfo = {         
         type: monitoringAlertEventHandlerModalType,
         name: monitoringAlertEventHandlerModalName,
-        // url: "https://hooks.slack.com/services/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",
-        // channel: "#kapacitor-alert"
-        // url: "https://hooks.slack.com/services/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",
-        // url: "https://hooks.slack.com/services/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",
-        // channel: "#monitoring-alert-event-handler"
         url: monitoringAlertEventHandlerModalUrl,
         channel: monitoringAlertEventHandlerModalChannel
     }
@@ -656,12 +636,12 @@ function addMonitoringAlertEventHandlerRow(item, index){
     console.log(item)
     var html = ""
 
-    html += '<tr><td class="overlay hidden" data-th="">'
+    html += '<tr><td class="overlay hidden column-50px" data-th="">'
         + '<input type="hidden" id="monitoringAlertEventHandlerType_info_' + index + '" value="' + item.type + '"/>'
         + '<input type="hidden" id="monitoringAlertEventHandlerName_info_' + index + '" value="' + item.name + '"/>'
         + '<input type="checkbox" name="chk" value="' + item.type +'" id="raw_' + index + '" title="" />'
         + '<label for="td_ch1"></label> <span class="ov off"></span></td>'
-        + '<td class="btn_mtd ovm" data-th="Type">' + item.type + '<span class="ov"></span>'
+        + '<td class="btn_mtd ovm column-30percent" data-th="Type">' + item.type + '<span class="ov"></span>'
         + '<input type="hidden" id="monitoringAlertEventHandler_info_' + index + '" value="' + item.type + '"/>'
         + '<td class="overlay hidden" data-th="Name">' + item.name + '</td></tr>'
 	
