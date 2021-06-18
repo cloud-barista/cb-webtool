@@ -74,6 +74,24 @@ function getCommonNameSpaceList(caller){
     });
 }
 
+function getCommonCloudConnectionList(caller, sortType){
+    var url = "/setting/connections/cloudconnectionconfig/list";
+    axios.get(url,{
+        headers:{
+                'Content-Type' : "application/json"
+        }
+    }).then(result=>{
+        console.log("get CloudConnection Data : ",result.data);
+        var data = result.data.ConnectionConfig;
+        getCloudConnectionListCallbackSuccess(caller, data, sortType);
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        getCloudConnectionListCallbackFail(caller, error);
+    });
+}
+
 function getCommonCredentialList(caller){
     var url = "/setting/connections/credential";
     axios.get(url,{
@@ -519,6 +537,21 @@ function getCommonVmSecurityGroupInfo(caller, securityGroupId){
 	});
 }
 
+function getCommonVmImageInfo(caller, imageId){
+    
+    //var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+imageId
+    // var apiInfo = ApiInfo
+    var url = "/setting/resources/machineimage/" + imageId
+    axios.get(url,{
+        // headers:{
+        //     'Authorization': apiInfo
+        // }
+    }).then(result=>{
+        console.log(result);
+        getCommonVmImageInfoCallbackSuccess(caller, result.data.VirtualMachineImageInfo);        
+    })
+
+}
 
 // form 화면에서 조회에 문제가 있는 경우 표시
 // 모든 form 화면 시작할 때(onLoad 시) 체크하도록
