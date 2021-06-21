@@ -1,6 +1,7 @@
 $(document).ready(function(){
     checkLoadStatus();
 
+    setTableHeightForScroll("mcksListTable", 700);
 });
 
 function clickListOfMcks(uid, mcksIndex){

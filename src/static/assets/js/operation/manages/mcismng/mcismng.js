@@ -24,6 +24,8 @@ $(document).ready(function(){
         // mcisList filter        
         filterTable("mcisListTable", "Name", selectedMcisID);
     }
+
+    setTableHeightForScroll("mcisListTable", 700);
 });
 
 ///////////// MCIS Handling //////////////
