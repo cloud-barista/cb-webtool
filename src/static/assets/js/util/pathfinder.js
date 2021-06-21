@@ -27,6 +27,7 @@ function getWebToolUrl(controllerKeyName){
         [
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
             ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
+            ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
         ]
     );
 
@@ -551,6 +552,67 @@ function getCommonVmImageInfo(caller, imageId){
         getCommonVmImageInfoCallbackSuccess(caller, result.data.VirtualMachineImageInfo);        
     })
 
+}
+
+
+// MCIS에 명령어 날리기
+function postRemoteCommandMcis(mcisID, commandWord){
+    var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID";
+    var urlParamMap = new Map();
+    urlParamMap.set(":mcisID", mcisID)
+    var url = setUrlByParam(orgUrl, urlParamMap)
+
+    console.log(" command = " + commandWord)    
+    axios.post(url, {
+        // headers: {
+        //     'Content-Type': "application/json"
+        // },
+        command: commandWord        
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            commonAlert("Success to Send the Command " + result.data.message);
+        }else{
+            commonAlert("Fail to Send the Command " + result.data.message);
+        }
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+	});
+}
+
+// VM에 명령어 날리기
+function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord){    
+    //RemoteCommandVmOfMcis
+    var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID";
+    var urlParamMap = new Map();
+    urlParamMap.set(":mcisID", mcisID)
+    urlParamMap.set(":vmID", vmID)
+    var url = setUrlByParam(orgUrl, urlParamMap)
+
+    console.log(" command = " + commandWord)    
+    axios.post(url, {
+        // headers: {
+        //     'Content-Type': "application/json"
+        // },
+        command: commandWord        
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            commonAlert("Success to Send the Command " + result.data.message);
+        }else{
+            commonAlert("Fail to Send the Command " + result.data.message);
+        }
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+	});
 }
 
 // form 화면에서 조회에 문제가 있는 경우 표시

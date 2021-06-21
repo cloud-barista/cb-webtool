@@ -1077,3 +1077,75 @@ function getCommonVmImageInfoCallbackSuccess(caller, imageInfo){
 function getCommonVmImageInfoCallbackFail(caller, data){
     // -- fail 나더라도 그냥 넘어감.
 }
+
+function remoteCommandMcis(commandWord){    
+    // mcis가 선택되어 있어야 하고
+    var checked_nothing = 0;
+    $("[id^='td_ch_']").each(function(){
+       
+        if($(this).is(":checked")){
+            checked_nothing++;
+            console.log("checked")
+            var mcisID = $(this).val()            
+            postRemoteCommandMcis(mcisID, commandWord);
+        }else{
+            console.log("checked nothing")
+           
+        }
+    })
+    if(checked_nothing == 0){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }
+
+}
+
+
+function remoteCommandVmMcis(commandWord){    
+    // VM 선택되어 있어야     
+    var mcisID = $("#mcis_id").val();
+    var vmID = $("#vm_id").val();
+    var vmName = $("#vm_name").val();
+    console.log("remoteCommandVmMcis start")
+    // 위 값으로 mcisIndex, vmIndex 를 찾자
+    var mcisIndex = 0;
+    var vmIndex = 0;
+    $("[id^='mcisVmID_']").each(function(){
+        if( vmID == $(this).val()){
+            var mcisVm = $(this).attr("id").split("_")
+            mcisIndex = mcisVm[1]
+            vmIndex = mcisVm[2]
+            return false;
+        }
+    });
+
+    if(!mcisID){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }
+    if(!vmID){
+        commonAlert("Please Select VM!!")
+        return;
+    }
+    console.log(" commandWord = " + commandWord);
+    if(!commandWord){
+        commonAlert("Please type command!!")
+        return;
+    }
+
+    // $("#manage_mcis_popup_sshkey_name").val(vmSshKeyID)
+    // $("#server_info_public_ip").val(vmPublicIp)
+    // $("#server_detail_view_public_ip").val(vmPublicIp)
+    // $("#server_info_connection_name").val(connectionName)
+
+    // $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId +"/ *** ")
+    // $("#server_detail_view_user_id_pass").val(data.vmUserAccount +"/ *** ")
+    // $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
+
+    // var publicIp = $("#server_info_public_ip").val();
+    // var accessId = $("#manage_mcis_popup_user_name").val();
+    // var sshKeyId = $("#manage_mcis_popup_sshkey_name").val();
+
+    postRemoteCommandVmOfMcis(mcisID, vmID, commandWord);
+
+}
