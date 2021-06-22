@@ -490,7 +490,9 @@ function commonPromptOpen(targetAction, targetObjId){
             ["FilterMcisName", "필터링할 단어를 입력하세요"],
             ["FilterMcisStatus", "필터링할 단어를 입력하세요"],
             ["FilterMcisDesc", "필터링할 단어를 입력하세요"],
-            
+            ["OprMngMcksStatus", "필터링할 단어를 입력하세요"],
+            ["OprMngMcksName", "필터링할 단어를 입력하세요"],
+            ["OprMngMcksNetworkCni", "필터링할 단어를 입력하세요"],
         ]
     );
     console.log(promptModalTextMap.get(targetAction));
@@ -620,6 +622,19 @@ function commonPromptOk(){
     }else if( targetAction == 'FilterMcisDesc'){// Description이라는 Column을 Filtering
         if( targetValue ){
             filterTable(targetObjId, "Description", targetValue)
+        }       
+    }else if( targetAction == 'OprMngMcksStatus'){// Description이라는 Column을 Filtering
+        console.log("OprMngMcksStatus");
+        if( targetValue ){
+            filterTable(targetObjId, "Status", targetValue)
+        }       
+    }else if( targetAction == 'OprMngMcksName'){// Description이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }       
+    }else if( targetAction == 'OprMngMcksNetworkCni'){// Description이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "NetworkCni", targetValue)
         }       
     }
    

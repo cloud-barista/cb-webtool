@@ -11,12 +11,10 @@
 											<a href="javascript:void(0);">Filter</a>
 											<div class="infobox">
 												<div class="box">
-													<p>NS name</p>
 													<ul>
-														<li><a href="javascript:void(0);">name</a></li>
-														<li><a href="javascript:void(0);">status</a></li>
-														<li><a href="javascript:void(0);">Description</a></li>
-														<li><a href="javascript:void(0);">Server name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('OprMngMcksStatus', 'mcksListTable')">Status</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('OprMngMcksName', 'mcksListTable')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="commonPromptOpen('OprMngMcksNetworkCni', 'mcksListTable')">NetworkCni</a></li>
 													</ul>
 												</div>
 											</div>
@@ -26,8 +24,9 @@
 											<div class="infobox">
 												<div class="box">
 													<ul>
-														<li><a href="javascript:void(0);">name</a></li>
-														<li><a href="javascript:void(0);">status</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('mcksListTable', 'Status')">Status</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('mcksListTable', 'Name')">Name</a></li>
+														<li><a href="javascript:void(0);" onclick="tableSort('mcksListTable', 'NetworkCni')">NetworkCni</a></li>
 													</ul>
 												</div>
 											</div>
@@ -56,7 +55,7 @@
 							<div class="ds_cont">
 								
 								<div class="dataTable status_list">
-									<table cellpadding="0" cellspacing="0" summary="">
+									<table cellpadding="0" cellspacing="0" summary="" id="mcksListTable">
 										<!-- <colgroup>
 											<col width="">
 											<col width="15%">
