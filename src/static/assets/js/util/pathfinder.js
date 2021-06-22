@@ -44,7 +44,8 @@ function showHelp(helpKey){
     if( path == "/main"){
         location.href="/main/apitestmng"
     }else{
-        $("#helpArea").modal()
+        //$("#helpArea").modal()        
+        changePage("/operation/about/about");// About으로 이동
     }
 }
 
@@ -615,6 +616,10 @@ function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord){
 	});
 }
 
+// dragonfly monitoring agent 설치 및 동작여부
+function checkDragonFlyMonitoringAgent(mcisID, vmID){
+  return true;
+}
 // form 화면에서 조회에 문제가 있는 경우 표시
 // 모든 form 화면 시작할 때(onLoad 시) 체크하도록
 // Header.html 에 정의
