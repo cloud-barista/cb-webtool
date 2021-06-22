@@ -32,6 +32,11 @@ $(document).ready(function(){
     //Server Configuration clear
     $(".btn_clear").click(function() {
         //$('.svc_ipbox').find('input, textarea').val('');
+        $("#es_name").val('');
+        $("#es_description").val('');
+        $("#es_regConnectionName").val('');
+        setConnectionValue("");
+        
         osHardwareClear();
         vnetClear();
         vmSecurityClear();
@@ -107,6 +112,7 @@ function osHardwareClear(){
 }
 
 function vnetClear(){
+  $("#tab_vNetInfo").val("");
   $("#e_vNetId").val("");
   $("#e_subnetId").val("");
 }
@@ -118,6 +124,10 @@ function vmSecurityClear(){
 
   $("#tab_sshKeyInfo").val("");
   $("#e_sshKeyId").val("");
+
+  $("#es_vmUserAccount").val("");
+  $("#es_vmUserPassword").val("");
+  
 }
 
 
@@ -202,8 +212,8 @@ function selectBoxFilterByText(targetObject, compareText){
 function selectBoxFilterBy2Texts(targetObject, compareText1, compareText2){
   $('#' + targetObject +' option').filter(function() {
     if( this.value == "") return;
-    console.log(this.text + " : " + compareText)
-    console.log(this.text.indexOf(compareText) > -1)
+    console.log(this.text + " : " + compareText1)
+    console.log(this.text.indexOf(compareText1) > -1)
     if ( this.text.indexOf(compareText1) > -1 && this.text.indexOf(compareText2) > -1 ){
       $(this).show()
     }else{
@@ -226,16 +236,20 @@ function getRegionListFilterForSelectbox(provider, targetRegionObj, targetConnec
 }
 
 // region변경시 connection 정보 filter
-function getConnectionListFilterForSelectbox(region, referenceObj, targetConnectionObj){
+function getConnectionListFilterForSelectbox(regionValue, referenceObj, targetConnectionObj){
   var referenceVal = $('#' + referenceObj).val();
-  var regionValue = region.substring(region.indexOf("]") ).trim();  
-  console.log(region + ", regionValue = " + regionValue);
+  //var regionValue = region.substring(region.indexOf("]") ).trim();  
+  // console.log(region + ", regionValue = " + regionValue);
   if( referenceVal == ""){
     selectBoxFilterByText(targetConnectionObj, regionValue)
   }else{
     selectBoxFilterBy2Texts(targetConnectionObj, referenceVal, regionValue)
   }
-  $("#" + targetConnectionObj + " option:eq(0)").attr("selected", "selected");
+  
+  // $("#" + targetConnectionObj + " option:eq(0)").attr("selected", "selected");
+  $("#es_regConnectionName").val("");
+  setConnectionValue("");// val("")을 했을 때 자동으로 설정이 안되어서 setConnectionValue("")으로 값 set.
+  
 }
 
 // TODO : filter 기능 check
@@ -382,12 +396,19 @@ function expertDone_btn(){
 function setConnectionValue(connName){
   console.log(" connection change")
   var connectionObj = $("#e_connectionName");
+  var tempConnectionObj = $("#t_connectionName");
+  if( connName == ""){
+    connectionObj.val(connName);
+    tempConnectionObj.val(connName);
+    return;
+  }
+
   if( connectionObj.val() == "" ){// 비어있으면 그냥 set
     console.log(" initial connName")
     connectionObj.val(connName);
   } else if( connectionObj.val() != connName){
     console.log(" diff connName " + connName + " : " + connectionObj.val())
-    $("#t_connectionName").val(connName);
+    tempConnectionObj.val(connName);
     commonConfirmOpen("DifferentConnection")
   } else {
     

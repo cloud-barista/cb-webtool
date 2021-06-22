@@ -26,6 +26,18 @@ $(document).ready(function(){
     }
 
     setTableHeightForScroll("mcisListTable", 700);
+
+
+    // 상세 Tab 선택시 monitoring일 때 monitoring 조회
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href") // activated tab
+        if ( target == '#McisMonitoring'){
+            var selectedMcisID = $("#selected_mcis_id").val();
+            var selectedVmID = $("#selected_vm_id").val();
+            showVmMonitoring(selectedMcisID,selectedVmID)
+        }
+        
+    });
 });
 
 ///////////// MCIS Handling //////////////
@@ -616,10 +628,27 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             ////// vm connection tab //////
 
 
-            ////// vm mornitoring tab //////
+            $("#selected_mcis_id").val(mcisID);
+            $("#selected_vm_id").val(vmID);
+            var installMonAgent = data.monAgentStatus;
+            console.log("install mon agent : ",installMonAgent)
+            if(installMonAgent == "installed"){
+                var isWorking = checkDragonFlyMonitoringAgent(mcisID, vmID);
+                if( isWorking){
+                    $("#mcis_detail_info_check_monitoring").prop("checked",true)
+                    $("#mcis_detail_info_check_monitoring").attr("disabled",true)
+                }else{
+                    $("#mcis_detail_info_check_monitoring").prop("checked",false)
+                    $("#mcis_detail_info_check_monitoring").attr("disabled",false)
+                }                
+            }else{
+                $("#mcis_detail_info_check_monitoring").prop("checked",false)
+                $("#mcis_detail_info_check_monitoring").attr("disabled",false)
+            }
+
+            ////// vm mornitoring tab 으로 이동 //////            
             // install Mon agent
-            var installMonAgent = data.monAgentStatus
-            showVmMonitoring(mcisID,vmID)            
+            // showVmMonitoring(mcisID,vmID)            
         }
     // ).catch(function(error){
     //     var statusCode = error.response.data.status;
@@ -634,6 +663,8 @@ function vmDetailInfo(mcisID, mcisName, vmID){
         commonErrorAlert(statusCode, errorMessage) 
     });
 
+    // $("#Detail").show();// 첫번째 Detail tab 표시.
+    $('[href="#Detail"]').tab('show');
 
     /////////////////////
 
@@ -733,7 +764,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
 function showVmMonitoring(mcisID, vmID){
     $("#mcis_detail_info_check_monitoring").prop("checked",true)
     $("#mcis_detail_info_check_monitoring").attr("disabled",true)
-    $("#Monitoring_tab").show();
+    // $("#Monitoring_tab").show();
     //var duration = "5m"
     var duration = "30m"
     var period_type = "m"
@@ -743,6 +774,8 @@ function showVmMonitoring(mcisID, vmID){
     for(var i in metric_arr){
         getVmMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
     }    
+    //$("#Monitoring_tab").hide();
+    
  }
  
 
@@ -1078,6 +1111,24 @@ function getCommonVmImageInfoCallbackSuccess(caller, imageInfo){
 
 function getCommonVmImageInfoCallbackFail(caller, data){
     // -- fail 나더라도 그냥 넘어감.
+}
+
+function bubble_box(){
+    $(".bubble_box .box").each(function(){
+		var $list = $(this);
+		var bubble =  $list.find('.bb_info');
+		var menuTime;
+		$list.mouseenter(function(){
+			bubble.fadeIn(300);
+			clearTimeout(menuTime);
+		}).mouseleave(function(){
+			clearTimeout(menuTime);
+    	menuTime = setTimeout(mTime, 100);
+		});
+		function mTime() {
+	    bubble.stop().fadeOut(100);
+	  }
+	});
 }
 
 function remoteCommandMcis(commandWord){    
