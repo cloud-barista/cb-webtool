@@ -490,6 +490,9 @@ function commonPromptOpen(targetAction, targetObjId){
             ["FilterMcisName", "필터링할 단어를 입력하세요"],
             ["FilterMcisStatus", "필터링할 단어를 입력하세요"],
             ["FilterMcisDesc", "필터링할 단어를 입력하세요"],
+
+            ["RemoteCommandMcis", "Please enter a command to execute"],
+            ["RemoteCommandVmOfMcis", "Please enter a command to execute"],
             
         ]
     );
@@ -620,8 +623,18 @@ function commonPromptOk(){
     }else if( targetAction == 'FilterMcisDesc'){// Description이라는 Column을 Filtering
         if( targetValue ){
             filterTable(targetObjId, "Description", targetValue)
-        }       
+        }
+    }else if( targetAction == 'RemoteCommandMcis'){
+        if( targetValue ){
+            remoteCommandMcis(targetValue);
+            //postRemoteCommandMcis(targetValue);
+        }
+    }else if( targetAction == 'RemoteCommandVmOfMcis'){
+        if( targetValue ){
+            remoteCommandVmMcis(targetValue);
+        }
     }
+
    
     commonPromptClose();
 }
