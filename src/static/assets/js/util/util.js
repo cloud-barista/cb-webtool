@@ -493,6 +493,10 @@ function commonPromptOpen(targetAction, targetObjId){
             ["OprMngMcksStatus", "필터링할 단어를 입력하세요"],
             ["OprMngMcksName", "필터링할 단어를 입력하세요"],
             ["OprMngMcksNetworkCni", "필터링할 단어를 입력하세요"],
+
+            ["RemoteCommandMcis", "Please enter a command to execute"],
+            ["RemoteCommandVmOfMcis", "Please enter a command to execute"],
+            
         ]
     );
     console.log(promptModalTextMap.get(targetAction));
@@ -635,8 +639,18 @@ function commonPromptOk(){
     }else if( targetAction == 'OprMngMcksNetworkCni'){// Description이라는 Column을 Filtering
         if( targetValue ){
             filterTable(targetObjId, "NetworkCni", targetValue)
-        }       
+        } 
+    }else if( targetAction == 'RemoteCommandMcis'){
+        if( targetValue ){
+            remoteCommandMcis(targetValue);
+            //postRemoteCommandMcis(targetValue);
+        }
+    }else if( targetAction == 'RemoteCommandVmOfMcis'){
+        if( targetValue ){
+            remoteCommandVmMcis(targetValue);
+        }
     }
+
    
     commonPromptClose();
 }
