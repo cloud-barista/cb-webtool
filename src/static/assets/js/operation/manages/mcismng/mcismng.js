@@ -24,6 +24,19 @@ $(document).ready(function(){
         // mcisList filter        
         filterTable("mcisListTable", "Name", selectedMcisID);
     }
+
+    setTableHeightForScroll("mcisListTable", 700);
+
+    // 상세 Tab 선택시 monitoring일 때 monitoring 조회
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href") // activated tab
+        if ( target == '#McisMonitoring'){
+            var selectedMcisID = $("#selected_mcis_id").val();
+            var selectedVmID = $("#selected_vm_id").val();
+            showVmMonitoring(selectedMcisID,selectedVmID)
+        }
+        
+    });
 });
 
 ///////////// MCIS Handling //////////////
@@ -614,10 +627,27 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             ////// vm connection tab //////
 
 
-            ////// vm mornitoring tab //////
+            $("#selected_mcis_id").val(mcisID);
+            $("#selected_vm_id").val(vmID);
+            var installMonAgent = data.monAgentStatus;
+            console.log("install mon agent : ",installMonAgent)
+            if(installMonAgent == "installed"){
+                var isWorking = checkDragonFlyMonitoringAgent(mcisID, vmID);
+                if( isWorking){
+                    $("#mcis_detail_info_check_monitoring").prop("checked",true)
+                    $("#mcis_detail_info_check_monitoring").attr("disabled",true)
+                }else{
+                    $("#mcis_detail_info_check_monitoring").prop("checked",false)
+                    $("#mcis_detail_info_check_monitoring").attr("disabled",false)
+                }                
+            }else{
+                $("#mcis_detail_info_check_monitoring").prop("checked",false)
+                $("#mcis_detail_info_check_monitoring").attr("disabled",false)
+            }
+
+            ////// vm mornitoring tab 으로 이동 //////            
             // install Mon agent
-            var installMonAgent = data.monAgentStatus
-            showVmMonitoring(mcisID,vmID)            
+            // showVmMonitoring(mcisID,vmID)            
         }
     // ).catch(function(error){
     //     var statusCode = error.response.data.status;
@@ -632,6 +662,8 @@ function vmDetailInfo(mcisID, mcisName, vmID){
         commonErrorAlert(statusCode, errorMessage) 
     });
 
+    // $("#Detail").show();// 첫번째 Detail tab 표시.
+    $('[href="#Detail"]').tab('show');
 
     /////////////////////
 
@@ -731,7 +763,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
 function showVmMonitoring(mcisID, vmID){
     $("#mcis_detail_info_check_monitoring").prop("checked",true)
     $("#mcis_detail_info_check_monitoring").attr("disabled",true)
-    $("#Monitoring_tab").show();
+    // $("#Monitoring_tab").show();
     //var duration = "5m"
     var duration = "30m"
     var period_type = "m"
@@ -741,6 +773,8 @@ function showVmMonitoring(mcisID, vmID){
     for(var i in metric_arr){
         getVmMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
     }    
+    //$("#Monitoring_tab").hide();
+    
  }
  
 
@@ -1057,4 +1091,114 @@ function setRegionMap(locationInfo){
       });
 
     //   $("#regionMap").css("display", "block");
+
+}
+
+
+function getCommonVmImageInfoCallbackSuccess(caller, imageInfo){
+    // var imageInfo = data;
+    var html = ""
+    console.log("image info : ",imageInfo)
+    html +='<a href="javascript:void(0);" title="'+imageInfo.cspImageName+'">'+imageInfo.id+'</a>'
+          +'<div class="bb_info">Image Name : '+imageInfo.name+', GuestOS:'+imageInfo.guestOS+'</div>'
+   
+    $("#server_detail_view_image_id").empty();
+    $("#server_detail_view_image_id").append(html);
+    $("#server_info_os").val(imageInfo.guestOS);
+    $("#server_detail_view_os").val(imageInfo.guestOS);
+    bubble_box();
+}
+
+function getCommonVmImageInfoCallbackFail(caller, data){
+    // -- fail 나더라도 그냥 넘어감.
+}
+
+function bubble_box(){
+    $(".bubble_box .box").each(function(){
+		var $list = $(this);
+		var bubble =  $list.find('.bb_info');
+		var menuTime;
+		$list.mouseenter(function(){
+			bubble.fadeIn(300);
+			clearTimeout(menuTime);
+		}).mouseleave(function(){
+			clearTimeout(menuTime);
+    	menuTime = setTimeout(mTime, 100);
+		});
+		function mTime() {
+	    bubble.stop().fadeOut(100);
+	  }
+	});
+}
+
+function remoteCommandMcis(commandWord){    
+    // mcis가 선택되어 있어야 하고
+    var checked_nothing = 0;
+    $("[id^='td_ch_']").each(function(){
+       
+        if($(this).is(":checked")){
+            checked_nothing++;
+            console.log("checked")
+            var mcisID = $(this).val()            
+            postRemoteCommandMcis(mcisID, commandWord);
+        }else{
+            console.log("checked nothing")
+           
+        }
+    })
+    if(checked_nothing == 0){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }
+
+}
+
+
+function remoteCommandVmMcis(commandWord){    
+    // VM 선택되어 있어야     
+    var mcisID = $("#mcis_id").val();
+    var vmID = $("#vm_id").val();
+    var vmName = $("#vm_name").val();
+    console.log("remoteCommandVmMcis start")
+    // 위 값으로 mcisIndex, vmIndex 를 찾자
+    var mcisIndex = 0;
+    var vmIndex = 0;
+    $("[id^='mcisVmID_']").each(function(){
+        if( vmID == $(this).val()){
+            var mcisVm = $(this).attr("id").split("_")
+            mcisIndex = mcisVm[1]
+            vmIndex = mcisVm[2]
+            return false;
+        }
+    });
+
+    if(!mcisID){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }
+    if(!vmID){
+        commonAlert("Please Select VM!!")
+        return;
+    }
+    console.log(" commandWord = " + commandWord);
+    if(!commandWord){
+        commonAlert("Please type command!!")
+        return;
+    }
+
+    // $("#manage_mcis_popup_sshkey_name").val(vmSshKeyID)
+    // $("#server_info_public_ip").val(vmPublicIp)
+    // $("#server_detail_view_public_ip").val(vmPublicIp)
+    // $("#server_info_connection_name").val(connectionName)
+
+    // $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId +"/ *** ")
+    // $("#server_detail_view_user_id_pass").val(data.vmUserAccount +"/ *** ")
+    // $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
+
+    // var publicIp = $("#server_info_public_ip").val();
+    // var accessId = $("#manage_mcis_popup_user_name").val();
+    // var sshKeyId = $("#manage_mcis_popup_sshkey_name").val();
+
+    postRemoteCommandVmOfMcis(mcisID, vmID, commandWord);
+
 }
