@@ -372,11 +372,13 @@ function getCommonFilterSpecsByRange(caller, searchObj){
         //     // commonAlert("Fail to Spec Searched");
         // }
         var data = result.data.VmSpecList;
-
+        console.log("caller " + caller)
         if ( caller == "virtualmachinespecmng") {
             console.log("return get Data");
             virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
+        }else if ( caller == "vmassistpopup"){
+            filterSpecsByRangeCallbackSuccess(caller, data);
         }
 	}).catch(error => {
 		console.warn(error);
