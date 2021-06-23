@@ -666,6 +666,7 @@ function getStaffText(){
                 '<select class="selectbox white pline" name="ipprotocol">'+
                     '<option value="tcp">TCP</option>'+
                     '<option value="udp">UDP</option>'+
+                    '<option value="*">ALL</option>'+
                 '</select>'+
         '</td>'+
         '<td class="overlay" data-th="direction">'+

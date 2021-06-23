@@ -27,7 +27,6 @@ $(document).ready(function(){
 
     setTableHeightForScroll("mcisListTable", 700);
 
-
     // 상세 Tab 선택시 monitoring일 때 monitoring 조회
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href") // activated tab
@@ -587,7 +586,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             // image id
             var imageIId = vmDetail.imageIId.nameId
             var imageId = data.imageId
-            getCommonVmImageInfo('mcisvmdetail', imageId) // 
+            // set_vmImageInfo(imageId) // 
             $("#server_detail_view_image_id").text(imageId+"("+imageIId+")")
 
             //vpc subnet
@@ -1092,6 +1091,7 @@ function setRegionMap(locationInfo){
       });
 
     //   $("#regionMap").css("display", "block");
+
 }
 
 

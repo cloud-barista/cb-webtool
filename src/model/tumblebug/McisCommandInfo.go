@@ -2,9 +2,9 @@ package tumblebug
 
 type McisCommandInfo struct {
 	Command  string `json:"command"`
-	UserName string `json:"userName"`
+	UserName string `json:"user_name"`
 	Ip       string `json:"ip"`
-	SshKey   string `json:"sskKey"`
-	McisID   string `json:"mcisId"`
-	VmID     string `json:"vmId"`
+	SshKey   string `json:"ssk_key"`
+	McisID   string `json:"mcis_id"`
+	VmID     string `json:"vm_id"`
 }
