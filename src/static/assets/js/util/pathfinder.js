@@ -27,7 +27,6 @@ function getWebToolUrl(controllerKeyName){
         [
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
             ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
-            ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
         ]
     );
 
