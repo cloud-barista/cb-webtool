@@ -27,7 +27,6 @@ function getWebToolUrl(controllerKeyName){
         [
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
             ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
-            ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
         ]
     );
 
@@ -372,11 +371,13 @@ function getCommonFilterSpecsByRange(caller, searchObj){
         //     // commonAlert("Fail to Spec Searched");
         // }
         var data = result.data.VmSpecList;
-
+        console.log("caller " + caller)
         if ( caller == "virtualmachinespecmng") {
             console.log("return get Data");
             virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
+        }else if ( caller == "vmassistpopup"){
+            filterSpecsByRangeCallbackSuccess(caller, data);
         }
 	}).catch(error => {
 		console.warn(error);
