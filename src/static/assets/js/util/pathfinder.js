@@ -43,7 +43,8 @@ function showHelp(helpKey){
     if( path == "/main"){
         location.href="/main/apitestmng"
     }else{
-        $("#helpArea").modal()
+        //$("#helpArea").modal()        
+        changePage("/operation/about/about");// About으로 이동
     }
 }
 
@@ -553,6 +554,71 @@ function getCommonVmImageInfo(caller, imageId){
 
 }
 
+
+// MCIS에 명령어 날리기
+function postRemoteCommandMcis(mcisID, commandWord){
+    var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID";
+    var urlParamMap = new Map();
+    urlParamMap.set(":mcisID", mcisID)
+    var url = setUrlByParam(orgUrl, urlParamMap)
+
+    console.log(" command = " + commandWord)    
+    axios.post(url, {
+        // headers: {
+        //     'Content-Type': "application/json"
+        // },
+        command: commandWord        
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            commonAlert("Success to Send the Command " + result.data.message);
+        }else{
+            commonAlert("Fail to Send the Command " + result.data.message);
+        }
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+	});
+}
+
+// VM에 명령어 날리기
+function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord){    
+    //RemoteCommandVmOfMcis
+    var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID";
+    var urlParamMap = new Map();
+    urlParamMap.set(":mcisID", mcisID)
+    urlParamMap.set(":vmID", vmID)
+    var url = setUrlByParam(orgUrl, urlParamMap)
+
+    console.log(" command = " + commandWord)    
+    axios.post(url, {
+        // headers: {
+        //     'Content-Type': "application/json"
+        // },
+        command: commandWord        
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            commonAlert("Success to Send the Command " + result.data.message);
+        }else{
+            commonAlert("Fail to Send the Command " + result.data.message);
+        }
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+	});
+}
+
+// dragonfly monitoring agent 설치 및 동작여부
+function checkDragonFlyMonitoringAgent(mcisID, vmID){
+  return true;
+}
 // form 화면에서 조회에 문제가 있는 경우 표시
 // 모든 form 화면 시작할 때(onLoad 시) 체크하도록
 // Header.html 에 정의
