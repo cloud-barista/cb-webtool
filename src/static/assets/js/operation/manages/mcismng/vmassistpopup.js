@@ -197,10 +197,13 @@ function filterSpecsByRangeCallbackSuccess(caller, data){
             +'<td class="overlay hidden" data-th="description">'+item.description+'</td>'
             +'</tr>'
         })
-    }
+		$("#assist_specList").empty()
+    	$("#assist_specList").append(html)
+    }else{
+		commonAlert("No result Found")
+	}
 
-    $("#assist_specList").empty()
-    $("#assist_specList").append(html)
+    
 
 }
 // Spec Range 조회 실패
@@ -238,7 +241,12 @@ function applyAssistSpec(){
 		}
 		$("#e_connectionName").val(selectedConnectionName);
     }
+
     // 초기화
+    $("#assist_select_provider").val('');
+	$("#assist_select_resion").val('');
+	$("#assist_select_connectionName").val('');
+
 	$("#assist_vmSpec_id").val("");
     $("#assist_vmSpec_specName").val("");
     $("#assist_vmSpec_cspSpecName").val("");
