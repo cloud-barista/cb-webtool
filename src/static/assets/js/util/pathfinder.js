@@ -357,12 +357,20 @@ function putFetchSpecs(connectionName){
 }
 
 function getCommonFilterSpecsByRange(caller, searchObj){
-    var url = "/setting/resources/vmspec/filterspecsbyrange"
+    var url = "/setting/resources/vmspec/filterspecsbyrange";
 
-    axios.post(url, {
-        headers: {
-            'Content-Type': "application/json"
-        }, searchObj       
+    // 똑같은데... 얘는 param을 못받음
+    // axios.post(url, {    
+    //     headers: { 
+    //                 'Content-type': 'application/json',
+    //             },
+    //     searchObj       
+    axios.post(url,searchObj,{
+        headers: { 
+            'Content-type': 'application/json',
+            // 'Authorization': apiInfo, 
+        }
+
     }).then(result => {
         console.log(result);
         // if(result.data.status == 200 || result.data.status == 201){
@@ -372,11 +380,13 @@ function getCommonFilterSpecsByRange(caller, searchObj){
         //     // commonAlert("Fail to Spec Searched");
         // }
         var data = result.data.VmSpecList;
-
+        console.log("caller " + caller)
         if ( caller == "virtualmachinespecmng") {
             console.log("return get Data");
             virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
+        }else if ( caller == "vmassistpopup"){
+            filterSpecsByRangeCallbackSuccess(caller, data);
         }
 	}).catch(error => {
 		console.warn(error);

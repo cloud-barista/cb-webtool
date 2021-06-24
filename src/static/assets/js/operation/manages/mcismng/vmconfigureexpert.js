@@ -25,6 +25,7 @@ $(document).ready(function(){
   
     //Deployment Target table scrollbar
     $('.btn_assist').on('click', function() {
+      console.log("btn_assist click--")
       $("#Deployment_box").modal();
       $('.dtbox.scrollbar-inner').scrollbar();
     });

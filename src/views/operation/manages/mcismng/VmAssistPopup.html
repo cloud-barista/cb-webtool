@@ -4,7 +4,7 @@
 
 -->
 									<!-- OS HW Spec -->
-									<div class="modal fade popup_CreateTabBox popup_plineNone" id="OS_HW_Spec" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal fade popup_CreateTabBox popup_plineNone" id="OS_HW_Spec_Assist" tabindex="-1" role="dialog" aria-hidden="true">
 										
 										<div class="modal-dialog modal-dialog-centered" role="document">
 											<div class="modal-content">
@@ -28,19 +28,24 @@
 																		<ul>
 																			<li>
 																				<label>Cloud Provider / Region</label>
-																				<select class="selectbox white pline sel_2" onchange="getRegionListFilterAtAssist(this.value, 'assist_select_resion');">
+																				<select class="selectbox white pline sel_2" id="assist_select_provider" onchange="getRegionListFilterAtAssist(this.value, 'assist_select_resion');">
 																					<option value="">Selected CP</option>
 																					{{ range $cloudItem := .CloudOSList}}	
 																					<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
 																					{{ end }}
 																				</select>
-																				<select class="selectbox white pline sel_2" id="assist_select_resion">
+																				<select class="selectbox white pline sel_2" id="assist_select_resion" onchange="getConnectionListFilterForSelectbox(this.value, 'assist_select_provider', 'assist_select_connectionName');">
 																					<option value="">Selected Region</option>
 																					{{ range $regionItem := .RegionList}}	
 																					<option value="{{ $regionItem.RegionName }}">[{{ $regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
 																					{{ end }}
 																				</select>
-																				
+																				<select class="selectbox white pline sel_1" id="assist_select_connectionName">
+																					<option value="">Selected Connection</option>
+																					{{ range $connectionItem := .CloudConnectionConfigInfoList}}	
+																					<option value="{{ $connectionItem.ConfigName }}">{{ $connectionItem.ConfigName }} [{{ $connectionItem.ProviderName }}] {{ $connectionItem.RegionName }}</option>
+																					{{ end }}
+																				</select>
 																			</li>
 																		</ul>
 																	</div>
@@ -65,20 +70,20 @@
 																				</div>
 																			</li>
 																			 -->
-																			
+
 																			<li>
 																				<label>Storage  (min)</label>
 																				<div class="s_slider_box">
 																					<div class="slider_ip">
 																						<button class="btn_s btn_s_minus">-</button>
 																						<div>
-																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
 																						</div>
 																						<button class="btn_s btn_s_plus">+</button>
 																					</div>
-																					<input type="text" id="assist_max_num_storage_min" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																					<input type="text" id="assist_max_num_storage_min" name="assist_max_num_storage_min" value="1" placeholder="1" class="components_input txt_ipbox" title="" disabled />
 																				</div>
-																				<span class="stxt">Unit</span>
+																				<span class="stxt">TiB</span>
 																			</li>
 																			<li>
 																				<label>Storage  (max)</label>
@@ -86,16 +91,16 @@
 																					<div class="slider_ip">
 																						<button class="btn_s btn_s_minus">-</button>
 																						<div>
-																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" />
 																						</div>
 																						<button class="btn_s btn_s_plus">+</button>
 																					</div>
-																					<input type="text" id="assist_max_num_storage_max" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																					<input type="text" id="assist_max_num_storage_max" name="assist_max_num_storage_max" value="100" placeholder="100" class="components_input txt_ipbox" title="" disabled />
 																				</div>
-																				<span class="stxt">Unit</span>
+																				<span class="stxt">TiB</span>
 																			</li>
 																			<li>
-																				<label>Cost Per Hour  (min)</label>
+																				<label>Core  (min)</label>
 																				<div class="s_slider_box">
 																					<div class="slider_ip">
 																						<button class="btn_s btn_s_minus">-</button>
@@ -104,27 +109,27 @@
 																						</div>
 																						<button class="btn_s btn_s_plus">+</button>
 																					</div>
-																					<input type="text" id="assist_cost_per_hour_min" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																					<input type="text" id="assist_num_core_min" name="assist_num_core_min" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
 																				</div>
 																				<span class="stxt">Unit</span>
 																			</li>
 																			<li>
-																				<label>Cost Per Hour  (max)</label>
+																				<label>Core  (max)</label>
 																				<div class="s_slider_box">
 																					<div class="slider_ip">
 																						<button class="btn_s btn_s_minus">-</button>
 																						<div>
-																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="10" />
 																						</div>
 																						<button class="btn_s btn_s_plus">+</button>
 																					</div>
-																					<input type="text" id="assist_cost_per_hour_max" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																					<input type="text" id="assist_num_core_max" name="assist_num_core_max" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
 																				</div>
 																				<span class="stxt">Unit</span>
 																			</li>
 																		</ul>
 																	</div>
-																	
+															
 																	<div class="s_box s_box_2">
 																		<ul>
 																			<li>
@@ -137,7 +142,7 @@
 																						</div>
 																						<button class="btn_s btn_s_plus">+</button>
 																					</div>
-																					<input type="text" id="assist_num_vCPU_min" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																					<input type="text" id="assist_num_vCPU_min" name="assist_num_vCPU_min" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
 																				</div>
 																				<span class="stxt">Unit</span>
 																			</li>
@@ -147,27 +152,28 @@
 																					<div class="slider_ip">
 																						<button class="btn_s btn_s_minus">-</button>
 																						<div>
-																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="10" />
 																						</div>
 																						<button class="btn_s btn_s_plus">+</button>
 																					</div>
-																					<input type="text" id="assist_num_vCPU_max" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																					<input type="text" id="assist_num_vCPU_max" name="assist_num_vCPU_max" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
 																				</div>
 																				<span class="stxt">Unit</span>
 																			</li>
+																			
 																			<li>
 																				<label>ebs bandwidth (min)</label>
 																				<div class="s_slider_box">
 																					<div class="slider_ip">
 																						<button class="btn_s btn_s_minus">-</button>
 																						<div>
-																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
 																						</div>
 																						<button class="btn_s btn_s_plus">+</button>
 																					</div>
-																					<input type="text" id="assist_ebs_bw_Mbps_min" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																					<input type="text" id="assist_ebs_bw_Mbps_min" name="assist_ebs_bw_Mbps_min" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
 																				</div>
-																				<span class="stxt">Unit</span>
+																				<span class="stxt">Mbps</span>
 																			</li>
 																			<li>
 																				<label>ebs bandwidth (max)</label>
@@ -175,13 +181,13 @@
 																					<div class="slider_ip">
 																						<button class="btn_s btn_s_minus">-</button>
 																						<div>
-																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="10" data-slider-step="1" data-slider-value="0" />
+																							<input type="text" name="" value="" placeholder="" class="slider_bar" title="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" />
 																						</div>
 																						<button class="btn_s btn_s_plus">+</button>
 																					</div>
-																					<input type="text" id="assist_ebs_bw_Mbps_max" name="" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
+																					<input type="text" id="assist_ebs_bw_Mbps_max" name="assist_ebs_bw_Mbps_max" value="0" placeholder="0" class="components_input txt_ipbox" title="" disabled />
 																				</div>
-																				<span class="stxt">Unit</span>
+																				<span class="stxt">Mbps</span>
 																			</li>
 																			<!-- <li>
 																				<label class="l_a">GPU</label>
@@ -195,7 +201,12 @@
 															</div>																	
 															
 															<div class="stit">select Server Spec</div>
-															
+															<input type="hidden" id="assist_vmSpec_id"/>
+															<input type="hidden" id="assist_vmSpec_specName"/>
+															<input type="hidden" id="assist_vmSpec_cspSpecName"/>
+															<input type="hidden" id="assist_vmSpec_connectionName"/>
+															<input type="hidden" id="assist_vmSpec_info"/>
+																														
 															<!-- table scrollbar -->
 															<div class="dtbox scrollbar-inner">
 																<div class="dataTable dt_overlay">
@@ -205,11 +216,11 @@
 																			<tr>
 																				<th>spec ID</th>
 																				<th>spec Name</th>
-																				<th>CP</th>
+																				<th>Connection Name</th>
 																				<th>region</th>
-																				<th>os type</th>
+																				<th>OS type</th>
 																				<th>Cpu / core / mem / disk</th>
-																				<th>description</th>
+																				<th>Description</th>
 																			</tr>
 																		</thead>
 																		<tbody id="assist_specList">
@@ -262,7 +273,7 @@
 													
 													<div class="btnbox">
 														<div class="btn_right">
-															<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button> 
+															<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyAssistSpec()"><span>Apply</span></button> 
 															<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">Cancel</button> 
 														</div>
 													</div>
@@ -785,175 +796,8 @@
 									</div>
 
 									<!-- //Import Export popup -->
-<script>
 
-$(document).ready(function(){
-	
-	// #ID 에 .클래스명_assist
-	//	대상 class명.toggleClass
-	$('#OS_HW_Spec .btn_spec_assist').click(function(){
-		$(".spec_select_box").toggleClass("active");
-	});
-
-	$('#OS_HW_Spec .btn_image_assist').click(function(){
-		$(".spec_select_box").toggleClass("active");
-	});
-});
-															
-function openTextFile() {
-    var input = document.createElement("input");
-    input.type = "file";
-    input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
-    input.onchange = function (event) {
-        processFile(event.target.files[0]);
-    };
-    input.click();
-}
-
-// 선택한 파일을 읽어 화면에 보여줌
-function processFile(file) {
-    var reader = new FileReader();
-    reader.onload = function () {
-		console.log(reader.result);
-        $("#fileContent").val(reader.result);
-    };
-    //reader.readAsText(file, /* optional */ "euc-kr");
-	reader.readAsText(file);
-}
-
-
-// function exportVmScript(vmIndex){
-	
-// 	var connectionNameVal = $("#p_connectionName_" + vmIndex).val();
-// 	var descriptionVal = $("#p_description_" + vmIndex).val();
-// 	var imageIdVal = $("#p_imageId_" + vmIndex).val();
-// 	var labelVal = $("#p_label_" + vmIndex).val();
-// 	var nameVal = $("#p_name_" + vmIndex).val();
-// 	var securityGroupIdsVal = $("#p_securityGroupIds_" + vmIndex).val();
-// 	var specIdVal = $("#p_specId_" + vmIndex).val();
-// 	var sshKeyIdVal = $("#p_sshKeyId_" + vmIndex).val();
-// 	var subnetIdVal = $("#p_subnetId_" + vmIndex).val();
-// 	var vNetIdVal = $("#p_vNetId_" + vmIndex).val();
-// 	var vmGroupSizeVal = $("#p_vmGroupSize_" + vmIndex).val();
-// 	var vmUserAccountVal = $("#p_vmUserAccount_" + vmIndex).val();
-// 	var vmUserPasswordVal = $("#p_vmUserPassword_" + vmIndex).val();
-
-// 	var paramValueAppend = '"';
-// 	var vmCreateScript = "";
-// 	vmCreateScript += '{	';
-// 	vmCreateScript += paramValueAppend + 'connectionName' + paramValueAppend + ' : ' + paramValueAppend + connectionNameVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + descriptionVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'imageId' + paramValueAppend + ' : ' + paramValueAppend + imageIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + labelVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + nameVal + paramValueAppend;
-// 	// vmCreateScript += ',securityGroupIds: ';
-//     // vmCreateScript += '	' + paramValueAppend + securityGroupIdsVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'specId' + paramValueAppend + ' : ' + paramValueAppend + specIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
-// 	vmCreateScript += '}';
-
-	
-// 	$("#exportFileName").val(nameVal);
-// 	$("#vmExportScript").val(vmCreateScript);
-// }
-
-// function saveVmInfoToFile(){
-// 	var fileName = $("#exportFileName").val();
-// 	var exportScript = $("#vmExportScript").val();
-	
-// 	var element = document.createElement('a');
-// 	// element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
-// 	element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
-// 	// element.setAttribute('download', fileName);
-// 	element.setAttribute('download', fileName + ".json");
-
-// 	element.style.display = 'none';
-// 	document.body.appendChild(element);
-
-// 	element.click();
-
-// 	document.body.removeChild(element);
-
-// }
-
-// assist에서 provider 선택시 retion filter
-function getRegionListFilterAtAssist(provider, targetRegionObj){
-	// region 목록 filter
-	selectBoxFilterByText(targetRegionObj, provider)
-	$("#" + targetRegionObj + " option:eq(0)").attr("selected", "selected");
-}
-
-// assist popup에서 조회조건에 맞는 spec을 검색
-function assistFilterSpec(){
-	var conditionArr = new Array();
-	conditionArr.push("cost_per_hour");
-	conditionArr.push("ebs_bw_Mbps");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-	// conditionArr.push("evaluationScore_01");
-
-	// conditionArr.push("gpumem_GiB");
-	conditionArr.push("max_num_storage");
-	// conditionArr.push("max_total_storage_TiB");
-	// conditionArr.push("mem_GiB");
-	// conditionArr.push("net_bw_Gbps");
-	// conditionArr.push("num_core");
-	// conditionArr.push("num_gpu");
-	// conditionArr.push("num_storage");
-	conditionArr.push("num_vCPU");
-	// conditionArr.push("storage_GiB");
-	
-	// 
-	var searchObj = {}
-	searchObj['connectionName'] = "";
-	// var condition_CostPerHour = {}
-	// condition_CostPerHour['max'] = Number(costPerHourMax)
-	// condition_CostPerHour['min'] = Number(costPerHourMin)
-	// searchObj['cost_per_hour'] = condition_CostPerHour;
-
-	// var condition_ebsBwMbps = {}
-	// condition_ebsBwMbps['max'] = Number(ebsBwMbpsMax)
-	// condition_ebsBwMbps['min'] = Number(ebsBwMbpsMax)
-	// searchObj['ebs_bw_Mbps'] = condition_ebsBwMbps;
-	// assist_num_vCPU_min
-	for( var i = 0 ; i < conditionArr.length; i++){
-		var conditionMaxValue = $("#assist_" + conditionArr[i] + "_max").val();
-		var conditionMinValue = $("#assist_" + conditionArr[i] + "_min").val();
-		console.log("conditionMinValue=" + conditionMinValue);
-		console.log("conditionMaxValue=" + conditionMaxValue);
-		if( conditionMaxValue && conditionMinValue){
-			var conditionParam = {};
-			conditionParam['max'] = conditionMaxValue;
-			conditionParam['min'] = conditionMinValue;
-			searchObj[conditionArr[i]] = conditionParam;
-		}
-	}
-	console.log(searchObj);
-	// axios 전송
-	getCommonFilterSpecsByRange("vmassistpopup", searchObj);
-	// assist_specList 에 append
-}
-
-// Spec Range 조회 성공
-function filterSpecsByRangeCallbackSuccess(caller, data){
-	console.log(data)
-}
-// Spec Range 조회 실패
-function filterSpecsByRangeCallbackFail(){
-	
-}
-</script>
+									
+									<script src="/assets/js/operation/manages/mcismng/vmassistpopup.js"></script>
 
 {{end}}

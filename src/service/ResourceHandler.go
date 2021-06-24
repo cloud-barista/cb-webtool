@@ -1146,9 +1146,10 @@ func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *tumblebug.VmSpecReg
 }
 
 // resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)
-func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebug.VmSpecRangeInfo) (tumblebug.VmSpecRangeInfo, model.WebStatus) {
+func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebug.VmSpecRangeReqInfo) ([]tumblebug.TbSpecInfo, model.WebStatus) {
 	webStatus := model.WebStatus{}
-	vmSpecInfo := tumblebug.VmSpecRangeInfo{}
+	// vmSpecInfo := tumblebug.VmSpecRangeInfo{}
+	vmSpecInfo := map[string][]tumblebug.TbSpecInfo{}
 	fmt.Println("FilterVmSpecInfoListByRange ************ : ", nameSpaceID)
 	var originalUrl = "/ns/{nsId}/resources/filterSpecsByRange"
 	var paramMapper = make(map[string]string)
@@ -1163,24 +1164,24 @@ func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tumblebu
 
 	if err != nil {
 		fmt.Println(err)
-		return vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return vmSpecInfo["spec"], model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	
+
 	if respStatus != 200 && respStatus != 201 {
 		resultInfo := model.ResultInfo{}
 
 		json.NewDecoder(respBody).Decode(&resultInfo)
 		log.Println(resultInfo)
 		log.Println("ResultMessage : " + resultInfo.Message)
-		return vmSpecInfo, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+		return vmSpecInfo["spec"], model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
 	}
 
 	json.NewDecoder(respBody).Decode(&vmSpecInfo)
 	log.Println(vmSpecInfo)
 	webStatus.StatusCode = respStatus
-	
-	return vmSpecInfo, model.WebStatus{StatusCode: respStatus}
+
+	return vmSpecInfo["spec"], model.WebStatus{StatusCode: respStatus}
 }

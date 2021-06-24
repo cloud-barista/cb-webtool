@@ -14,7 +14,7 @@ type VmSpecRangeInfo struct {
 	NumStorage         RangeMinMax `json:"num_storage"`
 	NumVCPU            RangeMinMax `json:"num_vCPU"`
 	StorageGiB         RangeMinMax `json:"storage_GiB"`
-	EvaluationStatus   RangeMinMax `json:"evaluationStatus"`
+	EvaluationStatus   string      `json:"evaluationStatus"`
 	EvaluationScore01  RangeMinMax `json:"evaluationScore_01"`
 	EvaluationScore02  RangeMinMax `json:"evaluationScore_02"`
 	EvaluationScore03  RangeMinMax `json:"evaluationScore_03"`

@@ -71,7 +71,7 @@
 						<li>
 							<label>Cloud Provider / Region</label>
 							<select class="selectbox white pline sel_1" id="es_regProvider" onchange="getRegionListFilterForSelectbox(this.value, 'es_regRegion', 'es_regConnectionName');">
-								<option value="1">Selected CP</option>
+								<option value="">Selected CP</option>
 								{{ range $cloudItem := .CloudOSList}}	
 								<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
 								{{ end }}
