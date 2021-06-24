@@ -94,7 +94,17 @@ $(document).ready(function(){
             commonAlert(e);
         }
     })
+
+    // namespace clear 버튼: 입력내용 초기화
+    $(".btn_clear").click(function() {
+        clearNameSpaceCreateForm();        
+    });
  })
+
+ function clearNameSpaceCreateForm(){
+    $("#addNamespace").val('');
+    $("#addNamespaceDesc").val('');
+ }
  
  // 로그인 성공 시 Token저장
  function tokenSuccess(loginInfo) {    
@@ -318,8 +328,9 @@ function createNameSpace(){
 
                 getNameSpace();// 생성 후 namespace목록 조회
                 $("#btnToggleNamespace").click()
-                $("#namespace").val('')
-                $("#nsDesc").val('')
+                // $("#namespace").val('')
+                // $("#nsDesc").val('')
+                clearNameSpaceCreateForm();
             }else{
                 alert("Fail Create NameSpace")
             }
