@@ -131,10 +131,7 @@ function assistFilterSpec(){
 	
 	// 
 	var searchObj = {}
-	// searchObj['connectionName'] = "3";
-	// searchObj['ConnectionName'] = "4";
-	// searchObj['evaluationStatus'] = "1";
-	// searchObj['EvaluationStatus'] = "2";
+	searchObj['connectionName'] = $("#assist_select_connectionName").val();
 	
 	// var condition_CostPerHour = {}
 	// condition_CostPerHour['max'] = 100
