@@ -129,6 +129,7 @@ func CallLoginInfo(c echo.Context) model.LoginInfo {
 		fmt.Println(cookieUserID)
 		// return nil
 	}
+	fmt.Println(cookieUserID)
 	cookieUserIDStr := cookieUserID.Value
 	fmt.Println(cookieUserIDStr)
 
