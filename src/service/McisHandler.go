@@ -696,7 +696,7 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo)
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam
-
+	
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
@@ -704,7 +704,7 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo)
 		fmt.Println(err)
 		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	fmt.Println("resp : ", resp)
+	fmt.Println("resp : ", resp)	
 
 	// return body, err
 	respBody := resp.Body
@@ -716,8 +716,8 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo)
 
 	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println(resultInfo)
-
-	log.Println("ResultStatusCode : ", respStatus)
+	
+	log.Println("ResultStatusCode : " , respStatus)
 
 	// 실패시 Message에 성공시 Result에 string으로 담겨 온다.
 	if respStatus != 200 && respStatus != 201 {
@@ -756,7 +756,7 @@ func CommandVmOfMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandI
 		fmt.Println(err)
 		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	fmt.Println("resp : ", resp)
+	fmt.Println("resp : ", resp)	
 
 	// return body, err
 	respBody := resp.Body
@@ -768,8 +768,8 @@ func CommandVmOfMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandI
 
 	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println(resultInfo)
-
-	log.Println("ResultStatusCode : ", respStatus)
+	
+	log.Println("ResultStatusCode : " , respStatus)
 
 	// 실패시 Message에 성공시 Result에 string으로 담겨 온다.
 	if respStatus != 200 && respStatus != 201 {

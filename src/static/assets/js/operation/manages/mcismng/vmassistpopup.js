@@ -1,10 +1,12 @@
 
 $(document).ready(function(){
 	
+	//btn_spec
 	// #ID 에 .클래스명_assist
 	//	대상 class명.toggleClass
-	$('#OS_HW_Spec .btn_spec_assist').click(function(){
+	$('#OS_HW_Spec_Assist .btn_spec_assist').click(function(){
 		$(".spec_select_box").toggleClass("active");
+	
 	});
 
 	$('#OS_HW_Spec .btn_image_assist').click(function(){
@@ -129,10 +131,11 @@ function assistFilterSpec(){
 	
 	// 
 	var searchObj = {}
-	searchObj['connectionName'] = "";
+	searchObj['connectionName'] = $("#assist_select_connectionName").val();
+	
 	// var condition_CostPerHour = {}
-	// condition_CostPerHour['max'] = Number(costPerHourMax)
-	// condition_CostPerHour['min'] = Number(costPerHourMin)
+	// condition_CostPerHour['max'] = 100
+	// condition_CostPerHour['min'] = 10
 	// searchObj['cost_per_hour'] = condition_CostPerHour;
 
 	// var condition_ebsBwMbps = {}
@@ -147,12 +150,14 @@ function assistFilterSpec(){
 		console.log("conditionMaxValue=" + conditionMaxValue);
 		if( conditionMaxValue && conditionMinValue){
 			var conditionParam = {};
-			conditionParam['max'] = conditionMaxValue;
-			conditionParam['min'] = conditionMinValue;
+			// conditionParam['max'] = conditionMaxValue;
+			// conditionParam['min'] = conditionMinValue;
+			conditionParam['max'] = Number(conditionMaxValue);
+			conditionParam['min'] = Number(conditionMinValue);
 			searchObj[conditionArr[i]] = conditionParam;
 		}
-	}
-	console.log(searchObj);
+	}	
+	// console.log(searchObj);
 	// axios 전송
 	getCommonFilterSpecsByRange("vmassistpopup", searchObj);
 	// assist_specList 에 append
@@ -161,44 +166,113 @@ function assistFilterSpec(){
 // Spec Range 조회 성공
 function filterSpecsByRangeCallbackSuccess(caller, data){
 	console.log(data)
+    console.log("caller = " + caller + ", " + data.length)
 
     var html = ""
-    var vmSpecList = data
-    
+    var vmSpecList = data;
+    // cost_per_hour
+    // ebs_bw_Mbps
+    // evaluationScore_01
+    // evaluationStatus
+    // gpumem_GiB
+    // max_num_storage
+    // max_total_storage_TiB
+    // mem_GiB
+    // net_bw_Gbps
+    // num_core
+    // num_gpu
+    // num_storage
+    // num_vCPU
+    // storage_GiB
     $("#register_box").modal()    
-    vmSpecList.map(item=>(        html +='<tr>'
-                +'<td class="btn_mtd" data-th="spec ID">'+item.fromPort+' <span class="ov off"></span></td>'
-                +'<td class="overlay hidden" data-th="toPort">'+item.toPort+'</td>'
-                +'<td class="overlay hidden" data-th="toProtocol">'+item.ipProtocol+'</td>'
-                +'<td class="overlay hidden " data-th="direction">'+item.direction+'</td>'
-                +'</tr>'
-    ))
-    $("#manage_mcis_popup_sg").empty()
-    $("#manage_mcis_popup_sg").append(html)
+    if(data.length){
+        vmSpecList.forEach(function(item, index) {     
+            html +='<tr onclick="setAssistSpecId(\''+item.id+'\', \''+item.name+'\', \''+item.cspSpecName+'\', \''+item.connectionName+'\')">'
+            +'<td class="btn_mtd" data-th="spec ID">'+item.id+'<span class="ov off"></span></td>'
+            +'<td class="overlay hidden" data-th="spec Name">'+item.name+'</td>'
+            +'<td class="overlay hidden" data-th="csp spec Name">'+item.cspSpecName+'</td>'
+            +'<td class="overlay hidden" data-th="connection name">'+item.connectionName+'</td>'
+            +'<td class="overlay hidden" data-th="os type">'+item.os_type+'</td>'
+            +'<td class="overlay hidden" data-th="Cpu / core / mem / disk">CPU : '+item.num_vCPU+'<br>Core : ' + item.num_core + '<br>Disk : ' + item.storage_GiB + '</td>'
+            +'<td class="overlay hidden" data-th="description">'+item.description+'</td>'
+            +'</tr>'
+        })
+		$("#assist_specList").empty()
+    	$("#assist_specList").append(html)
+    }else{
+		commonAlert("No result Found")
+	}
 
-	// <thead>
-	// 	<tr>
-	// 		<th>spec ID</th>
-	// 		<th>spec Name</th>
-	// 		<th>CP</th>
-	// 		<th>region</th>
-	// 		<th>os type</th>
-	// 		<th>Cpu / core / mem / disk</th>
-	// 		<th>description</th>
-	// 	</tr>
-	// </thead>
-	// <tbody id="assist_specList">
-	// 	<!-- <tr>
-	// 		<td class="btn_mtd" data-th="spec ID">aws-spec01 <span class="ov off"></span></td>
-	// 		<td class="overlay hidden" data-th="spec Name">aws-spec01</td>
-	// 		<td class="overlay hidden" data-th="CP">AWS</td>
-	// 		<td class="overlay hidden" data-th="region">ap-northeast-1</td>
-	// 		<td class="overlay hidden" data-th="os type">Amazon Linux</td>
-	// 		<td class="overlay hidden" data-th="Cpu / core / mem / disk"></td>
-	// 		<td class="overlay hidden" data-th="description"></td>
-	// 	<tr>
+    
+
 }
 // Spec Range 조회 실패
 function filterSpecsByRangeCallbackFail(){
-	
+	commonAlert("Failt to Search Specs")
 }
+
+// table에서 spec 선택시 hidden으로 set
+function setAssistSpecId(speID, specName, cspSpecName, connectionName){
+	console.log(speID + ":" + specName + ":" + cspSpecName + ":" + connectionName)
+    $("#assist_vmSpec_id").val(speID);
+    $("#assist_vmSpec_specName").val(specName);
+    $("#assist_vmSpec_cspSpecName").val(cspSpecName);
+    $("#assist_vmSpec_connectionName").val(connectionName);
+	$("#assist_vmSpec_info").val(speID + "|" + specName + "|" + connectionName + "|" + cspSpecName);
+
+}
+
+// apply버튼 클릭시
+function applyAssistSpec(){
+    var selectedSpecID = $("#assist_vmSpec_id").val();	
+    if( selectedSpecID){
+//<tr onclick="setValueToFormObj('es_imageList', 'tab_vmImage', 'vmImage', '{{$vmInageIndex}}', 'e_imageId');">
+		// $("#tab_vmSpecInfo")
+		var selectedConnectionName = $("#assist_vmSpec_connectionName").val();
+		var selectedSpecInfo = $("#assist_vmSpec_info").val();
+		console.log(selectedSpecInfo);
+		$("#tab_vmSpecInfo").val(selectedSpecInfo);
+		$("#tab_vmSpecConnectionName").val(selectedConnectionName);
+		$("#e_specId" ).val(selectedSpecID);
+		
+		var esSelectedConnectionName = $("#es_regConnectionName option:selected").val()
+		if( esSelectedConnectionName == ""){// 선택한 connectionName이 없으면 set
+		$("#es_regConnectionName").val(selectedConnectionName);
+		}
+		$("#e_connectionName").val(selectedConnectionName);
+    }
+
+    // 초기화
+    $("#assist_select_provider").val('');
+	$("#assist_select_resion").val('');
+	$("#assist_select_connectionName").val('');
+
+	$("#assist_vmSpec_id").val("");
+    $("#assist_vmSpec_specName").val("");
+    $("#assist_vmSpec_cspSpecName").val("");
+    $("#assist_vmSpec_connectionName").val("");
+	$("#assist_vmSpec_info").val("");
+
+
+    $("#OS_HW_Spec_Assist").modal("hide")    
+}
+
+
+function setSpecValueToFormObj(selectedId, selectedSpecName, cspSpecName, selectedConnectionName){
+    var econnectionName = $("#e_connectionName").val();
+    if(econnectionName != "" && econnectionName != selectedConnectionName){
+      $("#t_connectionName").val(selectedConnectionName);// confirm을 통해서 form에 set 되므로 임시(t_connectionName)로 저장.
+      commonConfirmOpen("DifferentConnection");
+    }else{
+      var esSelectedConnectionName = $("#es_regConnectionName option:selected").val()
+      if( esSelectedConnectionName == ""){// 선택한 connectionName이 없으면 set
+        $("#es_regConnectionName").val(selectedConnectionName);
+      }
+
+      $("#e_connectionName").val(selectedConnectionName);
+      $("#e_imageId" + targetObjId).val(selectedId);
+      
+      //<input type="hidden" name="vmImage_info" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>
+      $("#tab_vmImageInfo").val(selectedId + "|" + selectedSpecName + "|" + selectedConnectionName + "|"  + cspSpecName);      
+    }  
+  }	

@@ -27,6 +27,7 @@ function getWebToolUrl(controllerKeyName){
         [
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
             ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
+            ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
         ]
     );
 
@@ -356,12 +357,20 @@ function putFetchSpecs(connectionName){
 }
 
 function getCommonFilterSpecsByRange(caller, searchObj){
-    var url = "/setting/resources/vmspec/filterspecsbyrange"
+    var url = "/setting/resources/vmspec/filterspecsbyrange";
 
-    axios.post(url, {
-        headers: {
-            'Content-Type': "application/json"
-        }, searchObj       
+    // 똑같은데... 얘는 param을 못받음
+    // axios.post(url, {    
+    //     headers: { 
+    //                 'Content-type': 'application/json',
+    //             },
+    //     searchObj       
+    axios.post(url,searchObj,{
+        headers: { 
+            'Content-type': 'application/json',
+            // 'Authorization': apiInfo, 
+        }
+
     }).then(result => {
         console.log(result);
         // if(result.data.status == 200 || result.data.status == 201){
