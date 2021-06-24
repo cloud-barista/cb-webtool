@@ -137,11 +137,11 @@ function commonConfirmOpen(targetAction){
             ["Provider", "Would you like to set Cloud Provider ?"],
 
             ["MoveToConnection", "Would you like to set Cloud config ?"],
-            ["DeleteCloudConnection", "Woudl you like to delete <br /> the Cloud connection? "],
+            ["DeleteCloudConnection", "Would you like to delete <br /> the Cloud connection? "],
 
-            ["DeleteCredential", "Woudl you like to delete <br /> the Credential? "],
-            ["DeleteDriver", "Woudl you like to delete <br /> the Driver? "],
-            ["DeleteRegion", "Woudl you like to delete <br /> the Region? "],
+            ["DeleteCredential", "Would you like to delete <br /> the Credential? "],
+            ["DeleteDriver", "Would you like to delete <br /> the Driver? "],
+            ["DeleteRegion", "Would you like to delete <br /> the Region? "],
 
 
             // ["IdPassRequired", "ID/Password required !"],    --. 이거는 confirm이 아니잖아

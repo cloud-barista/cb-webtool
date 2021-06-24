@@ -294,7 +294,7 @@ function showSecurityGroupInfo(sgName) {
             if(firewallDirection == "inbound" || firewallDirection == "ingress") {
                 inbounds += dtlFirewall[i].ipProtocol
                         + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '
-            } else if(firewallDirection == "outbound") {
+            } else if(firewallDirection == "outbound" || firewallDirection == "egress") {
                 outbounds += dtlFirewall[i].ipProtocol
                         + ' ' + dtlFirewall[i].fromPort + '~' + dtlFirewall[i].toPort + ' '            
             }else{// 정의되지 않은 항목은 inbound쪽에 몰아주기
@@ -500,7 +500,7 @@ function applyFirewallRuleSet() {
     var firstCidrValue = $("input[name='cidr']")[0].value;
     for(var i=0; i < cidrValue; i++){                                      
         cidrData[i] = $("input[name='cidr']")[i].value;
-        
+        console.log("firstCidrValue : " + firstCidrValue + " : ", cidrData[i]);
         if( firstCidrValue != cidrData[i]){
             isSameCidr = false;
         }
@@ -511,7 +511,7 @@ function applyFirewallRuleSet() {
             commonAlert("GCP allows only one direction");
             return;
         }
-        if( isSameCidr){
+        if( isSameCidr == false ){
             commonAlert("GCP CIDR Blocks must all be same");
             return;
         }
