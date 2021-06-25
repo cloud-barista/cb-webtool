@@ -102,7 +102,7 @@ function selectMonitoringMcis(mcisId){
                 }else{
                     vmStatusIcon = "bgbox_g";                    
                 }
-                vm_badge += '<li class="sel_cr ' + vmStatusIcon + '" ><a href="javascript:void(0);" onclick="selectVm(\''+mcis_id+'\',\''+vms[o].id+'\')" ><span class="txt">'+vms[o].name+'</span></a></li>';
+                vm_badge += '<li class="sel_cr ' + vmStatusIcon + '" ><a href="javascript:void(0);" onclick="selectVm(\''+mcisId+'\',\''+vms[o].id+'\')" ><span class="txt">'+vms[o].name+'</span></a></li>';
                 console.log("vm_status : ", vm_status)
 
             }
