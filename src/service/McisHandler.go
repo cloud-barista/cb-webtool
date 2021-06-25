@@ -563,6 +563,7 @@ func McisLifeCycle(mcisLifeCycle *tumblebug.McisLifeCycle) (*tumblebug.McisLifeC
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
 	resultMcisLifeCycle := tumblebug.McisLifeCycle{}
 	if err != nil {
+		fmt.Println("McisLifeCycle err")
 		fmt.Println(err)
 		return &resultMcisLifeCycle, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
@@ -575,13 +576,28 @@ func McisLifeCycle(mcisLifeCycle *tumblebug.McisLifeCycle) (*tumblebug.McisLifeC
 
 	// 응답에 생성한 객체값이 옴
 
-	json.NewDecoder(respBody).Decode(resultMcisLifeCycle)
-	fmt.Println(resultMcisLifeCycle)
+	if respStatus != 200 && respStatus != 201 {
+		// statusInfo := model.WebStatus{}
+		// fmt.Println("McisLifeCycle respStatus ", respStatus)
+		// fmt.Println(respBody)
+		// json.NewDecoder(respBody).Decode(statusInfo)
+		// fmt.Println(statusInfo)
+		// fmt.Println(statusInfo.Message)
 
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+
+		return &resultMcisLifeCycle, model.WebStatus{StatusCode: respStatus, Message: errorInfo.Message}
+	}
 	// return body, err
 	// respBody := resp.Body
 	// respStatus := resp.StatusCode
 	// return respBody, respStatus
+
+	json.NewDecoder(respBody).Decode(resultMcisLifeCycle)
+	fmt.Println(resultMcisLifeCycle)
+
 	return &resultMcisLifeCycle, model.WebStatus{StatusCode: respStatus}
 
 }
@@ -696,7 +712,7 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo)
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam
-	
+
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
@@ -704,7 +720,7 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo)
 		fmt.Println(err)
 		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	fmt.Println("resp : ", resp)	
+	fmt.Println("resp : ", resp)
 
 	// return body, err
 	respBody := resp.Body
@@ -716,8 +732,8 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo)
 
 	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println(resultInfo)
-	
-	log.Println("ResultStatusCode : " , respStatus)
+
+	log.Println("ResultStatusCode : ", respStatus)
 
 	// 실패시 Message에 성공시 Result에 string으로 담겨 온다.
 	if respStatus != 200 && respStatus != 201 {
@@ -756,7 +772,7 @@ func CommandVmOfMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandI
 		fmt.Println(err)
 		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	fmt.Println("resp : ", resp)	
+	fmt.Println("resp : ", resp)
 
 	// return body, err
 	respBody := resp.Body
@@ -768,8 +784,8 @@ func CommandVmOfMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandI
 
 	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println(resultInfo)
-	
-	log.Println("ResultStatusCode : " , respStatus)
+
+	log.Println("ResultStatusCode : ", respStatus)
 
 	// 실패시 Message에 성공시 Result에 string으로 담겨 온다.
 	if respStatus != 200 && respStatus != 201 {
