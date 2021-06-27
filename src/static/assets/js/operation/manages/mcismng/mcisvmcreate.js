@@ -1,7 +1,28 @@
 $(document).ready(function(){
     //OS_HW popup table scrollbar
     $('#OS_HW .btn_spec').on('click', function() {
+        console.log("os_hw bpn_spec clicked ** ")
         $('#OS_HW_Spec .dtbox.scrollbar-inner').scrollbar();
+
+        // connection 정보 set
+        var esSelectedProvider = $("#es_regProvider option:selected").val();
+        var esSelectedRegion = $("#es_regRegion option:selected").val();
+        var esSelectedConnectionName = $("#es_regConnectionName option:selected").val();
+
+        console.log("OS_HW_Spec_Assist click");
+        if( esSelectedProvider){
+            $("#assist_select_provider").val(esSelectedProvider);
+        }
+        if( esSelectedRegion){
+            $("#assist_select_resion").val(esSelectedRegion);
+        }
+        if( esSelectedConnectionName){
+            $("#assist_select_connectionName").val(esSelectedConnectionName);
+        }
+
+        console.log("esSelectedProvider = " + esSelectedProvider + " : " + $("#assist_select_provider").val());
+        console.log("esSelectedRegion = " + esSelectedRegion + " : " + $("#assist_select_resion").val());
+        console.log("esSelectedConnectionName = " + esSelectedConnectionName + " : " + $("#assist_select_connectionName").val());
     });
     //Security popup table scrollbar
     $('#Security .btn_edit').on('click', function() {

@@ -42,9 +42,10 @@ cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly의 개방�
 
 - Go 1.16 이상의 버전 설치<br>
   go mod 기반의 설치로 바뀌면서 Go 1.16 이상의 버전이 필요합니다.<br>
-  2021년 06월 기준으로 apt install golang으로는 구 버전이 설치되기 때문에 https://golang.org/doc/install 사이트에서 1.16 이상의 버전을 직접 설치해야 합니다.<br>
+
+  2021년 6월 기준으로 apt install golang으로는 구 버전이 설치되기 때문에 https://golang.org/doc/install 사이트에서 1.16 이상의 버전을 직접 설치해야 합니다.<br>
   - `$ wget https://golang.org/dl/go1.16.4.linux-amd64.tar.gz`
-  - `$ sudo tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz`
+  - `$ sudo tar -C /usr/local -xzf go1.16.4.linux-amd64.tar.gz`
 
 - Go 환경 설정  
   - `$ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bashrc`

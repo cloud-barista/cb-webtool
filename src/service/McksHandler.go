@@ -160,15 +160,9 @@ func DelCluster(nameSpaceID string, clusterName string) (*ladybug.StatusInfo, mo
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
 	statusInfo := ladybug.StatusInfo{}
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("delCluster ", err)
 		return &statusInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-
-	if err != nil {
-		fmt.Println(err)
-		return &statusInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
-	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
@@ -176,6 +170,10 @@ func DelCluster(nameSpaceID string, clusterName string) (*ladybug.StatusInfo, mo
 	json.NewDecoder(respBody).Decode(&statusInfo)
 	fmt.Println(statusInfo)
 
+	if respStatus != 200 && respStatus != 201 {
+		fmt.Println(respBody)
+		return &statusInfo, model.WebStatus{StatusCode: respStatus, Message: statusInfo.Message}
+	}
 	return &statusInfo, model.WebStatus{StatusCode: respStatus}
 }
 

@@ -1,8 +1,9 @@
 module github.com/cloud-barista/cb-webtool
 
-go 1.15
+go 1.16
 
 require (
+	github.com/davecgh/go-spew v1.1.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/foolin/echo-template v0.0.0-20190415034849-543a88245eec
 	github.com/go-session/echo-session v3.0.0+incompatible

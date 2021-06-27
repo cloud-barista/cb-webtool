@@ -536,6 +536,9 @@ func main() {
 	e.POST("/operation/manages/mcismng/proc/vmlifecycle", controller.McisVmLifeCycle)
 	e.POST("/operation/manages/mcismng/proc/vmmonitoring", controller.GetVmMonitoring)
 
+	e.POST("/operation/manages/mcismng/cmd/mcis/:mcisID", controller.CommandMcis)
+	e.POST("/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID", controller.CommandVmOfMcis)
+
 	// e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)

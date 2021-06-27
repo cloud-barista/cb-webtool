@@ -137,11 +137,11 @@ function commonConfirmOpen(targetAction){
             ["Provider", "Would you like to set Cloud Provider ?"],
 
             ["MoveToConnection", "Would you like to set Cloud config ?"],
-            ["DeleteCloudConnection", "Woudl you like to delete <br /> the Cloud connection? "],
+            ["DeleteCloudConnection", "Would you like to delete <br /> the Cloud connection? "],
 
-            ["DeleteCredential", "Woudl you like to delete <br /> the Credential? "],
-            ["DeleteDriver", "Woudl you like to delete <br /> the Driver? "],
-            ["DeleteRegion", "Woudl you like to delete <br /> the Region? "],
+            ["DeleteCredential", "Would you like to delete <br /> the Credential? "],
+            ["DeleteDriver", "Would you like to delete <br /> the Driver? "],
+            ["DeleteRegion", "Would you like to delete <br /> the Region? "],
 
 
             // ["IdPassRequired", "ID/Password required !"],    --. 이거는 confirm이 아니잖아
@@ -490,6 +490,12 @@ function commonPromptOpen(targetAction, targetObjId){
             ["FilterMcisName", "필터링할 단어를 입력하세요"],
             ["FilterMcisStatus", "필터링할 단어를 입력하세요"],
             ["FilterMcisDesc", "필터링할 단어를 입력하세요"],
+            ["OprMngMcksStatus", "필터링할 단어를 입력하세요"],
+            ["OprMngMcksName", "필터링할 단어를 입력하세요"],
+            ["OprMngMcksNetworkCni", "필터링할 단어를 입력하세요"],
+
+            ["RemoteCommandMcis", "Please enter a command to execute"],
+            ["RemoteCommandVmOfMcis", "Please enter a command to execute"],
             
         ]
     );
@@ -621,7 +627,30 @@ function commonPromptOk(){
         if( targetValue ){
             filterTable(targetObjId, "Description", targetValue)
         }       
+    }else if( targetAction == 'OprMngMcksStatus'){// Description이라는 Column을 Filtering
+        console.log("OprMngMcksStatus");
+        if( targetValue ){
+            filterTable(targetObjId, "Status", targetValue)
+        }       
+    }else if( targetAction == 'OprMngMcksName'){// Description이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "Name", targetValue)
+        }       
+    }else if( targetAction == 'OprMngMcksNetworkCni'){// Description이라는 Column을 Filtering
+        if( targetValue ){
+            filterTable(targetObjId, "NetworkCni", targetValue)
+        } 
+    }else if( targetAction == 'RemoteCommandMcis'){
+        if( targetValue ){
+            remoteCommandMcis(targetValue);
+            //postRemoteCommandMcis(targetValue);
+        }
+    }else if( targetAction == 'RemoteCommandVmOfMcis'){
+        if( targetValue ){
+            remoteCommandVmMcis(targetValue);
+        }
     }
+
    
     commonPromptClose();
 }

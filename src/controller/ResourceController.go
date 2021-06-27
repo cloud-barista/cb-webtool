@@ -1112,15 +1112,29 @@ func FetchVmSpecList(c echo.Context) error {
 
 // Spec Range search
 func FilterVmSpecListByRange(c echo.Context) error {
-	log.Println("FilterVmSpecListByRange : ")
+	log.Println("FilterVmSpecListByRange ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
-
-	vmSpecRange := new(tumblebug.VmSpecRangeInfo)
+	// params := make(map[string]string)
+	// _ := c.Bind(&params)
+	// fmt.Println(params["connectionName"])
+	// fmt.Println(params)
+	// fmt.Println("-----------")
+	// vmSpecRange := new(tumblebug.VmSpecRangeReqInfo)
+	// connectionName := new(tumblebug.TbConnectionName)
+	// if err := c.Bind(connectionName); err != nil {
+	// 	log.Println(err)
+	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 		"message": "fail",
+	// 		"status":  "fail",
+	// 	})
+	// }
+	// fmt.Println(connectionName)
+	// fmt.Println("ConnectionName=", connectionName)
+	vmSpecRange := &tumblebug.VmSpecRangeReqInfo{}
 	if err := c.Bind(vmSpecRange); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -1128,7 +1142,10 @@ func FilterVmSpecListByRange(c echo.Context) error {
 			"status":  "fail",
 		})
 	}
-	log.Println(vmSpecRange)
+	fmt.Println("vmSpecRange.ConnectionName=", vmSpecRange.ConnectionName)
+	fmt.Println(vmSpecRange)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	resultVmSpecInfo, respStatus := service.FilterVmSpecInfoListByRange(defaultNameSpaceID, vmSpecRange)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
@@ -1145,9 +1162,9 @@ func FilterVmSpecListByRange(c echo.Context) error {
 	// log.Println("respStatus = ", respStatus)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"status":  respStatus.StatusCode,
-		"VmSpecList":  resultVmSpecInfo,
+		"message":    "success",
+		"status":     respStatus.StatusCode,
+		"VmSpecList": resultVmSpecInfo,
 	})
 }
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+
 	// "strings"
 	"bytes"
 
@@ -499,15 +500,14 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 	//
 	var credentialBuffer bytes.Buffer
 	if credentialInfo.ProviderName == "GCP" {
-		
+
 		credentialBuffer.WriteString(`{`)
 		credentialBuffer.WriteString(`"CredentialName":"` + credentialInfo.CredentialName + `"`)
 		credentialBuffer.WriteString(`,"ProviderName":"` + credentialInfo.ProviderName + `"`)
 		credentialBuffer.WriteString(`,"KeyValueInfoList":[`)
-		
-		
+
 		for mapIndex, keyValueInfo := range credentialInfo.KeyValueInfoList {
-		// for mapIndex, _ := range credentialInfo.KeyValueInfoList {
+			// for mapIndex, _ := range credentialInfo.KeyValueInfoList {
 			gcpKey := keyValueInfo.Key
 			gcpValue := keyValueInfo.Value
 			// replacedValue := gcpValue
@@ -533,7 +533,7 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 		credentialBuffer.WriteString(`]`)
 		credentialBuffer.WriteString(`}`)
 		// fmt.Println("******* ")
-		
+
 		// fmt.Println(credentialBuffer.String())
 		resp, err := util.CommonHttpBytes(url, &credentialBuffer, http.MethodPost)
 
@@ -551,7 +551,7 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 		}
 
 		respBody := resp.Body
-		respStatus := resp.StatusCode	
+		respStatus := resp.StatusCode
 
 		if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
 			errorInfo := model.ErrorInfo{}
@@ -563,9 +563,73 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 			fmt.Println(returnCredentialInfo)
 		}
 		returnStatus.StatusCode = respStatus
-	}else{		
+	} else if credentialInfo.ProviderName == "OPENSTACK" {
+
+		credentialBuffer.WriteString(`{`)
+		credentialBuffer.WriteString(`"CredentialName":"` + credentialInfo.CredentialName + `"`)
+		credentialBuffer.WriteString(`,"ProviderName":"` + credentialInfo.ProviderName + `"`)
+		credentialBuffer.WriteString(`,"KeyValueInfoList":[`)
+
+		for mapIndex, keyValueInfo := range credentialInfo.KeyValueInfoList {
+			// for mapIndex, _ := range credentialInfo.KeyValueInfoList {
+			openstackKey := keyValueInfo.Key
+			openstackValue := keyValueInfo.Value
+			// replacedValue := gcpValue
+			if mapIndex > 0 {
+				credentialBuffer.WriteString(`,`)
+			}
+			credentialBuffer.WriteString(`{"Key":"` + openstackKey + `","Value":"` + openstackValue + `"}`)
+			// if gcpKey == "private_key" {
+			// // 	fmt.Println(gcpValue)
+			// // 	// fmt.Println(keyValueInfo)
+			// // 	fmt.Println("--------- before / after -----------------")
+			// 	replacedValue = strings.Replace(gcpValue, "\\n", "\n", -1)
+			// 	// replacedValue = strings.Replace(gcpValue, "\n", "\\n", -1)
+			// 	// replacedValue = "`" + gcpValue + "`"
+			// 	keyValueInfo.Value = replacedValue
+			// 	fmt.Println(replacedValue)
+			// 	// fmt.Println(keyValueInfo)
+
+			// }
+		}
+		// fmt.Println("GCP RegCredential : ", credentialInfo)
+
+		credentialBuffer.WriteString(`]`)
+		credentialBuffer.WriteString(`}`)
+		// fmt.Println("******* ")
+
+		// fmt.Println(credentialBuffer.String())
+		resp, err := util.CommonHttpBytes(url, &credentialBuffer, http.MethodPost)
+
+		// pbytes, marshalErr := json.Marshal(credentialInfo)
+		// if marshalErr != nil {
+		// 	fmt.Println(" ------------------ ")
+		// 	fmt.Println(marshalErr)
+		// }
+		// fmt.Println(string(pbytes))
+
+		// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+		if err != nil {
+			fmt.Println(err)
+			return &returnCredentialInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		}
+
+		respBody := resp.Body
+		respStatus := resp.StatusCode
+
+		if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+			errorInfo := model.ErrorInfo{}
+			json.NewDecoder(respBody).Decode(&errorInfo)
+			fmt.Println("respStatus != 200 reason ", errorInfo)
+			returnStatus.Message = errorInfo.Message
+		} else {
+			json.NewDecoder(respBody).Decode(&returnCredentialInfo)
+			fmt.Println(returnCredentialInfo)
+		}
+		returnStatus.StatusCode = respStatus
+	} else {
 		// body, err := util.CommonHttpPost(url, regionInfo)
-		
+
 		pbytes, marshalErr := json.Marshal(credentialInfo)
 		// pbytes, marshalErr := json.Marshal(credentialInfo)
 		if marshalErr != nil {
@@ -574,14 +638,14 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 		}
 		fmt.Println(string(pbytes))
 		resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-		
+
 		if err != nil {
 			fmt.Println(err)
 			return &returnCredentialInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 		}
 
 		respBody := resp.Body
-		respStatus := resp.StatusCode	
+		respStatus := resp.StatusCode
 
 		if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
 			errorInfo := model.ErrorInfo{}
@@ -594,7 +658,6 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 		}
 		returnStatus.StatusCode = respStatus
 	}
-	
 
 	// if err != nil {
 	// 	fmt.Println(err)
@@ -608,7 +671,7 @@ func RegCredential(credentialInfo *spider.CredentialInfo) (*spider.CredentialInf
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 
 	// respBody := resp.Body
-	// respStatus := resp.StatusCode	
+	// respStatus := resp.StatusCode
 
 	// if err != nil {
 	// 	fmt.Println(err)

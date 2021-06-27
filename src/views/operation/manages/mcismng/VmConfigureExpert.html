@@ -71,12 +71,12 @@
 						<li>
 							<label>Cloud Provider / Region</label>
 							<select class="selectbox white pline sel_1" id="es_regProvider" onchange="getRegionListFilterForSelectbox(this.value, 'es_regRegion', 'es_regConnectionName');">
-								<option value="1">Selected CP</option>
+								<option value="">Selected CP</option>
 								{{ range $cloudItem := .CloudOSList}}	
 								<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
 								{{ end }}
 							</select>
-							<select class="selectbox white pline sel_1" id="es_regRegion" onchange="getConnectionListFilterForSelectbox(this.value, 'es_regConnectionName');">
+							<select class="selectbox white pline sel_1" id="es_regRegion" onchange="getConnectionListFilterForSelectbox(this.value, 'es_regProvider', 'es_regConnectionName');">
 								<option value="">Selected Region</option>
 								{{ range $regionItem := .RegionList}}	
 								<option value="{{ $regionItem.RegionName }}">[{{ $regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
@@ -90,7 +90,7 @@
 								<select class="selectbox white pline sel_2" id="es_regConnectionName" onchange="setConnectionValue(this.value)">
 									<option value="">Selected Connection</option>
 									{{ range $connectionItem := .CloudConnectionConfigInfoList}}	
-									<option value="{{ $connectionItem.ConfigName }}">[{{ $connectionItem.ProviderName }}] {{ $connectionItem.RegionName }}</option>
+									<option value="{{ $connectionItem.ConfigName }}">{{ $connectionItem.ConfigName }} [{{ $connectionItem.ProviderName }}] {{ $connectionItem.RegionName }}</option>
 									{{ end }}
 								</select>
 								<a href="javascript:void(0);" class="btn_assist">Assist</a>
