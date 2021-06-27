@@ -1,4 +1,20 @@
 
+# v0.4.0-mocha (2021.06.30.)
+### API Change
+- 모니터링 Ploicy, Threshold 추가
+- UI에서 직접 Framework 직접호출 방식 -> go server를 통해 호출하는 방식으로 변경
+
+### Feature
+- MCIS, VM 생성 시 Import/Export 기능 추가
+- VM 생성 시 Expert 기능 추가
+- cb-tumblebug & cb-spider & cb-dragonfly & cb-ladybug 변경된 API 반영
+- credential에 provider별 설정기능 보완
+- table 검색, 정렬기능 추가
+- Main화면 추가
+
+### Bug Fix
+- style 보완 및 validation 고도화
+
 # v0.2.0-cappuccino (2020.06.03.)
 
 ### API Change
