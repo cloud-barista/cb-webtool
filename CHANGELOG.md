@@ -15,6 +15,22 @@
 ### Bug Fix
 - style 보완 및 validation 고도화
 
+
+
+# v0.3.0-espresso (2020.12.10.)
+### API Change
+- cb-tumblebug v0.2.9 / cb-dragonfly v0.2.8 버전의 변경된 API 반영
+  - 호환성 테스트 완료 (각 프레임워크의 v0.3.0-espresso 버전과 동일)
+### Feature
+- 신규 디자인 반영및 구조 변경
+- MCIR (Network / Security / SSH Key / Image / Spec) 기능 추가
+- MCIS 생성 시 모니터링 에이전트 자동 설치
+
+### Bug Fix
+- 최초 로그인 시 NS 목록 조회 오류 메시지 출력
+
+
+
 # v0.2.0-cappuccino (2020.06.03.)
 
 ### API Change
