@@ -130,7 +130,7 @@
 .dashboard .box_cont .rbox li.bg_cloudtwin {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_etc {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 
-.dashboard .box_cont .cbox { float:left; width:calc(100% - 230px); margin:0 0 0 40px; vertical-align:top; padding: 0 45px 0 0;}
+.dashboard .box_cont .cbox { float:right; width:calc(100% - 230px); margin:0 0 0 40px; vertical-align:top; padding: 0 45px 0 0;}
 .dashboard .box_cont .cbox .sc_box { float:right; height:128px;}
 .dashboard .box_cont .cbox .tcbox { height: 128px; padding:0 0 8px 0 !important; }
 .dashboard .d_box.box_m .cbox { width: calc(100% - 280px); margin:0; float: right; padding: 0 20px 0 0; min-width: 316.04px;}
@@ -266,6 +266,9 @@ table tbody tr {
 .column-40px {
     width: 40px;
 }
+.column-50px-chk {
+    width: 50px;
+}
 .column-50px {
     width: 50px;
 }
@@ -305,6 +308,7 @@ table tbody tr {
     .column-20px { width: 100%;}
     .column-30px { width: 100%;}
     .column-40px { width: 100%;}
+    .column-50px-chk { width: 100%;}
     .column-50px { width: 100%;}
     .column-60px { width: 100%;}
     .column-80px { width: 100%;}
@@ -367,9 +371,9 @@ table tbody tr {
 @media screen and (max-width:1785px){
 	.dashboard .d_box.box_1 { width:70%; }
 	.dashboard .d_box.box_2 { width:27.5%; }
-	/* .dashboard .d_box.box_3,
+	.dashboard .d_box.box_3,
 	.dashboard .d_box.box_1.box_1m,
-	.dashboard .d_box.box_3.box_2m { width:100%; margin:2.5% 0 0 0; } */
+	.dashboard .d_box.box_3.box_2m { width:100%; margin:2.5% 0 0 0; }
 	.dashboard .d_box.box_m1 { width:40%; margin:0; }
 	.dashboard .d_box.box_m2 { width:40%; margin:0 0 0 0.6%; }
 	.dashboard .d_box.box_m3 { width:18.8%; margin:0 0 0 0.6%; }
@@ -1402,9 +1406,9 @@ table tbody tr {
 .dashboard .register_box .top_ipbox .ipbox2.ipbox6 { padding-top:10px; }
 .dashboard .register_box .top_ipbox .ipbox1.ipbox7 { padding-top:20px; }
 .dashboard .register_box li.reg_1 textarea { width:50%; }
-.dashboard .register_box li.reg_2 input,
+.dashboard .register_box li.reg_2 input[type="text"],
 .dashboard .register_box li.reg_2 textarea { width:60.5%; }
-.dashboard .register_box li.reg_3 input,
+.dashboard .register_box li.reg_3 input[type="text"],
 /* .dashboard .register_box li.reg_3 input .upper_only {text-transform: uppercase;} */
 /* .dashboard .register_box li.reg_3 input .lower_only {text-transform: lowercase;} */
 .dashboard .register_box li.reg_3 textarea { width:50%; }
@@ -1452,7 +1456,9 @@ table tbody tr {
 .dashboard .register_box .graybox .logicbox .txtbox .logic_tbox { text-align:center; width:160px; float:left; }
 .dashboard .register_box .graybox .logicbox .txtbox .logic_tbox.lg_1 .txt,
 .dashboard .register_box .graybox .logicbox .txtbox .logic_tbox.lg_2 .txt,
-.dashboard .register_box .graybox .logicbox .txtbox .logic_tbox.lg_3 .txt { max-height:70px; overflow:hidden; }
+.dashboard .register_box .graybox .logicbox .txtbox .logic_tbox.lg_3 .txt,
+.dashboard .register_box .graybox .logicbox .txtbox .logic_tbox.lg_4 .txt,
+.dashboard .register_box .graybox .logicbox .txtbox .logic_tbox.lg_5 .txt { height:70px; overflow:hidden; min-width: 120px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; align-content: center; }
 .dashboard .register_box .graybox .logicbox .txtbox .logic_tbox.lg_4 { margin-top:-18px; }
 .dashboard .register_box .graybox .logicbox .txtbox .logic_tbox.lg_5 { margin-top:-38px; }
 .dashboard .register_box .graybox .logicbox .txtbox .logic_tbox .tit { color:#5e636c; font-size:16px; font-weight:500; letter-spacing:-0.5px; padding:0 0 10px 0; }
