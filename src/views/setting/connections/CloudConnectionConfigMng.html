@@ -94,7 +94,7 @@
 										</colgroup> -->
 										<thead>
 											<tr>
-												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+												<th class="column-50px-chk"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
                                                 <th class="column-15percent">Name</th>
                                                 <th class="column-80px">Cloud Provider</th>
                                                 <th class="column-120px">Region</th>
@@ -114,7 +114,7 @@
 
 											{{range $index, $item := .CloudConnectionConfigList}}	
 											<tr onclick="showConnectionConfigInfo('cc_info_{{$index}}');">
-												<td class="overlay hidden column-50px" data-th="">
+												<td class="overlay hidden column-50px-chk" data-th="">
 													<input type="hidden" id="cc_info_{{$index}}" value="{{$item.ConfigName}}|{{$item.ProviderName}}|{{$item.RegionName}}|{{$item.CredentialName}}|{{$item.DriverName}}"/>
 													<input type="checkbox" name="cloudconnection_chk" value="{{$item.ConfigName}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span>

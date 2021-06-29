@@ -202,7 +202,7 @@ function map_init(){
         var element = document.createElement('div');
       element.setAttribute("class", "popover");
       element.setAttribute("onclick", "$(this).hide()");
-      element.innerHTML="<div data-toggle='popover' style='width:100%;'>"+feature.get("title")+"</div>"
+      element.innerHTML="<div data-toggle='popover' style='width:100%;min-width: 100px;'>"+feature.get("title")+"</div>"
       
       
 

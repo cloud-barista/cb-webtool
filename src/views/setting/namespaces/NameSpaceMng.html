@@ -96,7 +96,7 @@
 										</colgroup> -->
 										<thead>
 											<tr>
-												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+												<th class="column-50px-chk"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
 												<th class="column-20percent">Name</th>
 												<th class="column-20percent">ID</th>
 												<th>description</th>
@@ -113,7 +113,7 @@
 											{{ end }}
 											{{range $index, $item := .NameSpaceList}}
 											<tr onclick="showNameSpaceInfo('ns_info_{{$index}}');">
-												<td class="overlay hidden column-50px" data-th="">
+												<td class="overlay hidden column-50px-chk" data-th="">
 													<input type="hidden" id="ns_info_{{$index}}" value="{{$item.ID}}|{{$item.Name}}|{{$item.Description}}"/>
 												 <input type="checkbox" name="chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
 												 <label for="td_ch1"></label> <span class="ov off"></span></td>
@@ -131,25 +131,25 @@
 								
 								<script>
 									/* scroll */
-									$(document).ready(function(){
-								    $("#th_chall").click(function() {
-								      if ($("#th_chall").prop("checked")) {
-								        $("input[name=chk]").prop("checked", true);
-								      } else {
-								        $("input[name=chk]").prop("checked", false);
-								      }
-								    })
+									// $(document).ready(function(){
+								    // $("#th_chall").click(function() {
+								    //   if ($("#th_chall").prop("checked")) {
+								    //     $("input[name=chk]").prop("checked", true);
+								    //   } else {
+								    //     $("input[name=chk]").prop("checked", false);
+								    //   }
+								    // })
 										
-										$(window).on("load resize",function(){
-											var vpwidth = $(window).width();
-										  if (vpwidth > 768 && vpwidth < 1800) {
-										    $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
-										 		$(".dataTable.scrollbar-inner").scrollbar();
-										  } else {
-										    $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
-										  }
-										});
-									});
+									// 	$(window).on("load resize",function(){
+									// 		var vpwidth = $(window).width();
+									// 	  if (vpwidth > 768 && vpwidth < 1800) {
+									// 	    $(".dashboard_cont .dataTable").addClass("scrollbar-inner");
+									// 	 		$(".dataTable.scrollbar-inner").scrollbar();
+									// 	  } else {
+									// 	    $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
+									// 	  }
+									// 	});
+									// });
 
 
 								</script>

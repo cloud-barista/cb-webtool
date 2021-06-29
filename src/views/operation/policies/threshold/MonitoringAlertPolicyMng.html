@@ -96,7 +96,7 @@
 										</colgroup> -->
 										<thead>
 											<tr>
-												<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
+												<th class="column-50px-chk"><input type="checkbox" name="" value="" id="th_chall" title="" /><label for="th_chall"></label></td>
                                                 <th class="column-14percent">Name</th>
                                                 <th class="column-16percent">Measurement</th>
                                                 <th class="column-15percent">Target Type</th>
@@ -116,7 +116,7 @@
 
 											{{range $index, $item := .MonitoringAlertPolicyList}}	
 											<tr onclick="showMonitoringAlertPolicyInfo('{{$item.AlertName}}');">
-												<td class="overlay hidden column-50px" data-th="">
+												<td class="overlay hidden column-50px-chk" data-th="">
 													<input type="hidden" id="alertpolicy_info_{{$index}}" value="{{$item.AlertName}}"/>
 													<input type="checkbox" name="chk" value="{{$item.AlertName}}" id="raw_{{$index}}" title="" />
 													<label for="td_ch1"></label> <span class="ov off"></span>
@@ -231,6 +231,8 @@
 														</select>
 														<input type="submit" name="" class="btn_search2" value="" title="" onclick="searchAlertEvent('selectMonitoringAlertEvent')"/>
 													</span>
+												</li>                                               
+												<li class="reg_2">
 													<textarea  cols="" rows="" placeholder="Monitoring Alert Event List Area" id="mAlertEventList" title="" class="gray" title="" readonly></textarea>
                                                     <!-- <input type="text" id="dtlProvider" name="dtlProvider" value="" placeholder="" class="gray" title="" readonly /> -->
 												</li>                                               
