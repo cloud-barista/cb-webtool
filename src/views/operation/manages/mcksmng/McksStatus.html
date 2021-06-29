@@ -40,19 +40,20 @@
 									<span title="Number connection" id="connectionCount">{{ .TotalConnectionConfigCount }}</span>
 								</div>
 
-								<div class="rbox">
+								<div class="cbox">
 									<div class="tcbox">
 										<div class="sc_box scrollbar-inner">
 											<ul id="cpConnectionDetail">
 												{{ range $key, $value := .ConnectionConfigCountMap }}
-												<li class="bg_{{$key}}">
-													<a href="#!"><span>{{ $key }} ( {{ $value }} )</span></a>
+												<li class="bg_etc bg_{{$key}}">
+													<a href="#!"><span class="conn_cnt">{{ $value }}<div class="conn_tit">{{ $key }}</div></span></a>
+													<!-- <a href="#!"><span>{{ $key }} ( {{ $value }} )</span></a> -->
 												</li>
 												{{ end }}
 											</ul>
 										</div>										
 									</div>
-									<div class="txt">Status of Infra Service</div>
+									<div class="txt">Status of Cloud Provider</div>
 								</div>
 							</div>
 							

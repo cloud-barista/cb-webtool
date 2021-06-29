@@ -53,16 +53,16 @@
 .dashboard:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .d_box { float:left; min-height:260px; margin:0 0 0 2.5%; background-color:#fff; border-radius:8px; box-shadow:5px 5px 8px 0 #d7dcde,0 -5px 8px 0 #d7dcde; } 
 .dashboard .d_box.box_1 { width:38%; margin:0; }
-.dashboard .d_box.box_1.box_1m { width:52.5%; }
+.dashboard .d_box.box_1.box_1m { width:48.7%; }
 .dashboard .d_box.box_2 { width:12%; }
 .dashboard .d_box.box_3 { width:45%; }
-.dashboard .d_box.box_3.box_2m { width:45%; }
+.dashboard .d_box.box_3.box_2m { width:48.7%; }
 .dashboard .d_box.box_m1 { width:26.5%; margin:0; }
-.dashboard .d_box.box_m1.box_1m { width:29.8%; }
+.dashboard .d_box.box_m1.box_1m { width:31.9%; }
 .dashboard .d_box.box_m2 { width:26.5%; margin:0 0 0 0.6%; }
-.dashboard .d_box.box_m2.box_2m { width:29.8%;  }
+.dashboard .d_box.box_m2.box_2m { width:31.9%;  }
 .dashboard .d_box.box_m3 { width:6%; margin:0 0 0 0.6%; }
-.dashboard .d_box.box_m4 { width:39.2%; margin:0 0 0 0.6%; }
+.dashboard .d_box.box_m4 { width:35%; margin:0 0 0 0.6%; }
 .dashboard .titbox { position:relative; height:59px; border-bottom:1px solid #e7ebee; margin:0 0 20px 0; }
 .dashboard .titbox.line_none { border-bottom:none; height:70px; }
 .dashboard .titbox .tit { position:absolute; left:44px; top:50%; transform:translateY(-50%); color:#5e636c;font-size:16px; line-height:16px; font-weight:200; }
@@ -91,7 +91,7 @@
 .dashboard .box_cont { padding:0 0 20px 0; }
 .dashboard .box_cont:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .box_cont .lbox { float:left; padding:42px 0 0 60px; display:inline-block; color:#888; font-size:22px; line-height:22px; font-weight:300; letter-spacing:-1px; vertical-align:top; }
-.dashboard .d_box.box_m .lbox { padding:42px 0 0 18px; }
+.dashboard .d_box.box_m .lbox { padding:42px 0 0 18px; max-width: 254.18px; }
 .dashboard .box_cont .lbox strong { display:inline-block; margin:0 6px 0 0; color:#5e636c; font-size:70px; line-height:70px; font-weight:400; letter-spacing:-1px; }
 .dashboard .box_cont .lbox strong.txt_3n { font-size:55px; line-height:75px; }
 .dashboard .box_cont .lbox span { display:inline-block; margin:0 4px; font-weight:100; }
@@ -130,14 +130,20 @@
 .dashboard .box_cont .rbox li.bg_cloudtwin {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .rbox li.bg_etc {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 
-.dashboard .box_cont .cbox { float:left; width:calc(100% - 190px); margin:0 0 0 40px; vertical-align:top; padding: 0 45px 0 0;}
+.dashboard .box_cont .cbox { float:left; width:calc(100% - 230px); margin:0 0 0 40px; vertical-align:top; padding: 0 45px 0 0;}
 .dashboard .box_cont .cbox .sc_box { float:right; height:128px;}
 .dashboard .box_cont .cbox .tcbox { height: 128px; padding:0 0 8px 0 !important; }
-.dashboard .d_box.box_m .cbox { width: calc(100% - 130px); margin:0; float: right; padding: 0 20px 0 0;}
-.dashboard .box_cont .cbox ul { padding:0; }
+.dashboard .d_box.box_m .cbox { width: calc(100% - 280px); margin:0; float: right; padding: 0 20px 0 0; min-width: 316.04px;}
+.dashboard .box_cont .cbox ul { padding:0; display: inline-flex; flex-wrap: wrap; justify-content: flex-end; }
 .dashboard .box_cont .cbox ul:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
-.dashboard .box_cont .cbox li { float:left; margin:0 15px 8px 0; width:88px; height:56px; text-align:center; color:#fff;font-size:16px; line-height:16px; font-weight:400; }
+.dashboard .box_cont .cbox li { float:left; margin:0 8px 8px 0; width:90px; height:56px; text-align:center; color:#fff;font-size:16px; line-height:16px; font-weight:400; }
 .dashboard .box_cont .cbox li span { padding:28px 0 0 0; color:#fff;font-size:16px; line-height:16px; font-weight:400; display:inline-block; }
+
+.dashboard .box_cont .cbox li div.conn_cnt { padding:14px 0 0 0; color:#fff;font-size:24px; line-height:16px; font-weight:400; display:inline-block; }
+.dashboard .box_cont .cbox li span.conn_tit { padding:4px 0 0 0; }
+.dashboard .box_cont .cbox li span.conn_cnt { padding:14px 0 0 0; font-size:24px; }
+.dashboard .box_cont .cbox li div.conn_tit { padding:4px 0 0 0; font-size:16px; }
+
 .dashboard .box_cont .cbox li a { display:block; }
 .dashboard .box_cont .cbox li.bg_b {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_y {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
@@ -145,6 +151,8 @@
 .dashboard .box_cont .cbox li.bg_g {  background:url(../img/common/bg_db_4.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_n {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
 
+.dashboard .box_cont .cbox li.bg_no {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_etc {  background:url(../img/common/bg_db_5.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_aws {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_azure {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_ali {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
@@ -152,10 +160,11 @@
 .dashboard .box_cont .cbox li.bg_gcp {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_clit {  background:url(../img/common/bg_db_n.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_cloudit {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_ops {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_ops {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_openstack {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
+.dashboard .box_cont .cbox li.bg_ncp {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_mock {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
 .dashboard .box_cont .cbox li.bg_cloudtwin {  background:url(../img/common/bg_db_1.png) center center no-repeat; }
-.dashboard .box_cont .cbox li.bg_etc {  background:url(../img/common/bg_db_2.png) center center no-repeat; }
 
 .dashboard .box_cont .cbox .txt { float:right; text-align:right; color:#888;font-size:14px; line-height:14px; font-weight:200; }
 .dashboard .num_txt { text-align:center; padding:53px 0 0 0; color:#5e636c;font-size:70px; line-height:70px; font-weight:400;  }
@@ -292,6 +301,18 @@ table tbody tr {
 }
 
 @media screen and (max-width: 768px) { 
+
+    .column-20px { width: 100%;}
+    .column-30px { width: 100%;}
+    .column-40px { width: 100%;}
+    .column-50px { width: 100%;}
+    .column-60px { width: 100%;}
+    .column-80px { width: 100%;}
+    .column-100px { width: 100%;}
+    .column-120px { width: 100%;}
+}
+
+@media screen and (max-width: 768px) { 
     .column-14percent { width: 100%; }
     .column-15percent { width: 100%; }
     .column-16percent { width: 100%; }
@@ -346,9 +367,9 @@ table tbody tr {
 @media screen and (max-width:1785px){
 	.dashboard .d_box.box_1 { width:70%; }
 	.dashboard .d_box.box_2 { width:27.5%; }
-	.dashboard .d_box.box_3,
+	/* .dashboard .d_box.box_3,
 	.dashboard .d_box.box_1.box_1m,
-	.dashboard .d_box.box_3.box_2m { width:100%; margin:2.5% 0 0 0; }
+	.dashboard .d_box.box_3.box_2m { width:100%; margin:2.5% 0 0 0; } */
 	.dashboard .d_box.box_m1 { width:40%; margin:0; }
 	.dashboard .d_box.box_m2 { width:40%; margin:0 0 0 0.6%; }
 	.dashboard .d_box.box_m3 { width:18.8%; margin:0 0 0 0.6%; }
@@ -361,6 +382,9 @@ table tbody tr {
 }
 @media screen and (max-width:1600px){
 	.dashboard .titbox .txt_ip  { text-align:left; margin:0; padding:52px 0 0 0; }
+	.dashboard .d_box.box_3,
+	.dashboard .d_box.box_1.box_1m,
+	.dashboard .d_box.box_3.box_2m { width:100%; margin:2.5% 0 0 0; }
 }
 @media screen and (max-width:1400px){
 	.dashboard .d_box.box_m1 { width:49.7%; margin:0; }
@@ -385,7 +409,7 @@ table tbody tr {
 	.dashboard .box_cont .lbox { float:left; padding:42px 0 0 40px; }
 	.dashboard .box_cont .rbox { float:right; padding:16px 40px 0 0; }
 	.dashboard .box_cont .rbox .numbox .num { width:70px; height:106px; margin:0 0 0 8px; }
-	.dashboard .box_cont .cbox { width:calc(100% - 190px); margin:0 0 0 10px; }
+	.dashboard .box_cont .cbox { width:calc(100% - 190px); margin:0; padding: 0 10px 0 0; }
 	.dashboard.dashboard_cont .top_info { right:20px; }
 	.dashboard.dashboard_cont .top_info > ul > li { margin:0 0 0 45px; }
 	.dashboard.dashboard_cont .d_box.box_b2 .mapcont { padding:2% 30px 3% 30px; }
@@ -412,7 +436,7 @@ table tbody tr {
 	.dashboard .box_cont .lbox { float:left; padding:42px 0 0 20px; }
 	.dashboard .box_cont .rbox { float:right; padding:16px 20px 0 0; }
 	.dashboard .box_cont .rbox .numbox .num { width:70px; height:106px; margin:0 0 0 6px; }
-	.dashboard .box_cont .cbox { width:calc(100% - 135px); margin:0 0 0 10px; }
+	.dashboard .box_cont .cbox { width:calc(100% - 155px); margin:0 0 0 10px; }
 	.dashboard.dashboard_cont .top_info { right:15px; }
 	.dashboard.dashboard_cont .top_info > ul > li { margin:0 0 0 30px; }
 	.dashboard.dashboard_cont .top_info > ul > li:last-child { margin:0 0 0 20px; }
@@ -438,12 +462,13 @@ table tbody tr {
 	.dashboard .d_box.box_2 .tit { left:15px; }
 	.dashboard .titbox .state { right:15px; }
 	.dashboard .box_cont .lbox { float:none; clear:both; display:block; padding:0 20px 0 20px; text-align:center; }
-	.dashboard .d_box.box_m .lbox { padding:0 20px 0 20px; }
+	.dashboard .d_box.box_m .lbox { padding:0 20px 0 20px; max-width: 100%; }
 	.dashboard .box_cont .rbox { float:none; clear:both; display:block; padding:10px 20px 0 20px; text-align:center; }
 	.dashboard .d_box.box_m .rbox { padding:10px 20px 0 20px; }
 	.dashboard .box_cont .rbox .numbox .num { width:70px; height:106px; margin:0 0 0 6px; }
 	.dashboard .box_cont .cbox { width:100%; margin:8px 0 0 0; padding:0 15px 0 0; }
 	.dashboard .d_box.box_m .cbox { width:100%; margin:8px 0 0 0; padding:0 15px 0 0; }
+	.dashboard .box_cont .cbox ul { padding:0; display: inline-flex; flex-wrap: wrap; justify-content: center; }
 	.dashboard .box_cont .cbox li { margin:0 0 8px 15px; }
 	.dashboard.dashboard_cont .top_info { margin-top:4px; }
 	.dashboard.dashboard_cont .top_info > ul { margin:0 25px 0 0;}
