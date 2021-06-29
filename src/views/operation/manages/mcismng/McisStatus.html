@@ -87,8 +87,9 @@
 										<div class="sc_box scrollbar-inner">
 											<ul id="cpConnectionDetail">
 												{{ range $key, $value := .ConnectionConfigCountMap }}
-												<li class="bg_{{$key}}">
-													<a href="#!"><span>{{ $key }} ( {{ $value }} )</span></a>
+												<li class="bg_etc bg_{{$key}}">
+													<a href="#!"><span class="conn_cnt">{{ $value }}<div class="conn_tit">{{ $key }}</div></span></a>
+													<!-- <a href="#!"><span>{{ $key }} ( {{ $value }} )</span></a> -->
 												</li>
 												{{ end }}
 											</ul>
