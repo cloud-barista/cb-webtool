@@ -1,5 +1,5 @@
 
-# v0.4.0-mocha (2021.06.30.)
+# v0.4.0-CafeMocha (2021.06.30.)
 ### API Change
 - 모니터링 Ploicy, Threshold 추가
 - UI에서 직접 Framework 직접호출 방식 -> go server를 통해 호출하는 방식으로 변경
