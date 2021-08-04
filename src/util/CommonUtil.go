@@ -121,7 +121,7 @@ func GetVmStatus(vmStatus string) string {
 		// 	vmStatusResuming++
 	} else if returnVmStatus == VM_STATUS_INCLUDE {
 		returnVmStatus = VM_STATUS_INCLUDE
-	} else if ( returnVmStatus == VM_STATUS_SUSPENDED || returnVmStatus == VM_STATUS_STOPPED) {
+	} else if returnVmStatus == VM_STATUS_SUSPENDED || returnVmStatus == VM_STATUS_STOPPED {
 		returnVmStatus = VM_STATUS_SUSPENDED
 	} else if returnVmStatus == VM_STATUS_TERMINATED {
 		returnVmStatus = VM_STATUS_TERMINATED

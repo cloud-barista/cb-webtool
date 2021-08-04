@@ -16,7 +16,7 @@ import (
 	echotemplate "github.com/foolin/echo-template"
 	echosession "github.com/go-session/echo-session"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v4"
 
 	//"github.com/twinj/uuid"
 	"github.com/google/uuid"

@@ -113,8 +113,8 @@ func CloudConnectionConfigMngForm(c echo.Context) error {
 	return echotemplate.Render(c, http.StatusOK,
 		"setting/connections/CloudConnectionConfigMng", // 파일명
 		map[string]interface{}{
-			"Message": cloudConnectionConfigErr.Message,
-			"Status":  cloudConnectionConfigErr.StatusCode,
+			"Message":                   cloudConnectionConfigErr.Message,
+			"Status":                    cloudConnectionConfigErr.StatusCode,
 			"LoginInfo":                 loginInfo,
 			"CloudOSList":               cloudOsList,
 			"NameSpaceList":             nsList,
