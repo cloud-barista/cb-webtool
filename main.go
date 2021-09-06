@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
-
+	"os"
 	//"github.com/cloud-barista/cb-webtool/src/controller"
 	"github.com/cloud-barista/cb-webtool/src/controller"
 	echotemplate "github.com/foolin/echo-template"
@@ -404,6 +404,20 @@ func main() {
 		DisableCache: true,
 	})
 
+	websocketTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "setting/namespaces/NameSpaceMng",
+		Partials: []string{
+			"templates/Top",
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Header",
+			"templates/Footer",
+		}, //
+		DisableCache: true,
+	})
+
 	// "setting/connections/CloudConnectionModal", --> Region, Credential, Driver modal로 쪼개짐
 
 	// // mcis 매핑할 middleware 추가
@@ -426,6 +440,31 @@ func main() {
 
 	e.GET("/", controller.Index)
 
+	/////// API 로 호출하는 경우 start////////
+
+	e.POST("/api/auth/login", controller.ApiLogin)
+
+	restrictedGroup := e.Group("/api/auth/restricted/")
+	restrictedGroup.Use(middleware.JWT([]byte(os.Getenv("LoginAccessSecret"))))
+	restrictedGroup.GET("", controller.Restricted)
+	restrictedGroup.GET("user", controller.ApiUserInfo)
+	restrictedGroup.GET("namespaceList", controller.ApiNamespaceList)
+
+	// e.POST("/api/auth/login", controller.ApiLoginProc)
+	// e.POST("/api/auth/logout", controller.ApiLogoutProc)
+	// e.GET("/api/auth/user", controller.ApiUserInfo)
+
+	// e.GET("/api/namespaces/list", controller.ApiNamespaceList)
+
+	/////// API 로 호출하는 경우 finish////////
+
+	/////// Websocket start ///////////
+	//e.GET("/ws", hello)  // 이것도 인증 거친것들만 해야하지 않나?? 그런데 경로가.. ws:: 이라...
+	// e.GET("ws/helloWS", controller.HelloNetWebSocket)
+	e.GET("ws/helloGorilla", controller.HelloGorillaWebSocket)
+
+	//////  Websocket end /////////
+
 	defaultGroup := e.Group("/operation/about", aboutTemplate)
 	defaultGroup.GET("/about", controller.About)
 
@@ -437,10 +476,14 @@ func main() {
 	mainGroup.GET("", controller.MainForm)
 	mainGroup.GET("/apitestmng", controller.ApiTestMngForm)
 
+	websocketGroup := e.Group("/websocket", websocketTemplate)
+	websocketGroup.GET("/websocketForm", controller.HelloForm) // websocket test
+
 	loginGroup := e.Group("/login", loginTemplate)
 
 	loginGroup.GET("", controller.LoginForm)
 	loginGroup.POST("/proc", controller.LoginProc)
+	loginGroup.POST("/token", controller.LoginToken) // Login 후 Token만 반환
 	e.GET("/logout", controller.LogoutProc)
 	// loginGroup.POST("/process", controller.LoginProcess)
 	//login 관련

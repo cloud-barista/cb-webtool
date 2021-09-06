@@ -5,7 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+	// tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
+
 	service "github.com/cloud-barista/cb-webtool/src/service"
 	"github.com/labstack/echo"
 
@@ -31,6 +35,7 @@ func McisPolicyMngForm(c echo.Context) error {
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
+	store.Save()
 	log.Println(" nsList  ", nsList)
 
 	// 해당 Namespace의 모든 MCIS 조회
@@ -100,7 +105,7 @@ func McisPolicyRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	mcisPolicyInfo := &tumblebug.McisPolicyInfo{}
+	mcisPolicyInfo := &tbmcis.McisPolicyInfo{}
 	if err := c.Bind(mcisPolicyInfo); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)

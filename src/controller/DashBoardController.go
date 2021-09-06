@@ -9,7 +9,12 @@ import (
 	// "sync"
 
 	// model "github.com/cloud-barista/cb-webtool/src/model"
-	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+	// tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	// tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
+
+	webtool "github.com/cloud-barista/cb-webtool/src/model/webtool"
 
 	"github.com/cloud-barista/cb-webtool/src/service"
 	util "github.com/cloud-barista/cb-webtool/src/util"
@@ -45,7 +50,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
 	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
 	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
-	mcisSimpleInfoList := []tumblebug.McisSimpleInfo{}          // mics summary 정보
+	mcisSimpleInfoList := []webtool.McisSimpleInfo{}            // mics summary 정보
 
 	totalMcisCount := 0 // mcis 갯수
 	totalVmCount := 0   // 모든 vm 갯수
@@ -56,6 +61,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
+	_ = store.Save()
 	log.Println(" nsList  ", nsList)
 
 	// 해당 Namespace의 모든 MCIS 조회
@@ -152,7 +158,7 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 			mcisConnectionNames += connectKey + " "
 		}
 		////////////// return value 에 set
-		mcisSimpleInfo := tumblebug.McisSimpleInfo{}
+		mcisSimpleInfo := webtool.McisSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
 		mcisSimpleInfo.Status = mcisInfo.Status
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)
@@ -223,6 +229,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
+	_ = store.Save()
 	log.Println(" nsList  ", nsList)
 
 	// provider 별 연결정보 count(MCIS 무관)
@@ -241,7 +248,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 	mcisStatusCountMapByMcis := make(map[string]map[string]int) // MCIS ID별 mcis status
 	totalVmStatusCountMap := make(map[string]int)               // 모든 VM의 상태 Map
 	vmStatusCountMapByMcis := make(map[string]map[string]int)   // MCIS ID 별 vmStatusMap [{mcis+status, count},{mcis+status, count}...]
-	mcisSimpleInfoList := []tumblebug.McisSimpleInfo{}          // mics summary 정보
+	mcisSimpleInfoList := []webtool.McisSimpleInfo{}            // mics summary 정보
 
 	for _, mcisInfo := range mcisList {
 		resultMcisStatusCountMap := service.GetMcisStatusCountMap(mcisInfo)
@@ -306,7 +313,7 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 			mcisConnectionNames += connectKey + " "
 		}
 		////////////// return value 에 set
-		mcisSimpleInfo := tumblebug.McisSimpleInfo{}
+		mcisSimpleInfo := webtool.McisSimpleInfo{}
 		mcisSimpleInfo.ID = mcisInfo.ID
 		mcisSimpleInfo.Status = mcisInfo.Status
 		mcisSimpleInfo.McisStatus = util.GetMcisStatus(mcisInfo.Status)

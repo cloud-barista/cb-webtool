@@ -1,0 +1,66 @@
+{{ template "Top" .}}
+	
+		<div id="lnb">
+			
+			<div class="bg"></div>
+				
+			<div class="m_box">
+				
+                {{template "TopBox" .}}
+
+                {{template "LNBPopup" .}}
+        
+                
+			</div>
+			
+			<div class="bottom"></div>
+			<a href="javascript:;" id="m_close"></a>
+			
+		</div>
+			
+		{{template "Header" .}}	
+				<!-- contents -->
+				<div class="contbox">
+					
+					<div class="titlebox">
+						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>WebSocket Test</strong></div>
+					</div>
+
+					<div class="dashboard dashboard_cont">
+						
+						<p id="output"></p>
+						
+					</div>
+                </div>
+
+<script>
+
+    var loc = window.location;
+    var uri = 'ws:';
+
+    if (loc.protocol === 'https:') {
+      uri = 'wss:';
+    }
+    uri += '//' + loc.host;
+    //uri += loc.pathname + 'ws/hello';
+    //uri += loc.pathname + 'ws/hello';
+    // uri += '/ws/helloWS';// Websocket
+    uri += '/ws/helloGorilla';// Gorilla websocket
+
+    ws = new WebSocket(uri)
+
+    ws.onopen = function() {
+      console.log('Connected')
+    }
+
+    ws.onmessage = function(evt) {
+      var out = document.getElementById('output');
+      out.innerHTML += evt.data + '<br>';
+    }
+
+    // setInterval(function() {
+    //   ws.send('Hello, Server!');
+    // }, 1000);
+</script>
+{{template "Footer" .}}
+
