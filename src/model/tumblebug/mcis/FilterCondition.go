@@ -1,6 +1,6 @@
 package mcis
 
 type FilterCondition struct {
-	condition Operation `json:"condition"`
-	metric    string    `json:"metric"`
+	Condition []Operation `json:"condition"`
+	Metric    string      `json:"metric"`
 }

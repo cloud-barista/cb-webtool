@@ -1,16 +1,16 @@
 package mcis
 
 type McisStatusInfo struct {
-	id              string         `json:"maxResultNum"`
-	installMonAgent string         `json:"installMonAgent"` // yes, no
-	masterIp        string         `json:"masterIp"`
-	masterSSHPort   string         `json:"masterSSHPort"`
-	masterVmId      string         `json:"masterVmId"`
-	name            string         `json:"name"`
-	status          string         `json:"status"`
-	targetAction    string         `json:"targetAction"`
-	targetStatus    string         `json:"targetStatus"`
-	vm              TbVmStatusInfo `json:"vm"`
+	ID              string         `json:"id"`
+	InstallMonAgent string         `json:"installMonAgent"` // yes, no
+	MasterIp        string         `json:"masterIp"`
+	MasterSSHPort   string         `json:"masterSSHPort"`
+	MasterVmID      string         `json:"masterVmId"`
+	Name            string         `json:"name"`
+	Status          string         `json:"status"`
+	TargetAction    string         `json:"targetAction"`
+	TargetStatus    string         `json:"targetStatus"`
+	Vm              TbVmStatusInfo `json:"vm"`
 }
 
 type McisStatusInfos []McisStatusInfo

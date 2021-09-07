@@ -7,5 +7,5 @@ import (
 type RestPostMcisRecommendResponse struct {
 	PlacementAlgo  string                `json:"placementAlgo"`
 	PlacementParam []tbcommon.TbKeyValue `json:"placementParam"`
-	VmRecommend    []TbVmRecommendInfo   `json:"vmReq"`
+	VmRecommend    []TbVmRecommendInfo   `json:"vmRecommend"`
 }
