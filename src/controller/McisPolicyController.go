@@ -121,7 +121,7 @@ func McisPolicyRegProc(c echo.Context) error {
 
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	resultMcisPolishInfo, respStatus := service.RegMcisPolicy(defaultNameSpaceID, mcisID, mcisPolicyInfo)
-	log.Println("RegMcis service returned")
+	log.Println("RegMcisPolicy service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":          respStatus.Message,

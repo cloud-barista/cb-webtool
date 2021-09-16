@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	// model "github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/model/dragonfly"
+
 	// spider "github.com/cloud-barista/cb-webtool/src/model/spider"
 	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	// tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
@@ -18,13 +18,10 @@ import (
 
 	webtool "github.com/cloud-barista/cb-webtool/src/model/webtool"
 
-	"github.com/cloud-barista/cb-webtool/src/model/websocket"
-
 	service "github.com/cloud-barista/cb-webtool/src/service"
-	// util "github.com/cloud-barista/cb-webtool/src/util"
+	util "github.com/cloud-barista/cb-webtool/src/util"
 
 	echotemplate "github.com/foolin/echo-template"
-	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
 	// echosession "github.com/go-session/echo-session"
 )
@@ -368,50 +365,55 @@ func McisRegProc(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	// 호출 전 생성할 내용 준비 : echo session handling
-	store := echosession.FromContext(c)
-	socketDataStore, isStoreOk := store.Get("socketdata")
+	// store := echosession.FromContext(c)
+	// socketDataStore, isStoreOk := store.Get("socketdata")
 
-	socketDataMap := map[string]websocket.WebSocketMessage{}
-	if !isStoreOk {
-	} else {
-		socketDataMap = socketDataStore.(map[string]websocket.WebSocketMessage)
-	}
+	// socketDataMap := map[int64]modelsocket.WebSocketMessage{}
+	// if !isStoreOk {
+	// } else {
+	// 	socketDataMap = socketDataStore.(map[int64]modelsocket.WebSocketMessage)
+	// }
 
-	websocketMessage := websocket.WebSocketMessage{}
+	// websocketMessage := modelsocket.WebSocketMessage{}
 
-	// socket의 key 생성 : ns + 구분 + id
+	// // socket의 key 생성 : ns + 구분 + id
 	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisInfo.Name // TODO : 공통 function으로 뺄 것.
-	websocketMessage.TaskId = "mcis"
-	websocketMessage.TaskKey = taskKey
-	websocketMessage.Status = "request"
-	websocketMessage.ProcessTime = time.Now()
-	// socketDataMap.put(taskKey, websocketMessage)
-	socketDataMap[taskKey] = websocketMessage
-	store.Set("socketdata", socketDataMap)
-	store.Save()
-	log.Println("setsocketdata" + taskKey + " : request ")
+	// websocketMessage.TaskType = "mcis"
+	// websocketMessage.TaskKey = taskKey
+	// websocketMessage.Status = "request"
+	// websocketMessage.ProcessTime = time.Now()
+	// // socketDataMap.put(taskKey, websocketMessage)
+	// // socketDataMap[taskKey] = websocketMessage
+	// socketDataMap[time.Now().UnixNano()] = websocketMessage
+
+	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	// store.Set("socketdata", socketDataMap)
+	// store.Save()
+	// log.Println("setsocketdata" + taskKey + " : request ")
 
 	// // go routin, channel
-	// go service.RegMcisByAsync(defaultNameSpaceID, mcisInfo, c)
-	// // 원래는 호출 결과를 return하나 go routine으로 바꾸면서 요청성공으로 return
-	// log.Println("before return")
-	// return c.JSON(http.StatusOK, map[string]interface{}{
-	// 	"message": "success",
-	// 	"status":  200,
-	// })
-
-	_, respStatus := service.RegMcis(defaultNameSpaceID, mcisInfo)
-	log.Println("RegMcis service returned")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+	go service.RegMcisByAsync(defaultNameSpaceID, mcisInfo, c)
+	// 원래는 호출 결과를 return하나 go routine으로 바꾸면서 요청성공으로 return
+	log.Println("before return")
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus.StatusCode,
+		"status":  200,
 	})
+
+	// _, respStatus := service.RegMcis(defaultNameSpaceID, mcisInfo)
+	// log.Println("RegMcis service returned")
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	// 	service.StoreWebsocketMessage("mcislifecycle", taskKey, "create", "failed", c) // session에 작업내용 저장
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
+	// return c.JSON(http.StatusOK, map[string]interface{}{
+	// 	"message": "success",
+	// 	"status":  respStatus.StatusCode,
+	// })
 
 }
 
@@ -580,28 +582,55 @@ func VmRegProc(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	mcisID := c.Param("mcisID")
 
-	// 일반 호출 : return 값 수신방식
-	_, respStatus := service.RegVm(defaultNameSpaceID, mcisID, vmInfo)
-	log.Println("RegVM service returned")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": respStatus.Message,
-		"status":  respStatus.StatusCode,
-	})
-
-	// go 루틴
-	// go service.AsyncRegVm(defaultNameSpaceID, mcisID, vmInfo)
+	// // 일반 호출 : return 값 수신방식
+	// _, respStatus := service.RegVm(defaultNameSpaceID, mcisID, vmInfo)
+	// log.Println("RegVM service returned")
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
 
 	// return c.JSON(http.StatusOK, map[string]interface{}{
-	// 	"message": "Call success",
-	// 	"status":  200,
+	// 	"message": respStatus.Message,
+	// 	"status":  respStatus.StatusCode,
 	// })
+
+	// 호출 전 생성할 내용 준비 : echo session handling
+	// store := echosession.FromContext(c)
+	// socketDataStore, isStoreOk := store.Get("socketdata")
+
+	// socketDataMap := map[int64]modelsocket.WebSocketMessage{}
+	// if !isStoreOk {
+	// } else {
+	// 	socketDataMap = socketDataStore.(map[int64]modelsocket.WebSocketMessage)
+	// }
+
+	// websocketMessage := modelsocket.WebSocketMessage{}
+
+	// // socket의 key 생성 : ns + 구분 + id
+	// taskKey := defaultNameSpaceID + "||" + "mcis_vm" + "||" + mcisID + "_" + vmInfo.Name // TODO : 공통 function으로 뺄 것.
+	// websocketMessage.TaskType = "mcis_vm"
+	// websocketMessage.TaskKey = taskKey
+	// websocketMessage.Status = "create_request"
+	// websocketMessage.ProcessTime = time.Now()
+	// // socketDataMap.put(taskKey, websocketMessage)
+	// // socketDataMap[taskKey] = websocketMessage
+	// socketDataMap[time.Now().UnixNano()] = websocketMessage
+	// store.Set("socketdata", socketDataMap)
+	// store.Save()
+	// log.Println("setsocketdata" + taskKey + " : request ")
+	taskKey := defaultNameSpaceID + "||" + "vm" + "||" + mcisID + "||" + vmInfo.Name
+	service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, util.VM_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	// go 루틴 호출 : return 값은 session에 저장
+	go service.AsyncRegVm(defaultNameSpaceID, mcisID, vmInfo, c)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Call success",
+		"status":  200,
+	})
 
 }
 
@@ -698,15 +727,23 @@ func McisLifeCycle(c echo.Context) error {
 		})
 	}
 
+	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisLifeCycle.McisID                                           // TODO : 공통 function으로 뺄 것.
+	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	//
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
 	log.Println("McisLifeCycle service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
 			"status": respStatus.StatusCode,
 		})
 	}
+
+	// 성공의 경우 요청만 들어간 상태이고 실제 상태는 status를 따로 날려야 알 수 있음. 그러므로 호출 전 requested 가 set 되었으므로 완료에 대한 상태는 추가로 넣지 않음.
+	// service.StoreWebsocketMessage("mcislifecycle", taskKey, mcisLifeCycle.LifeCycleType, "completed", c) // session에 작업내용 저장
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus.StatusCode,
@@ -735,9 +772,14 @@ func McisVmLifeCycle(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	vmLifeCycle.NameSpaceID = defaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+
+	taskKey := defaultNameSpaceID + "||" + "vm" + "||" + vmLifeCycle.McisID + "||" + vmLifeCycle.VmID
+	service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
 	_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
 	log.Println("McisVmLifeCycle service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
 			"status": respStatus.StatusCode,

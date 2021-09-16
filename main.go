@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+
 	//"github.com/cloud-barista/cb-webtool/src/controller"
 	"github.com/cloud-barista/cb-webtool/src/controller"
 	echotemplate "github.com/foolin/echo-template"
@@ -462,6 +463,9 @@ func main() {
 	//e.GET("/ws", hello)  // 이것도 인증 거친것들만 해야하지 않나?? 그런데 경로가.. ws:: 이라...
 	// e.GET("ws/helloWS", controller.HelloNetWebSocket)
 	e.GET("ws/helloGorilla", controller.HelloGorillaWebSocket)
+	e.GET("ws/websocketdata", controller.GetWebSocketData)
+
+	e.GET("ws/oneshot", controller.WebSocketOneShot)
 
 	//////  Websocket end /////////
 
