@@ -13,6 +13,32 @@ $(document).ready(function(){
         }
     })
 
+    $("#mcisListTable").each(function(){
+        var $sel_list = $(this);
+        var $detail = $(".server_info");
+        // console.log($sel_list);
+        // console.log($detail);
+
+        console.log(">>>>>");
+        $sel_list.off("click").click(function(){
+            $sel_list.addClass("active");
+            $sel_list.siblings().removeClass("active");
+            $detail.addClass("active");
+            $detail.siblings().removeClass("active");
+            $sel_list.off("click").click(function(){
+                if( $(this).hasClass("active") ) {
+                    $sel_list.removeClass("active");
+                    $detail.removeClass("active");
+                } else {
+                    $sel_list.addClass("active");
+                    $sel_list.siblings().removeClass("active");
+                    $detail.addClass("active");
+                    $detail.siblings().removeClass("active");
+                }
+            });
+        });
+    }); 
+
     // 지도 표시
     // setRegionMap();
 
@@ -38,7 +64,283 @@ $(document).ready(function(){
         }
         
     });
+
+    
+    // "NameSpaceList":      nsList,
+    // "CloudOSList":                   cloudOsList,
+    // "RegionList":                    regionInfoList,
+    // "CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
+    // "VMImageList":                   virtualMachineImageInfoList,
+    // "VMSpecList":                    vmSpecInfoList,
+    // "VNetList":                      vNetInfoList,
+    // "SecurityGroupList":             securityGroupInfoList,
+
+    //function getCommonNameSpaceList(caller, isCallback, targetObjId)
+    getCommonNameSpaceList("mcismng", false, "menuNameSpaceList")// 왼쪽 메뉴 표시용
+	// connection
+    getCommonCloudConnectionList("mcismng", true)
+	// // region
+	// getCommonRegionList("mcismng");
+	
+    // // resource
+	// // network(vnet)
+	// getCommonNetworkList("mcismng")
+	// // securitygroup
+	// getCommonSecurityGroupList("mcismng")
+	// // sshkey
+	// getCommonSshKeyList("mcismng")
+	
+	// // image
+	// getCommonVirtualMachineImageList("mcismng")
+
+	// // spec
+	// getCommonVirtualMachineSpecList("mcismng")
+	
+    // //
+	getCommonMcisList("mcismng", true)
 });
+
+
+////////// 화면 Load 시 가져온 값들을 set하는 function들
+function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sortType){
+    var totalProviderCount = 0;
+    var totalConnectionConfigCount = 0;
+    var providerConnectionMap = new Map();
+    if(!isEmpty(connectionConfigList) && connectionConfigList.length){
+        totalConnectionConfigCount = connectionConfigList.length;
+
+        var providerArr = new Array();
+        for(var itemIndex in connectionConfigList){
+            var aConnectionConfig = connectionConfigList[itemIndex]
+            // console.log(aConnectionConfig)
+            if( providerConnectionMap.has(aConnectionConfig.ProviderName) ){
+                providerConnectionMap.set(aConnectionConfig.ProviderName, providerConnectionMap.get(aConnectionConfig.ProviderName) + 1)
+            }else{
+                providerConnectionMap.set(aConnectionConfig.ProviderName, 0)
+            }
+
+        }
+        totalProviderCount = providerArr.length
+    }
+    // console.log(totalConnectionConfigCount + " : " + providerConnectionMap.size)
+    $("#connectionCount").text(totalConnectionConfigCount)
+    $("#providerCount").text(providerConnectionMap.size)
+
+
+    for ( let item of providerConnectionMap ) {
+        console.log(item[0] +' , '+ item[1]);
+        $("#cpConnectionDetail").append('<li class="bg_etc bg_' + item[0].toLowerCase() +'"><a href="javascript:void(0);"><span class="conn_cnt">' + item[1]+ '<div class="conn_tit">' + item[0]+ '</div></span></a></li>');
+    }
+}
+
+// MCIS 목록 조회 후 화면에 Set
+function getMcisListCallbackSuccess(caller, mcisList){
+
+    // MCIS Status
+    var totalMcisCnt = 0;
+    var mcisStatusCountMap = new Map();
+    mcisStatusCountMap.set("running", 0);
+    mcisStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
+    mcisStatusCountMap.set("terminate", 0);
+
+    var totalServerCnt = 0;
+    var totalVmStatusCountMap = new Map();
+    totalVmStatusCountMap.set("running", 0);
+    totalVmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
+    totalVmStatusCountMap.set("terminate", 0);
+
+    if(!isEmpty(mcisList) && mcisList.length > 0 ){
+        //totalMcisCnt = mcisList.length;
+        
+        for(var mcisIndex in mcisList){
+            var aMcis = mcisList[mcisIndex]
+            var mcisStatus = aMcis.status
+            var mcisProviderNames = "";//MCIS에 사용 된 provider
+            var totalVmCountOfMcis = 0;//MCIS의 VM 갯 수
+            // mcis status
+            try{               
+                // console.log(aMcis)
+                if( mcisStatus != ""){// mcis status 가 없는 경우는 skip
+                    var mcisDispStatus = getMcisStatusDisp(mcisStatus);
+                    if( mcisStatusCountMap.has(mcisDispStatus) ){
+                        mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
+                    }
+                    totalMcisCnt++;
+                }else{
+                    continue;// status가 없으면 mcks 일 수 있으므로 mcis에서는 count 제외
+                }
+            }catch(e){
+                console.log("mcis status error")
+            }
+
+            // vm status
+            try{
+                var vmListOfMcis = aMcis.vm;// array
+                
+
+                var vmStatusCountMap = new Map();
+                vmStatusCountMap.set("running", 0);
+                vmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
+                vmStatusCountMap.set("terminate", 0);
+
+                var vmCloudConnectionMap = new Map();
+                console.log(vmListOfMcis)
+                if (typeof vmListOfMcis !== 'undefined' && vmListOfMcis.length > 0) {                    
+                    for(var vmIndex in vmListOfMcis){
+                        var aVm = vmListOfMcis[vmIndex];
+                        var vmDispStatus = getVmStatusDisp(aVm.status);
+                        totalVmCountOfMcis++;
+                        console.log(vmDispStatus)
+                        if( vmStatusCountMap.has(vmDispStatus) ){
+                            vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)// mcis내 count
+                            totalVmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)// 전체 count
+                        }
+                        totalServerCnt++;
+
+                        // connections
+                        var location = aVm.location;
+                        if( !isEmpty(location) ){
+                            var cloudType = location.cloudType;
+                            if( vmCloudConnectionMap.has(cloudType) ){
+                                vmCloudConnectionMap.set(cloudType, vmCloudConnectionMap.get(cloudType) + 1)
+                            }else{
+                                vmCloudConnectionMap.set(cloudType, 0)
+                            }
+                        }
+                    }
+                }// end of vm list
+
+                // console.log(vmCloudConnectionMap);
+                vmCloudConnectionMap.forEach((value, key) => {
+                    mcisProviderNames += key + " ";
+                });
+                console.log("mcisProviderNames=" + mcisProviderNames);
+            }catch(e){
+                console.log("vm status error")
+            }
+
+            
+
+            // List of Mcis table
+            try{
+                
+                var addMcis = "";
+                addMcis += '<tr onclick="clickListOfMcis(\'' + aMcis.id + '\', ' + mcisIndex +' );" id="server_info_tr_' + mcisIndex +'" item="' + aMcis.id +'|' + mcisIndex + '">'
+
+                addMcis += '<td class="overlay hidden td_left column-14percent" data-th="Status">'
+                addMcis += '<img src="/assets/img/contents/icon_' + mcisStatus +'.png" class="icon" alt=""/>' + mcisStatus + '<span class="ov off"></span>'
+                addMcis += '</td>'
+                addMcis += '<td class="btn_mtd ovm column-14percent" data-th="Name">' + aMcis.name + '<span class="ov"></span></td>'
+                addMcis += '<td class="overlay hidden column-14percent" data-th="Cloud Connection">' + mcisProviderNames + '</td>'
+
+                addMcis += '<td class="overlay hidden column-14percent" data-th="Total Infras">' + totalVmCountOfMcis + '</td>'
+
+                addMcis += '<td class="overlay hidden column-14percent" data-th="# of Servers">'
+                addMcis += '<span class="bar" ></span> <span title="running">' + vmStatusCountMap.get('running') + '</span>'
+                addMcis += '<span class="bar" >/</span> <span title="stop">' + vmStatusCountMap.get('stop') + '</span>'
+                addMcis += '<span class="bar" >/</span> <span title="terminate">' + vmStatusCountMap.get('terminate') + '</span>'                
+                addMcis += '</td>'
+
+                addMcis += '<td class="overlay hidden" data-th="Description">' + aMcis.description + '</td>'
+
+
+                addMcis += '<td class="overlay hidden column-60px"  data-th="">'
+                addMcis += '<input type="checkbox" name="chk" value="' + aMcis.id + '" id="td_ch_' + mcisIndex + '" title="" />'
+                addMcis += '<label for="td_ch_' + mcisIndex + '"></label>'
+                addMcis += '</td>'
+
+                // MCIS 기본정보 hidden : 클릭시 보여주기 위해
+                addMcis += '<input type="hidden" name="mcisID" value="' + aMcis.id + '" id="mcisID' + mcisIndex + '"/>'
+                addMcis += '<input type="hidden" name="mcisName" value="' + aMcis.name + '" id="mcisName' + mcisIndex + '"/>'
+                addMcis += '<input type="hidden" name="mcisStatus" value="' + mcisStatus + '" id="mcisStatus' + mcisIndex + '"/>'
+                addMcis += '<input type="hidden" name="mcisDescription" value="' + aMcis.description + '" id="mcisDescription' + mcisIndex + '"/>'
+                addMcis += '<input type="hidden" name="mcisCloudConnections" value="' + mcisProviderNames + '" id="mcisCloudConnections' + mcisIndex + '"/>'
+                addMcis += '<input type="hidden" name="mcisVmTotalCount" value="' + totalServerCnt + '" id="mcisVmTotalCount' + mcisIndex + '"/>'
+
+
+                addMcis += '<input type="hidden" name="m_exportFileName" id="m_exportFileName_' + mcisIndex + '" value="" />'
+                addMcis += '<input type="hidden" name="m_mcisExportScript" id="m_mcisExportScript_' + mcisIndex + '" value="" />'
+
+                // export 용
+                
+                if (typeof vmListOfMcis !== 'undefined' && vmListOfMcis.length > 0) {
+                    for(var vmIndex in vmListOfMcis){
+                        var aVm = vmListOfMcis[vmIndex];
+                        addMcis += '<input type="hidden" name="vmID" id="mcisVmID_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.id + '" />'
+                        addMcis += '<input type="hidden" name="vmID" id="mcisVmName_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.name + '" />'
+                        addMcis += '<input type="hidden" name="vmStatus" id="mcisVmStatus_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.status + '" />'
+
+                        // vm export 용 m_ 는 mcis의 첫글자 m
+                        addMcis += '<input type="hidden" name="m_vmConnectionName" id="m_vmConnectionName_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.connectionName + '" />'
+                        addMcis += '<input type="hidden" name="m_vmDescription" id="m_vmDescription_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.description + '" />'
+                        addMcis += '<input type="hidden" name="m_vmImageId" id="m_vmImageId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.imageId + '" />'
+                        addMcis += '<input type="hidden" name="m_vmLabel" id="m_vmLabel_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.label + '" />'
+                        addMcis += '<input type="hidden" name="m_vmName" id="m_vmName_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.name + '" />'
+                        addMcis += '<input type="hidden" name="m_vmSecurityGroupIds" id="m_vmSecurityGroupIds_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.securityGroupIds + '" />'
+                        addMcis += '<input type="hidden" name="m_vmSpecId" id="m_vmSpecId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.specId + '" />'
+                        addMcis += '<input type="hidden" name="m_vmSshKeyId" id="m_vmSshKeyId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.sshKeyId + '" />'
+                        addMcis += '<input type="hidden" name="m_vmSubnetId" id="m_vmSubnetId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.subnetId + '" />'
+                        addMcis += '<input type="hidden" name="m_vmVnetId" id="m_vmVnetId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.vNetId + '" />'
+                        addMcis += '<input type="hidden" name="m_vmGroupSize" id="m_vmGroupSize_' + mcisIndex + '_' + vmIndex + '" value="0" />' // vm 생성 시 동일한 것을 몇 개 만들 것인가이며 생성 param에만 있음.조회결과에는 없음.
+                        addMcis += '<input type="hidden" name="m_vmUserAccount" id="m_vmUserAccount_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.vmUserAccount + '" />'
+                        addMcis += '<input type="hidden" name="m_vmUserPassword" id="m_vmUserPassword_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.vmUserPassword + '" />'
+
+                        addMcis += '<input type="hidden" name="m_vmExportFileName" id="m_vmExportFileName_' + mcisIndex + '_' + vmIndex + '" value="" />'
+                        addMcis += '<input type="hidden" name="m_vmExportScript" id="m_vmExportScript_' + mcisIndex + '_' + vmIndex + '" value="" />'
+                        
+                    }
+                }
+
+                // mcis export
+                addMcis += '<input type="hidden" name="m_mcisDescription" id="m_mcisDescription_' + mcisIndex + '" value="' + aMcis.description + '" />'
+                addMcis += '<input type="hidden" name="m_mcisID" id="m_mcisID_' + mcisIndex + '" value="' + aMcis.id + '" />'
+                addMcis += '<input type="hidden" name="m_mcisInstallMonAgent" id="m_mcisInstallMonAgent_' + mcisIndex + '" value="' + aMcis.installMonAgent + '" />'
+                addMcis += '<input type="hidden" name="m_mcisLabel" id="m_mcisLabel_' + mcisIndex + '" value="' + aMcis.label + '" />'
+                addMcis += '<input type="hidden" name="m_mcisName" id="m_mcisName_' + mcisIndex + '" value="' + aMcis.name + '" />'
+                addMcis += '<input type="hidden" name="m_mcisStatus" id="m_mcisStatus_' + mcisIndex + '" value="' + aMcis.status + '" />'
+
+
+                addMcis += '<input type="hidden" name="m_mcisExportFileName" id="m_exportFileName_' + mcisIndex + '" value="" />'
+                addMcis += '<input type="hidden" name="m_mcisExportScript" id="m_mcisExportScript_' + mcisIndex + '" value="" />'
+                        
+               
+
+                addMcis += '</tr>'
+                $("#mcisList").append(addMcis);
+                                           
+            }catch(e){
+                console.log("list of mcis error")
+                console.log(e)
+            }
+        }// end of mcis loop
+
+        $("#total_mcis").text(totalMcisCnt);
+        $("#mcis_status_running").text(mcisStatusCountMap.get("running"));
+        $("#mcis_status_stopped").text(mcisStatusCountMap.get("stop"));
+        $("#mcis_status_terminated").text(mcisStatusCountMap.get("terminate"));
+
+        $("#total_vm").text(totalServerCnt);
+        $("#vm_status_running").text(totalVmStatusCountMap.get("running"));
+        $("#vm_status_stopped").text(totalVmStatusCountMap.get("stop"));
+        $("#vm_status_terminated").text(totalVmStatusCountMap.get("terminate"));
+    }else{
+        var addMcis = "";
+        addMcis += '<tr>'
+        addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
+        addMcis += '</tr>'
+        $("#mcisList").append(addMcis);	
+    }
+}
+
+// 조회 실패시.
+function getMcisListCallbackFail(caller, error){
+    // List table에 no data 표시? 또는 조회 오류를 표시?
+    var addMcis = "";
+        addMcis += '<tr>'
+        addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
+        addMcis += '</tr>'
+    $("#mcisList").append(addMcis);	
+}
 
 ///////////// MCIS Handling //////////////
 
@@ -369,30 +671,7 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
     // }
 
     //Manage MCIS Server List on/off : table을 클릭하면 해당 Row 에 active style로 보여주기
-    $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function(){
-        var $sel_list = $(this);
-        var $detail = $(".server_info");
-        console.log($sel_list);
-        console.log($detail);
-        console.log(">>>>>");
-        $sel_list.off("click").click(function(){
-            $sel_list.addClass("active");
-            $sel_list.siblings().removeClass("active");
-            $detail.addClass("active");
-            $detail.siblings().removeClass("active");
-            $sel_list.off("click").click(function(){
-                if( $(this).hasClass("active") ) {
-                    $sel_list.removeClass("active");
-                    $detail.removeClass("active");
-                } else {
-                    $sel_list.addClass("active");
-                    $sel_list.siblings().removeClass("active");
-                    $detail.addClass("active");
-                    $detail.siblings().removeClass("active");
-                }
-            });
-        });
-    }); 
+
 }
 
 // VM 목록에서 VM 클릭시 해당 VM의 상세정보 

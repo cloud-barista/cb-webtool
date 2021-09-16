@@ -14,14 +14,17 @@ import (
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	// "github.com/cloud-barista/cb-webtool/src/model/spider"
 	"github.com/cloud-barista/cb-webtool/src/model/dragonfly"
-	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+	// tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
 
 // VM 에 모니터링 Agent 설치
 ///ns/{nsId}/monitoring/install/mcis/{mcisId}
-func RegBenchmarkAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *tumblebug.McisCmdReq) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
+func RegBenchmarkAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *tbmcis.McisCmdReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
 	fmt.Println("RegBenchmarkAgentInVm ************ : ")
 	var originalUrl = "/ns/{nsId}/monitoring/install/mcis/{mcisId}"
 
@@ -37,7 +40,7 @@ func RegBenchmarkAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentR
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	vmMonitoringAgentInfo := tumblebug.VmMonitoringAgentInfo{}
+	vmMonitoringAgentInfo := tbmcis.AgentInstallContentWrapper{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmMonitoringAgentInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -120,7 +123,7 @@ func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgent
 }
 
 // Get Monitoring Data
-func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (*tumblebug.VmMonitoringAgentInfo, model.WebStatus) {
+func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/monitoring/mcis/{mcisId}/metric/{metric}"
 
 	var paramMapper = make(map[string]string)
@@ -135,7 +138,7 @@ func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	vmMonitoringAgentInfo := tumblebug.VmMonitoringAgentInfo{}
+	vmMonitoringAgentInfo := tbmcis.AgentInstallContentWrapper{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmMonitoringAgentInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}

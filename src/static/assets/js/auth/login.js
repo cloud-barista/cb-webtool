@@ -48,7 +48,8 @@ $(document).ready(function(){
                         getCloudConnectionConfig();// getConfig() 이름 변경함.
                         getNameSpace();
                  }else{
-                     commonAlert("ID or PASSWORKD MISMATCH!!Check yourself!")
+                     //commonAlert("ID or PASSWORKD MISMATCH!!Check yourself!")
+                     alert("ID or PASSWORKD MISMATCH!!Check yourself!")
                     //  location.reload(true); 
                  }
             //  }).catch(function(error){
@@ -76,7 +77,8 @@ $(document).ready(function(){
                 }
                 console.log(error.config);
                 console.log("login error : ",error);
-                commonAlert("ID or PASSWORKD MISMATCH!!Check yourself!!")
+                //commonAlert(error.message)
+                alert(error.message)
                 //  location.reload(true);
              })
          }catch(e){

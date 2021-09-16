@@ -111,6 +111,60 @@ function goFocus(target){
 	fnMove(target)
 }
 
+// MCIS 상태값 중 일부만 사용 
+// ex) Partial-Suspended-1(2/2)  : 가운데값만 사용
+// todo : 일부정지인데 stop으로 표시하고 있는데....
+function getMcisStatusDisp(mcisFullStatus){
+	console.log("getMcisStatus " + mcisFullStatus);
+	var statusArr = mcisFullStatus.split("-");	
+	returnStatus = statusArr[1].toLowerCase();
+
+	const MCIS_STATUS_RUNNING = "running"
+	const MCIS_STATUS_INCLUDE = "include"
+	const MCIS_STATUS_SUSPENDED = "suspended"
+	const MCIS_STATUS_TERMINATED = "terminated"
+	const MCIS_STATUS_PARTIAL = "partial"
+	const MCIS_STATUS_ETC = "etc"
+
+	if (returnStatus == MCIS_STATUS_RUNNING) {
+		returnStatus = "running"
+	} else if (returnStatus == MCIS_STATUS_INCLUDE) {
+		returnStatus = "stop"
+	} else if (returnStatus == MCIS_STATUS_SUSPENDED) {
+		returnStatus = "stop"
+	} else if (returnStatus == MCIS_STATUS_TERMINATED) {
+		returnStatus = "terminate"
+	} else if (returnStatus == MCIS_STATUS_PARTIAL) {
+		returnStatus = "stop"
+	} else if (returnStatus == MCIS_STATUS_ETC) {
+		returnStatus = "stop"
+	} else {
+		returnStatus = "stop"
+	}
+	return returnStatus
+}
+// VM 상태를 UI에서 표현하는 방식으로 변경
+function getVmStatusDisp(vmFullStatus ) {
+	console.log("getVmStatusDisp " + vmFullStatus);
+	var returnVmStatus = vmFullStatus.toLowerCase() // 소문자로 변환
+
+	const VM_STATUS_RUNNING = "running"
+	const VM_STATUS_STOPPED = "stop"
+	const VM_STATUS_RESUMING = "resuming";
+	const VM_STATUS_INCLUDE = "include"	
+	const VM_STATUS_SUSPENDED = "suspended"	
+	const VM_STATUS_TERMINATED = "terminated"
+
+	if (returnVmStatus == VM_STATUS_RUNNING) {
+		returnVmStatus = "running"		
+	} else if (returnVmStatus == VM_STATUS_TERMINATED) {
+		returnVmStatus = "terminate"
+	} else {
+		returnVmStatus = "stop"
+	}
+	return returnVmStatus
+}
+
 function getVmStatus(vm_name, connection_name){
     var url = "/vmstatus/"+vm_name+"?connection_name="+connection_name
     var apiInfo = ApiInfo;

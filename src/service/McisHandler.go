@@ -7,13 +7,24 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
+	// "github.com/davecgh/go-spew/spew"
 
 	// "os"
 	// model "github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/model"
 	// spider "github.com/cloud-barista/cb-webtool/src/model/spider"
-	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+
+	// tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+	// tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
+
+	webtool "github.com/cloud-barista/cb-webtool/src/model/webtool"
+
+	// "github.com/go-session/echo-session"
+
+	// echosession "github.com/go-session/echo-session"
+	"github.com/labstack/echo"
 
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
@@ -25,7 +36,7 @@ import (
 // var MCISUrl = os.Getenv("TUMBLE_URL")// util.TUMBLEBUG
 
 // MCIS 목록 조회
-func GetMcisList(nameSpaceID string) ([]tumblebug.McisInfo, model.WebStatus) {
+func GetMcisList(nameSpaceID string) ([]tbmcis.TbMcisInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis"
 
 	var paramMapper = make(map[string]string)
@@ -45,7 +56,7 @@ func GetMcisList(nameSpaceID string) ([]tumblebug.McisInfo, model.WebStatus) {
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	mcisList := map[string][]tumblebug.McisInfo{}
+	mcisList := map[string][]tbmcis.TbMcisInfo{}
 	returnStatus := model.WebStatus{}
 
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
@@ -65,7 +76,7 @@ func GetMcisList(nameSpaceID string) ([]tumblebug.McisInfo, model.WebStatus) {
 }
 
 // 특정 MCIS 조회
-func GetMcisData(nameSpaceID string, mcisID string) (*tumblebug.McisInfo, model.WebStatus) {
+func GetMcisData(nameSpaceID string, mcisID string) (*tbmcis.TbMcisInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
@@ -93,7 +104,7 @@ func GetMcisData(nameSpaceID string, mcisID string) (*tumblebug.McisInfo, model.
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	mcisInfo := tumblebug.McisInfo{}
+	mcisInfo := tbmcis.TbMcisInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &mcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -118,7 +129,7 @@ func GetMcisData(nameSpaceID string, mcisID string) (*tumblebug.McisInfo, model.
 }
 
 // MCIS 등록. VM도 함께 등록
-func RegMcis(nameSpaceID string, mcisInfo *tumblebug.McisInfo) (*tumblebug.McisInfo, model.WebStatus) {
+func RegMcis(nameSpaceID string, mcisInfo *tbmcis.TbMcisInfo) (*tbmcis.TbMcisInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis"
 
 	var paramMapper = make(map[string]string)
@@ -131,7 +142,7 @@ func RegMcis(nameSpaceID string, mcisInfo *tumblebug.McisInfo) (*tumblebug.McisI
 	pbytes, _ := json.Marshal(mcisInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnMcisInfo := tumblebug.McisInfo{}
+	returnMcisInfo := tbmcis.TbMcisInfo{}
 	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
@@ -157,13 +168,101 @@ func RegMcis(nameSpaceID string, mcisInfo *tumblebug.McisInfo) (*tumblebug.McisI
 	return &returnMcisInfo, returnStatus
 }
 
+// MCIS 등록, channel 이용 : thread이긴 하나 ch를 통해 결과를 받은 후 처리되므로 다를 바가 없음.
+// go routine으로 호출하므로 호출결과를 echo-session에 저장  -> web socket으로 front-end 에 전달
+func RegMcisByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisInfo, c echo.Context) {
+	var originalUrl = "/ns/{nsId}/mcis"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
+
+	pbytes, _ := json.Marshal(mcisInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	returnMcisInfo := tbmcis.TbMcisInfo{}
+	returnStatus := model.WebStatus{}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	taskKey := nameSpaceID + "||" + "mcis" + "||" + mcisInfo.Name // TODO : 공통 function으로 뺄 것.
+
+	if err != nil {
+		fmt.Println(err)
+		// websocketMessage := websocket.WebSocketMessage{}
+		// websocketMessage.Status = "fail"
+		// websocketMessage.ProcessTime = time.Now()
+		// return &returnMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+
+		// websocket으로 전달할 data set
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+
+		// socketDataStore, storedOk := store.Get("socketdata") // 만들고 들어오기 때문에 저장된 게 없을 수 없음..
+		// if !storedOk {                                       // 저장된 거 가져올 때 오류면
+		// 	log.Println("get stored socketData error ")
+		// } else {
+		// 	socketDataMap := socketDataStore.(map[int64]websocket.WebSocketMessage)
+		// 	// socketDataMap := map[string]websocket.WebSocketMessage{} // 신규로 만들 필요 없음. 이미 있음(by taskKey)
+
+		// 	// socketDataMap[taskKey] = websocketMessage// 해당 객체 갱신.
+		// 	// websocketMessage := socketDataMap[taskKey]
+		// 	websocketMessage := websocket.WebSocketMessage{}
+		// 	websocketMessage.TaskType = "mcis"
+		// 	websocketMessage.TaskKey = taskKey
+		// 	websocketMessage.Status = "fail"
+		// 	websocketMessage.ProcessTime = time.Now()
+
+		// 	socketDataMap[time.Now().UnixNano()] = websocketMessage
+		// 	store.Set("socketdata", socketDataMap)
+
+		// 	store.Save()
+		// 	log.Println("get stored socketData fail ")
+		// }
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnMcisInfo)
+		fmt.Println(returnMcisInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	// // TODO : 결과값 설정 확인할 것.
+	// socketDataStore, storedOk := store.Get("socketdata")
+	// if !storedOk { // 저장된 거 가져올 때 오류면
+	// 	log.Println("get stored socketData error 2 ")
+	// }
+	// socketDataMap := socketDataStore.(map[int64]websocket.WebSocketMessage)
+	// websocketMessage := websocket.WebSocketMessage{}
+	// // websocketMessage := socketDataMap[time.Now().UnixNano()]
+	// // websocketMessage := socketDataMap[taskKey]
+	// websocketMessage.TaskType = "mcis"
+	// websocketMessage.TaskKey = taskKey
+	// websocketMessage.Status = "complete"
+	// websocketMessage.ProcessTime = time.Now()
+	// store.Set("socketdata", socketDataMap)
+	// store.Save()
+	// log.Println("set stored socketData complete ", respStatus)
+	// websocket으로 전달할 data set
+
+	StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+}
+
 // MCIS에 VM 추가 등록
-func RegVm(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) (*tumblebug.VmInfo, model.WebStatus) {
+func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmInfo) (*tbmcis.TbVmInfo, model.WebStatus) {
 	// var mcisInfoID = mcisInfo.ID // path의 mcisID와 전송되는 parameter의 mcisID 비교용
 	// var vmList = mcisInfo.Vms
 
 	// 전송은 vm -> 수신 vm
-	returnVmInfo := tumblebug.VmInfo{}
+	returnVmInfo := tbmcis.TbVmInfo{}
 	returnStatus := model.WebStatus{}
 	fmt.Println("111")
 
@@ -216,7 +315,7 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) (*tumble
 }
 
 // VM 등록
-func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) {
+func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmInfo, c echo.Context) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
 
 	var paramMapper = make(map[string]string)
@@ -231,14 +330,44 @@ func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) {
 	pbytes, _ := json.Marshal(vmInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
+	respBody := resp.Body
+	respStatus := resp.StatusCode
 	fmt.Println("AsyncRegVm result ", err)
 	log.Println(resp)
+
+	// // TODO : 결과값 설정 확인할 것.
+	// store := echosession.FromContext(c)
+	// socketDataStore, storedOk := store.Get("socketdata")
+	// if !storedOk { // 저장된 거 가져올 때 오류면
+	// 	log.Println("get stored socketData error 2 ")
+	// }
+	// socketDataMap := socketDataStore.(map[string]websocket.WebSocketMessage)
+	// websocketMessage := socketDataMap[taskKey]
+	// // websocketMessage := socketDataMap[taskKey]
+	// websocketMessage.Status = "complete"
+	// websocketMessage.ProcessTime = time.Now()
+	// store.Set("socketdata", socketDataMap)
+	// store.Save()
+	// log.Println("set stored socketData complete ", respStatus)
+
+	returnVmInfo := tbmcis.TbVmInfo{}
+	taskKey := nameSpaceID + "||" + "vm" + "||" + mcisID + "||" + vmInfo.Name
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.VM_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	} else {
+		json.NewDecoder(respBody).Decode(&returnVmInfo)
+		fmt.Println(returnVmInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.VM_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+	}
 }
 
 // MCIS에 VM 추가 등록
-func RegVmGroup(nameSpaceID string, mcisID string, mcisInfo *tumblebug.McisInfo) (*tumblebug.McisInfo, model.WebStatus) {
+func RegVmGroup(nameSpaceID string, mcisID string, mcisInfo *tbmcis.TbMcisInfo) (*tbmcis.TbMcisInfo, model.WebStatus) {
 	var mcisInfoID = mcisInfo.ID
-	var vmList = mcisInfo.Vms
+	var vmList = mcisInfo.Vm
 
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup" // 여러개 추가할 때
 	if len(vmList) == 0 {
@@ -261,7 +390,7 @@ func RegVmGroup(nameSpaceID string, mcisID string, mcisInfo *tumblebug.McisInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	// 전송은 vm이나 수신은 mcisInfo (mcis안에 vm목록이 있음.)
-	returnMcisInfo := tumblebug.McisInfo{}
+	returnMcisInfo := tbmcis.TbMcisInfo{}
 	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
@@ -306,7 +435,7 @@ func RegVmGroup(nameSpaceID string, mcisID string, mcisInfo *tumblebug.McisInfo)
 // }
 
 // MCIS 목록에서 mcis 상태별 count map반환
-func GetMcisStatusCountMap(mcisInfo tumblebug.McisInfo) map[string]int {
+func GetMcisStatusCountMap(mcisInfo tbmcis.TbMcisInfo) map[string]int {
 	mcisStatusRunning := 0
 	mcisStatusStopped := 0
 	mcisStatusTerminated := 0
@@ -332,15 +461,15 @@ func GetMcisStatusCountMap(mcisInfo tumblebug.McisInfo) map[string]int {
 
 // MCIS의 vm별 statun와 vm 상태별 count
 // key는 vmID + vmName, value는 vmStatus
-func GetSimpleVmWithStatusCountMap(mcisInfo tumblebug.McisInfo) ([]tumblebug.VmSimpleInfo, map[string]int) {
+func GetSimpleVmWithStatusCountMap(mcisInfo tbmcis.TbMcisInfo) ([]webtool.VmSimpleInfo, map[string]int) {
 	// log.Println(" mcisInfo  ", index, mcisInfo)
 	// vmStatusMap := make(map[string]int)
 	// vmStatusMap := map[string]string{} // vmName : vmStatus
 
 	vmStatusCountMap := map[string]int{}
 	totalVmStatusCount := 0
-	vmList := mcisInfo.Vms
-	var vmSimpleList []tumblebug.VmSimpleInfo
+	vmList := mcisInfo.Vm
+	var vmSimpleList []webtool.VmSimpleInfo
 	for vmIndex, vmInfo := range vmList {
 		// log.Println(" vmInfo  ", vmIndex, vmInfo)
 		vmStatus := util.GetVmStatus(vmInfo.Status) // lowercase로 변환
@@ -351,7 +480,7 @@ func GetSimpleVmWithStatusCountMap(mcisInfo tumblebug.McisInfo) ([]tumblebug.VmS
 
 		log.Println(locationInfo)
 		//
-		vmSimpleObj := tumblebug.VmSimpleInfo{
+		vmSimpleObj := webtool.VmSimpleInfo{
 			VmIndex:   vmIndex + 1,
 			VmID:      vmInfo.ID,
 			VmName:    vmInfo.Name,
@@ -427,7 +556,7 @@ func GetSimpleVmWithStatusCountMap(mcisInfo tumblebug.McisInfo) ([]tumblebug.VmS
 }
 
 // MCIS별 connection count
-func GetVmConnectionCountMap(mcisInfo tumblebug.McisInfo) map[string]int {
+func GetVmConnectionCountMap(mcisInfo tbmcis.TbMcisInfo) map[string]int {
 	// connectionCountTotal := 0
 	// connectionCountByMcis := 0
 	// vmCountTotal := 0
@@ -480,9 +609,9 @@ func GetVmConnectionCountMap(mcisInfo tumblebug.McisInfo) map[string]int {
 }
 
 // 해당 MCIS의 VM 연결 수
-func GetVmConnectionCountByMcis(mcisInfo tumblebug.McisInfo) map[string]int {
+func GetVmConnectionCountByMcis(mcisInfo tbmcis.TbMcisInfo) map[string]int {
 	// log.Println(" mcisInfo  ", index, mcisInfo)
-	vmList := mcisInfo.Vms
+	vmList := mcisInfo.Vm
 	// mcisConnectionCountMap := make(map[string]int)
 	mcisConnectionCountMap := map[string]int{}
 
@@ -510,7 +639,7 @@ func GetVmConnectionCountByMcis(mcisInfo tumblebug.McisInfo) map[string]int {
 }
 
 // MCIS의 특정 VM 조회
-func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tumblebug.VmInfo, model.WebStatus) {
+func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.TbVmInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}"
 
 	var paramMapper = make(map[string]string)
@@ -526,7 +655,7 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tumblebug
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	vmInfo := tumblebug.VmInfo{}
+	vmInfo := tbmcis.TbVmInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -543,7 +672,8 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tumblebug
 }
 
 // MCIS의 Status변경
-func McisLifeCycle(mcisLifeCycle *tumblebug.McisLifeCycle) (*tumblebug.McisLifeCycle, model.WebStatus) {
+// LifeCycle 의 경우 요청에 대한 응답이 바로 오므로 asyncMethod를 따로 만들지 않음. 응답시간이 오래걸리는 경우 syncXXX 를 만들고 echo 를 같이 넘겨 결과 처리하도록 해야 함.
+func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle) (*webtool.McisLifeCycle, model.WebStatus) {
 	nameSpaceID := mcisLifeCycle.NameSpaceID
 	mcisID := mcisLifeCycle.McisID
 	lifeCycleType := mcisLifeCycle.LifeCycleType
@@ -561,7 +691,7 @@ func McisLifeCycle(mcisLifeCycle *tumblebug.McisLifeCycle) (*tumblebug.McisLifeC
 	//// var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
 	pbytes, _ := json.Marshal(mcisLifeCycle)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
-	resultMcisLifeCycle := tumblebug.McisLifeCycle{}
+	resultMcisLifeCycle := webtool.McisLifeCycle{}
 	if err != nil {
 		fmt.Println("McisLifeCycle err")
 		fmt.Println(err)
@@ -602,8 +732,8 @@ func McisLifeCycle(mcisLifeCycle *tumblebug.McisLifeCycle) (*tumblebug.McisLifeC
 
 }
 
-// MCIS의 VM Status변경
-func McisVmLifeCycle(vmLifeCycle *tumblebug.VmLifeCycle) (*tumblebug.VmLifeCycle, model.WebStatus) {
+// MCIS의 VM Status변경 : 요청에 대한 응답이 바로 오므로 async 만들지 않음
+func McisVmLifeCycle(vmLifeCycle *webtool.VmLifeCycle) (*webtool.VmLifeCycle, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}?action={type}"
 
 	var paramMapper = make(map[string]string)
@@ -618,7 +748,7 @@ func McisVmLifeCycle(vmLifeCycle *tumblebug.VmLifeCycle) (*tumblebug.VmLifeCycle
 	///url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
 	pbytes, _ := json.Marshal(vmLifeCycle)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
-	resultVmLifeCycle := tumblebug.VmLifeCycle{}
+	resultVmLifeCycle := webtool.VmLifeCycle{}
 	if err != nil {
 		fmt.Println(err)
 		return &resultVmLifeCycle, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -636,7 +766,7 @@ func McisVmLifeCycle(vmLifeCycle *tumblebug.VmLifeCycle) (*tumblebug.VmLifeCycle
 
 // 벤치마크?? MCIS 조회. 근데 왜 결과는 resultarray지?
 // TODO : 여러개 return되면 method이름을 xxxData -> xxxList 로 바꿀 것
-func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string) (*[]tumblebug.McisBenchmarkInfo, model.WebStatus) {
+func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string) (*[]tbmcis.BenchmarkInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/benchmark/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
@@ -651,7 +781,7 @@ func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string) (*[]
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	// defer body.Close()
-	resultBenchmarkInfos := []tumblebug.McisBenchmarkInfo{}
+	resultBenchmarkInfos := []tbmcis.BenchmarkInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &resultBenchmarkInfos, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -668,7 +798,7 @@ func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string) (*[]
 }
 
 // List all MCISs
-func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) (*[]tumblebug.McisBenchmarkInfo, model.WebStatus) {
+func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) (*[]tbmcis.BenchmarkInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/benchmarkall/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
@@ -683,7 +813,7 @@ func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) (
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	// defer body.Close()
-	resultBenchmarkInfos := []tumblebug.McisBenchmarkInfo{}
+	resultBenchmarkInfos := []tbmcis.BenchmarkInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &resultBenchmarkInfos, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -699,10 +829,8 @@ func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) (
 }
 
 // MCIS에 명령 내리기
-func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo) (model.WebStatus, model.WebStatus) {
+func CommandMcis(nameSpaceID string, mcisID string, mcisCommandInfo *tbmcis.McisCmdReq) (model.WebStatus, model.WebStatus) {
 	webStatus := model.WebStatus{}
-
-	mcisID := mcisCommandInfo.McisID
 
 	var originalUrl = "/ns/{nsId}/cmd/mcis/{mcisId}"
 
@@ -748,11 +876,8 @@ func CommandMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo)
 }
 
 // 특정 VM에 명령내리기
-func CommandVmOfMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo) (model.WebStatus, model.WebStatus) {
+func CommandVmOfMcis(nameSpaceID string, mcisID string, vmID string, mcisCommandInfo *tbmcis.McisCmdReq) (model.WebStatus, model.WebStatus) {
 	webStatus := model.WebStatus{}
-
-	mcisID := mcisCommandInfo.McisID
-	vmID := mcisCommandInfo.VmID
 
 	var originalUrl = "/ns/{nsId}/cmd/mcis/{mcisId}/vm/{vmId}"
 
@@ -800,9 +925,7 @@ func CommandVmOfMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandI
 }
 
 //Install the benchmark agent to specified MCIS
-func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisCommandInfo *tumblebug.McisCommandInfo) (*tumblebug.McisCommandResult, model.WebStatus) {
-	mcisID := mcisCommandInfo.McisID
-
+func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisID string, mcisCommandInfo *tbmcis.McisCmdReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/install/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
@@ -816,7 +939,7 @@ func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisCommandInfo *tumblebug.
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnMcisCommandResult := tumblebug.McisCommandResult{}
+	returnMcisCommandResult := tbmcis.AgentInstallContentWrapper{}
 	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
@@ -841,7 +964,7 @@ func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisCommandInfo *tumblebug.
 	// return respBody, respStatusCode
 	return &returnMcisCommandResult, returnStatus
 
-	// resultMcisCommandResult := tumblebug.McisCommandResult{}
+	// resultMcisCommandResult := tbmcis.AgentInstallContentWrapper{}
 	// if err != nil {
 	// 	fmt.Println(err)
 	// 	return &resultMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -918,7 +1041,7 @@ func DelMcis(nameSpaceID string, mcisID string) (io.ReadCloser, model.WebStatus)
 }
 
 // MCIS에 VM 생성. path에 mcisID가 있음. VMInfo에는 mcisID가 없음.
-func RegVM(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) (*tumblebug.VmInfo, model.WebStatus) {
+func RegVM(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmInfo) (*tbmcis.TbVmInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm"
 
 	var paramMapper = make(map[string]string)
@@ -932,7 +1055,7 @@ func RegVM(nameSpaceID string, mcisID string, vmInfo *tumblebug.VmInfo) (*tumble
 	pbytes, _ := json.Marshal(vmInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnVmInfo := tumblebug.VmInfo{}
+	returnVmInfo := tbmcis.TbVmInfo{}
 	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
@@ -1012,7 +1135,7 @@ func DelVM(nameSpaceID string, mcisID string, vmID string) (io.ReadCloser, model
 }
 
 // 특정 VM 조회
-func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tumblebug.VmInfo, model.WebStatus) {
+func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.TbVmInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}"
 
 	var paramMapper = make(map[string]string)
@@ -1027,7 +1150,7 @@ func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tumblebug.VmInf
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	vmInfo := tumblebug.VmInfo{}
+	vmInfo := tbmcis.TbVmInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -1044,64 +1167,65 @@ func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tumblebug.VmInf
 }
 
 // Get MCIS recommendation
-func GetMcisRecommand(nameSpaceID string, mcisID string, mcisRecommandReq *tumblebug.McisRecommendReq) (*tumblebug.McisRecommendInfo, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcis/recommend"
+// Deprecated at 0.4.5
+// func GetMcisRecommand(nameSpaceID string, mcisID string, mcisRecommandReq *tumblebug.McisRecommendReq) (*tumblebug.McisRecommendInfo, model.WebStatus) {
+// 	var originalUrl = "/ns/{nsId}/mcis/recommend"
 
-	var paramMapper = make(map[string]string)
-	paramMapper["{nsId}"] = nameSpaceID
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+// 	var paramMapper = make(map[string]string)
+// 	paramMapper["{nsId}"] = nameSpaceID
+// 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/recommend"
+// 	url := util.TUMBLEBUG + urlParam
+// 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/recommend"
 
-	pbytes, _ := json.Marshal(mcisRecommandReq)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+// 	pbytes, _ := json.Marshal(mcisRecommandReq)
+// 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnMcisRecommendInfo := tumblebug.McisRecommendInfo{}
-	returnStatus := model.WebStatus{}
+// 	returnMcisRecommendInfo := tumblebug.McisRecommendInfo{}
+// 	returnStatus := model.WebStatus{}
 
-	respBody := resp.Body
-	respStatus := resp.StatusCode
+// 	respBody := resp.Body
+// 	respStatus := resp.StatusCode
 
-	if err != nil {
-		fmt.Println(err)
-		return &returnMcisRecommendInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
-	log.Println(respBody)
-	spew.Dump(respBody)
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
-		returnStatus.Message = errorInfo.Message
-	} else {
-		json.NewDecoder(respBody).Decode(&returnMcisRecommendInfo)
-		fmt.Println(returnMcisRecommendInfo)
-	}
-	returnStatus.StatusCode = respStatus
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return &returnMcisRecommendInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+// 	}
+// 	log.Println(respBody)
+// 	spew.Dump(respBody)
+// 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+// 		errorInfo := model.ErrorInfo{}
+// 		json.NewDecoder(respBody).Decode(&errorInfo)
+// 		fmt.Println("respStatus != 200 reason ", errorInfo)
+// 		returnStatus.Message = errorInfo.Message
+// 	} else {
+// 		json.NewDecoder(respBody).Decode(&returnMcisRecommendInfo)
+// 		fmt.Println(returnMcisRecommendInfo)
+// 	}
+// 	returnStatus.StatusCode = respStatus
 
-	return &returnMcisRecommendInfo, returnStatus
+// 	return &returnMcisRecommendInfo, returnStatus
 
-	// mcisRecommandesult := tumblebug.McisRecommendInfo{}
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return &mcisRecommandesult, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	// }
+// 	// mcisRecommandesult := tumblebug.McisRecommendInfo{}
+// 	// if err != nil {
+// 	// 	fmt.Println(err)
+// 	// 	return &mcisRecommandesult, model.WebStatus{StatusCode: 500, Message: err.Error()}
+// 	// }
 
-	// respBody := resp.Body
-	// respStatus := resp.StatusCode
+// 	// respBody := resp.Body
+// 	// respStatus := resp.StatusCode
 
-	// // TODO : result는 resultArray인데....
-	// json.NewDecoder(respBody).Decode(mcisRecommandesult)
-	// fmt.Println(mcisRecommandesult)
-	// return &mcisRecommandesult, model.WebStatus{StatusCode: respStatus}
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	// }
+// 	// // TODO : result는 resultArray인데....
+// 	// json.NewDecoder(respBody).Decode(mcisRecommandesult)
+// 	// fmt.Println(mcisRecommandesult)
+// 	// return &mcisRecommandesult, model.WebStatus{StatusCode: respStatus}
+// 	// if err != nil {
+// 	// 	fmt.Println(err)
+// 	// 	return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+// 	// }
 
-	// respBody := resp.Body
-	// respStatus := resp.StatusCode
+// 	// respBody := resp.Body
+// 	// respStatus := resp.StatusCode
 
-	// return respBody, model.WebStatus{StatusCode: respStatus}
-}
+// 	// return respBody, model.WebStatus{StatusCode: respStatus}
+// }

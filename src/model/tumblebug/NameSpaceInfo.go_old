@@ -7,3 +7,5 @@ type NameSpaceInfo struct {
 }
 
 type NameSpaceInfos []NameSpaceInfo
+
+// common의 TBNsInfo 로 이동

@@ -4,7 +4,11 @@ import (
 	// "encoding/json"
 	"fmt"
 
-	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	// tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
+
 	service "github.com/cloud-barista/cb-webtool/src/service"
 
 	// util "github.com/cloud-barista/cb-webtool/src/util"
@@ -55,6 +59,7 @@ func VpcMngForm(c echo.Context) error {
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
+	store.Save()
 	log.Println(" nsList  ", nsList)
 
 	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
@@ -142,7 +147,7 @@ func VpcRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vNetRegInfo := new(tumblebug.VNetRegInfo)
+	vNetRegInfo := new(tbmcir.TbVNetReq)
 	if err := c.Bind(vNetRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -227,6 +232,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
+	store.Save()
 	log.Println(" nsList  ", nsList)
 
 	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
@@ -312,7 +318,7 @@ func SecirityGroupRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	securityGroupRegInfo := new(tumblebug.SecurityGroupRegInfo)
+	securityGroupRegInfo := new(tbmcir.TbSecurityGroupReq)
 	if err := c.Bind(securityGroupRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -391,6 +397,7 @@ func SshKeyMngForm(c echo.Context) error {
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
+	store.Save()
 	log.Println(" nsList  ", nsList)
 
 	sshKeyInfoList, respStatus := service.GetSshKeyInfoList(defaultNameSpaceID)
@@ -475,7 +482,7 @@ func SshKeyRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	sshKeyRegInfo := new(tumblebug.SshKeyRegInfo)
+	sshKeyRegInfo := new(tbmcir.TbSshKeyReq)
 	if err := c.Bind(sshKeyRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -551,6 +558,7 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
+	store.Save()
 	log.Println(" nsList  ", nsList)
 
 	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
@@ -636,7 +644,7 @@ func VirtualMachineImageRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	virtualMachineImageRegInfo := new(tumblebug.VirtualMachineImageRegInfo)
+	virtualMachineImageRegInfo := new(tbmcir.TbImageReq)
 	if err := c.Bind(virtualMachineImageRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -878,6 +886,7 @@ func VmSpecMngForm(c echo.Context) error {
 	// 최신 namespacelist 가져오기
 	nsList, _ := service.GetNameSpaceList()
 	store.Set("namespace", nsList)
+	store.Save()
 	log.Println(" nsList  ", nsList)
 
 	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
@@ -962,7 +971,7 @@ func VmSpecRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vmSpecRegInfo := new(tumblebug.VmSpecRegInfo)
+	vmSpecRegInfo := new(tbmcir.TbSpecReq)
 	if err := c.Bind(vmSpecRegInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -1035,7 +1044,7 @@ func LookupVmSpecList(c echo.Context) error {
 	}
 
 	// paramConnectionName := c.Param("connectionName")
-	connectionName := new(tumblebug.TbConnectionName)
+	connectionName := new(tbcommon.TbConnectionName)
 	if err := c.Bind(connectionName); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -1134,7 +1143,7 @@ func FilterVmSpecListByRange(c echo.Context) error {
 	// }
 	// fmt.Println(connectionName)
 	// fmt.Println("ConnectionName=", connectionName)
-	vmSpecRange := &tumblebug.VmSpecRangeReqInfo{}
+	vmSpecRange := &tbmcir.FilterSpecsByRangeRequest{}
 	if err := c.Bind(vmSpecRange); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -1175,7 +1184,7 @@ func GetInspectResourceList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	inspectResource := new(tumblebug.InspectResourcesRequest)
+	inspectResource := new(tbcommon.RestInspectResourcesRequest)
 	if err := c.Bind(inspectResource); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{

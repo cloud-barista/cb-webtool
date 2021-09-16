@@ -4,7 +4,11 @@ import (
 	// "encoding/json"
 	"fmt"
 
-	"github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+	// tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	// tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
+
 	service "github.com/cloud-barista/cb-webtool/src/service"
 
 	// util "github.com/cloud-barista/cb-webtool/src/util"
@@ -63,7 +67,7 @@ func NameSpaceRegProc(c echo.Context) error {
 	// nameSpaceInfo.Name = namespace
 	// nameSpaceInfo.Description = description
 
-	nameSpaceInfo := new(tumblebug.NameSpaceInfo)
+	nameSpaceInfo := new(tbcommon.TbNsInfo)
 	if err := c.Bind(nameSpaceInfo); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -117,7 +121,7 @@ func NameSpaceUpdateProc(c echo.Context) error {
 	}
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	nameSpaceInfo := new(tumblebug.NameSpaceInfo)
+	nameSpaceInfo := new(tbcommon.TbNsInfo)
 	if err := c.Bind(nameSpaceInfo); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -303,7 +307,7 @@ func SetNameSpace(c echo.Context) error {
 	} else {
 		fmt.Println("______________")
 
-		// nsList := nsResult.([]tumblebug.NameSpaceInfo)
+		// nsList := nsResult.([]tbcommon.TbNsInfo)
 		// fmt.Println("nsList ", nsList)
 		for _, nsInfo := range nsList {
 			fmt.Println(nsInfo.ID + " :  " + nameSpaceID)
