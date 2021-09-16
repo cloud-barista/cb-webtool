@@ -405,6 +405,7 @@ func GetWebSocketData(c echo.Context) error {
 			log.Println("is socket working : open finished")
 		case "req": // 특정시간 이후 모두 조회. 조회할 시간이 parameter로 넘어온다. // key값이 unixTime으로 되어 있으므로  string -> int64 -> unixTime -> time
 			// sendData["data"] = objmap["data"]
+			log.Println(objmap)
 			sCallTime := objmap["callTime"].(string)
 			log.Println("is socket working : req started")
 			nCallTime, nErr := strconv.ParseInt(sCallTime, 10, 64)
