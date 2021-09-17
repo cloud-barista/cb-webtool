@@ -4,5 +4,6 @@ package webtool
 type McisLifeCycle struct {
 	NameSpaceID   string `json:"nameSpaceID"`
 	McisID        string `json:"mcisID"`
-	LifeCycleType string `json:"lifeCycleType"`
+	LifeCycleType string `json:"lifeCycleType"` // create, suspend, resume, terminate, delete  : Const.MCIS_LIFECYCLE_xxx
+
 }

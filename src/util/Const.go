@@ -27,6 +27,13 @@ var PROVIDER_CLOUDIT = "cloudit"
 var PROVIDER_OPENSTACK = "openstack"
 var PROVIDER_MOCK = "mock"
 
+// MCIS 의 life cycle // socket통신에서 사용
+var MCIS_LIFECYCLE_CREATE = "create"
+var MCIS_LIFECYCLE_SUSPEND = "suspend"
+var MCIS_LIFECYCLE_RESUME = "resume"
+var MCIS_LIFECYCLE_TERMINATE = "terminate"
+var MCIS_LIFECYCLE_DELETE = "delete"
+
 // MCIS의 상태(소문자).  (기타 상태는 UNDEFINED + ETC)
 var MCIS_STATUS_RUNNING = "running"
 var MCIS_STATUS_INCLUDE = "include"
@@ -44,6 +51,14 @@ var MCKS_STATUS_PARTIAL = "partial"
 var MCKS_STATUS_ETC = "etc"
 
 var STATUS_ARRAY = []string{"running", "stopped", "terminated"}
+
+// VM 의 life cycle // socket통신에서 사용
+var VM_LIFECYCLE_CREATE = "create"
+var VM_LIFECYCLE_SUSPEND = "suspend"
+var VM_LIFECYCLE_RESUME = "resume"
+var VM_LIFECYCLE_TERMINATE = "terminate"
+var VM_LIFECYCLE_DELETE = "delete"
+var VM_LIFECYCLE_REBOOT = "reboot"
 
 // VM의 상태(소문자).  (기타 상태는 UNDEFINED + ETC)
 var VM_STATUS_RUNNING = "running"
@@ -69,6 +84,24 @@ var STORE_CREDENTIALLIST = "credentiallist"
 var STORE_DRIVERLIST = "driverlist"
 var STORE_CLOUDCONNECTIONCONFIGLIST = "cloudconnectionconfiglist"
 
-
 var STORE_DEFAULT_NAMESPACENAME = "defaultnamespacename"
 var STORE_DEFAULT_NAMESPACEID = "defaultnamespaceid"
+
+// websocket으로 전달하는 task의 종류
+var TASK_TYPE_MCIS = "mcis"
+var TASK_TYPE_VM = "vm"
+var TASK_TYPE_MCKS = "mcks"
+var TASK_TYPE_DRIVER = "driver"
+var TASK_TYPE_CREDENTIAL = "credential"
+var TASK_TYPE_REGION = "region"
+var TASK_TYPE_CONNECTION = "connection"
+var TASK_TYPE_VNET = "vnet"
+var TASK_TYPE_SECURITYGROUP = "securitygroup"
+var TASK_TYPE_VMIMAGE = "vmimage"
+var TASK_TYPE_VMSPEC = "vmspec"
+
+// 요청상태 : socket 으로 전달하는 요청 상태
+var TASK_STATUS_REQUEST = "requested"
+var TASK_STATUS_PROCESS = "processing"
+var TASK_STATUS_FAIL = "failed"
+var TASK_STATUS_COMPLETE = "completed"
