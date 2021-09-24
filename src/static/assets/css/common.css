@@ -14,12 +14,12 @@ body {
   touch-action: none;
 }
 .logic_tbox > div > a:link {
-  color:#ffffff; 
-  font-weight:400; 
+  color: #ffffff;
+  font-weight: 400;
 }
 .logic_tbox > div > a:hover {
-  color:#dad73d; 
-  font-weight:400; 
+  color: #dad73d;
+  font-weight: 400;
 }
 
 #wrap {
@@ -191,9 +191,9 @@ body {
   font-weight: 100;
 }
 #lnb .topbox .info .txt_2 .infobox .box > ul > li > ul > li > a:hover {
-  color:#dad73d; 
-  font-weight:400; 
-  background-color:#535757;
+  color: #dad73d;
+  font-weight: 400;
+  background-color: #535757;
 }
 #lnb .leftmenu {
   position: relative;
@@ -655,6 +655,9 @@ body {
   font-weight: 500;
   border-radius: 20px;
 }
+#contents .header .topmenu > ul > li span #badge {
+  display: none;
+}
 #contents .header .topmenu .logout {
   margin-top: -1px;
 }
@@ -715,7 +718,8 @@ body {
 #contents .header .topmenu .infobox .notice_table tbody {
   margin: 3px 5px 10px;
   padding: 5px 15px;
-  overflow: scroll;
+  height: 300px;
+  overflow-y: auto;
 }
 #contents .header .topmenu .infobox .notice_table tbody tr {
   margin: 5px 0;
@@ -1312,7 +1316,7 @@ select.pline {
 /* loading size */
 .loading-container {
   /* position: relative; */
-  position: fixed; 
+  position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
