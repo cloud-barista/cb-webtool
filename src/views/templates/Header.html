@@ -26,8 +26,25 @@
 					</li> -->
 					<li class="notice">
 						<img src="/assets/img/common/icon_notice.png" alt=""/>
+						<span class="badge badge-icon">5</span>
 						<div class="infobox">
-							<div class="box box_txt">See you in the next release !</div>
+							<!-- <div class="box box_txt">See you in the next release !</div> -->
+							<div class="notice_table">
+								<table>
+									<thead>
+										<tr>
+											<th>No.</th>
+											<th>Time</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th>No.</th>
+											<td><textarea id="callTime"></textarea></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</li>
 					<!-- <li class="email">
@@ -86,30 +103,34 @@
 				ws.send(JSON.stringify(sendData));
 				console.log(event);
 			}
-
 			// websocket req : 
 			var interval = setInterval(function() {
 				getWebsocketData()
-        	}, 30000);// 30초마다
-			
-
+				
+        	}, 5000);// 30초마다
+			var idx = 0
 			// websocket message response
 			ws.onmessage = (event) => {
 				console.log(event.data);
 				let recData = JSON.parse(event.data);
 				console.log("recData.event= " + recData.event)
 				console.log(recData)
+				
 				switch (recData.event) {
 					case 'res':
-						var out = document.getElementById('output');
+						var out = $('#callTime');
 						var jsonStr = JSON.stringify(recData);
 						lastCallTime = recData.callTime;
-						//out.innerHTML += jsonStr + '<br> by res';
+						setCallTime();
+						// $('#callTime').val('aaaaaaa');
+						// console.log($('#callTime').val());
 						console.log(recData);
 						break;
 					default:
-						var out = document.getElementById('output');
-						out.innerHTML += recData;
+						// var out = document.getElementById('callTime');
+						// out.innerHTML += recData;
+						$('#callTime').empty();
+						$('#callTime').append(jsonStr + '<br> by res open');
 						console.log(recData);
 						break
 				}
@@ -136,6 +157,13 @@
 			// 반복 중단
 			function stopInterval(){
 				clearInterval(interval)
+			}
+
+			function setCallTime(){
+				console.log("---")
+				console.log($('#callTime').val());
+				$("#callTime").val('aaaa22');
+				console.log($('#callTime').val());
 			}
 		</script>
 {{end}}

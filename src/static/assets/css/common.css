@@ -670,6 +670,7 @@ body {
 #contents .header .topmenu .setting {
   margin: 0 0 0 39px;
 }
+
 #contents .header .topmenu .infobox {
   display: none;
   position: absolute;
@@ -679,7 +680,7 @@ body {
   background-color: #5e636c;
   border-radius: 8px;
 }
-#contents .header .topmenu .infobox:after {
+/* #contents .header .topmenu .infobox:after {
   content: "";
   display: block;
   position: absolute;
@@ -689,7 +690,7 @@ body {
   border-bottom: 7px solid #5e636c;
   border-right: 6px solid transparent;
   border-left: 6px solid transparent;
-}
+} */
 #contents .header .topmenu .infobox .box {
   padding: 20px 24px 21px 24px;
   min-width: 156px;
@@ -701,6 +702,23 @@ body {
   white-space: nowrap;
   color: #fff;
   font-size: 14px;
+}
+#contents .header .topmenu .infobox .notice_table {
+  min-width: 300px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+#contents .header .topmenu .infobox .notice_table thead {
+  color: #fff;
+  margin: 12px 15px 10px;
+}
+#contents .header .topmenu .infobox .notice_table tbody {
+  margin: 3px 5px 10px;
+  padding: 5px 15px;
+  overflow: scroll;
+}
+#contents .header .topmenu .infobox .notice_table tbody tr {
+  margin: 5px 0;
 }
 #contents .header .topmenu .infobox .box p {
   color: #06a9b7;
