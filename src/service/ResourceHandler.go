@@ -741,17 +741,43 @@ func LookupVirtualMachineImageList(connectionName string) (tbmcir.SpiderImageInf
 	return lookupImageList["image"], model.WebStatus{StatusCode: respStatus}
 }
 
-func LookupVirtualMachineImageData(virtualMachineImageID string) (*tbmcir.TbImageInfo, model.WebStatus) {
-	var originalUrl = "/lookupImage/{imageId}"
+// deprecated :  imageId 받는 것에서 connection 받는 것 까지로 변경 됨
+// func LookupVirtualMachineImageData(virtualMachineImageID string) (*tbmcir.TbImageInfo, model.WebStatus) {
+// 	var originalUrl = "/lookupImage/{imageId}"
+// 	var paramMapper = make(map[string]string)
+// 	paramMapper["{imageId}"] = virtualMachineImageID
+// 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+// 	url := util.TUMBLEBUG + urlParam
+// 	// url := util.TUMBLEBUG + "/lookupImage/" + virtualMachineImageID
+
+// 	// pbytes, _ := json.Marshal(nameSpaceID)
+// 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+// 	virtualMachineImageInfo := tbmcir.TbImageInfo{}
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+// 	}
+
+// 	respBody := resp.Body
+// 	respStatus := resp.StatusCode
+
+// 	json.NewDecoder(respBody).Decode(virtualMachineImageInfo)
+// 	fmt.Println(virtualMachineImageInfo)
+
+// 	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
+// }
+
+// 특정 provider의 특정 image정보 조회
+func LookupVirtualMachineImageData(restLookupImageRequest *tbmcir.RestLookupImageRequest) (*tbmcir.SpiderImageInfo, model.WebStatus) {
+	var originalUrl = "/lookupImage"
 	var paramMapper = make(map[string]string)
-	paramMapper["{imageId}"] = virtualMachineImageID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/lookupImage/" + virtualMachineImageID
 
-	// pbytes, _ := json.Marshal(nameSpaceID)
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	virtualMachineImageInfo := tbmcir.TbImageInfo{}
+	pbytes, _ := json.Marshal(restLookupImageRequest)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	virtualMachineImageInfo := tbmcir.SpiderImageInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -1068,16 +1094,41 @@ func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.Spi
 
 }
 
-func LookupVmSpecInfoData(vmSpecName string) (*tbmcir.RestGetAllSpecResponse, model.WebStatus) {
-	var originalUrl = "/lookupSpec/{specName}"
-	var paramMapper = make(map[string]string)
-	paramMapper["{specName}"] = vmSpecName
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/lookupSpec/" + vmSpecName
+// deprecated 호출경로 변경
+// func LookupVmSpecInfoData(vmSpecName string) (*tbmcir.RestGetAllSpecResponse, model.WebStatus) {
+// 	var originalUrl = "/lookupSpec/{specName}"
+// 	var paramMapper = make(map[string]string)
+// 	paramMapper["{specName}"] = vmSpecName
+// 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+// 	url := util.TUMBLEBUG + urlParam
+// 	// url := util.TUMBLEBUG + "/lookupSpec/" + vmSpecName
 
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	vmSpecInfo := tbmcir.RestGetAllSpecResponse{}
+// 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+// 	vmSpecInfo := tbmcir.RestGetAllSpecResponse{}
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+// 	}
+
+// 	respBody := resp.Body
+// 	respStatus := resp.StatusCode
+
+// 	json.NewDecoder(respBody).Decode(&vmSpecInfo)
+// 	fmt.Println(vmSpecInfo)
+
+// 	return &vmSpecInfo, model.WebStatus{StatusCode: respStatus}
+// }
+
+func LookupVmSpecInfoData(restLookupSpecRequest *tbmcir.RestLookupSpecRequest) (*tbmcir.SpiderSpecInfo, model.WebStatus) {
+	var originalUrl = "/lookupSpec"
+
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(restLookupSpecRequest)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	vmSpecInfo := tbmcir.SpiderSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}

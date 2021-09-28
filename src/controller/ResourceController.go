@@ -7,6 +7,7 @@ import (
 	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+
 	// tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
 	service "github.com/cloud-barista/cb-webtool/src/service"
@@ -810,8 +811,17 @@ func LookupVirtualMachineImageData(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	paramVirtualMachineImage := c.Param("imageID")
-	virtualMachineImageInfo, respStatus := service.LookupVirtualMachineImageData(paramVirtualMachineImage)
+	restLookupImageRequest := new(tbmcir.RestLookupImageRequest)
+	if err := c.Bind(restLookupImageRequest); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	// paramVirtualMachineImage := c.Param("imageID")
+	// virtualMachineImageInfo, respStatus := service.LookupVirtualMachineImageData(paramVirtualMachineImage)
+	virtualMachineImageInfo, respStatus := service.LookupVirtualMachineImageData(restLookupImageRequest)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":                 "success",
@@ -1079,8 +1089,15 @@ func LookupVmSpecData(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	paramVMSpec := c.Param("specID") // IID
-	vmSpecInfo, respStatus := service.LookupVmSpecInfoData(paramVMSpec)
+	restLookupSpecRequest := new(tbmcir.RestLookupSpecRequest)
+	if err := c.Bind(restLookupSpecRequest); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	vmSpecInfo, respStatus := service.LookupVmSpecInfoData(restLookupSpecRequest)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",

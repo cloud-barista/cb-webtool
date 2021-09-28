@@ -97,6 +97,37 @@ func GetNameSpaceList() ([]tbcommon.TbNsInfo, model.WebStatus) {
 	return nameSpaceInfoList["ns"], model.WebStatus{StatusCode: respStatus}
 }
 
+// Namespace 조회 시 Option에 해당하는 값만 조회. GetNameSpaceList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름
+func GetNameSpaceListByOption(optionParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetNameSpaceList start")
+	var originalUrl = "/ns"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.TUMBLEBUG + urlParam + "?option=" + optionParam
+	// url := util.TUMBLEBUG + "/ns"
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	//body := HttpGetHandler(url)
+
+	if err != nil {
+		// 	// Tumblebug 접속 확인하라고
+		// fmt.Println(err)
+		// panic(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	nameSpaceInfoList := map[string][]string{}
+	// defer body.Close()
+	json.NewDecoder(respBody).Decode(&nameSpaceInfoList)
+	//spew.Dump(body)
+	fmt.Println(nameSpaceInfoList["idList"])
+
+	return nameSpaceInfoList["idList"], model.WebStatus{StatusCode: respStatus}
+}
+
 // Get namespace
 func GetNameSpaceData(nameSpaceID string) (tbcommon.TbNsInfo, model.WebStatus) {
 	fmt.Println("GetNameSpaceData start")
@@ -125,7 +156,7 @@ func GetNameSpaceData(nameSpaceID string) (tbcommon.TbNsInfo, model.WebStatus) {
 	return nameSpaceInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-// NameSpace 등록
+// NameSpace 등록.  등록 후 전체조회를 하기 때문에 굳이 TbNsInfo로 변경하지 않는데... 해야겠지?
 func RegNameSpace(nameSpaceInfo *tbcommon.TbNsInfo) (io.ReadCloser, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	var originalUrl = "/ns"
@@ -146,7 +177,7 @@ func RegNameSpace(nameSpaceInfo *tbcommon.TbNsInfo) (io.ReadCloser, model.WebSta
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
-// NameSpace 수정 : namespace 없데이트 기능 없음
+// NameSpace 수정 : 만들어 놓기는 했으나, tb에 namespace 없데이트 기능 없음
 func UpdateNameSpace(nameSpaceID string, nameSpaceInfo *tbcommon.TbNsInfo) (io.ReadCloser, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}"
 	var paramMapper = make(map[string]string)
