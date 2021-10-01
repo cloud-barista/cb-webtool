@@ -87,7 +87,6 @@ func GetMcisPolicyInfoData(c echo.Context) error {
 
 	mcisID := c.Param("mcisID")
 	log.Println("mcisID= " + mcisID)
-	//monitoringGroup.GET("/mcis/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
 
 	resultMcisInfo, _ := service.GetMcisPolicyInfoData(defaultNameSpaceID, mcisID)
 

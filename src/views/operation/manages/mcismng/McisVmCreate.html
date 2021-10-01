@@ -105,16 +105,16 @@
 														</div> -->
 														
 														<ul id="mcis_server_list">
-															{{range $vmIndex, $item := .VMList}}
+															<!-- { {range $vmIndex, $item := .VMList} }
 															
 															<li>
 																<div class="server server_on bgbox_g">
 																	<div class="icon"></div>
-																	<div class="txt">{{$item.Name}}</div>
+																	<div class="txt">{ {$item.Name} }</div>
 																</div>
 															</li>														
 
-															{{ end }}
+															{ { end } } -->
 															<li>
 																
 																<div class="server server_add" onClick="displayNewServerForm()">

@@ -105,3 +105,6 @@ var TASK_STATUS_REQUEST = "requested"
 var TASK_STATUS_PROCESS = "processing"
 var TASK_STATUS_FAIL = "failed"
 var TASK_STATUS_COMPLETE = "completed"
+
+//
+var VMSPEC_LIFECYCLE_CREATE = "create"

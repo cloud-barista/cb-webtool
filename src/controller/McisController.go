@@ -313,7 +313,9 @@ func GetMcisList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	mcisList, respStatus := service.GetMcisList(defaultNameSpaceID)
+	// mcisList, respStatus := service.GetMcisList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	mcisList, respStatus := service.GetMcisList(defaultNameSpaceID, optionParam)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
@@ -349,7 +351,7 @@ func McisRegProc(c echo.Context) error {
 	log.Println("get info")
 	//&[]Person{}
 	// mcisInfo := &tumblebug.McisInfo{}
-	mcisInfo := &tbmcis.TbMcisInfo{}
+	mcisInfo := &tbmcis.TbMcisReq{}
 	if err := c.Bind(mcisInfo); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
@@ -430,8 +432,9 @@ func McisDelProc(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	mcisID := c.Param("mcisID")
+	optionParam := c.QueryParam("option")
 	log.Println("mcisID= " + mcisID)
-	_, respStatus := service.DelMcis(defaultNameSpaceID, mcisID)
+	_, respStatus := service.DelMcis(defaultNameSpaceID, mcisID, optionParam)
 	log.Println("RegMcis service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -568,7 +571,7 @@ func VmRegProc(c echo.Context) error {
 	}
 
 	// mCISInfo := &tumblebug.McisInfo{}
-	vmInfo := &tbmcis.TbVmInfo{}
+	vmInfo := &tbmcis.TbVmReq{}
 	if err := c.Bind(vmInfo); err != nil {
 		// if err := c.Bind(mCISInfoList); err != nil {
 		log.Println(err)
@@ -859,7 +862,7 @@ func CommandMcis(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	// command는 bind 되어있을 것이고.
+	// command는 bind 되어있을 것이고. // RestPostCmdMcisResponseWrapper
 	respMessage, respStatus := service.CommandMcis(defaultNameSpaceID, mcisID, mcisCommand)
 	log.Println("CommandMcis result")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
@@ -870,8 +873,9 @@ func CommandMcis(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": respMessage.Message,
-		"status":  respMessage.StatusCode,
+		"message":       respStatus.Message,
+		"status":        respStatus.StatusCode,
+		"commandResult": respMessage,
 	})
 }
 
@@ -920,7 +924,8 @@ func CommandVmOfMcis(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": respMessage.Message,
-		"status":  respMessage.StatusCode,
+		"message":       respStatus.Message,
+		"status":        respStatus.StatusCode,
+		"commandResult": respMessage,
 	})
 }

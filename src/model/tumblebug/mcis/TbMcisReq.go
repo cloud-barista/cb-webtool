@@ -7,5 +7,6 @@ type TbMcisReq struct {
 	Name            string `json:"name"`
 	PlacementAlgo   string `json:"placementAlgo"`
 
-	Vm TbVmInfo `json:"vm"`
+	// Vm TbVmInfo `json:"vm"`
+	Vm TbVmReq `json:"vm"`
 }

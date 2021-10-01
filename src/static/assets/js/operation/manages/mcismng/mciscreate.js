@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-
+    console.log("hohohoho")
     //Servers Expert on/off
 //     var check = $(".switch .ch");
 //     var $Servers = $(".servers_config");

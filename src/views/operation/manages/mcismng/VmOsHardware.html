@@ -78,20 +78,7 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>HW Spec</label>
-							<!-- <select class="selectbox white pline sel_1" id="e_specId">
-								<option value="">All</option>
-								{{ range $vmSpecItem := .VMSpecList}}
-								<option value="{{ $vmSpecItem.ID }}">[{{ $vmSpecItem.Name }}] {{ $vmSpecItem.CspSpecName }}  {{ $vmSpecItem.NumVCPU }} {{ $vmSpecItem.NumCore }}</option>
-								{{ end }}
-
-							</select>
-							<span class="sbox sbox_m">
-								<input type="text" name="e_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" title="" id="e_specFilterKeyword"/>
-								<input type="submit" name="" class="btn_search" value="" title="" onclick="hardwareSpecFilter('e_specId', 'e_specFilterKeyword')"/>
-								<a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec" class="btn_spec">Assist</a>
-							</span>
-							<input type="text" name="" value="" placeholder="" class="gray ip_2" title=""readonly /> -->
-
+							
 							<span class="sbox sbox_m">
 								<input type="text" name="es_specFilterKeyword" placeholder="Filter Items" class="pline ip_1 search_ip" id="filter_spec" onkeydown="filterEnterToHidden(this.id, 'vmSpec_info', 'es_specList');"/>
 								<input type="submit" name="" class="btn_search" value="" title="" onclick="filterToHidden('filter_spec', 'vmSpec_info', 'es_specList')"/>
@@ -117,27 +104,27 @@
 									</tr>
 								</thead>
 								<tbody id="e_specListTbody">
-									{{ $length := len .VMSpecList }} 
-									{{ if eq $length 0 }}
+									<!-- { { $length := len .VMSpecList } } 
+									{ { if eq $length 0 } }
 									<tr>
 										<td class="overlay hidden" data-th="" colspan="8">No Data</td>
 									</tr>
-									{{ end }}
+									{ { end } }
 
-									{{range $vmSpecIndex, $vmSpecItem := .VMSpecList}}	
-									<tr onclick="setValueToFormObj('es_specList', 'tab_vmSpec', 'vmSpec', '{{$vmSpecIndex}}', 'e_specId');">
-											<input type="hidden" id="vmSpec_id_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}"/>
-											<input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_{{$vmSpecIndex}}" value="{{$vmSpecItem.ConnectionName}}"/>
-											<input type="hidden" name="vmSpec_info" id="vmSpec_info_{{$vmSpecIndex}}" value="{{$vmSpecItem.ID}}|{{$vmSpecItem.Name}}|{{$vmSpecItem.ConnectionName}}|{{$vmSpecItem.CspSpecName}}"/>
+									{ {range $vmSpecIndex, $vmSpecItem := .VMSpecList} }	
+									<tr onclick="setValueToFormObj('es_specList', 'tab_vmSpec', 'vmSpec', '{ { $vmSpecIndex } }', 'e_specId');">
+											<input type="hidden" id="vmSpec_id_{ {$vmSpecIndex} }" value="{ {$vmSpecItem.ID} }"/>
+											<input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_{ {$vmSpecIndex} }" value="{ {$vmSpecItem.ConnectionName} }"/>
+											<input type="hidden" name="vmSpec_info" id="vmSpec_info_{ {$vmSpecIndex} }" value="{ {$vmSpecItem.ID} }|{ {$vmSpecItem.Name} }|{ {$vmSpecItem.ConnectionName} }|{ {$vmSpecItem.CspSpecName} }"/>
 										
-										<td class="overlay hidden" data-th="Name">{{$vmSpecItem.Name}}</td>
+										<td class="overlay hidden" data-th="Name">{ {$vmSpecItem.Name} }</td>
 										<td class="btn_mtd ovm td_left" data-th="ConnectionName">
-											{{$vmSpecItem.ConnectionName}}
+											{ {$vmSpecItem.ConnectionName} }
 										</td>
-										<td class="overlay hidden" data-th="CspSpecName">{{$vmSpecItem.CspSpecName}}</td>
+										<td class="overlay hidden" data-th="CspSpecName">{ {$vmSpecItem.CspSpecName} }</td>
 									</tr>											
-									{{end}}
-									
+									{ {end} }
+									 -->
 								</tbody>
 							</table>
 						

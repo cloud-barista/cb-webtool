@@ -21,9 +21,9 @@
 			
 			function getVmiInfo(){
 				
-				 var configName = $("#s_regConnectionName option:selected").val();
+				var configName = $("#s_regConnectionName option:selected").val();
 				 
-				 console.log("2 : ",configName);
+				console.log("2 : ",configName);
 				// getCommonVirtualMachineImageList("mcissimpleconfigure", "name"); setCommonVirtualMachineImageList()
 				// var url = "/setting/resources" + "/machineimage/lookupimage";//TODO : 조회 오류남... why? connectionName으로 lookup
 				var url = "/setting/resources" + "/machineimage/list"
