@@ -549,8 +549,8 @@ func main() {
 	policyGroup := e.Group("/operation/policies", policyTemplate)
 	policyGroup.GET("/policy/mngform", controller.McisPolicyMngForm)
 	policyGroup.GET("/mcis/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
-	policyGroup.POST("/mcis/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
-	policyGroup.GET("/mcis/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
+	e.POST("/operation/policies/mcis/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
+	e.GET("/operation/policies/mcis/:mcisID/metric/:metric", controller.GetMcisPolicyInfoData)
 
 	// MCIS
 	// e.GET("/Manage/MCIS/reg", controller.McisRegForm)
@@ -689,8 +689,9 @@ func main() {
 
 	e.GET("/setting/resources/machineimage/lookupimages", controller.LookupCspVirtualMachineImageList) // TODO : Image 전체목록인가? 확인필요
 	//resourcesGroup.GET("/machineimage/lookupimage", controller.LookupVirtualMachineImageList)          // TODO : Image 전체목록인가? 확인필요
-	resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
-	e.POST("/setting/resources/machineimage/fetchimages", controller.FetchVirtualMachineImageList)     // TODO : Image 정보 갱신인가? 확인필요
+	// resourcesGroup.GET("/machineimage/lookupimage/:imageID", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
+	e.GET("/setting/resources/machineimage/lookupimage", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
+	e.POST("/setting/resources/machineimage/fetchimages", controller.FetchVirtualMachineImageList) // TODO : Image 정보 갱신인가? 확인필요
 
 	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
 
@@ -701,9 +702,11 @@ func main() {
 	resourcesGroup.DELETE("/vmspec/del/:vmSpecID", controller.VmSpecDelProc) // DelProc + SskKey 같이 앞으로 넘길까
 	// resourcesGroup.PUT("/vmspec/put/:vmSpecID", controller.VmSpecPutProc)	// TODO : put 만들어야 함
 
-	resourcesGroup.GET("/vmspec/lookupvmspec", controller.LookupVmSpecList)             // TODO : Image 전체목록인가? 확인필요
-	resourcesGroup.GET("/vmspec/lookupvmspec/:vmSpecName", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
-	resourcesGroup.POST("/vmspec/fetchvmspec", controller.FetchVmSpecList)              // TODO : Image 정보 갱신인가? 확인필요
+	// resourcesGroup.GET("/vmspec/lookupvmspec", controller.LookupVmSpecList)             // TODO : Image 전체목록인가? 확인필요
+	e.GET("/setting/resources/vmspec/lookupvmspecs", controller.LookupVmSpecList) // TODO : Image 전체목록인가? 확인필요
+	// resourcesGroup.GET("/vmspec/lookupvmspec/:vmSpecName", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
+	e.GET("/setting/resources/vmspec/lookupvmspec", controller.LookupVmSpecData) // TODO : Image 상세 정보인가? 확인필요
+	resourcesGroup.POST("/vmspec/fetchvmspec", controller.FetchVmSpecList)       // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
 	e.POST("/setting/resources/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange) // TODO : post방식의 filterspec 생성필요
 

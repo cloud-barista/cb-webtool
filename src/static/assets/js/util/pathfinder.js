@@ -338,7 +338,7 @@ function getCommonVirtualMachineSpecList(caller, sortType) {
 
 // /lookupSpecs
 function getCommonLookupSpecList(caller, connectionName) {    
-    var url = "/setting/resources/vmspec/lookupvmspec"
+    var url = "/setting/resources/vmspec/lookupvmspecs"
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -346,6 +346,38 @@ function getCommonLookupSpecList(caller, connectionName) {
         },
         params: {
             connectionName: connectionName
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.CspVmSpecList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( caller == "vmspecmng"){
+			console.log("return get Data")			
+			lookupSpecListCallbackSuccess(caller, data)		
+		}
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        lookupSpecListCallbackSuccess(error)
+	});
+}
+
+// /lookupSpecs
+function getCommonLookupSpec(caller, connectionName, cspSpecName) {    
+    var url = "/setting/resources/vmspec/lookupvmspec"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        },
+        params: {
+            connectionName: connectionName,
+            cspSpecName : cspSpecName
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
@@ -448,6 +480,39 @@ function getCommonLookupImageList(caller, connectionName) {
         },
         params: {
             connectionName: connectionName
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.VirtualMachineImageList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( caller == "vmimagemng"){
+			console.log("return get Data")			
+			lookupVmImageListCallbackSuccess(caller, data)		
+		}
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        lookupVmImageListCallbackFail(error)
+	});
+}
+
+// /lookupImages
+function getCommonLookupImage(caller, connectionName, cspImageID) {    
+    //var url = "/setting/resources/vmimage/lookupvmimagelist"
+    var url = "/setting/resources/machineimage/lookupimages"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        },
+        params: {
+            connectionName: connectionName,
+            cspImageID : cspImageID
         }
     }).then(result => {
         console.log("get Image List : ", result.data);

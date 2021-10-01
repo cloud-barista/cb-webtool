@@ -21,6 +21,7 @@ type TbSpecInfo struct {
 	EvaluationScore10 float32 `json:"evaluationScore10"`
 	EvaluationStatus  string  `json:"evaluationStatus"`
 
+	GpuMemGiB          int    `json:"gpuMemGiB"`
 	GpuModel           string `json:"gpuModel"`
 	GpuP2p             string `json:"gpuP2p"`
 	ID                 string `json:"id"`
