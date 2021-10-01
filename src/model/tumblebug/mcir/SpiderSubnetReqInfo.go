@@ -5,7 +5,7 @@ import (
 )
 
 type SpiderSubnetReqInfo struct {
-	Name         string              `json:"name"`
-	Ipv4_CIDR    string              `json:"ipv4_CIDR"`
-	KeyValueList tbcommon.TbKeyValue `json:"keyValueList"`
+	Name         string                `json:"name"`
+	Ipv4_CIDR    string                `json:"ipv4_CIDR"`
+	KeyValueList []tbcommon.TbKeyValue `json:"keyValueList"`
 }
