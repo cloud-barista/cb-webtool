@@ -16,6 +16,7 @@ $(document).ready(function(){
     $("#mcisListTable").each(function(){
         var $sel_list = $(this);
         var $detail = $(".server_info");
+        $status = $(".server_status")
         // console.log($sel_list);
         // console.log($detail);
 
@@ -25,15 +26,18 @@ $(document).ready(function(){
             $sel_list.siblings().removeClass("active");
             $detail.addClass("active");
             $detail.siblings().removeClass("active");
+            $status.addClass("view");
             $sel_list.off("click").click(function(){
                 if( $(this).hasClass("active") ) {
                     $sel_list.removeClass("active");
                     $detail.removeClass("active");
+                    $status.removeClass("view");
                 } else {
                     $sel_list.addClass("active");
                     $sel_list.siblings().removeClass("active");
                     $detail.addClass("active");
                     $detail.siblings().removeClass("active");
+                    $status.addClass("view");
                 }
             });
         });
@@ -225,6 +229,19 @@ function getMcisListCallbackSuccess(caller, mcisList){
             try{
                 
                 var addMcis = "";
+                var displayMcisStatus = "";// icon_running, icon_stop, icon_terminate
+                if( mcisStatus.toLowerCase().indexOf("running") ){
+                    displayMcisStatus = "running"
+                }else if ( mcisStatus.toLowerCase().indexOf("suspend")){
+                    displayMcisStatus = "stop"
+                }else if ( mcisStatus.toLowerCase().indexOf("terminate")){
+                    displayMcisStatus = "terminate"
+                }else {
+                    displayMcisStatus = "terminate"
+                }
+
+
+
                 addMcis += '<tr onclick="clickListOfMcis(\'' + aMcis.id + '\', ' + mcisIndex +' );" id="server_info_tr_' + mcisIndex +'" item="' + aMcis.id +'|' + mcisIndex + '">'
 
                 addMcis += '<td class="overlay hidden td_left column-14percent" data-th="Status">'

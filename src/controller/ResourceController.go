@@ -5,13 +5,15 @@ import (
 	"fmt"
 
 	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	"github.com/cloud-barista/cb-webtool/src/model"
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+
 	// tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
 	service "github.com/cloud-barista/cb-webtool/src/service"
 
-	// util "github.com/cloud-barista/cb-webtool/src/util"
+	util "github.com/cloud-barista/cb-webtool/src/util"
 
 	"github.com/labstack/echo"
 	// "io/ioutil"
@@ -644,17 +646,36 @@ func VirtualMachineImageRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	virtualMachineImageRegInfo := new(tbmcir.TbImageReq)
-	if err := c.Bind(virtualMachineImageRegInfo); err != nil {
-		log.Println(err)
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "fail",
-			"status":  "fail",
-		})
-	}
+	// virtualMachineImageRegInfo := new(tbmcir.TbImageReq)
 
-	paramVirtualMachineImageRegistType := c.Param("virtualMachineImageRegistType") // registerWithId 또는 registerWithInfo
-	resultVirtualMachineImageInfo, respStatus := service.RegVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageRegistType, virtualMachineImageRegInfo)
+	resultVirtualMachineImageInfo := new(tbmcir.TbImageInfo)
+	respStatus := model.WebStatus{}
+
+	paramVirtualMachineImageRegistType := c.Param("registeringMethod") // registeringMethod = registerWithId 또는 registerWithInfo
+	// registeringMethod 에 따라 request Object가 달라짐.
+	if paramVirtualMachineImageRegistType == "registerWithInfo" {
+		virtualMachineImageRegInfo := new(tbmcir.TbImageInfo)
+		if err := c.Bind(virtualMachineImageRegInfo); err != nil {
+			log.Println(err)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "fail",
+				"status":  "fail",
+			})
+		}
+		resultVirtualMachineImageInfo, respStatus = service.RegVirtualMachineImageWithInfo(defaultNameSpaceID, paramVirtualMachineImageRegistType, virtualMachineImageRegInfo)
+	} else {
+		virtualMachineImageRegInfo := new(tbmcir.TbImageReq)
+		if err := c.Bind(virtualMachineImageRegInfo); err != nil {
+			log.Println(err)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "fail",
+				"status":  "fail",
+			})
+		}
+		resultVirtualMachineImageInfo, respStatus = service.RegVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageRegistType, virtualMachineImageRegInfo)
+	}
+	// resultVirtualMachineImageInfo, respStatus := service.RegVirtualMachineImage(defaultNameSpaceID, paramVirtualMachineImageRegistType, virtualMachineImageRegInfo)
+
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -810,8 +831,17 @@ func LookupVirtualMachineImageData(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	paramVirtualMachineImage := c.Param("imageID")
-	virtualMachineImageInfo, respStatus := service.LookupVirtualMachineImageData(paramVirtualMachineImage)
+	restLookupImageRequest := new(tbmcir.RestLookupImageRequest)
+	if err := c.Bind(restLookupImageRequest); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	// paramVirtualMachineImage := c.Param("imageID")
+	// virtualMachineImageInfo, respStatus := service.LookupVirtualMachineImageData(paramVirtualMachineImage)
+	virtualMachineImageInfo, respStatus := service.LookupVirtualMachineImageData(restLookupImageRequest)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":                 "success",
@@ -830,8 +860,16 @@ func SearchVirtualMachineImageList(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	paramKeywords := c.Param("keywords")
-	virtualMachineImageInfoList, respStatus := service.SearchVirtualMachineImageList(defaultNameSpaceID, paramKeywords)
+	// paramKeywords := c.Param("keywords")
+	restSearchImageRequest := new(tbmcir.RestSearchImageRequest)
+	if err := c.Bind(restSearchImageRequest); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	virtualMachineImageInfoList, respStatus := service.SearchVirtualMachineImageList(defaultNameSpaceID, restSearchImageRequest)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":                 "success",
@@ -971,18 +1009,33 @@ func VmSpecRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vmSpecRegInfo := new(tbmcir.TbSpecReq)
-	if err := c.Bind(vmSpecRegInfo); err != nil {
-		log.Println(err)
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "fail",
-			"status":  "fail",
-		})
-	}
+	resultVirtualMachineSpecInfo := new(tbmcir.TbSpecInfo)
+	respStatus := model.WebStatus{}
 
 	paramVMSpecregisteringMethod := c.Param("specregisteringMethod") // registerWithInfo or Else(간단등록인 경우 param설정 필요 X)
+	if paramVMSpecregisteringMethod == "registerWithInfo" {
+		vmSpecRegInfo := new(tbmcir.TbSpecInfo)
+		if err := c.Bind(vmSpecRegInfo); err != nil {
+			log.Println(err)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "fail",
+				"status":  "fail",
+			})
+		}
+		resultVirtualMachineSpecInfo, respStatus = service.RegVmSpecWithInfo(defaultNameSpaceID, paramVMSpecregisteringMethod, vmSpecRegInfo)
+	} else {
+		vmSpecRegInfo := new(tbmcir.TbSpecReq)
+		if err := c.Bind(vmSpecRegInfo); err != nil {
+			log.Println(err)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "fail",
+				"status":  "fail",
+			})
+		}
+		resultVirtualMachineSpecInfo, respStatus = service.RegVmSpec(defaultNameSpaceID, paramVMSpecregisteringMethod, vmSpecRegInfo)
+	}
 
-	resultVmSpecInfo, respStatus := service.RegVmSpec(defaultNameSpaceID, paramVMSpecregisteringMethod, vmSpecRegInfo)
+	// resultVmSpecInfo, respStatus := service.RegVmSpec(defaultNameSpaceID, paramVMSpecregisteringMethod, vmSpecRegInfo)
 	// todo : return message 조치 필요. 중복 등 에러났을 때 message 표시가 제대로 되지 않음
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		// 호출은 정상: http.StatusOK, 결과는 정상이 아님. (statusCode != 200,201)
@@ -1000,7 +1053,7 @@ func VmSpecRegProc(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"status":  respStatus.StatusCode,
-		"VMSpec":  resultVmSpecInfo,
+		"VMSpec":  resultVirtualMachineSpecInfo,
 	})
 }
 
@@ -1079,8 +1132,15 @@ func LookupVmSpecData(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	paramVMSpec := c.Param("specID") // IID
-	vmSpecInfo, respStatus := service.LookupVmSpecInfoData(paramVMSpec)
+	restLookupSpecRequest := new(tbmcir.RestLookupSpecRequest)
+	if err := c.Bind(restLookupSpecRequest); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	vmSpecInfo, respStatus := service.LookupVmSpecInfoData(restLookupSpecRequest)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
@@ -1089,7 +1149,7 @@ func LookupVmSpecData(c echo.Context) error {
 	})
 }
 
-// TODO : Fetch 의미 파악필요
+// Fetch는 Spider에 있는 VM Image정보를 Tumblebug으로 가져오는 작업. 시간이 오래걸리므로 이전에는 전체 Image목록을 가져왔으나 결과만 return하는 것으로 변경 됨.
 func FetchVmSpecList(c echo.Context) error {
 	log.Println("FetchVMSpecList : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -1099,19 +1159,24 @@ func FetchVmSpecList(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vmSpecInfoList, respStatus := service.FetchVmSpecInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+	taskKey := defaultNameSpaceID + "||" + "VMSpec" + "||" + "Fetch"
+	//func StoreWebsocketMessage(taskType string, taskKey string, lifeCycle string, requestStatus string, c echo.Context) {
+	service.StoreWebsocketMessage(util.TASK_TYPE_VMSPEC, taskKey, util.VMSPEC_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	// vmSpecInfoList, respStatus := service.FetchVmSpecInfoList(defaultNameSpaceID)
+	go service.FetchVmSpecInfoListByAsync(defaultNameSpaceID, c)
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus.StatusCode,
+		"status":  "200",
 		// "DefaultNameSpaceID": defaultNameSpaceID,
-		"VmSpec": vmSpecInfoList,
+		// "VmSpec": vmSpecInfoList,
 	})
 }
 

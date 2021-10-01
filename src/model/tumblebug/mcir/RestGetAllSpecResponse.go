@@ -2,5 +2,5 @@ package mcir
 
 //
 type RestGetAllSpecResponse struct {
-	Spec TbSpecInfo `json:"spec"`
+	Spec []TbSpecInfo `json:"spec"`
 }

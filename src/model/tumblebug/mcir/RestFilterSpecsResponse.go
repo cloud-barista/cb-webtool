@@ -2,5 +2,5 @@ package mcir
 
 //
 type RestFilterSpecsResponse struct {
-	SpaceInfo TbSpecInfo `json:"spec"`
+	SpaceInfo []TbSpecInfo `json:"spec"`
 }
