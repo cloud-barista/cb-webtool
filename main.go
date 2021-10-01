@@ -549,8 +549,8 @@ func main() {
 	policyGroup := e.Group("/operation/policies", policyTemplate)
 	policyGroup.GET("/policy/mngform", controller.McisPolicyMngForm)
 	policyGroup.GET("/mcis/:mcisID/vm/:vmID/agent/mngform", controller.VmMonitoringAgentRegForm)
-	policyGroup.POST("/mcis/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
-	policyGroup.GET("/mcis/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
+	e.POST("/operation/policies/mcis/:mcisID/vm/:vmID/agent/reg/proc", controller.VmMonitoringAgentRegProc) // namespace 등록 처리
+	e.GET("/operation/policies/mcis/:mcisID/metric/:metric", controller.GetMcisPolicyInfoData)
 
 	// MCIS
 	// e.GET("/Manage/MCIS/reg", controller.McisRegForm)

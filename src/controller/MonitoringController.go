@@ -39,7 +39,9 @@ func McisMonitoringMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	// 해당 Namespace의 모든 MCIS 조회
-	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	// mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	mcisList, _ := service.GetMcisList(defaultNameSpaceID, optionParam)
 	log.Println(" mcisList  ", mcisList)
 
 	return echotemplate.Render(c, http.StatusOK,
@@ -154,14 +156,13 @@ func GetVmMonitoringInfoData(c echo.Context) error {
 	mcisID := c.Param("mcisID")
 	metric := c.Param("metric")
 	log.Println("mcisID= " + mcisID)
-	//monitoringGroup.GET("/mcis/:mcisID/metric/:metric", controller.GetVmMonitoringInfoData)
 
 	resultMcisInfo, _ := service.GetVmMonitoringInfoData(defaultNameSpaceID, mcisID, metric)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":  "success",
-		"status":   200,
-		"McisInfo": resultMcisInfo,
+		"message":       "success",
+		"status":        200,
+		"MonResultInfo": resultMcisInfo,
 	})
 }
 
@@ -186,7 +187,9 @@ func McksMonitoringMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	// 해당 Namespace의 모든 MCIS 조회
-	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	// mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	mcisList, _ := service.GetMcisList(defaultNameSpaceID, optionParam)
 	log.Println(" mcisList  ", mcisList)
 
 	return echotemplate.Render(c, http.StatusOK,

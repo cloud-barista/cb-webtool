@@ -65,7 +65,8 @@ func DashBoardByNameSpaceMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	// 해당 Namespace의 모든 MCIS 조회
-	mcisList, mcisErr := service.GetMcisList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	mcisList, mcisErr := service.GetMcisList(defaultNameSpaceID, optionParam)
 	log.Println(" mcisList  ", mcisList)
 
 	if mcisErr.StatusCode != 200 && mcisErr.StatusCode != 201 {
@@ -238,7 +239,9 @@ func GlobalDashBoardMngForm(c echo.Context) error {
 	totalConnectionCount := len(cloudConnectionConfigInfoList)
 
 	// 모든 MCIS 조회
-	mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	// mcisList, _ := service.GetMcisList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	mcisList, _ := service.GetMcisList(defaultNameSpaceID, optionParam)
 	log.Println(" mcisList  ", mcisList)
 
 	// totalMcisCount := len(mcisList) // mcis 갯수

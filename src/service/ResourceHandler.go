@@ -19,6 +19,8 @@ import (
 	tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
 	util "github.com/cloud-barista/cb-webtool/src/util"
+
+	"github.com/labstack/echo"
 )
 
 // 해당 namespace의 vpc 목록 조회
@@ -498,7 +500,8 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (model.WebStatus, model.WebS
 // VirtualMachineImage 목록 조회
 func GetVirtualMachineImageInfoList(nameSpaceID string) ([]tbmcir.TbImageInfo, model.WebStatus) {
 	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
-	var originalUrl = "/ns/{nsId}/resources/image"
+	// var originalUrl = "/ns/{nsId}/resources/image"
+	var originalUrl = "/ns​/{nsId}​/resources​/image"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
@@ -530,6 +533,51 @@ func GetVirtualMachineImageInfoList(nameSpaceID string) ([]tbmcir.TbImageInfo, m
 	return virtualMachineImageList["image"], model.WebStatus{StatusCode: respStatus}
 }
 
+// VirtualMachineImage 목록에서 Option으로 ID 목록만 가져오는 function
+func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
+	// var originalUrl = "/ns/{nsId}/resources/image"
+	var originalUrl = "/ns​/{nsId}​/resources​/image"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+
+	optionParamVal := ""
+	// install, init, cpus, cpum, memR, memW, fioR, fioW, dbR, dbW, rtt, mrtt, clean
+	if optionParam != "" {
+		optionParamVal = "?option=" + optionParam
+	}
+
+	// url := util.TUMBLEBUG + urlParam
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam + optionParamVal
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image"
+
+	pbytes, _ := json.Marshal(nameSpaceID)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// TODO : defer를 넣어줘야 할 듯. defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// virtualMachineImageIdList := map[string][]tbcommon.TbIdList{}
+	virtualMachineImageIdList := tbcommon.TbIdList{}
+
+	json.NewDecoder(respBody).Decode(&virtualMachineImageIdList)
+	fmt.Println(virtualMachineImageIdList.IDList)
+
+	// robots, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Printf("%s", robots)
+
+	return virtualMachineImageIdList.IDList, model.WebStatus{StatusCode: respStatus}
+}
+
 // VirtualMachineImage 상세 조회
 func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string) (*tbmcir.TbImageInfo, model.WebStatus) {
 	fmt.Println("GetVirtualMachineImageData ************ : ")
@@ -557,14 +605,60 @@ func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string
 	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-// VirtualMachineImage 등록
+// VirtualMachineImage 등록 registeringMethod = imageID
 func RegVirtualMachineImage(nameSpaceID string, registType string, virtualMachineImageRegInfo *tbmcir.TbImageReq) (*tbmcir.TbImageInfo, model.WebStatus) {
 	fmt.Println("RegVirtualMachineImage ************ : ")
 	if registType == "" {
 		registType = "registerWithId" // registerWithId 또는 registerWithInfo
 	}
 
-	var originalUrl = "/ns/{nsId}/resources/image?action={registType}"
+	var originalUrl = "/ns/{nsId}/resources/image?registeringMethod=registerWithId"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{registType}"] = registType
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image?action=registerWithInfo" //
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image?action=registerWithId"//
+
+	pbytes, _ := json.Marshal(virtualMachineImageRegInfo) // action=registerWithInfo, registerWithId param이 regInfo안에 모두 있으므로 별도로 나누어 호출하지않고 그냥 사용
+	fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	virtualMachineImageInfo := tbmcir.TbImageInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	// data, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf("%s\n", string(data))
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	// respStatus := resp.Status
+	// log.Println("respStatusCode = ", respStatusCode)
+	// log.Println("respStatus = ", respStatus)
+
+	// 응답에 생성한 객체값이 옴
+
+	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
+	fmt.Println(virtualMachineImageInfo)
+	// return respBody, respStatusCode
+	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// VirtualMachineImage 등록 registeringMethod = imageID
+// 생성시 action에 regist
+func RegVirtualMachineImageWithInfo(nameSpaceID string, registType string, virtualMachineImageRegInfo *tbmcir.TbImageInfo) (*tbmcir.TbImageInfo, model.WebStatus) {
+	fmt.Println("RegVirtualMachineImage ************ : ")
+	if registType == "" {
+		registType = "registerWithId" // registerWithId 또는 registerWithInfo
+	}
+
+	var originalUrl = "/ns/{nsId}/resources/image?registeringMethod=registerWithInfo"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{registType}"] = registType
@@ -821,7 +915,7 @@ func FetchVirtualMachineImageList(nameSpaceID string) ([]tbcommon.TbSimpleMsg, m
 }
 
 // VirtualMachineImage 상세 조회
-func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID string) (*tbmcir.TbImageInfo, model.WebStatus) {
+func SearchVirtualMachineImageList(nameSpaceID string, restSearchImageRequest *tbmcir.RestSearchImageRequest) ([]tbmcir.TbImageInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/searchImage"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -830,11 +924,13 @@ func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID str
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/searchImage/"
 
 	// pbytes, _ := json.Marshal(nameSpaceID)
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	virtualMachineImageInfo := tbmcir.TbImageInfo{}
+	pbytes, _ := json.Marshal(restSearchImageRequest)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	virtualMachineImageInfo := tbmcir.RestGetAllImageResponse{}
 	if err != nil {
 		fmt.Println(err)
-		return &virtualMachineImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return virtualMachineImageInfo.Image, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
@@ -843,7 +939,7 @@ func SearchVirtualMachineImageList(nameSpaceID string, virtualMachineImageID str
 	json.NewDecoder(respBody).Decode(&virtualMachineImageInfo)
 	fmt.Println(virtualMachineImageInfo)
 
-	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
+	return virtualMachineImageInfo.Image, model.WebStatus{StatusCode: respStatus}
 }
 
 // VMSpec 목록 조회
@@ -876,11 +972,48 @@ func GetVmSpecInfoList(nameSpaceID string) ([]tbmcir.RestGetAllSpecResponse, mod
 	fmt.Println(vmSpecList["spec"])
 
 	return vmSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+}
 
+func GetVmSpecInfoListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetVMSpecInfoList ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/spec"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+
+	optionParamVal := ""
+	if optionParam != "" {
+		optionParamVal = "?option=" + optionParam
+	}
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	// url := util.TUMBLEBUG + urlParam
+	url := util.TUMBLEBUG + urlParam + optionParamVal
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
+
+	// pbytes, _ := json.Marshal(nameSpaceID)
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// TODO : defer를 넣어줘야 할 듯. defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	vmSpecList := tbcommon.TbIdList{}
+
+	json.NewDecoder(respBody).Decode(&vmSpecList)
+	//spew.Dump(body)
+	fmt.Println(vmSpecList.IDList)
+
+	return vmSpecList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
 // VMSpec 상세 조회
-func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*tbmcir.RestGetAllSpecResponse, model.WebStatus) {
+func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*tbmcir.TbSpecInfo, model.WebStatus) {
 	fmt.Println("GetVMSpecInfoData ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/spec/{specId}"
 	var paramMapper = make(map[string]string)
@@ -892,7 +1025,7 @@ func GetVmSpecInfoData(nameSpaceID string, vmSpecID string) (*tbmcir.RestGetAllS
 
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	vmSpecInfo := tbmcir.RestGetAllSpecResponse{}
+	vmSpecInfo := tbmcir.TbSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -959,7 +1092,61 @@ func RegVmSpec(nameSpaceID string, specregisteringMethod string, vmSpecRegInfo *
 	return &vmSpecInfo, returnStatus
 }
 
-func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *tbmcir.TbSpecInfo) (*tbmcir.RestGetAllSpecResponse, model.WebStatus) {
+// specRegisteringMethod에 따라 requestMethod가 다르므로 function 분리 함
+func RegVmSpecWithInfo(nameSpaceID string, specregisteringMethod string, vmSpecRegInfo *tbmcir.TbSpecInfo) (*tbmcir.TbSpecInfo, model.WebStatus) {
+	fmt.Println("RegVMSpec ************ : ")
+	if specregisteringMethod == "" {
+		specregisteringMethod = "registerWithInfo" // registerWithInfo or Else 이므로 registerWithInfo 를 넣거나 아니거나.
+	}
+
+	// else인 경우에는 4개의 parameter만 있음{
+	// 	"connectionName": "string",
+	// 	"cspSpecName": "string",
+	// 	"description": "string",
+	// 	"name": "string"
+	//   }
+	//var originalUrl = "/ns/{nsId}/resources/spec?registeringMethod={specregisteringMethod}"
+	var originalUrl = "/ns/{nsId}/resources/spec?registeringMethod={specregisteringMethod}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{specregisteringMethod}"] = specregisteringMethod
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam
+	// "https://localhost:1323/tumblebug/ns/ns01/resources/spec?registeringMethod=registerWithInfo"
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec?action=registerWithInfo"// parameter를 모두 받지않기 때문에 param의 data type이 틀려 오류남.
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec" // 그래서 action 인자없이 전송
+
+	pbytes, _ := json.Marshal(vmSpecRegInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	vmSpecInfo := tbmcir.TbSpecInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// 응답에 생성한 객체값이 옴
+	returnStatus := model.WebStatus{}
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&vmSpecInfo)
+		fmt.Println(vmSpecInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	// return respBody, respStatusCode
+	return &vmSpecInfo, returnStatus
+}
+
+func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *tbmcir.TbSpecInfo) (*tbmcir.TbSpecInfo, model.WebStatus) {
 	fmt.Println("UpdateVMSpec ************ : ")
 	vmSpecID := vmSpecRegInfo.ID
 	var originalUrl = "/ns/{nsId}/resources/spec/{specId}"
@@ -972,7 +1159,7 @@ func UpdateVMSpec(nameSpaceID string, vmSpecRegInfo *tbmcir.TbSpecInfo) (*tbmcir
 
 	pbytes, _ := json.Marshal(vmSpecRegInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
-	vmSpecInfo := tbmcir.RestGetAllSpecResponse{}
+	vmSpecInfo := tbmcir.TbSpecInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &vmSpecInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -1143,7 +1330,8 @@ func LookupVmSpecInfoData(restLookupSpecRequest *tbmcir.RestLookupSpecRequest) (
 	return &vmSpecInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-func FetchVmSpecInfoList(nameSpaceID string) ([]tbmcir.RestGetAllSpecResponse, model.WebStatus) {
+// Fetch는 결과만 return
+func FetchVmSpecInfoList(nameSpaceID string) (*tbcommon.TbSimpleMsg, model.WebStatus) {
 	fmt.Println("FetchVmSpecInfoList ************ : ", nameSpaceID)
 	var originalUrl = "/ns/{nsId}/resources/fetchSpecs"
 	var paramMapper = make(map[string]string)
@@ -1152,28 +1340,61 @@ func FetchVmSpecInfoList(nameSpaceID string) ([]tbmcir.RestGetAllSpecResponse, m
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/fetchSpecs"
 
+	resultInfo := tbcommon.TbSimpleMsg{}
 	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodPost)
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &resultInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	fetchSpecList := map[string][]tbmcir.RestGetAllSpecResponse{}
+	// fetchSpecList := map[string][]tbmcir.RestGetAllSpecResponse{}
 
-	json.NewDecoder(respBody).Decode(&fetchSpecList)
+	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println("FetchVmSpecList called ")
 
-	return fetchSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+	return &resultInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// 오래걸리므로 비동기로 처리
+func FetchVmSpecInfoListByAsync(nameSpaceID string, c echo.Context) {
+	log.Println("FetchVmSpecInfoListByAsync ************ : ", nameSpaceID)
+	var originalUrl = "/ns/{nsId}/resources/fetchSpecs"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/fetchSpecs"
+
+	// resultInfo := tbcommon.TbSimpleMsg{}
+
+	taskKey := nameSpaceID + "||" + "VMSpec" + "||" + "Fetch"
+
+	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodPost)
+	_, err := util.CommonHttpWithoutParam(url, http.MethodPost)
+	if err != nil {
+		fmt.Println(err)
+		StoreWebsocketMessage(util.TASK_TYPE_VMSPEC, taskKey, util.VMSPEC_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	}
+	// defer body.Close()
+	// respBody := resp.Body
+	// respStatus := resp.StatusCode
+	// // fetchSpecList := map[string][]tbmcir.RestGetAllSpecResponse{}
+
+	// json.NewDecoder(respBody).Decode(&resultInfo)
+
+	log.Println("FetchVmSpecList called ")
+	StoreWebsocketMessage(util.TASK_TYPE_VMSPEC, taskKey, util.VMSPEC_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
 }
 
 // resourcesGroup.PUT("/vmspec/put/:specID", controller.VmSpecPutProc)	// RegProc _ SshKey 같이 앞으로 넘길까
 // resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)
 
 // spec들을 filterling
-func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *tbmcir.TbSpecInfo) ([]tbmcir.RestGetAllSpecResponse, model.WebStatus) {
+func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *tbmcir.TbSpecInfo) ([]tbmcir.TbSpecInfo, model.WebStatus) {
 	fmt.Println("FilterVmSpecInfoList ************ : ", nameSpaceID)
 	var originalUrl = "/ns/{nsId}/resources/filterSpecs"
 	var paramMapper = make(map[string]string)
@@ -1183,7 +1404,11 @@ func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *tbmcir.TbSpecInfo) 
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/filterSpecs"
 	// /ns/{nsId}/resources/filterSpecs
 	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodPost)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodPost)
+
+	pbytes, _ := json.Marshal(vmSpecRegInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
 	if err != nil {
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -1191,19 +1416,19 @@ func FilterVmSpecInfoList(nameSpaceID string, vmSpecRegInfo *tbmcir.TbSpecInfo) 
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	fetchSpecList := map[string][]tbmcir.RestGetAllSpecResponse{}
+	filterSpecList := tbmcir.RestFilterSpecsResponse{}
 
-	json.NewDecoder(respBody).Decode(&fetchSpecList)
+	json.NewDecoder(respBody).Decode(&filterSpecList)
 	log.Println("FilterVmSpecInfoList called ")
 
-	return fetchSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+	return filterSpecList.SpaceInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // resourcesGroup.POST("/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange)
 func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tbmcir.FilterSpecsByRangeRequest) ([]tbmcir.TbSpecInfo, model.WebStatus) {
 	webStatus := model.WebStatus{}
-	// vmSpecInfo := tumblebug.VmSpecRangeInfo{}
-	vmSpecInfo := map[string][]tbmcir.TbSpecInfo{}
+	resultInfo := tbmcir.RestFilterSpecsResponse{}
+
 	fmt.Println("FilterVmSpecInfoListByRange ************ : ", nameSpaceID)
 	var originalUrl = "/ns/{nsId}/resources/filterSpecsByRange"
 	var paramMapper = make(map[string]string)
@@ -1218,24 +1443,23 @@ func FilterVmSpecInfoListByRange(nameSpaceID string, vmSpecRangeMinMax *tbmcir.F
 
 	if err != nil {
 		fmt.Println(err)
-		return vmSpecInfo["spec"], model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return resultInfo.SpaceInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// defer body.Close()
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
 	if respStatus != 200 && respStatus != 201 {
-		resultInfo := model.ResultInfo{}
-
-		json.NewDecoder(respBody).Decode(&resultInfo)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
 		log.Println(resultInfo)
-		log.Println("ResultMessage : " + resultInfo.Message)
-		return vmSpecInfo["spec"], model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+		log.Println("ResultMessage : " + failResultInfo.Message)
+		return resultInfo.SpaceInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
-	json.NewDecoder(respBody).Decode(&vmSpecInfo)
-	log.Println(vmSpecInfo)
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
 	webStatus.StatusCode = respStatus
 
-	return vmSpecInfo["spec"], model.WebStatus{StatusCode: respStatus}
+	return resultInfo.SpaceInfo, model.WebStatus{StatusCode: respStatus}
 }

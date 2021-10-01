@@ -123,7 +123,7 @@ func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgent
 }
 
 // Get Monitoring Data
-func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
+func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (*tbmcis.MonResultSimpleResponse, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/monitoring/mcis/{mcisId}/metric/{metric}"
 
 	var paramMapper = make(map[string]string)
@@ -138,19 +138,19 @@ func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	vmMonitoringAgentInfo := tbmcis.AgentInstallContentWrapper{}
+	vmMonitoringResult := tbmcis.MonResultSimpleResponse{}
 	if err != nil {
 		fmt.Println(err)
-		return &vmMonitoringAgentInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &vmMonitoringResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	json.NewDecoder(respBody).Decode(&vmMonitoringAgentInfo)
-	fmt.Println(vmMonitoringAgentInfo)
+	json.NewDecoder(respBody).Decode(&vmMonitoringResult)
+	fmt.Println(vmMonitoringResult)
 
-	return &vmMonitoringAgentInfo, model.WebStatus{StatusCode: respStatus}
+	return &vmMonitoringResult, model.WebStatus{StatusCode: respStatus}
 }
 
 // VM monitoring

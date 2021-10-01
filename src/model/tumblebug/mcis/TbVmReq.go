@@ -3,7 +3,6 @@ package mcis
 type TbVmReq struct {
 	ConnectionName string `json:"connectionName"`
 	Description    string `json:"description"`
-	ID             string `json:"id"`
 	ImageID        string `json:"imageId"`
 	Label          string `json:"label"`
 	Name           string `json:"name"`

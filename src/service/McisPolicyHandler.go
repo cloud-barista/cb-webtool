@@ -55,6 +55,7 @@ func GetMcisPolicyInfoData(nameSpaceID string, mcisID string) (*tbmcis.RestGetAl
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam
@@ -85,6 +86,7 @@ func RegMcisPolicy(nameSpaceID string, mcisID string, mcisPolicyInfo *tbmcis.Mci
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam
@@ -147,6 +149,7 @@ func DelMcisPolicy(nameSpaceID string, mcisID string) (io.ReadCloser, model.WebS
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam
