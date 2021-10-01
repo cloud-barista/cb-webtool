@@ -784,14 +784,17 @@ func GetInspectResourceList(inspectResource *tbcommon.RestInspectResourcesReques
 	pbytes, _ := json.Marshal(inspectResource)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	inspectResourcesResponse := tbmcis.TbInspectResourcesResponse{}
-	if err != nil {
-		fmt.Println(err)
-		return &inspectResourcesResponse, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
-
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+
+	inspectResourcesResponse := tbmcis.TbInspectResourcesResponse{}
+	if err != nil {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println(failResultInfo)
+		//return &inspectResourcesResponse, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &inspectResourcesResponse, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
 
 	json.NewDecoder(respBody).Decode(inspectResourcesResponse)
 	fmt.Println(inspectResourcesResponse)
@@ -869,7 +872,8 @@ func LookupVirtualMachineImageData(restLookupImageRequest *tbmcir.RestLookupImag
 	url := util.TUMBLEBUG + urlParam
 
 	pbytes, _ := json.Marshal(restLookupImageRequest)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	virtualMachineImageInfo := tbmcir.SpiderImageInfo{}
 	if err != nil {
