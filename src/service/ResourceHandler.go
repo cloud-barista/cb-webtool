@@ -501,7 +501,7 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (model.WebStatus, model.WebS
 func GetVirtualMachineImageInfoList(nameSpaceID string) ([]tbmcir.TbImageInfo, model.WebStatus) {
 	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
 	// var originalUrl = "/ns/{nsId}/resources/image"
-	var originalUrl = "/ns​/{nsId}​/resources​/image"
+	var originalUrl = "/ns/{nsId}/resources/image"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
@@ -612,7 +612,8 @@ func RegVirtualMachineImage(nameSpaceID string, registType string, virtualMachin
 		registType = "registerWithId" // registerWithId 또는 registerWithInfo
 	}
 
-	var originalUrl = "/ns/{nsId}/resources/image?registeringMethod=registerWithId"
+	// API에는 registeringMethod로 표현되어있으나 실제로는 action임.
+	var originalUrl = "/ns/{nsId}/resources/image?action=registerWithId"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{registType}"] = registType
@@ -947,7 +948,7 @@ func SearchVirtualMachineImageList(nameSpaceID string, restSearchImageRequest *t
 }
 
 // VMSpec 목록 조회
-func GetVmSpecInfoList(nameSpaceID string) ([]tbmcir.RestGetAllSpecResponse, model.WebStatus) {
+func GetVmSpecInfoList(nameSpaceID string) ([]tbmcir.TbSpecInfo, model.WebStatus) {
 	fmt.Println("GetVMSpecInfoList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/spec"
 	var paramMapper = make(map[string]string)
@@ -969,13 +970,13 @@ func GetVmSpecInfoList(nameSpaceID string) ([]tbmcir.RestGetAllSpecResponse, mod
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	vmSpecList := map[string][]tbmcir.RestGetAllSpecResponse{}
+	vmSpecList := tbmcir.RestGetAllSpecResponse{}
 
 	json.NewDecoder(respBody).Decode(&vmSpecList)
 	//spew.Dump(body)
-	fmt.Println(vmSpecList["spec"])
+	fmt.Println(vmSpecList.Spec)
 
-	return vmSpecList["spec"], model.WebStatus{StatusCode: respStatus}
+	return vmSpecList.Spec, model.WebStatus{StatusCode: respStatus}
 }
 
 func GetVmSpecInfoListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
