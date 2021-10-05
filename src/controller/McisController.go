@@ -833,7 +833,7 @@ func GetVmMonitoring(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":          "success",
 		"status":           respStatus.StatusCode,
-		"VMMonitoringInfo": returnVMMonitoringInfo,
+		"VMMonitoringInfo": returnVMMonitoringInfo[vmMonitoring.Metric],
 	})
 }
 

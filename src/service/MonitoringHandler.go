@@ -66,7 +66,8 @@ func RegBenchmarkAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentR
 
 func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgentReg *dragonfly.VmMonitoringInstallReg) (*model.WebStatus, model.WebStatus) {
 	fmt.Println("RegMonitoringAgentInVm ************ : ")
-	var originalUrl = "/agent/install"
+	//var originalUrl = "/agent/install"
+	var originalUrl = "/agent"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
 	// Command  string `json:"command"`
@@ -156,7 +157,8 @@ func GetVmMonitoringInfoData(nameSpaceID string, mcisID string, metric string) (
 // VM monitoring
 // Get vm monitoring info
 // 멀티 클라우드 인프라 VM 모니터링 정보 조회
-func GetVmMonitoring(vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitoringInfo, model.WebStatus) {
+func GetVmMonitoring(vmMonitoring *dragonfly.VmMonitoring) (map[string]interface{}, model.WebStatus) {
+	//func GetVmMonitoring(vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitoringInfo, model.WebStatus) {
 	nameSpaceID := vmMonitoring.NameSpaceID
 	mcisID := vmMonitoring.McisID
 	vmID := vmMonitoring.VmID
@@ -187,20 +189,48 @@ func GetVmMonitoring(vmMonitoring *dragonfly.VmMonitoring) (*dragonfly.VmMonitor
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
-	vmMonitoringInfo := dragonfly.VmMonitoringInfo{}
+	//vmMonitoringInfo := dragonfly.VmMonitoringInfo{}
+	vmMonitoringInfo := make(map[string]interface{})
 	if err != nil {
 		fmt.Println(err)
-		return &vmMonitoringInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return vmMonitoringInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// util.DisplayResponse(resp) // 수신내용 확인
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	json.NewDecoder(respBody).Decode(&vmMonitoringInfo)
-	fmt.Println(vmMonitoringInfo)
+	if metric == "cpu" {
+		vmMonitoringInfoByCpu := dragonfly.VmMonitoringInfoByCpu{}
+		json.NewDecoder(respBody).Decode(&vmMonitoringInfoByCpu)
 
-	return &vmMonitoringInfo, model.WebStatus{StatusCode: respStatus}
+		//vmMonitoringInfo.ValuesByCpu = vmMonitoringInfoByCpu
+		vmMonitoringInfo[metric] = vmMonitoringInfoByCpu
+	} else if metric == "memory" {
+		vmMonitoringInfoByMemory := dragonfly.VmMonitoringInfoByMemory{}
+		json.NewDecoder(respBody).Decode(&vmMonitoringInfoByMemory)
+
+		//vmMonitoringInfo.ValuesByMemory = vmMonitoringInfoByMemory
+		vmMonitoringInfo[metric] = vmMonitoringInfoByMemory
+	} else if metric == "disk" {
+		vmMonitoringInfoByDisk := dragonfly.VmMonitoringInfoByDisk{}
+		json.NewDecoder(respBody).Decode(&vmMonitoringInfoByDisk)
+
+		//vmMonitoringInfo.ValuesByDisk = vmMonitoringInfoByDisk
+		vmMonitoringInfo[metric] = vmMonitoringInfoByDisk
+	} else if metric == "network" {
+		vmMonitoringInfoByNetwork := dragonfly.VmMonitoringInfoByNetwork{}
+		json.NewDecoder(respBody).Decode(&vmMonitoringInfoByNetwork)
+
+		//vmMonitoringInfo.ValuesByNetwork = vmMonitoringInfoByNetwork
+		vmMonitoringInfo[metric] = vmMonitoringInfoByNetwork
+	}
+
+	//json.NewDecoder(respBody).Decode(&vmMonitoringInfo)
+	//fmt.Println(vmMonitoringInfo)
+
+	//return &vmMonitoringInfo, model.WebStatus{StatusCode: respStatus}
+	return vmMonitoringInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // 멀티 클라우드 인프라 VM 온디맨드 모니터링 정보 조회
@@ -407,6 +437,7 @@ func ResetMonigoringConfig(monitoringConfig *dragonfly.MonitoringConfig) (*drago
 // Install agent to vm
 // 모니터링 에이전트 설치 : 위에 RegMonitoringAgentInVm 와 뭐가 다른거지?
 func InstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.VmMonitoringInstallReg) (*dragonfly.VmMonitoringInstallReg, model.WebStatus) {
+	//var originalUrl = "/agent/install"
 	var originalUrl = "/agent/install"
 	//{{ip}}:{{port}}/dragonfly/agent/install
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -445,7 +476,8 @@ func InstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.VmMo
 // 모니터링 에이전트 제거
 // Uninstall agent to vm
 func UnInstallAgentToVm(nameSpaceID string, vmMonitoringInstallReg *dragonfly.VmMonitoringInstallReg) (*dragonfly.VmMonitoringInstallReg, model.WebStatus) {
-	var originalUrl = "/agent/uninstall"
+	//var originalUrl = "/agent/uninstall"
+	var originalUrl = "/agent"
 	//{{ip}}:{{port}}/dragonfly/agent/uninstall
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
