@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	// "errors"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 
@@ -156,8 +155,8 @@ func GetNameSpaceData(nameSpaceID string) (tbcommon.TbNsInfo, model.WebStatus) {
 	return nameSpaceInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-// NameSpace 등록.  등록 후 전체조회를 하기 때문에 굳이 TbNsInfo로 변경하지 않는데... 해야겠지?
-func RegNameSpace(nameSpaceInfo *tbcommon.TbNsInfo) (io.ReadCloser, model.WebStatus) {
+// NameSpace 등록.  등록 후 생성된 Namespace 정보를 return
+func RegNameSpace(nameSpaceInfo *tbcommon.TbNsInfo) (tbcommon.TbNsInfo, model.WebStatus) {
 	// buff := bytes.NewBuffer(pbytes)
 	var originalUrl = "/ns"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -167,18 +166,26 @@ func RegNameSpace(nameSpaceInfo *tbcommon.TbNsInfo) (io.ReadCloser, model.WebSta
 	//body, err := util.CommonHttpPost(url, nameSpaceInfo)
 	pbytes, _ := json.Marshal(nameSpaceInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	return respBody, model.WebStatus{StatusCode: respStatus}
+
+	resultNameSpaceInfo := tbcommon.TbNsInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return resultNameSpaceInfo, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&resultNameSpaceInfo)
+	return resultNameSpaceInfo, model.WebStatus{StatusCode: respStatus}
+	//return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
 // NameSpace 수정 : 만들어 놓기는 했으나, tb에 namespace 없데이트 기능 없음
-func UpdateNameSpace(nameSpaceID string, nameSpaceInfo *tbcommon.TbNsInfo) (io.ReadCloser, model.WebStatus) {
+func UpdateNameSpace(nameSpaceID string, nameSpaceInfo *tbcommon.TbNsInfo) (tbcommon.TbNsInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -189,18 +196,25 @@ func UpdateNameSpace(nameSpaceID string, nameSpaceInfo *tbcommon.TbNsInfo) (io.R
 	pbytes, _ := json.Marshal(nameSpaceInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	return respBody, model.WebStatus{StatusCode: respStatus}
+
+	resultNameSpaceInfo := tbcommon.TbNsInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return resultNameSpaceInfo, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&resultNameSpaceInfo)
+
+	return resultNameSpaceInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // NameSpace 삭제
-func DelNameSpace(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+func DelNameSpace(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -210,12 +224,19 @@ func DelNameSpace(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
-	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	return respBody, model.WebStatus{StatusCode: respStatus}
+
+	resultInfo := tbcommon.TbSimpleMsg{}
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	if err != nil {
+		fmt.Println(err)
+		//return resultInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		json.NewDecoder(respBody).Decode(&resultInfo)
+		return resultInfo, model.WebStatus{StatusCode: 500, Message: resultInfo.Message}
+	}
+
+	return resultInfo, model.WebStatus{StatusCode: respStatus}
 }

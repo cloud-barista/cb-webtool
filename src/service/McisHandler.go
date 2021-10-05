@@ -780,7 +780,7 @@ func McisVmLifeCycle(vmLifeCycle *webtool.VmLifeCycle) (*webtool.VmLifeCycle, mo
 
 // 벤치마크?? MCIS 조회. 근데 왜 결과는 resultarray지?
 // TODO : 여러개 return되면 method이름을 xxxData -> xxxList 로 바꿀 것
-func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string, optionParam string) (*[]tbmcis.BenchmarkInfo, model.WebStatus) {
+func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string, optionParam string) ([]tbmcis.BenchmarkInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/benchmark/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
@@ -799,27 +799,30 @@ func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string, opti
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/benchmark/mcis/" + mcisID
 	// /ns/{nsId}/benchmark/mcis/{mcisId}
 	pbytes, _ := json.Marshal(hostIp)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
-
-	// defer body.Close()
-	resultBenchmarkInfos := []tbmcis.BenchmarkInfo{}
-	if err != nil {
-		fmt.Println(err)
-		return &resultBenchmarkInfos, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
-	// util.DisplayResponse(resp) // 수신내용 확인
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost) // 조회이나 POST로 호출
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	// defer body.Close()
+	//resultBenchmarkInfos := []tbmcis.BenchmarkInfo{}
+	resultBenchmarkInfos := map[string][]tbmcis.BenchmarkInfo{}
+	if err != nil {
+		fmt.Println(err)
+		//return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return nil, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
+	// util.DisplayResponse(resp) // 수신내용 확인
 
 	json.NewDecoder(respBody).Decode(&resultBenchmarkInfos)
 	fmt.Println(resultBenchmarkInfos)
 	//resultarray
-	return &resultBenchmarkInfos, model.WebStatus{StatusCode: respStatus}
+	return resultBenchmarkInfos["resultarray"], model.WebStatus{StatusCode: respStatus}
 }
 
 // List all MCISs
-func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) (*[]tbmcis.BenchmarkInfo, model.WebStatus) {
+func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) ([]tbmcis.BenchmarkInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/benchmarkall/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
@@ -831,22 +834,30 @@ func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) (
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/benchmark/mcis/" + mcisID
 
 	pbytes, _ := json.Marshal(hostIp)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
-
-	// defer body.Close()
-	resultBenchmarkInfos := []tbmcis.BenchmarkInfo{}
-	if err != nil {
-		fmt.Println(err)
-		return &resultBenchmarkInfos, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost) // 조회이나 POST로 호출
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
+	// defer body.Close()
+	//resultBenchmarkInfos := []tbmcis.BenchmarkInfo{}
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return &resultBenchmarkInfos, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	//}
+	resultBenchmarkInfos := map[string][]tbmcis.BenchmarkInfo{}
+	if err != nil {
+		fmt.Println(err)
+		//return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return nil, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
+
 	json.NewDecoder(respBody).Decode(&resultBenchmarkInfos)
 	fmt.Println(resultBenchmarkInfos)
 
-	return &resultBenchmarkInfos, model.WebStatus{StatusCode: respStatus}
+	return resultBenchmarkInfos["resultarray"], model.WebStatus{StatusCode: respStatus}
 }
 
 // MCIS에 명령 내리기
