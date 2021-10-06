@@ -67,14 +67,18 @@ func GetMcisList(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, m
 	returnStatus := model.WebStatus{}
 
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
-		returnStatus.Message = errorInfo.Message
-	} else {
-		json.NewDecoder(respBody).Decode(&mcisList)
-		fmt.Println(mcisList["mcis"])
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
+		//returnStatus.Message = errorInfo.Message
+
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
+	json.NewDecoder(respBody).Decode(&mcisList)
+	fmt.Println(mcisList["mcis"])
+
 	returnStatus.StatusCode = respStatus
 	log.Println(respBody)
 	// util.DisplayResponse(resp) // 수신내용 확인
@@ -127,6 +131,12 @@ func GetMcisData(nameSpaceID string, mcisID string) (*tbmcis.TbMcisInfo, model.W
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return &mcisInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
 	json.NewDecoder(respBody).Decode(&mcisInfo)
 	fmt.Println(mcisInfo)
 
@@ -167,14 +177,18 @@ func RegMcis(nameSpaceID string, mcisInfo *tbmcis.TbMcisReq) (*tbmcis.TbMcisInfo
 	}
 
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
-		returnStatus.Message = errorInfo.Message
-	} else {
-		json.NewDecoder(respBody).Decode(&returnMcisInfo)
-		fmt.Println(returnMcisInfo)
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
+		//returnStatus.Message = errorInfo.Message
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return &returnMcisInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
+
+	json.NewDecoder(respBody).Decode(&returnMcisInfo)
+	fmt.Println(returnMcisInfo)
+
 	returnStatus.StatusCode = respStatus
 
 	// return respBody, respStatusCode
@@ -196,8 +210,8 @@ func RegMcisByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisReq, c echo.Conte
 	pbytes, _ := json.Marshal(mcisInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnMcisInfo := tbmcis.TbMcisInfo{}
-	returnStatus := model.WebStatus{}
+	//returnMcisInfo := tbmcis.TbMcisInfo{}
+	//returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
@@ -206,6 +220,7 @@ func RegMcisByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisReq, c echo.Conte
 
 	if err != nil {
 		fmt.Println(err)
+		log.Println("RegMcisByAsync ", err)
 		// websocketMessage := websocket.WebSocketMessage{}
 		// websocketMessage.Status = "fail"
 		// websocketMessage.ProcessTime = time.Now()
@@ -238,15 +253,28 @@ func RegMcisByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisReq, c echo.Conte
 	}
 
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
-		returnStatus.Message = errorInfo.Message
-	} else {
-		json.NewDecoder(respBody).Decode(&returnMcisInfo)
-		fmt.Println(returnMcisInfo)
+		//util.DisplayResponse(resp) // 결과 확인용
+
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
+		//returnStatus.Message = errorInfo.Message
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegMcisByAsync ", failResultInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 	}
-	returnStatus.StatusCode = respStatus
+
+	//if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+	//	errorInfo := model.ErrorInfo{}
+	//	json.NewDecoder(respBody).Decode(&errorInfo)
+	//	fmt.Println("respStatus != 200 reason ", errorInfo)
+	//	returnStatus.Message = errorInfo.Message
+	//} else {
+	//	json.NewDecoder(respBody).Decode(&returnMcisInfo)
+	//	fmt.Println(returnMcisInfo)
+	//}
+	//returnStatus.StatusCode = respStatus
 
 	// // TODO : 결과값 설정 확인할 것.
 	// socketDataStore, storedOk := store.Get("socketdata")
@@ -306,23 +334,29 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 
 	if err != nil {
 		fmt.Println(err)
+		log.Println("RegVm ", err)
 		return &returnVmInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
 		//util.DisplayResponse(resp) // 결과 확인용
 
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
-		returnStatus.Message = errorInfo.Message
-	} else {
-		json.NewDecoder(respBody).Decode(&returnVmInfo)
-		fmt.Println(returnVmInfo)
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
+		//returnStatus.Message = errorInfo.Message
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegVm ", failResultInfo)
+		return &returnVmInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
+
+	json.NewDecoder(respBody).Decode(&returnVmInfo)
+	//fmt.Println(returnVmInfo)
+
 	returnStatus.StatusCode = respStatus
-	fmt.Println(respBody)
-	fmt.Println(respStatus)
+	//fmt.Println(respBody)
+	//fmt.Println(respStatus)
 
 	return &returnVmInfo, returnStatus
 }
@@ -366,11 +400,15 @@ func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq, c ech
 	returnVmInfo := tbmcis.TbVmInfo{}
 	taskKey := nameSpaceID + "||" + "vm" + "||" + mcisID + "||" + vmInfo.Name
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
+
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegVm ", failResultInfo)
 		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.VM_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
-	} else {
+	} else { // return이 없으므로 else에서 처리
 		json.NewDecoder(respBody).Decode(&returnVmInfo)
 		fmt.Println(returnVmInfo)
 		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.VM_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
@@ -406,24 +444,28 @@ func RegVmGroup(nameSpaceID string, mcisID string, vmGroupInfo *tbmcis.TbVmReq) 
 	returnMcisInfo := tbmcis.TbMcisInfo{}
 	returnStatus := model.WebStatus{}
 
-	respBody := resp.Body
-	respStatus := resp.StatusCode
-
 	if err != nil {
 		fmt.Println(err)
 		return &returnMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
-		returnStatus.Message = errorInfo.Message
-	} else {
-		json.NewDecoder(respBody).Decode(&returnMcisInfo)
-		fmt.Println(returnMcisInfo)
-	}
+	respBody := resp.Body
+	respStatus := resp.StatusCode
 	returnStatus.StatusCode = respStatus
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
+		//returnStatus.Message = errorInfo.Message
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegVmGroup ", failResultInfo)
+		return &returnMcisInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&returnMcisInfo)
+	fmt.Println(returnMcisInfo)
 
 	// return respBody, respStatusCode
 	return &returnMcisInfo, returnStatus
@@ -678,6 +720,13 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.Tb
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("GetVMofMcisData ", failResultInfo)
+		return &vmInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
 	json.NewDecoder(respBody).Decode(&vmInfo)
 	fmt.Println("respStatus = ", respStatus)
 	fmt.Println(vmInfo)
@@ -728,11 +777,16 @@ func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle) (*webtool.McisLifeCycle
 		// fmt.Println(statusInfo)
 		// fmt.Println(statusInfo.Message)
 
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
 
-		return &resultMcisLifeCycle, model.WebStatus{StatusCode: respStatus, Message: errorInfo.Message}
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("McisLifeCycle ", failResultInfo)
+		return &resultMcisLifeCycle, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+
+		//return &resultMcisLifeCycle, model.WebStatus{StatusCode: respStatus, Message: errorInfo.Message}
 	}
 	// return body, err
 	// respBody := resp.Body
@@ -771,6 +825,13 @@ func McisVmLifeCycle(vmLifeCycle *webtool.VmLifeCycle) (*webtool.VmLifeCycle, mo
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("McisVmLifeCycle ", failResultInfo)
+		return &resultVmLifeCycle, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
 	// 응답에 생성한 객체값이 옴
 	json.NewDecoder(respBody).Decode(resultVmLifeCycle)
 	fmt.Println(resultVmLifeCycle)
@@ -808,12 +869,16 @@ func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string, opti
 	resultBenchmarkInfos := map[string][]tbmcis.BenchmarkInfo{}
 	if err != nil {
 		fmt.Println(err)
-		//return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
-		failResultInfo := tbcommon.TbSimpleMsg{}
-		json.NewDecoder(respBody).Decode(&failResultInfo)
-		return nil, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// util.DisplayResponse(resp) // 수신내용 확인
+
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("GetBenchmarkMcisData ", failResultInfo)
+		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
 
 	json.NewDecoder(respBody).Decode(&resultBenchmarkInfos)
 	fmt.Println(resultBenchmarkInfos)
@@ -848,10 +913,14 @@ func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) (
 	resultBenchmarkInfos := map[string][]tbmcis.BenchmarkInfo{}
 	if err != nil {
 		fmt.Println(err)
-		//return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		return nil, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+		log.Println("GetBenchmarkAllMcisList ", failResultInfo)
+		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
 	json.NewDecoder(respBody).Decode(&resultBenchmarkInfos)
@@ -887,7 +956,6 @@ func CommandMcis(nameSpaceID string, mcisID string, mcisCommandInfo *tbmcis.Mcis
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 	//resultInfo := model.ResultInfo{}
-
 	log.Println("ResultStatusCode : ", respStatus)
 
 	// 실패시 Message에 성공시 Result에 string으로 담겨 온다.
@@ -984,22 +1052,22 @@ func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisID string, mcisCommandI
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	returnStatus.StatusCode = respStatus
 
 	if err != nil {
 		fmt.Println(err)
 		return &returnMcisCommandResult, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		errorInfo := model.ErrorInfo{}
-		json.NewDecoder(respBody).Decode(&errorInfo)
-		fmt.Println("respStatus != 200 reason ", errorInfo)
-		returnStatus.Message = errorInfo.Message
-	} else {
-		json.NewDecoder(respBody).Decode(&returnMcisCommandResult)
-		fmt.Println(returnMcisCommandResult)
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("InstallBenchmarkAgentToMcis ", failResultInfo)
+		return &returnMcisCommandResult, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
-	returnStatus.StatusCode = respStatus
+
+	json.NewDecoder(respBody).Decode(&returnMcisCommandResult)
+	fmt.Println(returnMcisCommandResult)
 
 	// return respBody, respStatusCode
 	return &returnMcisCommandResult, returnStatus
@@ -1049,6 +1117,13 @@ func DelAllMcis(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("DelAllMcis ", failResultInfo)
+		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
@@ -1085,6 +1160,14 @@ func DelMcis(nameSpaceID string, mcisID string, optionParam string) (io.ReadClos
 	}
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("DelMcis ", failResultInfo)
+		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
@@ -1207,6 +1290,13 @@ func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.TbVmInfo
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("GetVmData ", failResultInfo)
+		return &vmInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
 
 	json.NewDecoder(respBody).Decode(&vmInfo)
 	fmt.Println(vmInfo)
