@@ -1256,6 +1256,7 @@ func DelVMSpec(nameSpaceID string, vmSpecID string) (model.WebStatus, model.WebS
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
+// Connection에 Provider와 Region정보가 있으므로 해당 Region에 맞는 VmImage만 조회
 func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.SpiderImageInfos, model.WebStatus) {
 	fmt.Println("LookupVmSpecInfoList ************ : ")
 	var originalUrl = "/lookupSpecs"
