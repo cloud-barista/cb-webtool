@@ -794,7 +794,7 @@ func AllVirtualMachineImageDelProc(c echo.Context) error {
 // 	})
 // }
 
-// 해당 csp의 전체 image목록 : -> TODO : thread로 처리 할 것. 시간 오래걸림. NETS DB에 저장하는 것으로
+// 해당 connection( provider, region ) 에서 사용가능한 image목록 조회 : 등록시 사용하므로 오래걸려도 기다려야 함.
 func LookupCspVirtualMachineImageList(c echo.Context) error {
 	log.Println("LookupCspVirtualMachineImageList : ")
 	loginInfo := service.CallLoginInfo(c)
