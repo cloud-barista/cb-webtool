@@ -79,7 +79,7 @@ func GetMcisList(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, m
 	json.NewDecoder(respBody).Decode(&mcisList)
 	fmt.Println(mcisList["mcis"])
 
-	returnStatus.StatusCode = respStatuWs
+	returnStatus.StatusCode = respStatus
 	log.Println(respBody)
 	// util.DisplayResponse(resp) // 수신내용 확인
 
