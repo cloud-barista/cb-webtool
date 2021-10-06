@@ -245,7 +245,7 @@ function getMcisListCallbackSuccess(caller, mcisList){
                 addMcis += '<tr onclick="clickListOfMcis(\'' + aMcis.id + '\', ' + mcisIndex +' );" id="server_info_tr_' + mcisIndex +'" item="' + aMcis.id +'|' + mcisIndex + '">'
 
                 addMcis += '<td class="overlay hidden td_left column-14percent" data-th="Status">'
-                addMcis += '<img src="/assets/img/contents/icon_' + mcisStatus +'.png" class="icon" alt=""/>' + mcisStatus + '<span class="ov off"></span>'
+                addMcis += '<img src="/assets/img/contents/icon_' + displayMcisStatus +'.png" class="icon" alt=""/>' + mcisStatus + '<span class="ov off"></span>'
                 addMcis += '</td>'
                 addMcis += '<td class="btn_mtd ovm column-14percent" data-th="Name">' + aMcis.name + '<span class="ov"></span></td>'
                 addMcis += '<td class="overlay hidden column-14percent" data-th="Cloud Connection">' + mcisProviderNames + '</td>'
