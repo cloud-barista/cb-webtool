@@ -54,7 +54,39 @@ func GetVnetList(nameSpaceID string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
 	fmt.Println(vNetInfoList["vNet"])
 
 	return vNetInfoList["vNet"], model.WebStatus{StatusCode: respStatus}
+}
 
+func GetVnetListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetVnetList ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/vNet"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	//url := util.TUMBLEBUG + urlParam
+	url := util.TUMBLEBUG + urlParam + "?option=" + optionParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
+
+	//pbytes, _ := json.Marshal(nameSpaceID)
+	// body, err := util.CommonHttpGet(url)
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	vNetInfoList := map[string][]string{}
+	json.NewDecoder(respBody).Decode(&vNetInfoList)
+	//spew.Dump(body)
+	fmt.Println(vNetInfoList["idList"])
+
+	return vNetInfoList["idList"], model.WebStatus{StatusCode: respStatus}
 }
 
 // vpc 상세 조회-> ResourceHandler로 이동
@@ -197,6 +229,38 @@ func GetSecurityGroupList(nameSpaceID string) ([]tbmcir.TbSecurityGroupInfo, mod
 
 	return securityGroupList["securityGroup"], model.WebStatus{StatusCode: respStatus}
 
+}
+
+// SecurityGroupList 조회 시 Option에 해당하는 값만 조회. GetSecurityGroupList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름
+func GetSecurityGroupListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetSecurityGroupList ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/securityGroup"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam + "?option=" + optionParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup"
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		// 	// Tumblebug 접속 확인하라고
+		// fmt.Println(err)
+		// panic(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	securityGroupList := map[string][]string{}
+	// defer body.Close()
+	json.NewDecoder(respBody).Decode(&securityGroupList)
+	//spew.Dump(body)
+	fmt.Println(securityGroupList["idList"])
+
+	return securityGroupList["idList"], model.WebStatus{StatusCode: respStatus}
 }
 
 // SecurityGroup 상세 조회
@@ -383,6 +447,39 @@ func GetSshKeyInfoList(nameSpaceID string) ([]tbmcir.TbSshKeyInfo, model.WebStat
 	fmt.Println(sshKeyList["sshKey"])
 
 	return sshKeyList["sshKey"], model.WebStatus{StatusCode: respStatus}
+
+}
+
+func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetSshKeyInfoList ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/sshKey"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	//url := util.TUMBLEBUG + urlParam
+	url := util.TUMBLEBUG + urlParam + "?option=" + optionParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
+
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	sshKeyList := map[string][]string{}
+
+	json.NewDecoder(respBody).Decode(&sshKeyList)
+	//spew.Dump(body)
+	fmt.Println(sshKeyList["idList"])
+
+	return sshKeyList["idList"], model.WebStatus{StatusCode: respStatus}
 
 }
 
