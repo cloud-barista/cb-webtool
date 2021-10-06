@@ -555,8 +555,8 @@ function lookupVmImageListCallbackSuccess(caller, data){
             var mapValue = ""
             var mapName = "";
             keyValueMap.map( (mapObj, mapIndex) => {
-                if( mapObj.Key == "Name"){
-                    mapName = mapObj.Value
+                if( mapObj.key == "Name"){
+                    mapName = mapObj.value
                     return
                 }
                 // console.log("mapIndex = " + mapIndex);
@@ -576,16 +576,16 @@ function lookupVmImageListCallbackSuccess(caller, data){
                 imageName = item.name;
             }
             if(iid){
-                iidNameID = (iid.NameId == undefined || item.NameId == "" ? "" :  iid.NameId);
-                iidSystemID = (iid.SystemId == undefined || item.SystemId == "" ? "" :  iid.SystemId);
+                iidNameID = (iid.nameId == undefined || item.nameId == "" ? "" :  iid.nameId);
+                iidSystemID = (iid.systemId == undefined || item.systemId == "" ? "" :  iid.systemId);
             }
 //cspImageNameID, cspImageName, cspImageGuestOS
-            html += '<tr onclick="setCspVmImageInfo(\''+iidNameID+'\',\''+imageName+'\',\''+item.guestOS+'\');">'            
+            html += '<tr onclick="setCspVmImageInfo(\''+iidNameID+'\',\''+imageName+'\',\''+item.guestOS+'\');">'
                 + '<td class="overlay hidden" data-th="name">' + imageName + '</td>' 
                 + '<td class="btn_mtd ovm" data-th="status ">' + item.status  + '<span class="ov"></span></td>'
                 + '<td class="btn_mtd ovm" data-th="guestOS ">' + item.guestOS  + '<span class="ov"></span></td>'
-                + '<td class="overlay hidden" data-th="vcpc">' + iidNameID + '</td>' 
-                + '<td class="overlay hidden" data-th="gpu">'  + iidSystemID + '</td>' 
+                + '<td class="overlay hidden" data-th="iidNameID">' + iidNameID + '</td>'
+                + '<td class="overlay hidden" data-th="iidSystemID">'  + iidSystemID + '</td>'
                 + '</tr>'
         });
         

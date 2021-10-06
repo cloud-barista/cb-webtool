@@ -819,7 +819,7 @@ func LookupVirtualMachineImageList(connectionName string) (tbmcir.SpiderImageInf
 
 	pbytes, _ := json.Marshal(paramMap)
 	log.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	log.Println("LookupVirtualMachineImageList called 1 ")
 	if err != nil {
 		fmt.Println(err)
@@ -1256,6 +1256,7 @@ func DelVMSpec(nameSpaceID string, vmSpecID string) (model.WebStatus, model.WebS
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
+// Connection에 Provider와 Region정보가 있으므로 해당 Region에 맞는 VmImage만 조회
 func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.SpiderImageInfos, model.WebStatus) {
 	fmt.Println("LookupVmSpecInfoList ************ : ")
 	var originalUrl = "/lookupSpecs"
@@ -1265,7 +1266,7 @@ func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.Spi
 
 	pbytes, _ := json.Marshal(connectionName)
 	// fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 	if err != nil {
 		fmt.Println(err)
@@ -1318,7 +1319,8 @@ func LookupVmSpecInfoData(restLookupSpecRequest *tbmcir.RestLookupSpecRequest) (
 	url := util.TUMBLEBUG + urlParam
 
 	pbytes, _ := json.Marshal(restLookupSpecRequest)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	vmSpecInfo := tbmcir.SpiderSpecInfo{}
 	if err != nil {
