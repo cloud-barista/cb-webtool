@@ -117,6 +117,19 @@ function commonAlertClose(){
     $("#alertArea").modal("hide");
 }
 
+// message를 표현할 alert 창 : 생성 결과를 표시하는 Alert로 commonAlert와 동일하나 닫힐 때 event처리를 할 수 있게
+// 사용할 화면에서 $('#alertResultArea').on('hidden.bs.modal', function () {  // 수행할 일 또는 함수 호출  // })
+function commonResultAlert(alertMessage){
+    console.log(alertMessage);
+    // $('#alertText').text(alertMessage);
+    $('#alertResultText').html(alertMessage);
+    $("#alertResultArea").modal();
+}
+// alert창 닫기
+function commonResultAlertClose(){
+    $("#alertResultArea").modal("hide");
+}
+
 // 에러 메세지 alert 통일 용
 function commonErrorAlert(statusCode, message){
     commonAlert("Error(" + statusCode + ") : " + message);

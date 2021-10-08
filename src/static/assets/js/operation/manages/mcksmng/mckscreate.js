@@ -1,3 +1,13 @@
+$(document).ready(function() {
+
+    // 생성 완료 시 List화면으로 page이동
+    $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
+        var targetUrl = "/operation/manages/mcksmng/mngform"
+        changePage(targetUrl);
+    })
+
+})
+
 function deploy_btn(){
     var mcksName = $("#mcksreg_name").val();
     if( !validateCloudbaristaKeyName(mcksName, 11) ){
@@ -105,9 +115,9 @@ function deploy_btn(){
             console.log("Result message : ",message); 
 
             if(result.status == 201 || result.status == 200){
-                commonAlert("MCKS Create Success")
-                var targetUrl = "/operation/manages/mcksmng/mngform"
-                changePage(targetUrl);
+                commonResultAlert("MCKS Create Success")
+                // var targetUrl = "/operation/manages/mcksmng/mngform"
+                // changePage(targetUrl);
             
             }else{
                 commonErrorAlert(statusCode, message) 

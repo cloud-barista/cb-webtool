@@ -266,7 +266,6 @@ func ApiCall(c echo.Context) error {
 	} else if params["ApiTarget"] == "LADYBUG" {
 		apiTarget = util.LADYBUG
 	}
-
 	apiMethod := ""
 	if params["ApiMethod"] == "GET" {
 		apiMethod = http.MethodGet
