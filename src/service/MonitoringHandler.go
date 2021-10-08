@@ -358,16 +358,17 @@ func PutMonigoringConfig(monitoringConfigReg *dragonfly.MonitoringConfigReg) (*d
 
 	fmt.Println("Update MonigoringConfigReg : ", url)
 
-	fmt.Println(monitoringConfigReg)
-
-	urlValues, convertErr := util.StructToMapByJson(monitoringConfigReg)
-	if convertErr != nil {
-		log.Println(convertErr)
-	}
-
-	fmt.Println(urlValues)
-	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
-	// resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	//fmt.Println(monitoringConfigReg)
+	//
+	//urlValues, convertErr := util.StructToMapByJson(monitoringConfigReg)
+	//if convertErr != nil {
+	//	log.Println(convertErr)
+	//}
+	//
+	//fmt.Println(urlValues)
+	//resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
+	pbytes, _ := json.Marshal(monitoringConfigReg)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 	resultMonitoringConfig := dragonfly.MonitoringConfig{}
 	if err != nil {
 		log.Println("-----")
@@ -584,17 +585,17 @@ func RegMonitoringAlert(vmMonitoringAlertInfo *dragonfly.VmMonitoringAlertInfo) 
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/task"
 
-	// pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
-	// fmt.Println(string(pbytes))
-	// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	pbytes, _ := json.Marshal(vmMonitoringAlertInfo)
+	fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertInfo)
-	if convertErr != nil {
-		log.Println(convertErr)
-	}
-
-	fmt.Println(urlValues)
-	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
+	//urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertInfo)
+	//if convertErr != nil {
+	//	log.Println(convertErr)
+	//}
+	//
+	//fmt.Println(urlValues)
+	//resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
 
 	resultVmMonitoringAlertInfo := dragonfly.VmMonitoringAlertInfo{}
 	if err != nil {
@@ -756,17 +757,17 @@ func RegMonitoringAlertEventHandler(vmMonitoringAlertEventHandlerInfoReg *dragon
 	url := util.DRAGONFLY + urlParam
 	// url := util.DRAGONFLY + "/alert/eventhandler"
 
-	// pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfoReg)
-	// fmt.Println(string(pbytes))
-	// resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	pbytes, _ := json.Marshal(vmMonitoringAlertEventHandlerInfoReg)
+	fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertEventHandlerInfoReg)
-	if convertErr != nil {
-		log.Println(convertErr)
-	}
-
-	fmt.Println(urlValues)
-	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
+	//urlValues, convertErr := util.StructToMapByJson(vmMonitoringAlertEventHandlerInfoReg)
+	//if convertErr != nil {
+	//	log.Println(convertErr)
+	//}
+	//
+	//fmt.Println(urlValues)
+	//resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
 
 	resultVmMonitoringAlertEventHandlerInfoReg := dragonfly.VmMonitoringAlertEventHandlerInfoReg{}
 	if err != nil {
@@ -919,10 +920,10 @@ func GetMonitoringAlertLogList(taskName string, logLevel string) ([]dragonfly.Vm
 	paramMapper[":task_name"] = taskName
 	paramMapper["{logLevel}"] = logLevel
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-
+	//
 	url := util.DRAGONFLY + urlParam
-	resp, err := util.CommonHttpFormData(url, nil, http.MethodGet)
-	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	//resp, err := util.CommonHttpFormData(url, nil, http.MethodGet)
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
