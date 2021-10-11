@@ -39,16 +39,17 @@ func McisPolicyMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	// 해당 Namespace의 모든 MCIS 조회
-	mcisList, _ := service.GetMcisPolicyList(defaultNameSpaceID)
-	log.Println(" mcisList  ", mcisList)
+	mcisPolicyList, _ := service.GetMcisPolicyList(defaultNameSpaceID)
+	log.Println(" mcisList  ", mcisPolicyList)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/monitorings/McisPolishMng", // 파일명
+		//"operation/monitorings/McisPolishMng", // 파일명
+		"operation/monitorings/mcismonitoring/McisMonitoringMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
-			"McisList":           mcisList,
+			"McisPolicyList":     mcisPolicyList,
 		})
 
 }
@@ -65,12 +66,12 @@ func GetMcisPolicyInfoList(c echo.Context) error {
 	mcisID := c.Param("mcisID")
 	log.Println("mcisID= " + mcisID)
 
-	resultMcisInfo, _ := service.GetMcisPolicyList(defaultNameSpaceID)
+	resultMcisPolicyInfo, _ := service.GetMcisPolicyList(defaultNameSpaceID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":  "success",
-		"status":   200,
-		"McisInfo": resultMcisInfo,
+		"message":        "success",
+		"status":         200,
+		"McisPolicyInfo": resultMcisPolicyInfo,
 	})
 }
 
@@ -88,12 +89,12 @@ func GetMcisPolicyInfoData(c echo.Context) error {
 	mcisID := c.Param("mcisID")
 	log.Println("mcisID= " + mcisID)
 
-	resultMcisInfo, _ := service.GetMcisPolicyInfoData(defaultNameSpaceID, mcisID)
+	resultMcisPolicyInfo, _ := service.GetMcisPolicyInfoData(defaultNameSpaceID, mcisID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":  "success",
-		"status":   200,
-		"McisInfo": resultMcisInfo,
+		"message":        "success",
+		"status":         200,
+		"McisPolicyInfo": resultMcisPolicyInfo,
 	})
 }
 
@@ -119,13 +120,13 @@ func McisPolicyRegProc(c echo.Context) error {
 	mcisID := c.Param("mcisID")
 
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	resultMcisPolishInfo, respStatus := service.RegMcisPolicy(defaultNameSpaceID, mcisID, mcisPolicyInfo)
+	resultMcisPolicyInfo, respStatus := service.RegMcisPolicy(defaultNameSpaceID, mcisID, mcisPolicyInfo)
 	log.Println("RegMcisPolicy service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":          respStatus.Message,
 			"status":         respStatus.StatusCode,
-			"McisPolishInfo": resultMcisPolishInfo,
+			"McisPolicyInfo": resultMcisPolicyInfo,
 		})
 	}
 
