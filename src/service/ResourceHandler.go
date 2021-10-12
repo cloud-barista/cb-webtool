@@ -166,6 +166,43 @@ func DelVpc(nameSpaceID string, vNetID string) (model.WebStatus, model.WebStatus
 	return webStatus, model.WebStatus{StatusCode: respStatus}
 }
 
+
+// 전체 vpc 삭제
+func DelAllVpc(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/resources/vNet"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodDelete)
+
+	resultInfo := tbcommon.TbSimpleMsg{}
+
+	if err != nil {
+		return resultInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return resultInfo, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+
+	return resultInfo, model.WebStatus{StatusCode: respStatus}
+	
+}
+
+
+
 // 해당 namespace의 SecurityGroup 목록 조회
 func GetSecurityGroupList(nameSpaceID string) ([]tbmcir.TbSecurityGroupInfo, model.WebStatus) {
 	fmt.Println("GetSecurityGroupList ************ : ")
@@ -497,6 +534,42 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (model.WebStatus, model.WebS
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
+
+// 전체 sshKey 삭제
+func DelAllSshKey(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/resources/sshKey"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodDelete)
+
+	resultInfo := tbcommon.TbSimpleMsg{}
+
+	if err != nil {
+		return resultInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return resultInfo, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+
+	return resultInfo, model.WebStatus{StatusCode: respStatus}
+	
+}
+
+
 // VirtualMachineImage 목록 조회
 func GetVirtualMachineImageInfoList(nameSpaceID string) ([]tbmcir.TbImageInfo, model.WebStatus) {
 	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
@@ -819,7 +892,7 @@ func LookupVirtualMachineImageList(connectionName string) (tbmcir.SpiderImageInf
 
 	pbytes, _ := json.Marshal(paramMap)
 	log.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 	log.Println("LookupVirtualMachineImageList called 1 ")
 	if err != nil {
 		fmt.Println(err)
@@ -1256,7 +1329,6 @@ func DelVMSpec(nameSpaceID string, vmSpecID string) (model.WebStatus, model.WebS
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
-// Connection에 Provider와 Region정보가 있으므로 해당 Region에 맞는 VmImage만 조회
 func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.SpiderImageInfos, model.WebStatus) {
 	fmt.Println("LookupVmSpecInfoList ************ : ")
 	var originalUrl = "/lookupSpecs"
@@ -1266,7 +1338,7 @@ func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.Spi
 
 	pbytes, _ := json.Marshal(connectionName)
 	// fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 	if err != nil {
 		fmt.Println(err)
@@ -1319,8 +1391,7 @@ func LookupVmSpecInfoData(restLookupSpecRequest *tbmcir.RestLookupSpecRequest) (
 	url := util.TUMBLEBUG + urlParam
 
 	pbytes, _ := json.Marshal(restLookupSpecRequest)
-	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	vmSpecInfo := tbmcir.SpiderSpecInfo{}
 	if err != nil {

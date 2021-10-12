@@ -11,7 +11,7 @@ import (
 	model "github.com/cloud-barista/cb-webtool/src/model"
 	// "github.com/cloud-barista/cb-webtool/src/model/spider"
 
-	// tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	// tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
@@ -121,7 +121,7 @@ func RegMcisPolicy(nameSpaceID string, mcisID string, mcisPolicyInfo *tbmcis.Mci
 }
 
 //
-func DelAllMcisPolicy(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+func DelAllMcisPolicy(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/policy/mcis"
 
 	var paramMapper = make(map[string]string)
@@ -129,19 +129,28 @@ func DelAllMcisPolicy(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/policy/mcis"
 
-	// 경로안에 parameter가 있어 추가 param없이 호출 함.
-	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodDelete)
+
+	resultInfo := tbcommon.TbSimpleMsg{}
+
 	if err != nil {
-		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return resultInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	// return body, err
+
 	respBody := resp.Body
 	respStatus := resp.StatusCode
+	
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return resultInfo, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+
+	return resultInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 func DelMcisPolicy(nameSpaceID string, mcisID string) (io.ReadCloser, model.WebStatus) {
