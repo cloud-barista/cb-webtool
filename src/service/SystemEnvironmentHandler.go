@@ -24,7 +24,7 @@ import (
 )
 
 
-func DelAllConfig() (tbcommon.TbSimpleMsg, model.WebStatus) {
+func DelAllTbConfig() (tbcommon.TbSimpleMsg, model.WebStatus) {
 	fmt.Println("Delete all configs start")
 	var originalUrl = "/config"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -57,7 +57,7 @@ func DelAllConfig() (tbcommon.TbSimpleMsg, model.WebStatus) {
 }
 
 
-func GetAllConfig() (tbcommon.TbRestGetAllConfigResponse, model.WebStatus) {
+func GetAllTbConfig() (tbcommon.TbRestGetAllConfigResponse, model.WebStatus) {
 	fmt.Println("Get all configs list start")
 	var originalUrl = "/config"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -124,7 +124,7 @@ func RegOrUpdateConfig(configReg tbcommon.TbConfigReq) (tbcommon.TbConfigInfo, m
 
 }
 
-func DelConfigById(configID string) (tbcommon.TbConfigInfo, model.WebStatus) {
+func DelTbConfig(configID string) (tbcommon.TbConfigInfo, model.WebStatus) {
 	var originalUrl = "/config/{configId}"
 
 	var paramMapper = make(map[string]string)
@@ -157,7 +157,7 @@ func DelConfigById(configID string) (tbcommon.TbConfigInfo, model.WebStatus) {
 }
 
 
-func GetConfigById(configID string) (tbcommon.TbConfigInfo, model.WebStatus) {
+func GetTbConfig(configID string) (tbcommon.TbConfigInfo, model.WebStatus) {
 	var originalUrl = "/config/{configId}"
 
 	var paramMapper = make(map[string]string)

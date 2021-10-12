@@ -263,38 +263,39 @@ func RegMcisByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisReq, c echo.Conte
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		log.Println("RegMcisByAsync ", failResultInfo)
 		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	} else {
+
+		//if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		//	errorInfo := model.ErrorInfo{}
+		//	json.NewDecoder(respBody).Decode(&errorInfo)
+		//	fmt.Println("respStatus != 200 reason ", errorInfo)
+		//	returnStatus.Message = errorInfo.Message
+		//} else {
+		//	json.NewDecoder(respBody).Decode(&returnMcisInfo)
+		//	fmt.Println(returnMcisInfo)
+		//}
+		//returnStatus.StatusCode = respStatus
+
+		// // TODO : 결과값 설정 확인할 것.
+		// socketDataStore, storedOk := store.Get("socketdata")
+		// if !storedOk { // 저장된 거 가져올 때 오류면
+		// 	log.Println("get stored socketData error 2 ")
+		// }
+		// socketDataMap := socketDataStore.(map[int64]websocket.WebSocketMessage)
+		// websocketMessage := websocket.WebSocketMessage{}
+		// // websocketMessage := socketDataMap[time.Now().UnixNano()]
+		// // websocketMessage := socketDataMap[taskKey]
+		// websocketMessage.TaskType = "mcis"
+		// websocketMessage.TaskKey = taskKey
+		// websocketMessage.Status = "complete"
+		// websocketMessage.ProcessTime = time.Now()
+		// store.Set("socketdata", socketDataMap)
+		// store.Save()
+		// log.Println("set stored socketData complete ", respStatus)
+		// websocket으로 전달할 data set
+
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
 	}
-
-	//if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-	//	errorInfo := model.ErrorInfo{}
-	//	json.NewDecoder(respBody).Decode(&errorInfo)
-	//	fmt.Println("respStatus != 200 reason ", errorInfo)
-	//	returnStatus.Message = errorInfo.Message
-	//} else {
-	//	json.NewDecoder(respBody).Decode(&returnMcisInfo)
-	//	fmt.Println(returnMcisInfo)
-	//}
-	//returnStatus.StatusCode = respStatus
-
-	// // TODO : 결과값 설정 확인할 것.
-	// socketDataStore, storedOk := store.Get("socketdata")
-	// if !storedOk { // 저장된 거 가져올 때 오류면
-	// 	log.Println("get stored socketData error 2 ")
-	// }
-	// socketDataMap := socketDataStore.(map[int64]websocket.WebSocketMessage)
-	// websocketMessage := websocket.WebSocketMessage{}
-	// // websocketMessage := socketDataMap[time.Now().UnixNano()]
-	// // websocketMessage := socketDataMap[taskKey]
-	// websocketMessage.TaskType = "mcis"
-	// websocketMessage.TaskKey = taskKey
-	// websocketMessage.Status = "complete"
-	// websocketMessage.ProcessTime = time.Now()
-	// store.Set("socketdata", socketDataMap)
-	// store.Save()
-	// log.Println("set stored socketData complete ", respStatus)
-	// websocket으로 전달할 data set
-
-	StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
 }
 
 // MCIS에 VM 추가 등록

@@ -15,6 +15,7 @@ var SPIDER = os.Getenv("SPIDER_URL")
 var TUMBLEBUG = os.Getenv("TUMBLE_URL")
 var DRAGONFLY = os.Getenv("DRAGONFLY_URL")
 var LADYBUG = os.Getenv("LADYBUG_URL")
+var MCKS = os.Getenv("MCKS_URL")
 
 var HTTP_CALL_SUCCESS = 200
 var HTTP_POST_SUCCESS = 201
@@ -108,3 +109,9 @@ var TASK_STATUS_COMPLETE = "completed"
 
 //
 var VMSPEC_LIFECYCLE_CREATE = "create"
+
+var MCKS_LIFECYCLE_CREATE = "create"
+var MCKS_LIFECYCLE_SUSPEND = "suspend"
+var MCKS_LIFECYCLE_RESUME = "resume"
+var MCKS_LIFECYCLE_TERMINATE = "terminate"
+var MCKS_LIFECYCLE_DELETE = "delete"
