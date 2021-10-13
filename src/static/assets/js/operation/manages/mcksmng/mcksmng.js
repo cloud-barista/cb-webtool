@@ -126,7 +126,6 @@ function deleteMCKS(){
             // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
         }else{
             console.log("checked nothing")
-           
         }
     })
 
@@ -139,6 +138,7 @@ function deleteMCKS(){
     }
 
     // TODO : 삭제 호출부분 function으로 뺼까?
+    //var url = "/ns/{namespace}/clusters/{cluster}"
     var url = "/operation/manages/mcksmng/" + mcksID + "/" + mcksName;               
     axios.delete(url,{})
         .then(result=>{
