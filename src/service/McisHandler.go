@@ -1098,21 +1098,30 @@ func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisID string, mcisCommandI
 }
 
 // Delete All MCISs
-func DelAllMcis(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
+func DelAllMcis(nameSpaceID string, optionParam string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/"
+	optionParamVal := ""
+	
+	if optionParam != "" {
+		optionParamVal = "?option=" + optionParam
+	}
+
+	// url := util.TUMBLEBUG + urlParam
+	url := util.TUMBLEBUG + urlParam + optionParamVal
 
 	// 경로안에 parameter가 있어 추가 param없이 호출 함.
-	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodDelete)
+
+	resultInfo := tbcommon.TbSimpleMsg{}
+
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return resultInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
@@ -1122,10 +1131,10 @@ func DelAllMcis(nameSpaceID string) (io.ReadCloser, model.WebStatus) {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		log.Println("DelAllMcis ", failResultInfo)
-		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+		return resultInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
-	return respBody, model.WebStatus{StatusCode: respStatus}
+	return resultInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // MCIS 삭제. TODO : 해당 namespace의 MCIS만 삭제 가능... 창 두개에서 1개는 MCIS삭제, 1개는 namespace 변경이 있을 수 있으므로 UI에서 namespace도 넘겨서 비교할 것.
