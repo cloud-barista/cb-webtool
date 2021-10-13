@@ -1,4 +1,9 @@
 $(document).ready(function(){
+    getVmList()
+    getCommonNetworkList('vmcreate')
+
+    // e_vNetListTbody
+
     //OS_HW popup table scrollbar
     $('#OS_HW .btn_spec').on('click', function() {
         console.log("os_hw bpn_spec clicked ** ")
@@ -84,6 +89,7 @@ $(document).ready(function(){
 //             });		
 //     }
 //   });
+
 });
 
 
@@ -319,6 +325,8 @@ function vmCreateCallback(resultVmKey, resultStatus){
 
 // 현재 mcis의 vm 목록 조회 : deploy후 상태볼 때 사용
 function getVmList(){
+
+    console.log("getVmList()")
     var mcis_id = $("#mcis_id").val();
     
     
@@ -374,7 +382,7 @@ function getVmList(){
                 $("#mcis_server_list").append(appendLi);
 
                 // commonAlert("VM 목록 조회 완료")
-                $("#serverRegistResult").text("VM 목록 조회 완료");
+                //$("#serverRegistResult").text("VM 목록 조회 완료");
             }
         }
     }).catch((error) => {
@@ -382,4 +390,66 @@ function getVmList(){
         console.log(error.response)
         var errorMessage = error.response.data.error;
     })
+}
+
+// 화면 Load시 가져오나 굳이?
+function getNetworkListCallbackSuccess(caller, data){
+	console.log(data);
+	if ( data == null || data == undefined || data == "null"){
+		
+	}else{// 아직 data가 1건도 없을 수 있음
+        var html = ""
+		if( data.length > 0){
+			data.forEach(function(vNetItem, vNetIndex) {     
+
+                var subnetHtml = ""
+                var subnetData = vNetItem.subnetInfoList
+                console.log(subnetData)
+                subnetData.forEach(function(subnetItem, subnetIndex) {
+                    subnetHtml +='<input type="hidden" name="vNet_subnet_' + vNetItem.id + '" id="vNet_subnet_' + vNetItem.id + '_' + subnetIndex + '" value="' + subnetItem.iid.nameId + '"/>'
+                                + subnetIndex + ' || ' + subnetItem.iid.nameId + ' <p>'
+                })
+
+                console.log(subnetHtml)
+                html +='<tr onclick="setVnetValueToFormObj(\'es_vNetList\', \'tab_vNet\', \'vNetItem.ID\',\'vNet\', \'vNetIndex\', \'e_vNetId\');">'
+												
+                +'        <input type="hidden" id="vNet_id_' + vNetIndex + '" value="' + vNetItem.id + '"/>'
+                +'        <input type="hidden" name="vNet_connectionName" id="vNet_connectionName_' + vNetIndex + '" value="' + vNetItem.connectionName + '"/>'
+                +'        <input type="hidden" name="vNet_name" id="vNet_name_' + vNetIndex + '" value="' + vNetItem.name + '"/>'
+                +'        <input type="hidden" name="vNet_description" id="vNet_description_' + vNetIndex + '" value="' + vNetItem.description + '"/>'
+                +'        <input type="hidden" name="vNet_cidrBlock" id="vNet_cidrBlock_' + vNetIndex + '" value="' + vNetItem.cidrBlock + '"/>'
+                +'        <input type="hidden" name="vNet_cspVnetName" id="vNet_cspVnetName_' + vNetIndex + '" value="' + vNetItem.cspVNetName + '"/>'
+                        
+                +'        <input type="hidden" name="vNet_subnetInfos" id="vNet_subnetInfos_' + vNetIndex + '" value="' + vNetItem.subnetInfos + '"/>'
+                +'        <input type="hidden" name="vNet_keyValueInfos" id="vNet_keyValueInfos_' + vNetIndex + '" value="' + vNetItem.keyValueInfos + '"/>'
+
+                +'        <input type="hidden" id="vNet_info_' + vNetIndex + '" value="' + vNetItem.id + '|' + vNetItem.name + ' |' + vNetItem.cspVNetName + '|' + vNetItem.cidrBlock + '|' + vNetItem.subnetInfos + '"/>'
+                        
+                +'    <td class="overlay hidden" data-th="Name">' + vNetItem.name + '</td>'
+                +'    <td class="btn_mtd ovm td_left" data-th="CidrBlock">'
+                +'        ' + vNetItem.cidrBlock
+                +'    </td>'
+                +'    <td class="btn_mtd ovm td_left" data-th="SubnetInfo">' + subnetHtml
+                // +'        { {range $subnetIndex, $subnetItem := .SubnetInfos + ''
+                // +'        <input type="hidden" name="vNet_subnet_' + vNetItem.ID + '" id="vNet_subnet_' + vNetItem.ID + '_' + subnetIndex + '" value="' + subnetItem.IID.NameId + '"/>'
+                // +'        ' + subnetIndex + ' || ' + subnetItem.IID.NameId + ' <p>'
+                // +'        { { end  + ''
+                +'    </td>'
+                +'    <td class="overlay hidden" data-th="Description">' + vNetItem.description + '</td>'
+                +'</tr>'
+            })
+            $("#e_vNetListTbody").empty()
+            $("#e_vNetListTbody").append(html)
+		}
+	}
+	
+}
+function getNetworkListCallbackFail(caller, error){
+	// no data
+    var html = ""
+    html +='<tr>'
+		+ '<td class="overlay hidden" data-th="" colspan="4">No Data</td>'
+        + '</tr>';
+    $("#e_vNetListTbody").empty()
+    $("#e_vNetListTbody").append(html)
 }

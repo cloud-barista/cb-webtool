@@ -21,9 +21,9 @@
 			
 			function getVmiInfo(){
 				
-				 var configName = $("#s_regConnectionName option:selected").val();
+				var configName = $("#s_regConnectionName option:selected").val();
 				 
-				 console.log("2 : ",configName);
+				console.log("2 : ",configName);
 				// getCommonVirtualMachineImageList("mcissimpleconfigure", "name"); setCommonVirtualMachineImageList()
 				// var url = "/setting/resources" + "/machineimage/lookupimage";//TODO : 조회 오류남... why? connectionName으로 lookup
 				var url = "/setting/resources" + "/machineimage/list"
@@ -201,10 +201,11 @@
 							
                             for(var k in subnetInfoList){
 								
-									init_subnet = subnetInfoList[0].IId.NameId
-									console.log("init_subnet :",init_subnet)
+									//init_subnet = subnetInfoList[0].IId.NameId
+								init_subnet = subnetInfoList[k].iid.nameId
+								console.log("init_subnet :",init_subnet)
 							
-                                html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].IPv4_CIDR+'</option>'; 
+                                html2 += '<option value="'+subnetInfoList[k].iid.nameId+'" >'+subnetInfoList[k].ipv4_CIDR+'</option>';
                             }
                         }
                     }

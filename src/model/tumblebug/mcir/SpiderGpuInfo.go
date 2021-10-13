@@ -1,4 +1,4 @@
-package tumblebug
+package mcir
 
 type SpiderGpuInfo struct {
 	Count string `json:"count"`

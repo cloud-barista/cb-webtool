@@ -51,7 +51,8 @@ function showHelp(helpKey){
 
 //////////////// api -> local server -> target api  호출 ///////////////
 // 한 화면에서 서로다른 형태로 호출이 가능하므로 caller(호출자) 를 callback에 같이 넘겨서 구분할 수 있게 함.
-function getCommonNameSpaceList(caller){
+// isCallback = false 이고 targetObjId 가 있는 경우 해당 obj set
+function getCommonNameSpaceList(caller, isCallback, targetObjId){
     var url = "/setting/namespaces/namespace/list";
     axios.get(url,{
         headers:{
@@ -62,21 +63,55 @@ function getCommonNameSpaceList(caller){
         // var data = result.data.ns;
         var data = result.data;
         
-        getNameSpaceListCallbackSuccess(caller, data);
-            
+        if( !isCallback && targetObjId != undefined ){
+            setLeftMenuNamespaceList(targetObjId, data);
+        }else{            
+            getNameSpaceListCallbackSuccess(caller, data);
+        }   
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         // commonErrorAlert(statusCode, errorMessage) 
+        if( !isCallback && targetObjId != undefined ){
+            setLeftMenuNamespaceList(targetObjId, data);
+        }else{            
+            getNameSpaceListCallbackFail(caller, error);
+        }  
         
-        getNameSpaceListCallbackFail(caller, error);
         
     });
 }
+// namespaceList를 해당 targetObjeId에 set
+// function setCommonNamespaceList(targetObjId, namespaceList){
+//     if(!isEmpty(namespaceList) && namespaceList.length){            
+//         var html = "";
+//         for(var aNamespace in namespaceList){
+//             html += '<div class="list" onclick="selectNS(\''+item.id+'\');">'
+//             +'<div class="stit">'+item.name+'</div>'
+//             +'<div class="stxt">'+item.description+' </div>'
+//             +'</div>'          
+//         }
+//         $(targetObjId).empty();
+//         $(targetObjId).append(html);
+//         nsModal()     
+//     }
+// }
 
-function getCommonCloudConnectionList(caller, sortType){
+// namespaceList를 좌측메뉴에 set. 
+// common.js나 util.js로 넘길까?
+function setLeftMenuNamespaceList(targetObjId, namespaceList){
+    console.log("setLeftMenuNamespaceList targetObj=" + targetObjId)
+    if(!isEmpty(namespaceList) && namespaceList.length){            
+        for(var itemIndex in namespaceList){
+            console.log(namespaceList[itemIndex])
+            $("#" + targetObjId).append('<li><a href="javascript:void(0);" onclick="selectDefaultNameSpace(\'TobBox\', \'' + namespaceList[itemIndex].id +'\' )" data-toggle="modal" data-target="#NameSpace">' + namespaceList[itemIndex].name + '</a></li>');
+        }
+    }
+}
+
+function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId){
     var url = "/setting/connections/cloudconnectionconfig/list";
     axios.get(url,{
         headers:{
@@ -85,7 +120,11 @@ function getCommonCloudConnectionList(caller, sortType){
     }).then(result=>{
         console.log("get CloudConnection Data : ",result.data);
         var data = result.data.ConnectionConfig;
-        getCloudConnectionListCallbackSuccess(caller, data, sortType);
+
+        if( !isCallback && targetObjId != undefined ){
+        }else{
+            getCloudConnectionListCallbackSuccess(caller, data, sortType);
+        }        
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
@@ -299,7 +338,7 @@ function getCommonVirtualMachineSpecList(caller, sortType) {
 
 // /lookupSpecs
 function getCommonLookupSpecList(caller, connectionName) {    
-    var url = "/setting/resources/vmspec/lookupvmspec"
+    var url = "/setting/resources/vmspec/lookupvmspecs"
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -307,6 +346,38 @@ function getCommonLookupSpecList(caller, connectionName) {
         },
         params: {
             connectionName: connectionName
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.CspVmSpecList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( caller == "vmspecmng"){
+			console.log("return get Data")			
+			lookupSpecListCallbackSuccess(caller, data)		
+		}
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        lookupSpecListCallbackSuccess(error)
+	});
+}
+
+// /lookupSpecs
+function getCommonLookupSpec(caller, connectionName, cspSpecName) {    
+    var url = "/setting/resources/vmspec/lookupvmspec"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        },
+        params: {
+            connectionName: connectionName,
+            cspSpecName : cspSpecName
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
@@ -430,6 +501,39 @@ function getCommonLookupImageList(caller, connectionName) {
 	});
 }
 
+// /lookupImages
+function getCommonLookupImage(caller, connectionName, cspImageID) {    
+    //var url = "/setting/resources/vmimage/lookupvmimagelist"
+    var url = "/setting/resources/machineimage/lookupimages"
+    axios.get(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        },
+        params: {
+            connectionName: connectionName,
+            cspImageID : cspImageID
+        }
+    }).then(result => {
+        console.log("get Image List : ", result.data);
+        
+        var data = result.data.VirtualMachineImageList;
+        
+		// Data가져온 뒤 set할 method 호출
+		if( caller == "vmimagemng"){
+			console.log("return get Data")			
+			lookupVmImageListCallbackSuccess(caller, data)		
+		}
+    // }).catch(function(error){
+    //     console.log("list error : ",error);        
+    // });
+	}).catch(error => {
+		console.warn(error);
+		console.log(error.response) 
+        lookupVmImageListCallbackFail(error)
+	});
+}
+
 //
 ///ns/{nsId}/resources/fetchImages
 function getCommonFetchImages(caller, connectionName) {
@@ -456,7 +560,7 @@ function getCommonFetchImages(caller, connectionName) {
 
 
 // MCIS 목록 존재여부
-function getCommonMcisList(caller) {
+function getCommonMcisList(caller, isCallback, targetObjId){
     var url = "/operation/manages/mcismng/list"
 
     axios.get(url, {
