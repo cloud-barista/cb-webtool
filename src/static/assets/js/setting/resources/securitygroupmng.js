@@ -281,7 +281,7 @@ function showSecurityGroupInfo(sgName) {
         var dtlCspSecurityGroupName = data.cspSecurityGroupName;
         var dtlDescription = data.description;
         var dtlConnectionName = data.connectionName;
-        var dtlvNetId = data.vNetID;
+        var dtlvNetId = data.vNetId;
 
         var dtlFirewall = data.firewallRules;
         console.log("firefire : ", dtlFirewall);
