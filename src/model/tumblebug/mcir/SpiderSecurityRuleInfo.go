@@ -1,9 +1,9 @@
 package mcir
 
 type SpiderSecurityRuleInfo struct {
-	Cidr        string `json:"cidr"`
-	Description string `json:"description"`
-	fromPort    string `json:"fromPort"`
-	toPort      string `json:"toPort"`
-	ipProtocol  string `json:"ipProtocol"`
+	Cidr       string `json:"cidr"`
+	Direction  string `json:"direction"`
+	FromPort   string `json:"fromPort"`
+	ToPort     string `json:"toPort"`
+	IpProtocol string `json:"ipProtocol"`
 }
