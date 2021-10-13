@@ -232,7 +232,7 @@ func McksRegProc(c echo.Context) error {
 
 	// Async로 변경
 	taskKey := defaultNameSpaceID + "||" + "mcks" + "||" + clusterReq.Name                                               // TODO : 공통 function으로 뺄 것.
-	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCKS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+	service.StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
 	go service.RegClusterByAsync(defaultNameSpaceID, clusterReq, c)
 	// 원래는 호출 결과를 return하나 go routine으로 바꾸면서 요청성공으로 return
 	log.Println("before return")
@@ -257,19 +257,29 @@ func McksDelProc(c echo.Context) error {
 	clusterName := c.Param("clusterName")
 	log.Println("clusterName= " + clusterName)
 
-	resultStatusInfo, respStatus := service.DelCluster(defaultNameSpaceID, clusterName)
-	log.Println("DelMCKS service returned")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+	taskKey := defaultNameSpaceID + "||" + "mcks" + "||" + clusterName
+	service.StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_DELETE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	// resultStatusInfo, respStatus := service.DelCluster(defaultNameSpaceID, clusterName)
+	//log.Println("DelMCKS service returned")
+	//if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	//	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	//		"error":  respStatus.Message,
+	//		"status": respStatus.StatusCode,
+	//	})
+	//}
+	//
+	//return c.JSON(http.StatusOK, map[string]interface{}{
+	//	"message":    "success",
+	//	"status":     respStatus.StatusCode,
+	//	"StatusInfo": resultStatusInfo,
+	//})
+
+	go service.DelClusterByAsync(defaultNameSpaceID, clusterName, c)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":    "success",
-		"status":     respStatus.StatusCode,
-		"StatusInfo": resultStatusInfo,
+		"message": "success",
+		"status":  200,
 	})
 }
 
