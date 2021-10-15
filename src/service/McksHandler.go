@@ -223,6 +223,63 @@ func DelCluster(nameSpaceID string, clusterName string) (*ladybug.StatusInfo, mo
 	return &statusInfo, model.WebStatus{StatusCode: respStatus}
 }
 
+// Cluster 삭제 비동기 처리
+func DelClusterByAsync(nameSpaceID string, clusterName string, c echo.Context) {
+	var originalUrl = "/ns/{namespace}/clusters/{cluster}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{namespace}"] = nameSpaceID
+	paramMapper["{cluster}"] = clusterName
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.MCKS + urlParam
+
+	//if clusterName == "" {
+	//	return nil, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
+	//}
+
+	// 경로안에 parameter가 있어 추가 param없이 호출 함.
+	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+
+	//statusInfo := ladybug.StatusInfo{}
+	//if err != nil {
+	//	fmt.Println("delCluster ", err)
+	//	return &statusInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	//}
+
+	//respBody := resp.Body
+	//respStatus := resp.StatusCode
+	//
+	//json.NewDecoder(respBody).Decode(&statusInfo)
+	//fmt.Println(statusInfo)
+
+	taskKey := nameSpaceID + "||" + "mcks" + "||" + clusterName
+
+	if err != nil {
+		fmt.Println(err)
+		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
+		//returnStatus.Message = errorInfo.Message
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegMcisByAsync ", failResultInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+
+	} else {
+		returnClusterInfo := ladybug.ClusterInfo{}
+		json.NewDecoder(respBody).Decode(&returnClusterInfo)
+		fmt.Println(returnClusterInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_DELETE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+	}
+}
+
 // MCKS의 상태값 숫자로 표시
 func GetMcksStatusCountMap(clusterList []ladybug.ClusterInfo) map[string]int {
 	mcksStatusRunning := 0
