@@ -38,7 +38,7 @@ $(document).ready(function () {
 	// spec
 	getCommonVirtualMachineSpecList("mainspec")
 	
-	getCommonMcisList("mainmcis")
+	getCommonMcisList("mainmcis", true, "", "status")
 
 	getCommonMcksList("mainmcks")
 	//$("#guideArea").modal();
