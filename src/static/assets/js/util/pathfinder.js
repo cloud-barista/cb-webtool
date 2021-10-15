@@ -567,9 +567,11 @@ function getCommonFetchImages(caller, connectionName) {
 
 
 // MCIS 목록 존재여부
-function getCommonMcisList(caller, isCallback, targetObjId){
+function getCommonMcisList(caller, isCallback, targetObjId, optionParam){
     var url = "/operation/manages/mcismng/list"
-
+    if ( optionParam != undefined ){
+        url += "?option=" + optionParam;
+    }
     axios.get(url, {
         headers: {
             'Content-Type': "application/json"
@@ -590,28 +592,29 @@ function getCommonMcisList(caller, isCallback, targetObjId){
 	});
 }
 
-function getCommonMcisList(caller) {
-    var url = "/operation/manages/mcismng/list"
-
-    axios.get(url, {
-        headers: {
-            'Content-Type': "application/json"
-        }
-    }).then(result => {
-        console.log("get Mcis List : ", result.data);
-        
-        var data = result.data.McisList;
-
-        // if ( caller == "mainmcis") {
-            console.log("return get Data");            
-			getMcisListCallbackSuccess(caller, data)		
-		// }
-    }).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
-        getMcisListCallbackFail(error)
-	});
-}
+// 왜 똑같은게 있지?? 주석처리 함. 문제없으면 삭제할 것
+// function getCommonMcisList(caller) {
+//     var url = "/operation/manages/mcismng/list"
+//
+//     axios.get(url, {
+//         headers: {
+//             'Content-Type': "application/json"
+//         }
+//     }).then(result => {
+//         console.log("get Mcis List : ", result.data);
+//
+//         var data = result.data.McisList;
+//
+//         // if ( caller == "mainmcis") {
+//             console.log("return get Data");
+// 			getMcisListCallbackSuccess(caller, data)
+// 		// }
+//     }).catch(error => {
+// 		console.warn(error);
+// 		console.log(error.response)
+//         getMcisListCallbackFail(error)
+// 	});
+// }
 
 function getCommonMcksList(caller) {
     var url = "/operation/manages/mcksmng/list"
