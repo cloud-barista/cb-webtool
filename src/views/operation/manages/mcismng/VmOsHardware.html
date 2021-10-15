@@ -46,29 +46,29 @@
 								</tr>
 							</thead>
 							<tbody id="es_imageListTbody">
-								{{ $length := len .VMImageList }} 
-								{{ if eq $length 0 }}
+<!--								{ { $length := len .VMImageList } } -->
+<!--								{ { if eq $length 0 } }-->
 								<tr>
 									<td class="overlay hidden" data-th="" colspan="8">No Data</td>
 								</tr>
-								{{ end }}
+<!--								{ { end } }-->
 
-								{{range $vmInageIndex, $vmImageItem := .VMImageList}}	
+<!--								{ {range $vmInageIndex, $vmImageItem := .VMImageList} }	-->
 								
-								<tr onclick="setValueToFormObj('es_imageList', 'tab_vmImage', 'vmImage', '{{$vmInageIndex}}', 'e_imageId');">
-										<input type="hidden" id="vmImage_id_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}"/>
-										<input type="hidden" name="vmImage_connectionName" id="vmImage_connectionName_{{$vmInageIndex}}" value="{{$vmImageItem.ConnectionName}}"/>
-										<input type="hidden" name="vmImage_info" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>										
-									<td class="overlay hidden" data-th="Name">{{$vmImageItem.Name}}</td>
-									<td class="btn_mtd ovm td_left" data-th="ConnectionName">
-										{{$vmImageItem.ConnectionName}}
-									</td>
-									<td class="overlay hidden" data-th="CspImageId">{{$vmImageItem.CspImageId}}</td>
-									<td class="overlay hidden" data-th="CspImageName">{{$vmImageItem.CspImageName}}</td>
-									<td class="overlay hidden" data-th="GuestOS">{{$vmImageItem.GuestOS}}</td>
-									<td class="overlay hidden" data-th="Description">{{$vmImageItem.Description}}</td>
-								</tr>											
-								{{end}}
+<!--								<tr onclick="setValueToFormObj('es_imageList', 'tab_vmImage', 'vmImage', '{ {$vmInageIndex} }', 'e_imageId');">-->
+<!--										<input type="hidden" id="vmImage_id_{ {$vmInageIndex} }" value="{ {$vmImageItem.ID} }"/>-->
+<!--										<input type="hidden" name="vmImage_connectionName" id="vmImage_connectionName_{ {$vmInageIndex} }" value="{ {$vmImageItem.ConnectionName} }"/>-->
+<!--										<input type="hidden" name="vmImage_info" id="vmImage_info_{ {$vmInageIndex} }" value="{ {$vmImageItem.ID} }|{ {$vmImageItem.Name} }|{ {$vmImageItem.ConnectionName} }|{ {$vmImageItem.CspImageId} }|{ {$vmImageItem.CspImageName} }|{ {$vmImageItem.GuestOS} }|{ {$vmImageItem.Description} }"/>										-->
+<!--									<td class="overlay hidden" data-th="Name">{ {$vmImageItem.Name} }</td>-->
+<!--									<td class="btn_mtd ovm td_left" data-th="ConnectionName">-->
+<!--										{ {$vmImageItem.ConnectionName} }-->
+<!--									</td>-->
+<!--									<td class="overlay hidden" data-th="CspImageId">{ {$vmImageItem.CspImageId} }</td>-->
+<!--									<td class="overlay hidden" data-th="CspImageName">{ {$vmImageItem.CspImageName} }</td>-->
+<!--									<td class="overlay hidden" data-th="GuestOS">{ {$vmImageItem.GuestOS} }</td>-->
+<!--									<td class="overlay hidden" data-th="Description">{ {$vmImageItem.Description} }</td>-->
+<!--								</tr>											-->
+<!--								{ {end} }-->
 
 							</tbody>
 						</table>
@@ -94,13 +94,15 @@
 								<colgroup>
 									<col width="30%">
 									<col width="30%">
-									<col width="30%">			
+									<col width="30%">
+									<col width="*">
 								</colgroup>
 								<thead>
 									<tr>
 										<th>Spec Name</th>
 										<th>Connection Name</th>
 										<th>CSP Spec Name</th>
+										<th>Desc</th>
 									</tr>
 								</thead>
 								<tbody id="e_specListTbody">

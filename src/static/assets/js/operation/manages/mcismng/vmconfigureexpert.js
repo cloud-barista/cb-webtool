@@ -609,10 +609,12 @@ function setVnetValueToFormObj(tableId, prefixTargetTabName, prefixVnetId, prefi
 
   // subnet set 추가
   //<input type="hidden" name="vNet_subnet_{{$vNetItem.ID}}" id="vNet_subnet_{{$vNetItem.ID}}_{{$subnetIndex}}" value="{{$subnetItem.IID}}"/>
-  var selectedSubnetIndex = 0;// default : 0
-  var selectedSubnetId = $("#" + prefixName + "_subnet_" + prefixVnetId + "_" + selectedSubnetIndex).val();
-  console.log("selectedSubnetId = " + selectedSubnetId);
-  $("#e_subnetId").val(selectedSubnetId);
+  // var selectedSubnetIndex = 0;// default : 0
+  // var selectedSubnetId = $("#" + prefixName + "_subnet_" + prefixVnetId + "_" + selectedSubnetIndex).val();
+  var selectedSubnetIds = $("#vNet_subnetInfos_" + selectedIndex).val();
+  console.log("selectedSubnetId = " + selectedSubnetIds);
+
+  $("#e_subnetId").val(selectedSubnetIds);// subnetId가 1개 이상이지만 securityGroup종속임.
 }
 
 // 대상 table, 선택한 tr의 index, set할 값, 대상 form의 obj 지정하여

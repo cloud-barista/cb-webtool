@@ -293,15 +293,19 @@ function getCommonVirtualMachineImageList(caller, sortType) {
 			setVirtualMachineImageListAtSimpleConfigure(data, sortType)			
 		}else if( caller == "mainimage"){
 			console.log("return get Data")
-			getImageListCallbackSuccess(caller, data)		
-		}
+			getImageListCallbackSuccess(caller, data)
+        }else if( caller == "vmcreate"){
+            console.log("return get Data")
+            getImageListCallbackSuccess(caller, data)
+        }
     // }).catch(function(error){
     //     console.log("list error : ",error);        
     // });
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
-	});
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
+        getImageListCallbackFail(error)
+    });
 }
 
 
@@ -327,8 +331,11 @@ function getCommonVirtualMachineSpecList(caller, sortType) {
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
         }else if( caller == "mainspec"){
 			console.log("return get Data")
-			getSpecListCallbackSuccess(caller, data)		
-		}
+			getSpecListCallbackSuccess(caller, data)
+        }else if( caller == "vmcreate"){
+            console.log("return get Data")
+            getSpecListCallbackSuccess(caller, data)
+        }
     }).catch(error => {
 		console.warn(error);
 		console.log(error.response) 

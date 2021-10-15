@@ -112,41 +112,41 @@
 										</tr>
 									</thead>
 									<tbody id="e_vNetListTbody">
-										{ { $length := len .VNetList } } 
-										{ { if eq $length 0 } }
+<!--										{ { $length := len .VNetList } } -->
+<!--										{ { if eq $length 0 } }-->
 										<tr>
 											<td class="overlay hidden" data-th="" colspan="4">No Data</td>
 										</tr>
-										{ { end } }
+<!--										{ { end } }-->
 		
-										{ {range $vNetIndex, $vNetItem := .VNetList} }	
-										<tr onclick="setVnetValueToFormObj('es_vNetList', 'tab_vNet', '{ {$vNetItem.ID} }','vNet', '{ {$vNetIndex} }', 'e_vNetId');">
-												
-												<input type="hidden" id="vNet_id_{ {$vNetIndex} }" value="{ {$vNetItem.ID} }"/>
-												<input type="hidden" name="vNet_connectionName" id="vNet_connectionName_{ {$vNetIndex} }" value="{ {$vNetItem.ConnectionName} }"/>
-												<input type="hidden" name="vNet_name" id="vNet_name_{ {$vNetIndex} }" value="{ {$vNetItem.Name} }"/>
-												<input type="hidden" name="vNet_description" id="vNet_description_{ {$vNetIndex} }" value="{ {$vNetItem.Description} }"/>
-												<input type="hidden" name="vNet_cidrBlock" id="vNet_cidrBlock_{ {$vNetIndex} }" value="{ {$vNetItem.CidrBlock} }"/>
-												<input type="hidden" name="vNet_cspVnetName" id="vNet_cspVnetName_{ {$vNetIndex} }" value="{ {$vNetItem.CspVNetName} }"/>
-												
-												<input type="hidden" name="vNet_subnetInfos" id="vNet_subnetInfos_{ {$vNetIndex} }" value="{ {$vNetItem.SubnetInfos} }"/>
-												<input type="hidden" name="vNet_keyValueInfos" id="vNet_keyValueInfos_{ {$vNetIndex} }" value="{ {$vNetItem.KeyValueInfos} }"/>
-		
-												<input type="hidden" id="vNet_info_{ {$vNetIndex} }" value="{ {$vNetItem.ID} }|{ {$vNetItem.Name} } |{ {$vNetItem.CspVNetName} }|{ {$vNetItem.CidrBlock} }|{  {$vNetItem.SubnetInfos} }"/>
-												
-											<td class="overlay hidden" data-th="Name">{ {$vNetItem.Name} }</td>
-											<td class="btn_mtd ovm td_left" data-th="CidrBlock">
-												{ {$vNetItem.CidrBlock} }
-											</td>
-											<td class="btn_mtd ovm td_left" data-th="SubnetInfo">
-												{ {range $subnetIndex, $subnetItem := .SubnetInfos} }
-												<input type="hidden" name="vNet_subnet_{ {$vNetItem.ID} }" id="vNet_subnet_{ {$vNetItem.ID} }_{ {$subnetIndex} }" value="{ {$subnetItem.IID.NameId} }"/>
-												{ {$subnetIndex} } || { {$subnetItem.IID.NameId} } <p>
-												{ { end } }
-											</td>
-											<td class="overlay hidden" data-th="Description">{ {$vNetItem.Description} }</td>
-										</tr>											
-										{ {end} }
+<!--										{ {range $vNetIndex, $vNetItem := .VNetList} }	-->
+<!--										<tr onclick="setVnetValueToFormObj('es_vNetList', 'tab_vNet', '{ {$vNetItem.ID} }','vNet', '{ {$vNetIndex} }', 'e_vNetId');">-->
+<!--												-->
+<!--												<input type="hidden" id="vNet_id_{ {$vNetIndex} }" value="{ {$vNetItem.ID} }"/>-->
+<!--												<input type="hidden" name="vNet_connectionName" id="vNet_connectionName_{ {$vNetIndex} }" value="{ {$vNetItem.ConnectionName} }"/>-->
+<!--												<input type="hidden" name="vNet_name" id="vNet_name_{ {$vNetIndex} }" value="{ {$vNetItem.Name} }"/>-->
+<!--												<input type="hidden" name="vNet_description" id="vNet_description_{ {$vNetIndex} }" value="{ {$vNetItem.Description} }"/>-->
+<!--												<input type="hidden" name="vNet_cidrBlock" id="vNet_cidrBlock_{ {$vNetIndex} }" value="{ {$vNetItem.CidrBlock} }"/>-->
+<!--												<input type="hidden" name="vNet_cspVnetName" id="vNet_cspVnetName_{ {$vNetIndex} }" value="{ {$vNetItem.CspVNetName} }"/>-->
+<!--												-->
+<!--												<input type="hidden" name="vNet_subnetInfos" id="vNet_subnetInfos_{ {$vNetIndex} }" value="{ {$vNetItem.SubnetInfos} }"/>-->
+<!--												<input type="hidden" name="vNet_keyValueInfos" id="vNet_keyValueInfos_{ {$vNetIndex} }" value="{ {$vNetItem.KeyValueInfos} }"/>-->
+<!--		-->
+<!--												<input type="hidden" id="vNet_info_{ {$vNetIndex} }" value="{ {$vNetItem.ID} }|{ {$vNetItem.Name} } |{ {$vNetItem.CspVNetName} }|{ {$vNetItem.CidrBlock} }|{  {$vNetItem.SubnetInfos} }"/>-->
+<!--												-->
+<!--											<td class="overlay hidden" data-th="Name">{ {$vNetItem.Name} }</td>-->
+<!--											<td class="btn_mtd ovm td_left" data-th="CidrBlock">-->
+<!--												{ {$vNetItem.CidrBlock} }-->
+<!--											</td>-->
+<!--											<td class="btn_mtd ovm td_left" data-th="SubnetInfo">-->
+<!--												{ {range $subnetIndex, $subnetItem := .SubnetInfos} }-->
+<!--												<input type="hidden" name="vNet_subnet_{ {$vNetItem.ID} }" id="vNet_subnet_{ {$vNetItem.ID} }_{ {$subnetIndex} }" value="{ {$subnetItem.IID.NameId} }"/>-->
+<!--												{ {$subnetIndex} } || { {$subnetItem.IID.NameId} } <p>-->
+<!--												{ { end } }-->
+<!--											</td>-->
+<!--											<td class="overlay hidden" data-th="Description">{ {$vNetItem.Description} }</td>-->
+<!--										</tr>											-->
+<!--										{ {end} }-->
 										
 									</tbody>
 								</table>

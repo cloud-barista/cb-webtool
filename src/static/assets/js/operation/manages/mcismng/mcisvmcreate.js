@@ -1,7 +1,8 @@
 $(document).ready(function(){
     getVmList()
     getCommonNetworkList('vmcreate')
-
+    getCommonVirtualMachineImageList('vmcreate')
+    getCommonVirtualMachineSpecList('vmcreate')
     // e_vNetListTbody
 
     //OS_HW popup table scrollbar
@@ -404,14 +405,25 @@ function getNetworkListCallbackSuccess(caller, data){
 
                 var subnetHtml = ""
                 var subnetData = vNetItem.subnetInfoList
+                var subnetIds = "["
                 console.log(subnetData)
                 subnetData.forEach(function(subnetItem, subnetIndex) {
-                    subnetHtml +='<input type="hidden" name="vNet_subnet_' + vNetItem.id + '" id="vNet_subnet_' + vNetItem.id + '_' + subnetIndex + '" value="' + subnetItem.iid.nameId + '"/>'
-                                + subnetIndex + ' || ' + subnetItem.iid.nameId + ' <p>'
+                    // subnetHtml +='<input type="hidden" name="vNet_subnet_' + vNetItem.id + '" id="vNet_subnet_' + vNetItem.id + '_' + subnetIndex + '" value="' + subnetItem.iid.nameId + '"/>'
+                    //             + subnetIndex + ' || ' + subnetItem.iid.nameId + ' <p>'
+                    // console.log(subnetItem)
+                    // console.log(subnetItem.iid)
+                    subnetHtml += subnetIndex + ' || ' + subnetItem.iid.nameId + '<p>'
+                    if( subnetIndex > 0 ){ subnetIds += "," }
+                    subnetIds += subnetItem.iid.nameId
+
                 })
+                subnetIds += "]"
+                subnetHtml +='<input type="hidden" name="vNet_subnet_' + vNetItem.id + '" id="vNet_subnet_' + vNetItem.id + '_' + vNetIndex + '" value="' + subnetIds + '"/>'
+
+                console.log("subnetIds = " + subnetIds)
 
                 console.log(subnetHtml)
-                html +='<tr onclick="setVnetValueToFormObj(\'es_vNetList\', \'tab_vNet\', \'vNetItem.ID\',\'vNet\', \'vNetIndex\', \'e_vNetId\');">'
+                html +='<tr onclick="setVnetValueToFormObj(\'es_vNetList\', \'tab_vNet\', \'vNetItem.ID\',\'vNet\',' + vNetIndex + ', \'e_vNetId\');">'
 												
                 +'        <input type="hidden" id="vNet_id_' + vNetIndex + '" value="' + vNetItem.id + '"/>'
                 +'        <input type="hidden" name="vNet_connectionName" id="vNet_connectionName_' + vNetIndex + '" value="' + vNetItem.connectionName + '"/>'
@@ -420,10 +432,12 @@ function getNetworkListCallbackSuccess(caller, data){
                 +'        <input type="hidden" name="vNet_cidrBlock" id="vNet_cidrBlock_' + vNetIndex + '" value="' + vNetItem.cidrBlock + '"/>'
                 +'        <input type="hidden" name="vNet_cspVnetName" id="vNet_cspVnetName_' + vNetIndex + '" value="' + vNetItem.cspVNetName + '"/>'
                         
-                +'        <input type="hidden" name="vNet_subnetInfos" id="vNet_subnetInfos_' + vNetIndex + '" value="' + vNetItem.subnetInfos + '"/>'
-                +'        <input type="hidden" name="vNet_keyValueInfos" id="vNet_keyValueInfos_' + vNetIndex + '" value="' + vNetItem.keyValueInfos + '"/>'
+                +'        <input type="hidden" name="vNet_subnetInfos" id="vNet_subnetInfos_' + vNetIndex + '" value="' + subnetIds + '"/>'
 
-                +'        <input type="hidden" id="vNet_info_' + vNetIndex + '" value="' + vNetItem.id + '|' + vNetItem.name + ' |' + vNetItem.cspVNetName + '|' + vNetItem.cidrBlock + '|' + vNetItem.subnetInfos + '"/>'
+                //    사용하지 않는데 굳이 리스트를 할당할 필요가 있을까?
+                //+'        <input type="hidden" name="vNet_keyValueInfos" id="vNet_keyValueInfos_' + vNetIndex + '" value="' + vNetItem.keyValueInfos + '"/>'
+
+                +'        <input type="hidden" id="vNet_info_' + vNetIndex + '" value="' + vNetItem.id + '|' + vNetItem.name + ' |' + vNetItem.cspVNetName + '|' + vNetItem.cidrBlock + '|' + subnetIds + '"/>'
                         
                 +'    <td class="overlay hidden" data-th="Name">' + vNetItem.name + '</td>'
                 +'    <td class="btn_mtd ovm td_left" data-th="CidrBlock">'
@@ -452,4 +466,81 @@ function getNetworkListCallbackFail(caller, error){
         + '</tr>';
     $("#e_vNetListTbody").empty()
     $("#e_vNetListTbody").append(html)
+}
+
+function getSpecListCallbackSuccess(caller, data){
+    console.log(data);
+    if ( data == null || data == undefined || data == "null"){
+
+    }else{// 아직 data가 1건도 없을 수 있음
+        var html = ""
+        if( data.length > 0){
+            data.forEach(function(vSpecItem, vSpecIndex) {
+
+                html +='<tr onclick="setValueToFormObj(\'es_specList\', \'tab_vmSpec\', \'vmSpec\',' + vSpecIndex + ', \'e_specId\');">'
+                + '     <input type="hidden" id="vmSpec_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
+                + '     <input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
+                + '     <input type="hidden" name="vmSpec_info" id="vmSpec_info_' + vSpecIndex + '" value="' + vSpecItem.id + '|' + vSpecItem.name + '|' + vSpecItem.connectionName + '|' + vSpecItem.cspImageId + '|' + vSpecItem.cspImageName + '|' + vSpecItem.guestOS + '|' + vSpecItem.description + '"/>'
+                + '<td class="overlay hidden" data-th="Name">' + vSpecItem.name + '</td>'
+                + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                + vSpecItem.connectionName
+                + '</td>'
+                + '<td class="overlay hidden" data-th="CspSpecName">' + vSpecItem.cspSpecName + '</td>'
+
+                + '<td class="overlay hidden" data-th="Description">' + vSpecItem.description + '</td>'
+                + '</tr>'
+
+            })
+            $("#e_specListTbody").empty()
+            $("#e_specListTbody").append(html)
+        }
+    }
+}
+function getSpecListCallbackFail(caller, error){
+    // no data
+    var html = ""
+    html +='<tr>'
+        + '<td class="overlay hidden" data-th="" colspan="4">No Data</td>'
+        + '</tr>';
+    $("#e_specListTbody").empty()
+    $("#e_specListTbody").append(html)
+}
+
+function getImageListCallbackSuccess(caller, data){
+    console.log(data);
+    if ( data == null || data == undefined || data == "null"){
+
+    }else{// 아직 data가 1건도 없을 수 있음
+        var html = ""
+        if( data.length > 0){
+            data.forEach(function(vImageItem, vImageIndex) {
+
+                html +='<tr onclick="setValueToFormObj(\'es_imageList\', \'tab_vmImage\', \'vmImage\','  + vImageIndex + ', \'e_imageId\');">'
+                + '     <input type="hidden" id="vmImage_id_' + vImageIndex + '" value="' + vImageItem.id + '"/>'
+                + '     <input type="hidden" name="vmImage_connectionName" id="vmImage_connectionName_' + vImageIndex + '" value="' + vImageItem.connectionName + '"/>'
+                + '     <input type="hidden" name="vmImage_info" id="vmImage_info_' + vImageIndex + '" value="' + vImageItem.id + '|' + vImageItem.name + '|' + vImageItem.connectionName + '|' + vImageItem.cspImageId + '|' + vImageItem.cspImageName + '|' + vImageItem.guestOS + '|' + vImageItem.description + '"/>'
+
+                + '<td class="overlay hidden" data-th="Name">' + vImageItem.name + '</td>'
+                + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                + vImageItem.connectionName
+                + '</td>'
+                + '<td class="overlay hidden" data-th="CspImageId">' + vImageItem.cspImageId + '</td>'
+                + '<td class="overlay hidden" data-th="CspImageName">' + vImageItem.cspImageName + '</td>'
+                + '<td class="overlay hidden" data-th="GuestOS">' + vImageItem.guestOS + '</td>'
+                + '<td class="overlay hidden" data-th="Description">' + vImageItem.description + '</td>'
+                + '</tr>'
+            })
+            $("#es_imageListTbody").empty()
+            $("#es_imageListTbody").append(html)
+        }
+    }
+}
+function getImageListCallbackFail(error){
+    // no data
+    var html = ""
+    html +='<tr>'
+        + '<td class="overlay hidden" data-th="" colspan="4">No Data</td>'
+        + '</tr>';
+    $("#es_imageListTbody").empty()
+    $("#es_imageListTbody").append(html)
 }
