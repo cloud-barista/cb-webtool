@@ -240,3 +240,35 @@ func DelNameSpace(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 
 	return resultInfo, model.WebStatus{StatusCode: respStatus}
 }
+
+
+// NameSpace 삭제
+func DelAllNameSpace() (tbcommon.TbSimpleMsg, model.WebStatus) {
+	var originalUrl = "/ns"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID
+
+	// 경로안에 parameter가 있어 추가 param없이 호출 함.
+	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+
+	resultInfo := tbcommon.TbSimpleMsg{}
+
+	if err != nil {
+		return resultInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return resultInfo, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+
+	return resultInfo, model.WebStatus{StatusCode: respStatus}
+}
