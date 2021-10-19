@@ -1,6 +1,7 @@
 {{define "Header"}}
 <script type="text/javascript">
   var lastCallTime = "0"; // 호출하면 호출시간을 return하여 해당시간 이후Data만 가져오도록
+  var messageData = "";//받아온 Data
   var loc = window.location;
   var uri = "ws:";
   var ws;
@@ -37,6 +38,7 @@
         var out = document.getElementById("callTime");
         var jsonStr = JSON.stringify(recData);
         lastCallTime = recData.callTime;
+        messageData = recData.message;
         out.value += lastCallTime;
         console.log(recData);
         break;
@@ -77,6 +79,13 @@
     var out = document.getElementById("callTime");
     out.innerHTML = lastCallTime;
   }
+
+  // 날짜(data)를 넘기면 yyyymmddhh24miss 형태로 반환
+  function yyyymmddhh24miss(d){
+    function pad(n) { return n<10 ? "0"+n : n }
+    return d.getFullYear()+"-"+ pad(d.getMonth()+1)+"-"+ pad(d.getDate())+" "+ pad(d.getHours())+":"+ pad(d.getMinutes())+":"+ pad(d.getSeconds())
+  }
+
 </script>
 <div id="contents">
   <!-- container -->
@@ -139,7 +148,22 @@
                           tr.appendChild(td);
                           th.innerHTML = ++idx;
                           badge.innerHTML = idx;
-                          td.innerHTML = lastCallTime;
+                          //td.innerHTML = messageData;
+                          var valueString = "";
+                          console.log("append data")
+                          for(idx in messageData){
+                            console.log(messageData[idx]);
+                            let processTime = new Date(messageData[idx].processTime);
+                            valueString = messageData[idx].taskType + " : " + messageData[idx].lifeCycle + " : " + messageData[idx].status
+                            valueString += "<br> taskKey : " + messageData[idx].taskKey
+                            valueString += "<br> " + yyyymmddhh24miss(processTime)
+
+                          };
+                          td.innerHTML = valueString
+                          // var valueString = messageData.taskType + " : " + messageData.lifeCycle + " : " + messageData.status
+                          // valueString += "<br> taskKey : " + messageData.taskKey
+                          // valueString += "<br> " + messageData.processTime
+                          // td.innerHTML = valueString
                           previous = lastCallTime;
                         }
                       }, 30000); // 30초마다

@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    getCommonMcisList("mcismonitoringmng", true, status)
     resizeContent();
 });
 $(window).resize(function() {
@@ -27,42 +28,75 @@ $(document).ready(function(){
     // // show_mcis(url);
 })
 
-function getMcisList(nsid){
-    var url = "{{ .comURL.TumbleBugURL}}"+"/ns/"+nsid+"/mcis";
-    var apiInfo = "{{ .apiInfo}}";
-    axios.get(url,{
-        headers:{
-            'Authorization': apiInfo,
-            'Content-Type' : "application/json"
-        }
-    }).then(result=>{
-        var data = result.data.mcis;
-        console.log("getMCISList data: ",data);
-        var init_mcis = '';
-        if (data.length == 0) {
-            console.warn("data is empty, response data : ", data);
+// <option value="{ {$item.ID} }"  selected>{ {$item.Name} }|{ {$item.Status} }|{ {$item.Description} }-->
+// MCIS 목록 조회 후 화면에 Set
+function getMcisListCallbackSuccess(caller, mcisList){
 
-        } else {
-            init_mcis = data[0].id
-        }
-        console.log("init mcis : ", init_mcis);
-        var s_mcis_list = "<option value=''>Choose a Target MCIS for Monitoring</option>"
-        for(var i in data){
+    // MCIS Status
+    var addMcis = "";
+    if(!isEmpty(mcisList) && mcisList.length > 0 ){
+        var initMcis = mcisList[0].id
+
+        for(var i in mcisList){
             if(i == 0 ){
-                s_mcis_list +='<option value="'+data[i].id+'"  selected>'+data[i].name+"|"+data[i].status+"|"+data[i].description
+                addMcis +='<option value="'+mcisList[i].id+'"  selected>'+mcisList[i].name+"|"+mcisList[i].status+"|"+mcisList[i].description
             }else{
-                s_mcis_list +='<option value="'+data[i].id+'" >'+data[i].name+"|"+data[i].status+"|"+data[i].description
+                addMcis +='<option value="'+mcisList[i].id+'" >'+mcisList[i].name+"|"+mcisList[i].status+"|"+mcisList[i].description
             }
         }
-            
-
         $("#mcisList").empty()
-        $("#mcisList").append(s_mcis_list)
-        if (init_mcis != "") {
-            selectMonitoringMcis(init_mcis)
+        $("#mcisList").append(addMcis)
+        if (initMcis != "") {
+            selectMonitoringMcis(initMcis)
         }
-    })
+    }else{
+        var addMcis = "";
+
+        // $("#mcisList").append(addMcis);
+    }
 }
+
+// 조회 실패시.
+function getMcisListCallbackFail(caller, error){
+    // List table에 no data 표시? 또는 조회 오류를 표시?
+}
+
+// function getMcisList(nsid){
+//     var url = "{{ .comURL.TumbleBugURL}}"+"/ns/"+nsid+"/mcis";
+//     var apiInfo = "{{ .apiInfo}}";
+//     axios.get(url,{
+//         headers:{
+//             'Authorization': apiInfo,
+//             'Content-Type' : "application/json"
+//         }
+//     }).then(result=>{
+//         var data = result.data.mcis;
+//         console.log("getMCISList data: ",data);
+//         var init_mcis = '';
+//         if (data.length == 0) {
+//             console.warn("data is empty, response data : ", data);
+//
+//         } else {
+//             init_mcis = data[0].id
+//         }
+//         console.log("init mcis : ", init_mcis);
+//         var s_mcis_list = "<option value=''>Choose a Target MCIS for Monitoring</option>"
+//         for(var i in data){
+//             if(i == 0 ){
+//                 s_mcis_list +='<option value="'+data[i].id+'"  selected>'+data[i].name+"|"+data[i].status+"|"+data[i].description
+//             }else{
+//                 s_mcis_list +='<option value="'+data[i].id+'" >'+data[i].name+"|"+data[i].status+"|"+data[i].description
+//             }
+//         }
+//
+//
+//         $("#mcisList").empty()
+//         $("#mcisList").append(s_mcis_list)
+//         if (init_mcis != "") {
+//             selectMonitoringMcis(init_mcis)
+//         }
+//     })
+// }
 
 function selectMonitoringMcis(mcisId){
     $("#mcis_id").val(mcisId);

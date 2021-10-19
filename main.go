@@ -463,9 +463,9 @@ func main() {
 	//e.GET("/ws", hello)  // 이것도 인증 거친것들만 해야하지 않나?? 그런데 경로가.. ws:: 이라...
 	// e.GET("ws/helloWS", controller.HelloNetWebSocket)
 	e.GET("ws/helloGorilla", controller.HelloGorillaWebSocket)
-	e.GET("ws/websocketdata", controller.GetWebSocketData)
+	e.GET("ws/websocketdata", controller.GetWebSocketData) //TODO :  naming rule상 목록조회이므로 List로 바꿀 것
 
-	e.GET("ws/oneshot", controller.WebSocketOneShot)
+	//e.GET("ws/oneshot", controller.WebSocketOneShot)
 
 	//////  Websocket end /////////
 

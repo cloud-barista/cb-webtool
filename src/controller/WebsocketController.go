@@ -101,7 +101,7 @@ func HelloGorillaWebSocket(c echo.Context) error {
 			log.Println("is socket working : open started")
 			defaultTime := t.Add(time.Minute * -5) // 기본 조회시간은 현재시간 - 5분
 
-			socketDataMap := service.GetWebsocketMessageByProcessTime(defaultTime, c)
+			socketDataMap := service.GetWebsocketMessageByProcessTime(defaultTime.UnixNano(), c)
 			log.Printf("Received: %s\n", event)
 			returnMessage := map[string]interface{}{
 				"event":    "res",
@@ -125,7 +125,7 @@ func HelloGorillaWebSocket(c echo.Context) error {
 			}
 
 			uCallTime := time.Unix(nCallTime, 0)
-			socketDataMap := service.GetWebsocketMessageByProcessTime(uCallTime, c)
+			socketDataMap := service.GetWebsocketMessageByProcessTime(uCallTime.UnixNano(), c)
 			log.Printf("Received: %s\n", event)
 			returnMessage := map[string]interface{}{
 				"event":    "res",
@@ -297,33 +297,33 @@ func testData(c echo.Context) {
 }
 
 // Websocket 한번만. 호출되면 수행 수 닫기 : client에서 여러번 호출하게... 이러면 socket의 의미가 있나?
-func WebSocketOneShot(c echo.Context) error {
-	log.Println("WebSocketOneShot")
-	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
-	if err != nil {
-		return err
-	}
-	defer ws.Close()
-
-	// go testData(c) // 임시로 data 넣기
-
-	hasSent := false
-	socketDataMap := service.GetWebsocketMessageBySend(hasSent, c)
-	for key, val := range socketDataMap {
-		if val.Send == false { // 이건 좀 불합리 할 것 같은데.... 특정 시간 이내의 data만 전송하게 ???
-			// if val.Status == "complete" && val.Send == false {
-			sendMessage := socketDataMap[key]
-			sendErr := ws.WriteJSON(sendMessage)
-			if sendErr == nil {
-				// service.SetWebsocketMessageBySend(key, true, c) // 전송여부 set이 필요없을 듯.
-			}
-		}
-	}
-
-	ws.Close()
-	log.Println("is socket working : finish ")
-	return err
-}
+//func WebSocketOneShot(c echo.Context) error {
+//	log.Println("WebSocketOneShot")
+//	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+//	if err != nil {
+//		return err
+//	}
+//	defer ws.Close()
+//
+//	// go testData(c) // 임시로 data 넣기
+//
+//	hasSent := false
+//	socketDataMap := service.GetWebsocketMessageBySend(hasSent, c)
+//	for key, val := range socketDataMap {
+//		if val.Send == false { // 이건 좀 불합리 할 것 같은데.... 특정 시간 이내의 data만 전송하게 ???
+//			// if val.Status == "complete" && val.Send == false {
+//			sendMessage := socketDataMap[key]
+//			sendErr := ws.WriteJSON(sendMessage)
+//			if sendErr == nil {
+//				// service.SetWebsocketMessageBySend(key, true, c) // 전송여부 set이 필요없을 듯.
+//			}
+//		}
+//	}
+//
+//	ws.Close()
+//	log.Println("is socket working : finish ")
+//	return err
+//}
 
 // Listener 에서 감지된 Data 변경을 UI 로 push : listener 구현이 어떻게 될지 모르므로 일단은 남겨 놓음.
 // func GorillaWebSocketPush(c echo.Context) error {
@@ -388,13 +388,13 @@ func GetWebSocketData(c echo.Context) error {
 		switch event {
 		case "open": // 화면이 처음 열렸을 때
 			log.Println("is socket working : open started")
-			defaultTime := t.Add(time.Minute * -5) // 기본 조회시간은 현재시간 - 5분
+			defaultTime := t.Add(time.Minute * -60) // 기본 조회시간은 현재시간 - 60분
 
-			socketDataMap := service.GetWebsocketMessageByProcessTime(defaultTime, c)
-
+			socketDataList := service.GetWebsocketMessageByProcessTime(defaultTime.UnixNano(), c)
+			log.Println(socketDataList)
 			returnMessage := map[string]interface{}{
 				"event":    "res",
-				"messag":   socketDataMap,
+				"message":  socketDataList,
 				"callTime": time.Now().UnixNano(),
 			}
 
@@ -406,20 +406,20 @@ func GetWebSocketData(c echo.Context) error {
 		case "req": // 특정시간 이후 모두 조회. 조회할 시간이 parameter로 넘어온다. // key값이 unixTime으로 되어 있으므로  string -> int64 -> unixTime -> time
 			// sendData["data"] = objmap["data"]
 			log.Println(objmap)
-			sCallTime := objmap["callTime"].(string)
+			//sCallTime := objmap["callTime"].(string)
 			log.Println("is socket working : req started")
-			nCallTime, nErr := strconv.ParseInt(sCallTime, 10, 64)
-			if nErr != nil {
-				log.Println("sCallTime err  ", sCallTime)
-				d2 := t.Add(time.Minute * -5)
-				nCallTime = d2.UnixNano()
-			}
+			//nCallTime, nErr := strconv.ParseInt(sCallTime, 10, 64)
+			//if nErr != nil {
+			//	log.Println("sCallTime err  ", sCallTime)
+			d2 := t.Add(time.Minute * -5)
+			//nCallTime := d2.UnixNano()
+			//}
 
-			uCallTime := time.Unix(nCallTime, 0)
-			socketDataMap := service.GetWebsocketMessageByProcessTime(uCallTime, c)
+			//uCallTime := time.Unix(nCallTime, 0)
+			socketDataMap := service.GetWebsocketMessageByProcessTime(d2.UnixNano(), c)
 			returnMessage := map[string]interface{}{
 				"event":    "res",
-				"messag":   socketDataMap,
+				"message":  socketDataMap,
 				"callTime": time.Now().UnixNano(),
 			}
 
