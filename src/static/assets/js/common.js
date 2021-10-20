@@ -119,28 +119,40 @@ function getMcisStatusDisp(mcisFullStatus){
 	var statusArr = mcisFullStatus.split("-");	
 	returnStatus = statusArr[1].toLowerCase();
 
-	const MCIS_STATUS_RUNNING = "running"
-	const MCIS_STATUS_INCLUDE = "include"
-	const MCIS_STATUS_SUSPENDED = "suspended"
-	const MCIS_STATUS_TERMINATED = "terminated"
-	const MCIS_STATUS_PARTIAL = "partial"
-	const MCIS_STATUS_ETC = "etc"
+	// const MCIS_STATUS_RUNNING = "running"
+	// const MCIS_STATUS_INCLUDE = "include"
+	// const MCIS_STATUS_SUSPENDED = "suspended"
+	// const MCIS_STATUS_TERMINATED = "terminated"
+	// const MCIS_STATUS_PARTIAL = "partial"
+	// const MCIS_STATUS_ETC = "etc"
+	// console.log("before status " + returnStatus)
+	// if (returnStatus == MCIS_STATUS_RUNNING) {
+	// 	returnStatus = "running"
+	// } else if (returnStatus == MCIS_STATUS_INCLUDE) {
+	// 	returnStatus = "stop"
+	// } else if (returnStatus == MCIS_STATUS_SUSPENDED) {
+	// 	returnStatus = "stop"
+	// } else if (returnStatus == MCIS_STATUS_TERMINATED) {
+	// 	returnStatus = "terminate"
+	// } else if (returnStatus == MCIS_STATUS_PARTIAL) {
+	// 	returnStatus = "stop"
+	// } else if (returnStatus == MCIS_STATUS_ETC) {
+	// 	returnStatus = "stop"
+	// } else {
+	// 	returnStatus = "stop"
+	// }
 
-	if (returnStatus == MCIS_STATUS_RUNNING) {
+	if( mcisFullStatus.toLowerCase().indexOf("running") > -1 ){
 		returnStatus = "running"
-	} else if (returnStatus == MCIS_STATUS_INCLUDE) {
+	}else if ( mcisFullStatus.toLowerCase().indexOf("suspend") > -1 ){
 		returnStatus = "stop"
-	} else if (returnStatus == MCIS_STATUS_SUSPENDED) {
-		returnStatus = "stop"
-	} else if (returnStatus == MCIS_STATUS_TERMINATED) {
+	}else if ( mcisFullStatus.toLowerCase().indexOf("terminate") > -1 ){
 		returnStatus = "terminate"
-	} else if (returnStatus == MCIS_STATUS_PARTIAL) {
-		returnStatus = "stop"
-	} else if (returnStatus == MCIS_STATUS_ETC) {
-		returnStatus = "stop"
-	} else {
-		returnStatus = "stop"
+	// TODO : partial도 있는데... 처리를 어떻게 하지??
+	}else {
+		returnStatus = "terminate"
 	}
+	console.log("after status " + returnStatus)
 	return returnStatus
 }
 // VM 상태를 UI에서 표현하는 방식으로 변경
@@ -154,10 +166,13 @@ function getVmStatusDisp(vmFullStatus ) {
 	const VM_STATUS_INCLUDE = "include"	
 	const VM_STATUS_SUSPENDED = "suspended"	
 	const VM_STATUS_TERMINATED = "terminated"
+	const VM_STATUS_FAILED = "failed"
 
 	if (returnVmStatus == VM_STATUS_RUNNING) {
 		returnVmStatus = "running"		
 	} else if (returnVmStatus == VM_STATUS_TERMINATED) {
+		returnVmStatus = "terminate"
+	} else if (returnVmStatus == VM_STATUS_FAILED) {
 		returnVmStatus = "terminate"
 	} else {
 		returnVmStatus = "stop"
