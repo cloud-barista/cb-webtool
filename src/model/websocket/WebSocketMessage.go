@@ -21,3 +21,10 @@ type WebSocketMessage struct {
 	Event       string    `json:"event"`       // 화면이 열렸을 때(open), 닫혔을 때(close), 요청(req), 응답(res)
 	ProcessTime time.Time `json:"processTime"` // 상태변경 시간. 마지막으로 수신한 processTime 을 UI에서 가지고 해당 시간을 넘기면 lastProcessTime 이후꺼만 조회하면 될 듯.
 }
+
+type SocketMessage struct {
+	SaveTime int64            `json:"saveTime"`
+	Message  WebSocketMessage `json:"message"`
+}
+
+type SocketMessageList []SocketMessage

@@ -44,8 +44,17 @@ func GetMcisList(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, m
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	optionParamVal := ""
+
+	if optionParam == "" {
+		optionParam = "status"
+	}
 	// install, init, cpus, cpum, memR, memW, fioR, fioW, dbR, dbW, rtt, mrtt, clean
-	if optionParam != "" {
+	//if optionParam != "" {
+	//	optionParamVal = "?option=" + optionParam
+	//}
+	if optionParam == "all" {
+		optionParamVal = "" // all 은 optionParam값이 없는 경우임.
+	} else {
 		optionParamVal = "?option=" + optionParam
 	}
 

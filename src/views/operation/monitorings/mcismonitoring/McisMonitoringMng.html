@@ -50,9 +50,9 @@
 												<select class="selectbox white" id="mcisList" onchange="selectMonitoringMcis(this.value);" required>
 												<!-- <option value="mcis_id" disabled selected hidden>Choose a Target MCIS for Monitoring</option> -->
 												<option value="mcis_id">Choose a Target MCIS for Monitoring</option>
-												{{range $index, $item := .McisList}}
-												<option value="{{$item.ID}}"  selected>{{$item.Name}}|{{$item.Status}}|{{$item.Description}}
-												{{ end }}
+<!--												{ {range $index, $item := .McisList} }-->
+<!--												<option value="{ {$item.ID} }"  selected>{ {$item.Name} }|{ {$item.Status} }|{ {$item.Description} }-->
+<!--												{ { end } }-->
 												</select>
 											</div>
 											<!-- MCIS 모니터링 조회조건 : -->
