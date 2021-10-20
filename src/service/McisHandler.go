@@ -898,7 +898,7 @@ func GetBenchmarkMcisData(nameSpaceID string, mcisID string, hostIp string, opti
 
 // List all MCISs
 func GetBenchmarkAllMcisList(nameSpaceID string, mcisID string, hostIp string) ([]tbmcis.BenchmarkInfo, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/benchmarkall/mcis/{mcisId}"
+	var originalUrl = "/ns/{nsId}/benchmarkAll/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -1043,8 +1043,8 @@ func CommandVmOfMcis(nameSpaceID string, mcisID string, vmID string, mcisCommand
 }
 
 //Install the benchmark agent to specified MCIS
-func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisID string, mcisCommandInfo *tbmcis.McisCmdReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/install/mcis/{mcisId}"
+func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisID string, mcisCommandInfo *tbmcis.McisCmdReq) (*tbmcis.RestPostCmdMcisResponseWrapper, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/installBenchmarkAgent/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -1057,7 +1057,7 @@ func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisID string, mcisCommandI
 	pbytes, _ := json.Marshal(mcisCommandInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnMcisCommandResult := tbmcis.AgentInstallContentWrapper{}
+	returnMcisCommandResult := tbmcis.RestPostCmdMcisResponseWrapper{}
 	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
