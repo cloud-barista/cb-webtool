@@ -974,6 +974,37 @@ func GetInspectResourceList(inspectResource *tbcommon.RestInspectResourcesReques
 
 }
 
+func GetLoadCommonResource()(tbcommon.TbSimpleMsg, model.WebStatus) {
+	fmt.Println("Load Common Resources from internal asset files (Spec, Image)")
+	var originalUrl = "/loadCommonResource"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns"
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	resultInfo := tbcommon.TbSimpleMsg{}
+
+	if err != nil {
+		return resultInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return resultInfo, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+
+	return resultInfo, model.WebStatus{StatusCode: respStatus}
+}
+
 // VM Image 조회
 func LookupVirtualMachineImageList(connectionName string) (tbmcir.SpiderImageInfos, model.WebStatus) {
 	fmt.Println("LookupVirtualMachineImageList ************ : ", connectionName)
