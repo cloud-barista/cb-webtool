@@ -155,7 +155,7 @@ function getMcisListCallbackSuccess(caller, mcisList){
 
     if(!isEmpty(mcisList) && mcisList.length > 0 ){
         //totalMcisCnt = mcisList.length;
-        
+        var addMcis = "";
         for(var mcisIndex in mcisList){
             var aMcis = mcisList[mcisIndex]
             var mcisStatus = aMcis.status
@@ -228,7 +228,7 @@ function getMcisListCallbackSuccess(caller, mcisList){
             // List of Mcis table
             try{
                 
-                var addMcis = "";
+
                 var displayMcisStatus = "";// icon_running, icon_stop, icon_terminate
                 if( mcisStatus.toLowerCase().indexOf("running") ){
                     displayMcisStatus = "running"
@@ -323,13 +323,14 @@ function getMcisListCallbackSuccess(caller, mcisList){
                
 
                 addMcis += '</tr>'
-                $("#mcisList").append(addMcis);
-                                           
+
             }catch(e){
                 console.log("list of mcis error")
                 console.log(e)
             }
         }// end of mcis loop
+        $("#mcisList").empty();
+        $("#mcisList").append(addMcis);
 
         $("#total_mcis").text(totalMcisCnt);
         $("#mcis_status_running").text(mcisStatusCountMap.get("running"));
@@ -345,6 +346,7 @@ function getMcisListCallbackSuccess(caller, mcisList){
         addMcis += '<tr>'
         addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
         addMcis += '</tr>'
+        $("#mcisList").empty();
         $("#mcisList").append(addMcis);	
     }
 }
@@ -356,6 +358,7 @@ function getMcisListCallbackFail(caller, error){
         addMcis += '<tr>'
         addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
         addMcis += '</tr>'
+    $("#mcisList").empty();
     $("#mcisList").append(addMcis);	
 }
 
