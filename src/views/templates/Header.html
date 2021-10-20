@@ -36,10 +36,8 @@
     switch (recData.event) {
       case "res":
         var out = document.getElementById("callTime");
-        var jsonStr = JSON.stringify(recData);
         lastCallTime = recData.callTime;
         messageData = recData.message;
-        out.value += lastCallTime;
         console.log(recData);
         break;
       default:
@@ -81,9 +79,9 @@
   }
 
   // 날짜(data)를 넘기면 yyyymmddhh24miss 형태로 반환
-  function yyyymmddhh24miss(d){
-    function pad(n) { return n<10 ? "0"+n : n }
-    return d.getFullYear()+"-"+ pad(d.getMonth()+1)+"-"+ pad(d.getDate())+" "+ pad(d.getHours())+":"+ pad(d.getMinutes())+":"+ pad(d.getSeconds())
+  function yyyymmddhh24miss(d) {
+    function pad(n) { return n < 10 ? "0" + n : n }
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds())
   }
 
 </script>
@@ -103,14 +101,9 @@
       <div class="topmenu">
         <ul>
           <li class="logout">
-            <a
-              href="javascript:void(0);"
-              data-toggle="modal"
-              data-target="#logout"
-              onClick="commonConfirmOpen('Logout')"
-            >
-              <img src="/assets/img/common/icon_logout.png" alt="" /> Logout</a
-            >
+            <a href="javascript:void(0);" data-toggle="modal" data-target="#logout"
+              onClick="commonConfirmOpen('Logout')">
+              <img src="/assets/img/common/icon_logout.png" alt="" /> Logout</a>
           </li>
           <!-- <li class="add">
 						<img src="/assets/img/common/icon_add.png" alt=""/>
@@ -127,46 +120,73 @@
                 <table>
                   <thead>
                     <tr>
-                      <th>No.</th>
                       <th>Time</th>
+                      <th>Type</th>
+                      <th id="thName">Name</th>
+                      <th>LifeCycle</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody id="callTime">
                     <script>
                       var previous = "0";
-                      var idx = 0;
+                      var badgeIdx = 0;
+                      var maxProcessTime = new Date("0").valueOf();
+                      let lastCallTimeValue = new Date(lastCallTime / 1000).valueOf();
                       var out = document.getElementById("callTime");
                       var badge = document.getElementById("badge");
                       setInterval(function () {
-                        badge.style.display = "inline-block";
-                        if (previous !== lastCallTime) {
-                          var tr = document.createElement("tr");
-                          var th = document.createElement("th");
-                          var td = document.createElement("td");
-                          out.appendChild(tr);
-                          tr.appendChild(th);
-                          tr.appendChild(td);
-                          th.innerHTML = ++idx;
-                          badge.innerHTML = idx;
-                          //td.innerHTML = messageData;
-                          var valueString = "";
-                          console.log("append data")
-                          for(idx in messageData){
-                            console.log(messageData[idx]);
-                            let processTime = new Date(messageData[idx].processTime);
-                            valueString = messageData[idx].taskType + " : " + messageData[idx].lifeCycle + " : " + messageData[idx].status
-                            valueString += "<br> taskKey : " + messageData[idx].taskKey
-                            valueString += "<br> " + yyyymmddhh24miss(processTime)
+                        console.log("lastcalltime:", lastCallTime);
+                        console.log("lastcalltimevalue:", lastCallTimeValue);
+                        console.log(messageData);
 
-                          };
-                          td.innerHTML = valueString
-                          // var valueString = messageData.taskType + " : " + messageData.lifeCycle + " : " + messageData.status
-                          // valueString += "<br> taskKey : " + messageData.taskKey
-                          // valueString += "<br> " + messageData.processTime
-                          // td.innerHTML = valueString
-                          previous = lastCallTime;
-                        }
-                      }, 30000); // 30초마다
+                        var maxIdx = 0;
+                        if (messageData.length === 0) { return; } //메세지 없음
+
+                        console.log("append data")
+                        for (idx in messageData) {
+                          console.log(lastCallTimeValue);
+                          let processTime = new Date(messageData[idx].processTime).valueOf();
+                          if (maxProcessTime < processTime) {
+                            maxProcessTime = new Date(messageData[idx].processTime).valueOf();
+                            maxIdx = idx;
+                          }
+                          if (processTime > lastCallTimeValue) {
+                            var tr = document.createElement("tr");
+                            var th = document.createElement("th");
+                            var tdType = document.createElement("td");
+                            var tdName = document.createElement("td");
+                            tdName.setAttribute("id", "tdName");
+                            var tdLifeCycle = document.createElement("td");
+                            var tdStatus = document.createElement("td");
+                            out.appendChild(tr);
+                            tr.appendChild(th);
+                            tr.appendChild(tdType);
+                            tr.appendChild(tdName);
+                            tr.appendChild(tdLifeCycle);
+                            tr.appendChild(tdStatus);
+                            th.innerHTML = yyyymmddhh24miss(new Date(messageData[idx].processTime))
+                            tdType.innerHTML = messageData[idx].taskType;
+                            tdName.innerHTML = messageData[idx].taskKey;
+                            tdLifeCycle.innerHTML = messageData[idx].lifeCycle;
+                            tdStatus.innerHTML = messageData[idx].status;
+                            badge.innerHTML = ++badgeIdx;
+                            badge.style.display = "inline-block";
+                          }
+
+
+                        };
+                        //td.innerHTML = valueString
+                        // var valueString = messageData.taskType + " : " + messageData.lifeCycle + " : " + messageData.status
+                        // valueString += "<br> taskKey : " + messageData.taskKey
+                        // valueString += "<br> " + messageData.processTime
+                        // td.innerHTML = valueString
+                        lastCallTimeValue = new Date(messageData[maxIdx].processTime).valueOf();
+                        messageData = "";
+
+
+
+                      }, 1000);
                     </script>
                   </tbody>
                 </table>
@@ -180,21 +200,14 @@
 						</div>
 					</li> -->
           <li class="setting">
-            <a href="javascript:void(0);"
-              ><img src="/assets/img/common/icon_setting.png" alt=""
-            /></a>
+            <a href="javascript:void(0);"><img src="/assets/img/common/icon_setting.png" alt="" /></a>
             <div class="infobox">
               <div class="box">
                 <p>Cloud Setting</p>
                 <ul>
                   <li>
-                    <a
-                      href="javascript:void(0);"
-                      data-toggle="modal"
-                      data-target="#Connection"
-                      onClick="commonConfirmOpen('MoveToConnection')"
-                      >[Cloud] Connection</a
-                    >
+                    <a href="javascript:void(0);" data-toggle="modal" data-target="#Connection"
+                      onClick="commonConfirmOpen('MoveToConnection')">[Cloud] Connection</a>
                   </li>
                 </ul>
               </div>
@@ -202,10 +215,7 @@
           </li>
           <li class="question">
             <a href="javascript:void(0);" onclick="showHelp()">
-              <img
-                src="/assets/img/common/icon_question.png"
-                alt="Api call test"
-              />
+              <img src="/assets/img/common/icon_question.png" alt="Api call test" />
             </a>
           </li>
         </ul>
@@ -214,12 +224,7 @@
     <!-- //header -->
 
     <!-- Loading bar -->
-    <div
-      class="loading-container"
-      id="loadingContainer"
-      tabindex="-1"
-      style="display: none"
-    >
+    <div class="loading-container" id="loadingContainer" tabindex="-1" style="display: none">
       <div class="loading"></div>
       <div id="loading-text">loading</div>
     </div>

@@ -676,12 +676,12 @@ body {
 
 #contents .header .topmenu .infobox {
   display: none;
-  position: absolute;
-  left: 50%;
-  top: 36px;
-  transform: translateX(-50%);
-  background-color: #5e636c;
-  border-radius: 8px;
+    position: absolute;
+    right: 0;
+    top: 36px;
+    transform: translateX(15%);
+    background-color: #5e636c;
+    border-radius: 8px;
 }
 /* #contents .header .topmenu .infobox:after {
   content: "";
@@ -707,22 +707,33 @@ body {
   font-size: 14px;
 }
 #contents .header .topmenu .infobox .notice_table {
-  min-width: 300px;
+  min-width: 900px;
   font-size: 14px;
   vertical-align: middle;
 }
+
+#contents .header .topmenu .infobox .notice_table thead #thName,
+#contents .header .topmenu .infobox .notice_table tbody #tdName
+{
+  width: 35%;
+}
+
 #contents .header .topmenu .infobox .notice_table thead {
   color: #fff;
   margin: 12px 15px 10px;
 }
+#contents .header .topmenu .infobox .notice_table thead tr {
+ text-align: center;
+}
 #contents .header .topmenu .infobox .notice_table tbody {
   margin: 3px 5px 10px;
-  padding: 5px 15px;
+  padding: 5px 0 5px 10px;
   height: 300px;
   overflow-y: auto;
 }
 #contents .header .topmenu .infobox .notice_table tbody tr {
   margin: 5px 0;
+  text-align: center;
 }
 #contents .header .topmenu .infobox .box p {
   color: #06a9b7;

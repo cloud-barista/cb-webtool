@@ -406,17 +406,18 @@ func GetWebSocketData(c echo.Context) error {
 		case "req": // 특정시간 이후 모두 조회. 조회할 시간이 parameter로 넘어온다. // key값이 unixTime으로 되어 있으므로  string -> int64 -> unixTime -> time
 			// sendData["data"] = objmap["data"]
 			log.Println(objmap)
-			//sCallTime := objmap["callTime"].(string)
+			sCallTime := objmap["callTime"].(string)
 			log.Println("is socket working : req started")
-			//nCallTime, nErr := strconv.ParseInt(sCallTime, 10, 64)
-			//if nErr != nil {
-			//	log.Println("sCallTime err  ", sCallTime)
-			d2 := t.Add(time.Minute * -5)
-			//nCallTime := d2.UnixNano()
-			//}
+			nCallTime, nErr := strconv.ParseInt(sCallTime, 10, 64)
+			if nErr != nil {
+				log.Println("sCallTime err  ", sCallTime)
+				d2 := t.Add(time.Minute * -5)
+				nCallTime = d2.UnixNano()
+			}
 
-			//uCallTime := time.Unix(nCallTime, 0)
-			socketDataMap := service.GetWebsocketMessageByProcessTime(d2.UnixNano(), c)
+			uCallTime := time.Unix(0, nCallTime)
+			//socketDataMap := service.GetWebsocketMessageByProcessTime(d2.UnixNano(), c)
+			socketDataMap := service.GetWebsocketMessageByProcessTime(uCallTime.UnixNano(), c)
 			returnMessage := map[string]interface{}{
 				"event":    "res",
 				"message":  socketDataMap,
