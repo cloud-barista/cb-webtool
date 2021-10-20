@@ -120,7 +120,7 @@ function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sor
             if( providerConnectionMap.has(aConnectionConfig.ProviderName) ){
                 providerConnectionMap.set(aConnectionConfig.ProviderName, providerConnectionMap.get(aConnectionConfig.ProviderName) + 1)
             }else{
-                providerConnectionMap.set(aConnectionConfig.ProviderName, 0)
+                providerConnectionMap.set(aConnectionConfig.ProviderName, 1)
             }
 
         }
@@ -159,13 +159,15 @@ function getMcisListCallbackSuccess(caller, mcisList){
         for(var mcisIndex in mcisList){
             var aMcis = mcisList[mcisIndex]
             var mcisStatus = aMcis.status
+            var mcisTargetStatus = aMcis.targetStatus
+            var mcisTargetAction = aMcis.targetAction
             var mcisProviderNames = "";//MCIS에 사용 된 provider
             var totalVmCountOfMcis = 0;//MCIS의 VM 갯 수
+            var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
             // mcis status
             try{               
                 // console.log(aMcis)
                 if( mcisStatus != ""){// mcis status 가 없는 경우는 skip
-                    var mcisDispStatus = getMcisStatusDisp(mcisStatus);
                     if( mcisStatusCountMap.has(mcisDispStatus) ){
                         mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
                     }
@@ -197,7 +199,7 @@ function getMcisListCallbackSuccess(caller, mcisList){
                         console.log(vmDispStatus)
                         if( vmStatusCountMap.has(vmDispStatus) ){
                             vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)// mcis내 count
-                            totalVmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)// 전체 count
+                            totalVmStatusCountMap.set(vmDispStatus, totalVmStatusCountMap.get(vmDispStatus) + 1)// 전체 count
                         }
                         totalServerCnt++;
 
@@ -229,23 +231,23 @@ function getMcisListCallbackSuccess(caller, mcisList){
             try{
                 
 
-                var displayMcisStatus = "";// icon_running, icon_stop, icon_terminate
-                if( mcisStatus.toLowerCase().indexOf("running") ){
-                    displayMcisStatus = "running"
-                }else if ( mcisStatus.toLowerCase().indexOf("suspend")){
-                    displayMcisStatus = "stop"
-                }else if ( mcisStatus.toLowerCase().indexOf("terminate")){
-                    displayMcisStatus = "terminate"
-                }else {
-                    displayMcisStatus = "terminate"
-                }
+                // var displayMcisStatus = "";// icon_running, icon_stop, icon_terminate
+                // if( mcisStatus.toLowerCase().indexOf("running") ){
+                //     displayMcisStatus = "running"
+                // }else if ( mcisStatus.toLowerCase().indexOf("suspend")){
+                //     displayMcisStatus = "stop"
+                // }else if ( mcisStatus.toLowerCase().indexOf("terminate")){
+                //     displayMcisStatus = "terminate"
+                // }else {
+                //     displayMcisStatus = "terminate"
+                // }
 
 
 
                 addMcis += '<tr onclick="clickListOfMcis(\'' + aMcis.id + '\', ' + mcisIndex +' );" id="server_info_tr_' + mcisIndex +'" item="' + aMcis.id +'|' + mcisIndex + '">'
 
                 addMcis += '<td class="overlay hidden td_left column-14percent" data-th="Status">'
-                addMcis += '<img src="/assets/img/contents/icon_' + displayMcisStatus +'.png" class="icon" alt=""/>' + mcisStatus + '<span class="ov off"></span>'
+                addMcis += '<img src="/assets/img/contents/icon_' + mcisDispStatus +'.png" class="icon" alt=""/>' + mcisStatus + '<span class="ov off"></span>'
                 addMcis += '</td>'
                 addMcis += '<td class="btn_mtd ovm column-14percent" data-th="Name">' + aMcis.name + '<span class="ov"></span></td>'
                 addMcis += '<td class="overlay hidden column-14percent" data-th="Cloud Connection">' + mcisProviderNames + '</td>'
@@ -270,6 +272,8 @@ function getMcisListCallbackSuccess(caller, mcisList){
                 addMcis += '<input type="hidden" name="mcisID" value="' + aMcis.id + '" id="mcisID' + mcisIndex + '"/>'
                 addMcis += '<input type="hidden" name="mcisName" value="' + aMcis.name + '" id="mcisName' + mcisIndex + '"/>'
                 addMcis += '<input type="hidden" name="mcisStatus" value="' + mcisStatus + '" id="mcisStatus' + mcisIndex + '"/>'
+                addMcis += '<input type="hidden" name="mcisTargetStatus" value="' + mcisTargetStatus + '" id="mcisTargetStatus' + mcisIndex + '"/>'
+                addMcis += '<input type="hidden" name="mcisTargetAction" value="' + mcisTargetAction + '" id="mcisTargetAction' + mcisIndex + '"/>'
                 addMcis += '<input type="hidden" name="mcisDescription" value="' + aMcis.description + '" id="mcisDescription' + mcisIndex + '"/>'
                 addMcis += '<input type="hidden" name="mcisCloudConnections" value="' + mcisProviderNames + '" id="mcisCloudConnections' + mcisIndex + '"/>'
                 addMcis += '<input type="hidden" name="mcisVmTotalCount" value="' + totalServerCnt + '" id="mcisVmTotalCount' + mcisIndex + '"/>'
@@ -585,6 +589,9 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
     var mcisName =  $("#mcisName" + mcisIndex).val();
     var mcisDescription =  $("#mcisDescription" + mcisIndex).val();
     var mcisStatus =  $("#mcisStatus" + mcisIndex).val();
+    var mcisTargetStatus =  $("#mcisTargetStatus" + mcisIndex).val();
+    var mcisTargetAction =  $("#mcisTargetAction" + mcisIndex).val();
+    var mcisDispStatus = getMcisStatusDisp(mcisStatus);
     var mcisCloudConnections = $("#mcisCloudConnections" + mcisIndex).val();
     var vmTotalCountOfMcis = $("#mcisVmTotalCount" + mcisIndex).val();
     var vms = $("#mcisVmStatusList" + mcisIndex).val();
@@ -604,10 +611,10 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
 
     var mcis_badge = "";
     var mcisStatusIcon = "";
-    if(mcisStatus == "running"){ mcisStatusIcon = "icon_running_db.png"        
-    }else if(mcisStatus == "include" ){ mcisStatusIcon = "icon_stop_db.png"
-    }else if(mcisStatus == "suspended"){mcisStatusIcon = "icon_stop_db.png"
-    }else if(mcisStatus == "terminate"){mcisStatusIcon = "icon_terminate_db.png"
+    if(mcisDispStatus == "running"){ mcisStatusIcon = "icon_running_db.png"
+    }else if(mcisDispStatus == "include" ){ mcisStatusIcon = "icon_stop_db.png"
+    }else if(mcisDispStatus == "suspended"){mcisStatusIcon = "icon_stop_db.png"
+    }else if(mcisDispStatus == "terminate"){mcisStatusIcon = "icon_terminate_db.png"
     }else{
         mcisStatusIcon = "icon_stop_db.png"
     }
@@ -627,18 +634,18 @@ function showServerListAndStatusArea(mcis_id, mcisIndex){
             var vmName = $("#mcisVmName_" + mcisIndex + "_" + vmIndexOfMcis).val();
             var vmStatus = $("#mcisVmStatus_" + mcisIndex + "_" + vmIndexOfMcis).val();
             vmStatus = vmStatus.toLowerCase();
-            
-            var vmStatusIcon ="bgbox_g";            
-            if(vmStatus == "running"){ 
+            var vmDispStatus = getVmStatusDisp(vmStatus);
+            var vmStatusIcon ="bgbox_g";
+            if(vmDispStatus == "running"){
                 vmStatusIcon ="bgbox_b"
-            }else if(vmStatus == "include" ){
+            }else if(vmDispStatus == "include" ){
                 vmStatusIcon ="bgbox_g"
-            }else if(vmStatus == "suspended"){
+            }else if(vmDispStatus == "suspended"){
                 vmStatusIcon ="bgbox_g"
-            }else if(vmStatus == "terminated"){
+            }else if(vmDispStatus == "terminated"){
                 vmStatusIcon ="bgbox_r"
             }else{
-                vmStatusIcon ="bgbox_g"
+                vmStatusIcon ="bgbox_r"
             }
             vm_badge += '<li class="sel_cr ' + vmStatusIcon + '"><a href="javascript:void(0);" onclick="vmDetailInfo(\''+mcisID+'\',\''+mcisName+'\',\''+vmID+'\')"><span class="txt">'+vmName+'</span></a></li>';
         }
@@ -715,7 +722,7 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var vmName = data.name;
             var vmStatus = data.status;
             var vmDescription = data.description;
-            var vmPublicIp = data.publicIP === undefined ? "" : data.publicIP;
+            var vmPublicIp = data.publicIP == undefined ? "" : data.publicIP;
             var vmSshKeyID = data.sshKeyId;
             //vm info
             $("#vm_id").val(vmId);   
@@ -774,8 +781,8 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var architecture = "";   
             if(vmDetailKeyValueList){
                 for (var keyIndex in vmDetailKeyValueList) {
-                    if( vmDetailKeyValueList[keyIndex].Key == "Architecture"){// ?? 이게 뭐지?
-                        architecture = vmDetailKeyValueList[keyIndex].Value  
+                    if( vmDetailKeyValueList[keyIndex].key == "Architecture"){// ?? 이게 뭐지?
+                        architecture = vmDetailKeyValueList[keyIndex].value
                         break;
                     }
                 }
@@ -850,9 +857,9 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             // region zone locate
             
             //var region = data.region.region
-            var region = data.region.Region            
+            var region = data.region.region
             // var zone = data.region.zone
-            var zone = data.region.Zone
+            var zone = data.region.zone
             console.log(vmDetail.iid);
             $("#server_info_region").val(briefAddr +":"+region)
             $("#server_info_zone").val(zone)
