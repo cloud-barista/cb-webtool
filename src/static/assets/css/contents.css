@@ -181,7 +181,7 @@
 .dashboard.dashboard_cont .top_info > ul > li:last-child { margin:0 0 0 39px; }
 .dashboard.dashboard_cont .top_info > ul > li:last-child:before { background:none; }
 .dashboard.dashboard_cont .top_info > ul > li a {color:#5e636c;font-size:14px; line-height:14px; }
-.dashboard.dashboard_cont .top_info > ul > li img { vertical-align:middle; }
+.dashboard.dashboard_cont .top_info > ul > li img { vertical-align:middle; width: 23px; height: 23px; }
 .dashboard.dashboard_cont .top_info > ul > li .infobox { display:none; position:absolute; left:50%; top:23px; transform:translateX(-50%); background-color:#5e636c; border-radius:8px; cursor: default;}
 /*.dashboard.dashboard_cont .top_info > ul > li .infobox:after { content:''; display:block; position:absolute; top:-7px; left:50%; transform:translateX(-50%);  border-bottom:7px solid #5e636c; border-right:6px solid transparent;  border-left:6px solid transparent; }*/
 .dashboard.dashboard_cont .top_info > ul > li .infobox .box { padding:20px 24px 21px 24px; min-width:156px; text-align:left; background:none; }
