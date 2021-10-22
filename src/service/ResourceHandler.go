@@ -198,7 +198,6 @@ func DelVpc(nameSpaceID string, vNetID string) (model.WebStatus, model.WebStatus
 	return webStatus, model.WebStatus{StatusCode: respStatus}
 }
 
-
 // 전체 vpc 삭제
 func DelAllVpc(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/vNet"
@@ -219,7 +218,6 @@ func DelAllVpc(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	
 
 	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println(resultInfo)
@@ -230,10 +228,8 @@ func DelAllVpc(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 	}
 
 	return resultInfo, model.WebStatus{StatusCode: respStatus}
-	
+
 }
-
-
 
 // 해당 namespace의 SecurityGroup 목록 조회
 func GetSecurityGroupList(nameSpaceID string) ([]tbmcir.TbSecurityGroupInfo, model.WebStatus) {
@@ -631,7 +627,6 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (model.WebStatus, model.WebS
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
-
 // 전체 sshKey 삭제
 func DelAllSshKey(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/sshKey"
@@ -652,7 +647,6 @@ func DelAllSshKey(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	
 
 	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println(resultInfo)
@@ -663,9 +657,8 @@ func DelAllSshKey(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 	}
 
 	return resultInfo, model.WebStatus{StatusCode: respStatus}
-	
-}
 
+}
 
 // VirtualMachineImage 목록 조회
 func GetVirtualMachineImageInfoList(nameSpaceID string) ([]tbmcir.TbImageInfo, model.WebStatus) {
@@ -974,7 +967,7 @@ func GetInspectResourceList(inspectResource *tbcommon.RestInspectResourcesReques
 
 }
 
-func GetLoadCommonResource()(tbcommon.TbSimpleMsg, model.WebStatus) {
+func GetLoadCommonResource() (tbcommon.TbSimpleMsg, model.WebStatus) {
 	fmt.Println("Load Common Resources from internal asset files (Spec, Image)")
 	var originalUrl = "/loadCommonResource"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -992,7 +985,6 @@ func GetLoadCommonResource()(tbcommon.TbSimpleMsg, model.WebStatus) {
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	
 
 	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println(resultInfo)
@@ -1020,7 +1012,7 @@ func LookupVirtualMachineImageList(connectionName string) (tbmcir.SpiderImageInf
 
 	pbytes, _ := json.Marshal(paramMap)
 	log.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	log.Println("LookupVirtualMachineImageList called 1 ")
 	if err != nil {
 		fmt.Println(err)
@@ -1466,7 +1458,7 @@ func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.Spi
 
 	pbytes, _ := json.Marshal(connectionName)
 	// fmt.Println(string(pbytes))
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 	if err != nil {
 		fmt.Println(err)
@@ -1519,7 +1511,7 @@ func LookupVmSpecInfoData(restLookupSpecRequest *tbmcir.RestLookupSpecRequest) (
 	url := util.TUMBLEBUG + urlParam
 
 	pbytes, _ := json.Marshal(restLookupSpecRequest)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	vmSpecInfo := tbmcir.SpiderSpecInfo{}
 	if err != nil {
