@@ -250,6 +250,8 @@ $(function () {
 	//jQuery('.selectbox').niceSelect();
 	//menu_level3_cloudconnectionconfig
 	/* lnb s */
+
+
 	var $menu_li = $('.menu > li'),
 		$ul_sub = $('.menu > li ul'),
 		$lnb = $('#lnb'),
@@ -333,7 +335,7 @@ $(function () {
 		}
 	});
 
-	//header menu click
+	//header menu click(toggle)
 	$(".header .topmenu > ul > li").each(function () {
 		var $btn = $(this);
 		var list = $btn.find('.infobox');
@@ -513,6 +515,7 @@ $(function () {
 
 // mobile table
 $(function () {
+
 	$(".dataTable tr span.ov").each(function () {
 		$(this).on('click', function () {
 			$(this).parent().parent().find(".btn_mtd").toggleClass("over");
@@ -541,7 +544,7 @@ $('.graph_list .glist a[href*="#"]').click(function(event) {
 	지원하는 cloud driver 목록
 	target : target object = id (name아님)
 	getCloudOS(apiInfo, target)
-
+	
 	ex)
 	var spiderURL =  "{{ .comURL.SpiderURL}}"
 	var apiInfo = "{{ .apiInfo}}";

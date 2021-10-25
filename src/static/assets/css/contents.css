@@ -44,9 +44,9 @@
 .titlebox .location span { font-weight:200; display:inline-block; margin:0 10px; }
 .titlebox .location strong { font-weight:400; }
 
-.btn_search { position:absolute; top:-2px; right:1px; width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat; }
+.btn_search { position:absolute; top:70px; right:1px; width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat; }
 .btn_search2 { position:relative; top:-2px; right:1px; width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat; }
-
+.btn_search_image{width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat;}
 .btn_hide { position:relative; top:-2px; right:1px; width:100%; right:51px; text-align:right; outline:none; border:none; background:none; padding:0; margin:0; float : right; display:none;}
 
 .dashboard { margin:33px 0 0 0; }
@@ -236,8 +236,8 @@
 
 /* Table scroll추가. table이 보여지는 시점에 table 높이를 지정하면 세로 스크롤이 생김(id로 제어) */
 table {
-    display: flex;
-    flex-flow: column;
+    /* display: flex;
+    flex-flow: column; */
     height: 100%;
     width: 100%;
 }
@@ -245,15 +245,19 @@ table thead {
     /* head takes the height it requires, 
     and it's not scaled when table is resized */
     flex: 0 0 auto;
+	/* display: block; */
     /* width: calc(100% - 0.91em); */
-	width: calc(100% - 1.4em);
-}
+	/* width: calc(100% - 1.4em); */
+	width: calc(100% - 1.2em);
+	/* width: 100%; */
+} 
 table tbody {
     /* body takes all the remaining available space */    
     display: block;
     overflow-y: scroll;
 	background-color: #fff;
 }
+
 table tbody tr {
     width: 100%;
 }
@@ -2318,13 +2322,13 @@ table tbody tr {
 .popup_CreateTabBox .modal-body .pop-body .pop-cont input.pline { border:1px dashed #ccc; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox { margin:20px 0 0 0; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
-.popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox { float:left; width:50%; }
-.popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox > ul { text-align:right; }
+.popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox { float:left; width:100%; }
+.popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox > ul { text-align:center; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox input.ip_1,
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox .selectbox.sel_1,
-.popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox textarea.ta_1 { width:68%; }
+.popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox textarea.ta_1 { width: 34%; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox textarea.ta_1 { height:80px }
-.popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox .selectbox.sel_2 { width:32%; }
+.popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox .selectbox.sel_2 { width:16%; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox li.txt { text-align:left; margin:11px 0 0 0; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .if_ipbox .ipbox li.txt a { margin:0 0 0 15px; display:inline-block; text-decoration:underline; color:#06a9b7; font-size:14px; font-weight:200; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont > .scrollbar-inner {  margin:8px 0 0 0; max-height:256px; overflow:auto; }
@@ -2415,6 +2419,9 @@ table tbody tr {
 .popup_editBox .modal-body .pop-body .pop-cont input.gray { background-color:#e7ebee; }
 .popup_editBox .modal-body .pop-body .pop-cont input.pline { border:1px dashed #ccc; }
 .popup_editBox .modal-body .pop-body .pop-cont .toptxt { padding:0 0 0 20px; color:#5e636c; font-size:16px; font-weight:500; }
+.popup_editBox .modal-body .pop-body .pop-cont .keyword_box .keyword {display: inline-flex; align-items: center; border: 1px solid #5e636c;  padding: 10px 5px 10px 10px; border-radius: 5px; margin-top: 5px;}
+.popup_editBox .modal-body .pop-body .pop-cont .keyword_box .keyword:not(:last-of-type) {margin-right: 5px;}
+.popup_editBox .modal-body .pop-body .pop-cont .keyword_box .btn_del_image{padding: 0;margin: 0 5px;width: 26px;height: 26px;overflow: hidden;text-indent: -9999em;outline: none; border: none;box-sizing: border-box; background: url(../img/contents/btn_del_s.png) center center no-repeat;}
 .popup_editBox .modal-body .pop-body .pop-cont .toptxt.topsel { padding:0; }
 .popup_editBox .modal-body .pop-body .pop-cont .toptxt .selectbox { width:150px; }
 .popup_editBox .modal-body .pop-body .pop-cont .toptxt label { margin:0 10px 0 0; }
