@@ -95,6 +95,91 @@ func GetMcisList(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, m
 	return mcisList["mcis"], returnStatus
 }
 
+func GetMcisListByID(nameSpaceID string) ([]string, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	//if optionParam != ""{
+	//	urlParam += "?option=" + optionParam
+	//}
+	urlParam += "?option=id"
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	mcisList := tbcommon.TbIdList{}
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		//errorInfo := model.ErrorInfo{}
+		//json.NewDecoder(respBody).Decode(&errorInfo)
+		//fmt.Println("respStatus != 200 reason ", errorInfo)
+		//returnStatus.Message = errorInfo.Message
+
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&mcisList)
+	//spew.Dump(body)
+	fmt.Println(mcisList.IDList)
+
+	return mcisList.IDList, model.WebStatus{StatusCode: respStatus}
+}
+
+func GetMcisListByOption(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	mcisList := map[string][]tbmcis.TbMcisInfo{}
+	returnStatus := model.WebStatus{}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+	json.NewDecoder(respBody).Decode(&mcisList)
+	fmt.Println(mcisList["mcis"])
+
+	returnStatus.StatusCode = respStatus
+	log.Println(respBody)
+	// util.DisplayResponse(resp) // 수신내용 확인
+
+	return mcisList["mcis"], returnStatus
+}
+
 // 특정 MCIS 조회
 // action : status, suspend, resume, reboot, terminate, refine
 // option : id, -
@@ -1115,7 +1200,7 @@ func DelAllMcis(nameSpaceID string, optionParam string) (tbcommon.TbSimpleMsg, m
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	optionParamVal := ""
-	
+
 	if optionParam != "" {
 		optionParamVal = "?option=" + optionParam
 	}

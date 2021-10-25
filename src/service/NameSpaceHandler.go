@@ -96,13 +96,52 @@ func GetNameSpaceList() ([]tbcommon.TbNsInfo, model.WebStatus) {
 	return nameSpaceInfoList["ns"], model.WebStatus{StatusCode: respStatus}
 }
 
-// Namespace 조회 시 Option에 해당하는 값만 조회. GetNameSpaceList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름
-func GetNameSpaceListByOption(optionParam string) ([]string, model.WebStatus) {
+// Namespace 조회 시 Option에 해당하는 값만 조회. GetNameSpaceList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름. controller에서 분기
+func GetNameSpaceListByOption(optionParam string) ([]tbcommon.TbNsInfo, model.WebStatus) {
 	fmt.Println("GetNameSpaceList start")
 	var originalUrl = "/ns"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
-	url := util.TUMBLEBUG + urlParam + "?option=" + optionParam
+	url := util.TUMBLEBUG + urlParam
+	if optionParam != "" {
+		url = url + "?option=" + optionParam
+	}
+	// url := util.TUMBLEBUG + "/ns"
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	//body := HttpGetHandler(url)
+
+	if err != nil {
+		// 	// Tumblebug 접속 확인하라고
+		// fmt.Println(err)
+		// panic(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	nameSpaceInfoList := map[string][]tbcommon.TbNsInfo{}
+	// defer body.Close()
+	json.NewDecoder(respBody).Decode(&nameSpaceInfoList)
+	//spew.Dump(body)
+	fmt.Println(nameSpaceInfoList["ns"])
+
+	return nameSpaceInfoList["ns"], model.WebStatus{StatusCode: respStatus}
+}
+
+// Namespace 조회 시 Option에 해당하는 값만 조회. GetNameSpaceList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름
+func GetNameSpaceListByOptionID(optionParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetNameSpaceList start")
+	var originalUrl = "/ns"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.TUMBLEBUG + urlParam
+	if optionParam == "id" {
+		url = url + "?option=" + optionParam
+	} else {
+		return nil, model.WebStatus{StatusCode: 500, Message: "option param is not ID"}
+	}
 	// url := util.TUMBLEBUG + "/ns"
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -241,7 +280,6 @@ func DelNameSpace(nameSpaceID string) (tbcommon.TbSimpleMsg, model.WebStatus) {
 	return resultInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-
 // NameSpace 삭제
 func DelAllNameSpace() (tbcommon.TbSimpleMsg, model.WebStatus) {
 	var originalUrl = "/ns"
@@ -260,7 +298,6 @@ func DelAllNameSpace() (tbcommon.TbSimpleMsg, model.WebStatus) {
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	
 
 	json.NewDecoder(respBody).Decode(&resultInfo)
 	log.Println(resultInfo)
