@@ -52,8 +52,13 @@ function showHelp(helpKey){
 //////////////// api -> local server -> target api  호출 ///////////////
 // 한 화면에서 서로다른 형태로 호출이 가능하므로 caller(호출자) 를 callback에 같이 넘겨서 구분할 수 있게 함.
 // isCallback = false 이고 targetObjId 가 있는 경우 해당 obj set
-function getCommonNameSpaceList(caller, isCallback, targetObjId){
+function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam){
     var url = "/setting/namespaces/namespace/list";
+
+    if(optionParam != ""){
+        url += "?option=" +optionParam;
+    }
+
     axios.get(url,{
         headers:{
             'Content-Type' : "application/json"
@@ -133,8 +138,12 @@ function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId)
     });
 }
 
-function getCommonCredentialList(caller){
+function getCommonCredentialList(caller, optionParam){
     var url = "/setting/connections/credential";
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
+    }
     axios.get(url,{
         headers:{
                 'Content-Type' : "application/json"
@@ -152,8 +161,13 @@ function getCommonCredentialList(caller){
 }
 
 
-function getCommonRegionList(caller){
+function getCommonRegionList(caller, optionParam){
     var url = "/setting/connections/region"
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
+    }
+
     axios.get(url,{
 
     }).then(result=>{
@@ -170,8 +184,13 @@ function getCommonRegionList(caller){
 }
 
 
-function getCommonDriverList(caller){
+function getCommonDriverList(caller, optionParam){
     var url = "/setting/connections"+"/driver";
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
+    }
+
     axios.get(url,{
         // headers:{
         //     'Authorization': "{{ .apiInfo}}",
@@ -191,11 +210,15 @@ function getCommonDriverList(caller){
     });
 }
 
-function getCommonNetworkList(caller){
+function getCommonNetworkList(caller, optionParam){
     console.log("vnet : ");
     
     var url = "/setting/resources/network/list"
-    var html = "";
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
+    }
+
     axios.get(url,{
         headers:{
             // 'Authorization': apiInfo
@@ -216,8 +239,13 @@ function getCommonNetworkList(caller){
 }
 
 
-function getCommonSecurityGroupList(caller, sortType) {
+function getCommonSecurityGroupList(caller, sortType, optionParam) {
     var url = "/setting/resources/securitygroup/list";
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
+    }
+
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -246,8 +274,13 @@ function getCommonSecurityGroupList(caller, sortType) {
 	});
 }
 
-function getCommonSshKeyList(caller) {
+function getCommonSshKeyList(caller, optionParam) {
     var url = "/setting/resources/sshkey/list"
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
+    }
+
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -271,10 +304,15 @@ function getCommonSshKeyList(caller) {
 
 // connection 정보가 바뀔 때 해당 connection에 등록 된 vmi(virtual machine image) 목록 조회.
 // 공통으로 사용해야하므로 호출후 결과만 리턴... 그러나, ajax로 호출이라 결과 받기 전에 return되므로 해결방안 필요
-function getCommonVirtualMachineImageList(caller, sortType) {
+function getCommonVirtualMachineImageList(caller, sortType, optionParam) {
     var sortType = sortType;
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/machineimage/list"
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
+    }
+
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
@@ -309,11 +347,15 @@ function getCommonVirtualMachineImageList(caller, sortType) {
 }
 
 
-function getCommonVirtualMachineSpecList(caller, sortType) {
+function getCommonVirtualMachineSpecList(caller, sortType, optionParam) {
     console.log("CommonSpecCaller : " + caller);
     console.log("CommonSpecSortType : " + sortType);
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/vmspec/list"
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
+    }
 
     axios.get(url, {
         headers: {
@@ -569,8 +611,9 @@ function getCommonFetchImages(caller, connectionName) {
 // MCIS 목록 존재여부
 function getCommonMcisList(caller, isCallback, targetObjId, optionParam){
     var url = "/operation/manages/mcismng/list"
-    if ( optionParam != undefined ){
-        url += "?option=" + optionParam;
+
+    if ( optionParam != ""){
+        url += "?option=" + optionParam
     }
     axios.get(url, {
         headers: {
@@ -616,8 +659,12 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam){
 // 	});
 // }
 
-function getCommonMcksList(caller) {
+function getCommonMcksList(caller, optionParam) {
     var url = "/operation/manages/mcksmng/list"
+
+    if ( optionParam != undefined ){
+        url += "?option=" + optionParam;
+    }
 
     axios.get(url, {
         headers: {

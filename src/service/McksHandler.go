@@ -75,6 +75,41 @@ func GetClusterList(nameSpaceID string) ([]ladybug.ClusterInfo, model.WebStatus)
 	return clusterList["items"], model.WebStatus{StatusCode: respStatus}
 }
 
+//
+func GetClusterListByID(nameSpaceID string) ([]string, model.WebStatus) {
+	var originalUrl = "/ns/{namespace}/clusters"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{namespace}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.MCKS + urlParam
+	// url := util.MCKS + "/ns/" + nameSpaceID + "/clusters"
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	// 원래는 items 와 kind 가 들어오는데
+	// kind에는 clusterlist 라는 것만 있고 실제로는 items 에 cluster 정보들이 있음.
+	// 그래서 굳이 kind까지 처리하지 않고 item만 return
+	clusterList := map[string][]ladybug.ClusterInfo{}
+	json.NewDecoder(respBody).Decode(&clusterList)
+	fmt.Println(clusterList["items"])
+	log.Println(respBody)
+	// util.DisplayResponse(resp) // 수신내용 확인
+	ids := []string{}
+	for _, keyMcksInfo := range clusterList["items"] {
+		ids = append(ids, keyMcksInfo.Mcis) // ID값이 없어 MCIS항목으로 처리
+	}
+	return ids, model.WebStatus{StatusCode: respStatus}
+}
+
 // 특정 Cluster 조회
 func GetClusterData(nameSpaceID string, cluster string) (*ladybug.ClusterInfo, model.WebStatus) {
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}"

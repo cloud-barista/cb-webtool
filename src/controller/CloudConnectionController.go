@@ -358,6 +358,7 @@ func GetCredentialList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
+	// Spider호출이므로 optionParam 사용X
 	credentialList, respStatus := service.GetCredentialList()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
