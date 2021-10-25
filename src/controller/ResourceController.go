@@ -64,7 +64,8 @@ func VpcMngForm(c echo.Context) error {
 	store.Save()
 	log.Println(" nsList  ", nsList)
 
-	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	vNetInfoList, respStatus := service.GetVnetListByOption(defaultNameSpaceID, optionParam)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/NetworkMng", // 파일명
@@ -104,20 +105,40 @@ func GetVpcList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	vNetInfoList, respStatus := service.GetVnetList(defaultNameSpaceID)
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
+
+	optionParam := c.QueryParam("option")
+	if optionParam == "id" {
+		vNetInfoList, respStatus := service.GetVnetListByID(defaultNameSpaceID)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"VNetList":           vNetInfoList,
+		})
+	} else {
+		vNetInfoList, respStatus := service.GetVnetListByOption(defaultNameSpaceID, optionParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"VNetList":           vNetInfoList,
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":            "success",
-		"status":             respStatus.StatusCode,
-		"DefaultNameSpaceID": defaultNameSpaceID,
-		"VNetList":           vNetInfoList,
-	})
 }
 
 // Vpc 상세정보
@@ -237,7 +258,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 	store.Save()
 	log.Println(" nsList  ", nsList)
 
-	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
+	securityGroupInfoList, respStatus := service.GetSecurityGroupListByOptionID(defaultNameSpaceID, "")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/SecurityGroupMng", // 파일명
@@ -275,19 +296,39 @@ func GetSecirityGroupList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	securityGroupInfoList, respStatus := service.GetSecurityGroupList(defaultNameSpaceID)
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
+
+	optionParam := c.QueryParam("option")
+
+	if optionParam == "id" {
+		securityGroupInfoList, respStatus := service.GetSecurityGroupListByOptionID(defaultNameSpaceID, optionParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"SecurityGroupList":  securityGroupInfoList,
+		})
+	} else {
+		securityGroupInfoList, respStatus := service.GetSecurityGroupListByOption(defaultNameSpaceID, optionParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"SecurityGroupList":  securityGroupInfoList,
 		})
 	}
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":            "success",
-		"status":             respStatus.StatusCode,
-		"DefaultNameSpaceID": defaultNameSpaceID,
-		"SecurityGroupList":  securityGroupInfoList,
-	})
+
 }
 
 // 상세정보
@@ -402,7 +443,8 @@ func SshKeyMngForm(c echo.Context) error {
 	store.Save()
 	log.Println(" nsList  ", nsList)
 
-	sshKeyInfoList, respStatus := service.GetSshKeyInfoList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	sshKeyInfoList, respStatus := service.GetSshKeyInfoListByOption(defaultNameSpaceID, optionParam)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/SshKeyMng", // 파일명
@@ -438,20 +480,38 @@ func GetSshKeyList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	sshKeyInfoList, respStatus := service.GetSshKeyInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
+
+	optionParam := c.QueryParam("option")
+	if optionParam == "id" {
+		sshKeyInfoList, respStatus := service.GetSshKeyInfoListByID(defaultNameSpaceID)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"SshKeyList":         sshKeyInfoList,
+		})
+	} else {
+		sshKeyInfoList, respStatus := service.GetSshKeyInfoListByOption(defaultNameSpaceID, optionParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"SshKeyList":         sshKeyInfoList,
 		})
 	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":            "success",
-		"status":             respStatus.StatusCode,
-		"DefaultNameSpaceID": defaultNameSpaceID,
-		"SshKeyList":         sshKeyInfoList,
-	})
 }
 
 // SSHKey 상세정보
@@ -600,20 +660,41 @@ func GetVirtualMachineImageList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
+
+	optionParam := c.QueryParam("option")
+
+	if optionParam == "id" {
+		virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoListByID(defaultNameSpaceID)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":                 "success",
+			"status":                  respStatus.StatusCode,
+			"DefaultNameSpaceID":      defaultNameSpaceID,
+			"VirtualMachineImageList": virtualMachineImageInfoList,
+		})
+	} else {
+		virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoListByOption(defaultNameSpaceID, optionParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":                 "success",
+			"status":                  respStatus.StatusCode,
+			"DefaultNameSpaceID":      defaultNameSpaceID,
+			"VirtualMachineImageList": virtualMachineImageInfoList,
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":                 "success",
-		"status":                  respStatus.StatusCode,
-		"DefaultNameSpaceID":      defaultNameSpaceID,
-		"VirtualMachineImageList": virtualMachineImageInfoList,
-	})
 }
 
 // VirtualMachineImage 상세정보
@@ -963,20 +1044,40 @@ func GetVmSpecList(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
+
+	optionParam := c.QueryParam("option")
+
+	if optionParam == "id" {
+		vmSpecInfoList, respStatus := service.GetVmSpecInfoListByID(defaultNameSpaceID)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"VmSpecList":         vmSpecInfoList,
+		})
+	} else {
+		vmSpecInfoList, respStatus := service.GetVmSpecInfoListByOption(defaultNameSpaceID, optionParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"VmSpecList":         vmSpecInfoList,
 		})
 	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":            "success",
-		"status":             respStatus.StatusCode,
-		"DefaultNameSpaceID": defaultNameSpaceID,
-		"VmSpecList":         vmSpecInfoList,
-	})
 }
 
 // VMSpec 상세정보

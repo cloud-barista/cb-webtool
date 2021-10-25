@@ -21,6 +21,7 @@ function getNameSpaceListCallbackSuccess(caller, data){
                        
         ModalDetail() 
     } else {
+        var sort_type = "Name";//정렬 기본값은 Name 칼럼.  TODO : Data조회시 sortType이 있으면 해당 값으로 sort필요.  tableSort라는 function 있음.
         if(data.length){ 
             if(sort_type){            
                 data.filter(list=> list.name !=="" ).sort((a,b) => ( a[sort_type] < b[sort_type] ? -1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item,index)=>(
