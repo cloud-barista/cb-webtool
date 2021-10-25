@@ -79,8 +79,9 @@ func MainForm(c echo.Context) error {
 	// store := echosession.FromContext(c)
 	workingStep := map[string]string{}
 
+	//option := c.QueryParam("option")
 	// 최신 namespacelist 가져오기
-	// nameSpaceInfoList, nsStatus := service.GetNameSpaceList()
+	//nameSpaceInfoList, nsStatus := service.GetNameSpaceListByOption(option)
 	nameSpaceInfoList, nsStatus := service.GetStoredNameSpaceList(c)
 	// store.Set("namespace", nameSpaceInfoList)
 	// log.Println(" nsList  ", nsList)

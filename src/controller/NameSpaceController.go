@@ -255,15 +255,30 @@ func GetNameSpaceList(c echo.Context) error {
 	fmt.Println("====== GET NAMESPACE LIST ========")
 	// store := echosession.FromContext(c)
 	// nameSpaceInfoList, nsStatus := service.GetNameSpaceList()
-	nameSpaceInfoList, nsStatus := service.GetStoredNameSpaceList(c)
-	if nsStatus.StatusCode == 500 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": nsStatus.Message,
-			"status":  nsStatus.StatusCode,
-		})
-	}
 
-	return c.JSON(http.StatusOK, nameSpaceInfoList)
+	optionParam := c.QueryParam("option")
+
+	if optionParam == "id" {
+		nameSpaceInfoList, nsStatus := service.GetNameSpaceListByOptionID(optionParam)
+		if nsStatus.StatusCode == 500 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": nsStatus.Message,
+				"status":  nsStatus.StatusCode,
+			})
+		}
+		return c.JSON(http.StatusOK, nameSpaceInfoList)
+	} else {
+		nameSpaceInfoList, nsStatus := service.GetNameSpaceListByOption(optionParam)
+		if nsStatus.StatusCode == 500 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": nsStatus.Message,
+				"status":  nsStatus.StatusCode,
+			})
+		}
+		return c.JSON(http.StatusOK, nameSpaceInfoList)
+	}
+	//nameSpaceInfoList, nsStatus := service.GetStoredNameSpaceList(c)
+
 }
 
 // 기본 namespace set. set default Namespace

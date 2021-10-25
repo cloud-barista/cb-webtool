@@ -31,6 +31,7 @@ func GetVnetList(nameSpaceID string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
@@ -56,14 +57,19 @@ func GetVnetList(nameSpaceID string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
 	return vNetInfoList["vNet"], model.WebStatus{StatusCode: respStatus}
 }
 
-func GetVnetListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+// ID목록만 조회
+func GetVnetListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	fmt.Println("GetVnetList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/vNet"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	//url := util.TUMBLEBUG + urlParam
-	url := util.TUMBLEBUG + urlParam + "?option=" + optionParam
+
+	//if optionParam != ""{
+	//	urlParam += "?option=" + optionParam
+	//}
+	urlParam += "?option=id"
+	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
 	//pbytes, _ := json.Marshal(nameSpaceID)
@@ -87,6 +93,43 @@ func GetVnetListByOption(nameSpaceID string, optionParam string) ([]string, mode
 	fmt.Println(vNetInfoList["idList"])
 
 	return vNetInfoList["idList"], model.WebStatus{StatusCode: respStatus}
+}
+
+// List 조회시 optionParam 추가
+func GetVnetListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
+	fmt.Println("GetVnetList ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/vNet"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
+
+	//pbytes, _ := json.Marshal(nameSpaceID)
+	// body, err := util.CommonHttpGet(url)
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	vNetInfoList := map[string][]tbmcir.TbVNetInfo{}
+	json.NewDecoder(respBody).Decode(&vNetInfoList)
+	//spew.Dump(body)
+	fmt.Println(vNetInfoList["vNet"])
+
+	return vNetInfoList["vNet"], model.WebStatus{StatusCode: respStatus}
 }
 
 // vpc 상세 조회-> ResourceHandler로 이동
@@ -238,6 +281,7 @@ func GetSecurityGroupList(nameSpaceID string) ([]tbmcir.TbSecurityGroupInfo, mod
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup"
 
@@ -261,18 +305,21 @@ func GetSecurityGroupList(nameSpaceID string) ([]tbmcir.TbSecurityGroupInfo, mod
 	fmt.Println(securityGroupList["securityGroup"])
 
 	return securityGroupList["securityGroup"], model.WebStatus{StatusCode: respStatus}
-
 }
 
-// SecurityGroupList 조회 시 Option에 해당하는 값만 조회. GetSecurityGroupList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름
-func GetSecurityGroupListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
-	fmt.Println("GetSecurityGroupList ************ : ")
+// ID만 조회
+func GetSecurityGroupListByOptionID(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetSecurityGroupListByOptionID ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/securityGroup"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.TUMBLEBUG + urlParam + "?option=" + optionParam
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+
+	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup"
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
@@ -294,6 +341,42 @@ func GetSecurityGroupListByOption(nameSpaceID string, optionParam string) ([]str
 	fmt.Println(securityGroupList["idList"])
 
 	return securityGroupList["idList"], model.WebStatus{StatusCode: respStatus}
+}
+
+// SecurityGroupList 조회 시 Option에 해당하는 값만 조회. GetSecurityGroupList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름
+func GetSecurityGroupListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbSecurityGroupInfo, model.WebStatus) {
+	fmt.Println("GetSecurityGroupListByOption ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/securityGroup"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup"
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		// 	// Tumblebug 접속 확인하라고
+		// fmt.Println(err)
+		// panic(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	securityGroupList := map[string][]tbmcir.TbSecurityGroupInfo{}
+
+	json.NewDecoder(respBody).Decode(&securityGroupList)
+	//spew.Dump(body)
+	fmt.Println(securityGroupList["securityGroup"])
+
+	return securityGroupList["securityGroup"], model.WebStatus{StatusCode: respStatus}
 }
 
 // SecurityGroup 상세 조회
@@ -457,6 +540,7 @@ func GetSshKeyInfoList(nameSpaceID string) ([]tbmcir.TbSshKeyInfo, model.WebStat
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
 
@@ -483,14 +567,51 @@ func GetSshKeyInfoList(nameSpaceID string) ([]tbmcir.TbSshKeyInfo, model.WebStat
 
 }
 
+func GetSshKeyInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
+	fmt.Println("GetSshKeyInfoListByID ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/sshKey"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	//url := util.TUMBLEBUG + urlParam
+	urlParam += "?option=id"
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
+
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+
+	sshKeyList := map[string][]string{}
+	// defer body.Close()
+	json.NewDecoder(respBody).Decode(&sshKeyList)
+	//spew.Dump(body)
+	log.Println(sshKeyList["idList"])
+
+	return sshKeyList["idList"], model.WebStatus{StatusCode: respStatus}
+}
+
 func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
 	fmt.Println("GetSshKeyInfoList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/sshKey"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	//url := util.TUMBLEBUG + urlParam
-	url := util.TUMBLEBUG + urlParam + "?option=" + optionParam
+
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
 
 	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
@@ -586,8 +707,8 @@ func DelSshKey(nameSpaceID string, sshKeyID string) (model.WebStatus, model.WebS
 	webStatus := model.WebStatus{}
 	// if ValidateString(sshKeyID) != nil {
 	if len(sshKeyID) == 0 {
-		log.Println("securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다.")
-		return webStatus, model.WebStatus{StatusCode: 4040, Message: "securityGroupID 가 없으면 해당 namespace의 모든 securityGroup이 삭제되므로 처리할 수 없습니다."}
+		log.Println("sshKeyID 가 없으면 해당 namespace의 모든 sshKeyID 삭제되므로 처리할 수 없습니다.")
+		return webStatus, model.WebStatus{StatusCode: 4040, Message: "sshKeyID 가 없으면 해당 namespace의 모든 sshKeyID 삭제되므로 처리할 수 없습니다."}
 	}
 
 	var originalUrl = "/ns/{nsId}/resources/sshKey/{sshKeyId}"
@@ -697,22 +818,22 @@ func GetVirtualMachineImageInfoList(nameSpaceID string) ([]tbmcir.TbImageInfo, m
 }
 
 // VirtualMachineImage 목록에서 Option으로 ID 목록만 가져오는 function
-func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
-	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
+func GetVirtualMachineImageInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
+	fmt.Println("GetVirtualMachineImageInfoListByID ************ : ")
 	// var originalUrl = "/ns/{nsId}/resources/image"
-	var originalUrl = "/ns​/{nsId}​/resources​/image"
+	var originalUrl = "/ns/{nsId}/resources/image"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 
-	optionParamVal := ""
-	// install, init, cpus, cpum, memR, memW, fioR, fioW, dbR, dbW, rtt, mrtt, clean
-	if optionParam != "" {
-		optionParamVal = "?option=" + optionParam
-	}
-
 	// url := util.TUMBLEBUG + urlParam
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.TUMBLEBUG + urlParam + optionParamVal
+
+	//if optionParam != ""{
+	//	urlParam += "?option=" + optionParam
+	//}
+	urlParam += "?option=id"
+	url := util.TUMBLEBUG + urlParam
+	//url := util.TUMBLEBUG + urlParam + optionParamVal
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image"
 
 	pbytes, _ := json.Marshal(nameSpaceID)
@@ -730,7 +851,7 @@ func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam stri
 	virtualMachineImageIdList := tbcommon.TbIdList{}
 
 	json.NewDecoder(respBody).Decode(&virtualMachineImageIdList)
-	fmt.Println(virtualMachineImageIdList.IDList)
+	//fmt.Println(virtualMachineImageIdList.IDList)
 
 	// robots, err := ioutil.ReadAll(resp.Body)
 	// if err != nil {
@@ -739,6 +860,48 @@ func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam stri
 	// fmt.Printf("%s", robots)
 
 	return virtualMachineImageIdList.IDList, model.WebStatus{StatusCode: respStatus}
+}
+
+func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbImageInfo, model.WebStatus) {
+	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
+	// var originalUrl = "/ns/{nsId}/resources/image"
+	var originalUrl = "/ns​/{nsId}​/resources​/image"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+
+	// url := util.TUMBLEBUG + urlParam
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+	url := util.TUMBLEBUG + urlParam
+	//url := util.TUMBLEBUG + urlParam + optionParamVal
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image"
+
+	pbytes, _ := json.Marshal(nameSpaceID)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// TODO : defer를 넣어줘야 할 듯. defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	virtualMachineImageList := map[string][]tbmcir.TbImageInfo{}
+
+	json.NewDecoder(respBody).Decode(&virtualMachineImageList)
+	fmt.Println(virtualMachineImageList["image"])
+
+	// robots, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Printf("%s", robots)
+
+	return virtualMachineImageList["image"], model.WebStatus{StatusCode: respStatus}
 }
 
 // VirtualMachineImage 상세 조회
@@ -1172,20 +1335,20 @@ func GetVmSpecInfoList(nameSpaceID string) ([]tbmcir.TbSpecInfo, model.WebStatus
 	return vmSpecList.Spec, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetVmSpecInfoListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+func GetVmSpecInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	fmt.Println("GetVMSpecInfoList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/spec"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 
-	optionParamVal := ""
-	if optionParam != "" {
-		optionParamVal = "?option=" + optionParam
-	}
-
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	// url := util.TUMBLEBUG + urlParam
-	url := util.TUMBLEBUG + urlParam + optionParamVal
+
+	//if optionParam != ""{
+	//	urlParam += "?option=" + optionParam
+	//}
+	urlParam += "?option=id"
+	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
 
 	// pbytes, _ := json.Marshal(nameSpaceID)
@@ -1208,6 +1371,42 @@ func GetVmSpecInfoListByOption(nameSpaceID string, optionParam string) ([]string
 	fmt.Println(vmSpecList.IDList)
 
 	return vmSpecList.IDList, model.WebStatus{StatusCode: respStatus}
+}
+
+func GetVmSpecInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbSpecInfo, model.WebStatus) {
+	fmt.Println("GetVMSpecInfoList ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/spec"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+	url := util.TUMBLEBUG + urlParam
+	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
+
+	// pbytes, _ := json.Marshal(nameSpaceID)
+	// resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// TODO : defer를 넣어줘야 할 듯. defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	vmSpecList := tbmcir.RestGetAllSpecResponse{}
+
+	json.NewDecoder(respBody).Decode(&vmSpecList)
+	//spew.Dump(body)
+	fmt.Println(vmSpecList.Spec)
+
+	return vmSpecList.Spec, model.WebStatus{StatusCode: respStatus}
 }
 
 // VMSpec 상세 조회

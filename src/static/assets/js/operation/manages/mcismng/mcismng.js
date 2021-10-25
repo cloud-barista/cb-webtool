@@ -101,7 +101,7 @@ $(document).ready(function(){
 	// getCommonVirtualMachineSpecList("mcismng")
 	
     // //
-	getCommonMcisList("mcismng", true)
+	getCommonMcisList("mcismng", true, "", "status")
 });
 
 
