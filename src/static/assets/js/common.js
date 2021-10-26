@@ -142,14 +142,14 @@ function getMcisStatusDisp(mcisFullStatus) {
 	// 	returnStatus = "stop"
 	// }
 
-	if( mcisFullStatus.toLowerCase().indexOf("running") > -1 ){
+	if (mcisFullStatus.toLowerCase().indexOf("running") > -1) {
 		returnStatus = "running"
-	}else if ( mcisFullStatus.toLowerCase().indexOf("suspend") > -1 ){
+	} else if (mcisFullStatus.toLowerCase().indexOf("suspend") > -1) {
 		returnStatus = "stop"
-	}else if ( mcisFullStatus.toLowerCase().indexOf("terminate") > -1 ){
+	} else if (mcisFullStatus.toLowerCase().indexOf("terminate") > -1) {
 		returnStatus = "terminate"
-	// TODO : partial도 있는데... 처리를 어떻게 하지??
-	}else {
+		// TODO : partial도 있는데... 처리를 어떻게 하지??
+	} else {
 		returnStatus = "terminate"
 	}
 	console.log("after status " + returnStatus)
@@ -171,11 +171,11 @@ function getVmStatusDisp(vmFullStatus) {
 	if (returnVmStatus == VM_STATUS_RUNNING) {
 		returnVmStatus = "running"
 	} else if (returnVmStatus == VM_STATUS_TERMINATED) {
-		returnVmStatus = "terminate"
+		returnVmStatus = "terminated"
 	} else if (returnVmStatus == VM_STATUS_FAILED) {
-		returnVmStatus = "terminate"
+		returnVmStatus = "terminated"
 	} else {
-		returnVmStatus = "stop"
+		returnVmStatus = "stopped"
 	}
 	return returnVmStatus
 }
