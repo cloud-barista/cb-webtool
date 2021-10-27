@@ -601,7 +601,7 @@ func GetSshKeyInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	return sshKeyList["idList"], model.WebStatus{StatusCode: respStatus}
 }
 
-func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbSshKeyInfo, model.WebStatus) {
 	fmt.Println("GetSshKeyInfoList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/sshKey"
 	var paramMapper = make(map[string]string)
@@ -627,14 +627,13 @@ func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string) ([]string
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	sshKeyList := map[string][]string{}
+	sshKeyList := map[string][]tbmcir.TbSshKeyInfo{}
 
 	json.NewDecoder(respBody).Decode(&sshKeyList)
 	//spew.Dump(body)
-	fmt.Println(sshKeyList["idList"])
+	fmt.Println(sshKeyList["sshKey"])
 
-	return sshKeyList["idList"], model.WebStatus{StatusCode: respStatus}
-
+	return sshKeyList["sshKey"], model.WebStatus{StatusCode: respStatus}
 }
 
 // sshKey 상세 조회
