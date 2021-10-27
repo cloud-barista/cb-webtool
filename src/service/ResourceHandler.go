@@ -862,9 +862,9 @@ func GetVirtualMachineImageInfoListByID(nameSpaceID string) ([]string, model.Web
 }
 
 func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbImageInfo, model.WebStatus) {
-	fmt.Println("GetVirtualMachineImageInfoList ************ : ")
+	fmt.Println("GetVirtualMachineImageInfoListByOption ************ : ")
 	// var originalUrl = "/ns/{nsId}/resources/image"
-	var originalUrl = "/ns​/{nsId}​/resources​/image"
+	var originalUrl = "/ns/{nsId}/resources/image"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 
