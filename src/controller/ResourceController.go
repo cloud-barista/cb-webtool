@@ -258,7 +258,7 @@ func SecirityGroupMngForm(c echo.Context) error {
 	store.Save()
 	log.Println(" nsList  ", nsList)
 
-	securityGroupInfoList, respStatus := service.GetSecurityGroupListByOptionID(defaultNameSpaceID, "")
+	securityGroupInfoList, respStatus := service.GetSecurityGroupListByOption(defaultNameSpaceID, "")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/SecurityGroupMng", // 파일명
