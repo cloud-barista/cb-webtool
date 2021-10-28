@@ -201,11 +201,12 @@
 							
                             for(var k in subnetInfoList){
 								
-									//init_subnet = subnetInfoList[0].IId.NameId
-								init_subnet = subnetInfoList[k].iid.nameId
+									// init_subnet = subnetInfoList[0].IId.NameId
+								init_subnet = subnetInfoList[k].id
 								console.log("init_subnet :",init_subnet)
 							
-                                html2 += '<option value="'+subnetInfoList[k].iid.nameId+'" >'+subnetInfoList[k].ipv4_CIDR+'</option>';
+                                html2 += '<option value="'+subnetInfoList[k].id+'" >'+subnetInfoList[k].ipv4_CIDR+'</option>';
+								// html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].Ipv4_CIDR+'</option>';
                             }
                         }
                     }
