@@ -3,6 +3,8 @@ $(document).ready(function () {
     getCommonNetworkList('vmcreate')
     getCommonVirtualMachineImageList('vmcreate')
     getCommonVirtualMachineSpecList('vmcreate')
+    getCommonSecurityGroupList('vmcreate')
+    getCommonSshKeyList('vmcreate')
     // e_vNetListTbody
 
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
@@ -415,7 +417,7 @@ function getNetworkListCallbackSuccess(caller, data) {
         var html = ""
         if (data.length > 0) {
             data.forEach(function (vNetItem, vNetIndex) {
-
+                // TODO : 생성 function으로 뺄 것. vnet에 subnet이 2개 이상 있을 수 있는데 그중 1개의 subnet을 선택해야 함.
                 var subnetHtml = ""
                 var subnetData = vNetItem.subnetInfoList
                 var subnetIds = ""
@@ -425,9 +427,9 @@ function getNetworkListCallbackSuccess(caller, data) {
                     //             + subnetIndex + ' || ' + subnetItem.iid.nameId + ' <p>'
                     // console.log(subnetItem)
                     // console.log(subnetItem.iid)
-                    subnetHtml += subnetIndex + ' || ' + subnetItem.iid.nameId + '<p>'
+                    subnetHtml += subnetIndex + ' || ' + subnetItem.id + '<p>'
                     if (subnetIndex > 0) { subnetIds += "," }
-                    subnetIds += subnetItem.iid.nameId
+                    subnetIds += subnetItem.name
 
                 })
                 subnetIds += ""
@@ -556,4 +558,79 @@ function getImageListCallbackFail(error) {
         + '</tr>';
     $("#es_imageListTbody").empty()
     $("#es_imageListTbody").append(html)
+}
+
+function getSecurityGroupListCallbackSuccess(caller, data){
+    // expert에서 사용할 securityGroup
+    if (data == null || data == undefined || data == "null") {
+
+    } else {// 아직 data가 1건도 없을 수 있음
+        var html = ""
+        if (data.length > 0) {
+            data.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
+
+                html += '<tr>'
+
+                    + '<td class="overlay hidden column-50px" data-th="">'
+                    + '     <input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_' + vSecurityGroupIndex + '" title="" />'
+                    + '     <input type="hidden" id="securityGroup_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
+                    + '     <input type="hidden" id="securityGroup_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
+                    + '     <input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
+                    + '     <input type="hidden" name="securityGroup_info" id="securityGroup_info_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.name +'|' + vSecurityGroupItem.connectionName + '|' + vSecurityGroupItem.description + '"/>'
+                    + '     <label for="td_ch1"></label> <span class="ov off"></span>'
+                    + '</td>'
+                    + '<td class="btn_mtd ovm td_left" data-th="Name">'
+                    + vSecurityGroupItem.name
+                    + '</td>'
+                    + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                    + vSecurityGroupItem.connectionName
+                    + '</td>'
+                    + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
+
+                    + '</tr>'
+            })
+            $("#e_securityGroupListTbody").empty()
+            $("#e_securityGroupListTbody").append(html)
+
+        }
+    }
+}
+
+function getSecurityGroupListCallbackFail(error){
+
+}
+
+function getSshKeyListCallbackSuccess(caller, data){
+    // expert에서 사용할 sshkey
+    if (data == null || data == undefined || data == "null") {
+
+    } else {// 아직 data가 1건도 없을 수 있음
+        var html = ""
+        if (data.length > 0) {
+            data.forEach(function (vSshKeyItem, vSshKeyIndex) {
+
+                html += '<tr onclick="setValueToFormObj(\'es_sshKeyList\', \'tab_sshKey\', \'sshKey\', ' + vSshKeyIndex + ', \'e_sshKeyId\');">'
+
+                    + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
+
+                    + '     <input type="hidden" name="sshKey_id" id="sshKey_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+                    + '     <input type="hidden" name="sshKey_connectionName" id="sshKey_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+                    + '     <input type="hidden" name="sshKey_info" id="sshKey_info_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '|' + vSshKeyItem.connectionName + '|' + vSshKeyItem.description + '"/>'
+                    + '</td>'
+                    + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                    + vSshKeyItem.connectionName
+                    + '</td>'
+                    + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
+
+                    + '</tr>'
+            })
+            $("#e_sshKeyListTbody").empty()
+            $("#e_sshKeyListTbody").append(html)
+
+        }
+    }
+}
+
+function getSshKeyListCallbackFail(caller, error){
+
 }

@@ -39,33 +39,33 @@
 							</tr>
 						</thead>
 						<tbody id="e_securityGroupListTbody">
-							{{ $length := len .SecurityGroupList }} 
-							{{ if eq $length 0 }}
-							<tr>
-								<td class="overlay hidden" data-th="" colspan="4">No Data</td>
-							</tr>
-							{{ end }}
+<!--							{ { $length := len .SecurityGroupList } } -->
+<!--							{ { if eq $length 0 } }-->
+<!--							<tr>-->
+<!--								<td class="overlay hidden" data-th="" colspan="4">No Data</td>-->
+<!--							</tr>-->
+<!--							{ { end } }-->
 
-							{{range $securityGroupIndex, $securityGroupItem := .SecurityGroupList}}	
-							<!-- <tr onclick="setValueToFormObj('e_securityGroupList', 'tab_securityGroupInfo', 'securityGroup', '{{$securityGroupIndex}}', 'e_securityGroupIds');"> -->
-							<tr>
-								<td class="overlay hidden column-50px" data-th="">
-									<input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_{{$securityGroupIndex}}" title="" />
-									<input type="hidden" id="securityGroup_id_{{$securityGroupIndex}}" value="{{$securityGroupItem.ID}}"/>
-									<input type="hidden" id="securityGroup_name_{{$securityGroupIndex}}" value="{{$securityGroupItem.Name}}"/>
-									<input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_{{$securityGroupIndex}}" value="{{$securityGroupItem.ConnectionName}}"/>									
-									<input type="hidden" name="securityGroup_info" id="securityGroup_info_{{$securityGroupIndex}}" value="{{$securityGroupItem.Name}}|{{$securityGroupItem.ConnectionName}}|{{$securityGroupItem.Description}}"/>
-											
-									<label for="td_ch1"></label> <span class="ov off"></span>
-								</td>
-								<td class="overlay hidden" data-th="Name">{{$securityGroupItem.Name}}</td>
-								<td class="btn_mtd ovm td_left" data-th="ConnectionName">
-									{{$securityGroupItem.ConnectionName}}
-								</td>
-								<td class="overlay hidden" data-th="Description">{{$securityGroupItem.Description}}</td>
-							</tr>											
-							{{end}}
-							
+<!--							{ {range $securityGroupIndex, $securityGroupItem := .SecurityGroupList} }	-->
+<!--							&lt;!&ndash; <tr onclick="setValueToFormObj('e_securityGroupList', 'tab_securityGroupInfo', 'securityGroup', '{ {$securityGroupIndex} }', 'e_securityGroupIds');"> &ndash;&gt;-->
+<!--							<tr>-->
+<!--								<td class="overlay hidden column-50px" data-th="">-->
+<!--									<input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_{ {$securityGroupIndex} }" title="" />-->
+<!--									<input type="hidden" id="securityGroup_id_{ {$securityGroupIndex} }" value="{ {$securityGroupItem.ID} }"/>-->
+<!--									<input type="hidden" id="securityGroup_name_{ {$securityGroupIndex} }" value="{ {$securityGroupItem.Name} }"/>-->
+<!--									<input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_{ {$securityGroupIndex} }" value="{ {$securityGroupItem.ConnectionName} }"/>									-->
+<!--									<input type="hidden" name="securityGroup_info" id="securityGroup_info_{ {$securityGroupIndex} }" value="{ {$securityGroupItem.Name} }|{ {$securityGroupItem.ConnectionName} }|{ {$securityGroupItem.Description} }"/>-->
+<!--											-->
+<!--									<label for="td_ch1"></label> <span class="ov off"></span>-->
+<!--								</td>-->
+<!--								<td class="overlay hidden" data-th="Name">{ {$securityGroupItem.Name} }</td>-->
+<!--								<td class="btn_mtd ovm td_left" data-th="ConnectionName">-->
+<!--									{ {$securityGroupItem.ConnectionName} }-->
+<!--								</td>-->
+<!--								<td class="overlay hidden" data-th="Description">{ {$securityGroupItem.Description} }</td>-->
+<!--							</tr>											-->
+<!--							{ {end} }-->
+<!--							-->
 						</tbody>
 					</table>
 				</div>
@@ -112,27 +112,27 @@
 							</tr>
 						</thead>
 						<tbody id="e_sshKeyListTbody">
-							{{ $length := len .SshKeyList }} 
-							{{ if eq $length 0 }}
-							<tr>
-								<td class="overlay hidden" data-th="" colspan="4">No Data</td>
-							</tr>
-							{{ end }}
+<!--							{ { $length := len .SshKeyList } } -->
+<!--							{ { if eq $length 0 } }-->
+<!--							<tr>-->
+<!--								<td class="overlay hidden" data-th="" colspan="4">No Data</td>-->
+<!--							</tr>-->
+<!--							{ { end } }-->
 
-							{{range $sshKeyIndex, $sshKeyItem := .SshKeyList}}	
-							<tr onclick="setValueToFormObj('es_sshKeyList', 'tab_sshKey', 'sshKey', '{{$sshKeyIndex}}', 'e_sshKeyId');">
-								<input type="hidden" name="sshKey_id" id="sshKey_id_{{$sshKeyIndex}}" value="{{$sshKeyItem.ID}}"/>
-								<input type="hidden" name="sshKey_connectionName" id="sshKey_connectionName_{{$sshKeyIndex}}" value="{{$sshKeyItem.ConnectionName}}"/>
-								<input type="hidden" name="sshKey_info" id="sshKey_info_{{$sshKeyIndex}}" value="{{$sshKeyItem.Name}}|{{$sshKeyItem.ConnectionName}}|{{$sshKeyItem.Description}}"/>
-								
-								<td class="overlay hidden" data-th="Name">{{$sshKeyItem.Name}}</td>
-								<td class="btn_mtd ovm td_left" data-th="ConnectionName">
-									{{$sshKeyItem.ConnectionName}}
-								</td>
-								<td class="overlay hidden" data-th="Description">{{$sshKeyItem.Description}}</td>
-							</tr>											
-							{{end}}
-							
+<!--							{ {range $sshKeyIndex, $sshKeyItem := .SshKeyList} }	-->
+<!--							<tr onclick="setValueToFormObj('es_sshKeyList', 'tab_sshKey', 'sshKey', '{ {$sshKeyIndex} }', 'e_sshKeyId');">-->
+<!--								<input type="hidden" name="sshKey_id" id="sshKey_id_{ {$sshKeyIndex} }" value="{ {$sshKeyItem.ID} }"/>-->
+<!--								<input type="hidden" name="sshKey_connectionName" id="sshKey_connectionName_{ {$sshKeyIndex} }" value="{ {$sshKeyItem.ConnectionName} }"/>-->
+<!--								<input type="hidden" name="sshKey_info" id="sshKey_info_{ {$sshKeyIndex} }" value="{ {$sshKeyItem.Name} }|{ {$sshKeyItem.ConnectionName} }|{ {$sshKeyItem.Description} }"/>-->
+<!--								-->
+<!--								<td class="overlay hidden" data-th="Name">{ {$sshKeyItem.Name} }</td>-->
+<!--								<td class="btn_mtd ovm td_left" data-th="ConnectionName">-->
+<!--									{ {$sshKeyItem.ConnectionName} }-->
+<!--								</td>-->
+<!--								<td class="overlay hidden" data-th="Description">{ {$sshKeyItem.Description} }</td>-->
+<!--							</tr>											-->
+<!--							{ {end} }-->
+<!--							-->
 						</tbody>
 					</table>
 				</div>

@@ -117,7 +117,7 @@ function goFocus(target) {
 function getMcisStatusDisp(mcisFullStatus) {
 	console.log("getMcisStatus " + mcisFullStatus);
 	var statusArr = mcisFullStatus.split("-");
-	returnStatus = statusArr[1].toLowerCase();
+	returnStatus = statusArr[0].toLowerCase();
 
 	// const MCIS_STATUS_RUNNING = "running"
 	// const MCIS_STATUS_INCLUDE = "include"

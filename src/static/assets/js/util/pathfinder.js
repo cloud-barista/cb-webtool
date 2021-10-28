@@ -265,7 +265,9 @@ function getCommonSecurityGroupList(caller, sortType, optionParam) {
 		}else if( caller == "mainsecuritygroup"){
 			console.log("return get Data")
 			getSecurityGroupListCallbackSuccess(caller, data)			
-		}
+		}else {
+            getSecurityGroupListCallbackSuccess(caller, data)
+        }
 
 	}).catch(error => {
 		console.warn(error);

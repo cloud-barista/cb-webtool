@@ -97,7 +97,7 @@ func GetVnetListByID(nameSpaceID string) ([]string, model.WebStatus) {
 
 // List 조회시 optionParam 추가
 func GetVnetListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
-	fmt.Println("GetVnetList ************ : ")
+	fmt.Println("GetVnetListByOption ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/vNet"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
