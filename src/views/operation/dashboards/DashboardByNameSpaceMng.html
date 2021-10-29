@@ -271,20 +271,21 @@
 <script type="text/javascript" src="/assets/js/util/mcislifecycle.js"></script>
 <script type="text/javascript">
 
-
+	let osmLayer;
 	$(document).ready(function () {
 		// $("[id^='mcis_areabox_']").each(function (idx, item) {
 		// 	console.log("item:", item);
 		// 	$(item).removeClass("active");// style이 제대로 먹지 않아서 강제로 처리
 		// })
 
-		const osmLayer = new ol.layer.Tile({
+		osmLayer = new ol.layer.Tile({
 			source: new ol.source.OSM(),
 		});
 
 		// var JZMap = map_init()
 		// console.log("JZMAP here : ",JZMap);
-		setMap();
+		//setMap();// ready 상태에서는 vm정보가 없기때문에 완료 후 지도를 그리도록 변경
 	});
+
 </script>
 {{template "Footer" .}}

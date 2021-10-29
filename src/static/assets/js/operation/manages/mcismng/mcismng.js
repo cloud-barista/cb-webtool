@@ -43,9 +43,6 @@ $(document).ready(function(){
         });
     }); 
 
-    // 지도 표시
-    // setRegionMap();
-
     selectedMcisID = $("#selected_mcis_id").val();
     
     // console.log(selectedMcisID);
@@ -65,6 +62,16 @@ $(document).ready(function(){
             var selectedMcisID = $("#selected_mcis_id").val();
             var selectedVmID = $("#selected_vm_id").val();
             showVmMonitoring(selectedMcisID,selectedVmID)
+        }else if ( target == '#McisConnection'){
+            // 지도 표시
+            var pointInfo = new Object();
+            pointInfo.id = "1"
+            pointInfo.name = $("#server_connection_view_region").val();
+            pointInfo.cloudType = $("#server_connection_view_csp").val();;//
+            pointInfo.latitude = $("#server_location_latitude").val();;//
+            pointInfo.longitude = $("#server_location_longitude").val();//
+            pointInfo.markerIndex = 1
+            setMap(pointInfo);
         }
         
     });
@@ -839,20 +846,18 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             var nativeRegion = locationInfo.nativeRegion;
            
             if( locationInfo){
-                // 지도에 표시
-                // $("#map").empty();
-                // map = map_init();
-                // var map = map_init_target('map2')
-                // console.log("map");
-                // let pointInfo = new Map();
-                // pointInfo.set("title", "111");
-                // pointInfo.set("vm_status", "222");
-                // pointInfo.set("vm_id", "333");
-                // pointInfo.set("id", "444");
+                $("#server_location_latitude").val(latitude)
+                $("#server_location_longitude").val(longitude)
 
-                // drawMap(map, longitude, latitude, pointInfo);
-                // console.log("drawMap");
-                // setRegionMap(locationInfo);
+                // // 지도 표시
+                // var pointInfo = new Object();
+                // pointInfo.id = "1"
+                // pointInfo.name = nativeRegion;
+                // pointInfo.cloudType = cloudType;//server_connection_view_csp
+                // pointInfo.latitude = latitude;//server_location_latitude
+                // pointInfo.longitude = longitude//server_location_longitude
+                // pointInfo.markerIndex = 1
+                // setMap(pointInfo);
             }
             // region zone locate
             
@@ -1340,65 +1345,36 @@ function getSecurityGroupCallbackFail(error){
 }
 
 // 지도에 marker로 region 표시.  
-// TODO : default로 지도 표시한 뒤 location만 받아서 marker만 추가하도록 변경필요
-function setRegionMap(locationInfo){
-//         var lat            = 38.1300;
-//         var lon            = -78.4500;
-// //     var zoom           = 1;
+// Map 관련 설정
+function setMap(locationInfo){
+    //show_mcis2(url,JZMap);
+    //function show_mcis2(url, map){
+    // var JZMap = map;
 
-//     lat = 37.413294;
-//     lon = 126.734086;// 서울
-    console.log(locationInfo);
-    
-    var latitude =  37.413294;;
-    var longitude = 126.734086;// 서울
-    var briefAddr = "seoul region"
-    var nativeRegion = "east asia";
-    console.log("location is ===")
-    console.log(locationInfo)
-    if( locationInfo){
-        latitude = locationInfo.latitude;
-        longitude = locationInfo.longitude;
-        briefAddr = locationInfo.briefAddr;
-        nativeRegion = locationInfo.nativeRegion;
+    if( locationInfo == undefined) {
+        var locationInfo = new Object();
+        locationInfo.id = "1"
+        locationInfo.name = "pin"
+        locationInfo.cloudType = "aws";
+        locationInfo.latitude = "34.3800";
+        locationInfo.longitude = "131.7000"
+        locationInfo.markerIndex = 1
     }
-    console.log("latitude= " + latitude + ", longitude = " + longitude)
-    const iconFeature = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude])),
-        // geometry: new ol.geom.Point(ol.proj.fromLonLat([-2, 53])),
-        name: nativeRegion,
-      });
-      
-      const map = new ol.Map({
-        target: 'regionMap',
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM(),
-          }),
-          new ol.layer.Vector({
-            source: new ol.source.Vector({
-              features: [iconFeature]
-            }),
-            style: new ol.style.Style({
-              image: new ol.style.Icon({
-                anchor: [0.5, 46],
-                anchorXUnits: 'fraction',
-                anchorYUnits: 'pixels',
-                src: '/assets/img/marker/black.png'
-              })
-            })
-          })
-        ],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([longitude, latitude]),
-        //   zoom: 1    //전 세계 표시
-        zoom: 4
-        // zoom: 6
-        })
-      });
 
-    //   $("#regionMap").css("display", "block");
+    console.log("setMap")
+    var JZMap = map_init()// mcis.map.js 파일에 정의되어 있으므로 import 필요.  TODO : map click할 때 feature 에 id가 없어 tooltip 에러나고 있음. 해결필요
+
+    //지도 그리기 관련
+    var polyArr = new Array();
+
+    var longitudeValue = locationInfo.longitude;
+    var latitudeValue = locationInfo.latitude;
+    console.log(longitudeValue + " : " + latitudeValue);
+    if (longitudeValue && latitudeValue) {
+        drawMap(JZMap, longitudeValue, latitudeValue, locationInfo)
+    }
 }
+
 
 
 function getCommonVmImageInfoCallbackSuccess(caller, imageInfo){

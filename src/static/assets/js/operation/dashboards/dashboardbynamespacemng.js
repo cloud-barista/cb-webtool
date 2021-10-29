@@ -124,9 +124,12 @@ function getMcisListCallbackSuccess(caller, mcisList) {
                         // vm항목 미리 생성 후 mcis 생성할 때 붙임
                         addVm += '<div class="shot bgbox_' + vmDispStatus + '">'
                         addVm += '    <a href="javascript:void(0);"><span>' + (Number(vmIndex) + 1).toString() + '</span></a>'
-                        // for map
-                        addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aVm.vmID + '"/>'
-                        addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + aVm.vmName + '"/>'
+                        // for map : 원래는 vmId, Name등의 정보가 보여져야하나, mcis를 simple로 가져오면 해당 정보가 비어있어 화면상의 mcis이름 과 vm index를 보여주게 함
+                        // addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aVm.vmID + '"/>'
+                        // addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + aVm.vmName + '"/>'
+                        addVm += '        <input type="hidden" name="mapPinIndex" id="mapPinIndex_' + vmIndex + '" value="' + mcisIndex + '"/>'
+                        addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aMcis.name + '"/>'
+                        addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + (Number(vmIndex) + 1).toString() + '"/>'
                         addVm += '        <input type="hidden" name="vmStatus" id="vmStatus_' + vmIndex + '" value="' + vmDispStatus + '"/>'
                         addVm += '        <input type="hidden" name="longitude" id="longitude_' + vmIndex + '" value="' + location.longitude + '"/>'
                         addVm += '        <input type="hidden" name="latitude" id="latitude_' + vmIndex + '" value="' + location.latitude + '"/>'
@@ -200,6 +203,9 @@ function getMcisListCallbackSuccess(caller, mcisList) {
         $("#vm_status_running").text(totalVmStatusCountMap.get("running"));
         $("#vm_status_stopped").text(totalVmStatusCountMap.get("stop"));
         $("#vm_status_terminated").text(totalVmStatusCountMap.get("terminate"));
+
+        // MCIS를 가져와서 화면에 뿌려지면 vm정보가 있으므로 Map그리기
+        setMap();
     } else {
         var addMcis = "";
         addMcis += '<tr>'
@@ -295,27 +301,35 @@ function setMap() {
     //show_mcis2(url,JZMap);
     //function show_mcis2(url, map){
     // var JZMap = map;
-    var JZMap = map_init()// TODO : map click할 때 feature 에 id가 없어 tooltip 에러나고 있음. 해결필요 
+
+    console.log("setMap")
+    var JZMap = map_init()// mcis.map.js 파일에 정의 되어 있음.
 
     //지도 그리기 관련
     var polyArr = new Array();
 
     // $("[id^='vmID_']").each(function(){
-    $("input[name=vmID]").each(function (vmIndex, item) {
+    $("input[name='vmID']").each(function (vmIndex, item) {
         // var vmID = $(this).attr("id");
         // var vmIndex = vmID.split ("_")[1];
+
+        console.log("vmIndex " + vmIndex)
+        console.log("id " + $(this).attr("id"));
+
         var vmIDValue = $("#vmID_" + vmIndex).val();
         var vmNameValue = $("#vmName_" + vmIndex).val();
         var vmStatusValue = $("#vmStatus_" + vmIndex).val();
         var longitudeValue = $("#longitude_" + vmIndex).val();
         var latitudeValue = $("#latitude_" + vmIndex).val();
+        var mapPinIndexValue = $("#mapPinIndex_" + vmIndex).val();
 
         var vms = new Object();
         vms.id = vmIDValue;
         vms.name = vmNameValue;
         vms.longitudeValue = longitudeValue;
         vms.latitudeValue = latitudeValue;
-        // vms.status = vmStatusValue;
+        vms.status = vmStatusValue;
+        vms.markerIndex = mapPinIndexValue
         // vms.status = vmStatusValue;
 
         var fromLonLat = longitudeValue + " " + latitudeValue;

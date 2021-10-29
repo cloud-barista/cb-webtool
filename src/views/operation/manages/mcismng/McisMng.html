@@ -70,4 +70,12 @@
 
 <script type="text/javascript" src="/assets/js/operation/manages/mcismng/mcismng.js"></script>
 <script type="text/javascript" src="/assets/js/util/mcislifecycle.js"></script>
+<script type="text/javascript">
+	let osmLayer;
+	$(document).ready(function () {
+		osmLayer = new ol.layer.Tile({
+			source: new ol.source.OSM(),
+		});
+	});
+</script>
 {{template "Footer" .}}

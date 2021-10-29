@@ -88,10 +88,7 @@ var m = new ol.Map({
       return feature;
     })
     console.log("feature click info : ",feature.get("vm_id"));
-   
-    
 
-   
     if(feature){
       var coordinates = feature.getGeometry().getCoordinates();
       
@@ -258,17 +255,62 @@ function map_init(){
     });
   return m;
 }
+
+// 주어진 index에 맞는 marker표시.
+function getMarkerSrc(markerIndex){
+    var markerSrc = ""
+    console.log("markerIndex " + markerIndex)
+    if (markerIndex == undefined){
+        markerIndex = 1
+    }
+    var remainder = markerIndex%10
+    console.log("markerIndex " + markerIndex + " : " + remainder)
+    switch(remainder){
+        case 0 :
+            markerSrc = "/assets/img/marker/black.png"
+            break;
+        case 1 :
+            markerSrc = "/assets/img/marker/blue.png"
+            break;
+        case 2 :
+            markerSrc = "/assets/img/marker/green.png"
+            break;
+        case 3 :
+            markerSrc = "/assets/img/marker/grey.png"
+            break;
+        case 4 :
+            markerSrc = "/assets/img/marker/orange.png"
+            break;
+        case 5 :
+            markerSrc = "/assets/img/marker/purple.png"
+            break;
+        case 6 :
+            markerSrc = "/assets/img/marker/red.png"
+            break;
+        case 7 :
+            markerSrc = "/assets/img/marker/white.png"
+            break;
+        case 8 :
+            markerSrc = "/assets/img/marker/yellow.png"
+            break;
+        default :
+            markerSrc = "/assets/img/marker/black.png"
+            break;
+    }
+    return markerSrc
+}
 function drawMap(map,long,lat,info){
-  console.log("in drawMap")
-  var JZMap = map;
-  console.log("JZMap : ",JZMap);
+    console.log("in drawMap")
+
+    var JZMap = map;
+    console.log("JZMap : ",JZMap);
   
-  var icon = new ol.style.Style({
+    var icon = new ol.style.Style({
     image: new ol.style.Icon({
-        src:'/assets/img/marker/purple.png', // pin Image
+        // src:'/assets/img/marker/purple.png', // pin Image
+        src: getMarkerSrc(info.markerIndex),
         anchor: [0.5, 1],
         scale: 0.5
-    
     })
 })
   var map_center = ol.proj.fromLonLat([long, lat]);
