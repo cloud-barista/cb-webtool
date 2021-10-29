@@ -336,7 +336,8 @@ function deleteCloudConnection() {
             var data = result.data
             console.log(data);
             if (result.status == 200) {
-                commonResultAlert(data.message)
+                //commonResultAlert(data.message)
+                commonResultAlert("Deleted Cloud Connection ")
                 //location.reload(true)
             }
             // }).catch(function(error){
@@ -849,21 +850,21 @@ function saveNewCredential() {
     }).then(result => {
         console.log(result);
         if (result.status == 200 || result.status == 201) {
-            alert("Success Save Cloud Credential");
-            // 성공하면 내용 초기화 : provider가 같으면 key0, key1 은 그대로 사용
-            $("#CredentialModalCredentialName").val('');
-            // $("#CredentialModalProviderName option:eq(0)").attr("selecte", "selected");
-            $("#CredentialModalKey0").val('');
-            $("#CredentialModalValue0").val('');
-            $("#CredentialModalKey1").val('');
-            $("#CredentialModalValue1").val('');
-            $("#CredentialModalKey2").val('');
-            $("#CredentialModalValue2").val('');
-            $("#CredentialModalKey3").val('');
-            $("#CredentialModalValue3").val('');
-            $("#CredentialModalKey4").val('');
-            $("#CredentialModalValue4").val('');
-            // Credential table 갱신
+            commonAlert("Success Save Cloud Credential");
+            // // 성공하면 내용 초기화 : provider가 같으면 key0, key1 은 그대로 사용
+            // $("#CredentialModalCredentialName").val('');
+            // // $("#CredentialModalProviderName option:eq(0)").attr("selecte", "selected");
+            // $("#CredentialModalKey0").val('');
+            // $("#CredentialModalValue0").val('');
+            // $("#CredentialModalKey1").val('');
+            // $("#CredentialModalValue1").val('');
+            // $("#CredentialModalKey2").val('');
+            // $("#CredentialModalValue2").val('');
+            // $("#CredentialModalKey3").val('');
+            // $("#CredentialModalValue3").val('');
+            // $("#CredentialModalKey4").val('');
+            // $("#CredentialModalValue4").val('');
+            // // Credential table 갱신
             getCredentialList();
         } else {
             commonAlert("Fail Create Cloud Credential")
