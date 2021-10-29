@@ -493,7 +493,8 @@ function showVNetInfo(vpcName) {
 
         var subList = data.subnetInfoList;
         for (var i in subList) {
-            dtlSubnet += subList[i].iid.nameId + " (" + subList[i].ipv4_CIDR + ")";
+            // dtlSubnet += subList[i].iid.nameId + " (" + subList[i].ipv4_CIDR + ")";
+            dtlSubnet += subList[i].id + " (" + subList[i].ipv4_CIDR + ")";
         }
         console.log("dtlSubnet : ", dtlSubnet);
 

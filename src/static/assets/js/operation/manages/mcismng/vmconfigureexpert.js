@@ -64,45 +64,87 @@ $(document).ready(function(){
     });
 
     //// checkbox를 사용하는 table에서 checkbox를 사용할 때 Event정의
-    $("input:checkbox[name='securityGroup_chk']").change(function(){
+    // golang rendering 방식에서 변경되었으므로 document on change로 정의 함.
+    // $("input:checkbox[name='securityGroup_chk']").change(function(){
+    //   console.log("in checkbox change")
+    //   var chkIdArr = $(this).attr('id').split("_");// 0번째와 2번째를 합치면 id 추출가능  ex) securityGroup_Raw_0
+    //   console.log("chkIdArr " + chkIdArr + " : " + $(this).is(":checked"))
+    //   if( $(this).is(":checked")){
+    //     // 해당 securityGroup의 connection과 form의 connection이 다르면초기화 후 set
+    //     // 같으면 securityGroup set
+    //
+    //     var selectedId = $("#" + chkIdArr[0] + "_id_" + chkIdArr[2]).val()//id="securityGroup_id_{{$securityGroupIndex}}"
+    //     var selectedInfo = $("#" + chkIdArr[0] + "_info_" + chkIdArr[2]).val()
+    //     var selectedConnectionName = $("#" + chkIdArr[0] + "_connectionName_" + chkIdArr[2]).val()
+    //     if( $("#e_connectionName").val() != "" && $("#e_connectionName").val() != selectedConnectionName){
+    //
+    //         var targetTabOjbInfo = "tab_securityGroupInfo";
+    //         var targetTabObjConnectionName = "tab_securityGroupConnectionName";
+    //
+    //         $("#" + targetTabOjbInfo).val(selectedInfo);
+    //         $("#" + targetTabObjConnectionName).val(selectedConnectionName);
+    //         $("#t_connectionName").val(selectedConnectionName);// 임시 connectionName set
+    //         rollbackObjArr[0] = targetTabOjbInfo;
+    //         rollbackObjArr[1] = targetTabObjConnectionName;
+    //
+    //         commonConfirmOpen("DifferentConnectionAtSecurityGroup");
+    //         // TODO : commonConfirmOpen 해서 OK면 초기화  :
+    //         // securityGroupTable 및 display securityGroup ifno 를 현재 connection Name으로 Set.
+    //         // 다른 table은 1개만 선택하므로 display input box 들 초기화.
+    //         //  connection정보로 선택된 항목의 connectionName 비교 후 초기화 function 만들 것.
+    //
+    //     }else{
+    //       $("#e_connectionName").val(selectedConnectionName);
+    //       setMuipleValueToFormObj('securityGroup_chk', 'tab_securityGroupInfo', 'e_securityGroupIds')
+    //     }
+    //   }else{//Uncheck event
+    //   //   // alert("B " + $(this).is(":checked") + " : " +  securityGroupId);
+    //     $("#t_connectionName").val(selectedConnectionName).val("");
+    //     setMuipleValueToFormObj('securityGroup_chk', 'tab_securityGroupInfo', 'e_securityGroupIds')
+    //   }
+    // });
+});
+
+$(document).on('change', 'input[name="securityGroup_chk"]',
+    function(){
+      console.log("in checkbox change")
       var chkIdArr = $(this).attr('id').split("_");// 0번째와 2번째를 합치면 id 추출가능  ex) securityGroup_Raw_0
+      console.log("chkIdArr " + chkIdArr + " : " + $(this).is(":checked"))
       if( $(this).is(":checked")){
         // 해당 securityGroup의 connection과 form의 connection이 다르면초기화 후 set
         // 같으면 securityGroup set
-
 
         var selectedId = $("#" + chkIdArr[0] + "_id_" + chkIdArr[2]).val()//id="securityGroup_id_{{$securityGroupIndex}}"
         var selectedInfo = $("#" + chkIdArr[0] + "_info_" + chkIdArr[2]).val()
         var selectedConnectionName = $("#" + chkIdArr[0] + "_connectionName_" + chkIdArr[2]).val()
         if( $("#e_connectionName").val() != "" && $("#e_connectionName").val() != selectedConnectionName){
-        
-            var targetTabOjbInfo = "tab_securityGroupInfo";
-            var targetTabObjConnectionName = "tab_securityGroupConnectionName";
 
-            $("#" + targetTabOjbInfo).val(selectedInfo);
-            $("#" + targetTabObjConnectionName).val(selectedConnectionName);
-            $("#t_connectionName").val(selectedConnectionName);// 임시 connectionName set     
-            rollbackObjArr[0] = targetTabOjbInfo;
-            rollbackObjArr[1] = targetTabObjConnectionName;
-            
-            commonConfirmOpen("DifferentConnectionAtSecurityGroup");
-            // TODO : commonConfirmOpen 해서 OK면 초기화  : 
-            // securityGroupTable 및 display securityGroup ifno 를 현재 connection Name으로 Set.
-            // 다른 table은 1개만 선택하므로 display input box 들 초기화.
-            //  connection정보로 선택된 항목의 connectionName 비교 후 초기화 function 만들 것.
-          
+          var targetTabOjbInfo = "tab_securityGroupInfo";
+          var targetTabObjConnectionName = "tab_securityGroupConnectionName";
+
+          $("#" + targetTabOjbInfo).val(selectedInfo);
+          $("#" + targetTabObjConnectionName).val(selectedConnectionName);
+          $("#t_connectionName").val(selectedConnectionName);// 임시 connectionName set
+          rollbackObjArr[0] = targetTabOjbInfo;
+          rollbackObjArr[1] = targetTabObjConnectionName;
+
+          commonConfirmOpen("DifferentConnectionAtSecurityGroup");
+          // TODO : commonConfirmOpen 해서 OK면 초기화  :
+          // securityGroupTable 및 display securityGroup ifno 를 현재 connection Name으로 Set.
+          // 다른 table은 1개만 선택하므로 display input box 들 초기화.
+          //  connection정보로 선택된 항목의 connectionName 비교 후 초기화 function 만들 것.
+
         }else{
           $("#e_connectionName").val(selectedConnectionName);
           setMuipleValueToFormObj('securityGroup_chk', 'tab_securityGroupInfo', 'e_securityGroupIds')
-        }        
+        }
       }else{//Uncheck event
-      //   // alert("B " + $(this).is(":checked") + " : " +  securityGroupId);
+        //   // alert("B " + $(this).is(":checked") + " : " +  securityGroupId);
         $("#t_connectionName").val(selectedConnectionName).val("");
         setMuipleValueToFormObj('securityGroup_chk', 'tab_securityGroupInfo', 'e_securityGroupIds')
-      }            
-    });
-});
-
+      }
+    }
+)
 //////// Tab Clear //////
 function osHardwareClear(){
   $("#tab_vmImageInfo").val("");
