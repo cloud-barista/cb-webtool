@@ -336,7 +336,8 @@ function deleteCloudConnection() {
             var data = result.data
             console.log(data);
             if (result.status == 200) {
-                commonResultAlert(data.message)
+                //commonResultAlert(data.message)
+                commonResultAlert("Deleted Cloud Connection ")
                 //location.reload(true)
             }
             // }).catch(function(error){
