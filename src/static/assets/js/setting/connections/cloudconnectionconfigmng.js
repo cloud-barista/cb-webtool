@@ -390,6 +390,15 @@ function getRegionDetail(target) {
                 }
                 console.log("info Region Detail, regionName : ", target, ", region : ", regionID, ", zone : ", zoneID)
                 setRegionDispInfo(regionID, zoneID)
+
+                var locationInfo = new Object();
+                locationInfo.id = "1"
+                locationInfo.name = "pin"
+                locationInfo.cloudType = "aws";
+                locationInfo.latitude = "34.3800";
+                locationInfo.longitude = "131.7000"
+                locationInfo.markerIndex = 1
+                setMap(locationInfo)
             }
             // }).catch(function(error){
             //     console.log("region detail error : ",error);        
@@ -1121,3 +1130,35 @@ function selCredentialProvider(providerName) {
         liValue4.css("display", "none")
     }
 }
+
+// Map 관련 설정
+function setMap(locationInfo){
+    //show_mcis2(url,JZMap);
+    //function show_mcis2(url, map){
+    // var JZMap = map;
+
+    if( locationInfo == undefined) {
+        var locationInfo = new Object();
+        locationInfo.id = "1"
+        locationInfo.name = "pin"
+        locationInfo.cloudType = "aws";
+        locationInfo.latitude = "34.3800";
+        locationInfo.longitude = "131.7000"
+        locationInfo.markerIndex = 1
+    }
+
+    console.log("setMap")
+    var JZMap = map_init()// mcis.map.js 파일에 정의되어 있으므로 import 필요.  TODO : map click할 때 feature 에 id가 없어 tooltip 에러나고 있음. 해결필요
+
+    //지도 그리기 관련
+    var polyArr = new Array();
+
+    var longitudeValue = locationInfo.longitude;
+    var latitudeValue = locationInfo.latitude;
+    console.log(longitudeValue + " : " + latitudeValue);
+    if (longitudeValue && latitudeValue) {
+        drawMap(JZMap, longitudeValue, latitudeValue, locationInfo)
+    }
+}
+
+// Map 관련 설정 끝.

@@ -260,7 +260,8 @@
 												</div>
 												
 												<div class="mapcont">
-													<div class="map"><a href="javascript:void(0);"><img src="/assets/img/contents/img_map_d.jpg" alt="sample map"/></a></div>
+													<div id="map" class="map" style="height:300px;">
+													</div>
 												</div>
 											</div>
 											
@@ -533,5 +534,13 @@
 				<!-- //required -->
 
 <script src="/assets/js/setting/connections/cloudconnectionconfigmng.js"></script>
+<script type="text/javascript">
+	let osmLayer;
+	$(document).ready(function () {
+		osmLayer = new ol.layer.Tile({
+			source: new ol.source.OSM(),
+		});
+	});
 
+</script>
 {{template "Footer" .}}
