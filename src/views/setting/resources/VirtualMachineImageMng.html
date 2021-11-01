@@ -517,19 +517,24 @@
 
 						<div class="pop-cont">
 
+							<div>
+								<input type="text" id="image_keyword" placeholder="Input Keyword" class="pline image"
+									onkeyup="displaySearchImageKeywordwithEnter(event)" />
+								<input type="submit" name="" class="btn_search_image" title="" value=""
+									onclick="displaySearchImageKeyword()" />
+							</div>
+							<div class="keyword_box">
+								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
+									onclick="delAllKeyword()" />
+							</div>
+
 							<div class="toptxt">
 								<label>Image List : <span id="lookupVmImageCount"></span></label>
 								<button type="button" class="btn btn-sm btn-dark"
 									onclick="commonConfirmOpen('FetchImages')">Fetch Images</button>
 							</div>
-							<div>
-								<input type="text" id="image_keyword" placeholder="Input Keyword" class="pline" />
-								<input type="submit" name="" class="btn_search_image" title="" value=""
-									onclick="displaySearchImageKeyword()" />
-							</div>
-							<div class="keyword_box">
 
-							</div>
+
 
 							<div class="top_info">
 								<ul>
