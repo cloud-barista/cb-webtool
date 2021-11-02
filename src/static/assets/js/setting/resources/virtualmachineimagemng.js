@@ -624,10 +624,25 @@ function clearCspImageInfo() {
 //입력한 keyword 화면에 표시
 function displaySearchImageKeyword() {
     console.log($("#image_keyword").val());
-    $(".keyword_box").append("<div class='keyword'>" + $("#image_keyword").val() + "<button class='btn_del_image' onclick='delSearchImageKeyword(event)'></button></div>");
+    if ($("#image_keyword").val().trim() !== "") {
+        $(".keyword_box").append("<div class='keyword'>" + $("#image_keyword").val().trim() + "<button class='btn_del_image' onclick='delSearchImageKeyword(event)'></button></div>");
+    }
+}
+
+function displaySearchImageKeywordwithEnter(e) {
+    console.log($("#image_keyword").val());
+    if ($("#image_keyword").val().trim() !== "" && e.keyCode === 13) {
+        $(".keyword_box").append("<div class='keyword'>" + $("#image_keyword").val().trim() + "<button class='btn_del_image' onclick='delSearchImageKeyword(event)'></button></div>");
+    }
 }
 
 function delSearchImageKeyword(e) {
     console.log("remove keyword");
     $(e.target).parent().remove();
+}
+
+function delAllKeyword() {
+    $(".keyword").each(function (i, item) {
+        $(item).remove();
+    })
 }
