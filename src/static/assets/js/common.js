@@ -155,6 +155,18 @@ function getMcisStatusDisp(mcisFullStatus) {
 	console.log("after status " + returnStatus)
 	return returnStatus
 }
+
+function getMcisStatusIcon(mcisDispStatus){
+	var mcisStatusIcon = "";
+	if(mcisDispStatus == "running"){ mcisStatusIcon = "icon_running_db.png"
+	}else if(mcisDispStatus == "include" ){ mcisStatusIcon = "icon_stop_db.png"
+	}else if(mcisDispStatus == "suspended"){mcisStatusIcon = "icon_stop_db.png"
+	}else if(mcisDispStatus == "terminate"){mcisStatusIcon = "icon_terminate_db.png"
+	}else{
+		mcisStatusIcon = "icon_stop_db.png"
+	}
+	return mcisStatusIcon
+}
 // VM 상태를 UI에서 표현하는 방식으로 변경
 function getVmStatusDisp(vmFullStatus) {
 	console.log("getVmStatusDisp " + vmFullStatus);
@@ -198,6 +210,36 @@ function getVmStatus(vm_name, connection_name) {
 	})
 }
 
+function getVmStatusClass(vmDispStatus){
+	var vmStatusClass = "bgbox_g";
+	if (vmDispStatus == "running") {
+		vmStatusClass = "bgbox_b"
+	} else if (vmDispStatus == "include") {
+		vmStatusClass = "bgbox_g"
+	} else if (vmDispStatus == "suspended") {
+		vmStatusClass = "bgbox_g"
+	} else if (vmDispStatus == "terminated") {
+		vmStatusClass = "bgbox_r"
+	} else {
+		vmStatusClass = "bgbox_r"
+	}
+	return vmStatusClass;
+}
+function getVmStatusIcon(vmDispStatus){
+	var vmStatusIcon = "icon_running_db.png";
+	if(vmDispStatus == "running"){
+	    vmStatusIcon = "icon_running_db.png";
+	}else if(vmDispStatus == "stop"){
+	    vmStatusIcon = "icon_stop_db.png";
+	}else if(vmDispStatus == "suspended"){
+	    vmStatusIcon = "icon_stop_db.png";
+	}else if(vmDispStatus == "terminate"){
+	    vmStatusIcon = "icon_terminate_db.png";
+	}else{
+	    vmStatusIcon = "icon_stop_db.png";
+	}
+	return vmStatusIcon;
+}
 // 좌측메뉴 선택 표시
 // 경로를 split하여 첫번째 : Operation / Setting, 두번째 선택, 세번째 선택하도록 
 // //http://localhost:1234/setting/connections/cloudconnectionconfig/mngform
