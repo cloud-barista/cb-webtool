@@ -28,6 +28,9 @@ function getWebToolUrl(controllerKeyName){
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
             ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
             ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
+
+            ["McisData", "/operation/manages/mcismng/:mcisID"],
+            ["VmOfMcisData", "/operation/manages/mcismng/:mcisID/vm/:vmID"]
         ]
     );
 
@@ -660,6 +663,34 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam){
 //         getMcisListCallbackFail(error)
 // 	});
 // }
+
+// MCIS 상세정보 조회
+function getCommonMcisData(caller, mcisID){
+    //var orgUrl = "/operation/manages/mcismng/:mcisID";
+    // McisData
+    var urlParamMap = new Map();
+    urlParamMap.set(":mcisID", mcisID)
+    var url = setUrlByParam(getWebToolUrl('McisData'), urlParamMap)
+    axios.get(url, {
+
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            console.log("11111")
+            getMcisDataCallbackSuccess(caller, result.data.McisInfo)
+        }else{
+            console.log("22222")
+            //getMcisDataCallbackFail(caller, data)
+            commonErrorAlert(result.data.status, "MCIS Data Search Failed");
+        }
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+    });
+}
 
 function getCommonMcksList(caller, optionParam) {
     var url = "/operation/manages/mcksmng/list"
