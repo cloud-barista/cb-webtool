@@ -64,110 +64,108 @@ function getGeoLocationInfo(mcis_id,map){
 
 function map_init_target(target){
  
-  const osmLayer = new ol.layer.Tile({
-    source: new ol.source.OSM(),
-  });
+    const osmLayer = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+    });
   
 
-var m = new ol.Map({
-    target: target,
-    layers: [
-      osmLayer
-    ],
-    view: new ol.View({
-      center: [0,0],
-      zoom: 1
-    })
-  });
-   var JZMap = m;
-;
-  JZMap.on('click',function(evt){
-   // var element = document.getElementById('map_pop2');
-    var element = document.createElement('div');
-    var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
-      return feature;
-    })
-    console.log("feature click info : ",feature.get("vm_id"));
-
-    if(feature){
-      var coordinates = feature.getGeometry().getCoordinates();
-      
-      // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
-     
-     
-      element.setAttribute("class", "popover");
-      
-      
-      //element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
-      element.setAttribute("onclick", "$(this).hide()");
-     // element.innerHTML="<p>"+feature.get("title")+"</p>";
-      // element.innerHTML='<div tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here\'s some amazing content. It\'s very engaging. Right?">Dismissible popover</a>';
-     
-      
-      // $(element).empty()
-      // $(element).show()    
-
-      $(element).popover({
-        placement: 'auto',
-        html: true,
-        content: "<div onclick='alert(\"Hello\")'><p>ID : "+feature.get('vm_id')+"</p>"+"Status :"+feature.get('vm_status')+"</div>",
-        title: feature.get('title'),
-        trigger:'click',
+    var m = new ol.Map({
+        target: target,
+        layers: [
+          osmLayer
+        ],
+        view: new ol.View({
+          center: [0,0],
+          zoom: 1
+        })
       });
+       var JZMap = m;
+    ;
 
-      var popup = new ol.Overlay({
-        element: element,
-        id:feature.get("id"),
-        positioning: 'bottom-center',
-        stopEvent: false,
-        offset: [0, -50]
-      });
-      popup.setPosition(coordinates);
-      // var popup = new ol.Overlay({
-      //   element: element,
-      //   id:feature.get("vm_id"),
-      //   positioning: 'bottom-center',
-      //   position: coordinates,
-      //   offset: [0, -70],
-      //   stopEvent: false,
-      //   offset: [0, -50]
-      // });
+    JZMap.on('click',function(evt){
+        // var element = document.getElementById('map_pop2');
+        var element = document.createElement('div');
+        var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
+          return feature;
+        })
+        console.log("feature click info : ",feature.get("vm_id"));
+
+        if(feature){
+            var coordinates = feature.getGeometry().getCoordinates();
+            // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
+
+            element.setAttribute("class", "popover");
       
+      
+            //element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
+            element.setAttribute("onclick", "$(this).hide()");
+            // element.innerHTML="<p>"+feature.get("title")+"</p>";
+            // element.innerHTML='<div tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here\'s some amazing content. It\'s very engaging. Right?">Dismissible popover</a>';
+     
+      
+            // $(element).empty()
+            // $(element).show()
+
+            $(element).popover({
+                placement: 'auto',
+                html: true,
+                content: "<div onclick='alert(\"Hello\")'><p>ID : "+feature.get('vm_id')+"</p>"+"Status :"+feature.get('vm_status')+"</div>",
+                title: feature.get('title'),
+                trigger:'click',
+            });
+
+            var popup = new ol.Overlay({
+                element: element,
+                id:feature.get("id"),
+                positioning: 'bottom-center',
+                stopEvent: false,
+                offset: [0, -50]
+            });
+            popup.setPosition(coordinates);
+            // var popup = new ol.Overlay({
+            //   element: element,
+            //   id:feature.get("vm_id"),
+            //   positioning: 'bottom-center',
+            //   position: coordinates,
+            //   offset: [0, -70],
+            //   stopEvent: false,
+            //   offset: [0, -50]
+            // });
+
        
-      JZMap.addOverlay(popup);
+            JZMap.addOverlay(popup);
       
-      $(element).popover('toggle');
-    }else{
-      $(element).popover('hide');
-    }
-  });
+            $(element).popover('toggle');
+        }else{
+            $(element).popover('hide');
+        }
+    });
  
-return m;
+    return m;
 }
+
 function map_init(){
  
     const osmLayer = new ol.layer.Tile({
       source: new ol.source.OSM(),
     });
 
-  var m = new ol.Map({
-      target: 'map',
-      layers: [
-        osmLayer
-      ],
-      view: new ol.View({
-        center: ol.proj.fromLonLat([37.41, 8.82]),
-        zoom: 0
-      })
+    var m = new ol.Map({
+        target: 'map',
+        layers: [
+            osmLayer
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([37.41, 8.82]),
+            zoom: 0
+        })
     });
+
     var JZMap = m;
 
-    
-    
-
-  //   var deleteOverlay = function(id){
-  //     JZMap.removeOverlay(JZMap.getOverlayById(id));
-  // }
+    //   var deleteOverlay = function(id){
+    //     JZMap.removeOverlay(JZMap.getOverlayById(id));
+    // }
  
   // JZMap.on('pointermove', function(e) {
   //   var feature = JZMap.forEachFeatureAtPixel(e.pixel,function(feature){
@@ -184,76 +182,72 @@ function map_init(){
   //   var hit = JZMap.hasFeatureAtPixel(pixel);
   
   // });
-    JZMap.on('click',function(evt){
+        JZMap.on('click',function(evt){
      
-      var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
-        return feature;
-      })
-      console.log(feature)
-      console.log("feature click info : ",feature.get("id"));//Cannot read property 'get' of undefined at e.<anonymous> (mcis.map.js:196)
-      var id = feature.get("id")
-      if(feature.get("id") != null){
-        JZMap.removeOverlay(JZMap.getOverlayById(id));
-      }
-      if(feature){
-        var element = document.createElement('div');
-      element.setAttribute("class", "popover");
-      element.setAttribute("onclick", "$(this).hide()");
-      element.innerHTML="<div data-toggle='popover' style='width:100%;min-width: 100px;'>"+feature.get("title")+"</div>"
-      
-      
+            var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
+                return feature;
+            })
+            console.log(feature)
+            console.log("feature click info : ",feature.get("id"));//Cannot read property 'get' of undefined at e.<anonymous> (mcis.map.js:196)
+            var id = feature.get("id")
+            if(feature.get("id") != null){
+                JZMap.removeOverlay(JZMap.getOverlayById(id));
+            }
+            if(feature){
+                var element = document.createElement('div');
+                element.setAttribute("class", "popover");
+                element.setAttribute("onclick", "$(this).hide()");
+                element.innerHTML="<div data-toggle='popover' style='width:100%;min-width: 100px;'>"+feature.get("title")+"</div>"
 
-      
-      
-      feature.set("element");
-  
-      var popup = new ol.Overlay({
-        element: element,
-        positioning: 'auto',
-        stopEvent: false,
-        offset: [0, 0],
-        id:feature.get("id")
-      });
-        var coordinates = feature.getGeometry().getCoordinates();
-        popup.setPosition(coordinates);
-        // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
-       
-       
-        // element.setAttribute("class", "overlayElement");
-        // element.setAttribute("id", feature.get('vm_id'));
-        // element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
-       
-        
-        // $(element).empty()
-        // $(element).show()    
+                feature.set("element");
 
-        // $(element).popover({
-        //   placement: 'top',
-        //   html: true,
-        //   content: "ID : "+feature.get('vm_id')+"\n"+"Status :"+feature.get('vm_status'),
-        //   title: feature.get('title'),
-        // });
+                var popup = new ol.Overlay({
+                    element: element,
+                    positioning: 'auto',
+                    stopEvent: false,
+                    offset: [0, 0],
+                    id:feature.get("id")
+                });
+                var coordinates = feature.getGeometry().getCoordinates();
+                popup.setPosition(coordinates);
+            // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
 
-        
-        // var popup = new ol.Overlay({
-        //   element: element,
-        //   id:feature.get("vm_id"),
-        //   positioning: 'bottom-center',
-        //   position: coordinates,
-        //   offset: [0, -70],
-        //   stopEvent: false,
-        //   offset: [0, -50]
-        // });
-        
+
+            // element.setAttribute("class", "overlayElement");
+            // element.setAttribute("id", feature.get('vm_id'));
+            // element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
+
+
+            // $(element).empty()
+            // $(element).show()
+
+            // $(element).popover({
+            //   placement: 'top',
+            //   html: true,
+            //   content: "ID : "+feature.get('vm_id')+"\n"+"Status :"+feature.get('vm_status'),
+            //   title: feature.get('title'),
+            // });
+
+
+            // var popup = new ol.Overlay({
+            //   element: element,
+            //   id:feature.get("vm_id"),
+            //   positioning: 'bottom-center',
+            //   position: coordinates,
+            //   offset: [0, -70],
+            //   stopEvent: false,
+            //   offset: [0, -50]
+            // });
+
          
-        JZMap.addOverlay(popup);
+            JZMap.addOverlay(popup);
         
-        $(element).popover('show');
-      }else{
-        $(element).popover('hide');
-      }
+            $(element).popover('show');
+        }else{
+            $(element).popover('hide');
+        }
     });
-  return m;
+    return m;
 }
 
 // 주어진 index에 맞는 marker표시.
@@ -306,32 +300,34 @@ function drawMap(map,long,lat,info){
     console.log("JZMap : ",JZMap);
   
     var icon = new ol.style.Style({
-    image: new ol.style.Icon({
-        // src:'/assets/img/marker/purple.png', // pin Image
-        src: getMarkerSrc(info.markerIndex),
-        anchor: [0.5, 1],
-        scale: 0.5
+        image: new ol.style.Icon({
+            // src:'/assets/img/marker/purple.png', // pin Image
+            src: getMarkerSrc(info.markerIndex),
+            anchor: [0.5, 1],
+            scale: 0.5
+        })
     })
-})
-  var map_center = ol.proj.fromLonLat([long, lat]);
-  var point_gem = new ol.geom.Point(map_center);
-  var point_feature = new ol.Feature(point_gem);
-  point_feature.setStyle([icon])
-  //feature 에 set info
-  console.log("info : ",info)
-  point_feature.set('title',info.name)
-  point_feature.set('vm_status',info.status)
-  point_feature.set('vm_id',info.id)
-  point_feature.set('id',info.id)
 
-  var stackVectorMap = new ol.source.Vector({
-    features : [point_feature]
-  })
+    var map_center = ol.proj.fromLonLat([long, lat]);
+    var point_gem = new ol.geom.Point(map_center);
+    var point_feature = new ol.Feature(point_gem);
+    point_feature.setStyle([icon])
 
-  var stackLayer = new ol.layer.Vector({
-    source: stackVectorMap
-  })
-  JZMap.addLayer(stackLayer)
+    //feature 에 set info
+    console.log("info : ",info)
+    point_feature.set('title',info.name)
+    point_feature.set('vm_status',info.status)
+    point_feature.set('vm_id',info.id)
+    point_feature.set('id',info.id)
+
+    var stackVectorMap = new ol.source.Vector({
+        features : [point_feature]
+    })
+
+    var stackLayer = new ol.layer.Vector({
+        source: stackVectorMap
+    })
+    JZMap.addLayer(stackLayer)
  
 }
 

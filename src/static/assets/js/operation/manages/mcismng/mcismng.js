@@ -1592,6 +1592,7 @@ function getMcisDataCallbackFail(error){
 
 // 지도에 marker로 region 표시.  
 // Map 관련 설정
+
 function setMap(locationInfo){
     //show_mcis2(url,JZMap);
     //function show_mcis2(url, map){
@@ -1608,8 +1609,6 @@ function setMap(locationInfo){
     }
 
     console.log("setMap")
-    var JZMap = map_init()// mcis.map.js 파일에 정의되어 있으므로 import 필요.  TODO : map click할 때 feature 에 id가 없어 tooltip 에러나고 있음. 해결필요
-
     //지도 그리기 관련
     var polyArr = new Array();
 
@@ -1617,7 +1616,9 @@ function setMap(locationInfo){
     var latitudeValue = locationInfo.latitude;
     console.log(longitudeValue + " : " + latitudeValue);
     if (longitudeValue && latitudeValue) {
-        drawMap(JZMap, longitudeValue, latitudeValue, locationInfo)
+        $("#map").empty()
+        var locationMap = map_init()// mcis.map.js 파일에 정의되어 있으므로 import 필요.  TODO : map click할 때 feature 에 id가 없어 tooltip 에러나고 있음. 해결필요
+        drawMap(locationMap, longitudeValue, latitudeValue, locationInfo)
     }
 }
 
@@ -1738,7 +1739,7 @@ function setToTalMcisStatus(){
     try{
         for(var mcisIndex in totalMcisListObj){
             var aMcis = totalMcisListObj[mcisIndex]
-            aMcisStatusCountMap = calculateMcisStatusCount(aMcis);
+            var aMcisStatusCountMap = calculateMcisStatusCount(aMcis);
             totalMcisStatusMap.set(aMcis.id, aMcisStatusCountMap)
         }
     }catch(e){
@@ -1746,29 +1747,29 @@ function setToTalMcisStatus(){
     }
     displayMcisStatusArea();
 }
-// 해당 mcis에서 상태값들을 count : 1개 mcis의 상태는 1개만 있으므로 running, stop, terminate 중 1개만 1, 나머지는 0
-function calculateMcisStatusCount(mcisData){
-    console.log("calculateMcisStatusCount")
-    console.log(mcisData)
-    var mcisStatusCountMap = new Map();
-    mcisStatusCountMap.set("running", 0);
-    mcisStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
-    mcisStatusCountMap.set("terminate", 0);
-    try{
-        var mcisStatus = mcisData.status
-        var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
-
-        if( mcisStatus != ""){// mcis status 가 없는 경우는 skip
-            if( mcisStatusCountMap.has(mcisDispStatus) ){
-                mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
-            }
-        }
-    }catch(e){
-        console.log("mcis status error")
-    }
-    console.log(mcisStatusCountMap);
-    return mcisStatusCountMap;
-}
+// // 해당 mcis에서 상태값들을 count : 1개 mcis의 상태는 1개만 있으므로 running, stop, terminate 중 1개만 1, 나머지는 0
+// function calculateMcisStatusCount(mcisData){
+//     console.log("calculateMcisStatusCount")
+//     console.log(mcisData)
+//     var mcisStatusCountMap = new Map();
+//     mcisStatusCountMap.set("running", 0);
+//     mcisStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
+//     mcisStatusCountMap.set("terminate", 0);
+//     try{
+//         var mcisStatus = mcisData.status
+//         var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
+//
+//         if( mcisStatus != ""){// mcis status 가 없는 경우는 skip
+//             if( mcisStatusCountMap.has(mcisDispStatus) ){
+//                 mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
+//             }
+//         }
+//     }catch(e){
+//         console.log("mcis status error")
+//     }
+//     console.log(mcisStatusCountMap);
+//     return mcisStatusCountMap;
+// }
 // 화면 표시
 function displayMcisStatusArea(){
     var sumMcisCnt = 0;
@@ -1796,7 +1797,7 @@ function setTotalVmStatus(){
     try{
         for(var mcisIndex in totalMcisListObj){
             var aMcis = totalMcisListObj[mcisIndex]
-            vmStatusCountMap = calculateVmStatusCount(aMcis.vm);
+            var vmStatusCountMap = calculateVmStatusCount(aMcis.vm);
             totalVmStatusMap.set(aMcis.id, vmStatusCountMap)
         }
     }catch(e){
@@ -1806,31 +1807,31 @@ function setTotalVmStatus(){
 }
 
 // 1개 mcis 아래의 vm 들의 status만 계산
-function calculateVmStatusCount(vmList){
-    console.log("calculateVmStatusCount")
-    console.log(vmList)
-    var sumVmCnt = 0;
-    var vmStatusCountMap = new Map();
-    vmStatusCountMap.set("running", 0);
-    vmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
-    vmStatusCountMap.set("terminate", 0);
-    try{
-        for(var vmIndex in vmList) {
-            var aVm = vmList[vmIndex];
-            var vmStatus = aVm.status;
-            var vmDispStatus = getVmStatusDisp(vmStatus);
-
-            if (vmStatus != "") {// vm status 가 없는 경우는 skip
-                if (vmStatusCountMap.has(vmDispStatus)) {
-                    vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)
-                }
-            }
-        }
-    }catch(e){
-        console.log("mcis status error")
-    }
-    return vmStatusCountMap;
-}
+// function calculateVmStatusCount(vmList){
+//     console.log("calculateVmStatusCount")
+//     console.log(vmList)
+//     var sumVmCnt = 0;
+//     var vmStatusCountMap = new Map();
+//     vmStatusCountMap.set("running", 0);
+//     vmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
+//     vmStatusCountMap.set("terminate", 0);
+//     try{
+//         for(var vmIndex in vmList) {
+//             var aVm = vmList[vmIndex];
+//             var vmStatus = aVm.status;
+//             var vmDispStatus = getVmStatusDisp(vmStatus);
+//
+//             if (vmStatus != "") {// vm status 가 없는 경우는 skip
+//                 if (vmStatusCountMap.has(vmDispStatus)) {
+//                     vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)
+//                 }
+//             }
+//         }
+//     }catch(e){
+//         console.log("mcis status error")
+//     }
+//     return vmStatusCountMap;
+// }
 
 // 화면 표시
 function displayVmStatusArea(){
@@ -1857,7 +1858,7 @@ function setTotalConnection(){
     try{
         for(var mcisIndex in totalMcisListObj){
             var aMcis = totalMcisListObj[mcisIndex]
-            cloudConnectionCountMap = calculateConnectionCount(aMcis.vm);
+            var cloudConnectionCountMap = calculateConnectionCount(aMcis.vm);
             totalCloudConnectionMap.set(aMcis.id, cloudConnectionCountMap)
         }
     }catch(e){
@@ -1865,25 +1866,25 @@ function setTotalConnection(){
     }
     displayConnectionCountArea();
 }
-function calculateConnectionCount(vmList){
-    console.log("calculateConnectionCount")
-    console.log(vmList)
-    var vmCloudConnectionCountMap = new Map();
-
-    for(var vmIndex in vmList) {
-        var aVm = vmList[vmIndex]
-        var location = aVm.location;
-        if (!isEmpty(location)) {
-            var cloudType = location.cloudType;
-            if (vmCloudConnectionCountMap.has(cloudType)) {
-                vmCloudConnectionCountMap.set(cloudType, vmCloudConnectionCountMap.get(cloudType) + 1)
-            } else {
-                vmCloudConnectionCountMap.set(cloudType, 0)
-            }
-        }
-    }
-    return vmCloudConnectionCountMap;
-}
+// function calculateConnectionCount(vmList){
+//     console.log("calculateConnectionCount")
+//     console.log(vmList)
+//     var vmCloudConnectionCountMap = new Map();
+//
+//     for(var vmIndex in vmList) {
+//         var aVm = vmList[vmIndex]
+//         var location = aVm.location;
+//         if (!isEmpty(location)) {
+//             var cloudType = location.cloudType;
+//             if (vmCloudConnectionCountMap.has(cloudType)) {
+//                 vmCloudConnectionCountMap.set(cloudType, vmCloudConnectionCountMap.get(cloudType) + 1)
+//             } else {
+//                 vmCloudConnectionCountMap.set(cloudType, 0)
+//             }
+//         }
+//     }
+//     return vmCloudConnectionCountMap;
+// }
 function displayConnectionCountArea(){
     // mcis별 합계이므로 total을 구해서 표시해야 함.
     var sumCloudConnectionMap = new Map();
@@ -1950,6 +1951,8 @@ function setMcisListTableRow(aMcisData, mcisIndex){
 
     var vmStatusCountMap = totalVmStatusMap.get(aMcisData.id);
     var totalVmCountOfMcis = vmStatusCountMap.get('running') + vmStatusCountMap.get('stop') + vmStatusCountMap.get('terminate');
+    console.log(vmStatusCountMap);
+
     // elementNames
     // id="server_info_tr_" + mcisIndex             // tr
     // id="mcisInfo_mcisStatus_icon_" + mcisIndex   // icon
@@ -2193,8 +2196,8 @@ function displayServerDetailInfoArea(mcisID, mcisName, vmData){
     //         $("#mcis_detail_info_check_monitoring").attr("disabled",false)
     //     }
     // }else{
-        $("#mcis_detail_info_check_monitoring").prop("checked",false)
-        $("#mcis_detail_info_check_monitoring").attr("disabled",false)
+    //     $("#mcis_detail_info_check_monitoring").prop("checked",false)
+    //     $("#mcis_detail_info_check_monitoring").attr("disabled",false)
     // }
 
     $("#server_info_text").text('['+vmName+'/'+mcisName+']')
