@@ -183,11 +183,11 @@ function getVmStatusDisp(vmFullStatus) {
 	if (returnVmStatus == VM_STATUS_RUNNING) {
 		returnVmStatus = "running"
 	} else if (returnVmStatus == VM_STATUS_TERMINATED) {
-		returnVmStatus = "terminated"
+		returnVmStatus = "terminate"
 	} else if (returnVmStatus == VM_STATUS_FAILED) {
-		returnVmStatus = "terminated"
+		returnVmStatus = "terminate"
 	} else {
-		returnVmStatus = "stopped"
+		returnVmStatus = "stop"
 	}
 	return returnVmStatus
 }

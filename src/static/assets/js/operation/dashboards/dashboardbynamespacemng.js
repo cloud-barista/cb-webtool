@@ -39,181 +39,191 @@ function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sor
 }
 
 // MCIS 목록 조회 후 화면에 Set
+
 function getMcisListCallbackSuccess(caller, mcisList) {
+    totalMcisListObj = mcisList;
+    setToTalMcisStatus();// mcis상태 표시 를 위해 필요
+    setTotalVmStatus();// mcis 의 vm들 상태표시 를 위해 필요
+    setTotalConnection();// Mcis의 provider별 connection 표시를 위해 필요
 
-    // MCIS Status
-    var totalMcisCnt = 0;
-    var mcisStatusCountMap = new Map();
-    mcisStatusCountMap.set("running", 0);
-    mcisStatusCountMap.set("stopped", 0);  // partial 도 stop으로 보고있음.
-    mcisStatusCountMap.set("terminated", 0);
-    mcisStatusCountMap.set("total", 0);
+    displayMcisDashboard();
 
-    var totalServerCnt = 0;
-    var totalVmStatusCountMap = new Map();
-    totalVmStatusCountMap.set("running", 0);
-    totalVmStatusCountMap.set("stopped", 0);  // partial 도 stop으로 보고있음.
-    totalVmStatusCountMap.set("terminated", 0);
-    totalVmStatusCountMap.set("total", 0);
-
-    if (!isEmpty(mcisList) && mcisList.length > 0) {
-        //totalMcisCnt = mcisList.length;
-        var addMcis = "";
-        var addVm = "";
-        for (var mcisIndex in mcisList) {
-            var aMcis = mcisList[mcisIndex]
-            var mcisStatus = aMcis.status
-
-            var mcisProviderNames = "";//MCIS에 사용 된 provider
-            var totalVmCountOfMcis = 0;//MCIS의 VM 갯 수
-            var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
-            // mcis status
-            try {
-                // console.log(aMcis)
-                if (mcisStatus != "") {// mcis status 가 없는 경우는 skip
-                    if (mcisStatusCountMap.has(mcisDispStatus)) {
-                        mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
-                    }
-                    totalMcisCnt++;
-                } else {
-                    continue;// status가 없으면 mcks 일 수 있으므로 mcis에서는 count 제외
-                }
-            } catch (e) {
-                console.log("mcis status error")
-            }
-
-            // vm status
-            try {
-                var vmListOfMcis = aMcis.vm;// array
+    setMap();// MCIS를 가져와서 화면에 뿌려지면 vm정보가 있으므로 Map그리기
 
 
-                var vmStatusCountMap = new Map();
-                vmStatusCountMap.set("running", 0);
-                vmStatusCountMap.set("stopped", 0);  // partial 도 stop으로 보고있음.
-                vmStatusCountMap.set("terminated", 0);
-                vmStatusCountMap.set("total", 0);
+    // // MCIS Status
+    // var totalMcisCnt = 0;
+    // var mcisStatusCountMap = new Map();
+    // mcisStatusCountMap.set("running", 0);
+    // mcisStatusCountMap.set("stopped", 0);  // partial 도 stop으로 보고있음.
+    // mcisStatusCountMap.set("terminated", 0);
+    // mcisStatusCountMap.set("total", 0);
+    //
+    // var totalServerCnt = 0;
+    // var totalVmStatusCountMap = new Map();
+    // totalVmStatusCountMap.set("running", 0);
+    // totalVmStatusCountMap.set("stopped", 0);  // partial 도 stop으로 보고있음.
+    // totalVmStatusCountMap.set("terminated", 0);
+    // totalVmStatusCountMap.set("total", 0);
+    //
+    // if (!isEmpty(mcisList) && mcisList.length > 0) {
+    //     //totalMcisCnt = mcisList.length;
+    //     var addMcis = "";
+    //     var addVm = "";
+    //     for (var mcisIndex in mcisList) {
+    //         var aMcis = mcisList[mcisIndex]
+    //         var mcisStatus = aMcis.status
+    //
+    //         var mcisProviderNames = "";//MCIS에 사용 된 provider
+    //         var totalVmCountOfMcis = 0;//MCIS의 VM 갯 수
+    //         var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
+    //         // mcis status
+    //         try {
+    //             // console.log(aMcis)
+    //             if (mcisStatus != "") {// mcis status 가 없는 경우는 skip
+    //                 if (mcisStatusCountMap.has(mcisDispStatus)) {
+    //                     mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
+    //                 }
+    //                 totalMcisCnt++;
+    //             } else {
+    //                 continue;// status가 없으면 mcks 일 수 있으므로 mcis에서는 count 제외
+    //             }
+    //         } catch (e) {
+    //             console.log("mcis status error")
+    //         }
+    //
+    //         // vm status
+    //         try {
+    //             var vmListOfMcis = aMcis.vm;// array
+    //
+    //
+    //             var vmStatusCountMap = new Map();
+    //             vmStatusCountMap.set("running", 0);
+    //             vmStatusCountMap.set("stopped", 0);  // partial 도 stop으로 보고있음.
+    //             vmStatusCountMap.set("terminated", 0);
+    //             vmStatusCountMap.set("total", 0);
+    //
+    //             var vmCloudConnectionMap = new Map();
+    //             console.log(vmListOfMcis)
+    //             if (typeof vmListOfMcis !== 'undefined' && vmListOfMcis.length > 0) {
+    //                 for (var vmIndex in vmListOfMcis) {
+    //                     var aVm = vmListOfMcis[vmIndex];
+    //                     var vmDispStatus = getVmStatusDisp(aVm.status);
+    //                     console.log("vmDispStatus:", vmDispStatus);
+    //                     totalVmCountOfMcis++;
+    //                     console.log("vmStatus " + aVm.status + " , dispVmStatus " + vmDispStatus)
+    //                     if (vmStatusCountMap.has(vmDispStatus)) {
+    //                         vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)// mcis내 count
+    //                         totalVmStatusCountMap.set(vmDispStatus, totalVmStatusCountMap.get(vmDispStatus) + 1)// 전체 count
+    //                     }
+    //                     vmStatusCountMap.set("total", vmStatusCountMap.get("total") + 1)// mcis내 count
+    //                     totalVmStatusCountMap.set("total", totalVmStatusCountMap.get("total") + 1)
+    //                     totalServerCnt++;
+    //
+    //                     // connections
+    //                     var location = aVm.location;
+    //                     if (!isEmpty(location)) {
+    //                         var cloudType = location.cloudType;
+    //                         if (vmCloudConnectionMap.has(cloudType)) {
+    //                             vmCloudConnectionMap.set(cloudType, vmCloudConnectionMap.get(cloudType) + 1)
+    //                         } else {
+    //                             vmCloudConnectionMap.set(cloudType, 0)
+    //                         }
+    //                     }
+    //
+    //                     // vm항목 미리 생성 후 mcis 생성할 때 붙임
+    //                     addVm += '<div class="shot bgbox_' + vmDispStatus + '">'
+    //                     addVm += '    <a href="javascript:void(0);"><span>' + (Number(vmIndex) + 1).toString() + '</span></a>'
+    //                     // for map : 원래는 vmId, Name등의 정보가 보여져야하나, mcis를 simple로 가져오면 해당 정보가 비어있어 화면상의 mcis이름 과 vm index를 보여주게 함
+    //                     // addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aVm.vmID + '"/>'
+    //                     // addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + aVm.vmName + '"/>'
+    //                     addVm += '        <input type="hidden" name="mapPinIndex" id="mapPinIndex_' + vmIndex + '" value="' + mcisIndex + '"/>'
+    //                     addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aMcis.name + '"/>'
+    //                     addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + (Number(vmIndex) + 1).toString() + '"/>'
+    //                     addVm += '        <input type="hidden" name="vmStatus" id="vmStatus_' + vmIndex + '" value="' + vmDispStatus + '"/>'
+    //                     addVm += '        <input type="hidden" name="longitude" id="longitude_' + vmIndex + '" value="' + location.longitude + '"/>'
+    //                     addVm += '        <input type="hidden" name="latitude" id="latitude_' + vmIndex + '" value="' + location.latitude + '"/>'
+    //                     addVm += '</div>'
+    //
+    //                 }
+    //             }// end of vm list
+    //
+    //             // console.log(vmCloudConnectionMap);
+    //             vmCloudConnectionMap.forEach((value, key) => {
+    //                 mcisProviderNames += key + " ";
+    //             });
+    //             console.log("mcisProviderNames=" + mcisProviderNames);
+    //         } catch (e) {
+    //             console.log("vm status error")
+    //         }
+    //
+    //
+    //
+    //         // List of Mcis table
+    //         try {
+    //
+    //             addMcis += '    <div class="areabox dbinfo cursor" id="mcis_areabox_' + mcisIndex + '" onclick="selectMcis(\'' + aMcis.id + '\',\'' + aMcis.name + '\',\'mcis_areabox_' + mcisIndex + '\', this)">'
+    //             addMcis += '        <div class="box">'
+    //             addMcis += '            <div class="top">'
+    //             addMcis += '                <div class="txtbox">'
+    //             addMcis += '                    <div class="tit">' + aMcis.name + '</div>'
+    //             addMcis += '                    <div class="txt"><span class="bgbox_b"></span>Available 01</div>'
+    //             addMcis += '                </div>'
+    //
+    //             addMcis += '                <div class="state color_' + mcisDispStatus + '"></div>'
+    //             addMcis += '            </div>'
+    //
+    //             addMcis += '            <div class="numbox">'
+    //             addMcis += '                infra <strong class="color_b">' + vmStatusCountMap.get("total") + '</strong>'
+    //             addMcis += '                <span class="line">(</span> <span class="num color_b">' + vmStatusCountMap.get("running") + '</span>'
+    //             addMcis += '                <span class="line">/</span> <span class="num color_y">' + vmStatusCountMap.get("stopped") + '</span>'
+    //             addMcis += '                <span class="line">/</span> <span class="num color_r">' + vmStatusCountMap.get("terminated") + '</span>'
+    //             addMcis += '                <span class="line">)</span>'
+    //             addMcis += '            </div>'
+    //
+    //             // 이 항목은 크게 의미가 없는데??
+    //             addMcis += '            <div class="numinfo">'
+    //             addMcis += '                <div class="num">server ' + vmStatusCountMap.get("total") + '</div>'
+    //             addMcis += '            </div>'
+    //
+    //             addMcis += '            <div class="shotbox">'
+    //             // 각 vm 의 항목들
+    //             addMcis += addVm
+    //             addMcis += '            </div>'
+    //
+    //             addMcis += '        </div>'
+    //             addMcis += '    </div>'
+    //
+    //         } catch (e) {
+    //             console.log("list of mcis error")
+    //             console.log(e)
+    //         }
+    //         addVm = "";//
+    //     }// end of mcis loop
+    //
+    //     $("#mcisList").empty();
+    //     $("#mcisList").append(addMcis);
+    //
+    //     $("#total_mcis").text(totalMcisCnt);
+    //     $("#mcis_status_running").text(mcisStatusCountMap.get("running"));
+    //     $("#mcis_status_stopped").text(mcisStatusCountMap.get("stop"));
+    //     $("#mcis_status_terminated").text(mcisStatusCountMap.get("terminate"));
+    //
+    //     $("#total_vm").text(totalServerCnt);
+    //     $("#vm_status_running").text(totalVmStatusCountMap.get("running"));
+    //     $("#vm_status_stopped").text(totalVmStatusCountMap.get("stop"));
+    //     $("#vm_status_terminated").text(totalVmStatusCountMap.get("terminate"));
 
-                var vmCloudConnectionMap = new Map();
-                console.log(vmListOfMcis)
-                if (typeof vmListOfMcis !== 'undefined' && vmListOfMcis.length > 0) {
-                    for (var vmIndex in vmListOfMcis) {
-                        var aVm = vmListOfMcis[vmIndex];
-                        var vmDispStatus = getVmStatusDisp(aVm.status);
-                        console.log("vmDispStatus:", vmDispStatus);
-                        totalVmCountOfMcis++;
-                        console.log("vmStatus " + aVm.status + " , dispVmStatus " + vmDispStatus)
-                        if (vmStatusCountMap.has(vmDispStatus)) {
-                            vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)// mcis내 count
-                            totalVmStatusCountMap.set(vmDispStatus, totalVmStatusCountMap.get(vmDispStatus) + 1)// 전체 count
-                        }
-                        vmStatusCountMap.set("total", vmStatusCountMap.get("total") + 1)// mcis내 count
-                        totalVmStatusCountMap.set("total", totalVmStatusCountMap.get("total") + 1)
-                        totalServerCnt++;
-
-                        // connections
-                        var location = aVm.location;
-                        if (!isEmpty(location)) {
-                            var cloudType = location.cloudType;
-                            if (vmCloudConnectionMap.has(cloudType)) {
-                                vmCloudConnectionMap.set(cloudType, vmCloudConnectionMap.get(cloudType) + 1)
-                            } else {
-                                vmCloudConnectionMap.set(cloudType, 0)
-                            }
-                        }
-
-                        // vm항목 미리 생성 후 mcis 생성할 때 붙임
-                        addVm += '<div class="shot bgbox_' + vmDispStatus + '">'
-                        addVm += '    <a href="javascript:void(0);"><span>' + (Number(vmIndex) + 1).toString() + '</span></a>'
-                        // for map : 원래는 vmId, Name등의 정보가 보여져야하나, mcis를 simple로 가져오면 해당 정보가 비어있어 화면상의 mcis이름 과 vm index를 보여주게 함
-                        // addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aVm.vmID + '"/>'
-                        // addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + aVm.vmName + '"/>'
-                        addVm += '        <input type="hidden" name="mapPinIndex" id="mapPinIndex_' + vmIndex + '" value="' + mcisIndex + '"/>'
-                        addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aMcis.name + '"/>'
-                        addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + (Number(vmIndex) + 1).toString() + '"/>'
-                        addVm += '        <input type="hidden" name="vmStatus" id="vmStatus_' + vmIndex + '" value="' + vmDispStatus + '"/>'
-                        addVm += '        <input type="hidden" name="longitude" id="longitude_' + vmIndex + '" value="' + location.longitude + '"/>'
-                        addVm += '        <input type="hidden" name="latitude" id="latitude_' + vmIndex + '" value="' + location.latitude + '"/>'
-                        addVm += '</div>'
-
-                    }
-                }// end of vm list
-
-                // console.log(vmCloudConnectionMap);
-                vmCloudConnectionMap.forEach((value, key) => {
-                    mcisProviderNames += key + " ";
-                });
-                console.log("mcisProviderNames=" + mcisProviderNames);
-            } catch (e) {
-                console.log("vm status error")
-            }
-
-
-
-            // List of Mcis table
-            try {
-
-                addMcis += '    <div class="areabox dbinfo cursor" id="mcis_areabox_' + mcisIndex + '" onclick="selectMcis(\'' + aMcis.id + '\',\'' + aMcis.name + '\',\'mcis_areabox_' + mcisIndex + '\', this)">'
-                addMcis += '        <div class="box">'
-                addMcis += '            <div class="top">'
-                addMcis += '                <div class="txtbox">'
-                addMcis += '                    <div class="tit">' + aMcis.name + '</div>'
-                addMcis += '                    <div class="txt"><span class="bgbox_b"></span>Available 01</div>'
-                addMcis += '                </div>'
-
-                addMcis += '                <div class="state color_' + mcisDispStatus + '"></div>'
-                addMcis += '            </div>'
-
-                addMcis += '            <div class="numbox">'
-                addMcis += '                infra <strong class="color_b">' + vmStatusCountMap.get("total") + '</strong>'
-                addMcis += '                <span class="line">(</span> <span class="num color_b">' + vmStatusCountMap.get("running") + '</span>'
-                addMcis += '                <span class="line">/</span> <span class="num color_y">' + vmStatusCountMap.get("stopped") + '</span>'
-                addMcis += '                <span class="line">/</span> <span class="num color_r">' + vmStatusCountMap.get("terminated") + '</span>'
-                addMcis += '                <span class="line">)</span>'
-                addMcis += '            </div>'
-
-                // 이 항목은 크게 의미가 없는데??
-                addMcis += '            <div class="numinfo">'
-                addMcis += '                <div class="num">server ' + vmStatusCountMap.get("total") + '</div>'
-                addMcis += '            </div>'
-
-                addMcis += '            <div class="shotbox">'
-                // 각 vm 의 항목들
-                addMcis += addVm
-                addMcis += '            </div>'
-
-                addMcis += '        </div>'
-                addMcis += '    </div>'
-
-            } catch (e) {
-                console.log("list of mcis error")
-                console.log(e)
-            }
-            addVm = "";//
-        }// end of mcis loop
-
-        $("#mcisList").empty();
-        $("#mcisList").append(addMcis);
-
-        $("#total_mcis").text(totalMcisCnt);
-        $("#mcis_status_running").text(mcisStatusCountMap.get("running"));
-        $("#mcis_status_stopped").text(mcisStatusCountMap.get("stop"));
-        $("#mcis_status_terminated").text(mcisStatusCountMap.get("terminate"));
-
-        $("#total_vm").text(totalServerCnt);
-        $("#vm_status_running").text(totalVmStatusCountMap.get("running"));
-        $("#vm_status_stopped").text(totalVmStatusCountMap.get("stop"));
-        $("#vm_status_terminated").text(totalVmStatusCountMap.get("terminate"));
-
-        // MCIS를 가져와서 화면에 뿌려지면 vm정보가 있으므로 Map그리기
-        setMap();
-    } else {
-        var addMcis = "";
-        addMcis += '<tr>'
-        addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
-        addMcis += '</tr>'
-        $("#mcisList").empty();
-        $("#mcisList").append(addMcis);
-    }
+        // // MCIS를 가져와서 화면에 뿌려지면 vm정보가 있으므로 Map그리기
+        // setMap();
+    // } else {
+    //     var addMcis = "";
+    //     addMcis += '<tr>'
+    //     addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
+    //     addMcis += '</tr>'
+    //     $("#mcisList").empty();
+    //     $("#mcisList").append(addMcis);
+    // }
 }
 
 // 조회 실패시.
@@ -375,4 +385,253 @@ function setMap() {
         //           }
         //     }
     })
+}
+
+
+/////////////  set : data설정, caculate : 연산, display : 화면 표시
+var totalMcisListObj = new Object();// 모든 MCIS정보를 다 넣고 갱신하여 빼 쓰도록
+var totalMcisStatusMap = new Map();
+function setToTalMcisStatus(){
+    try{
+        for(var mcisIndex in totalMcisListObj){
+            var aMcis = totalMcisListObj[mcisIndex]
+            var aMcisStatusCountMap = calculateMcisStatusCount(aMcis);
+            totalMcisStatusMap.set(aMcis.id, aMcisStatusCountMap)
+        }
+    }catch(e){
+        console.log("mcis status error")
+    }
+    displayMcisStatusArea();
+}
+// 화면 표시
+function displayMcisStatusArea(){
+    var sumMcisCnt = 0;
+    var sumMcisRunningCnt = 0;
+    var sumMcisStopCnt = 0;
+    var sumMcisTerminateCnt = 0;
+    totalMcisStatusMap.forEach((value, key) => {
+        var statusRunning = value.get("running");
+        var statusStop = value.get("stop");
+        var statusTerminate = value.get("terminate")
+        sumMcisRunningCnt += statusRunning
+        sumMcisStopCnt += statusStop
+        sumMcisTerminateCnt += statusTerminate
+    });
+    sumMcisCnt = sumMcisRunningCnt + sumMcisStopCnt + sumMcisTerminateCnt
+
+    $("#total_mcis").text(sumMcisCnt);
+    $("#mcis_status_running").text(sumMcisRunningCnt);
+    $("#mcis_status_stopped").text(sumMcisStopCnt);
+    $("#mcis_status_terminated").text(sumMcisTerminateCnt);
+}
+
+var totalVmStatusMap = new Map();
+// Mcis 목록에서 vmStatus만 처리 : 화면표시는 display function에서
+function setTotalVmStatus(){
+    try{
+        for(var mcisIndex in totalMcisListObj){
+            var aMcis = totalMcisListObj[mcisIndex]
+            console.log(aMcis);
+            var vmStatusCountMap = calculateVmStatusCount(aMcis.vm);
+            totalVmStatusMap.set(aMcis.id, vmStatusCountMap)
+        }
+    }catch(e){
+        console.log("mcis status error")
+    }
+    displayVmStatusArea();
+}
+
+// 화면 표시
+function displayVmStatusArea(){
+    var sumVmCnt = 0;
+    var sumVmRunningCnt = 0;
+    var sumVmStopCnt = 0;
+    var sumVmTerminateCnt = 0;
+    totalVmStatusMap.forEach((value, key) => {
+        var statusRunning = value.get("running");
+        var statusStop = value.get("stop");
+        var statusTerminate = value.get("terminate")
+        sumVmRunningCnt += statusRunning
+        sumVmStopCnt += statusStop
+        sumVmTerminateCnt += statusTerminate
+    });
+    sumVmCnt = sumVmRunningCnt + sumVmStopCnt + sumVmTerminateCnt
+    $("#total_vm").text(sumVmCnt);
+    $("#vm_status_running").text(sumVmRunningCnt);
+    $("#vm_status_stopped").text(sumVmStopCnt);
+    $("#vm_status_terminated").text(sumVmTerminateCnt);
+}
+var totalCloudConnectionMap = new Map();
+function setTotalConnection(){
+    try{
+        for(var mcisIndex in totalMcisListObj){
+            var aMcis = totalMcisListObj[mcisIndex]
+            cloudConnectionCountMap = calculateConnectionCount(aMcis.vm);
+            totalCloudConnectionMap.set(aMcis.id, cloudConnectionCountMap)
+        }
+    }catch(e){
+        console.log("mcis status error")
+    }
+    displayConnectionCountArea();
+}
+
+function displayConnectionCountArea(){
+    // mcis별 합계이므로 total을 구해서 표시해야 함.
+    var sumCloudConnectionMap = new Map();
+    totalCloudConnectionMap.forEach((value, key) => {
+
+    });
+
+    // 합계를 화면에 표시
+}
+
+function displayMcisDashboard() {
+
+    if (!isEmpty(totalMcisListObj) && totalMcisListObj.length > 0) {
+        //totalMcisCnt = mcisList.length;
+        var addMcis = "";
+        for (var mcisIndex in totalMcisListObj) {
+            var aMcis = totalMcisListObj[mcisIndex]
+            if (aMcis.id != "") {
+                addMcis += setMcisListTableRow(aMcis, mcisIndex);
+            }
+        }// end of mcis loop
+        $("#mcisList").empty();
+        $("#mcisList").append(addMcis);
+
+    } else {
+        var addMcis = "";
+        addMcis += '<tr>'
+        addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
+        addMcis += '</tr>'
+        $("#mcisList").empty();
+        $("#mcisList").append(addMcis);
+    }
+}
+
+function setMcisListTableRow(aMcisData, mcisIndex){
+    var mcisTableRow = "";
+    var mcisStatus = aMcisData.status
+    var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
+
+    var vmStatusCountMap = totalVmStatusMap.get(aMcisData.id);
+    var totalVmCountOfMcis = vmStatusCountMap.get('running') + vmStatusCountMap.get('stop') + vmStatusCountMap.get('terminate');
+
+    // List of Mcis table
+    try{
+
+        // vm항목 미리 생성 후 mcis 생성할 때 붙임
+        var addVm = "";
+        var vmListOfMcis = aMcisData.vm;
+        if (typeof vmListOfMcis !== 'undefined' && vmListOfMcis.length > 0) {
+            for (var vmIndex in vmListOfMcis) {
+                var aVm = vmListOfMcis[vmIndex];
+                var vmDispStatus = getVmStatusDisp(aVm.status);
+
+                // connections
+                var location = aVm.location;
+                if (!isEmpty(location)) {
+                    var vmLongitude = location.longitude;
+                    var vmLatitude = location.latitude;
+
+                }
+
+                addVm += '<div class="shot bgbox_' + vmDispStatus + '">'
+                addVm += '    <a href="javascript:void(0);"><span>' + (Number(vmIndex) + 1).toString() + '</span></a>'
+                // for map : 원래는 vmId, Name등의 정보가 보여져야하나, mcis를 simple로 가져오면 해당 정보가 비어있어 화면상의 mcis이름 과 vm index를 보여주게 함
+                // addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aVm.vmID + '"/>'
+                // addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + aVm.vmName + '"/>'
+                addVm += '        <input type="hidden" name="mapPinIndex" id="mapPinIndex_' + vmIndex + '" value="' + mcisIndex + '"/>'
+                addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aMcisData.name + '"/>'
+                addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + (Number(vmIndex) + 1).toString() + '"/>'
+                addVm += '        <input type="hidden" name="vmStatus" id="vmStatus_' + vmIndex + '" value="' + vmDispStatus + '"/>'
+                addVm += '        <input type="hidden" name="longitude" id="longitude_' + vmIndex + '" value="' + location.longitude + '"/>'
+                addVm += '        <input type="hidden" name="latitude" id="latitude_' + vmIndex + '" value="' + location.latitude + '"/>'
+                addVm += '</div>'
+            }
+        }
+
+        // mcis
+        mcisTableRow += '    <div class="areabox dbinfo cursor" id="mcis_areabox_' + mcisIndex + '" onclick="selectMcis(\'' + aMcisData.id + '\',\'' + aMcisData.name + '\',\'mcis_areabox_' + mcisIndex + '\', this)">'
+        mcisTableRow += '        <div class="box">'
+        mcisTableRow += '            <div class="top">'
+        mcisTableRow += '                <div class="txtbox">'
+        mcisTableRow += '                    <div class="tit">' + aMcisData.name + '</div>'
+        mcisTableRow += '                    <div class="txt"><span class="bgbox_b"></span>Available 01</div>'
+        mcisTableRow += '                </div>'
+
+        mcisTableRow += '                <div class="state color_' + mcisDispStatus + '"></div>'
+        mcisTableRow += '            </div>'
+
+        mcisTableRow += '            <div class="numbox">'
+        mcisTableRow += '                infra <strong class="color_b">' + totalVmCountOfMcis + '</strong>'
+        mcisTableRow += '                <span class="line">(</span> <span class="num color_b">' + vmStatusCountMap.get("running") + '</span>'
+        mcisTableRow += '                <span class="line">/</span> <span class="num color_y">' + vmStatusCountMap.get("stop") + '</span>'
+        mcisTableRow += '                <span class="line">/</span> <span class="num color_r">' + vmStatusCountMap.get("terminate") + '</span>'
+        mcisTableRow += '                <span class="line">)</span>'
+        mcisTableRow += '            </div>'
+
+        // 이 항목은 크게 의미가 없는데??
+        mcisTableRow += '            <div class="numinfo">'
+        mcisTableRow += '                <div class="num">server ' + vmStatusCountMap.get("total") + '</div>'
+        mcisTableRow += '            </div>'
+
+        mcisTableRow += '            <div class="shotbox">'
+
+        mcisTableRow += addVm;// 각 vm 의 항목들
+
+        mcisTableRow += '            </div>'
+
+        mcisTableRow += '        </div>'
+        mcisTableRow += '    </div>'
+
+
+    }catch(e){
+        console.log("list of mcis error")
+        console.log(e)
+
+        mcisTableRow = '<tr>'
+        mcisTableRow += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
+        mcisTableRow += '</tr>'
+    }
+    return mcisTableRow;
+}
+
+
+// MCIS List table의 1개 Row Update
+function updateMcisListTableRow(aMcisData, mcisIndex) {
+
+    var mcisStatus = aMcisData.status
+    var mcisProviderNames = getProviderNamesOfMcis(aMcisData.id);//MCIS에 사용 된 provider
+    var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
+
+    var vmStatusCountMap = totalVmStatusMap.get(aMcisData.id);
+    var mcisStatusImg = "/assets/img/contents/icon_" + mcisDispStatus + ".png"
+
+    var sumVmCountRunning = vmStatusCountMap.get("running")
+    var sumVmCountStop = vmStatusCountMap.get("stop")
+    var sumVmCountTerminate = vmStatusCountMap.get("terminate")
+    var sumVmCount = sumVmCountRunning + sumVmCountStop + sumVmCountTerminate
+
+    // id="server_info_tr_" + mcisIndex             // tr   -> 변경없음
+    // id="mcisInfo_mcisStatus_icon_" + mcisIndex   // icon
+    $("#mcisInfo_mcisStatus_icon_" + mcisIndex).attr("src", mcisStatusImg);
+
+    // id="mcisInfo_mcisstatus_" + mcisIndex
+    $("#mcisInfo_mcisstatus_" + mcisIndex).text(mcisStatus)
+    // id="mcisInfo_mcisName_" + mcisIndex
+    $("#mcisInfo_mcisName_" + mcisIndex).text(aMcisData.name)
+    // id="mcisInfo_mcisProviderNames_" + mcisIndex
+    $("#mcisInfo_mcisProviderNames_" + mcisIndex).text(mcisProviderNames)
+    // id="mcisInfo_totalVmCountOfMcis_" + mcisIndex
+    $("#mcisInfo_totalVmCountOfMcis_" + mcisIndex).text(sumVmCount)
+    // id="mcisInfo_vmstatus_running_" + mcisIndex
+    $("#mcisInfo_vmstatus_running_" + mcisIndex).text(sumVmCountRunning)
+    // id="mcisInfo_vmstatus_stop_" + mcisIndex
+    $("#mcisInfo_vmstatus_stop_" + mcisIndex).text(sumVmCountStop)
+    // id="mcisInfo_vmstatus_terminate_" + mcisIndex
+    $("#mcisInfo_vmstatus_terminate_" + mcisIndex).text(sumVmCountTerminate)
+    // id="mcisInfo_mcisDescription_" + mcisIndex
+    $("#mcisInfo_mcisDescription_" + mcisIndex).text(sumVmCount)
+    // id="td_ch_" + mcisIndex                      // checkbox -> 변경없음
 }

@@ -799,6 +799,79 @@ function getRegionListByProviderForSelectbox(provider, targetObjID) {
     })
 }
 
+// 해당 mcis에서 상태값들을 count : 1개 mcis의 상태는 1개만 있으므로 running, stop, terminate 중 1개만 1, 나머지는 0
+// dashboard, mcis 에서 사용
+function calculateMcisStatusCount(mcisData){
+    console.log("calculateMcisStatusCount")
+    console.log(mcisData)
+    var mcisStatusCountMap = new Map();
+    mcisStatusCountMap.set("running", 0);
+    mcisStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
+    mcisStatusCountMap.set("terminate", 0);
+    try{
+        var mcisStatus = mcisData.status
+        var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
+
+        if( mcisStatus != ""){// mcis status 가 없는 경우는 skip
+            if( mcisStatusCountMap.has(mcisDispStatus) ){
+                mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
+            }
+        }
+    }catch(e){
+        console.log("mcis status error")
+    }
+    console.log(mcisStatusCountMap);
+    return mcisStatusCountMap;
+}
+
+// 1개 mcis 아래의 vm 들의 status만 계산
+// dashboard, mcis 에서 사용
+function calculateVmStatusCount(vmList){
+    console.log("calculateVmStatusCount")
+    console.log(vmList)
+    var sumVmCnt = 0;
+    var vmStatusCountMap = new Map();
+    vmStatusCountMap.set("running", 0);
+    vmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
+    vmStatusCountMap.set("terminate", 0);
+    try{
+        for(var vmIndex in vmList) {
+            var aVm = vmList[vmIndex];
+            var vmStatus = aVm.status;
+            var vmDispStatus = getVmStatusDisp(vmStatus);
+
+            if (vmStatus != "") {// vm status 가 없는 경우는 skip
+                if (vmStatusCountMap.has(vmDispStatus)) {
+                    vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)
+                }
+            }
+        }
+    }catch(e){
+        console.log("mcis status error")
+    }
+    return vmStatusCountMap;
+}
+
+// mcis내 vm들의 provider별 connection count
+function calculateConnectionCount(vmList){
+    console.log("calculateConnectionCount")
+    console.log(vmList)
+    var vmCloudConnectionCountMap = new Map();
+
+    for(var vmIndex in vmList) {
+        var aVm = vmList[vmIndex]
+        var location = aVm.location;
+        if (!isEmpty(location)) {
+            var cloudType = location.cloudType;
+            if (vmCloudConnectionCountMap.has(cloudType)) {
+                vmCloudConnectionCountMap.set(cloudType, vmCloudConnectionCountMap.get(cloudType) + 1)
+            } else {
+                vmCloudConnectionCountMap.set(cloudType, 0)
+            }
+        }
+    }
+    return vmCloudConnectionCountMap;
+}
 
 function isEmpty(str) {
     if (typeof str == "undefined" || str == null || str == "")
