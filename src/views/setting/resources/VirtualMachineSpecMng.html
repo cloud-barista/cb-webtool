@@ -316,6 +316,29 @@
 								<div class="toptxt search">
 									<label>Search</label>
 									<input type="submit" name="" class="btn_search_spec" title="" value="" onclick="" />
+									<ul>
+										<li class="reg_1">
+											<label>Cloud Provider</label>
+											<select class="selectbox white pline w3" name="ProviderName"
+												id="regProvider"
+												onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
+												<option value="" selected>Select Cloud Provider</option>
+												{{ range $item := .CloudOSList}}
+												<option value="{{ $item }}">{{ $item }}</option>
+												{{ end }}
+												<option value="MOCK">MOCK</option> <!-- 임시로 MOCK 추가-->
+											</select>
+
+										</li>
+										<li class="reg_1">
+											<label></span>Connection Name</label>
+											<select class="selectbox white pline w3" name="reg_connectionName"
+												id="regConnectionName" onchange="clearCspImageInfo()">
+												<option value="" selected>Selected ConnectionName</option>
+											</select>
+										</li>
+									</ul>
+
 								</div>
 								<div class="s_box s_box_1">
 									<ul>
@@ -440,9 +463,9 @@
 							</div>
 
 							<div class="toptxt">
-								<label>Spec List : <span id="lookupSpecCount"></span></label>
 								<button type="button" class="btn btn-sm btn-dark"
 									onclick="commonConfirmOpen('FetchSpecs')">Fetch Specs</button>
+								<label>Spec List : <span id="lookupSpecCount"></span></label>
 							</div>
 
 
