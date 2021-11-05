@@ -412,6 +412,7 @@ $(function () {
 
 	//Manage MCIS Server List on/off
 	$(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function () {
+		console.log("sel_cr");
 		var $sel_list = $(this),
 			$detail = $(".server_info");
 		$sel_list.off("click").click(function () {
@@ -432,6 +433,7 @@ $(function () {
 			});
 		});
 	});
+
 
 	//Monitoring MCIS Server List on/off
 	$(".ds_cont_mbox .mtbox .g_list .listbox li.sel_cr").each(function () {
