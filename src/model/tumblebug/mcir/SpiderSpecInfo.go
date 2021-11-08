@@ -10,7 +10,7 @@ type SpiderSpecInfo struct {
 	Mem          string              `json:"mem"`
 	Name         string              `json:"name"`
 	Region       string              `json:"region"`
-	Vcpu         SpiderVCpuInfo      `json:"ipProtocol"`
+	Vcpu         SpiderVCpuInfo      `json:"vCpu"`
 }
 
 type SpiderSpecInfos []SpiderSpecInfo

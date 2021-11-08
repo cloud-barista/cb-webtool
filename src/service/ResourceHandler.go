@@ -1647,7 +1647,7 @@ func DelVMSpec(nameSpaceID string, vmSpecID string) (model.WebStatus, model.WebS
 	// return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
-func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.SpiderImageInfos, model.WebStatus) {
+func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.SpiderSpecInfos, model.WebStatus) {
 	fmt.Println("LookupVmSpecInfoList ************ : ")
 	var originalUrl = "/lookupSpecs"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
@@ -1668,7 +1668,7 @@ func LookupVmSpecInfoList(connectionName *tbcommon.TbConnectionName) (tbmcir.Spi
 
 	// return respBody, respStatus
 	// log.Println(respBody)
-	vmSpecList := map[string]tbmcir.SpiderImageInfos{}
+	vmSpecList := map[string]tbmcir.SpiderSpecInfos{}
 
 	json.NewDecoder(respBody).Decode(&vmSpecList)
 	// fmt.Println(vmSpecList["vmspec"])

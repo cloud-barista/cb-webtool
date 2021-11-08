@@ -37,7 +37,7 @@ $(document).ready(function () {
 
     $('.btn_assist').on('click', function () {
         // lookupVmImageList()
-        showSpecAssistPopup();
+        showImageAssistPopup();
     });
 });
 
@@ -524,7 +524,7 @@ function showVirtualMachinImageInfo(target) {
 // }
 
 // Assist Popup
-function showSpecAssistPopup(){
+function showImageAssistPopup(){
     $("#imageAssist").modal();
 
     var regProviderName = $("#regProviderName").val();
@@ -535,8 +535,8 @@ function showSpecAssistPopup(){
     var connectionName = $("#regConnectionName").val();
     // assistConnectionName
 
-    if (!connectionName && connection != "") {
-        console.log("showSpecAssistPopup conn " + connectionName)
+    if (!connectionName && connectionName != "") {
+        console.log("showImageAssistPopup conn " + connectionName)
         $("#assistImageConnectionName option[value=" + connectionName + "]").prop('selected', true).change();
         lookupVmImageList()
     }

@@ -315,13 +315,13 @@
 							<div class="spec_box">
 								<div class="toptxt search">
 									<label>Search</label>
-									<input type="submit" name="" class="btn_search_spec" title="" value="" onclick="" />
+									<input type="submit" name="" class="btn_search_spec" title="" value="" onclick="lookupSpecList()" />
 									<ul>
 										<li class="reg_1">
 											<label>Cloud Provider</label>
-											<select class="selectbox white pline w3" name="ProviderName"
-												id="regProvider"
-												onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
+											<select class="selectbox white pline w3" name="assistSpecProviderName"
+												id="assistSpecProviderName"
+												onchange="getConnectionListForSelectbox(this.value, 'assistSpecConnectionName')">
 												<option value="" selected>Select Cloud Provider</option>
 												{{ range $item := .CloudOSList}}
 												<option value="{{ $item }}">{{ $item }}</option>
@@ -332,8 +332,8 @@
 										</li>
 										<li class="reg_1">
 											<label></span>Connection Name</label>
-											<select class="selectbox white pline w3" name="reg_connectionName"
-												id="regConnectionName" onchange="clearCspImageInfo()">
+											<select class="selectbox white pline w3" name="assistSpecConnectionName"
+												id="assistSpecConnectionName" onchange="clearAssistSpecList('assistSpecList')">
 												<option value="" selected>Selected ConnectionName</option>
 											</select>
 										</li>
