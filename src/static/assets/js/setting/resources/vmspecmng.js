@@ -34,7 +34,8 @@ $(document).ready(function () {
     setTableHeightForScroll('serverSpecList', 300)
 
     $('.btn_assist').on('click', function () {
-        lookupSpecList()
+        showSpecAssistPopup();
+        // lookupSpecList()
     });
 });
 
@@ -443,16 +444,41 @@ function deleteVmSpec() {
     });
 }
 
+function clearCspSpecInfo(){
+    $("#regSpecName").val();
+    $("#regCspSpecName").val();
+}
+
+function clearAssistSpecList(targetTableList){
+    $("#" + targetTableList).empty()
+}
+function showSpecAssistPopup(){
+    $("#specAssist").modal();
+
+    var regProviderName = $("#regProvider").val();
+    if( regProviderName ){
+        $("#assistSpecProviderName").val(regProviderName);
+        // $("#assistImageProviderName option[value=" + configName + "]").prop('selected', true).change();
+    }
+    var connectionName = $("#regConnectionName").val();
+    // assistConnectionName
+
+    if (!connectionName && connectionName != "") {
+        console.log("showSpecAssistPopup conn " + connectionName)
+        $("#assistSpecConnectionName option[value=" + connectionName + "]").prop('selected', true).change();
+        lookupSpecList()
+    }
+}
 // connection에 등록된 spec목록 조회(공통함수 호출)
 function lookupSpecList() {
     $("#assistSpecList").empty()
-    var connectionName = $("#regConnectionName").val();
+    var connectionName = $("#assistSpecConnectionName").val();
     if (!connectionName) {
         commonAlert("connection name required")
         return;
     }
 
-    $("#specAssist").modal();
+    // $("#specAssist").modal();
     $('.dtbox.scrollbar-inner').scrollbar();
 
     getCommonLookupSpecList("vmspecmng", connectionName);
@@ -504,10 +530,10 @@ function lookupSpecListCallbackSuccess(caller, data) {
             //     // console.log(mapIndex);
             //     mapValue += mapObj.Key + " : " + mapObj.Value + " <br/>";
             // });
-            var vpc = item.vcpc;
-            var vcpcValue = "";
-            if (vpc) {
-                vcpcValue = 'Clock : ' + vpc.clock + '<br/> count :' + vpc.count
+            var vCpu = item.vCpu;
+            var vCpuValue = "";
+            if (vCpu) {
+                vCpuValue = 'clock : ' + vCpu.clock + '<br/> count :' + vCpu.count
             }
             var gpu = item.gpu;
             var gpuValue = "";
@@ -522,7 +548,7 @@ function lookupSpecListCallbackSuccess(caller, data) {
                 + '<td class="overlay hidden" data-th="region">' + item.region + '</td>'
                 + '<td class="btn_mtd ovm" data-th="name ">' + item.name + '<span class="ov"></span></td>'
                 + '<td class="btn_mtd ovm" data-th="mem ">' + item.mem + '<span class="ov"></span></td>'
-                + '<td class="overlay hidden" data-th="vcpc">' + vcpcValue + '</td>'
+                + '<td class="overlay hidden" data-th="vcpu">' + vCpuValue + '</td>'
                 + '<td class="overlay hidden" data-th="gpu">' + gpuValue + '</td>'
                 + '</tr>'
         });
@@ -537,6 +563,8 @@ function lookupSpecListCallbackSuccess(caller, data) {
 // popup에서 main의 txtbox로 specName set
 function setCspSpecName(cspSpecName) {
     $("#regCspSpecName").val(cspSpecName);
+    $("#regProvider").val();//
+    // $("#assistSpecProviderName").val(regProviderName);
     $("#specAssist").modal("hide");
 }
 

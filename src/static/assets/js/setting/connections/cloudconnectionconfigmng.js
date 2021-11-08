@@ -810,7 +810,7 @@ function saveNewCredential() {
     var credentialInfo = "";
     // provider에 따라 사용하는 key가 불규칙적임.
 
-    if (providerName == "AWS") {
+    if (providerName == "AWS" || providerName == "TENCENT" ) {
         credentialInfo = {
             CredentialName: credentialName,
             ProviderName: providerName,
@@ -1090,7 +1090,7 @@ function selCredentialProvider(providerName) {
     liValue4.css("display", "")
 
     // 기본은 모두 보이게 이므로 특정 provider일 때 control
-    if (providerName == "AWS") {
+    if (providerName == "AWS" || providerName == "TENCENT") {
         key0.val("ClientId");
         key1.val("ClientSecret");
 
