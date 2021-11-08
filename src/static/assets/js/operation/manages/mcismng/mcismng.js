@@ -1,12 +1,11 @@
-
 var selectedMcis = "";// 선택 된 mcisId :// 다른 화면 등에서 mcisID를 넘겨주는 경우 사용
 $(document).ready(function(){
     checkLoadStatus();
 
     jQuery('.sc_box.scrollbar-inner').scrollbar();// CP / connectin의 구름 이미지들 창이 작아졌을 때 scroll 생기도록
 
-    // MCIS List의 상단 의 checkbox 클릭시 전체 선택하도록 
-    $("#th_chall").click(function () {
+    // MCIS List의 상단 의 checkbox 클릭시 전체 선택하도록
+    $("#th_chall").click(function() {
         if ($("#th_chall").prop("checked")) {
             $("input[name=chk]").prop("checked", true);
         } else {
@@ -14,7 +13,7 @@ $(document).ready(function(){
         }
     })
 
-    $("#mcisListTable").each(function () {
+    $("#mcisListTable").each(function(){
         var $sel_list = $(this);
         var $detail = $(".server_info");
         $status = $(".server_status")
@@ -22,14 +21,14 @@ $(document).ready(function(){
         // console.log($detail);
 
         console.log(">>>>>");
-        $sel_list.off("click").click(function () {
+        $sel_list.off("click").click(function(){
             $sel_list.addClass("active");
             $sel_list.siblings().removeClass("active");
             $detail.addClass("active");
             $detail.siblings().removeClass("active");
             $status.addClass("view");
-            $sel_list.off("click").click(function () {
-                if ($(this).hasClass("active")) {
+            $sel_list.off("click").click(function(){
+                if( $(this).hasClass("active") ) {
                     $sel_list.removeClass("active");
                     $detail.removeClass("active");
                     $status.removeClass("view");
@@ -48,8 +47,8 @@ $(document).ready(function(){
 
     // console.log(selectedMcisID);
     // Dashboard 등에서 선택한 MCIS Mng를 하면 해당 Mcis로만 보이도록 (전체에서 filter 기능만 수행)
-    if (selectedMcisID != undefined && selectedMcisID != "") {
-        // mcisList filter        
+    if( selectedMcisID != undefined && selectedMcisID != ""){
+        // mcisList filter
         filterTable("mcisListTable", "Name", selectedMcisID);
     }
 
@@ -59,11 +58,11 @@ $(document).ready(function(){
     // 상세 Tab 선택시 monitoring일 때 monitoring 조회
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href") // activated tab
-        if (target == '#McisMonitoring') {
+        if ( target == '#McisMonitoring'){
             var selectedMcisID = $("#selected_mcis_id").val();
             var selectedVmID = $("#selected_vm_id").val();
-            showVmMonitoring(selectedMcisID, selectedVmID)
-        } else if (target == '#McisConnection') {
+            showVmMonitoring(selectedMcisID,selectedVmID)
+        }else if ( target == '#McisConnection'){
             // 지도 표시
             var pointInfo = new Object();
             pointInfo.id = "1"
@@ -74,7 +73,6 @@ $(document).ready(function(){
             pointInfo.markerIndex = 1
             setMap(pointInfo);
         }
-
     });
 
 
@@ -89,45 +87,45 @@ $(document).ready(function(){
 
     //function getCommonNameSpaceList(caller, isCallback, targetObjId)
     getCommonNameSpaceList("mcismng", false, "menuNameSpaceList")// 왼쪽 메뉴 표시용
-    // connection
+	// connection
     getCommonCloudConnectionList("mcismng", true)
-    // // region
-    // getCommonRegionList("mcismng");
+	// // region
+	// getCommonRegionList("mcismng");
 
     // // resource
-    // // network(vnet)
-    // getCommonNetworkList("mcismng")
-    // // securitygroup
-    // getCommonSecurityGroupList("mcismng")
-    // // sshkey
-    // getCommonSshKeyList("mcismng")
+	// // network(vnet)
+	// getCommonNetworkList("mcismng")
+	// // securitygroup
+	// getCommonSecurityGroupList("mcismng")
+	// // sshkey
+	// getCommonSshKeyList("mcismng")
 
-    // // image
-    // getCommonVirtualMachineImageList("mcismng")
+	// // image
+	// getCommonVirtualMachineImageList("mcismng")
 
-    // // spec
-    // getCommonVirtualMachineSpecList("mcismng")
+	// // spec
+	// getCommonVirtualMachineSpecList("mcismng")
 
     // //
-    getCommonMcisList("mcismng", true, "", "status")
+	getCommonMcisList("mcismngready", true, "", "status")
 });
 
 
 ////////// 화면 Load 시 가져온 값들을 set하는 function들
-function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sortType) {
+function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sortType){
     var totalProviderCount = 0;
     var totalConnectionConfigCount = 0;
     var providerConnectionMap = new Map();
-    if (!isEmpty(connectionConfigList) && connectionConfigList.length) {
+    if(!isEmpty(connectionConfigList) && connectionConfigList.length){
         totalConnectionConfigCount = connectionConfigList.length;
 
         var providerArr = new Array();
-        for (var itemIndex in connectionConfigList) {
+        for(var itemIndex in connectionConfigList){
             var aConnectionConfig = connectionConfigList[itemIndex]
             // console.log(aConnectionConfig)
-            if (providerConnectionMap.has(aConnectionConfig.ProviderName)) {
+            if( providerConnectionMap.has(aConnectionConfig.ProviderName) ){
                 providerConnectionMap.set(aConnectionConfig.ProviderName, providerConnectionMap.get(aConnectionConfig.ProviderName) + 1)
-            } else {
+            }else{
                 providerConnectionMap.set(aConnectionConfig.ProviderName, 1)
             }
 
@@ -139,14 +137,13 @@ function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sor
     $("#providerCount").text(providerConnectionMap.size)
 
 
-    for (let item of providerConnectionMap) {
-        console.log(item[0] + ' , ' + item[1]);
-        $("#cpConnectionDetail").append('<li class="bg_etc bg_' + item[0].toLowerCase() + '"><a href="javascript:void(0);"><span class="conn_cnt">' + item[1] + '<div class="conn_tit">' + item[0] + '</div></span></a></li>');
+    for ( let item of providerConnectionMap ) {
+        console.log(item[0] +' , '+ item[1]);
+        $("#cpConnectionDetail").append('<li class="bg_etc bg_' + item[0].toLowerCase() +'"><a href="javascript:void(0);"><span class="conn_cnt">' + item[1]+ '<div class="conn_tit">' + item[0]+ '</div></span></a></li>');
     }
 }
 
 // MCIS 목록 조회 후 화면에 Set
-
 function getMcisListCallbackSuccess(caller, mcisList){
     totalMcisListObj = mcisList;
     setToTalMcisStatus();// mcis상태 표시 를 위해 필요
@@ -154,9 +151,12 @@ function getMcisListCallbackSuccess(caller, mcisList){
     setTotalConnection();// Mcis의 provider별 connection 표시를 위해 필요
 
     displayMcisListTable();
-
-
-
+    // console.log("caller = " + caller)
+    if( caller == "mcismngready"){
+        var selectedMcisID = $("#selected_mcis_id").val();
+        console.log(" selectedMcisID for filter " + selectedMcisID)
+        filterTable("mcisListTable", "Name", selectedMcisID);
+    }
     // // MCIS Status
     // var totalMcisCnt = 0;
     // var mcisStatusCountMap = new Map();
@@ -369,16 +369,15 @@ function getMcisListCallbackSuccess(caller, mcisList){
     //     $("#mcisList").empty();
     //     $("#mcisList").append(addMcis);
     // }
-
 }
 
 // 조회 실패시.
-function getMcisListCallbackFail(caller, error) {
+function getMcisListCallbackFail(caller, error){
     // List table에 no data 표시? 또는 조회 오류를 표시?
     var addMcis = "";
-    addMcis += '<tr>'
-    addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
-    addMcis += '</tr>'
+        addMcis += '<tr>'
+        addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
+        addMcis += '</tr>'
     $("#mcisList").empty();
     $("#mcisList").append(addMcis);
 }
@@ -465,7 +464,7 @@ function setMcisData(mcisInfo, mcisIndex){
 ///////////// MCIS Handling //////////////
 
 // 등록 form으로 이동
-function createNewMcis() {// Manage_MCIS_Life_Cycle_popup.html
+function createNewMcis(){// Manage_MCIS_Life_Cycle_popup.html
     var targetUrl = "/operation/manage" + "/mcismng/regform"
     // location.href = "/Manage/MCIS/reg"
     // $('#loadingContainer').show();
@@ -473,79 +472,79 @@ function createNewMcis() {// Manage_MCIS_Life_Cycle_popup.html
     changePage(targetUrl)
 }
 
-// MCIS 제어 : 선택한 VM의 상태 변경 
+// MCIS 제어 : 선택한 VM의 상태 변경
 // callMcisLifeCycle -> util.callMcisLifeCycle -> callbackMcisLifeCycle 순으로 호출 됨
-function callMcisLifeCycle(type) {
+function callMcisLifeCycle(type){
     var checked_nothing = 0;
-    $("[id^='td_ch_']").each(function () {
+    $("[id^='td_ch_']").each(function(){
 
-        if ($(this).is(":checked")) {
+        if($(this).is(":checked")){
             checked_nothing++;
             console.log("checked")
             var mcisID = $(this).val()
             mcisLifeCycle(mcisID, type);
-        } else {
+        }else{
             console.log("checked nothing")
 
         }
     })
-    if (checked_nothing == 0) {
+    if(checked_nothing == 0){
         commonAlert("Please Select MCIS!!")
         return;
     }
 }
 
 // McisLifeCycle을 호출 한 뒤 return값 처리
-function callbackMcisLifeCycle(resultStatus, resultData, type) {
-    var message = "MCIS " + type + " complete!."
-    if (resultStatus == 200 || resultStatus == 201) {
+function callbackMcisLifeCycle(resultStatus, resultData, type){
+    var message = "MCIS "+type+ " complete!."
+    if(resultStatus == 200 || resultStatus == 201){
         commonAlert(message);
         location.reload();//완료 후 페이지를 reload -> 해당 mcis만 reload
         // 해당 mcis 조회
         // 상태 count 재설정
-    } else {
+    }else{
         commonAlert("MCIS " + type + " failed!");
     }
 }
 
 // list에 선택된 MCIS 제거. 1개씩
-function deleteMCIS() {
+function deleteMCIS(){
     var checkedCount = 0;
     var mcisID = "";
-    $("[id^='td_ch_']").each(function () {
+    $("[id^='td_ch_']").each(function(){
 
-        if ($(this).is(":checked")) {
+        if($(this).is(":checked")){
             checkedCount++;
             console.log("checked")
             mcisID = $(this).val();
             // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
-        } else {
+        }else{
             console.log("checked nothing")
 
         }
     })
 
-    if (checkedCount == 0) {
+    if(checkedCount == 0){
         commonAlert("Please Select MCIS!!")
         return;
-    } else if (checkedCount > 1) {
+    }else if( checkedCount > 1){
         commonAlert("Please Select One MCIS at a time")
         return;
     }
 
     // TODO : 삭제 호출부분 function으로 뺼까?
     var url = "/operation/manages/mcismng/" + mcisID;
-    axios.delete(url, {})
-        .then(result => {
-            console.log("get  Data : ", result.data);
+    axios.delete(url,{})
+        .then(result=>{
+            console.log("get  Data : ",result.data);
 
             var statusCode = result.data.status;
             var message = result.data.message;
 
-            if (statusCode != 200 && statusCode != 201) {
-                commonAlert(message + "(" + statusCode + ")");
+            if( statusCode != 200 && statusCode != 201) {
+                commonAlert(message +"(" + statusCode + ")");
                 return;
-            } else {
+            }else{
                 commonAlert(message);
                 // TODO : MCIS List 조회
                 location.reload();
@@ -560,19 +559,19 @@ function deleteMCIS() {
         });
 
 }
-////////////// MCIS Handling end //////////////// 
+////////////// MCIS Handling end ////////////////
 
 
 
 ////////////// VM Handling ///////////
-function addNewVirtualMachine() {
+function addNewVirtualMachine(){
     var mcis_id = $("#mcis_id").val()
     var mcis_name = $("#mcis_name").val()
     // location.href = "/Manage/MCIS/reg/"+mcis_id+"/"+mcis_name
-    location.href = "/operation/manages/mcismng/regform/" + mcis_id + "/" + mcis_name;
+    location.href = "/operation/manages/mcismng/regform/"+mcis_id+"/"+mcis_name;
 }
 
-function vmLifeCycle(type) {
+function vmLifeCycle(type){
     var mcisID = $("#mcis_id").val();
     var vmID = $("#vm_id").val();
     var vmName = $("#vm_name").val();
@@ -587,11 +586,11 @@ function vmLifeCycle(type) {
     //     }
     // })
     // return;
-    if (!mcisID) {
+    if(!mcisID){
         commonAlert("Please Select MCIS!!")
         return;
     }
-    if (!vmID) {
+    if(!vmID){
         commonAlert("Please Select VM!!")
         return;
     }
@@ -617,32 +616,32 @@ function vmLifeCycle(type) {
     /////////
     // + mcis + "/vm/" + vm_id + "/action/" + type
 
-    console.log("life cycle3 url : ", url);
+    console.log("life cycle3 url : ",url);
 
-    var message = vmName + " " + type + " complete!."
+    var message = vmName+" "+type+ " complete!."
     var obj = {
-        mcisID: mcisID,
-        vmID: vmID,
-        lifeCycleType: type
-    }
-    axios.post(url, obj, {
+        mcisID : mcisID,
+        vmID : vmID,
+        lifeCycleType : type
+     }
+    axios.post(url,obj,{
         headers: {
             'Content-type': 'application/json',
-            // 'Authorization': apiInfo, 
+            // 'Authorization': apiInfo,
         }
-        // })
-        // axios.post(url,{
-        //     headers: { },
+    // })
+    // axios.post(url,{
+    //     headers: { },
         // mcisID:mcis_id,
         // vmID:vm_id,
         // vmLifeCycleType:type
-    }).then(result => {
+    }).then(result=>{
         var status = result.status
 
-        console.log("life cycle result : ", result)
+        console.log("life cycle result : ",result)
         var data = result.data
-        console.log("result Message : ", data.message)
-        if (status == 200 || status == 201) {
+        console.log("result Message : ",data.message)
+        if(status == 200 || status == 201){
             commonAlert(message);
             location.reload();// TODO 일단은 Reaoad : 해당 영역(MCIS의 VM들 status 조회)를 refresh할 수 있는 기능 필요
             //show_mcis(mcis_url,"");
@@ -663,13 +662,11 @@ const config_arr = new Array();
 // 각 mcis 별 vmstatus 목록
 
 
-// List Of MCIS 클릭 시 
+// List Of MCIS 클릭 시
 // mcis 테이블의 선택한 row 강조( on )
 // 해당 MCIS의 VM 상태목록 보여주는 함수 호출
-
 function clickListOfMcis(mcisID, mcisIndex){
     console.log("click view mcis id :",mcisID)
-    
 
     // MCIS Info 에 mcis id 표시
     $("#mcis_id").val(mcisID);
@@ -677,10 +674,8 @@ function clickListOfMcis(mcisID, mcisIndex){
     $("#selected_mcis_index").val(mcisIndex);
 
     // MCIS Info area set
-
     //showServerListAndStatusArea(mcisID,mcisIndex);
     displayMcisInfoArea(totalMcisListObj[mcisIndex]);
-
 
     //makeMcisScript(index);// export를 위한 script 준비 -> Export 실행할 때 가져오는 것으로 변경( MCIS정보는 option=simple로 가져오므로)
 }
@@ -690,25 +685,25 @@ const mcisInfoDataList = new Array()// test_arr : mcisInfo 1개 전체, pageLoad
 // MCIS Info area 안의 Server List / Status 내용 표시
 // 해당 MCIS의 모든 VM 표시
 // TODO : 클릭했을 때 서버에서 조회하는것으로 변경할 것.
-function showServerListAndStatusArea(mcis_id, mcisIndex) {
+function showServerListAndStatusArea(mcis_id, mcisIndex){
 
-    var mcisID = $("#mcisID" + mcisIndex).val();
-    var mcisName = $("#mcisName" + mcisIndex).val();
-    var mcisDescription = $("#mcisDescription" + mcisIndex).val();
-    var mcisStatus = $("#mcisStatus" + mcisIndex).val();
-    var mcisTargetStatus = $("#mcisTargetStatus" + mcisIndex).val();
-    var mcisTargetAction = $("#mcisTargetAction" + mcisIndex).val();
+    var mcisID =  $("#mcisID" + mcisIndex).val();
+    var mcisName =  $("#mcisName" + mcisIndex).val();
+    var mcisDescription =  $("#mcisDescription" + mcisIndex).val();
+    var mcisStatus =  $("#mcisStatus" + mcisIndex).val();
+    var mcisTargetStatus =  $("#mcisTargetStatus" + mcisIndex).val();
+    var mcisTargetAction =  $("#mcisTargetAction" + mcisIndex).val();
     var mcisDispStatus = getMcisStatusDisp(mcisStatus);
     var mcisCloudConnections = $("#mcisCloudConnections" + mcisIndex).val();
     var vmTotalCountOfMcis = $("#mcisVmTotalCount" + mcisIndex).val();
     var vms = $("#mcisVmStatusList" + mcisIndex).val();
 
-    $("#mcis_info_txt").text("[ " + mcisName + " ]");
+    $("#mcis_info_txt").text("[ "+ mcisName +" ]");
     $("#mcis_server_info_status").empty();
-    $("#mcis_server_info_status").append('<strong>Server List / Status</strong>  <span class="stxt">[ ' + mcisName + ' ]</span>  Server(' + vmTotalCountOfMcis + ')')
+    $("#mcis_server_info_status").append('<strong>Server List / Status</strong>  <span class="stxt">[ '+mcisName+' ]</span>  Server('+vmTotalCountOfMcis+')')
 
     //
-    $("#mcis_info_name").val(mcisName + " / " + mcisID)
+    $("#mcis_info_name").val(mcisName+" / "+mcisID)
     $("#mcis_info_description").val(mcisDescription);
     $("#mcis_info_targetStatus").val(mcisTargetStatus);
     $("#mcis_info_targetAction").val(mcisTargetAction);
@@ -717,7 +712,6 @@ function showServerListAndStatusArea(mcis_id, mcisIndex) {
     $("#mcis_name").val(mcisName)
 
     var mcis_badge = "";
-
     var mcisStatusIcon = getMcisStatusIcon(mcisDispStatus);
     // var mcisStatusIcon = "";
     // if(mcisDispStatus == "running"){ mcisStatusIcon = "icon_running_db.png"
@@ -766,7 +760,6 @@ function showServerListAndStatusArea(mcis_id, mcisIndex) {
     // $("#mcis_server_info_box").empty();
     // $("#mcis_server_info_box").append(vm_badge);
 
-
     // var sta = mcisStatus;
     // var sl = sta.split("-");
     // var status = sl[0].toLowerCase()
@@ -787,7 +780,7 @@ function showServerListAndStatusArea(mcis_id, mcisIndex) {
 
     //     var vmStatusIcon ="bgbox_g";
 
-    //     if(vmStatus == "running"){ 
+    //     if(vmStatus == "running"){
     //         vmStatusIcon ="bgbox_b"
     //     }else if(vmStatus == "include" ){
     //         vmStatusIcon ="bgbox_g"
@@ -903,18 +896,18 @@ function refreshVmDetailInfo(){
     vmDetailInfo(mcisID, '', vmID)
 }
 
-// VM 목록에서 VM 클릭시 해당 VM의 상세정보 
-function vmDetailInfo(mcisID, mcisName, vmID) {
+// VM 목록에서 VM 클릭시 해당 VM의 상세정보
+function vmDetailInfo(mcisID, mcisName, vmID){
     var url = "/operation/manages/mcismng/" + mcisID + "/vm/" + vmID
-    axios.get(url, {})
-        .then(result => {
-            console.log("get  Data : ", result.data);
+    axios.get(url,{})
+        .then(result=>{
+            console.log("get  Data : ",result.data);
 
             var statusCode = result.data.status;
             var message = result.data.message;
 
-            if (statusCode != 200 && statusCode != 201) {
-                commonAlert(message + "(" + statusCode + ")");
+            if( statusCode != 200 && statusCode != 201) {
+                commonAlert(message +"(" + statusCode + ")");
                 return;
             }
             var data = result.data.VmInfo;
@@ -926,11 +919,6 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             var vmDescription = data.description;
             var vmPublicIp = data.publicIP == undefined ? "" : data.publicIP;
             var vmSshKeyID = data.sshKeyId;
-
-            //mark active
-            $(`#${vmID}`).addClass("active");
-            $(`#${vmID}`).siblings().removeClass("active");
-
             //vm info
             $("#vm_id").val(vmId);
             $("#vm_name").val(vmName);
@@ -940,8 +928,10 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             $("#manage_mcis_popup_mcis_id").val(mcisID)
             $("#manage_mcis_popup_sshkey_name").val(vmSshKeyID)
 
+            $("#server_info_text").text('['+vmName+'/'+mcisName+']')
+            $("#server_detail_info_text").text('['+vmName+'/'+mcisName+']')
 
-            
+
             var vmBadge =""
             var vmStatusIcon = getVmStatusIcon(vmStatus)
             // var vmStatusIcon = "icon_running_db.png";
@@ -958,18 +948,17 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             // }
             //var vmBadge = '<img src="/assets/img/contents/' + vmStatusIcon +'" alt="' + vmStatus + '"/>'
 
-
             $("#server_detail_view_server_status").val(vmStatus);
             // $("#server_info_status_img").empty()
             // $("#server_info_status_img").append(vmBadge)
             $("#server_info_status_icon_img\n").attr("src", vmStatusIcon);
 
-            $("#server_info_name").val(vmName + "/" + vmID)
+            $("#server_info_name").val(vmName +"/"+ vmID)
             $("#server_info_desc").val(vmDescription)
 
             // ip information
             $("#server_info_public_ip").val(vmPublicIp)
-            $("#server_detail_info_public_ip_text").text("Public IP : " + vmPublicIp)
+            $("#server_detail_info_public_ip_text").text("Public IP : "+vmPublicIp)
             $("#server_info_public_dns").val(data.publicDNS)
             $("#server_info_private_ip").val(data.privateIP)
             $("#server_info_private_dns").val(data.privateDNS)
@@ -987,9 +976,9 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             // var vmDetailKeyValueList = vmDetail.KeyValueList
             var vmDetailKeyValueList = vmDetail.keyValueList
             var architecture = "";
-            if (vmDetailKeyValueList) {
+            if(vmDetailKeyValueList){
                 for (var keyIndex in vmDetailKeyValueList) {
-                    if (vmDetailKeyValueList[keyIndex].key == "Architecture") {// ?? 이게 뭐지?
+                    if( vmDetailKeyValueList[keyIndex].key == "Architecture"){// ?? 이게 뭐지?
                         architecture = vmDetailKeyValueList[keyIndex].value
                         break;
                     }
@@ -998,14 +987,14 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
                 // console.log("architecture : ",architecture.length)
                 // if(architecture.length > 0){
                 //     architecture = architecture[0].Value
-                //     console.log("architecture2 : ",architecture)                    
+                //     console.log("architecture2 : ",architecture)
                 // }
                 // console.log("architecture = " + architecture)
                 $("#server_info_archi").val(architecture)
                 $("#server_detail_view_archi").val(architecture)
             }
             //    // server spec
-            // var vmSecName = data.VmSpecName            
+            // var vmSecName = data.VmSpecName
             var vmSpecName = vmDetail.vmspecName;
             $("#server_info_vmspec_name").val(vmSpecName)
             $("#server_detail_view_server_spec").text(vmSpecName)
@@ -1020,19 +1009,19 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             var locationInfo = data.location;
             var cloudType = locationInfo.cloudType;
             var cspIcon = ""
-            if (cloudType == "aws") {
+            if(cloudType == "aws"){
                 cspIcon = "img_logo1"
-            } else if (cloudType == "azure") {
+            }else if(cloudType == "azure"){
                 cspIcon = "img_logo5"
-            } else if (cloudType == "gcp") {
+            }else if(cloudType == "gcp"){
                 cspIcon = "img_logo7"
-            } else if (cloudType == "cloudit") {
+            }else if(cloudType == "cloudit"){
                 cspIcon = "img_logo6"
-            } else if (cloudType == "openstack") {
+            }else if(cloudType == "openstack"){
                 cspIcon = "img_logo9"
-            } else if (cloudType == "alibaba") {
+            }else if(cloudType == "alibaba"){
                 cspIcon = "img_logo4"
-            } else {
+            }else{
                 csp_icon = '<img src="/assets/img/contents/img_logo1.png" alt=""/>'
             }
             $("#server_info_csp_icon").empty()
@@ -1046,7 +1035,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             var briefAddr = locationInfo.briefAddr;
             var nativeRegion = locationInfo.nativeRegion;
 
-            if (locationInfo) {
+            if( locationInfo){
                 $("#server_location_latitude").val(latitude)
                 $("#server_location_longitude").val(longitude)
 
@@ -1067,14 +1056,14 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             // var zone = data.region.zone
             var zone = data.region.zone
             console.log(vmDetail.iid);
-            $("#server_info_region").val(briefAddr + ":" + region)
+            $("#server_info_region").val(briefAddr +":"+region)
             $("#server_info_zone").val(zone)
-            $("#server_info_cspVMID").val("cspVMID : " + vmDetail.iid.nameId)
+            $("#server_info_cspVMID").val("cspVMID : "+vmDetail.iid.nameId)
 
-            $("#server_detail_view_region").val(briefAddr + " : " + region)
+            $("#server_detail_view_region").val(briefAddr +" : "+region)
             $("#server_detail_view_zone").val(zone)
 
-            $("#server_connection_view_region").val(briefAddr + "(" + region + ")")
+            $("#server_connection_view_region").val(briefAddr +"("+region+")")
             $("#server_connection_view_zone").val(zone)
 
             // connection name
@@ -1083,8 +1072,8 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             $("#server_connection_view_connection_name").val(connectionName)
 
             // credential and driver info
-            console.log("connectionConfig : ", connectionConfig)
-            if (connectionConfig) {
+            console.log("connectionConfig : ",connectionConfig)
+            if(connectionConfig){
                 var credentialName = connectionConfig.CredentialName
                 var driverName = connectionConfig.DriverName
                 $("#server_connection_view_credential_name").val(credentialName)
@@ -1099,8 +1088,8 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             // image id
             var imageIId = vmDetail.imageIId.nameId
             var imageId = data.imageId
-            getCommonVmImageInfo('mcisvmdetail', imageId) // 
-            $("#server_detail_view_image_id").text(imageId + "(" + imageIId + ")")
+            getCommonVmImageInfo('mcisvmdetail', imageId) //
+            $("#server_detail_view_image_id").text(imageId+"("+imageIId+")")
 
             //vpc subnet
             var vpcId = vmDetail.vpcIID.nameId
@@ -1108,15 +1097,15 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             var subnetId = vmDetail.subnetIID.nameId
             var subnetSystemId = vmDetail.subnetIID.systemId
             var eth = vmDetail.networkInterface
-            $("#server_detail_view_vpc_id").text(vpcId + "(" + vpcSystemId + ")")
+            $("#server_detail_view_vpc_id").text(vpcId+"("+vpcSystemId+")")
             // set_vmVPCInfo(vpcId, subnetId);
 
-            $("#server_detail_view_subnet_id").text(subnetId + "(" + subnetSystemId + ")")
+            $("#server_detail_view_subnet_id").text(subnetId+"("+subnetSystemId+")")
             $("#server_detail_view_eth").val(eth)
 
             // user account
-            $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId + "/ *** ")
-            $("#server_detail_view_user_id_pass").val(data.vmUserAccount + "/ *** ")
+            $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId +"/ *** ")
+            $("#server_detail_view_user_id_pass").val(data.vmUserAccount +"/ *** ")
             $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
 
 
@@ -1124,41 +1113,41 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
 
             var sg_arr = vmDetail.securityGroupIIds
             console.log(sg_arr);
-            if (sg_arr) {
-                sg_arr.map((item, index) => {
+            if(sg_arr){
+                sg_arr.map((item,index)=>{
                     console.log("item index = " + index)
-                    append_sg += '<a href="javascript:void(0);" onclick="getCommonVmSecurityGroupInfo(\'mcisvm\',\'' + item.nameId + '\');"title="' + item.nameId + '" >' + item.nameId + '</a> '
+                    append_sg +='<a href="javascript:void(0);" onclick="getCommonVmSecurityGroupInfo(\'mcisvm\',\''+item.nameId+'\');"title="'+item.nameId+'" >'+item.nameId+'</a> '
                 })
             }
-            console.log("append sg : ", append_sg)
+            console.log("append sg : ",append_sg)
 
             $("#server_detail_view_security_group").empty()
             $("#server_detail_view_security_group").append(append_sg);
 
             $("#server_detail_view_keypair_name").val(vmDetail.keyPairIId.nameId)
-            // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인 
+            // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인
             ////// vm connection tab //////
 
 
             $("#selected_mcis_id").val(mcisID);
             $("#selected_vm_id").val(vmID);
             var installMonAgent = data.monAgentStatus;
-            console.log("install mon agent : ", installMonAgent)
-            if (installMonAgent == "installed") {
+            console.log("install mon agent : ",installMonAgent)
+            if(installMonAgent == "installed"){
                 var isWorking = checkDragonFlyMonitoringAgent(mcisID, vmID);
-                if (isWorking) {
-                    $("#mcis_detail_info_check_monitoring").prop("checked", true)
-                    $("#mcis_detail_info_check_monitoring").attr("disabled", true)
-                } else {
-                    $("#mcis_detail_info_check_monitoring").prop("checked", false)
-                    $("#mcis_detail_info_check_monitoring").attr("disabled", false)
+                if( isWorking){
+                    $("#mcis_detail_info_check_monitoring").prop("checked",true)
+                    $("#mcis_detail_info_check_monitoring").attr("disabled",true)
+                }else{
+                    $("#mcis_detail_info_check_monitoring").prop("checked",false)
+                    $("#mcis_detail_info_check_monitoring").attr("disabled",false)
                 }
-            } else {
-                $("#mcis_detail_info_check_monitoring").prop("checked", false)
-                $("#mcis_detail_info_check_monitoring").attr("disabled", false)
+            }else{
+                $("#mcis_detail_info_check_monitoring").prop("checked",false)
+                $("#mcis_detail_info_check_monitoring").attr("disabled",false)
             }
 
-            ////// vm mornitoring tab 으로 이동 //////            
+            ////// vm mornitoring tab 으로 이동 //////
             // install Mon agent
             // showVmMonitoring(mcisID,vmID)
 
@@ -1180,18 +1169,18 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             $("#m_exportFileName_" + mcisIndex + "_"+ vmIndex).val(vmName);
             $("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
         }
-            // ).catch(function(error){
-            //     var statusCode = error.response.data.status;
-            //     var message = error.response.data.message;
-            //     commonErrorAlert(statusCode, message)        
-            // });
-        ).catch((error) => {
-            console.warn(error);
-            console.log(error.response)
-            var errorMessage = error.response.statusText;
-            var statusCode = error.response.status;
-            commonErrorAlert(statusCode, errorMessage)
-        });
+    // ).catch(function(error){
+    //     var statusCode = error.response.data.status;
+    //     var message = error.response.data.message;
+    //     commonErrorAlert(statusCode, message)
+    // });
+    ).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.statusText;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage)
+    });
 
     // $("#Detail").show();// 첫번째 Detail tab 표시.
     $('[href="#Detail"]').tab('show');
@@ -1199,123 +1188,123 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
     /////////////////////
 
 
-    //    // credential and driver info
-    //    console.log("config arr2 : ",config_arr)
-    //    console.log("connection_name :",connection_name)
-    //    var arr_config = config_arr
-    //    console.log("arr_config : ",arr_config);
-    //    if(arr_config){
-    //        var config_info = arr_config.filter(cred => cred.ConfigName === connection_name)[0]
-    //        console.log("inner config info : ",config_info)
-    //        console.log("config_info : ",config_info)
-    //        var credentialName = config_info.CredentialName
-    //        var driverName = config_info.DriverName
-    //        $("#server_connection_view_credential_name").val(credentialName)
-    //        $("#server_connection_view_driver_name").val(driverName)
-    //    }
+//    // credential and driver info
+//    console.log("config arr2 : ",config_arr)
+//    console.log("connection_name :",connection_name)
+//    var arr_config = config_arr
+//    console.log("arr_config : ",arr_config);
+//    if(arr_config){
+//        var config_info = arr_config.filter(cred => cred.ConfigName === connection_name)[0]
+//        console.log("inner config info : ",config_info)
+//        console.log("config_info : ",config_info)
+//        var credentialName = config_info.CredentialName
+//        var driverName = config_info.DriverName
+//        $("#server_connection_view_credential_name").val(credentialName)
+//        $("#server_connection_view_driver_name").val(driverName)
+//    }
 
 
 
 
-    //    // server id / system id
-    //    $("#server_detail_view_server_id").val(select_vm.id)
-    //    // systemid 를 사용할 경우 아래 꺼 사용
-    //    //$("#server_detail_view_server_id").val(vm_detail.IId.SystemId)
+//    // server id / system id
+//    $("#server_detail_view_server_id").val(select_vm.id)
+//    // systemid 를 사용할 경우 아래 꺼 사용
+//    //$("#server_detail_view_server_id").val(vm_detail.IId.SystemId)
 
-    //    // image id
-    //    var imageIId = vm_detail.ImageIId.NameId
-    //    var imageId = select_vm.imageId
-    //    set_vmImageInfo(imageId)
-    //    $("#server_detail_view_image_id_text").text(imageId+"("+imageIId+")")
+//    // image id
+//    var imageIId = vm_detail.ImageIId.NameId
+//    var imageId = select_vm.imageId
+//    set_vmImageInfo(imageId)
+//    $("#server_detail_view_image_id_text").text(imageId+"("+imageIId+")")
 
-    //    //vpc subnet
-    //    var vpcId = vm_detail.VpcIID.NameId
-    //    var vpcSystemId = vm_detail.VpcIID.SystemId
-    //    var subnetId = vm_detail.SubnetIID.NameId
-    //    var subnetSystemId = vm_detail.SubnetIID.SystemId
-    //    var eth = vm_detail.NetworkInterface
-    //    $("#server_detail_view_vpc_id_text").text(vpcId+"("+vpcSystemId+")")
-    //    set_vmVPCInfo(vpcId, subnetId);
+//    //vpc subnet
+//    var vpcId = vm_detail.VpcIID.NameId
+//    var vpcSystemId = vm_detail.VpcIID.SystemId
+//    var subnetId = vm_detail.SubnetIID.NameId
+//    var subnetSystemId = vm_detail.SubnetIID.SystemId
+//    var eth = vm_detail.NetworkInterface
+//    $("#server_detail_view_vpc_id_text").text(vpcId+"("+vpcSystemId+")")
+//    set_vmVPCInfo(vpcId, subnetId);
 
-    //    $("#server_detail_view_subnet_id_text").text(subnetId+"("+subnetSystemId+")")
-    //    $("#server_detail_view_eth_text").val(eth)
+//    $("#server_detail_view_subnet_id_text").text(subnetId+"("+subnetSystemId+")")
+//    $("#server_detail_view_eth_text").val(eth)
 
-    //    // install Mon agent
-    //    var installMonAgent = select_vm.monAgentStatus
-    //    checkDragonFly(mcis_id,vm_id)
+//    // install Mon agent
+//    var installMonAgent = select_vm.monAgentStatus
+//    checkDragonFly(mcis_id,vm_id)
 
-    //    // device info
-    //    var root_device_type = vm_detail.VMBootDisk
-    //    var root_device = vm_detail.VMBootDisk
-    //    var block_device = vm_detail.VMBlockDisk
-    //    $("#server_detail_view_root_device_type").val(root_device_type)
-    //    $("#server_detail_view_root_device").val(root_device)
-    //    $("#server_detail_view_block_device").val(block_device)
+//    // device info
+//    var root_device_type = vm_detail.VMBootDisk
+//    var root_device = vm_detail.VMBootDisk
+//    var block_device = vm_detail.VMBlockDisk
+//    $("#server_detail_view_root_device_type").val(root_device_type)
+//    $("#server_detail_view_root_device").val(root_device)
+//    $("#server_detail_view_block_device").val(block_device)
 
-    //     // key pair info
+//     // key pair info
 
-    //     $("#server_detail_view_keypair_name").val(vm_detail.KeyPairIId.NameId)
-    //     var sshkey = vm_detail.KeyPairIId.NameId
-    //     if(sshkey){
-    //        set_vmSSHInfo(sshkey)
-    //     }
-    //     // user account
-    //     $("#server_detail_view_access_id_pass").val(vm_detail.VMUserId +"/"+vm_detail.VMUserPasswd)
-    //     $("#server_detail_view_user_id_pass").val(select_vm.vmUserAccount +"/"+select_vm.vmUserPassword)
-    //     $("#manage_mcis_popup_user_name").val(select_vm.vmUserAccount)
+//     $("#server_detail_view_keypair_name").val(vm_detail.KeyPairIId.NameId)
+//     var sshkey = vm_detail.KeyPairIId.NameId
+//     if(sshkey){
+//        set_vmSSHInfo(sshkey)
+//     }
+//     // user account
+//     $("#server_detail_view_access_id_pass").val(vm_detail.VMUserId +"/"+vm_detail.VMUserPasswd)
+//     $("#server_detail_view_user_id_pass").val(select_vm.vmUserAccount +"/"+select_vm.vmUserPassword)
+//     $("#manage_mcis_popup_user_name").val(select_vm.vmUserAccount)
 
-    //     // namespace 
-    //     var ns_id = NAMESPACE
-    //     $("#manage_mcis_popup_ns_id").val(ns_id)
+//     // namespace
+//     var ns_id = NAMESPACE
+//     $("#manage_mcis_popup_ns_id").val(ns_id)
 
 
-    //     // security Gorup
-    //    var append_sg = ''
+//     // security Gorup
+//    var append_sg = ''
 
-    //    var sg_arr = vm_detail.SecurityGroupIIds
-    //    if(sg_arr){
-    //        //여기서 호출해서 세부 값을 가져 오자
+//    var sg_arr = vm_detail.SecurityGroupIIds
+//    if(sg_arr){
+//        //여기서 호출해서 세부 값을 가져 오자
 
-    //        sg_arr.map((item,index)=>{
+//        sg_arr.map((item,index)=>{
 
-    //            append_sg +='<a href="javascript:void(0);" onclick="set_vmSecurityGroupInfo(\''+item.NameId+'\');"title="'+item.NameId+'" >'+item.NameId+'</a> '
-    //        })
-    //    }
+//            append_sg +='<a href="javascript:void(0);" onclick="set_vmSecurityGroupInfo(\''+item.NameId+'\');"title="'+item.NameId+'" >'+item.NameId+'</a> '
+//        })
+//    }
 
-    //    console.log("append sg : ",append_sg)
+//    console.log("append sg : ",append_sg)
 
-    //    $("#server_detail_view_security_group").empty()
-    //    $("#server_detail_view_security_group").append(append_sg);
+//    $("#server_detail_view_security_group").empty()
+//    $("#server_detail_view_security_group").append(append_sg);
 
 }
 
 
 // 조회 성공 시 Monitoring Tab 표시
-function showVmMonitoring(mcisID, vmID) {
-    $("#mcis_detail_info_check_monitoring").prop("checked", true)
-    $("#mcis_detail_info_check_monitoring").attr("disabled", true)
+function showVmMonitoring(mcisID, vmID){
+    $("#mcis_detail_info_check_monitoring").prop("checked",true)
+    $("#mcis_detail_info_check_monitoring").attr("disabled",true)
     // $("#Monitoring_tab").show();
     //var duration = "5m"
     var duration = "30m"
     var period_type = "m"
-    var metric_arr = ["cpu", "memory", "disk", "network"];
+    var metric_arr = ["cpu","memory","disk","network"];
     var statisticsCriteria = "last";
-    // TODO : Analytics View 는 안보이게 
-    for (var i in metric_arr) {
-        getVmMetric("canvas_" + i, metric_arr[i], mcisID, vmID, metric_arr[i], period_type, statisticsCriteria, duration);
+    // TODO : Analytics View 는 안보이게
+    for(var i in metric_arr){
+        getVmMetric("canvas_"+i,metric_arr[i],mcisID,vmID,metric_arr[i],period_type,statisticsCriteria,duration);
     }
     //$("#Monitoring_tab").hide();
 
-}
+ }
 
 
-// getVMMetric 는 mcis.chart.js로 이동 
+// getVMMetric 는 mcis.chart.js로 이동
 
 
 ////////////////
 
 // MCIS script export
-function mcisScriptExport() {
+function mcisScriptExport(){
 
     // var mcisID = $("#mcis_id").val();
     var vmID = $("#vm_id").val();
@@ -1323,23 +1312,23 @@ function mcisScriptExport() {
 
     var checkedCount = 0;
     var mcisID = "";
-    $("[id^='td_ch_']").each(function () {
+    $("[id^='td_ch_']").each(function(){
 
-        if ($(this).is(":checked")) {
+        if($(this).is(":checked")){
             checkedCount++;
             console.log("checked")
             mcisID = $(this).val();
             // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
-        } else {
+        }else{
             console.log("checked nothing")
 
         }
     })
 
-    if (checkedCount == 0) {
+    if(checkedCount == 0){
         commonAlert("Please Select MCIS!!")
         return;
-    } else if (checkedCount > 1) {
+    }else if( checkedCount > 1){
         commonAlert("Please Select One MCIS at a time")
         return;
     }
@@ -1349,13 +1338,12 @@ function mcisScriptExport() {
     var vmIndex = 0;
     //mcisID{{$index}}
     console.log("mcisScriptExport start")
-    $("[id^='mcisID']").each(function () {
-        if (mcisID == $(this).val()) {
+    $("[id^='mcisID']").each(function(){
+        if( mcisID == $(this).val()){
             mcisIndex = $(this).attr("id").replace("mcisID", "")
             return false;
         }
     });
-
 
     // MCIS정보를 가져온 뒤 save하자.
     getCommonMcisData('mcisexport', mcisID);
@@ -1367,11 +1355,10 @@ function mcisScriptExport() {
     // console.log("mcisscript")
     // console.log($("#m_mcisExportScript_" + mcisIndex).val())
     // saveToMcisAsJsonFile(mcisIndex, vmIndex);
-
 }
 
 // vm script export
-function vmScriptExport() {
+function vmScriptExport(){
 
     var mcisID = $("#mcis_id").val();
     var vmID = $("#vm_id").val();
@@ -1380,8 +1367,8 @@ function vmScriptExport() {
     // 위 값으로 mcisIndex, vmIndex 를 찾자
     var mcisIndex = 0;
     var vmIndex = 0;
-    $("[id^='mcisVmID_']").each(function () {
-        if (vmID == $(this).val()) {
+    $("[id^='mcisVmID_']").each(function(){
+        if( vmID == $(this).val()){
             var mcisVm = $(this).attr("id").split("_")
             mcisIndex = mcisVm[1]
             vmIndex = mcisVm[2]
@@ -1389,21 +1376,19 @@ function vmScriptExport() {
         }
     });
 
-    if (!mcisID) {
+    if(!mcisID){
         commonAlert("Please Select MCIS!!")
         return;
     }
-    if (!vmID) {
+    if(!vmID){
         commonAlert("Please Select VM!!")
         return;
     }
 
-    
     // console.log("index " + mcisIndex + " , " + vmIndex)
     // if( $("#m_vmExportScript_" + mcisIndex + "_" + vmIndex).val() == ""){
     //     makeVmScript(mcisIndex, vmIndex);
     // }
-
     console.log("vmscript")
     console.log($("#m_vmExportScript_" + mcisIndex + "_" + vmIndex).val())
     saveToVmAsJsonFile(mcisIndex, vmIndex);
@@ -1411,47 +1396,45 @@ function vmScriptExport() {
 
 // mcis를 선택하면 해당 mcis를 export할 준비를 함
 // lifecycle 의 ExportScriptOfMcis 를 통해 선택한 mcis script를 file로 저장
-function makeMcisScript(mcisIndex) {
+function makeMcisScript(mcisIndex){
     var vms = 'mcisVmID_' + mcisIndex + "_";
     var vmIndex = 0;
-
     // // vmScript 먼저 생성
     // console.log("in makeMcisScript " + mcisIndex + " vms : " + vms);
     // $("[id^='" + vms +"']").each(function(){
     //     makeVmScript(mcisIndex, vmIndex);
     //     vmIndex++;
     // });
-
     console.log(" gogo mcis script");
-    var mcisIDVal = $("#m_mcisID_" + mcisIndex).val();
+	var mcisIDVal = $("#m_mcisID_" + mcisIndex).val();
     var mcisNameVal = $("#m_mcisName_" + mcisIndex).val();
-    var mcisLabelVal = $("#m_mcisLabel_" + mcisIndex).val();
-    var mcisDescriptionVal = $("#m_mcisDescription_" + mcisIndex).val();
-    var mcisInstallMonAgentVal = $("#m_mcisInstallMonAgent_" + mcisIndex).val();
+	var mcisLabelVal = $("#m_mcisLabel_" + mcisIndex).val();
+	var mcisDescriptionVal = $("#m_mcisDescription_" + mcisIndex).val();
+	var mcisInstallMonAgentVal = $("#m_mcisInstallMonAgent_" + mcisIndex).val();
 
 
     var paramValueAppend = '"';
     var mcisCreateScript = "";
     console.log(" gogo mcis script2 ");
-    mcisCreateScript += '{	';
-    mcisCreateScript += paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + mcisNameVal + paramValueAppend;
-    mcisCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + mcisDescriptionVal + paramValueAppend;
-    mcisCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + mcisLabelVal + paramValueAppend;
-    mcisCreateScript += ',' + paramValueAppend + 'installMonAgent' + paramValueAppend + ' : ' + paramValueAppend + mcisInstallMonAgentVal + paramValueAppend;
-    console.log(mcisCreateScript);
+	mcisCreateScript += '{	';
+	mcisCreateScript += paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + mcisNameVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + mcisDescriptionVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + mcisLabelVal + paramValueAppend;
+	mcisCreateScript += ',' + paramValueAppend + 'installMonAgent' + paramValueAppend + ' : ' + paramValueAppend + mcisInstallMonAgentVal + paramValueAppend;
+	console.log(mcisCreateScript);
     // vmScript 가져오기
     console.log("vm Size =" + vmIndex);
     mcisCreateScript += ',' + paramValueAppend + 'vm' + paramValueAppend + ':[';
     var addedVmIndex = 0;
-    for (var i = 0; i < vmIndex; i++) {
+    for( var i = 0; i < vmIndex; i++){
         var vmScript = $("#m_vmExportScript_" + mcisIndex + "_" + i).val();// 여기에 담겨있음.(위에서 먼저 호출해서 생성 해 둠)
 
-        console.log(i);
+        console.log(i );
         console.log(vmScript);
 
-        if (vmScript == undefined) continue;// VM이 Terminated 된 경우 등에서는 vmScript가 정상적으로 생성되지 않음.
+        if( vmScript == undefined) continue;// VM이 Terminated 된 경우 등에서는 vmScript가 정상적으로 생성되지 않음.
 
-        if (addedVmIndex > 0) mcisCreateScript += ",";
+        if( addedVmIndex > 0) mcisCreateScript += ",";
 
         mcisCreateScript += vmScript;
         addedVmIndex++;
@@ -1460,37 +1443,37 @@ function makeMcisScript(mcisIndex) {
     mcisCreateScript += '}';
 
     $("#m_exportFileName_" + mcisIndex).val(mcisNameVal);
-    $("#m_mcisExportScript_" + mcisIndex).val(mcisCreateScript);
+	$("#m_mcisExportScript_" + mcisIndex).val(mcisCreateScript);
 
     console.log("mcisCreateScript============");
     console.log(mcisCreateScript);
 }
 
 // vm을 선택하면 해당 vm을 export할 준비를 함
-function makeVmScript(mcisIndex, vmIndex) {
-    console.log("in makeVmScript" + mcisIndex + " : " + vmIndex)
-    var connectionNameVal = $("#m_vmConnectionName_" + mcisIndex + "_" + vmIndex).val();
-    var descriptionVal = $("#m_vmDescription_" + mcisIndex + "_" + vmIndex).val();
-    var imageIdVal = $("#m_vmImageId_" + mcisIndex + "_" + vmIndex).val();
-    var labelVal = $("#m_vmLabel_" + mcisIndex + "_" + vmIndex).val();
-    var nameVal = $("#m_vmName_" + mcisIndex + "_" + vmIndex).val();
-    var securityGroupIdsVal = $("#m_vmSecurityGroupIds_" + mcisIndex + "_" + vmIndex).val();
-    var specIdVal = $("#m_vmSpecId_" + mcisIndex + "_" + vmIndex).val();
-    var sshKeyIdVal = $("#m_vmSshKeyId_" + mcisIndex + "_" + vmIndex).val();
-    var subnetIdVal = $("#m_vmSubnetId_" + mcisIndex + "_" + vmIndex).val();
-    var vNetIdVal = $("#m_vmVnetId_" + mcisIndex + "_" + vmIndex).val();
-    var vmGroupSizeVal = $("#m_vmGroupSize_" + mcisIndex + "_" + vmIndex).val();
-    var vmUserAccountVal = $("#m_vmUserAccount_" + mcisIndex + "_" + vmIndex).val();
-    var vmUserPasswordVal = $("#m_vmUserPassword_" + mcisIndex + "_" + vmIndex).val();
+function makeVmScript(mcisIndex, vmIndex){
+	console.log("in makeVmScript" +  mcisIndex + " : " + vmIndex)
+	var connectionNameVal = $("#m_vmConnectionName_" + mcisIndex + "_" + vmIndex).val();
+	var descriptionVal = $("#m_vmDescription_" + mcisIndex + "_" + vmIndex).val();
+	var imageIdVal = $("#m_vmImageId_" + mcisIndex + "_" + vmIndex).val();
+	var labelVal = $("#m_vmLabel_" + mcisIndex + "_" + vmIndex).val();
+	var nameVal = $("#m_vmName_" + mcisIndex + "_" + vmIndex).val();
+	var securityGroupIdsVal = $("#m_vmSecurityGroupIds_" + mcisIndex + "_" + vmIndex).val();
+	var specIdVal = $("#m_vmSpecId_" + mcisIndex + "_" + vmIndex).val();
+	var sshKeyIdVal = $("#m_vmSshKeyId_" + mcisIndex + "_" + vmIndex).val();
+	var subnetIdVal = $("#m_vmSubnetId_" + mcisIndex + "_" + vmIndex).val();
+	var vNetIdVal = $("#m_vmVnetId_" + mcisIndex + "_" + vmIndex).val();
+	var vmGroupSizeVal = $("#m_vmGroupSize_" + mcisIndex + "_" + vmIndex).val();
+	var vmUserAccountVal = $("#m_vmUserAccount_" + mcisIndex + "_" + vmIndex).val();
+	var vmUserPasswordVal = $("#m_vmUserPassword_" + mcisIndex + "_" + vmIndex).val();
 
-    var paramValueAppend = '"';
-    var vmCreateScript = "";
-    vmCreateScript += '{	';
-    vmCreateScript += paramValueAppend + 'connectionName' + paramValueAppend + ' : ' + paramValueAppend + connectionNameVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + descriptionVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'imageId' + paramValueAppend + ' : ' + paramValueAppend + imageIdVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + labelVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + nameVal + paramValueAppend;
+	var paramValueAppend = '"';
+	var vmCreateScript = "";
+	vmCreateScript += '{	';
+	vmCreateScript += paramValueAppend + 'connectionName' + paramValueAppend + ' : ' + paramValueAppend + connectionNameVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + descriptionVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'imageId' + paramValueAppend + ' : ' + paramValueAppend + imageIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + labelVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + nameVal + paramValueAppend;
 
     //vmCreateScript += ',' + paramValueAppend + 'securityGroupIds' + paramValueAppend + ' : ' + paramValueAppend + securityGroupIdsVal + paramValueAppend;
 
@@ -1501,77 +1484,77 @@ function makeVmScript(mcisIndex, vmIndex) {
 
     vmCreateScript += ',' + paramValueAppend + 'securityGroupIds' + paramValueAppend + ' : [';
 
-    for (var i = 0; i < sgArr.length; i++) {
-        if (i > 0) vmCreateScript += ','
+    for( var i = 0; i < sgArr.length; i++){
+        if( i > 0) vmCreateScript += ','
         vmCreateScript += paramValueAppend + sgArr[i] + paramValueAppend;
         console.log("securityGroupIdsVal [" + i + "] =" + sgArr[i]);
     }
     vmCreateScript += ']';
 
-    vmCreateScript += ',' + paramValueAppend + 'specId' + paramValueAppend + ' : ' + paramValueAppend + specIdVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
-    vmCreateScript += '}';
+	vmCreateScript += ',' + paramValueAppend + 'specId' + paramValueAppend + ' : ' + paramValueAppend + specIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
+	vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
+	vmCreateScript += '}';
 
 
-    $("#m_exportFileName_" + mcisIndex + "_" + vmIndex).val(nameVal);
-    $("#m_vmExportScript_" + mcisIndex + "_" + vmIndex).val(vmCreateScript);
+	$("#m_exportFileName_" + mcisIndex + "_"+ vmIndex).val(nameVal);
+	$("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
     console.log("vmCreateScript============" + mcisIndex + ":" + vmIndex);
     console.log(vmCreateScript);
 }
 
 // json 파일로 저장
-function saveToMcisAsJsonFile(mcisIndex) {
-    var fileName = "MCIS_" + $("#m_exportFileName_" + mcisIndex).val();
-    var exportScript = $("#m_mcisExportScript_" + mcisIndex).val();
+function saveToMcisAsJsonFile(mcisIndex){
+	var fileName = "MCIS_" + $("#m_exportFileName_" + mcisIndex).val();
+	var exportScript = $("#m_mcisExportScript_" + mcisIndex).val();
 
     saveFileProcess(fileName, exportScript);
 }
-function saveToVmAsJsonFile(mcisIndex, vmIndex) {
-    var fileName = "VM_" + $("#m_exportFileName_" + mcisIndex + "_" + vmIndex).val();
-    var exportScript = $("#m_vmExportScript_" + mcisIndex + "_" + vmIndex).val();
+function saveToVmAsJsonFile(mcisIndex, vmIndex){
+	var fileName = "VM_" + $("#m_exportFileName_" + mcisIndex + "_" + vmIndex).val();
+	var exportScript = $("#m_vmExportScript_" + mcisIndex + "_"  + vmIndex).val();
 
     saveFileProcess(fileName, exportScript);
 }
 
 // 파일명, script대로 파일 생성
-function saveFileProcess(fileName, exportScript) {
+function saveFileProcess(fileName, exportScript){
 
-    var element = document.createElement('a');
-    // element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
-    element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
-    // element.setAttribute('download', fileName);
-    element.setAttribute('download', fileName + ".json");
+	var element = document.createElement('a');
+	// element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
+	element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
+	// element.setAttribute('download', fileName);
+	element.setAttribute('download', fileName + ".json");
 
-    element.style.display = 'none';
-    document.body.appendChild(element);
+	element.style.display = 'none';
+	document.body.appendChild(element);
 
-    element.click();
+	element.click();
 
-    document.body.removeChild(element);
+	document.body.removeChild(element);
 }
 
-function getSecurityGroupCallbackSuccess(caller, data) {
+function getSecurityGroupCallbackSuccess(caller, data){
     var html = ""
     var firewallRules = data.firewallRules
 
     $("#register_box").modal()
-    firewallRules.map(item => (html += '<tr>'
-        + '<td class="btn_mtd" data-th="fromPort">' + item.fromPort + ' <span class="ov off"></span></td>'
-        + '<td class="overlay hidden" data-th="toPort">' + item.toPort + '</td>'
-        + '<td class="overlay hidden" data-th="toProtocol">' + item.ipProtocol + '</td>'
-        + '<td class="overlay hidden " data-th="direction">' + item.direction + '</td>'
-        + '</tr>'
+    firewallRules.map(item=>(        html +='<tr>'
+                +'<td class="btn_mtd" data-th="fromPort">'+item.fromPort+' <span class="ov off"></span></td>'
+                +'<td class="overlay hidden" data-th="toPort">'+item.toPort+'</td>'
+                +'<td class="overlay hidden" data-th="toProtocol">'+item.ipProtocol+'</td>'
+                +'<td class="overlay hidden " data-th="direction">'+item.direction+'</td>'
+                +'</tr>'
     ))
     $("#manage_mcis_popup_sg").empty()
     $("#manage_mcis_popup_sg").append(html)
 }
 
-function getSecurityGroupCallbackFail(error) {
+function getSecurityGroupCallbackFail(error){
 
 }
 
@@ -1611,17 +1594,15 @@ function getMcisDataCallbackFail(error){
 
 }
 
-// 지도에 marker로 region 표시.  
+// 지도에 marker로 region 표시.
 // Map 관련 설정
 
-
 function setMap(locationInfo){
-
     //show_mcis2(url,JZMap);
     //function show_mcis2(url, map){
     // var JZMap = map;
 
-    if (locationInfo == undefined) {
+    if( locationInfo == undefined) {
         var locationInfo = new Object();
         locationInfo.id = "1"
         locationInfo.name = "pin"
@@ -1647,12 +1628,12 @@ function setMap(locationInfo){
 
 
 
-function getCommonVmImageInfoCallbackSuccess(caller, imageInfo) {
+function getCommonVmImageInfoCallbackSuccess(caller, imageInfo){
     // var imageInfo = data;
     var html = ""
-    console.log("image info : ", imageInfo)
-    html += '<a href="javascript:void(0);" title="' + imageInfo.cspImageName + '">' + imageInfo.id + '</a>'
-        + '<div class="bb_info">Image Name : ' + imageInfo.name + ', GuestOS:' + imageInfo.guestOS + '</div>'
+    console.log("image info : ",imageInfo)
+    html +='<a href="javascript:void(0);" title="'+imageInfo.cspImageName+'">'+imageInfo.id+'</a>'
+          +'<div class="bb_info">Image Name : '+imageInfo.name+', GuestOS:'+imageInfo.guestOS+'</div>'
 
     $("#server_detail_view_image_id").empty();
     $("#server_detail_view_image_id").append(html);
@@ -1661,44 +1642,44 @@ function getCommonVmImageInfoCallbackSuccess(caller, imageInfo) {
     bubble_box();
 }
 
-function getCommonVmImageInfoCallbackFail(caller, data) {
+function getCommonVmImageInfoCallbackFail(caller, data){
     // -- fail 나더라도 그냥 넘어감.
 }
 
-function bubble_box() {
-    $(".bubble_box .box").each(function () {
-        var $list = $(this);
-        var bubble = $list.find('.bb_info');
-        var menuTime;
-        $list.mouseenter(function () {
-            bubble.fadeIn(300);
-            clearTimeout(menuTime);
-        }).mouseleave(function () {
-            clearTimeout(menuTime);
-            menuTime = setTimeout(mTime, 100);
-        });
-        function mTime() {
-            bubble.stop().fadeOut(100);
-        }
-    });
+function bubble_box(){
+    $(".bubble_box .box").each(function(){
+		var $list = $(this);
+		var bubble =  $list.find('.bb_info');
+		var menuTime;
+		$list.mouseenter(function(){
+			bubble.fadeIn(300);
+			clearTimeout(menuTime);
+		}).mouseleave(function(){
+			clearTimeout(menuTime);
+    	menuTime = setTimeout(mTime, 100);
+		});
+		function mTime() {
+	    bubble.stop().fadeOut(100);
+	  }
+	});
 }
 
-function remoteCommandMcis(commandWord) {
+function remoteCommandMcis(commandWord){
     // mcis가 선택되어 있어야 하고
     var checked_nothing = 0;
-    $("[id^='td_ch_']").each(function () {
+    $("[id^='td_ch_']").each(function(){
 
-        if ($(this).is(":checked")) {
+        if($(this).is(":checked")){
             checked_nothing++;
             console.log("checked")
             var mcisID = $(this).val()
             postRemoteCommandMcis(mcisID, commandWord);
-        } else {
+        }else{
             console.log("checked nothing")
 
         }
     })
-    if (checked_nothing == 0) {
+    if(checked_nothing == 0){
         commonAlert("Please Select MCIS!!")
         return;
     }
@@ -1706,8 +1687,8 @@ function remoteCommandMcis(commandWord) {
 }
 
 
-function remoteCommandVmMcis(commandWord) {
-    // VM 선택되어 있어야     
+function remoteCommandVmMcis(commandWord){
+    // VM 선택되어 있어야
     var mcisID = $("#mcis_id").val();
     var vmID = $("#vm_id").val();
     var vmName = $("#vm_name").val();
@@ -1715,8 +1696,8 @@ function remoteCommandVmMcis(commandWord) {
     // 위 값으로 mcisIndex, vmIndex 를 찾자
     var mcisIndex = 0;
     var vmIndex = 0;
-    $("[id^='mcisVmID_']").each(function () {
-        if (vmID == $(this).val()) {
+    $("[id^='mcisVmID_']").each(function(){
+        if( vmID == $(this).val()){
             var mcisVm = $(this).attr("id").split("_")
             mcisIndex = mcisVm[1]
             vmIndex = mcisVm[2]
@@ -1724,16 +1705,16 @@ function remoteCommandVmMcis(commandWord) {
         }
     });
 
-    if (!mcisID) {
+    if(!mcisID){
         commonAlert("Please Select MCIS!!")
         return;
     }
-    if (!vmID) {
+    if(!vmID){
         commonAlert("Please Select VM!!")
         return;
     }
     console.log(" commandWord = " + commandWord);
-    if (!commandWord) {
+    if(!commandWord){
         commonAlert("Please type command!!")
         return;
     }
