@@ -36,7 +36,8 @@ $(document).ready(function () {
     setTableHeightForScroll('serverImageList', 300)
 
     $('.btn_assist').on('click', function () {
-        lookupVmImageList()
+        // lookupVmImageList()
+        showSpecAssistPopup();
     });
 });
 
@@ -522,20 +523,40 @@ function showVirtualMachinImageInfo(target) {
 //     })        
 // }
 
+// Assist Popup
+function showSpecAssistPopup(){
+    $("#imageAssist").modal();
+
+    var regProviderName = $("#regProviderName").val();
+    if( regProviderName ){
+        $("#assistImageProviderName").val(regProviderName);
+        // $("#assistImageProviderName option[value=" + configName + "]").prop('selected', true).change();
+    }
+    var connectionName = $("#regConnectionName").val();
+    // assistConnectionName
+
+    if (!connectionName && connection != "") {
+        console.log("showSpecAssistPopup conn " + connectionName)
+        $("#assistImageConnectionName option[value=" + connectionName + "]").prop('selected', true).change();
+        lookupVmImageList()
+    }
+}
 // connection에 등록된 spec목록 조회(공통함수 호출)
 function lookupVmImageList() {
     $("#assistVmImageList").empty()
     // connection과 상관없이 조회 가능
-    var connectionName = $("#regConnectionName").val();
-    if (!connectionName) {
+
+    //assistConnectionName
+    var assistConnectionName = $("#assistImageConnectionName").val();
+    if (!assistConnectionName) {
         commonAlert("connection name required")
         return;
     }
 
-    $("#imageAssist").modal();
+
     $('.dtbox.scrollbar-inner').scrollbar();
 
-    getCommonLookupImageList("vmimagemng", connectionName);
+    getCommonLookupImageList("vmimagemng", assistConnectionName);
 }
 // 성공 callback
 function lookupVmImageListCallbackSuccess(caller, data) {
@@ -620,7 +641,10 @@ function clearCspImageInfo() {
     $("#regGuestOS").val();
 }
 
-
+// assistPopup의 connection 정보가 바뀌면 image정보도 초기화 시킨다.
+function clearAssistImageList(targetTableList){
+    $("#" + targetTableList).empty()
+}
 //입력한 keyword 화면에 표시
 function displaySearchImageKeyword() {
     console.log($("#image_keyword").val());

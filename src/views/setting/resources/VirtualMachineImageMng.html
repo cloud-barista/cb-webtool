@@ -374,7 +374,7 @@
 							<ul>
 								<li class="reg_1">
 									<label>Cloud Provider</label>
-									<select class="selectbox white pline w3" name="ProviderName" id="regProvider"
+									<select class="selectbox white pline w3" name="ProviderName" id="regProviderName"
 										onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
 										<option value="" selected>Select Cloud Provider</option>
 										<!--
@@ -522,9 +522,9 @@
 									<ul>
 										<li class="reg_1">
 											<label>Cloud Provider</label>
-											<select class="selectbox white pline w3" name="ProviderName"
-												id="regProvider"
-												onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
+											<select class="selectbox white pline w3" name="AssistImageProviderName"
+												id="assistImageProviderName"
+												onchange="getConnectionListForSelectbox(this.value, 'assistImageConnectionName')">
 												<option value="" selected>Select Cloud Provider</option>
 												{{ range $item := .CloudOSList}}
 												<option value="{{ $item }}">{{ $item }}</option>
@@ -535,8 +535,8 @@
 										</li>
 										<li class="reg_1">
 											<label></span>Connection Name</label>
-											<select class="selectbox white pline w3" name="reg_connectionName"
-												id="regConnectionName" onchange="clearCspImageInfo()">
+											<select class="selectbox white pline w3" name="assistImageConnectionName"
+												id="assistImageConnectionName" onchange="clearAssistImageList('assistVmImageList')">
 												<option value="" selected>Selected ConnectionName</option>
 											</select>
 										</li>
@@ -546,7 +546,7 @@
 									<input type="text" id="image_keyword" placeholder="Input Keyword"
 										class="pline image" onkeyup="displaySearchImageKeywordwithEnter(event)" />
 									<input type="submit" name="" class="btn_search_image" title="" value=""
-										onclick="displaySearchImageKeyword()" />
+										onclick="lookupVmImageList()" />
 								</div>
 								<div class="keyword_box">
 									<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
