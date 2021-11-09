@@ -6,6 +6,16 @@
 							<div class="titbox">
 								<div class="tit initial"><strong>List of MCIS</strong></div>
 								<div class="top_info">
+<!--									<div>-->
+<!--										<input type="text" id="keywordMcis" placeholder="Input Keyword"-->
+<!--											   class="pline image" onkeyup="searchKeywordByEnter(event, 'searchMcisKeywords'" />-->
+<!--										<input type="submit" name="" class="btn_search_image" title="" value=""-->
+<!--											   onclick="getCommonMcisList()" />-->
+<!--									</div>-->
+									<div class="keyword_box" id="searchMcisKeywords">
+									</div>
+									<input type="button" name="" class="btn_del_all" title="" value="필터 지우기"
+										   onclick="delAllKeyword( 'mcislistfilter')" />
 									<ul>
 										<li>
 											<a href="javascript:void(0);">Filter</a>
@@ -73,8 +83,8 @@
 										</li>
 									</ul>
 								</div>
-							</div>						
-							
+							</div>
+
 							<div class="ds_cont">
 								
 								<div class="dataTable status_list">

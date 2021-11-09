@@ -247,7 +247,7 @@ function selectMcis(id, name, target, obj) {
 
     if ($target.hasClass("active")) {
         // location.href = "/Manage/MCIS/list/" + mcis_id + "/" + mcis_name
-        location.href = "/operation/manages/mcismng/mngform"
+        location.href = "/operation/manages/mcismng/mngform?mcisid="+mcis_id
         return;
     } else {
         $target.addClass("active")
