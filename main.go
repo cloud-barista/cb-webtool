@@ -266,7 +266,7 @@ func main() {
 			"operation/manages/mcismng/VmConfigureExpert",
 			"operation/manages/mcismng/VmConfigureImport",
 
-			"operation/manages/mcismng/VmAssistPopup",
+			"templates/VmAssistPopup",
 
 			"operation/manages/mcismng/VmOsHardware",
 			"operation/manages/mcismng/VmNetwork",
@@ -348,6 +348,7 @@ func main() {
 			"templates/Header",
 			"templates/Modal",
 			"templates/Footer",
+			"templates/VmAssistPopup",
 		},
 		DisableCache: true,
 	})
