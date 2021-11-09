@@ -1097,10 +1097,8 @@ function searchKeyword(keyword, caller) {
 
 // Enter Key가 눌리면 keywordId 의 값으로 조회로직 호출
 function searchKeywordByEnter(keyEvent, caller) {
-
     if( keyEvent.keyCode === 13){
         if( caller == "mcislistfilter"){
-            var keywordObjId = "searchMcisKeywords";
             searchKeyword($(this).val(),  caller);
         }
     }
