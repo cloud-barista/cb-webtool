@@ -630,7 +630,8 @@ function commonPromptOk() {
         }
     } else if (targetAction == 'FilterMcisName') {// Name이라는 Column을 Filtering
         if (targetValue) {
-            filterTable(targetObjId, "Name", targetValue)
+            // keyword표시
+            searchKeyword(targetValue, 'mcislistfilter')
         }
     } else if (targetAction == 'FilterMcisStatus') {// Status이라는 Column을 Filtering
         if (targetValue) {
@@ -673,6 +674,12 @@ function commonPromptClose() {
     $('#promptText').text('');
     $('#promptOkAction').val('');
     $("#promptArea").modal("hide");
+}
+
+function commonPromptEnter(keyEvent){
+    if (keyEvent.keyCode == 13) {
+        commonPromptOk();
+    }
 }
 //////// Prompt end //////////
 // provider에 등록된 connection을 selectbox에 표시
@@ -960,11 +967,11 @@ function tableSort(tableId, columnName) {
 // 1. 대상 table에 ID가 있어야 함.
 // 2. filter > 대상 칼럼을 선택 시 > txt 입력창이 떠서 keyword를 입력하면 해당 내용으로 filtering
 // 3. 입력 단어가 ALL 이면 모두 보여준다.
-function filterTable(tableId, filterColumnName, filterKeyword) {
+function filterTableWithKeywords(tableId, filterColumnName, filterKeywordList) {
     var filterTargetColumnIndex = getTableColumnIndex(tableId, filterColumnName)
     console.log("filterTargetColumnIndex=" + filterTargetColumnIndex);
-    var filter = filterKeyword.toUpperCase();
-    console.log("filter=" + filter);
+
+    console.log(filterKeywordList);
 
     //var tableObj = $('#' + tableId);
     var tableObj = document.getElementById(tableId);
@@ -980,9 +987,22 @@ function filterTable(tableId, filterColumnName, filterKeyword) {
         if (tdTag) {
             txtValue = tdTag.textContent || tdTag.innerText;
             console.log(txtValue + " = " + tdTag.textContent + " || " + tdTag.innerText);
-            if (filter == "ALL") {
-                trObj[i].style.display = "";
-            } else if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            console.log(filterKeywordList);
+            var keywordsSize = filterKeywordList.length;
+            var foundKeywordsSize = 0;
+            $.each(filterKeywordList, function(index, value){
+                var filter = value.toUpperCase();
+                if (filter == "ALL") {
+                    foundKeywordsSize = keywordsSize;
+                    return false;
+                } else if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    foundKeywordsSize++
+                } else {
+
+                }
+            });
+
+            if ( keywordsSize == foundKeywordsSize) {
                 trObj[i].style.display = "";
             } else {
                 trObj[i].style.display = "none";
@@ -990,6 +1010,41 @@ function filterTable(tableId, filterColumnName, filterKeyword) {
         }
     }
 }
+function filterTable(tableId, filterColumnName, filterKeyword) {
+    var filterKeywordList = new Array();
+    filterKeywordList.push(filterKeyword);
+    filterTableWithKeywords(tableId, filterColumnName, filterKeywordList)
+}
+// function filterTable(tableId, filterColumnName, filterKeyword) {
+//     var filterTargetColumnIndex = getTableColumnIndex(tableId, filterColumnName)
+//     console.log("filterTargetColumnIndex=" + filterTargetColumnIndex);
+//     var filter = filterKeyword.toUpperCase();
+//     console.log("filter=" + filter);
+//
+//     //var tableObj = $('#' + tableId);
+//     var tableObj = document.getElementById(tableId);
+//     var trObj = tableObj.getElementsByTagName("tr");
+//     //var rows = tableObj[0].rows;
+//     console.log(trObj.length);
+//     // Loop through all table rows, and hide those who don't match the search query
+//     // 찾은 column을 기준으로 fintering한다.
+//     for (i = 1; i < trObj.length; i++) {
+//         console.log(trObj[i]);
+//         var tdTag = trObj[i].getElementsByTagName("td")[filterTargetColumnIndex];
+//         console.log(tdTag);
+//         if (tdTag) {
+//             txtValue = tdTag.textContent || tdTag.innerText;
+//             console.log(txtValue + " = " + tdTag.textContent + " || " + tdTag.innerText);
+//             if (filter == "ALL") {
+//                 trObj[i].style.display = "";
+//             } else if (txtValue.toUpperCase().indexOf(filter) > -1) {
+//                 trObj[i].style.display = "";
+//             } else {
+//                 trObj[i].style.display = "none";
+//             }
+//         }
+//     }
+// }
 
 // table에서 hidden으로 설정된 obj를 기준으로 filterling. 보이고 안보이고
 function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword) {
@@ -1012,5 +1067,73 @@ function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword) {
         } else {
             trs.eq(i).css("display", "none");
         }
+    }
+}
+
+
+// keyword object의 값을 읽어 target object에 추가
+//입력한 keyword 화면에 표시, 조회로직 수행
+// caller = 이미 입력된 keyword 들 및 구분자
+function searchKeyword(keyword, caller) {
+    if (keyword.trim() !== "") {
+        var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
+
+        if( caller == "mcislistfilter"){
+            var keywordObjId = "searchMcisKeywords";
+            var targetTableObjId = "mcisListTable";
+            var targetColumnName = "Name";// 기본값은 Name Column ( Table에 'Name' 이라는 Column이 있어야 함 )
+
+            $("#" + keywordObjId).append(addKeyword);
+            var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
+            $("[name='keyword_" + caller + "']").each(function( idx, ele){
+               keywords.push($(this).text());
+            });
+            keywords.push(keyword);
+            // filterTableWithKeywords('mcisListTable', "Name", keywords);
+            filterTableWithKeywords(targetTableObjId, targetColumnName, keywords);
+        }
+    }
+}
+
+// Enter Key가 눌리면 keywordId 의 값으로 조회로직 호출
+function searchKeywordByEnter(keyEvent, caller) {
+
+    if( keyEvent.keyCode === 13){
+        if( caller == "mcislistfilter"){
+            var keywordObjId = "searchMcisKeywords";
+            searchKeyword($(this).val(),  caller);
+        }
+    }
+}
+
+function delSearchKeyword(event, caller) {
+    console.log("remove keyword");
+    $(event.target).parent().remove();
+    if( caller == "mcislistfilter"){
+        var targetColumnName = "Name";// 기본값은 Name Column ( Table에 'Name' 이라는 Column이 있어야 함 )
+        var targetTableObjId = "mcisListTable";
+
+        var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
+        $("[name='keyword_" + caller + "']").each(function( idx, ele){
+            keywords.push($(this).text());
+        });
+        if( keywords.length > 0){
+            filterTableWithKeywords(targetTableObjId, targetColumnName, keywords);
+        }else{
+            filterTable(targetTableObjId, targetColumnName, 'ALL');
+        }
+    }
+}
+
+function delAllKeyword( caller) {
+    console.log("delAllKeyword " + caller)
+    if( caller == "mcislistfilter"){
+        var keywordObjId = "searchMcisKeywords";
+        var targetTableObjId = "mcisListTable";
+
+        $("#" + keywordObjId).each(function (i, item) {
+            $(item).remove();
+        })
+        filterTable(targetTableObjId, 'Name', 'ALL');
     }
 }
