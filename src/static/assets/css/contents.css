@@ -1934,7 +1934,7 @@ table tbody tr {
 /* create */
 .dashboard .create_box {}
 .dashboard .create_box li { margin:3px 0 0 0; }
-.dashboard .create_box li label { position:relative; text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
+.dashboard .create_box li label { position:relative; text-align:left; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .dashboard .create_box li label span.ch { color:#ff0000; display:inline-block; margin:0 4px 0 0;}
 .dashboard .create_box li label span.txt_sb { display:block; font-size:15px; font-weight:300; }
 .dashboard .create_box li .selectbox { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
@@ -2181,6 +2181,7 @@ table tbody tr {
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox.ipbox4 { width:100%; }
 
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox > ul { text-align:right; padding-right:42px; }
+.dashboard .create_tab .tab-content .tab_ipbox .ipbox > .ul_access { margin-top: 20px; }
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox input.ip_1,
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox .selectbox.sel_1 { width:34%; }
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox input.ip_2,
@@ -2365,7 +2366,7 @@ table tbody tr {
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box li .a_link { display:inline-block; vertical-align:middle; width:270px; text-align:left; }
 .popup_CreateTabBox .modal-body .pop-body .pop-cont .spec_select_box .spec_box .s_box li .a_link a { text-decoration:underline; color:#06a9b7; font-size:14px; font-weight:200; }
 /*spec assist*/
-.popup_editBox .modal-body .pop-body .pop-cont .spec_box { padding:10px 25px 25px 25px; background: #f8f9fa;border: 1px dashed #ccc;border-radius: 10px;}
+.popup_editBox .modal-body .pop-body .pop-cont .spec_box { padding:10px 25px 25px 25px; background: #f8f9fa;border: 1px dashed #ccc;border-radius: 10px; margin-bottom: 20px;}
 .popup_editBox .modal-body .pop-body .pop-cont .spec_box:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .popup_editBox .modal-body .pop-body .pop-cont .spec_box .s_box { float:left; width:50%; }
 .popup_editBox .modal-body .pop-body .pop-cont .spec_box .s_box > ul {}
@@ -2448,7 +2449,8 @@ table tbody tr {
 .popup_editBox .modal-body .pop-body .pop-cont input.gray { background-color:#e7ebee; }
 .popup_editBox .modal-body .pop-body .pop-cont input.pline { border:1px dashed #ccc; }
 .popup_editBox .modal-body .pop-body .pop-cont input.pline.image { width: 90%; margin: 10px 0; }
-.popup_editBox .modal-body .pop-body .pop-cont .image_box { padding:10px 25px; background: #f8f9fa;border: 1px dashed #ccc;border-radius: 10px;}
+.popup_editBox .modal-body .pop-body .pop-cont .image_box { padding:10px 25px; background: #f8f9fa;border: 1px dashed #ccc;border-radius: 10px; margin-bottom: 20px;}
+.popup_editBox .modal-body .pop-body .pop-cont .search_box { padding:10px 25px; background: #f8f9fa;border: 1px dashed #ccc;border-radius: 10px; margin-bottom: 50px;}
 .popup_editBox .modal-body .pop-body .pop-cont .toptxt { /*padding:0 0 0 20px;*/ color:#5e636c; font-size:16px; font-weight:500;transform: translateY(30%);z-index: 99;}
 .popup_editBox .modal-body .pop-body .pop-cont .toptxt.search{padding: 0;margin-bottom: 40px;}
 .popup_editBox .modal-body .pop-body .pop-cont .toptxt.search ul{margin-top: 10px;}
@@ -2463,7 +2465,7 @@ table tbody tr {
 .popup_editBox .modal-body .pop-body .pop-cont .b_txt { margin:20px 0 0 0; color:#5e636c; font-size:13px; font-family:'Noto Sans KR'; text-align:center; }
 .popup_editBox .modal-body .pop-body .pop-cont .b_txt span.ch { color:#ff0000; font-family:'Noto Sans KR'; }
 .popup_editBox .modal-body .pop-body .pop-cont .b_txt span.txt { color:#06a9b7; font-family:'Noto Sans KR'; }
-.popup_editBox .modal-body .pop-body .pop-cont > .scrollbar-inner {  margin:20px 0 0 0; max-height:256px; overflow:auto; }
+.popup_editBox .modal-body .pop-body .pop-cont > .scrollbar-inner {  margin:20px 0 0 0; /*max-height:256px; overflow:auto;*/ }
 .popup_editBox .modal-body .pop-body .pop-cont .dataTable { padding:0; }
 .popup_editBox .modal-body .pop-body .pop-cont .dataTable table { background-color:#f7f7f7; }
 .popup_editBox .modal-body .pop-body .pop-cont .dataTable thead th { padding:10px 5px; background-color:#999ea7; }
@@ -2477,13 +2479,13 @@ table tbody tr {
 .popup_editBox .modal-body .pop-body .pop-cont .dataTable tr.bottom_line  { overflow:hidden; text-indent:-9999em; }
 
 
-.popup_editBox .modal-body .pop-body .pop-cont .top_info { position:absolute; right:35px; transform:translateY(-70%); z-index:99; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info { position: absolute; right: 35px; z-index: 99; top: calc(100% - 450px)}
 .popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li { position:relative; display:inline-block; margin:0 0 0 67px; color:#5e636c;font-size:14px; line-height:14px; font-weight:300; }
 .popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li:before { content:''; display:block; width:8px; height:7px; background:url(../img/contents/icon_down.png) center center no-repeat; position:absolute; right:-14px; top:3px; }
 .popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li:last-child { margin:0 0 0 39px; }
 .popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li:last-child:before { background:none; }
 
-.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox { display:none; position:absolute; left:50%; top:23px; transform:translateX(-50%); background-color:#5e636c; border-radius:8px; }
+.popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox { display:none; position:absolute; left:50%; top:23px; transform:translateX(-50%); background-color:#5e636c; border-radius:8px; z-index:99;}
 .popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box { padding:20px 24px 21px 24px; min-width:156px; text-align:left; background:none; }
 .popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box p { margin:0 0 5px 0; color:#06a9b7;font-size:14px; line-height:14px; font-weight:400; }
 .popup_editBox .modal-body .pop-body .pop-cont .top_info > ul > li .infobox .box > ul > li { margin:8px 0 2px 0; color:#fff;font-size:14px; line-height:14px; font-weight:100; }
