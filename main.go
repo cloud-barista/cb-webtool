@@ -693,7 +693,8 @@ func main() {
 	e.GET("/setting/resources/machineimage/lookupimage", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
 	e.POST("/setting/resources/machineimage/fetchimages", controller.FetchVirtualMachineImageList) // TODO : Image 정보 갱신인가? 확인필요
 
-	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
+	//resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
+	e.POST("/setting/resources/machineimage/searchimage", controller.SearchVirtualMachineImageList)
 
 	resourcesGroup.GET("/vmspec/mngform", controller.VmSpecMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
 	resourcesGroup.GET("/vmspec/list", controller.GetVmSpecList)
