@@ -67,7 +67,9 @@
 		});
 	});
 </script>
+
 <input type="hidden" id="assistSelectedIndex"/><!-- Assist Popup에서 table의 항목을 클릭했을 때 index를 저장. apply 클릭 시 해당 index의 값을 main으로 set 하기 위한 용도 -->
+
 <!-- Network Interface popup -->
 <div class="modal fade popup_CreateTabBox" id="Network_Interface" tabindex="-1" role="dialog" aria-hidden="true">
 
@@ -842,17 +844,40 @@
 						<div class="search_box">
 							<div class="toptxt search">
 								<label>Search</label>
+								<ul>
+									<li class="reg_1">
+										<label>Cloud Provider</label>
+										<select class="selectbox white pline w3" name="AssistNetworkProviderName"
+												id="assistNetworkProviderName"
+												onchange="getConnectionListForSelectbox(this.value, 'assistNetworkConnectionName')">
+											<option value="" selected>Select Cloud Provider</option>
+											{{ range $item := .CloudOSList}}
+											<option value="{{ $item }}">{{ $item }}</option>
+											{{ end }}
+										</select>
+
+									</li>
+									<li class="reg_1">
+										<label></span>Connection Name</label>
+										<select class="selectbox white pline w3" name="assistNetworkConnectionName"
+												id="assistNetworkConnectionName"
+												onchange="clearAssistImageList('assistNetworkList')">
+											<option value="" selected>Selected ConnectionName</option>
+										</select>
+									</li>
+								</ul>
 							</div>
 							<div>
-								<input type="text" id="b" placeholder="Input Keyword" class="pline image"
-									onkeyup="" />
-								<input type="submit" name="" class="btn_search_image" title="" value=""
-									onclick="" />
+								<input type="text" id="keywordAssistNetwork" placeholder="Input Keyword" class="pline image"
+									   onkeyup="searchAssistNetworkByEnter(event, 'searchNetworkAssistAtReg')" />
+								<input type="button" name="" class="btn_search_image" title="" value=""
+									   onclick="searchNetworkByKeyword('searchNetworkAssistAtReg')" />
 							</div>
-							<div class="keyword_box">
+							<div class="keyword_box" id="searchAssistNetworkKeywords">
 								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
-									onclick="delAllKeyword()" />
+									   onclick="delAllKeyword()" />
 							</div>
+
 						</div>
 						<div class="top_info">
 							<ul>
@@ -925,7 +950,7 @@
 
 				<div class="btnbox">
 					<div class="btn_right">
-						<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button>
+						<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyAssistValues('networkAssist');"><span>Apply</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
 					</div>
 				</div>
@@ -938,7 +963,7 @@
 </div>
 <!-- Network Assist popup -->
 <!-- Security Assist popup setValueToFormObj('e_securityGroupList', 'tab_securityGroupInfo', 'securityGroup', '{ {$securityGroupIndex} }', 'e_securityGroupIds') -->
-<div class="modal fade popup_editBox" id="securityAssist" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade popup_editBox" id="securityGroupAssist" tabindex="-1" role="dialog" aria-hidden="true">
 
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -955,17 +980,18 @@
 							<div class="toptxt search">
 								<label>Search</label>
 							</div>
+
 							<div>
-								<input type="text" id="" placeholder="Input Keyword" class="pline image"
-									onkeyup="" />
-								<input type="submit" name="" class="btn_search_image" title="" value=""
-									onclick="" />
+								<input type="text" id="keywordAssistSecurityGroup" placeholder="Input Keyword" class="pline image"
+									   onkeyup="searchAssistSecurityGroupkByEnter(event, 'searchSecurityGroupAssistAtReg')" />
+								<input type="button" name="" class="btn_search_image" title="" value=""
+									   onclick="searchSecurityGroupByKeyword('searchSecurityGroupAssistAtReg')" />
 							</div>
-							<div class="keyword_box">
+							<div class="keyword_box" id="searchAssistSecurityGroupKeywords">
 								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
-									onclick="delAllKeyword()" />
+									   onclick="delAllKeyword()" />
 							</div>
-						</div>
+
 						<div class="top_info">
 							<ul>
 								<li>
@@ -1037,7 +1063,7 @@
 
 				<div class="btnbox">
 					<div class="btn_right">
-						<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button>
+						<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyAssistValues('securityGroupAssist')"><span>Apply</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
 					</div>
 				</div>
