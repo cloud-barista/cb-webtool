@@ -1091,6 +1091,36 @@ function searchKeyword(keyword, caller) {
             keywords.push(keyword);
             // filterTableWithKeywords('mcisListTable', "Name", keywords);
             filterTableWithKeywords(targetTableObjId, targetColumnName, keywords);
+        }else if( caller == "searchVmImageAssistAtReg"){
+            // <div>
+            //     <input type="text" id="searchImageAssistKeywords" placeholder="Input Keyword" className="pline image"
+            //            onKeyUp="searchKeywordByEnter(event, 'VmRegAssistImage')"/>
+            //     <input type="submit" name="" className="btn_search_image" title="" value=""
+            //            onClick="lookupVmImageList()"/>
+            // </div>
+            // <div className="keyword_box">
+            //     <input type="submit" name="" className="btn_del_all" title="" value="필터 지우기"
+            //            onClick="delAllKeyword()"/>
+            // </div>
+            // searchVmImageAssistAtReg
+
+            var keywordObjId = "searchAssistImageKeywords";
+            $("#" + keywordObjId).append(addKeyword);
+            var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
+            $("[name='keyword_" + caller + "']").each(function( idx, ele){
+                keywords.push($(this).text());
+            });
+            keywords.push(keyword);
+            // var targetTableObjId = "popAssistVmImageTable";
+            // var targetColumnName = "Name";// 기본값은 Name Column ( Table에 'Name' 이라는 Column이 있어야 함 )
+            //
+            // $("#" + keywordObjId).append(addKeyword);
+            // var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
+            // $("[name='keyword_" + caller + "']").each(function( idx, ele){
+            //     keywords.push($(this).text());
+            // });
+            // keywords.push(keyword);
+            getCommonSearchVmImageList(keywordObjId, caller)
         }
     }
 }
@@ -1098,7 +1128,11 @@ function searchKeyword(keyword, caller) {
 // Enter Key가 눌리면 keywordId 의 값으로 조회로직 호출
 function searchKeywordByEnter(keyEvent, caller) {
     if( keyEvent.keyCode === 13){
-        if( caller == "mcislistfilter"){
+        if( caller == "mcislistfilter") {
+            searchKeyword($(this).val(), caller);
+        }else{
+            console.log($(this))
+            //VmRegAssistImage
             searchKeyword($(this).val(),  caller);
         }
     }

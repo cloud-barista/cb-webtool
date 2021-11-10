@@ -492,7 +492,7 @@ function getSpecListCallbackSuccess(caller, data) {
         if (data.length > 0) {
             data.forEach(function (vSpecItem, vSpecIndex) {
 
-                html += '<tr onclick="setValueToFormObj(\'es_specList\', \'tab_vmSpec\', \'vmSpec\',' + vSpecIndex + ', \'e_specId\');">'
+                html += '<tr onclick="setValueToFormObj(\'tab_vmSpec\', \'vmSpec\',' + vSpecIndex + ', \'e_specId\');">'
                     + '     <input type="hidden" id="vmSpec_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
                     + '     <input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
                     + '     <input type="hidden" name="vmSpec_info" id="vmSpec_info_' + vSpecIndex + '" value="' + vSpecItem.id + '|' + vSpecItem.name + '|' + vSpecItem.connectionName + '|' + vSpecItem.cspImageId + '|' + vSpecItem.cspImageName + '|' + vSpecItem.guestOS + '|' + vSpecItem.description + '"/>'
@@ -558,6 +558,36 @@ function getImageListCallbackFail(error) {
         + '</tr>';
     $("#es_imageListTbody").empty()
     $("#es_imageListTbody").append(html)
+}
+
+// 등록 된 vm search 결과
+function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList){
+    console.log("11111");
+    console.log(vmImageList);
+    var html = ""
+    if (vmImageList.length > 0) {
+        vmImageList.forEach(function (vImageItem, vImageIndex) {
+            //connectionName
+            //cspSpecName
+            html += '<tr onclick="setAssistValue(' + vImageIndex + ');">'
+                + '     <input type="hidden" id="vmImageAssist_name_' + vImageIndex + '" value="' + vImageItem.name + '"/>'
+                + '     <input type="hidden" id="vmImageAssist_connectionName_' + vImageIndex + '" value="' + vImageItem.connectionName + '"/>'
+                + '     <input type="hidden" id="vmImageAssist_cspImageId_' + vImageIndex + '" value="' + vImageItem.cspImageId + '"/>'
+                + '     <input type="hidden" id="vmImageAssist_cspImageName_' + vImageIndex + '" value="' + vImageItem.cspImageName + '"/>'
+                + '     <input type="hidden" id="vmImageAssist_guestOS_' + vImageIndex + '" value="' + vImageItem.guestOS + '"/>'
+                + '     <input type="hidden" id="vmImageAssist_description_' + vImageIndex + '" value="' + vImageItem.description + '"/>'
+                + '<td class="overlay hidden" data-th="Name">' + vImageItem.name + '</td>'
+                + '<td class="overlay hidden" data-th="CspImageId">' + vImageItem.cspImageId + '</td>'
+                + '<td class="overlay hidden" data-th="CspImageName">' + vImageItem.cspImageName + '</td>'
+                + '</td>'
+                + '<td class="overlay hidden" data-th="GuestOS">' + vImageItem.guestOS + '</td>'
+                + '<td class="overlay hidden" data-th="Description">' + vImageItem.description + '</td>'
+                + '</tr>'
+
+        });
+        $("#assistVmImageList").empty()
+        $("#assistVmImageList").append(html)
+    }
 }
 
 function getSecurityGroupListCallbackSuccess(caller, data){
@@ -633,4 +663,198 @@ function getSshKeyListCallbackSuccess(caller, data){
 
 function getSshKeyListCallbackFail(caller, error){
 
+}
+
+// EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
+function searchAssistImageByEnter(event, caller){
+    if( event.keyCode === 13) {
+        // searchKeyword(keyword, caller);
+        searchVmImageByKeyword(caller);
+        // searchKeyword($(this).val(), caller)
+    }
+}
+
+//
+function searchVmImageByKeyword(caller){
+    var keyword = "";
+    var keywordObjId = "";
+    if( caller == "searchVmImageAssistAtReg"){
+        keyword = $("#keywordAssistImage").val();
+        keywordObjId = "searchAssistImageKeywords";
+    }
+
+    if( !keyword ){
+        commonAlert("At least a keyword required");
+        return;
+    }
+    var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
+
+    $("#" + keywordObjId).append(addKeyword);
+    var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
+    $("[name='keyword_" + caller + "']").each(function( idx, ele){
+        keywords.push($(this).text());
+    });
+
+    getCommonSearchVmImageList(keywords, caller);
+}
+// Assist Spec filter Search버튼 클릭시
+function searchSpecsByRange(caller){
+    // var specFilter = new Object();
+
+    var assistSpecConnectionNameVal = $("#assistSpecConnectionName option:selected").val();
+    if( caller == 'searchVmSpecAssistAtReg'){
+
+    }
+    // if (assistSpecConnectionNameVal) {
+    //     specFilter.connectionName = assistSpecConnectionNameVal
+    // }
+
+    // storage
+    var storageMin = $("#assist_num_storage_min").val();
+    var storageMax = $("#assist_num_storage_max").val();
+
+    var storageObj = new Object();
+    storageObj.min = Number(storageMin)
+    storageObj.max = Number(storageMax)
+
+    // Core
+    var coreMin = $("#assist_num_core_min").val();
+    var coreMax = $("#assist_num_core_max").val();
+    var coreObj = new Object();
+    coreObj.min = Number(coreMin)
+    coreObj.max = Number(coreMax)
+
+    // specFilter.numCore = { "min": coreMin, "max": coreMax };
+
+    // vCPU
+    var vCpuMin = $("#assist_num_vCPU_min").val();
+    var vCpuMax = $("#assist_num_vCPU_max").val();
+    var vCpuObj = new Object();
+    vCpuObj.min = Number(vCpuMin)
+    vCpuObj.max = Number(vCpuMax)
+    // specFilter.numvCPU = { "min": vCpuMin, "max": vCpuMax };
+
+    // memory
+
+    var specFilter = {
+        connectionName: assistSpecConnectionNameVal,
+        maxTotalStorageTiB: storageObj,
+        numCore: coreObj,
+        numvCPU: vCpuObj,
+    }
+    getCommonFilterVmSpecListByRange(specFilter, caller)
+
+    // ID             string `json:"id"`
+    // Name           string `json:"name"`
+    // Description    string `json:"description"`
+    // ConnectionName string `json:"connectionName"`
+    // CspSpecName    string `json:"cspSpecName"`
+    // OsType         string `json:"osType"`
+    //
+    // CostPerHour Range `json:"costPerHour"`
+    // EbsBwMbps   Range `json:"ebsBwMbps"`
+    //
+    // EvaluationScore01 Range  `json:"evaluationScore01"`
+    // EvaluationScore02 Range  `json:"evaluationScore02"`
+    // EvaluationScore03 Range  `json:"evaluationScore03"`
+    // EvaluationScore04 Range  `json:"evaluationScore04"`
+    // EvaluationScore05 Range  `json:"evaluationScore05"`
+    // EvaluationScore06 Range  `json:"evaluationScore06"`
+    // EvaluationScore07 Range  `json:"evaluationScore07"`
+    // EvaluationScore08 Range  `json:"evaluationScore08"`
+    // EvaluationScore09 Range  `json:"evaluationScore09"`
+    // EvaluationScore10 Range  `json:"evaluationScore10"`
+    // EvaluationStatus  string `json:"evaluationStatus"`
+    //
+    // GpuModel string `json:"gpuModel"`
+    // GpuP2p   string `json:"gpuP2p"`
+    //
+    // MaxNumStorage      Range `json:"maxNumStorage"`
+    // MaxTotalStorageTiB Range `json:"maxTotalStorageTiB"`
+    // MemGiB             Range `json:"memGiB"`
+    //
+    // NetBwGbps  Range `json:"netBwGbps"`
+    // NumCore    Range `json:"numCore"`
+    // NumGpu     Range `json:"numGpu"`
+    // NumStorage Range `json:"numStorage"`
+    // NumVCPU    Range `json:"numvCPU"`
+    // StorageGiB Range `json:"storageGiB"`
+}
+
+// 등록된 spec조회 성공 시 table에 뿌려주고, 클릭시 spec 내용 set.
+function getCommonFilterVmSpecListCallbackSuccess(caller, vmSpecList){
+// function getCommonFilterVmImageListCallbackSuccess(caller, vmSpecList){
+    console.log(vmSpecList);
+    if (vmSpecList == null || vmSpecList == undefined || vmSpecList == "null") {
+
+    } else {// 아직 data가 1건도 없을 수 있음
+        var html = ""
+        if (vmSpecList.length > 0) {
+            vmSpecList.forEach(function (vSpecItem, vSpecIndex) {
+                //connectionName
+                //cspSpecName
+                html += '<tr onclick="setAssistValue(' + vSpecIndex + ');">'
+                    + '     <input type="hidden" id="vmSpecAssist_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
+                    + '     <input type="hidden" id="vmSpecAssist_name_' + vSpecIndex + '" value="' + vSpecItem.name + '"/>'
+                    + '     <input type="hidden" id="vmSpecAssist_cspSpecName_' + vSpecIndex + '" value="' + vSpecItem.cspSpecName + '"/>'
+                    + '     <input type="hidden" id="vmSpecAssist_memGiB_' + vSpecIndex + '" value="' + vSpecItem.memGiB + '"/>'
+                    + '     <input type="hidden" id="vmSpecAssist_numvCPU_' + vSpecIndex + '" value="' + vSpecItem.numvCPU + '"/>'
+                    + '     <input type="hidden" id="vmSpecAssist_numGpu_' + vSpecIndex + '" value="' + vSpecItem.numGpu + '"/>'
+                    + '     <input type="hidden" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
+                    + '<td class="overlay hidden" data-th="Name">' + vSpecItem.name + '</td>'
+                    + '<td class="overlay hidden" data-th="CspSpecName">' + vSpecItem.cspSpecName + '</td>'
+                    + '<td class="btn_mtd ovm td_left" data-th="Memory">'
+                    + vSpecItem.memGiB
+                    + '</td>'
+                    + '<td class="overlay hidden" data-th="VCPU">' + vSpecItem.numvCPU + '</td>'
+
+                    + '<td class="overlay hidden" data-th="GPU">' + vSpecItem.numGpu + '</td>'
+                    + '</tr>'
+            })
+            $("#assistSpecList").empty()
+            $("#assistSpecList").append(html)
+        }
+
+            // "associatedObjectList": null,
+            // "connectionName": "aws-conn-osaka",
+            // "costPerHour": 0,
+            // "cspSpecName": "t3.small",
+            // "description": "",
+            // "ebsBwMbps": 0,
+            // "evaluationScore01": 0,
+            // "evaluationScore02": 0,
+            // "evaluationScore03": 0,
+            // "evaluationScore04": 0,
+            // "evaluationScore05": 0,
+            // "evaluationScore06": 0,
+            // "evaluationScore07": 0,
+            // "evaluationScore08": 0,
+            // "evaluationScore09": 0,
+            // "evaluationScore10": 0,
+            // "evaluationStatus": "",
+            // "gpuMemGiB": 0,
+            // "gpuModel": "",
+            // "gpuP2p": "",
+            // "id": "osaka-t3small",
+            // "isAutoGenerated": false,
+            // "maxNumStorage": 0,
+            // "maxTotalStorageTiB": 0,
+            // "memGiB": 2,
+            // "name": "osaka-t3small",
+            // "namespace": "osaka-ns",
+            // "netBwGbps": 0,
+            // "numCore": 0,
+            // "numGpu": 0,
+            // "numStorage": 0,
+            // "numvCPU": 2,
+            // "orderInFilteredResult": 0,
+            // "osType": "",
+            // "storageGiB": 0
+
+
+    }
+}
+
+function clearAssistSpecList(targetTableList){
+    $("#" + targetTableList).empty()
 }

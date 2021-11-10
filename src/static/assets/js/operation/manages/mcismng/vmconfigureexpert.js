@@ -647,8 +647,8 @@ function filterTableByMultipleHiddenColumn(tableId, multipleColumnMap) {
 
 // vNet의 경우 value set이 다른 tab과 다름(setValueToFormObj 와 기능은 같음)
 // subnet 처리를 위한 로직 추가됨
-function setVnetValueToFormObj(tableId, prefixTargetTabName, prefixVnetId, prefixName, selectedIndex, targetObjId) {
-  setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedIndex, targetObjId);
+function setVnetValueToFormObj(prefixTargetTabName, prefixVnetId, prefixName, selectedIndex, targetObjId) {
+  setValueToFormObj(prefixTargetTabName, prefixName, selectedIndex, targetObjId);
 
   // subnet set 추가
   //<input type="hidden" name="vNet_subnet_{{$vNetItem.ID}}" id="vNet_subnet_{{$vNetItem.ID}}_{{$subnetIndex}}" value="{{$subnetItem.IID}}"/>
@@ -663,19 +663,16 @@ function setVnetValueToFormObj(tableId, prefixTargetTabName, prefixVnetId, prefi
 // 대상 table, 선택한 tr의 index, set할 값, 대상 form의 obj 지정하여
 // tr의 check시 해당 값이 obj에 저장
 // TODO : 초기화는??	
-function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedIndex, targetObjId) {
-  //setValueToFormObj('es_specList', 'tab_vmSpecInfo', 'vmSpec', '{{$vmSpecIndex}}', 'e_specId')
+function setValueToFormObj(prefixTargetTabName, prefixName, selectedIndex, targetObjId) {
+  console.log("prefixTargetTabName=" + prefixTargetTabName + ",prefixName=" + prefixName + ", selectedIndex=" + selectedIndex + ", targetObjId=" + targetObjId)
   var selectedId = $("#" + prefixName + "_id_" + selectedIndex).val();
   var selectedConnectionName = $("#" + prefixName + "_connectionName_" + selectedIndex).val();
-  var selectedInfo = $("#" + prefixName + "_info_" + selectedIndex).val();
 
   var econnectionName = $("#e_connectionName").val();
   console.log(econnectionName + " : " + selectedConnectionName);
   var targetTabObjId = prefixTargetTabName + "Info";
   var targetTabConnectionNameObjId = prefixTargetTabName + "ConnectionName";
   if (econnectionName != "" && econnectionName != selectedConnectionName) {
-    document.getElementById(tableId).style.display = "none";
-    $("#" + targetTabObjId).val(selectedInfo);
     $("#" + targetTabConnectionNameObjId).val(selectedConnectionName);
     $("#" + targetObjId).val(selectedId);
 
@@ -685,8 +682,6 @@ function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedInd
     commonConfirmOpen("DifferentConnection");
   } else {
     console.log("setValueToFormObj=" + targetTabObjId);
-    console.log(selectedInfo);
-    $("#" + targetTabObjId).val(selectedInfo);
     $("#" + targetTabConnectionNameObjId).val(selectedConnectionName);
     $("#" + targetObjId).val(selectedId);
 
@@ -695,9 +690,49 @@ function setValueToFormObj(tableId, prefixTargetTabName, prefixName, selectedInd
       $("#es_regConnectionName").val(selectedConnectionName);
     }
     $("#e_connectionName").val(selectedConnectionName);
-    // 값이 설정된 후에는 table 안보이게
-    document.getElementById(tableId).style.display = "none";
   }
+}
+
+// assist Popup에서 항목 선택 시 임시로 set. -> Apply버튼 클릭 시 화면으로 set할 것임.
+function setAssistValue(index){
+  $("#assistSelectedIndex").val(index);
+}
+// assist Popup에서 apply버튼 클릭 시 assestSelectedIndex의 값으로 선택된 값들을 main으로 set
+function applyAssistValues(caller){
+  //
+  var selectedIndex = $("#assistSelectedIndex").val();
+  console.log(caller + " : " + selectedIndex);
+  if(caller == "vmImageAssist"){
+    var orgPrefix = "vmImageAssist_";
+    var targetPrefix = "tab_vmImage_";
+
+    $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+    $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
+    $("#" + targetPrefix + "cspImageId").val($("#" + orgPrefix + "cspImageId_" + selectedIndex).val());
+    $("#" + targetPrefix + "cspImageName").val($("#" + orgPrefix + "cspImageName_" + selectedIndex).val());
+    $("#" + targetPrefix + "guestOS").val($("#" + orgPrefix + "guestOS_" + selectedIndex).val());
+    $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
+    $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
+
+    $("#imageAssist").modal("hide");
+  }else if ( caller == "vmSpecAssist"){
+    var orgPrefix = "vmSpecAssist_";
+    var targetPrefix = "tab_vmSpec_";
+    //tab_vmSpec_cspSpecName
+    // + '     <input type="hidden" id="vmSpec_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
+    // + '     <input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
+
+    $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+    $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
+    // $("#" + targetPrefix + "cspSpecId").val($("#" + orgPrefix + "cspSpecId_" + selectedIndex).val());
+    $("#" + targetPrefix + "cspSpecName").val($("#" + orgPrefix + "cspSpecName_" + selectedIndex).val());
+    $("#" + targetPrefix + "memGiB").val($("#" + orgPrefix + "memGiB_" + selectedIndex).val());
+    $("#" + targetPrefix + "numvCPU").val($("#" + orgPrefix + "numvCPU_" + selectedIndex).val());
+    $("#" + targetPrefix + "numGpu").val($("#" + orgPrefix + "numGpu_" + selectedIndex).val());
+
+    $("#specAssist").modal("hide");
+  }
+
 }
 
 // Table에서 connection 선택시 hidden에 connection정보 set.
