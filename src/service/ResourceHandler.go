@@ -1286,7 +1286,7 @@ func SearchVirtualMachineImageList(nameSpaceID string, restSearchImageRequest *t
 	// pbytes, _ := json.Marshal(nameSpaceID)
 	pbytes, _ := json.Marshal(restSearchImageRequest)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 	virtualMachineImageInfo := tbmcir.RestGetAllImageResponse{}
 	if err != nil {
 		fmt.Println(err)
