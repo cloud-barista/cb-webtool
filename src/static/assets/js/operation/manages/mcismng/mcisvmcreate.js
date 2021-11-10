@@ -409,69 +409,75 @@ function getVmList() {
 }
 
 // 화면 Load시 가져오나 굳이?
+var totalNetworkListByNamespace = new Array();
 function getNetworkListCallbackSuccess(caller, data) {
     console.log(data);
     if (data == null || data == undefined || data == "null") {
 
     } else {// 아직 data가 1건도 없을 수 있음
-        var html = ""
-        if (data.length > 0) {
-            data.forEach(function (vNetItem, vNetIndex) {
-                // TODO : 생성 function으로 뺄 것. vnet에 subnet이 2개 이상 있을 수 있는데 그중 1개의 subnet을 선택해야 함.
-                var subnetHtml = ""
-                var subnetData = vNetItem.subnetInfoList
-                var subnetIds = ""
-                console.log(subnetData)
-                subnetData.forEach(function (subnetItem, subnetIndex) {
-                    // subnetHtml +='<input type="hidden" name="vNet_subnet_' + vNetItem.id + '" id="vNet_subnet_' + vNetItem.id + '_' + subnetIndex + '" value="' + subnetItem.iid.nameId + '"/>'
-                    //             + subnetIndex + ' || ' + subnetItem.iid.nameId + ' <p>'
-                    // console.log(subnetItem)
-                    // console.log(subnetItem.iid)
-                    subnetHtml += subnetIndex + ' || ' + subnetItem.id + '<p>'
-                    if (subnetIndex > 0) { subnetIds += "," }
-                    subnetIds += subnetItem.name
-
-                })
-                subnetIds += ""
-                subnetHtml += '<input type="hidden" name="vNet_subnet_' + vNetItem.id + '" id="vNet_subnet_' + vNetItem.id + '_' + vNetIndex + '" value="' + subnetIds + '"/>'
-
-                console.log("subnetIds = " + subnetIds)
-
-                console.log(subnetHtml)
-                html += '<tr onclick="setVnetValueToFormObj(\'es_vNetList\', \'tab_vNet\', \'vNetItem.ID\',\'vNet\',' + vNetIndex + ', \'e_vNetId\');">'
-
-                    + '        <input type="hidden" id="vNet_id_' + vNetIndex + '" value="' + vNetItem.id + '"/>'
-                    + '        <input type="hidden" name="vNet_connectionName" id="vNet_connectionName_' + vNetIndex + '" value="' + vNetItem.connectionName + '"/>'
-                    + '        <input type="hidden" name="vNet_name" id="vNet_name_' + vNetIndex + '" value="' + vNetItem.name + '"/>'
-                    + '        <input type="hidden" name="vNet_description" id="vNet_description_' + vNetIndex + '" value="' + vNetItem.description + '"/>'
-                    + '        <input type="hidden" name="vNet_cidrBlock" id="vNet_cidrBlock_' + vNetIndex + '" value="' + vNetItem.cidrBlock + '"/>'
-                    + '        <input type="hidden" name="vNet_cspVnetName" id="vNet_cspVnetName_' + vNetIndex + '" value="' + vNetItem.cspVNetName + '"/>'
-
-                    + '        <input type="hidden" name="vNet_subnetInfos" id="vNet_subnetInfos_' + vNetIndex + '" value="' + subnetIds + '"/>'
-
-                    //    사용하지 않는데 굳이 리스트를 할당할 필요가 있을까?
-                    //+'        <input type="hidden" name="vNet_keyValueInfos" id="vNet_keyValueInfos_' + vNetIndex + '" value="' + vNetItem.keyValueInfos + '"/>'
-
-                    + '        <input type="hidden" id="vNet_info_' + vNetIndex + '" value="' + vNetItem.id + '|' + vNetItem.name + ' |' + vNetItem.cspVNetName + '|' + vNetItem.cidrBlock + '|' + subnetIds + '"/>'
-
-                    + '    <td class="overlay hidden" data-th="Name">' + vNetItem.name + '</td>'
-                    + '    <td class="btn_mtd ovm td_left" data-th="CidrBlock">'
-                    + '        ' + vNetItem.cidrBlock
-                    + '    </td>'
-                    + '    <td class="btn_mtd ovm td_left" data-th="SubnetInfo">' + subnetHtml
-                    // +'        { {range $subnetIndex, $subnetItem := .SubnetInfos + ''
-                    // +'        <input type="hidden" name="vNet_subnet_' + vNetItem.ID + '" id="vNet_subnet_' + vNetItem.ID + '_' + subnetIndex + '" value="' + subnetItem.IID.NameId + '"/>'
-                    // +'        ' + subnetIndex + ' || ' + subnetItem.IID.NameId + ' <p>'
-                    // +'        { { end  + ''
-                    + '    </td>'
-                    + '    <td class="overlay hidden" data-th="Description">' + vNetItem.description + '</td>'
-                    + '</tr>'
-            })
-            $("#e_vNetListTbody").empty()
-            $("#e_vNetListTbody").append(html)
-        }
+        setNetworkListToExpertMode(data);
+        // var html = ""
+        // if (data.length > 0) {
+        //     totalNetworkListByNamespace = data;
+        //
+        //     setNetworkListToNomalMode(data)
+        //     setNetworkListToExpertMode(data)
+        //
+        //     data.forEach(function (vNetItem, vNetIndex) {
+        //         // TODO : 생성 function으로 뺄 것. vnet에 subnet이 2개 이상 있을 수 있는데 그중 1개의 subnet을 선택해야 함.
+        //         var subnetHtml = ""
+        //         var subnetData = vNetItem.subnetInfoList
+        //         var subnetIds = ""
+        //         console.log(subnetData)
+        //         subnetData.forEach(function (subnetItem, subnetIndex) {
+        //             // subnetHtml +='<input type="hidden" name="vNet_subnet_' + vNetItem.id + '" id="vNet_subnet_' + vNetItem.id + '_' + subnetIndex + '" value="' + subnetItem.iid.nameId + '"/>'
+        //             //             + subnetIndex + ' || ' + subnetItem.iid.nameId + ' <p>'
+        //             // console.log(subnetItem)
+        //             // console.log(subnetItem.iid)
+        //             subnetHtml += subnetIndex + ' || ' + subnetItem.id + '<p>'
+        //             if (subnetIndex > 0) { subnetIds += "," }
+        //             subnetIds += subnetItem.name
+        //
+        //         })
+        //         subnetIds += ""
+        //         subnetHtml += '<input type="hidden" name="vNet_subnet_' + vNetItem.id + '" id="vNet_subnet_' + vNetItem.id + '_' + vNetIndex + '" value="' + subnetIds + '"/>'
+        //
+        //         console.log("subnetIds = " + subnetIds)
+        //
+        //         console.log(subnetHtml)
+        //         html += '<tr onclick="setVnetValueToFormObj(\'es_vNetList\', \'tab_vNet\', \'vNetItem.ID\',\'vNet\',' + vNetIndex + ', \'e_vNetId\');">'
+        //
+        //             + '        <input type="hidden" id="vNet_id_' + vNetIndex + '" value="' + vNetItem.id + '"/>'
+        //             + '        <input type="hidden" name="vNet_connectionName" id="vNet_connectionName_' + vNetIndex + '" value="' + vNetItem.connectionName + '"/>'
+        //             + '        <input type="hidden" name="vNet_name" id="vNet_name_' + vNetIndex + '" value="' + vNetItem.name + '"/>'
+        //             + '        <input type="hidden" name="vNet_description" id="vNet_description_' + vNetIndex + '" value="' + vNetItem.description + '"/>'
+        //             + '        <input type="hidden" name="vNet_cidrBlock" id="vNet_cidrBlock_' + vNetIndex + '" value="' + vNetItem.cidrBlock + '"/>'
+        //             + '        <input type="hidden" name="vNet_cspVnetName" id="vNet_cspVnetName_' + vNetIndex + '" value="' + vNetItem.cspVNetName + '"/>'
+        //
+        //             + '        <input type="hidden" name="vNet_subnetInfos" id="vNet_subnetInfos_' + vNetIndex + '" value="' + subnetIds + '"/>'
+        //
+        //             //    사용하지 않는데 굳이 리스트를 할당할 필요가 있을까?
+        //             //+'        <input type="hidden" name="vNet_keyValueInfos" id="vNet_keyValueInfos_' + vNetIndex + '" value="' + vNetItem.keyValueInfos + '"/>'
+        //
+        //             + '        <input type="hidden" id="vNet_info_' + vNetIndex + '" value="' + vNetItem.id + '|' + vNetItem.name + ' |' + vNetItem.cspVNetName + '|' + vNetItem.cidrBlock + '|' + subnetIds + '"/>'
+        //
+        //             + '    <td class="overlay hidden" data-th="Name">' + vNetItem.name + '</td>'
+        //             + '    <td class="btn_mtd ovm td_left" data-th="CidrBlock">'
+        //             + '        ' + vNetItem.cidrBlock
+        //             + '    </td>'
+        //             + '    <td class="btn_mtd ovm td_left" data-th="SubnetInfo">' + subnetHtml
+        //             // +'        { {range $subnetIndex, $subnetItem := .SubnetInfos + ''
+        //             // +'        <input type="hidden" name="vNet_subnet_' + vNetItem.ID + '" id="vNet_subnet_' + vNetItem.ID + '_' + subnetIndex + '" value="' + subnetItem.IID.NameId + '"/>'
+        //             // +'        ' + subnetIndex + ' || ' + subnetItem.IID.NameId + ' <p>'
+        //             // +'        { { end  + ''
+        //             + '    </td>'
+        //             + '    <td class="overlay hidden" data-th="Description">' + vNetItem.description + '</td>'
+        //             + '</tr>'
+        //     })
+        //     $("#e_vNetListTbody").empty()
+        //     $("#e_vNetListTbody").append(html)
+        // }
     }
-
 }
 function getNetworkListCallbackFail(caller, error) {
     // no data
@@ -482,6 +488,55 @@ function getNetworkListCallbackFail(caller, error) {
     $("#e_vNetListTbody").empty()
     $("#e_vNetListTbody").append(html)
 }
+
+// simple mode일 때 나타나는 vnetList
+function setNetworkListToExpertMode(data){
+    var html = ""
+    if (data.length > 0) {
+        totalNetworkListByNamespace = data;
+        var calNetIndex = 0;
+        data.forEach(function (vNetItem, vNetIndex) {
+            var subnetData = vNetItem.subnetInfoList;
+            var addedSubnetIndex = 0;// subnet 이 1개 이상인 경우 subnet 으로 인한 index차이를 계산
+            console.log(subnetData)
+            subnetData.forEach(function (subnetItem, subnetIndex) {
+                console.log(subnetItem)
+                // console.log(subnetItem.iid)
+                var subnetId = subnetItem.name
+
+
+                html += '<tr onclick="setAssistValue(' + calNetIndex + ');">'
+
+                    + '        <input type="hidden" id="vNetAssist_id' + calNetIndex + '" value="' + vNetItem.id + '"/>'
+                    + '        <input type="hidden" name="vNetAssist_connectionName" id="vNetAssist_connectionName' + calNetIndex + '" value="' + vNetItem.connectionName + '"/>'
+                    + '        <input type="hidden" name="vNetAssist_name" id="vNetAssist_name_' + calNetIndex + '" value="' + vNetItem.name + '"/>'
+                    + '        <input type="hidden" name="vNetAssist_description" id="vNetAssist_description_' + calNetIndex + '" value="' + vNetItem.description + '"/>'
+                    + '        <input type="hidden" name="vNetAssist_cidrBlock" id="vNetAssist_cidrBlock_' + calNetIndex + '" value="' + vNetItem.cidrBlock + '"/>'
+                    + '        <input type="hidden" name="vNetAssist_cspVnetName" id="vNetAssist_cspVnetName_' + calNetIndex + '" value="' + vNetItem.cspVNetName + '"/>'
+
+                    + '        <input type="hidden" name="vNetAssist_subnetId" id="vNetAssist_subnetId_' + calNetIndex + '" value="' + subnetItem.id + '"/>'
+                    + '        <input type="hidden" name="vNetAssist_subnetName" id="vNetAssist_subnetName_' + calNetIndex + '" value="' + subnetItem.name + '"/>'
+
+                    + '    <td class="overlay hidden" data-th="Name">' + vNetItem.name + '</td>'
+                    + '    <td class="btn_mtd ovm td_left" data-th="CidrBlock">'
+                    + '        ' + vNetItem.cidrBlock
+                    + '    </td>'
+                    + '    <td class="btn_mtd ovm td_left" data-th="SubnetId">' + subnetItem.id + "<br>" + subnetItem.ipv4_CIDR
+
+                    + '    </td>'
+                    + '    <td class="overlay hidden" data-th="Description">' + vNetItem.description + '</td>'
+                    + '</tr>'
+
+                calNetIndex++;
+
+            });
+
+        });
+        $("#assistVnetList").empty()
+        $("#assistVnetList").append(html)
+    }
+}
+
 
 function getSpecListCallbackSuccess(caller, data) {
     console.log(data);
@@ -590,39 +645,88 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList){
     }
 }
 
+var totalSecurityGroupListByNamespace = new Array();
 function getSecurityGroupListCallbackSuccess(caller, data){
     // expert에서 사용할 securityGroup
     if (data == null || data == undefined || data == "null") {
 
     } else {// 아직 data가 1건도 없을 수 있음
-        var html = ""
-        if (data.length > 0) {
-            data.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
+        if( caller == "vmcreate"){
+            var html = ""
+            if (data.length > 0) {
+                totalSecurityGroupListByNamespace = data;
+                data.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
+                    // <th>Name</th>
+                    // <th>VPC Id</th>
+                    // <th>Description</th>
+                    // <th>Firewall RuleSet</th>
+                    var firewallRules = vSecurityGroupItem.firewallRules;
+                    html += '<tr>'
 
-                html += '<tr>'
+                        + '<td class="overlay hidden column-50px" data-th="">'
+                        + '     <input type="checkbox" name="securityGroupAssist_chk" id="securityGroupAssist_Raw_' + vSecurityGroupIndex + '" title="" />'
+                        + '     <input type="hidden" name="securityGroupAssist_id" id="securityGroupAssist_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_name" id="securityGroupAssist_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_vNetId" id="securityGroupAssist_vNetId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.vNetId + '"/>'
 
-                    + '<td class="overlay hidden column-50px" data-th="">'
-                    + '     <input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_' + vSecurityGroupIndex + '" title="" />'
-                    + '     <input type="hidden" id="securityGroup_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
-                    + '     <input type="hidden" id="securityGroup_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
-                    + '     <input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
-                    + '     <input type="hidden" name="securityGroup_info" id="securityGroup_info_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.name +'|' + vSecurityGroupItem.connectionName + '|' + vSecurityGroupItem.description + '"/>'
-                    + '     <label for="td_ch1"></label> <span class="ov off"></span>'
-                    + '</td>'
-                    + '<td class="btn_mtd ovm td_left" data-th="Name">'
-                    + vSecurityGroupItem.name
-                    + '</td>'
-                    + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
-                    + vSecurityGroupItem.connectionName
-                    + '</td>'
-                    + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
+                        + '     <input type="hidden" name="securityGroupAssist_connectionName" id="securityGroupAssist_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_description" id="securityGroupAssist_description_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
 
-                    + '</tr>'
-            })
-            $("#e_securityGroupListTbody").empty()
-            $("#e_securityGroupListTbody").append(html)
+                        + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupId" id="securityGroupAssist_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupName" id="securityGroupAssist_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_firewallRules_cidr" id="securityGroupAssist_firewallRules_cidr' + vSecurityGroupIndex + '" value="'+ firewallRules.cidr + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_firewallRules_direction" id="securityGroupAssist_firewallRules_direction' + vSecurityGroupIndex + '" value="'+ firewallRules.direction + '"/>'
 
+                        + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort' + vSecurityGroupIndex + '" value="'+ firewallRules.fromPort + '"/>'
+                        + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort' + vSecurityGroupIndex + '" value="'+ firewallRules.toPort + '"/>'
+                        + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol' + vSecurityGroupIndex + '" value="'+ firewallRules.ipProtocol + '"/>'
+
+                        + '     <label for="td_ch1"></label> <span class="ov off"></span>'
+                        + '</td>'
+                        + '<td class="btn_mtd ovm td_left" data-th="Name">'
+                        + vSecurityGroupItem.name
+                        + '</td>'
+                        + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                        + vSecurityGroupItem.vNetId
+                        + '</td>'
+                        + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
+
+                        + '</tr>'
+                })
+                $("#assistSecurityGroupList").empty()
+                $("#assistSecurityGroupList").append(html)
+
+            }
         }
+
+        // var html = ""
+        // if (data.length > 0) {
+        //     data.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
+        //
+        //         html += '<tr>'
+        //
+        //             + '<td class="overlay hidden column-50px" data-th="">'
+        //             + '     <input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_' + vSecurityGroupIndex + '" title="" />'
+        //             + '     <input type="hidden" id="securityGroup_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
+        //             + '     <input type="hidden" id="securityGroup_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
+        //             + '     <input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
+        //             + '     <input type="hidden" name="securityGroup_info" id="securityGroup_info_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.name +'|' + vSecurityGroupItem.connectionName + '|' + vSecurityGroupItem.description + '"/>'
+        //             + '     <label for="td_ch1"></label> <span class="ov off"></span>'
+        //             + '</td>'
+        //             + '<td class="btn_mtd ovm td_left" data-th="Name">'
+        //             + vSecurityGroupItem.name
+        //             + '</td>'
+        //             + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+        //             + vSecurityGroupItem.connectionName
+        //             + '</td>'
+        //             + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
+        //
+        //             + '</tr>'
+        //     })
+        //     $("#e_securityGroupListTbody").empty()
+        //     $("#e_securityGroupListTbody").append(html)
+        //
+        // }
     }
 }
 
@@ -663,6 +767,42 @@ function getSshKeyListCallbackSuccess(caller, data){
 
 function getSshKeyListCallbackFail(caller, error){
 
+}
+
+// EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
+function searchAssistNetworkByEnter(event, caller){
+    if( event.keyCode === 13) {
+        searchNetworkByKeyword(caller);
+    }
+}
+
+//
+function searchNetworkByKeyword(caller){
+    var keyword = "";
+    var keywordObjId = "";
+    if( caller == "searchNetworkAssistAtReg"){
+        keyword = $("#keywordAssistNetwork").val();
+        keywordObjId = "searchAssistNetworkKeywords";
+
+        //totalNetworkListByNamespace : page Load시 가져온 network List가 있으므로 해당 목록을 Filter한다.
+    }
+
+    // connection
+
+    //
+    if( !keyword ){
+        commonAlert("At least a keyword required");
+        return;
+    }
+    var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
+
+    $("#" + keywordObjId).append(addKeyword);
+    var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
+    $("[name='keyword_" + caller + "']").each(function( idx, ele){
+        keywords.push($(this).text());
+    });
+
+    //getCommonSearchVmImageList(keywords, caller);
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)

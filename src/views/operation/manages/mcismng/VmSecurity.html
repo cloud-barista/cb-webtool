@@ -13,86 +13,46 @@
 						<label><span class="ch">*</span>Security Group Name</label>
 
 						<span class="sbox sbox_m">
-							<input type="text" name="es_securityGroupFilterKeyword"
+							<input type="text" name="tab_securityGroup_name"
 								placeholder="Security Group Name, description, subnet keyword" class="pline"
-								id="filter_securityGroup" />
-							<a href="javascript:void(0);" data-toggle="modal" data-target="#securityAssist"
+								id="tab_securityGroup_name" />
+							<a href="javascript:void(0);" data-toggle="modal" data-target="#securityGroupAssist"
 								class="btn_network">Assist</a>
 						</span>
-						<input type="hidden" name="tab_securityGroupConnectionName"
-							id="tab_securityGroupConnectionName" />
+						<input type="hidden" name="tab_securityGroup_id"
+							id="tab_securityGroup_id" />
+						<input type="hidden" name="tab_securityGroup_connectionName"
+							   id="tab_securityGroup_connectionName" />
 					</li>
 					<li><label>VPC Id</label><span class="sbox">
-							<input type="text" id="" name="" value="" placeholder="" class="gray" title="" readonly />
-						</span></li>
-					<li><label>Description</label><span class="sbox">
-							<input type="text" id="" name="" value="" placeholder="" class="gray" title="" readonly />
+							<input type="text" id="tab_securityGroup_vpcId" name="tab_securityGroup_vpcId" value="" placeholder="" class="gray" title="" readonly />
 						</span></li>
 					<li><label>Firewall RuleSet</label><span class="sbox">
-							<input type="text" id="" name="" value="" placeholder="Inbound" class="gray" title=""
+							<input type="text" id="tab_securityGroup_firewallRules_direction" name="tab_securityGroup_firewallRules_direction" value="" placeholder="Direction" class="gray" title=""
 								readonly />
 						</span></li>
 					<li><span class="sbox">
-							<input type="text" id="" name="" value="" placeholder="Outbound" class="gray" title=""
+							<input type="text" id="tab_securityGroup_firewallRules_fromPort" name="tab_securityGroup_firewallRules_fromPort" value="" placeholder="FromPort" class="gray" title=""
 								readonly />
 						</span></li>
 					<li><span class="sbox">
-							<input type="text" id="" name="" value="" placeholder="CIDR" class="gray" title=""
+							<input type="text" id="tab_securityGroup_firewallRules_toPort" name="tab_securityGroup_firewallRules_toPort" value="" placeholder="ToPort" class="gray" title=""
 								readonly />
+						</span></li>
+					<li><span class="sbox">
+							<input type="text" id="tab_securityGroup_firewallRules_ipProtocol" name="tab_securityGroup_firewallRules_ipProtocol" value="" placeholder="Ip Protocol" class="gray" title=""
+								   readonly />
+						</span></li>
+					<li><span class="sbox">
+							<input type="text" id="tab_securityGroup_firewallRules_cidr" name="tab_securityGroup_firewallRules_cidr" value="" placeholder="CIDR" class="gray" title=""
+								   readonly />
+						</span></li>
+					<li><label>Description</label><span class="sbox">
+							<input type="text" id="tab_securityGroup_description" name="tab_securityGroup_description" value="" placeholder="" class="gray" title="" readonly />
 						</span></li>
 
 				</ul>
 
-				<!-- <div class="dataTable status_list">
-					<a href="javascript:void(0);" id="e_securityGroupListHide" class="btn_hide"
-						onclick="hideFilterResultTable('e_securityGroupList', 'e_securityGroupListHide')">Hide</a>
-					<table cellpadding="0" cellspacing="0" id="e_securityGroupList"
-						style="max-height:300px; display:none;"> -->
-				<!-- <colgroup>
-							<col width="50px">
-							<col width="30%">
-							<col width="30%">
-							<col width="30%">			
-						</colgroup> -->
-				<!-- <thead>
-							<tr>
-								<th class="column-50px">&nbsp;</td>
-								<th>SecurityGroup Name</th>
-								<th>Connection Name</th>
-								<th>Description</th>
-							</tr>
-						</thead>
-						<tbody id="e_securityGroupListTbody"> -->
-				<!--							{ { $length := len .SecurityGroupList } } -->
-				<!--							{ { if eq $length 0 } }-->
-				<!--							<tr>-->
-				<!--								<td class="overlay hidden" data-th="" colspan="4">No Data</td>-->
-				<!--							</tr>-->
-				<!--							{ { end } }-->
-
-				<!--							{ {range $securityGroupIndex, $securityGroupItem := .SecurityGroupList} }	-->
-				<!--							&lt;!&ndash; <tr onclick="setValueToFormObj('e_securityGroupList', 'tab_securityGroupInfo', 'securityGroup', '{ {$securityGroupIndex} }', 'e_securityGroupIds');"> &ndash;&gt;-->
-				<!--							<tr>-->
-				<!--								<td class="overlay hidden column-50px" data-th="">-->
-				<!--									<input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_{ {$securityGroupIndex} }" title="" />-->
-				<!--									<input type="hidden" id="securityGroup_id_{ {$securityGroupIndex} }" value="{ {$securityGroupItem.ID} }"/>-->
-				<!--									<input type="hidden" id="securityGroup_name_{ {$securityGroupIndex} }" value="{ {$securityGroupItem.Name} }"/>-->
-				<!--									<input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_{ {$securityGroupIndex} }" value="{ {$securityGroupItem.ConnectionName} }"/>									-->
-				<!--									<input type="hidden" name="securityGroup_info" id="securityGroup_info_{ {$securityGroupIndex} }" value="{ {$securityGroupItem.Name} }|{ {$securityGroupItem.ConnectionName} }|{ {$securityGroupItem.Description} }"/>-->
-				<!--											-->
-				<!--									<label for="td_ch1"></label> <span class="ov off"></span>-->
-				<!--								</td>-->
-				<!--								<td class="overlay hidden" data-th="Name">{ {$securityGroupItem.Name} }</td>-->
-				<!--								<td class="btn_mtd ovm td_left" data-th="ConnectionName">-->
-				<!--									{ {$securityGroupItem.ConnectionName} }-->
-				<!--								</td>-->
-				<!--								<td class="overlay hidden" data-th="Description">{ {$securityGroupItem.Description} }</td>-->
-				<!--							</tr>											-->
-				<!--							{ {end} }-->
-				<!--							-->
-				<!-- </tbody>
-					</table>
-				</div> -->
 			</div>
 			<div class="ipbox ipbox2">
 				<ul>

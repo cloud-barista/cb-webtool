@@ -698,6 +698,7 @@ function setAssistValue(index){
   $("#assistSelectedIndex").val(index);
 }
 // assist Popup에서 apply버튼 클릭 시 assestSelectedIndex의 값으로 선택된 값들을 main으로 set
+// orgPrefix : assist창의 object, targetPrefix : 메인창의 object
 function applyAssistValues(caller){
   //
   var selectedIndex = $("#assistSelectedIndex").val();
@@ -716,22 +717,107 @@ function applyAssistValues(caller){
 
     $("#imageAssist").modal("hide");
   }else if ( caller == "vmSpecAssist"){
-    var orgPrefix = "vmSpecAssist_";
+    var orgPrefix = "vNetAssist_";
     var targetPrefix = "tab_vmSpec_";
-    //tab_vmSpec_cspSpecName
-    // + '     <input type="hidden" id="vmSpec_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
-    // + '     <input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
 
     $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
     $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
     // $("#" + targetPrefix + "cspSpecId").val($("#" + orgPrefix + "cspSpecId_" + selectedIndex).val());
-    $("#" + targetPrefix + "cspSpecName").val($("#" + orgPrefix + "cspSpecName_" + selectedIndex).val());
+    $("#" + targetPrefix + "cspSpecName_").val($("#" + orgPrefix + "cspSpecName_" + selectedIndex).val());
     $("#" + targetPrefix + "memGiB").val($("#" + orgPrefix + "memGiB_" + selectedIndex).val());
     $("#" + targetPrefix + "numvCPU").val($("#" + orgPrefix + "numvCPU_" + selectedIndex).val());
     $("#" + targetPrefix + "numGpu").val($("#" + orgPrefix + "numGpu_" + selectedIndex).val());
 
     $("#specAssist").modal("hide");
+  }else if ( caller == "networkAssist"){
+    var orgPrefix = "vNetAssist_";
+    var targetPrefix = "tab_vNet_";
+
+    $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+    $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
+    $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
+    $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
+    $("#" + targetPrefix + "cidrBlock").val($("#" + orgPrefix + "cidrBlock_" + selectedIndex).val());
+    $("#" + targetPrefix + "cspVnetName").val($("#" + orgPrefix + "cspVnetName_" + selectedIndex).val());
+    $("#" + targetPrefix + "subnetId").val($("#" + orgPrefix + "subnetId_" + selectedIndex).val());
+    $("#" + targetPrefix + "subnetName").val($("#" + orgPrefix + "subnetName_" + selectedIndex).val());
+
+    $("#networkAssist").modal("hide");
+  }else if ( caller == "securityGroupAssist"){
+    var orgPrefix = "securityGroupAssist_";
+    var firewallRules = "firewallRules";
+    var targetPrefix = "tab_securityGroup_";
+
+    // + '     <input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_' + vSecurityGroupIndex + '" title="" />'
+    // + '     <input type="hidden" id="securityGroup_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
+    // + '     <input type="hidden" id="securityGroup_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
+    // + '     <input type="hidden" id="securityGroup_vNetId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.vNetId + '"/>'
+    //
+    // + '     <input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
+    // + '     <input type="hidden" name="securityGroup_description" id="securityGroup_description_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
+    //
+    // + '     <input type="hidden" name="securityGroup_cspSecurityGroupId" id="securityGroup_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
+    // + '     <input type="hidden" name="securityGroup_cspSecurityGroupName" id="securityGroup_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
+    // + '     <input type="hidden" name="securityGroup_firewallRules_cidr" id="securityGroup_firewallRules_cidr' + vSecurityGroupIndex + '" value="'+ firewallRules.cidr + '"/>'
+    // + '     <input type="hidden" name="securityGroup_firewallRules_direction" id="securityGroup_firewallRules_direction' + vSecurityGroupIndex + '" value="'+ firewallRules.direction + '"/>'
+    //
+    // + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort' + vSecurityGroupIndex + '" value="'+ firewallRules.fromPort + '"/>'
+    // + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort' + vSecurityGroupIndex + '" value="'+ firewallRules.toPort + '"/>'
+    // + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol' + vSecurityGroupIndex + '" value="'+ firewallRules.ipProtocol + '"/>'
+
+console.log("aaa")
+    var count = 0;
+    var securityGroupIds = "";
+    $("input[name='securityGroupAssist_chk']:checked").each(function () {
+      var sgId = $(this).attr("id")
+      var sgEleArr = sgId.split("_");
+      var sgIndex = sgEleArr[sgEleArr.length-1];
+
+      if( count > 0){ securityGroupIds += ","}
+
+      securityGroupIds += $("#" + orgPrefix + "id_" + sgIndex).val()
+      $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + sgIndex).val());
+      $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + sgIndex).val());
+      $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + sgIndex).val());
+      $("#" + targetPrefix + "cidrBlock").val($("#" + orgPrefix + "cidrBlock_" + sgIndex).val());
+      $("#" + targetPrefix + "cspVnetName").val($("#" + orgPrefix + "cspVnetName_" + sgIndex).val());
+      $("#" + targetPrefix + "subnetId").val($("#" + orgPrefix + "subnetId_" + sgIndex).val());
+      $("#" + targetPrefix + "subnetName").val($("#" + orgPrefix + "subnetName_" + sgIndex).val());
+      count++;
+
+    });
+
+    $("#" + targetPrefix + "id").val(securityGroupIds);
+    // $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
+    // $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
+    // $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
+    // $("#" + targetPrefix + "cidrBlock").val($("#" + orgPrefix + "cidrBlock_" + selectedIndex).val());
+    // $("#" + targetPrefix + "cspVnetName").val($("#" + orgPrefix + "cspVnetName_" + selectedIndex).val());
+    // $("#" + targetPrefix + "subnetId").val($("#" + orgPrefix + "subnetId_" + selectedIndex).val());
+    // $("#" + targetPrefix + "subnetName").val($("#" + orgPrefix + "subnetName_" + selectedIndex).val());
+console.log("222")
+
+// id="tab_securityGroup_name"/>
+//tab_securityGroup_id
+// id="tab_securityGroup_connectionName"/>
+// <input type="text" id="tab_securityGroup_vpcId" name="tab_securityGroup_vpcId" value=""
+// <input type="text" id="tab_securityGroup_description" name="tab_securityGroup_description"
+
+// <input type="text" id="tab_securityGroup_firewallRules_direction"
+// <input type="text" id="tab_securityGroup_firewallRules_fromPort"
+// <input type="text" id="tab_securityGroup_firewallRules_toPort"
+// <input type="text" id="tab_securityGroup_firewallRules_ipProtocol"
+// <input type="text" id="tab_securityGroup_firewallRules_cidr"
+
+
+
+    $("#securityGroupAssist").modal("hide");
+
+  }else if ( caller == "sshKeyAssist"){
+
   }
+
+
 
 }
 
