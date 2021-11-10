@@ -3,457 +3,7 @@
 	assist 버튼 클릭시 나타날 popup 
 
 -->
-<!-- OS HW Spec -->
-<div class="modal fade popup_CreateTabBox popup_plineNone" id="OS_HW_Spec_Assist" tabindex="-1" role="dialog"
-	aria-hidden="true">
 
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-
-			<div class="modal-body">
-				<div class="pop-body">
-
-					<div class="pop-cont">
-						<div class="ifbox">
-							<div class="ipbox ipbox1">
-								<ul>
-									<li class="txt">Search Spec to select <input type="submit" name=""
-											class="btn_search" value="" title="" onclick="assistFilterSpec()" /></li>
-								</ul>
-							</div>
-						</div>
-
-						<div class="spec_select_box active">
-							<div class="if_ipbox">
-
-								<div class="ipbox ipbox2">
-									<ul>
-										<li>
-											<label>Cloud Provider / Region</label>
-											<select class="selectbox white pline sel_2" id="assist_select_provider"
-												onchange="getRegionListFilterAtAssist(this.value, 'assist_select_resion');">
-												<option value="">Selected CP</option>
-												{{ range $cloudItem := .CloudOSList}}
-												<option value="{{ $cloudItem }}">{{ $cloudItem }}</option>
-												{{ end }}
-											</select>
-											<select class="selectbox white pline sel_2" id="assist_select_resion"
-												onchange="getConnectionListFilterForSelectbox(this.value, 'assist_select_provider', 'assist_select_connectionName');">
-												<option value="">Selected Region</option>
-												{{ range $regionItem := .RegionList}}
-												<option value="{{ $regionItem.RegionName }}">[{{
-													$regionItem.ProviderName }}] {{ $regionItem.RegionName }}</option>
-												{{ end }}
-											</select>
-											<select class="selectbox white pline sel_1"
-												id="assist_select_connectionName">
-												<option value="">Selected Connection</option>
-												{{ range $connectionItem := .CloudConnectionConfigInfoList}}
-												<option value="{{ $connectionItem.ConfigName }}">{{
-													$connectionItem.ConfigName }} [{{ $connectionItem.ProviderName }}]
-													{{ $connectionItem.RegionName }}</option>
-												{{ end }}
-											</select>
-										</li>
-									</ul>
-								</div>
-							</div>
-
-							<div class="spec_box">
-								<div class="s_box s_box_1">
-									<ul>
-										<!--  onload 시 $("#ex2").slider({}); 와 같이 slider를 활성화 시켜야 함.
-																			<li>
-																				<label>vCPU core </label>
-																				<div class="slider_ip">
-																					<b>Min 10</b> <input id="ex2" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[50,60]"/> <b>Max 100</b>
-																				</div>
-																				<span class="stxt">Unit</span>
-																			</li>
-																			
-																			<li>
-																				<label>disk volume (min)</label>
-																				<div class="s_slider_box">
-																					<b>€ 10</b> <input id="ex3" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]"/><b>€ 1000</b>
-																				</div>
-																			</li>
-																			 -->
-
-										<li>
-											<label>Storage (min)</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="100" data-slider-step="1"
-															data-slider-value="1" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" id="assist_max_num_storage_min"
-													name="assist_max_num_storage_min" value="1" placeholder="1"
-													class="components_input txt_ipbox" title="" disabled />
-											</div>
-											<span class="stxt">TiB</span>
-										</li>
-										<li>
-											<label>Storage (max)</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="100" data-slider-step="1"
-															data-slider-value="100" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" id="assist_max_num_storage_max"
-													name="assist_max_num_storage_max" value="100" placeholder="100"
-													class="components_input txt_ipbox" title="" disabled />
-											</div>
-											<span class="stxt">TiB</span>
-										</li>
-										<li>
-											<label>Core (min)</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="0" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" id="assist_num_core_min" name="assist_num_core_min"
-													value="0" placeholder="0" class="components_input txt_ipbox"
-													title="" disabled />
-											</div>
-											<span class="stxt">Unit</span>
-										</li>
-										<li>
-											<label>Core (max)</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="10" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" id="assist_num_core_max" name="assist_num_core_max"
-													value="0" placeholder="0" class="components_input txt_ipbox"
-													title="" disabled />
-											</div>
-											<span class="stxt">Unit</span>
-										</li>
-									</ul>
-								</div>
-
-								<div class="s_box s_box_2">
-									<ul>
-										<li>
-											<label>vCPU (min)</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="0" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" id="assist_num_vCPU_min" name="assist_num_vCPU_min"
-													value="0" placeholder="0" class="components_input txt_ipbox"
-													title="" disabled />
-											</div>
-											<span class="stxt">Unit</span>
-										</li>
-										<li>
-											<label>vCPU (max)</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="10" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" id="assist_num_vCPU_max" name="assist_num_vCPU_max"
-													value="0" placeholder="0" class="components_input txt_ipbox"
-													title="" disabled />
-											</div>
-											<span class="stxt">Unit</span>
-										</li>
-
-										<li>
-											<label>ebs bandwidth (min)</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="100" data-slider-step="1"
-															data-slider-value="0" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" id="assist_ebs_bw_Mbps_min"
-													name="assist_ebs_bw_Mbps_min" value="0" placeholder="0"
-													class="components_input txt_ipbox" title="" disabled />
-											</div>
-											<span class="stxt">Mbps</span>
-										</li>
-										<li>
-											<label>ebs bandwidth (max)</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="100" data-slider-step="1"
-															data-slider-value="100" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" id="assist_ebs_bw_Mbps_max"
-													name="assist_ebs_bw_Mbps_max" value="0" placeholder="0"
-													class="components_input txt_ipbox" title="" disabled />
-											</div>
-											<span class="stxt">Mbps</span>
-										</li>
-										<!-- <li>
-																				<label class="l_a">GPU</label>
-																				<span class="a_link"><a href="javascript:void(0);" data-toggle="modal" data-target="#OS_HW_Spec_Select" class="btn_select">Select</a></span>
-																			</li> -->
-									</ul>
-								</div>
-
-							</div>
-
-						</div>
-
-						<div class="stit">select Server Spec</div>
-						<input type="hidden" id="assist_vmSpec_id" />
-						<input type="hidden" id="assist_vmSpec_specName" />
-						<input type="hidden" id="assist_vmSpec_cspSpecName" />
-						<input type="hidden" id="assist_vmSpec_connectionName" />
-						<input type="hidden" id="assist_vmSpec_info" />
-
-						<!-- table scrollbar -->
-						<div class="dtbox scrollbar-inner">
-							<div class="dataTable dt_overlay">
-								<table cellpadding="0" cellspacing="0" border="1" summary="">
-									<!-- <colgroup><col width="14%"><col width="14%"><col width="13%"><col width="14%"><col width="14%"><col width=""><col width="15%"></colgroup> -->
-									<thead>
-										<tr>
-											<th>spec ID</th>
-											<th>spec Name</th>
-											<th>Connection Name</th>
-											<th>region</th>
-											<th>OS type</th>
-											<th>Cpu / core / mem / disk</th>
-											<th>Description</th>
-										</tr>
-									</thead>
-									<tbody id="assist_specList">
-
-										<!-- <tr>
-																				<td class="btn_mtd" data-th="spec ID">aws-spec01 <span class="ov off"></span></td>
-																				<td class="overlay hidden" data-th="spec Name">aws-spec01</td>
-																				<td class="overlay hidden" data-th="CP">AWS</td>
-																				<td class="overlay hidden" data-th="region">ap-northeast-1</td>
-																				<td class="overlay hidden" data-th="os type">Amazon Linux</td>
-																				<td class="overlay hidden" data-th="Cpu / core / mem / disk"></td>
-																				<td class="overlay hidden" data-th="description"></td>
-																			<tr>
-																			</tr>
-																				<td class="btn_mtd" data-th="spec ID">aws-spec02 <span class="ov off"></span></td>
-																				<td class="overlay hidden" data-th="spec Name">aws-spec02</td>
-																				<td class="overlay hidden" data-th="CP">AWS</td>
-																				<td class="overlay hidden" data-th="region">ap-northeast-1</td>
-																				<td class="overlay hidden" data-th="os type">Windows</td>
-																				<td class="overlay hidden" data-th="Cpu / core / mem / disk"></td>
-																				<td class="overlay hidden" data-th="description"></td>
-																			<tr>
-																			</tr>
-																				<td class="btn_mtd" data-th="spec ID">azure-spec01 <span class="ov off"></span></td>
-																				<td class="overlay hidden" data-th="spec Name">azure-spec01</td>
-																				<td class="overlay hidden" data-th="CP">AZURE</td>
-																				<td class="overlay hidden" data-th="region">ap-north-1</td>
-																				<td class="overlay hidden" data-th="os type">Other Linux</td>
-																				<td class="overlay hidden" data-th="Cpu / core / mem / disk"></td>
-																				<td class="overlay hidden" data-th="description"></td>
-																			<tr>
-																			</tr>
-																				<td class="btn_mtd" data-th="spec ID">gcp-spec01 <span class="ov off"></span></td>
-																				<td class="overlay hidden" data-th="spec Name">gcp-spec01</td>
-																				<td class="overlay hidden" data-th="CP">GCP</td>
-																				<td class="overlay hidden" data-th="region">ap-east-1</td>
-																				<td class="overlay hidden" data-th="os type">Other Linux</td>
-																				<td class="overlay hidden" data-th="Cpu / core / mem / disk"></td>
-																				<td class="overlay hidden" data-th="description"></td>
-																			</tr> -->
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<!-- //table scrollbar -->
-
-					</div>
-
-				</div>
-
-				<div class="btnbox">
-					<div class="btn_right">
-						<button name="" value="" class="btn_apply btn_co btn_cr_g"
-							onclick="applyAssistSpec()"><span>Apply</span></button>
-						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">Cancel</button>
-					</div>
-				</div>
-
-			</div>
-
-		</div>
-	</div>
-
-</div>
-<!-- //OS HW Spec -->
-
-<!-- OS HW Spec select -->
-<div class="modal fade popup_CreateTabBox popup_CreateTabBox_s" id="OS_HW_Spec_Select" tabindex="-1" role="dialog"
-	aria-hidden="true">
-
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-
-			<div class="modal-body">
-				<div class="pop-body">
-
-					<div class="pop-cont">
-						<div class="ifbox">
-							<div class="title">GPU</div>
-							<div class="if_ipbox">
-								<div class="ipbox ipbox1">
-									<ul>
-										<li>
-											<label>GPU Mode</label>
-											<select class="selectbox white pline sel_1">
-												<option value="1">Input Name</option>
-											</select>
-										</li>
-									</ul>
-								</div>
-							</div>
-
-						</div>
-
-						<div class="spec_select_box d_block">
-
-							<div class="spec_box">
-
-								<div class="s_box s_box_1">
-									<ul>
-										<li>
-											<label>vCPU core min</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="0" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" name="" value="0" placeholder="0"
-													class="components_input txt_ipbox" title="" disabled />
-											</div>
-											<span class="stxt">Unit</span>
-										</li>
-										<li>
-											<label>vCPU core max</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="0" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" name="" value="0" placeholder="0"
-													class="components_input txt_ipbox" title="" disabled />
-											</div>
-											<span class="stxt">Unit</span>
-										</li>
-									</ul>
-								</div>
-
-								<div class="s_box s_box_2">
-									<ul>
-										<li>
-											<label>GPU memory</label>
-											<div class="s_slider_box">
-												<div class="slider_ip">
-													<button class="btn_s btn_s_minus">-</button>
-													<div>
-														<input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="0" />
-													</div>
-													<button class="btn_s btn_s_plus">+</button>
-												</div>
-												<input type="text" name="" value="1" placeholder="0"
-													class="components_input txt_ipbox" title="" disabled />
-											</div>
-											<span class="stxt">Unit</span>
-										</li>
-									</ul>
-								</div>
-
-							</div>
-
-						</div>
-
-
-					</div>
-
-				</div>
-
-				<div class="btnbox">
-					<div class="btn_right">
-						<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button>
-						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">Cancel</button>
-					</div>
-				</div>
-
-			</div>
-
-		</div>
-	</div>
-
-</div>
-<!-- //OS HW Spec select -->
 
 <script src="/assets/js/bootstrap-slider.min.js"></script>
 <script>
@@ -517,7 +67,7 @@
 		});
 	});
 </script>
-
+<input type="hidden" id="assistSelectedIndex"/><!-- Assist Popup에서 table의 항목을 클릭했을 때 index를 저장. apply 클릭 시 해당 index의 값을 main으로 set 하기 위한 용도 -->
 <!-- Network Interface popup -->
 <div class="modal fade popup_CreateTabBox" id="Network_Interface" tabindex="-1" role="dialog" aria-hidden="true">
 
@@ -899,22 +449,15 @@
 				<div class="pop-body">
 
 					<div class="title_box">
-						<div class="title">CSP Spec List</div>
+						<div class="title">CSP Spec List 1</div>
 					</div>
 
 					<div class="pop-cont">
-
-						<!-- <div class="toptxt">
-							<label>Spec List : <span id="lookupSpecCount"></span></label>
-							<button type="button" class="btn btn-sm btn-dark"
-								onclick="commonConfirmOpen('FetchSpecs')">Fetch Specs</button>
-						</div> -->
-
 						<div class="spec_box">
 							<div class="toptxt search">
 								<label>Search</label>
 								<input type="submit" name="" class="btn_search_spec" title="" value=""
-									onclick="lookupSpecList()" />
+									onclick="searchSpecsByRange('searchVmSpecAssistAtReg')" />
 								<ul>
 									<li class="reg_1">
 										<label>Cloud Provider</label>
@@ -942,22 +485,6 @@
 							</div>
 							<div class="s_box s_box_1">
 								<ul>
-									<!--  onload 시 $("#ex2").slider({}); 와 같이 slider를 활성화 시켜야 함.
-																		<li>
-																			<label>vCPU core </label>
-																			<div class="slider_ip">
-																				<b>Min 10</b> <input id="ex2" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[50,60]"/> <b>Max 100</b>
-																			</div>
-																			<span class="stxt">Unit</span>
-																		</li>
-																		
-																		<li>
-																			<label>disk volume (min)</label>
-																			<div class="s_slider_box">
-																				<b>€ 10</b> <input id="ex3" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]"/><b>€ 1000</b>
-																			</div>
-																		</li>
-																		 -->
 
 									<li>
 										<label>Storage</label>
@@ -1119,6 +646,7 @@
 									<thead>
 										<tr>
 											<th>Name</th>
+											<th>Csp SpecName</th>
 											<th>Memory</th>
 											<th>VCPU Info</th>
 											<th>GPU</th>
@@ -1138,7 +666,7 @@
 
 				<div class="btnbox">
 					<div class="btn_right">
-						<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button>
+						<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyAssistValues('vmSpecAssist');"><span>Apply</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
 					</div>
 				</div>
@@ -1193,12 +721,12 @@
 								</ul>
 							</div>
 							<div>
-								<input type="text" id="image_keyword" placeholder="Input Keyword" class="pline image"
-									onkeyup="displaySearchImageKeywordwithEnter(event)" />
-								<input type="submit" name="" class="btn_search_image" title="" value=""
-									onclick="lookupVmImageList()" />
+								<input type="text" id="keywordAssistImage" placeholder="Input Keyword" class="pline image"
+									onkeyup="searchAssistImageByEnter(event, 'searchVmImageAssistAtReg')" />
+								<input type="button" name="" class="btn_search_image" title="" value=""
+									onclick="searchVmImageByKeyword('searchVmImageAssistAtReg')" />
 							</div>
-							<div class="keyword_box">
+							<div class="keyword_box" id="searchAssistImageKeywords">
 								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
 									onclick="delAllKeyword()" />
 							</div>
@@ -1266,8 +794,8 @@
 											<th>Name</th>
 											<th>CspImageId</th>
 											<th>CspImageName</th>
-											<th>Description</th>
 											<th>GuestOS</th>
+											<th>Description</th>
 										</tr>
 									</thead>
 									<tbody id="assistVmImageList">
@@ -1284,7 +812,7 @@
 
 				<div class="btnbox">
 					<div class="btn_right">
-						<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button>
+						<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyAssistValues('vmImageAssist');"><span>Apply</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
 					</div>
 				</div>
@@ -1316,25 +844,16 @@
 								<label>Search</label>
 							</div>
 							<div>
-								<input type="text" id="image_keyword" placeholder="Input Keyword" class="pline image"
-									onkeyup="displaySearchImageKeywordwithEnter(event)" />
+								<input type="text" id="b" placeholder="Input Keyword" class="pline image"
+									onkeyup="" />
 								<input type="submit" name="" class="btn_search_image" title="" value=""
-									onclick="lookupVmImageList()" />
+									onclick="" />
 							</div>
 							<div class="keyword_box">
 								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
 									onclick="delAllKeyword()" />
 							</div>
 						</div>
-
-						<!-- <div class="toptxt">
-							<button type="button" class="btn btn-sm btn-dark"
-								onclick="commonConfirmOpen('FetchImages')">Fetch Images</button>
-							<label>Image List : <span id="lookupVmImageCount"></span></label>
-						</div> -->
-
-
-
 						<div class="top_info">
 							<ul>
 								<li>
@@ -1343,10 +862,10 @@
 										<div class="box">
 											<ul>
 												<li><a href="javascript:void(0);"
-														onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image
+														onclick="commonPromptOpen('AssistVnetName', 'serverImageList')">Image
 														ID</a></li>
 												<li><a href="javascript:void(0);"
-														onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image
+														onclick="commonPromptOpen('AssistVnetName', 'serverImageList')">Image
 														Name</a></li>
 											</ul>
 										</div>
@@ -1358,15 +877,15 @@
 										<div class="box">
 											<ul>
 												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'Name')">Name</a></li>
+														onclick="tableSort('assistVnetList', 'Name')">Name</a></li>
 												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'Status')">Status</a>
+														onclick="tableSort('assistVnetList', 'Status')">Status</a>
 												</li>
 												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'GuestOS')">GuestOS</a>
+														onclick="tableSort('assistVnetList', 'GuestOS')">GuestOS</a>
 												</li>
 												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'IID nameId')">IID
+														onclick="tableSort('assistVnetList', 'IID nameId')">IID
 														nameId</a></li>
 											</ul>
 										</div>
@@ -1382,7 +901,7 @@
 						<!-- table scrollbar -->
 						<div class="dtbox scrollbar-inner">
 							<div class="dataTable dt_overlay">
-								<table cellpadding="0" cellspacing="0" summary="" id="popAssistVmImageTable">
+								<table cellpadding="0" cellspacing="0" summary="" id="popAssistVnetTable">
 									<!-- <colgroup><col width="35%"><col width="25%"><col width=""></colgroup> -->
 									<thead>
 										<tr>
@@ -1392,7 +911,7 @@
 											<th>Description</th>
 										</tr>
 									</thead>
-									<tbody id="assistVmImageList">
+									<tbody id="assistVnetList">
 
 									</tbody>
 								</table>
@@ -1437,25 +956,16 @@
 								<label>Search</label>
 							</div>
 							<div>
-								<input type="text" id="image_keyword" placeholder="Input Keyword" class="pline image"
-									onkeyup="displaySearchImageKeywordwithEnter(event)" />
+								<input type="text" id="" placeholder="Input Keyword" class="pline image"
+									onkeyup="" />
 								<input type="submit" name="" class="btn_search_image" title="" value=""
-									onclick="lookupVmImageList()" />
+									onclick="" />
 							</div>
 							<div class="keyword_box">
 								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
 									onclick="delAllKeyword()" />
 							</div>
 						</div>
-
-						<!-- <div class="toptxt">
-							<button type="button" class="btn btn-sm btn-dark"
-								onclick="commonConfirmOpen('FetchImages')">Fetch Images</button>
-							<label>Image List : <span id="lookupVmImageCount"></span></label>
-						</div> -->
-
-
-
 						<div class="top_info">
 							<ul>
 								<li>
@@ -1479,15 +989,15 @@
 										<div class="box">
 											<ul>
 												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'Name')">Name</a></li>
+														onclick="tableSort('assistSecurityGroupList', 'Name')">Name</a></li>
 												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'Status')">Status</a>
+														onclick="tableSort('assistSecurityGroupList', 'Status')">Status</a>
 												</li>
 												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'GuestOS')">GuestOS</a>
+														onclick="tableSort('assistSecurityGroupList', 'GuestOS')">GuestOS</a>
 												</li>
 												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'IID nameId')">IID
+														onclick="tableSort('assistSecurityGroupList', 'IID nameId')">IID
 														nameId</a></li>
 											</ul>
 										</div>
@@ -1503,7 +1013,7 @@
 						<!-- table scrollbar -->
 						<div class="dtbox scrollbar-inner">
 							<div class="dataTable dt_overlay">
-								<table cellpadding="0" cellspacing="0" summary="" id="popAssistVmImageTable">
+								<table cellpadding="0" cellspacing="0" summary="" id="popAssistSecurityGroupTable">
 									<!-- <colgroup><col width="35%"><col width="25%"><col width=""></colgroup> -->
 									<thead>
 										<tr>
@@ -1513,7 +1023,7 @@
 											<th>Firewall RuleSet</th>
 										</tr>
 									</thead>
-									<tbody id="assistVmImageList">
+									<tbody id="assistSecurityGroupList">
 
 									</tbody>
 								</table>
@@ -1568,15 +1078,6 @@
 									onclick="delAllKeyword()" />
 							</div>
 						</div>
-
-						<!-- <div class="toptxt">
-							<button type="button" class="btn btn-sm btn-dark"
-								onclick="commonConfirmOpen('FetchImages')">Fetch Images</button>
-							<label>Image List : <span id="lookupVmImageCount"></span></label>
-						</div> -->
-
-
-
 						<div class="top_info">
 							<ul>
 								<li>
@@ -1624,7 +1125,7 @@
 						<!-- table scrollbar -->
 						<div class="dtbox scrollbar-inner">
 							<div class="dataTable dt_overlay">
-								<table cellpadding="0" cellspacing="0" summary="" id="popAssistVmImageTable">
+								<table cellpadding="0" cellspacing="0" summary="" id="popAssistSshKeyTable">
 									<!-- <colgroup><col width="35%"><col width="25%"><col width=""></colgroup> -->
 									<thead>
 										<tr>
@@ -1633,7 +1134,7 @@
 											<th>Description</th>
 										</tr>
 									</thead>
-									<tbody id="assistVmImageList">
+									<tbody id="assistSshKeyList">
 
 									</tbody>
 								</table>

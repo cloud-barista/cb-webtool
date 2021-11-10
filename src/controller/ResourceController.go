@@ -941,7 +941,6 @@ func SearchVirtualMachineImageList(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	// paramKeywords := c.Param("keywords")
 	restSearchImageRequest := new(tbmcir.RestSearchImageRequest)
 	if err := c.Bind(restSearchImageRequest); err != nil {
 		log.Println(err)
@@ -1309,6 +1308,7 @@ func FilterVmSpecListByRange(c echo.Context) error {
 	// }
 	// fmt.Println(connectionName)
 	// fmt.Println("ConnectionName=", connectionName)
+	//message=Unmarshal type error: expected=int, got=string, field=maxTotalStorageTiB.min, offset=65
 	vmSpecRange := &tbmcir.FilterSpecsByRangeRequest{}
 	if err := c.Bind(vmSpecRange); err != nil {
 		log.Println(err)
