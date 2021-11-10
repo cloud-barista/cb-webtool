@@ -676,10 +676,8 @@ function getCommonMcisData(caller, mcisID){
     }).then(result => {
         console.log(result);
         if(result.data.status == 200 || result.data.status == 201){
-            console.log("11111")
             getMcisDataCallbackSuccess(caller, result.data.McisInfo)
         }else{
-            console.log("22222")
             //getMcisDataCallbackFail(caller, data)
             commonErrorAlert(result.data.status, "MCIS Data Search Failed");
         }
@@ -757,6 +755,52 @@ function getCommonVmImageInfo(caller, imageId){
         getCommonVmImageInfoCallbackSuccess(caller, result.data.VirtualMachineImageInfo);        
     })
 
+}
+
+// 등록된 VM 들을 keyword로 조회
+function getCommonSearchVmImageList(keywordList, caller){
+    // console.log("keywordObjId = " + keywordObjId)
+    // var keywords = $("#" + keywordObjId).val().split(" ");
+    // console.log("keywords = " + keywords)
+    // var keywordList = new Array();
+    // for (var i = 0; i < keywords.length; i++) {
+    //     keywordList.push(keywords[i]);
+    // }
+
+    var url = "/setting/resources/machineimage/searchimage";
+    axios.post(url,{
+        // headers:{
+        //     'Authorization': apiInfo
+        // }
+        keywords: keywordList
+    }).then(result=>{
+        console.log(result);
+
+        if ( result.data.VirtualMachineImageList == null || result.data.VirtualMachineImageList == undefined || result.data.VirtualMachineImageList == "null"){
+            commonAlert("There is no result")
+        }else{
+            getCommonSearchVmImageListCallbackSuccess(caller, result.data.VirtualMachineImageList);
+        }
+    })
+}
+
+function getCommonFilterVmSpecListByRange(specFilterObj, caller){
+    console.log(specFilterObj)
+    var url = "/setting/resources/vmspec/filterspecsbyrange";
+    axios.post(url,specFilterObj
+    ).then(result=>{
+        console.log(result);
+
+        if ( result.data.VmSpecList == null || result.data.VmSpecList == undefined || result.data.VmSpecList == "null" || result.data.VmSpecList.length == 0){
+            commonAlert("There is no result")
+        }else{
+            getCommonFilterVmSpecListCallbackSuccess(caller, result.data.VmSpecList);
+        }
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
+
+    });
 }
 
 
