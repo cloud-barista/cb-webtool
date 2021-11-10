@@ -75,6 +75,10 @@ $(document).ready(function(){
         }
     });
 
+    $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
+        refreshMcisData();
+    })
+
 
     // "NameSpaceList":      nsList,
     // "CloudOSList":                   cloudOsList,
@@ -498,11 +502,15 @@ function callMcisLifeCycle(type){
 function callbackMcisLifeCycle(resultStatus, resultData, type){
     var message = "MCIS "+type+ " complete!."
     if(resultStatus == 200 || resultStatus == 201){
-        commonAlert(message);
-        location.reload();//완료 후 페이지를 reload -> 해당 mcis만 reload
+        // commonAlert(message);
+        console.log("callbackMcisLifeCycle" + message);
+        commonResultAlert(message);
+        //location.reload();//완료 후 페이지를 reload -> 해당 mcis만 reload
+
         // 해당 mcis 조회
         // 상태 count 재설정
     }else{
+
         commonAlert("MCIS " + type + " failed!");
     }
 }
@@ -642,8 +650,9 @@ function vmLifeCycle(type){
         var data = result.data
         console.log("result Message : ",data.message)
         if(status == 200 || status == 201){
-            commonAlert(message);
-            location.reload();// TODO 일단은 Reaoad : 해당 영역(MCIS의 VM들 status 조회)를 refresh할 수 있는 기능 필요
+            commonResultAlert(message);
+            // commonAlert(message);
+            // location.reload();// TODO 일단은 Reaoad : 해당 영역(MCIS의 VM들 status 조회)를 refresh할 수 있는 기능 필요
             //show_mcis(mcis_url,"");
         }
     })
@@ -882,10 +891,10 @@ function refreshMcisData(){
 // Server Info 변경 : 선택된 vm재조회, 상단의  MCIS Info의 해당 vm status변경 반영, 상단의 MCIS List의 요약에서 status 변경
 function refreshVmList(){
     var mcisID = $("#selected_mcis_id").val();
-
+    console.log("refreshVmList " + mcisID);
     getCommonMcisData("refreshmcisdata", mcisID)
 
-    // MCIS Data를 가져와 Set한 이후 MCIS List table에 반영, MCIS Info에 반
+    // MCIS Data를 가져와 Set한 이후 MCIS List table에 반영, MCIS Info에 반영
 
 }
 
