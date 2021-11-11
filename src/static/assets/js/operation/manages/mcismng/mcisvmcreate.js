@@ -743,24 +743,39 @@ function getSshKeyListCallbackSuccess(caller, data){
         if (data.length > 0) {
             data.forEach(function (vSshKeyItem, vSshKeyIndex) {
 
-                html += '<tr onclick="setValueToFormObj(\'es_sshKeyList\', \'tab_sshKey\', \'sshKey\', ' + vSshKeyIndex + ', \'e_sshKeyId\');">'
-
+                html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
+                    + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+                    + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
+                    + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+                    + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
                     + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
-
-                    + '     <input type="hidden" name="sshKey_id" id="sshKey_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
-                    + '     <input type="hidden" name="sshKey_connectionName" id="sshKey_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
-                    + '     <input type="hidden" name="sshKey_info" id="sshKey_info_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '|' + vSshKeyItem.connectionName + '|' + vSshKeyItem.description + '"/>'
-                    + '</td>'
-                    + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
-                    + vSshKeyItem.connectionName
-                    + '</td>'
+                    + '<td class="overlay hidden" data-th="ConnectionName">' + vSshKeyItem.connectionName + '</td>'
                     + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
-
+                    + '</td>'
                     + '</tr>'
             })
-            $("#e_sshKeyListTbody").empty()
-            $("#e_sshKeyListTbody").append(html)
+            $("#assistSshKeyList").empty()
+            $("#assistSshKeyList").append(html)
 
+            // data.forEach(function (vSshKeyItem, vSshKeyIndex) {
+            //
+            //     html += '<tr onclick="setValueToFormObj(\'es_sshKeyList\', \'tab_sshKey\', \'sshKey\', ' + vSshKeyIndex + ', \'e_sshKeyId\');">'
+            //
+            //         + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
+            //
+            //         + '     <input type="hidden" name="sshKey_id" id="sshKey_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+            //         + '     <input type="hidden" name="sshKey_connectionName" id="sshKey_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+            //         + '     <input type="hidden" name="sshKey_info" id="sshKey_info_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '|' + vSshKeyItem.connectionName + '|' + vSshKeyItem.description + '"/>'
+            //         + '</td>'
+            //         + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+            //         + vSshKeyItem.connectionName
+            //         + '</td>'
+            //         + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
+            //
+            //         + '</tr>'
+            // })
+            // $("#e_sshKeyListTbody").empty()
+            // $("#e_sshKeyListTbody").append(html)
         }
     }
 }

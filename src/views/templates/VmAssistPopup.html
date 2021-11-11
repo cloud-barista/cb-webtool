@@ -962,6 +962,7 @@
 
 </div>
 <!-- Network Assist popup -->
+
 <!-- Security Assist popup setValueToFormObj('e_securityGroupList', 'tab_securityGroupInfo', 'securityGroup', '{ {$securityGroupIndex} }', 'e_securityGroupIds') -->
 <div class="modal fade popup_editBox" id="securityGroupAssist" tabindex="-1" role="dialog" aria-hidden="true">
 
@@ -1034,8 +1035,6 @@
 								</li>
 							</ul>
 						</div>
-
-
 						<!-- table scrollbar -->
 						<div class="dtbox scrollbar-inner">
 							<div class="dataTable dt_overlay">
@@ -1056,11 +1055,9 @@
 							</div>
 						</div>
 						<!-- //table scrollbar -->
-
 					</div>
-
+					</div>
 				</div>
-
 				<div class="btnbox">
 					<div class="btn_right">
 						<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyAssistValues('securityGroupAssist')"><span>Apply</span></button>
@@ -1075,8 +1072,9 @@
 
 </div>
 <!-- Security Assist popup -->
+
 <!-- SSH Assist popup setValueToFormObj('es_sshKeyList', 'tab_sshKey', 'sshKey', '{ {$sshKeyIndex} }', 'e_sshKeyId')-->
-<div class="modal fade popup_editBox" id="sshAssist" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade popup_editBox" id="sshKeyAssist" tabindex="-1" role="dialog" aria-hidden="true">
 
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -1085,7 +1083,7 @@
 				<div class="pop-body">
 
 					<div class="title_box">
-						<div class="title">SSH Key List</div>
+						<div class="title">Security Group List</div>
 					</div>
 
 					<div class="pop-cont">
@@ -1093,60 +1091,60 @@
 							<div class="toptxt search">
 								<label>Search</label>
 							</div>
-							<div>
-								<input type="text" id="image_keyword" placeholder="Input Keyword" class="pline image"
-									onkeyup="displaySearchImageKeywordwithEnter(event)" />
-								<input type="submit" name="" class="btn_search_image" title="" value=""
-									onclick="lookupVmImageList()" />
-							</div>
-							<div class="keyword_box">
-								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
-									onclick="delAllKeyword()" />
-							</div>
-						</div>
-						<div class="top_info">
-							<ul>
-								<li>
-									<a href="javascript:void(0);">Filter</a>
-									<div class="infobox">
-										<div class="box">
-											<ul>
-												<li><a href="javascript:void(0);"
-														onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image
-														ID</a></li>
-												<li><a href="javascript:void(0);"
-														onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image
-														Name</a></li>
-											</ul>
-										</div>
-									</div>
-								</li>
-								<li>
-									<a href="javascript:void(0);">Sort</a>
-									<div class="infobox">
-										<div class="box">
-											<ul>
-												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'Name')">Name</a></li>
-												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'Status')">Status</a>
-												</li>
-												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'GuestOS')">GuestOS</a>
-												</li>
-												<li><a href="javascript:void(0);"
-														onclick="tableSort('assistSpecList', 'IID nameId')">IID
-														nameId</a></li>
-											</ul>
-										</div>
-									</div>
-								</li>
-								<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png"
-											alt="" /></a>
-								</li>
-							</ul>
-						</div>
 
+							<div>
+								<input type="text" id="keywordAssistSshKey" placeholder="Input Keyword" class="pline image"
+									   onkeyup="searchAssistSshKeyByEnter(event, 'searchSshKeyAssistAtReg')" />
+								<input type="button" name="" class="btn_search_image" title="" value=""
+									   onclick="searchSshKeyByKeyword('searchSshKeyAssistAtReg')" />
+							</div>
+							<div class="keyword_box" id="searchAssistSshKeyKeywords">
+								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
+									   onclick="delAllKeyword()" />
+							</div>
+
+							<div class="top_info">
+								<ul>
+									<li>
+										<a href="javascript:void(0);">Filter</a>
+										<div class="infobox">
+											<div class="box">
+												<ul>
+													<li><a href="javascript:void(0);"
+														   onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image
+														ID</a></li>
+													<li><a href="javascript:void(0);"
+														   onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image
+														Name</a></li>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li>
+										<a href="javascript:void(0);">Sort</a>
+										<div class="infobox">
+											<div class="box">
+												<ul>
+													<li><a href="javascript:void(0);"
+														   onclick="tableSort('assistSecurityGroupList', 'Name')">Name</a></li>
+													<li><a href="javascript:void(0);"
+														   onclick="tableSort('assistSecurityGroupList', 'Status')">Status</a>
+													</li>
+													<li><a href="javascript:void(0);"
+														   onclick="tableSort('assistSecurityGroupList', 'GuestOS')">GuestOS</a>
+													</li>
+													<li><a href="javascript:void(0);"
+														   onclick="tableSort('assistSecurityGroupList', 'IID nameId')">IID
+														nameId</a></li>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png"
+																		   alt="" /></a>
+									</li>
+								</ul>
+							</div>
 
 						<!-- table scrollbar -->
 						<div class="dtbox scrollbar-inner">
@@ -1174,7 +1172,7 @@
 
 				<div class="btnbox">
 					<div class="btn_right">
-						<button name="" value="" class="btn_apply btn_co btn_cr_g"><span>Apply</span></button>
+						<button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applyAssistValues('sshKeyAssist');"><span>Apply</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
 					</div>
 				</div>
