@@ -814,7 +814,22 @@ console.log("222")
     $("#securityGroupAssist").modal("hide");
 
   }else if ( caller == "sshKeyAssist"){
+    // + '     <input type="hidden" id="sshKeyAssist_id' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+    // + '     <input type="hidden" id="sshKeyAssist_name' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
+    // + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+    // + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
 
+    var orgPrefix = "sshKeyAssist_";
+    var targetPrefix = "tab_sshKey_";
+
+    $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+    $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
+    $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
+    $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
+
+    // id="tab_sshKey_connectionName" name="tab_sshKey_connectionName" value="" placeholder=""
+
+    $("#sshKeyAssist").modal("hide");
   }
 
 
