@@ -543,11 +543,11 @@ function showImageAssistPopup(){
 }
 // connection에 등록된 spec목록 조회(공통함수 호출)
 function lookupVmImageList() {
-    $("#assistVmImageList").empty()
+    $("#assistLookupVmImageList").empty()
     // connection과 상관없이 조회 가능
 
     //assistConnectionName
-    var assistConnectionName = $("#assistImageConnectionName").val();
+    var assistConnectionName = $("#assistLookupImageConnectionName").val();
     if (!assistConnectionName) {
         commonAlert("connection name required")
         return;
@@ -564,8 +564,8 @@ function lookupVmImageListCallbackSuccess(caller, data) {
     if (data == null) {
         html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
 
-        $("#assistVmImageList").empty()
-        $("#assistVmImageList").append(html)
+        $("#assistLookupVmImageList").empty()
+        $("#assistLookupVmImageList").append(html)
     } else {
 
         $.each(data, function (index, item) {
@@ -611,8 +611,8 @@ function lookupVmImageListCallbackSuccess(caller, data) {
         });
 
 
-        $("#assistVmImageList").empty()
-        $("#assistVmImageList").append(html)
+        $("#assistLookupVmImageList").empty()
+        $("#assistLookupVmImageList").append(html)
         $("#lookupVmImageCount").text(data.length);
     }
 }
@@ -645,6 +645,10 @@ function clearCspImageInfo() {
 function clearAssistImageList(targetTableList){
     $("#" + targetTableList).empty()
 }
+// assistPopup의 connection 정보가 바뀌면 image정보도 초기화 시킨다.
+function clearAssistLookupImageList(targetTableList){
+    $("#" + targetTableList).empty()
+}
 //입력한 keyword 화면에 표시
 function displaySearchImageKeyword() {
     console.log($("#image_keyword").val());
@@ -654,6 +658,12 @@ function displaySearchImageKeyword() {
 }
 
 function displaySearchImageKeywordwithEnter(e) {
+    console.log($("#image_keyword").val());
+    if ($("#image_keyword").val().trim() !== "" && e.keyCode === 13) {
+        $(".keyword_box").append("<div class='keyword'>" + $("#image_keyword").val().trim() + "<button class='btn_del_image' onclick='delSearchImageKeyword(event)'></button></div>");
+    }
+}
+function displaySearchLookupImageKeywordwithEnter(e) {
     console.log($("#image_keyword").val());
     if ($("#image_keyword").val().trim() !== "" && e.keyCode === 13) {
         $(".keyword_box").append("<div class='keyword'>" + $("#image_keyword").val().trim() + "<button class='btn_del_image' onclick='delSearchImageKeyword(event)'></button></div>");

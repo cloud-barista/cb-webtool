@@ -449,10 +449,11 @@ function clearCspSpecInfo(){
     $("#regCspSpecName").val();
 }
 
-function clearAssistSpecList(targetTableList){
+function clearLookupAssistSpecList(targetTableList){
     $("#" + targetTableList).empty()
 }
 function showSpecAssistPopup(){
+    console.log("showSpecAssistPopup")
     $("#specLookupAssist").modal();
 
     var regProviderName = $("#regProvider").val();
@@ -471,8 +472,8 @@ function showSpecAssistPopup(){
 }
 // connection에 등록된 spec목록 조회(공통함수 호출)
 function lookupSpecList() {
-    $("#assistSpecList").empty()
-    var connectionName = $("#assistSpecConnectionName").val();
+    $("#assistLookupSpecList").empty()
+    var connectionName = $("#assistLookupSpecConnectionName").val();
     if (!connectionName) {
         commonAlert("connection name required")
         return;
@@ -489,8 +490,8 @@ function lookupSpecListCallbackSuccess(caller, data) {
     if (data == null) {
         html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
 
-        $("#assistSpecList").empty()
-        $("#assistSpecList").append(html)
+        $("#assistLookupSpecList").empty()
+        $("#assistLookupSpecList").append(html)
     } else {
 
         // data.filter((list) => list.name !== "").map((item, index) => (
@@ -554,8 +555,8 @@ function lookupSpecListCallbackSuccess(caller, data) {
         });
 
 
-        $("#assistSpecList").empty()
-        $("#assistSpecList").append(html)
+        $("#assistLookupSpecList").empty()
+        $("#assistLookupSpecList").append(html)
         $("#lookupSpecCount").text(data.length);
         // displayVmSpecInfo("REG_SUCCESS");
     }
