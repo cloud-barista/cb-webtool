@@ -63,46 +63,6 @@ $(document).ready(function () {
     $('#Other .tab_ipbox').find('input, textarea').val('');
   });
 
-  //// checkbox를 사용하는 table에서 checkbox를 사용할 때 Event정의
-  // golang rendering 방식에서 변경되었으므로 document on change로 정의 함.
-  // $("input:checkbox[name='securityGroup_chk']").change(function(){
-  //   console.log("in checkbox change")
-  //   var chkIdArr = $(this).attr('id').split("_");// 0번째와 2번째를 합치면 id 추출가능  ex) securityGroup_Raw_0
-  //   console.log("chkIdArr " + chkIdArr + " : " + $(this).is(":checked"))
-  //   if( $(this).is(":checked")){
-  //     // 해당 securityGroup의 connection과 form의 connection이 다르면초기화 후 set
-  //     // 같으면 securityGroup set
-  //
-  //     var selectedId = $("#" + chkIdArr[0] + "_id_" + chkIdArr[2]).val()//id="securityGroup_id_{{$securityGroupIndex}}"
-  //     var selectedInfo = $("#" + chkIdArr[0] + "_info_" + chkIdArr[2]).val()
-  //     var selectedConnectionName = $("#" + chkIdArr[0] + "_connectionName_" + chkIdArr[2]).val()
-  //     if( $("#e_connectionName").val() != "" && $("#e_connectionName").val() != selectedConnectionName){
-  //
-  //         var targetTabOjbInfo = "tab_securityGroupInfo";
-  //         var targetTabObjConnectionName = "tab_securityGroupConnectionName";
-  //
-  //         $("#" + targetTabOjbInfo).val(selectedInfo);
-  //         $("#" + targetTabObjConnectionName).val(selectedConnectionName);
-  //         $("#t_connectionName").val(selectedConnectionName);// 임시 connectionName set
-  //         rollbackObjArr[0] = targetTabOjbInfo;
-  //         rollbackObjArr[1] = targetTabObjConnectionName;
-  //
-  //         commonConfirmOpen("DifferentConnectionAtSecurityGroup");
-  //         // TODO : commonConfirmOpen 해서 OK면 초기화  :
-  //         // securityGroupTable 및 display securityGroup ifno 를 현재 connection Name으로 Set.
-  //         // 다른 table은 1개만 선택하므로 display input box 들 초기화.
-  //         //  connection정보로 선택된 항목의 connectionName 비교 후 초기화 function 만들 것.
-  //
-  //     }else{
-  //       $("#e_connectionName").val(selectedConnectionName);
-  //       setMuipleValueToFormObj('securityGroup_chk', 'tab_securityGroupInfo', 'e_securityGroupIds')
-  //     }
-  //   }else{//Uncheck event
-  //   //   // alert("B " + $(this).is(":checked") + " : " +  securityGroupId);
-  //     $("#t_connectionName").val(selectedConnectionName).val("");
-  //     setMuipleValueToFormObj('securityGroup_chk', 'tab_securityGroupInfo', 'e_securityGroupIds')
-  //   }
-  // });
 });
 
 $(document).on('change', 'input[name="securityGroup_chk"]',
@@ -111,6 +71,8 @@ $(document).on('change', 'input[name="securityGroup_chk"]',
     var chkIdArr = $(this).attr('id').split("_");// 0번째와 2번째를 합치면 id 추출가능  ex) securityGroup_Raw_0
     console.log("chkIdArr " + chkIdArr + " : " + $(this).is(":checked"))
     if ($(this).is(":checked")) {
+
+      $("#assistSelectedIndex").val(chkIdArr[2]).val();
       // 해당 securityGroup의 connection과 form의 connection이 다르면초기화 후 set
       // 같으면 securityGroup set
 
@@ -459,7 +421,7 @@ function setConnectionValue(connName) {
 }
 
 // 다른 connectinName으로 set 할 때 기존에 있던 것들 중 connectionName이 다른 것들은 초기화
-function setAndClearByDifferentConnectionName() {
+function setAndClearByDifferentConnectionName(caller) {
   var tempConnectionName = $("#t_connectionName").val();
   console.log("setAndClearByDifferentConnectionName " + tempConnectionName);
   //$("#expert_form").reset();// 이거하면 싹 날아가므로 connectionName이 다른 항목들만 초기화.
@@ -702,7 +664,9 @@ function setAssistValue(index){
 function applyAssistValues(caller){
   //
   var selectedIndex = $("#assistSelectedIndex").val();
+  var applyConnectionName = "";
   console.log(caller + " : " + selectedIndex);
+
   if(caller == "vmImageAssist"){
     var orgPrefix = "vmImageAssist_";
     var targetPrefix = "tab_vmImage_";
@@ -714,6 +678,8 @@ function applyAssistValues(caller){
     $("#" + targetPrefix + "guestOS").val($("#" + orgPrefix + "guestOS_" + selectedIndex).val());
     $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
     $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
+
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
 
     $("#imageAssist").modal("hide");
   }else if ( caller == "vmSpecAssist"){
@@ -728,6 +694,7 @@ function applyAssistValues(caller){
     $("#" + targetPrefix + "numvCPU").val($("#" + orgPrefix + "numvCPU_" + selectedIndex).val());
     $("#" + targetPrefix + "numGpu").val($("#" + orgPrefix + "numGpu_" + selectedIndex).val());
 
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
     $("#specAssist").modal("hide");
   }else if ( caller == "networkAssist"){
     var orgPrefix = "vNetAssist_";
@@ -742,32 +709,16 @@ function applyAssistValues(caller){
     $("#" + targetPrefix + "subnetId").val($("#" + orgPrefix + "subnetId_" + selectedIndex).val());
     $("#" + targetPrefix + "subnetName").val($("#" + orgPrefix + "subnetName_" + selectedIndex).val());
 
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
     $("#networkAssist").modal("hide");
   }else if ( caller == "securityGroupAssist"){
+
     var orgPrefix = "securityGroupAssist_";
-    var firewallRules = "firewallRules";
+    var firewallRules = "firewallRules_";
     var targetPrefix = "tab_securityGroup_";
 
-    // + '     <input type="checkbox" name="securityGroup_chk" id="securityGroup_Raw_' + vSecurityGroupIndex + '" title="" />'
-    // + '     <input type="hidden" id="securityGroup_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
-    // + '     <input type="hidden" id="securityGroup_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
-    // + '     <input type="hidden" id="securityGroup_vNetId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.vNetId + '"/>'
-    //
-    // + '     <input type="hidden" name="securityGroup_connectionName" id="securityGroup_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
-    // + '     <input type="hidden" name="securityGroup_description" id="securityGroup_description_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
-    //
-    // + '     <input type="hidden" name="securityGroup_cspSecurityGroupId" id="securityGroup_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
-    // + '     <input type="hidden" name="securityGroup_cspSecurityGroupName" id="securityGroup_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
-    // + '     <input type="hidden" name="securityGroup_firewallRules_cidr" id="securityGroup_firewallRules_cidr' + vSecurityGroupIndex + '" value="'+ firewallRules.cidr + '"/>'
-    // + '     <input type="hidden" name="securityGroup_firewallRules_direction" id="securityGroup_firewallRules_direction' + vSecurityGroupIndex + '" value="'+ firewallRules.direction + '"/>'
-    //
-    // + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort' + vSecurityGroupIndex + '" value="'+ firewallRules.fromPort + '"/>'
-    // + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort' + vSecurityGroupIndex + '" value="'+ firewallRules.toPort + '"/>'
-    // + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol' + vSecurityGroupIndex + '" value="'+ firewallRules.ipProtocol + '"/>'
-
-console.log("aaa")
-    var count = 0;
     var securityGroupIds = "";
+    var count = 0;
     $("input[name='securityGroupAssist_chk']:checked").each(function () {
       var sgId = $(this).attr("id")
       var sgEleArr = sgId.split("_");
@@ -777,47 +728,25 @@ console.log("aaa")
 
       securityGroupIds += $("#" + orgPrefix + "id_" + sgIndex).val()
       $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + sgIndex).val());
+      $("#" + targetPrefix + "vNetId").val($("#" + orgPrefix + "vNetId_" + sgIndex).val());
       $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + sgIndex).val());
       $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + sgIndex).val());
-      $("#" + targetPrefix + "cidrBlock").val($("#" + orgPrefix + "cidrBlock_" + sgIndex).val());
-      $("#" + targetPrefix + "cspVnetName").val($("#" + orgPrefix + "cspVnetName_" + sgIndex).val());
-      $("#" + targetPrefix + "subnetId").val($("#" + orgPrefix + "subnetId_" + sgIndex).val());
-      $("#" + targetPrefix + "subnetName").val($("#" + orgPrefix + "subnetName_" + sgIndex).val());
-      count++;
 
+      $("#" + targetPrefix + firewallRules + "cidr").val($("#" + orgPrefix + firewallRules + "cidr_" + sgIndex).val());
+      $("#" + targetPrefix + firewallRules + "direction").val($("#" + orgPrefix + firewallRules + "direction_" + sgIndex).val());
+      $("#" + targetPrefix + firewallRules + "fromPort").val( $("#" + orgPrefix + firewallRules + "fromPort_" + sgIndex).val());
+      $("#" + targetPrefix + firewallRules + "toPort").val(   $("#" + orgPrefix + firewallRules + "toPort_" + sgIndex).val());
+      $("#" + targetPrefix + firewallRules + "ipProtocol").val($("#" + orgPrefix + firewallRules + "ipProtocol_" + sgIndex).val());
+
+      applyConnectionName = $("#" + orgPrefix + "connectionName_" + sgIndex).val();
+      count++;
     });
 
     $("#" + targetPrefix + "id").val(securityGroupIds);
-    // $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
-    // $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
-    // $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
-    // $("#" + targetPrefix + "cidrBlock").val($("#" + orgPrefix + "cidrBlock_" + selectedIndex).val());
-    // $("#" + targetPrefix + "cspVnetName").val($("#" + orgPrefix + "cspVnetName_" + selectedIndex).val());
-    // $("#" + targetPrefix + "subnetId").val($("#" + orgPrefix + "subnetId_" + selectedIndex).val());
-    // $("#" + targetPrefix + "subnetName").val($("#" + orgPrefix + "subnetName_" + selectedIndex).val());
-console.log("222")
-
-// id="tab_securityGroup_name"/>
-//tab_securityGroup_id
-// id="tab_securityGroup_connectionName"/>
-// <input type="text" id="tab_securityGroup_vpcId" name="tab_securityGroup_vpcId" value=""
-// <input type="text" id="tab_securityGroup_description" name="tab_securityGroup_description"
-
-// <input type="text" id="tab_securityGroup_firewallRules_direction"
-// <input type="text" id="tab_securityGroup_firewallRules_fromPort"
-// <input type="text" id="tab_securityGroup_firewallRules_toPort"
-// <input type="text" id="tab_securityGroup_firewallRules_ipProtocol"
-// <input type="text" id="tab_securityGroup_firewallRules_cidr"
-
-
 
     $("#securityGroupAssist").modal("hide");
 
   }else if ( caller == "sshKeyAssist"){
-    // + '     <input type="hidden" id="sshKeyAssist_id' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
-    // + '     <input type="hidden" id="sshKeyAssist_name' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
-    // + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
-    // + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
 
     var orgPrefix = "sshKeyAssist_";
     var targetPrefix = "tab_sshKey_";
@@ -827,13 +756,71 @@ console.log("222")
     $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
     $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
 
-    // id="tab_sshKey_connectionName" name="tab_sshKey_connectionName" value="" placeholder=""
-
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
     $("#sshKeyAssist").modal("hide");
   }
 
+  console.log($("#e_connectionName").val())
+  console.log("applyConnectionName = " + applyConnectionName)
+  //선택된 connection과 기존 connection이 다른 tab의 data는 초기화하고 set한다
+  if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != applyConnectionName) {
+    setAndClearByDifferentConnectionName(caller);
+  }
+}
+// diffConnectionCheck
+// 1. 다르면 -> confirm에서 OK면 -> applyAssistValues(caller) 호출하여 set되도록
+// 2. 같으면 바로 applyAssistValues(caller) 호출하여 set
+function applyAssistValidCheck(caller){
+  var selectedIndex = $("#assistSelectedIndex").val();
 
+  // 선택한 connection check : 이미 선택된 connection이 있을 때 비교하여 다른 connection이면 confirm을 띄우고 OK면 초기화 시키고 set
+  var selectedConnectionName = "";
+  if(caller == "vmImageAssist"){
+    var orgPrefix = "vmImageAssist_";
+    selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+  }else if ( caller == "vmSpecAssist"){
+    var orgPrefix = "vNetAssist_";
+    selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+  }else if ( caller == "networkAssist"){
+    var orgPrefix = "vNetAssist_";
+    selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+  }else if ( caller == "securityGroupAssist"){
+    var orgPrefix = "securityGroupAssist_";
+    var tempConnectionName = "";
+    var isSameConnection = true;
+    $("input[name='securityGroupAssist_chk']:checked").each(function () {
+      var sgId = $(this).attr("id")
+      var sgEleArr = sgId.split("_");
+      var sgIndex = sgEleArr[sgEleArr.length-1];
 
+      var currentConnectionName = $("#" + orgPrefix + "connectionName_" + sgIndex).val();
+      if( tempConnectionName == ""){
+        tempConnectionName = currentConnectionName
+      }else if( tempConnectionName != currentConnectionName){
+        isSameConnection = false;
+        return;
+      }
+    });
+
+    if( !isSameConnection){
+      commonAlert("서로다른 ConnectionName이 선택되어 있습니다.");
+      return;
+    }
+    selectedConnectionName = tempConnectionName;
+
+  }else if ( caller == "sshKeyAssist"){
+    var orgPrefix = "sshKeyAssist_";
+    selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+  }
+
+  $("#t_connectionName").val(selectedConnectionName);
+  if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != selectedConnectionName) {
+    //commonConfirmOpen("DifferentConnectionAtSecurityGroup");
+    commonConfirmOpen("DifferentConnectionAtAssistPopup", caller)
+  } else {
+    $("#e_connectionName").val(selectedConnectionName);
+    applyAssistValues(caller)
+  }
 }
 
 // Table에서 connection 선택시 hidden에 connection정보 set.

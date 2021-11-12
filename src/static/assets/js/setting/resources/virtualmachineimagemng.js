@@ -525,7 +525,7 @@ function showVirtualMachinImageInfo(target) {
 
 // Assist Popup
 function showImageAssistPopup(){
-    $("#imageAssist").modal();
+    $("#imageLookupAssist").modal();
 
     var regProviderName = $("#regProviderName").val();
     if( regProviderName ){
@@ -631,7 +631,7 @@ function setCspVmImageInfo(cspImageNameID, cspImageName, cspImageGuestOS) {
     $("#regCspImgName").val(cspImageName);
     $("#regGuestOS").val(cspImageGuestOS);
 
-    $("#imageAssist").modal("hide");
+    $("#imageLookupAssist").modal("hide");
 }
 
 // connection 정보가 바뀌면 image 정보도 초기화 시킨다.

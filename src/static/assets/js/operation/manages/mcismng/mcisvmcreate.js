@@ -660,7 +660,10 @@ function getSecurityGroupListCallbackSuccess(caller, data){
                     // <th>VPC Id</th>
                     // <th>Description</th>
                     // <th>Firewall RuleSet</th>
-                    var firewallRules = vSecurityGroupItem.firewallRules;
+                    var firewallRulesArr = vSecurityGroupItem.firewallRules;
+                    var firewallRules = firewallRulesArr[0];
+                    console.log("firewallRules");
+                    console.log(firewallRules);
                     html += '<tr>'
 
                         + '<td class="overlay hidden column-50px" data-th="">'
@@ -672,14 +675,14 @@ function getSecurityGroupListCallbackSuccess(caller, data){
                         + '     <input type="hidden" name="securityGroupAssist_connectionName" id="securityGroupAssist_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
                         + '     <input type="hidden" name="securityGroupAssist_description" id="securityGroupAssist_description_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
 
-                        + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupId" id="securityGroupAssist_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupName" id="securityGroupAssist_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_firewallRules_cidr" id="securityGroupAssist_firewallRules_cidr' + vSecurityGroupIndex + '" value="'+ firewallRules.cidr + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_firewallRules_direction" id="securityGroupAssist_firewallRules_direction' + vSecurityGroupIndex + '" value="'+ firewallRules.direction + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupId" id="securityGroupAssist_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.cspSecurityGroupId + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupName" id="securityGroupAssist_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.cspSecurityGroupName + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_firewallRules_cidr" id="securityGroupAssist_firewallRules_cidr_' + vSecurityGroupIndex + '" value="'+ firewallRules.cidr + '"/>'
+                        + '     <input type="hidden" name="securityGroupAssist_firewallRules_direction" id="securityGroupAssist_firewallRules_direction_' + vSecurityGroupIndex + '" value="'+ firewallRules.direction + '"/>'
 
-                        + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort' + vSecurityGroupIndex + '" value="'+ firewallRules.fromPort + '"/>'
-                        + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort' + vSecurityGroupIndex + '" value="'+ firewallRules.toPort + '"/>'
-                        + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol' + vSecurityGroupIndex + '" value="'+ firewallRules.ipProtocol + '"/>'
+                        + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort_' + vSecurityGroupIndex + '" value="'+ firewallRules.fromPort + '"/>'
+                        + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort_' + vSecurityGroupIndex + '" value="'+ firewallRules.toPort + '"/>'
+                        + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol_' + vSecurityGroupIndex + '" value="'+ firewallRules.ipProtocol + '"/>'
 
                         + '     <label for="td_ch1"></label> <span class="ov off"></span>'
                         + '</td>'
