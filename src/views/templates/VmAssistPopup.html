@@ -594,7 +594,7 @@
 						<div class="toptxt">
 							<button type="button" class="btn btn-sm btn-dark"
 								onclick="commonConfirmOpen('FetchSpecs')">Fetch Specs</button>
-							<label>Spec List : <span id="lookupSpecCount"></span></label>
+							<label>Spec List : <span id="assistSpecCount"></span></label>
 						</div>
 
 
@@ -734,9 +734,7 @@
 						</div>
 
 						<div class="toptxt">
-							<button type="button" class="btn btn-sm btn-dark"
-								onclick="commonConfirmOpen('FetchImages')">Fetch Images</button>
-							<label>Image List : <span id="lookupVmImageCount"></span></label>
+							<label>Image List : <span id="assistVmImageCount"></span></label>
 						</div>
 
 
@@ -847,9 +845,9 @@
 								<ul>
 									<li class="reg_1">
 										<label>Cloud Provider</label>
-										<select class="selectbox white pline w3" name="AssistImageProviderName"
-												id="assistImageProviderName"
-												onchange="getConnectionListForSelectbox(this.value, 'assistImageConnectionName')">
+										<select class="selectbox white pline w3" name="AssistLookupImageProviderName"
+												id="assistLookupImageProviderName"
+												onchange="getConnectionListForSelectbox(this.value, 'assistLookupImageConnectionName')">
 											<option value="" selected>Select Cloud Provider</option>
 											{{ range $item := .CloudOSList}}
 											<option value="{{ $item }}">{{ $item }}</option>
@@ -860,8 +858,8 @@
 									</li>
 									<li class="reg_1">
 										<label></span>Connection Name</label>
-										<select class="selectbox white pline w3" name="assistImageConnectionName"
-												id="assistImageConnectionName" onchange="clearAssistImageList('assistVmImageList')">
+										<select class="selectbox white pline w3" name="assistLookupImageConnectionName"
+												id="assistLookupImageConnectionName" onchange="clearLookupAssistImageList('assistLookupVmImageList')">
 											<option value="" selected>Selected ConnectionName</option>
 										</select>
 									</li>
@@ -869,7 +867,7 @@
 							</div>
 							<div>
 								<input type="text" id="image_keyword" placeholder="Input Keyword"
-									   class="pline image" onkeyup="displaySearchImageKeywordwithEnter(event)" />
+									   class="pline image" onkeyup="displaySearchLookupImageKeywordwithEnter(event)" />
 								<input type="submit" name="" class="btn_search_image" title="" value=""
 									   onclick="lookupVmImageList()" />
 							</div>
@@ -934,7 +932,7 @@
 						<!-- table scrollbar -->
 						<div class="dtbox scrollbar-inner">
 							<div class="dataTable dt_overlay">
-								<table cellpadding="0" cellspacing="0" summary="" id="popAssistVmImageTable">
+								<table cellpadding="0" cellspacing="0" summary="" id="popAssistLookupVmImageTable">
 									<!-- <colgroup><col width="35%"><col width="25%"><col width=""></colgroup> -->
 									<thead>
 									<tr>
@@ -945,7 +943,7 @@
 										<th>IID systemId</th>
 									</tr>
 									</thead>
-									<tbody id="assistVmImageList">
+									<tbody id="assistLookupVmImageList">
 
 									</tbody>
 								</table>
@@ -996,9 +994,9 @@
 								<ul>
 									<li class="reg_1">
 										<label>Cloud Provider</label>
-										<select class="selectbox white pline w3" name="assistSpecProviderName"
-												id="assistSpecProviderName"
-												onchange="getConnectionListForSelectbox(this.value, 'assistSpecConnectionName')">
+										<select class="selectbox white pline w3" name="assistLookupSpecProviderName"
+												id="assistLookupSpecProviderName"
+												onchange="getConnectionListForSelectbox(this.value, 'assistLookupSpecConnectionName')">
 											<option value="" selected>Select Cloud Provider</option>
 											{{ range $item := .CloudOSList}}
 											<option value="{{ $item }}">{{ $item }}</option>
@@ -1009,8 +1007,8 @@
 									</li>
 									<li class="reg_1">
 										<label></span>Connection Name</label>
-										<select class="selectbox white pline w3" name="assistSpecConnectionName"
-												id="assistSpecConnectionName" onchange="clearAssistSpecList('assistSpecList')">
+										<select class="selectbox white pline w3" name="assistLookupSpecConnectionName"
+												id="assistLookupSpecConnectionName" onchange="clearLookupAssistSpecList('assistLookupSpecList')">
 											<option value="" selected>Selected ConnectionName</option>
 										</select>
 									</li>
@@ -1022,8 +1020,8 @@
 									<li>
 										<label>Storage</label>
 										<div class="s_slider_box">
-											<input type="text" id="assist_num_storage_min"
-												   name="assist_max_num_storage_min" value="0" placeholder="1"
+											<input type="text" id="assistLookup_num_storage_min"
+												   name="assistLookup_max_num_storage_min" value="0" placeholder="1"
 												   class="components_input txt_ipbox" title="" disabled />
 											<div class="slider_ip">
 												<button class="btn_s btn_s_minus">-</button>
@@ -1031,8 +1029,8 @@
 												</div>
 												<button class="btn_s btn_s_plus">+</button>
 											</div>
-											<input type="text" id="assist_num_storage_max"
-												   name="assist_max_num_storage_min" value="100" placeholder="1"
+											<input type="text" id="assistLookup_num_storage_max"
+												   name="assistLookup_max_num_storage_min" value="100" placeholder="1"
 												   class="components_input txt_ipbox" title="" disabled />
 										</div>
 										<span class="stxt">TiB</span>
@@ -1041,7 +1039,7 @@
 									<li>
 										<label>Core</label>
 										<div class="s_slider_box">
-											<input type="text" id="assist_num_core_min" name="assist_num_core_min"
+											<input type="text" id="assistLookup_num_core_min" name="assist_num_core_min"
 												   value="0" placeholder="0" class="components_input txt_ipbox"
 												   title="" disabled />
 											<div class="slider_ip">
@@ -1050,7 +1048,7 @@
 												</div>
 												<button class="btn_s btn_s_plus">+</button>
 											</div>
-											<input type="text" id="assist_num_core_max" name="assist_num_core_max"
+											<input type="text" id="assistLookup_num_core_max" name="assist_num_core_max"
 												   value="100" placeholder="0" class="components_input txt_ipbox"
 												   title="" disabled />
 										</div>
@@ -1065,7 +1063,7 @@
 									<li>
 										<label>vCPU</label>
 										<div class="s_slider_box">
-											<input type="text" id="assist_num_vCPU_min" name="assist_num_vCPU_min"
+											<input type="text" id="assistLookup_num_vCPU_min" name="assist_num_vCPU_min"
 												   value="0" placeholder="0" class="components_input txt_ipbox"
 												   title="" disabled />
 											<div class="slider_ip">
@@ -1075,7 +1073,7 @@
 												</div>
 												<button class="btn_s btn_s_plus">+</button>
 											</div>
-											<input type="text" id="assist_num_vCPU_max" name="assist_num_vCPU_max"
+											<input type="text" id="assistLookup_num_vCPU_max" name="assist_num_vCPU_max"
 												   value="100" placeholder="0" class="components_input txt_ipbox"
 												   title="" disabled />
 										</div>
@@ -1086,7 +1084,7 @@
 									<li>
 										<label>ebs bandwidth</label>
 										<div class="s_slider_box">
-											<input type="text" id="assist_ebs_bw_Mbps_min"
+											<input type="text" id="assistLookup_ebs_bw_Mbps_min"
 												   name="assist_ebs_bw_Mbps_min" value="0" placeholder="0"
 												   class="components_input txt_ipbox" title="" disabled />
 											<div class="slider_ip">
@@ -1096,7 +1094,7 @@
 												</div>
 												<button class="btn_s btn_s_plus">+</button>
 											</div>
-											<input type="text" id="assist_ebs_bw_Mbps_max"
+											<input type="text" id="assistLookup_ebs_bw_Mbps_max"
 												   name="assist_ebs_bw_Mbps_max" value="100" placeholder="0"
 												   class="components_input txt_ipbox" title="" disabled />
 										</div>
@@ -1160,7 +1158,7 @@
 						<!-- table scrollbar -->
 						<div class="dtbox scrollbar-inner">
 							<div class="dataTable dt_overlay">
-								<table cellpadding="0" cellspacing="0" summary="" id="popCloudConnection">
+								<table cellpadding="0" cellspacing="0" summary="" id="popLookupSpec">
 									<!-- <colgroup><col width="35%"><col width="25%"><col width=""></colgroup> -->
 									<thead>
 									<tr>
@@ -1171,7 +1169,7 @@
 										<th>GPU</th>
 									</tr>
 									</thead>
-									<tbody id="assistSpecList">
+									<tbody id="assistLookupSpecList">
 
 									</tbody>
 								</table>
@@ -1474,49 +1472,49 @@
 								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
 									   onclick="delAllKeyword()" />
 							</div>
-
-							<div class="top_info">
-								<ul>
-									<li>
-										<a href="javascript:void(0);">Filter</a>
-										<div class="infobox">
-											<div class="box">
-												<ul>
-													<li><a href="javascript:void(0);"
-														   onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image
-														ID</a></li>
-													<li><a href="javascript:void(0);"
-														   onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image
-														Name</a></li>
-												</ul>
-											</div>
+						</div>
+						<div class="top_info">
+							<ul>
+								<li>
+									<a href="javascript:void(0);">Filter</a>
+									<div class="infobox">
+										<div class="box">
+											<ul>
+												<li><a href="javascript:void(0);"
+													   onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image
+													ID</a></li>
+												<li><a href="javascript:void(0);"
+													   onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image
+													Name</a></li>
+											</ul>
 										</div>
-									</li>
-									<li>
-										<a href="javascript:void(0);">Sort</a>
-										<div class="infobox">
-											<div class="box">
-												<ul>
-													<li><a href="javascript:void(0);"
-														   onclick="tableSort('assistSecurityGroupList', 'Name')">Name</a></li>
-													<li><a href="javascript:void(0);"
-														   onclick="tableSort('assistSecurityGroupList', 'Status')">Status</a>
-													</li>
-													<li><a href="javascript:void(0);"
-														   onclick="tableSort('assistSecurityGroupList', 'GuestOS')">GuestOS</a>
-													</li>
-													<li><a href="javascript:void(0);"
-														   onclick="tableSort('assistSecurityGroupList', 'IID nameId')">IID
-														nameId</a></li>
-												</ul>
-											</div>
+									</div>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Sort</a>
+									<div class="infobox">
+										<div class="box">
+											<ul>
+												<li><a href="javascript:void(0);"
+													   onclick="tableSort('assistSecurityGroupList', 'Name')">Name</a></li>
+												<li><a href="javascript:void(0);"
+													   onclick="tableSort('assistSecurityGroupList', 'Status')">Status</a>
+												</li>
+												<li><a href="javascript:void(0);"
+													   onclick="tableSort('assistSecurityGroupList', 'GuestOS')">GuestOS</a>
+												</li>
+												<li><a href="javascript:void(0);"
+													   onclick="tableSort('assistSecurityGroupList', 'IID nameId')">IID
+													nameId</a></li>
+											</ul>
 										</div>
-									</li>
-									<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png"
-																		   alt="" /></a>
-									</li>
-								</ul>
-							</div>
+									</div>
+								</li>
+								<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png"
+																	   alt="" /></a>
+								</li>
+							</ul>
+						</div>
 
 						<!-- table scrollbar -->
 						<div class="dtbox scrollbar-inner">
