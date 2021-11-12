@@ -453,7 +453,7 @@ function clearAssistSpecList(targetTableList){
     $("#" + targetTableList).empty()
 }
 function showSpecAssistPopup(){
-    $("#specAssist").modal();
+    $("#specLookupAssist").modal();
 
     var regProviderName = $("#regProvider").val();
     if( regProviderName ){
@@ -565,7 +565,7 @@ function setCspSpecName(cspSpecName) {
     $("#regCspSpecName").val(cspSpecName);
     $("#regProvider").val();//
     // $("#assistSpecProviderName").val(regProviderName);
-    $("#specAssist").modal("hide");
+    $("#specLookupAssist").modal("hide");
 }
 
 // 조회 실패

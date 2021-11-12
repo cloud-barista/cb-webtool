@@ -136,7 +136,7 @@ function commonErrorAlert(statusCode, message) {
 }
 
 // confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정
-function commonConfirmOpen(targetAction) {
+function commonConfirmOpen(targetAction, caller) {
     console.log("commonConfirmOpen : " + targetAction)
 
     //  [ id , 문구]
@@ -215,6 +215,7 @@ function commonConfirmOpen(targetAction) {
 
             ["DifferentConnection", "Do you want to set different connectionName?"],
             ["DifferentConnectionAtSecurityGroup", "Do you want to set different connectionName?"],
+            ["DifferentConnectionAtAssistPopup", "Do you want to set different connectionName?"],
 
             ["AddMonitoringAlertPolicy", "Would you like to register Threshold ?"],
             ["DeleteMonitoringAlertPolicy", "Are you sure to delete this Threshold ?"],
@@ -234,6 +235,7 @@ function commonConfirmOpen(targetAction) {
         //$('#modalText').text(confirmModalTextMap.get(targetAction));
         $('#confirmText').html(confirmModalTextMap.get(targetAction));
         $('#confirmOkAction').val(targetAction);
+        $('#confirmCaller').val(caller);
 
         if (targetAction == "Region") {
             // button에 target 지정
@@ -247,13 +249,14 @@ function commonConfirmOpen(targetAction) {
     }
 }
 
-// confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정, text 내용 전송
-function commonConfirmMsgOpen(targetAction, message) {
+// confirm modal창 보이기 modal창이 열릴 때 해당 창의 text 지정, close될 때 action 지정, text 내용 전송. caller : 구분자
+function commonConfirmMsgOpen(targetAction, message, caller) {
     console.log("commonConfirmMsgOpen : " + targetAction)
 
     try {
         $('#confirmText').html(message);
         $('#confirmOkAction').val(targetAction);
+        $('#confirmCaller').val(caller);
 
         $('#confirmArea').modal();
     } catch (e) {
@@ -266,6 +269,7 @@ function commonConfirmMsgOpen(targetAction, message) {
 function commonConfirmOk() {
     //modalArea
     var targetAction = $('#confirmOkAction').val();
+    var caller = $('#confirmCaller').val();
     if (targetAction == "Logout") {
         // Logout처리하고 index화면으로 간다. Logout ==> cookie expire
         // location.href="/logout"
@@ -421,9 +425,12 @@ function commonConfirmOk() {
     } else if (targetAction == "monitoringConfigPolicyConfig") {
         regMonitoringConfigPolicy()
     } else if (targetAction == "DifferentConnection") {
-        setAndClearByDifferentConnectionName();
+        setAndClearByDifferentConnectionName(caller);
     } else if (targetAction == "DifferentConnectionAtSecurityGroup") {
         uncheckDifferentConnectionAtSecurityGroup();
+    } else if (targetAction == "DifferentConnectionAtAssistPopup") {
+        // connection이 다른데도 set 한다고 하면 이전에 설정한 값들을 초기화 한 후 set한다.
+        applyAssistValues(caller);
     } else if (targetAction == "AddMonitoringAlertPolicy") {
         addMonitoringAlertPolicy();
     } else if (targetAction == "DeleteMonitoringAlertPolicy") {
