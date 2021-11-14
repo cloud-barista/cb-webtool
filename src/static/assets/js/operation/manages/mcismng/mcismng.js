@@ -1163,20 +1163,22 @@ function vmDetailInfo(mcisID, mcisName, vmID){
             // script 생성
             console.log("vmScriptExport start")
             // 위 값으로 mcisIndex, vmIndex 를 찾자
-            var mcisIndex = 0;
-            var vmIndex = 0;
-            $("[id^='mcisVmID_']").each(function(){
-                if( vmID == $(this).val()){
-                    var mcisVm = $(this).attr("id").split("_")
-                    mcisIndex = mcisVm[1]
-                    vmIndex = mcisVm[2]
-                    return false;
-                }
-            });
+            // var mcisIndex = 0;
+            // var vmIndex = 0;
+            // $("[id^='mcisVmID_']").each(function(){
+            //     if( vmID == $(this).val()){
+            //         var mcisVm = $(this).attr("id").split("_")
+            //         mcisIndex = mcisVm[1]
+            //         vmIndex = mcisVm[2]
+            //         return false;
+            //     }
+            // });
 
             var vmCreateScript = JSON.stringify(data)
-            $("#m_exportFileName_" + mcisIndex + "_"+ vmIndex).val(vmName);
-            $("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
+            // $("#m_exportFileName_" + mcisIndex + "_"+ vmIndex).val(vmName);
+            // $("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
+            $("#exportFileName").val(mcisID + "_" + vmID);
+            $("#exportScript").val(vmCreateScript);
         }
     // ).catch(function(error){
     //     var statusCode = error.response.data.status;
@@ -1398,7 +1400,7 @@ function vmScriptExport(){
     // if( $("#m_vmExportScript_" + mcisIndex + "_" + vmIndex).val() == ""){
     //     makeVmScript(mcisIndex, vmIndex);
     // }
-    console.log("vmscript")
+    console.log("vmscript " + mcisIndex + " : " + vmIndex)
     console.log($("#m_vmExportScript_" + mcisIndex + "_" + vmIndex).val())
     saveToVmAsJsonFile(mcisIndex, vmIndex);
 }
@@ -1518,14 +1520,18 @@ function makeVmScript(mcisIndex, vmIndex){
 
 // json 파일로 저장
 function saveToMcisAsJsonFile(mcisIndex){
-	var fileName = "MCIS_" + $("#m_exportFileName_" + mcisIndex).val();
-	var exportScript = $("#m_mcisExportScript_" + mcisIndex).val();
+	// var fileName = "MCIS_" + $("#m_exportFileName_" + mcisIndex).val();
+	// var exportScript = $("#m_mcisExportScript_" + mcisIndex).val();
+    var fileName = $("#exportFileName").val();
+    var exportScript = $("#exportScript").val();
 
     saveFileProcess(fileName, exportScript);
 }
 function saveToVmAsJsonFile(mcisIndex, vmIndex){
-	var fileName = "VM_" + $("#m_exportFileName_" + mcisIndex + "_" + vmIndex).val();
-	var exportScript = $("#m_vmExportScript_" + mcisIndex + "_"  + vmIndex).val();
+	// var fileName = "VM_" + $("#m_exportFileName_" + mcisIndex + "_" + vmIndex).val();
+	// var exportScript = $("#m_vmExportScript_" + mcisIndex + "_"  + vmIndex).val();
+    var fileName = $("#exportFileName").val();
+    var exportScript = $("#exportScript").val();
 
     saveFileProcess(fileName, exportScript);
 }
@@ -1545,6 +1551,10 @@ function saveFileProcess(fileName, exportScript){
 	element.click();
 
 	document.body.removeChild(element);
+
+    $("#exportFileName").val('');
+    $("#exportScript").val('');
+
 }
 
 function getSecurityGroupCallbackSuccess(caller, data){
@@ -1570,21 +1580,23 @@ function getSecurityGroupCallbackFail(error){
 function getMcisDataCallbackSuccess(caller, data, mcisID){
     if( caller == "mcisexport") {
 
-        var mcisIndex = 0;
-        console.log("mcisScriptExport start " + mcisID)
-        console.log(data);
-        $("[id^='mcisID']").each(function () {
-            if (mcisID == $(this).val()) {
-                mcisIndex = $(this).attr("id").replace("mcisID", "")
-                return false;
-            }
-        });
-
-        var mcisNameVal = $("#m_mcisName_" + mcisIndex).val();
+        // var mcisIndex = 0;
+        // console.log("mcisScriptExport start " + mcisID)
+        // console.log(data);
+        // $("[id^='mcisID']").each(function () {
+        //     if (mcisID == $(this).val()) {
+        //         mcisIndex = $(this).attr("id").replace("mcisID", "")
+        //         return false;
+        //     }
+        // });
+        //
+        // var mcisNameVal = $("#m_mcisName_" + mcisIndex).val();
         var mcisCreateScript = JSON.stringify(data)
         console.log(mcisCreateScript)
-        $("#m_exportFileName_" + mcisIndex).val(mcisNameVal);
-        $("#m_mcisExportScript_" + mcisIndex).val(mcisCreateScript);
+        // $("#m_exportFileName_" + mcisIndex).val(mcisNameVal);
+        // $("#m_mcisExportScript_" + mcisIndex).val(mcisCreateScript);
+        $("#exportFileName").val(data.id);
+        $("#exportScript").val(mcisCreateScript);
 
         saveToMcisAsJsonFile(mcisIndex);
     }else if( caller == "refreshmcisdata"){
