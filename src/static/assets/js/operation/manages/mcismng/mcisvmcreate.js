@@ -34,6 +34,7 @@ $(document).ready(function () {
             $("#assist_select_connectionName").val(esSelectedConnectionName);
         }
 
+        // 상단 공통 provider, region, connection
         console.log("esSelectedProvider = " + esSelectedProvider + " : " + $("#assist_select_provider").val());
         console.log("esSelectedRegion = " + esSelectedRegion + " : " + $("#assist_select_resion").val());
         console.log("esSelectedConnectionName = " + esSelectedConnectionName + " : " + $("#assist_select_connectionName").val());
@@ -507,8 +508,8 @@ function setNetworkListToExpertMode(data){
 
                 html += '<tr onclick="setAssistValue(' + calNetIndex + ');">'
 
-                    + '        <input type="hidden" id="vNetAssist_id' + calNetIndex + '" value="' + vNetItem.id + '"/>'
-                    + '        <input type="hidden" name="vNetAssist_connectionName" id="vNetAssist_connectionName' + calNetIndex + '" value="' + vNetItem.connectionName + '"/>'
+                    + '        <input type="hidden" name="vNetAssist_id" id="vNetAssist_id_' + calNetIndex + '" value="' + vNetItem.id + '"/>'
+                    + '        <input type="hidden" name="vNetAssist_connectionName" id="vNetAssist_connectionName_' + calNetIndex + '" value="' + vNetItem.connectionName + '"/>'
                     + '        <input type="hidden" name="vNetAssist_name" id="vNetAssist_name_' + calNetIndex + '" value="' + vNetItem.name + '"/>'
                     + '        <input type="hidden" name="vNetAssist_description" id="vNetAssist_description_' + calNetIndex + '" value="' + vNetItem.description + '"/>'
                     + '        <input type="hidden" name="vNetAssist_cidrBlock" id="vNetAssist_cidrBlock_' + calNetIndex + '" value="' + vNetItem.cidrBlock + '"/>'
@@ -625,6 +626,7 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList){
             //connectionName
             //cspSpecName
             html += '<tr onclick="setAssistValue(' + vImageIndex + ');">'
+                + '     <input type="hidden" id="vmImageAssist_id_' + vImageIndex + '" value="' + vImageItem.id + '"/>'
                 + '     <input type="hidden" id="vmImageAssist_name_' + vImageIndex + '" value="' + vImageItem.name + '"/>'
                 + '     <input type="hidden" id="vmImageAssist_connectionName_' + vImageIndex + '" value="' + vImageItem.connectionName + '"/>'
                 + '     <input type="hidden" id="vmImageAssist_cspImageId_' + vImageIndex + '" value="' + vImageItem.cspImageId + '"/>'
@@ -958,7 +960,7 @@ function getCommonFilterVmSpecListCallbackSuccess(caller, vmSpecList){
                     + '     <input type="hidden" id="vmSpecAssist_memGiB_' + vSpecIndex + '" value="' + vSpecItem.memGiB + '"/>'
                     + '     <input type="hidden" id="vmSpecAssist_numvCPU_' + vSpecIndex + '" value="' + vSpecItem.numvCPU + '"/>'
                     + '     <input type="hidden" id="vmSpecAssist_numGpu_' + vSpecIndex + '" value="' + vSpecItem.numGpu + '"/>'
-                    + '     <input type="hidden" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
+                    + '     <input type="hidden" id="vmSpecAssist_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
                     + '<td class="overlay hidden" data-th="Name">' + vSpecItem.name + '</td>'
                     + '<td class="overlay hidden" data-th="CspSpecName">' + vSpecItem.cspSpecName + '</td>'
                     + '<td class="btn_mtd ovm td_left" data-th="Memory">'
