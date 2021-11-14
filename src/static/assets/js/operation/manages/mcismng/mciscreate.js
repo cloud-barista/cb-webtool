@@ -102,6 +102,7 @@ function deployMcis(){
         //var theJson = jQuery.parseJSON($(this).val())
         //$("#mcisImportScriptPretty").val(fmt);	
         new_obj = $("#mcisImportScriptPretty").val();
+        new_obj.id = "";// id는 비워준다.
     }else{
 //         console.log(Simple_Server_Config_Arr)
         
