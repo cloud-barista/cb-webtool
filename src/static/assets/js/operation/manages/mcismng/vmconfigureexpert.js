@@ -683,7 +683,7 @@ function applyAssistValues(caller){
 
     $("#imageAssist").modal("hide");
   }else if ( caller == "vmSpecAssist"){
-    var orgPrefix = "vNetAssist_";
+    var orgPrefix = "vmSpecAssist_";
     var targetPrefix = "tab_vmSpec_";
 
     $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
@@ -766,6 +766,43 @@ function applyAssistValues(caller){
   if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != applyConnectionName) {
     setAndClearByDifferentConnectionName(caller);
   }
+
+  if(caller == "vmImageAssist"){
+    var orgPrefix = "vmImageAssist_";
+
+    $("#e_imageId").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+  }else if ( caller == "vmSpecAssist"){
+    var orgPrefix = "vmSpecAssist_";
+
+    $("#e_specId").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+  }else if ( caller == "networkAssist"){
+    var orgPrefix = "vNetAssist_";
+
+    $("#e_vNetId").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+    $("#e_subnetId").val($("#" + orgPrefix + "subnetId_" + selectedIndex).val());
+
+  }else if ( caller == "securityGroupAssist"){
+    var orgPrefix = "securityGroupAssist_";
+    var securityGroupIds = "";
+    var count = 0;
+    $("input[name='securityGroupAssist_chk']:checked").each(function () {
+      var sgId = $(this).attr("id")
+      var sgEleArr = sgId.split("_");
+      var sgIndex = sgEleArr[sgEleArr.length-1];
+
+      if( count > 0){ securityGroupIds += ","}
+
+      securityGroupIds += $("#" + orgPrefix + "id_" + sgIndex).val();
+      count++;
+    });
+
+    $("#e_securityGroupIds").val(securityGroupIds);
+  }else if ( caller == "sshKeyAssist"){
+    var orgPrefix = "sshKeyAssist_";
+
+    $("#e_sshKeyId").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+  }
+
 }
 // diffConnectionCheck
 // 1. 다르면 -> confirm에서 OK면 -> applyAssistValues(caller) 호출하여 set되도록
@@ -779,7 +816,7 @@ function applyAssistValidCheck(caller){
     var orgPrefix = "vmImageAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
   }else if ( caller == "vmSpecAssist"){
-    var orgPrefix = "vNetAssist_";
+    var orgPrefix = "vmSpecAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
   }else if ( caller == "networkAssist"){
     var orgPrefix = "vNetAssist_";
@@ -813,6 +850,9 @@ function applyAssistValidCheck(caller){
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
   }
 
+  console.log("caller=" + caller)
+  console.log($("#e_connectionName").val())
+  console.log("selectedConnectionName=" + selectedConnectionName)
   $("#t_connectionName").val(selectedConnectionName);
   if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != selectedConnectionName) {
     //commonConfirmOpen("DifferentConnectionAtSecurityGroup");

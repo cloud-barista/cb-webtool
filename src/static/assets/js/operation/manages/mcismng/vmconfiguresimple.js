@@ -173,7 +173,7 @@
 				}
 				console.log("get vnet INfo config name : ",configName)
                 // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/vNet";
-				var url = "/setting/resources"+"/network/list";
+				var url = "/setting/resources/network/list";
 				
                 var html = "";
                 var html2 = "";
@@ -184,26 +184,28 @@
                     // }
                 }).then(result=>{
                     data = result.data.VNetList
-					console.log("vNetwork Info : ",result)
+					// console.log("vNetwork Info : ",result)
 					var init_vnet = "";
 					var init_subnet = "";
 					var v_net_cnt = 0
 					var subnet_cnt = 0;
                     for(var i in data){
                         if(data[i].connectionName == configName){
+							console.log(data[i].connectionName  + " : " + configName);
+							console.log(data[i]);
                             html += '<option value="'+data[i].id+'" selected>'+data[i].cspVNetName+'('+data[i].id+')</option>'; 
 							v_net_cnt++;
 							var subnetInfoList = data[i].subnetInfoList
-							if(v_net_cnt == 1){
+							//if(v_net_cnt == 1){
 								init_vnet = data[i].id
-								console.log("init_vnet :",init_vnet)
-							}
+							// 	console.log("init_vnet :",init_vnet)
+							// }
 							
                             for(var k in subnetInfoList){
 								
 									// init_subnet = subnetInfoList[0].IId.NameId
 								init_subnet = subnetInfoList[k].id
-								console.log("init_subnet :",init_subnet)
+								// console.log("init_subnet :",init_subnet)
 							
                                 html2 += '<option value="'+subnetInfoList[k].id+'" >'+subnetInfoList[k].ipv4_CIDR+'</option>';
 								// html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].Ipv4_CIDR+'</option>';
@@ -218,7 +220,7 @@
 					//setting default
 					$("#s_subnetId").val(init_subnet);
 					$("#s_vNetId").val(init_vnet);				
-                    
+                    console.log("init_vnet=" + init_vnet + ", subnet=" + init_subnet)
                 })
             }
 						
