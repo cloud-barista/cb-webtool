@@ -465,7 +465,7 @@
 										<label>Cloud Provider</label>
 										<select class="selectbox white pline w3" name="assistSpecProviderName"
 											id="assistSpecProviderName"
-											onchange="getConnectionListForSelectbox(this.value, 'assistSpecConnectionName')">
+											onchange="filterConnectionByProvider(this.value, 'assistSpecConnectionName')">
 											<option value="" selected>Select Cloud Provider</option>
 											{{ range $item := .CloudOSList}}
 											<option value="{{ $item }}">{{ $item }}</option>
@@ -592,11 +592,8 @@
 						</div>
 
 						<div class="toptxt">
-							<button type="button" class="btn btn-sm btn-dark"
-								onclick="commonConfirmOpen('FetchSpecs')">Fetch Specs</button>
 							<label>Spec List : <span id="assistSpecCount"></span></label>
 						</div>
-
 
 						<div class="top_info">
 							<ul>
@@ -703,7 +700,7 @@
 										<label>Cloud Provider</label>
 										<select class="selectbox white pline w3" name="AssistImageProviderName"
 											id="assistImageProviderName"
-											onchange="getConnectionListForSelectbox(this.value, 'assistImageConnectionName')">
+												onchange="filterConnectionByProvider(this.value, 'assistImageConnectionName')">
 											<option value="" selected>Select Cloud Provider</option>
 											{{ range $item := .CloudOSList}}
 											<option value="{{ $item }}">{{ $item }}</option>
@@ -791,10 +788,8 @@
 									<thead>
 										<tr>
 											<th>Name</th>
-											<th>CspImageId</th>
 											<th>CspImageName</th>
-											<th>GuestOS</th>
-											<th>Description</th>
+											<th>CspImageId</th>
 										</tr>
 									</thead>
 									<tbody id="assistVmImageList">
