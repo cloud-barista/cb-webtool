@@ -1,5 +1,6 @@
 $(document).ready(function () {
     jQuery('.sc_box.scrollbar-inner').scrollbar();
+    AjaxLoadingShow(true);
 
     getCommonCloudConnectionList("dashboard", true)
 
@@ -50,6 +51,7 @@ function getMcisListCallbackSuccess(caller, mcisList) {
 
     setMap();// MCIS를 가져와서 화면에 뿌려지면 vm정보가 있으므로 Map그리기
 
+    AjaxLoadingShow(false);
 
     // // MCIS Status
     // var totalMcisCnt = 0;
