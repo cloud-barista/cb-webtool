@@ -68,7 +68,7 @@
 .dashboard .titbox { position:relative; height:59px; border-bottom:1px solid #e7ebee; margin:0 0 20px 0; }
 .dashboard .titbox.line_none { border-bottom:none; height:70px; }
 .dashboard .titbox .tit { position:absolute; left:44px; top:50%; transform:translateY(-50%); color:#5e636c;font-size:16px; line-height:16px; font-weight:200; }
-.dashboard .titbox .tit_keyword { position:absolute; left:15%; top:50%; transform:translateY(-50%); display: flex;}
+.dashboard .titbox .tit_keyword { position:absolute; left:20%; top:50%; transform:translateY(-50%); display: flex; align-items: center;}
 .dashboard .d_box.box_2 .tit { left:40px; }
 .dashboard .d_box.box_m .titbox .tit { left:32px; }
 .dashboard .d_box.box_m3 .titbox .tit { left:22px; }
