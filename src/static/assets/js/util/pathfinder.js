@@ -67,6 +67,7 @@ function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam){
             'Content-Type' : "application/json"
         }
     }).then(result=>{
+        console.log(result);
         console.log("get NameSpace Data : ",result.data);
         // var data = result.data.ns;
         var data = result.data;
@@ -119,6 +120,7 @@ function setLeftMenuNamespaceList(targetObjId, namespaceList){
     }
 }
 
+// caller 구분자, sortType : 오름.내림, isCallback
 function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId){
     var url = "/setting/connections/cloudconnectionconfig/list";
     axios.get(url,{

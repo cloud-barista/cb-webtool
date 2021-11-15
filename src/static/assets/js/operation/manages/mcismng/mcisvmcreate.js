@@ -1,5 +1,6 @@
 $(document).ready(function () {
     getVmList()
+    getCommonCloudConnectionList('vmcreate', '', true)
     getCommonNetworkList('vmcreate')
     getCommonVirtualMachineImageList('vmcreate')
     getCommonVirtualMachineSpecList('vmcreate')
@@ -44,6 +45,35 @@ $(document).ready(function () {
         $("#security_edit").modal();
         $('#security_edit .dtbox.scrollbar-inner').scrollbar();
     });
+
+    // image assist popup이 열리면 connection set
+    $('#imageAssist').on('show.bs.modal', function (e) {
+        setConnectionOfSearchCondition('imageAssist');
+    });
+
+    // image assist 가 닫힐 때, connection set
+    $('#imageAssist').on('hide.bs.modal', function (e) {
+    });
+
+    // spec assist popup이 열리면 connection set
+    $('#specAssist').on('show.bs.modal', function (e) {
+        setConnectionOfSearchCondition('specAssist');
+    });
+
+    // spec assist 가 닫힐 때, connection set
+    $('#specAssist').on('hide.bs.modal', function (e) {
+    });
+
+    // spec assist popup이 열리면 connection set
+    $('#networkAssist').on('show.bs.modal', function (e) {
+        setConnectionOfSearchCondition('networkAssist');
+    });
+
+    // spec assist 가 닫힐 때, connection set
+    $('#networkAssist').on('hide.bs.modal', function (e) {
+    });
+    networkAssist
+
 
     // $("input[name='vmInfoType']:radio").change(function () {
     //     //라디오 버튼 값을 가져온다.
@@ -102,6 +132,72 @@ $(document).ready(function () {
 
 });
 
+// connection 정보 설정. select box
+function setConnectionOfSearchCondition(caller){
+    // main connection 정보
+    var esSelectedProvider = $("#es_regProvider option:selected").val();
+    var esSelectedRegion = $("#es_regRegion option:selected").val();
+    var esSelectedConnectionName = $("#es_regConnectionName option:selected").val();
+
+    if( caller == "imageAssist"){
+        var assistProviderId = "assistImageProviderName";
+        var assistConnectionId = "assistImageConnectionName"
+        if (esSelectedProvider) {
+            $("#" + assistProviderId).val(esSelectedProvider);
+            $("#" + assistProviderId).attr('disabled', 'true');
+        }
+        // if (esSelectedRegion) {
+        //     $("#assist_select_resion").val(esSelectedRegion);
+        // }
+
+        filterConnectionByProvider(esSelectedProvider, assistConnectionId)
+        if (esSelectedConnectionName) {
+            $("#" + assistConnectionId).val(esSelectedConnectionName);
+            $("#" + assistConnectionId).attr('disabled', 'true');
+        }
+    }else if( caller == "specAssist"){
+        var assistProviderId = "assistSpecProviderName";
+        var assistConnectionId = "assistSpecConnectionName"
+        if (esSelectedProvider) {
+            $("#" + assistProviderId).val(esSelectedProvider);
+        }
+        // if (esSelectedRegion) {
+        //     $("#assist_select_resion").val(esSelectedRegion);
+        // }
+
+        filterConnectionByProvider(esSelectedProvider, assistConnectionId)
+        if (esSelectedConnectionName) {
+            $("#" + assistConnectionId).val(esSelectedConnectionName);
+        }
+    }else if( caller == "networkAssist"){
+        var assistProviderId = "assistNetworkProviderName";
+        var assistConnectionId = "assistNetworkConnectionName"
+        if (esSelectedProvider) {
+            $("#" + assistProviderId).val(esSelectedProvider);
+        }
+        // if (esSelectedRegion) {
+        //     $("#assist_select_resion").val(esSelectedRegion);
+        // }
+
+        filterConnectionByProvider(esSelectedProvider, assistConnectionId)
+        if (esSelectedConnectionName) {
+            $("#" + assistConnectionId).val(esSelectedConnectionName);
+        }
+    }
+}
+
+// target Object(selectbox) 에 해당 provider목록만 표시
+function filterConnectionByProvider(provider, targetObjId){
+    $('#' + targetObjId).find('option').remove();
+    $('#' + targetObjId).append('<option value="">Selected Connection</option>')
+    for (var connIndex in totalCloudConnectionList) {
+        var aConnection = totalCloudConnectionList[connIndex];
+        console.log(aConnection)
+        if( provider == "" || provider == aConnection.ProviderName) {
+            $('#' + targetObjId).append('<option value="' + aConnection.ConfigName + '">' + aConnection.ConfigName +'</option>')
+        }
+    }
+}
 
 var totalDeployServerCount = 0;
 function btn_deploy() {
@@ -373,6 +469,11 @@ function getVmList() {
                     $("#mcis_server_list *").remove();
                     var appendLi = "";
 
+                    // + 버튼은 가장 첫번째에
+                    appendLi = appendLi + '<li>';
+                    appendLi = appendLi + '<div class="server server_add" onClick="displayNewServerForm()">';
+                    appendLi = appendLi + '</div>';
+                    appendLi = appendLi + '</li>';
                     for (var o in vms) {
                         var vm_status = vms[o].status
                         var vm_name = vms[o].name
@@ -389,13 +490,7 @@ function getVmList() {
                         appendLi = appendLi + '</li>';
 
                         appendLi = appendLi + '</li>';
-
                     }
-                    appendLi = appendLi + '<li>';
-                    appendLi = appendLi + '<div class="server server_add" onClick="displayNewServerForm()">';
-                    appendLi = appendLi + '</div>';
-                    appendLi = appendLi + '</li>';
-
                     $("#mcis_server_list").append(appendLi);
 
                     // commonAlert("VM 목록 조회 완료")
@@ -409,6 +504,11 @@ function getVmList() {
         })
 }
 
+// 모든 커넥션 목록 ( expert mode, assist에서 사용 )
+var totalCloudConnectionList = new Array();
+function getCloudConnectionListCallbackSuccess(caller, data, sortType){
+    totalCloudConnectionList = data;
+}
 // 화면 Load시 가져오나 굳이?
 var totalNetworkListByNamespace = new Array();
 function getNetworkListCallbackSuccess(caller, data) {
@@ -416,7 +516,7 @@ function getNetworkListCallbackSuccess(caller, data) {
     if (data == null || data == undefined || data == "null") {
 
     } else {// 아직 data가 1건도 없을 수 있음
-        setNetworkListToExpertMode(data);
+        setNetworkListToExpertMode(data, caller);
         // var html = ""
         // if (data.length > 0) {
         //     totalNetworkListByNamespace = data;
@@ -490,13 +590,33 @@ function getNetworkListCallbackFail(caller, error) {
     $("#e_vNetListTbody").append(html)
 }
 
-// simple mode일 때 나타나는 vnetList
-function setNetworkListToExpertMode(data){
-    var html = ""
-    if (data.length > 0) {
-        totalNetworkListByNamespace = data;
-        var calNetIndex = 0;
-        data.forEach(function (vNetItem, vNetIndex) {
+function filterNetworkList(keywords, caller){
+    // provider
+    // connection
+    var assistProviderName = "";
+    var assistConnectionName = "";
+    var html = "";
+    if( caller == "networkAssist"){
+        assistProviderName = $("#assistNetworkProviderName option:selected").val();
+        assistConnectionName = $("#assistNetworkConnectionName option:selected").val();
+    }
+
+    var calNetIndex = 0;
+    totalNetworkListByNamespace.forEach(function (vNetItem, vNetIndex) {
+        if( assistConnectionName == "" || assistConnectionName == vNetItem.connectionName) {
+            // keyword가 있는 것들 중에서
+            var keywordExist = false
+            var keywordLength = keywords.length
+            var findCount = 0;
+            keywords.forEach(function (keywordValue, keywordIndex) {
+                if( vNetItem.name.indexOf(keywordValue) > -1){
+                    findCount++;
+                }
+            })
+            if( keywordLength != findCount){
+                return true;
+            }
+
             var subnetData = vNetItem.subnetInfoList;
             var addedSubnetIndex = 0;// subnet 이 1개 이상인 경우 subnet 으로 인한 index차이를 계산
             console.log(subnetData)
@@ -529,12 +649,19 @@ function setNetworkListToExpertMode(data){
                     + '</tr>'
 
                 calNetIndex++;
-
             });
-
-        });
-        $("#assistVnetList").empty()
-        $("#assistVnetList").append(html)
+        }
+    });
+    $("#assistVnetList").empty()
+    $("#assistVnetList").append(html)
+}
+// expert mode일 때 나타나는 vnetList
+function setNetworkListToExpertMode(data, caller){
+    var html = ""
+    if (data.length > 0) {
+        totalNetworkListByNamespace = data;
+        var keywords = new Array();
+        filterNetworkList(keywords, caller);
     }
 }
 
@@ -618,29 +745,35 @@ function getImageListCallbackFail(error) {
 
 // 등록 된 vm search 결과
 function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList){
-    console.log("11111");
     console.log(vmImageList);
     var html = ""
     if (vmImageList.length > 0) {
+        // if( caller == "imageAssist" ){
+        // 조회 조건으로 provider, connection이 선택되어 있으면 조회 후 filter
+        var assistProviderName = $("#assistImageProviderName option:selected").val();
+        var assistConnectionName = $("#assistImageConnectionName option:selected").val();
+        console.log("getCommonSearchVmImageListCallbackSuccess")
         vmImageList.forEach(function (vImageItem, vImageIndex) {
-            //connectionName
-            //cspSpecName
-            html += '<tr onclick="setAssistValue(' + vImageIndex + ');">'
-                + '     <input type="hidden" id="vmImageAssist_id_' + vImageIndex + '" value="' + vImageItem.id + '"/>'
-                + '     <input type="hidden" id="vmImageAssist_name_' + vImageIndex + '" value="' + vImageItem.name + '"/>'
-                + '     <input type="hidden" id="vmImageAssist_connectionName_' + vImageIndex + '" value="' + vImageItem.connectionName + '"/>'
-                + '     <input type="hidden" id="vmImageAssist_cspImageId_' + vImageIndex + '" value="' + vImageItem.cspImageId + '"/>'
-                + '     <input type="hidden" id="vmImageAssist_cspImageName_' + vImageIndex + '" value="' + vImageItem.cspImageName + '"/>'
-                + '     <input type="hidden" id="vmImageAssist_guestOS_' + vImageIndex + '" value="' + vImageItem.guestOS + '"/>'
-                + '     <input type="hidden" id="vmImageAssist_description_' + vImageIndex + '" value="' + vImageItem.description + '"/>'
-                + '<td class="overlay hidden" data-th="Name">' + vImageItem.name + '</td>'
-                + '<td class="overlay hidden" data-th="CspImageId">' + vImageItem.cspImageId + '</td>'
-                + '<td class="overlay hidden" data-th="CspImageName">' + vImageItem.cspImageName + '</td>'
-                + '</td>'
-                + '<td class="overlay hidden" data-th="GuestOS">' + vImageItem.guestOS + '</td>'
-                + '<td class="overlay hidden" data-th="Description">' + vImageItem.description + '</td>'
-                + '</tr>'
+            console.log(assistConnectionName + " : " + vImageItem.connectionName)
+            if( assistConnectionName == "" || assistConnectionName == vImageItem.connectionName) {
+                //connectionName
+                //cspSpecName
+                html += '<tr onclick="setAssistValue(' + vImageIndex + ');">'
+                    + '     <input type="hidden" id="vmImageAssist_id_' + vImageIndex + '" value="' + vImageItem.id + '"/>'
+                    + '     <input type="hidden" id="vmImageAssist_name_' + vImageIndex + '" value="' + vImageItem.name + '"/>'
+                    + '     <input type="hidden" id="vmImageAssist_connectionName_' + vImageIndex + '" value="' + vImageItem.connectionName + '"/>'
+                    + '     <input type="hidden" id="vmImageAssist_cspImageId_' + vImageIndex + '" value="' + vImageItem.cspImageId + '"/>'
+                    + '     <input type="hidden" id="vmImageAssist_cspImageName_' + vImageIndex + '" value="' + vImageItem.cspImageName + '"/>'
+                    + '     <input type="hidden" id="vmImageAssist_guestOS_' + vImageIndex + '" value="' + vImageItem.guestOS + '"/>'
+                    + '     <input type="hidden" id="vmImageAssist_description_' + vImageIndex + '" value="' + vImageItem.description + '"/>'
+                    + '<td class="overlay hidden" data-th="Name">' + vImageItem.name + '</td>'
+                    + '<td class="overlay hidden" data-th="CspImageName">' + vImageItem.cspImageName + '</td>'
+                    + '<td class="overlay hidden" data-th="CspImageId">' + vImageItem.cspImageId + '</td>'
 
+                    // + '<td class="overlay hidden" data-th="GuestOS">' + vImageItem.guestOS + '</td>'
+                    // + '<td class="overlay hidden" data-th="Description">' + vImageItem.description + '</td>'
+                    + '</tr>'
+            }
         });
         $("#assistVmImageList").empty()
         $("#assistVmImageList").append(html)
@@ -803,7 +936,7 @@ function searchNetworkByKeyword(caller){
     if( caller == "searchNetworkAssistAtReg"){
         keyword = $("#keywordAssistNetwork").val();
         keywordObjId = "searchAssistNetworkKeywords";
-
+        // network api에 connection으로 filter하는 기능이 없으므로
         //totalNetworkListByNamespace : page Load시 가져온 network List가 있으므로 해당 목록을 Filter한다.
     }
 
@@ -823,6 +956,7 @@ function searchNetworkByKeyword(caller){
     });
 
     //getCommonSearchVmImageList(keywords, caller);
+    filterNetworkList(keywords, caller)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)

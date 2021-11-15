@@ -157,13 +157,18 @@ func GetNameSpaceListByOptionID(optionParam string) ([]string, model.WebStatus) 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	nameSpaceInfoList := map[string][]string{}
+	//nameSpaceInfoList := map[string][]string{}
+	nameSpaceInfoList := tbcommon.TbIdList{}
 	// defer body.Close()
 	json.NewDecoder(respBody).Decode(&nameSpaceInfoList)
 	//spew.Dump(body)
-	fmt.Println(nameSpaceInfoList["idList"])
-
-	return nameSpaceInfoList["idList"], model.WebStatus{StatusCode: respStatus}
+	//fmt.Println(nameSpaceInfoList["idList"])
+	//
+	//return nameSpaceInfoList["idList"], model.WebStatus{StatusCode: respStatus}
+	//fmt.Println(nameSpaceInfoList["output"])
+	//return nameSpaceInfoList["output"], model.WebStatus{StatusCode: respStatus}
+	fmt.Println(nameSpaceInfoList.IDList)
+	return nameSpaceInfoList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
 // Get namespace
