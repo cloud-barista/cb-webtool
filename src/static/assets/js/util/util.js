@@ -1161,6 +1161,7 @@ function delSearchKeyword(event, caller) {
             filterTableWithKeywords(targetTableObjId, targetColumnName, keywords);
         } else {
             filterTable(targetTableObjId, targetColumnName, 'ALL');
+            hideBtnDelAll();
         }
     }
 }

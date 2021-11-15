@@ -87,12 +87,14 @@ func GetVnetListByID(nameSpaceID string) ([]string, model.WebStatus) {
 
 	// return respBody, respStatus
 	log.Println(respBody)
-	vNetInfoList := map[string][]string{}
+	//vNetInfoList := map[string][]string{}
+	vNetInfoList := tbcommon.TbIdList{}
 	json.NewDecoder(respBody).Decode(&vNetInfoList)
 	//spew.Dump(body)
-	fmt.Println(vNetInfoList["idList"])
+	//fmt.Println(vNetInfoList["idList"])
 
-	return vNetInfoList["idList"], model.WebStatus{StatusCode: respStatus}
+	//return vNetInfoList["idList"], model.WebStatus{StatusCode: respStatus}
+	return vNetInfoList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
 // List 조회시 optionParam 추가
@@ -334,13 +336,16 @@ func GetSecurityGroupListByOptionID(nameSpaceID string, optionParam string) ([]s
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	securityGroupList := map[string][]string{}
+	//securityGroupList := map[string][]string{}
+	securityGroupList := tbcommon.TbIdList{}
 	// defer body.Close()
 	json.NewDecoder(respBody).Decode(&securityGroupList)
 	//spew.Dump(body)
-	fmt.Println(securityGroupList["idList"])
+	//fmt.Println(securityGroupList["idList"])
+	fmt.Println(securityGroupList.IDList)
 
-	return securityGroupList["idList"], model.WebStatus{StatusCode: respStatus}
+	//return securityGroupList["idList"], model.WebStatus{StatusCode: respStatus}
+	return securityGroupList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
 // SecurityGroupList 조회 시 Option에 해당하는 값만 조회. GetSecurityGroupList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름
@@ -592,13 +597,16 @@ func GetSshKeyInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	// return respBody, respStatus
 	log.Println(respBody)
 
-	sshKeyList := map[string][]string{}
+	//sshKeyList := map[string][]string{}
+	sshKeyList := tbcommon.TbIdList{}
 	// defer body.Close()
 	json.NewDecoder(respBody).Decode(&sshKeyList)
 	//spew.Dump(body)
-	log.Println(sshKeyList["idList"])
+	//log.Println(sshKeyList["idList"])
+	log.Println(sshKeyList.IDList)
 
-	return sshKeyList["idList"], model.WebStatus{StatusCode: respStatus}
+	//return sshKeyList["idList"], model.WebStatus{StatusCode: respStatus}
+	return sshKeyList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
 func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbSshKeyInfo, model.WebStatus) {

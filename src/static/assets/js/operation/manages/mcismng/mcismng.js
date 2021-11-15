@@ -1,5 +1,6 @@
 var selectedMcis = "";// 선택 된 mcisId :// 다른 화면 등에서 mcisID를 넘겨주는 경우 사용
 $(document).ready(function(){
+    AjaxLoadingShow(true);
     checkLoadStatus();
 
     jQuery('.sc_box.scrollbar-inner').scrollbar();// CP / connectin의 구름 이미지들 창이 작아졌을 때 scroll 생기도록
@@ -161,6 +162,7 @@ function getMcisListCallbackSuccess(caller, mcisList){
         console.log(" selectedMcisID for filter " + selectedMcisID)
         filterTable("mcisListTable", "Name", selectedMcisID);
     }
+    AjaxLoadingShow(false);
     // // MCIS Status
     // var totalMcisCnt = 0;
     // var mcisStatusCountMap = new Map();
@@ -476,8 +478,40 @@ function createNewMcis(){// Manage_MCIS_Life_Cycle_popup.html
     changePage(targetUrl)
 }
 
+function changeLifeCycle(type){
+    var checked_nothing = 0;
+    var mcisIndex = 0;
+    var isMcks = false;
+    $("[id^='td_ch_']").each(function(){
+
+        if($(this).is(":checked")){
+            checked_nothing++;
+            console.log("checked")
+            aMcisData = totalMcisListObj[mcisIndex];
+            console.log(aMcisData);
+            if( aMcisData.label == "mcks"){
+                isMcks = true;
+                return false;
+            }
+        }else{
+            console.log("checked nothing")
+        }
+        mcisIndex++;
+    })
+    if( isMcks) {
+        commonAlert("MCKS life cycle cannot be changed");
+        return;
+    }
+
+    console.log("checked_nothing " + checked_nothing)
+    if(checked_nothing == 0){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }
+    commonConfirmOpen(type);
+}
 // MCIS 제어 : 선택한 VM의 상태 변경
-// callMcisLifeCycle -> util.callMcisLifeCycle -> callbackMcisLifeCycle 순으로 호출 됨
+// changeLifeCycle -> callMcisLifeCycle -> util.callMcisLifeCycle -> callbackMcisLifeCycle 순으로 호출 됨
 function callMcisLifeCycle(type){
     var checked_nothing = 0;
     $("[id^='td_ch_']").each(function(){
@@ -485,7 +519,7 @@ function callMcisLifeCycle(type){
         if($(this).is(":checked")){
             checked_nothing++;
             console.log("checked")
-            var mcisID = $(this).val()
+            var mcisID = $(this).val();
             mcisLifeCycle(mcisID, type);
         }else{
             console.log("checked nothing")
@@ -515,6 +549,45 @@ function callbackMcisLifeCycle(resultStatus, resultData, type){
     }
 }
 
+// mcis삭제 전 mcks 포함여부 체크
+function deleteCheckMCIS(type){
+    var checkedCount = 0;
+    var mcisID = "";
+    var mcisIndex = 0;
+    var isMcks = false;
+
+    $("[id^='td_ch_']").each(function(){
+
+        if($(this).is(":checked")){
+            checkedCount++;
+            console.log("checked")
+            mcisID = $(this).val();
+            aMcisData = totalMcisListObj[mcisIndex];
+            console.log(aMcisData);
+            if( aMcisData.label == "mcks"){
+                isMcks = true;
+                return false;
+            }
+        }else{
+            console.log("checked nothing")
+
+        }
+        mcisIndex++;
+    });
+    if(checkedCount == 0){
+        commonAlert("Please Select MCIS!!")
+        return;
+    }else if( checkedCount > 1){
+        commonAlert("Please Select One MCIS at a time")
+        return;
+    }
+
+    if( isMcks) {
+        commonAlert("MCKS cannot be deleted");
+        return;
+    }
+    commonConfirmOpen(type)
+}
 // list에 선택된 MCIS 제거. 1개씩
 function deleteMCIS(){
     var checkedCount = 0;
@@ -1990,7 +2063,7 @@ function setMcisListTableRow(aMcisData, mcisIndex){
     // id="mcisInfo_vmstatus_terminate_" + mcisIndex
     // id="mcisInfo_mcisDescription_" + mcisIndex
     // id="td_ch_" + mcisIndex                      // checkbox
-
+    console.log("label = " + aMcisData.label);
     // List of Mcis table
     try{
         mcisTableRow += '<tr onclick="clickListOfMcis(\'' + aMcisData.id + '\', ' + mcisIndex +' );" id="server_info_tr_' + mcisIndex +'" item="' + aMcisData.id +'|' + mcisIndex + '">'
@@ -1998,7 +2071,11 @@ function setMcisListTableRow(aMcisData, mcisIndex){
         mcisTableRow += '<td class="overlay hidden td_left column-14percent" data-th="Status">'
         mcisTableRow += '<img id="mcisInfo_mcisStatus_icon_' + mcisIndex + '" src="/assets/img/contents/icon_' + mcisDispStatus +'.png" class="icon" alt=""/><div id="mcisInfo_mcisstatus_' + mcisIndex + '">' + mcisStatus + '</div><span class="ov off"></span>'
         mcisTableRow += '</td>'
-        mcisTableRow += '<td class="btn_mtd ovm column-14percent" data-th="Name"><div id="mcisInfo_mcisName_' + mcisIndex + '">' + aMcisData.name + '</div><span class="ov"></span></td>'
+        mcisTableRow += '<td class="btn_mtd ovm column-14percent" data-th="Name">'
+        if( aMcisData.label == "mcks") {
+            mcisTableRow += '<span className="badge mcks-icon">11</span>'
+        }
+        mcisTableRow += '    <div id="mcisInfo_mcisName_' + mcisIndex + '">' + aMcisData.name + '</div><span class="ov"></span></td>'
         mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Cloud Connection"><div id="mcisInfo_mcisProviderNames_' + mcisIndex + '">' + mcisProviderNames + '</div></td>'
 
         mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Total Infras"><div id="mcisInfo_totalVmCountOfMcis_' + mcisIndex + '">' + totalVmCountOfMcis + '</div></td>'

@@ -136,21 +136,21 @@
                       var out = document.getElementById("callTime");
                       var badge = document.getElementById("badge");
                       setInterval(function () {
-                        console.log("lastcalltime:", lastCallTime);
-                        console.log("lastcalltimevalue:", lastCallTimeValue);
-                        console.log(messageData);
+                        // console.log("lastcalltime:", lastCallTime);
+                        // console.log("lastcalltimevalue:", lastCallTimeValue);
+                        // console.log(messageData);
 
                         var maxIdx = 0;
                         if (messageData.length === 0) { return; } //메세지 없음
 
                         console.log("append data")
                         for (idx in messageData) {
-                          console.log(lastCallTimeValue);
                           let processTime = new Date(messageData[idx].processTime).valueOf();
                           if (maxProcessTime < processTime) {
                             maxProcessTime = new Date(messageData[idx].processTime).valueOf();
                             maxIdx = idx;
                           }
+                          console.log("compare time ::: " + lastCallTimeValue + " : " + processTime);
                           if (processTime > lastCallTimeValue) {
                             var tr = document.createElement("tr");
                             var th = document.createElement("th");
@@ -170,6 +170,10 @@
                             tdName.innerHTML = messageData[idx].taskKey;
                             tdLifeCycle.innerHTML = messageData[idx].lifeCycle;
                             tdStatus.innerHTML = messageData[idx].status;
+
+                            // 처음 open시에는 badge표시 안함
+                            if( lastCallTimeValue == 0){continue;}
+
                             badge.innerHTML = ++badgeIdx;
                             badge.style.display = "inline-block";
                           }
@@ -227,6 +231,12 @@
     <div class="loading-container" id="loadingContainer" tabindex="-1" style="display: none">
       <div class="loading"></div>
       <div id="loading-text">loading</div>
+    </div>
+    <!-- // Loading bar -->
+    <!-- Loading bar -->
+    <div class="loading-container" id="Ajax_Loading" tabindex="-1" style="display: none">
+      <div class="loading"></div>
+      <div>loading</div>
     </div>
     <!-- // Loading bar -->
 

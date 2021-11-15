@@ -18,7 +18,6 @@
 				<!--										<input type="submit" name="" class="btn_search_image" title="" value=""-->
 				<!--											   onclick="getCommonMcisList()" />-->
 				<!--									</div>-->
-
 				<ul>
 					<li>
 						<a href="javascript:void(0);">Filter</a>
@@ -65,16 +64,16 @@
 											<!-- <li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Start">Start</a></li> -->
 											<li><a href="javascript:void(0);" data-toggle="modal"
 													data-target="#MCIS_Life_Reboot"
-													onClick="commonConfirmOpen('McisLifeCycleReboot')">Reboot</a></li>
+													onClick="changeLifeCycle('McisLifeCycleReboot')">Reboot</a></li>
 											<li><a href="javascript:void(0);" data-toggle="modal"
 													data-target="#MCIS_Life_Suspend"
-													onClick="commonConfirmOpen('McisLifeCycleSuspend')">Suspend</a></li>
+													onClick="changeLifeCycle('McisLifeCycleSuspend')">Suspend</a></li>
 											<li><a href="javascript:void(0);" data-toggle="modal"
 													data-target="#MCIS_Life_Resume"
-													onClick="commonConfirmOpen('McisLifeCycleResume')">Resume</a></li>
+													onClick="changeLifeCycle('McisLifeCycleResume')">Resume</a></li>
 											<li><a href="javascript:void(0);" data-toggle="modal"
 													data-target="#MCIS_Life_Terminate"
-													onClick="commonConfirmOpen('McisLifeCycleTerminate')">Terminate</a>
+													onClick="changeLifeCycle('McisLifeCycleTerminate')">Terminate</a>
 											</li>
 										</ul>
 									</li>
@@ -87,7 +86,7 @@
 													onClick="commonConfirmOpen('AddNewMcis')">New</a></li>
 											<li><a href="javascript:void(0);" data-toggle="modal"
 													data-target="#MCIS_n_New"
-													onClick="commonConfirmOpen('DeleteMcis')">Delete</a></li>
+													onClick="deleteCheckMCIS('DeleteMcis')">Delete</a></li>
 										</ul>
 									</li>
 									<li class="divider"></li>
@@ -112,44 +111,97 @@
 				</ul>
 			</div>
 		</div>
+	</div>
+	</li>
+	<li>
+		<a href="javascript:void(0);">Action</a>
+		<div class="infobox">
+			<div class="box">
+				<ul>
+					<li>
+						<strong>Life Cycle</strong>
+						<ul>
+							<!-- <li><a href="javascript:void(0);" data-toggle="modal" data-target="#Life_Start">Start</a></li> -->
+							<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Reboot"
+									onClick="commonConfirmOpen('McisLifeCycleReboot')">Reboot</a></li>
+							<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Suspend"
+									onClick="commonConfirmOpen('McisLifeCycleSuspend')">Suspend</a></li>
+							<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Resume"
+									onClick="commonConfirmOpen('McisLifeCycleResume')">Resume</a></li>
+							<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_Life_Terminate"
+									onClick="commonConfirmOpen('McisLifeCycleTerminate')">Terminate</a>
+							</li>
+						</ul>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<strong>Manage</strong>
+						<ul>
+							<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New"
+									onClick="commonConfirmOpen('AddNewMcis')">New</a></li>
+							<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New"
+									onClick="commonConfirmOpen('DeleteMcis')">Delete</a></li>
+						</ul>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<strong>Export</strong>
+						<ul>
+							<li><a href="javascript:void(0);" data-toggle="modal" data-target="#MCIS_n_New"
+									onClick="commonConfirmOpen('ExportScriptOfMcis')">Export Json</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</li>
+	<li>
+		<a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt="" /></a>
+		<a href="javascript:void(0);" onClick="getCommonMcisList('mcismng', true)"><img
+				src="/assets/img/common/icon_refresh.png" alt="refresh" /></a>
+	</li>
+	</ul>
+</div>
+</div>
 
-		<div class="ds_cont">
+<div class="ds_cont">
 
-			<div class="dataTable status_list">
-				<table cellpadding="0" cellspacing="0" border="1" id="mcisListTable">
-					<!-- <colgroup><col width=""><col width=""><col width="15%"><col width="15%"><col width="17%"><col width="18%"><col width="50px"></colgroup> -->
-					<thead>
-						<tr>
-							<th class="column-14percent">Status</th>
-							<th class="column-14percent">Name</th>
-							<th class="column-14percent">Cloud Connection</th>
-							<th class="column-14percent">Total Infras <span>Count of Total Servers</span></th>
-							<!-- <th class="column-14percent"># of Servers <span>Count of Run / Stop / Terminate / etc</span></th> -->
-							<th class="column-14percent"># of Servers <span>Count of Run / Stop / Terminate</span></th>
-							<th>Description</th>
-							<th class="column-60px"><input type="checkbox" name="" value="" id="th_chall"
-									title="" /><label for="th_chall"></label></td>
-						</tr>
+	<div class="dataTable status_list">
+		<table cellpadding="0" cellspacing="0" border="1" id="mcisListTable">
+			<!-- <colgroup><col width=""><col width=""><col width="15%"><col width="15%"><col width="17%"><col width="18%"><col width="50px"></colgroup> -->
+			<thead>
+				<tr>
+					<th class="column-14percent">Status</th>
+					<th class="column-14percent">Name</th>
+					<th class="column-14percent">Cloud Connection</th>
+					<th class="column-14percent">Total Infras <span>Count of Total Servers</span></th>
+					<!-- <th class="column-14percent"># of Servers <span>Count of Run / Stop / Terminate / etc</span></th> -->
+					<th class="column-14percent"># of Servers <span>Count of Run / Stop / Terminate</span></th>
+					<th>Description</th>
+					<th class="column-60px"><input type="checkbox" name="" value="" id="th_chall" title="" /><label
+							for="th_chall"></label></td>
+				</tr>
 
-					</thead>
-					<tbody id="mcisList">
-						<!-- <tr>
+			</thead>
+			<tbody id="mcisList">
+				<!-- <tr>
 												<td class="overlay hidden" data-th="" colspan="8">No Data</td>
 											</tr> -->
-					</tbody>
-				</table>
-			</div>
+			</tbody>
+		</table>
+	</div>
 
-			<script>
-				/* scroll */
+	<script>
+		/* scroll */
 									// $(document).ready(function(){
 									// 	var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";								
 									// 		show_mcis_list2(url);// mcis, server 상태표시								    
 									// });
-			</script>
+	</script>
 
 
-			<!-- <div class="pageing">
+	<!-- <div class="pageing">
 									<a href="#" class="btn_prev"><span>이전</span></a>
 									<a href="#" class="active">1</a>
 									<a href="#">2</a>
@@ -159,9 +211,9 @@
 									<a href="#" class="btn_next"><span>다음</span></a>
 								</div> -->
 
-		</div>
+</div>
 
-	</div>
+</div>
 
 </div>
 <!-- //list -->
