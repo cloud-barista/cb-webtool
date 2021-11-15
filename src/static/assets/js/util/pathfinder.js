@@ -120,6 +120,7 @@ function setLeftMenuNamespaceList(targetObjId, namespaceList){
     }
 }
 
+// caller 구분자, sortType : 오름.내림, isCallback
 function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId){
     var url = "/setting/connections/cloudconnectionconfig/list";
     axios.get(url,{
