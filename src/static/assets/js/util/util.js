@@ -683,7 +683,7 @@ function commonPromptClose() {
     $("#promptArea").modal("hide");
 }
 
-function commonPromptEnter(keyEvent){
+function commonPromptEnter(keyEvent) {
     if (keyEvent.keyCode == 13) {
         commonPromptOk();
     }
@@ -815,23 +815,23 @@ function getRegionListByProviderForSelectbox(provider, targetObjID) {
 
 // 해당 mcis에서 상태값들을 count : 1개 mcis의 상태는 1개만 있으므로 running, stop, terminate 중 1개만 1, 나머지는 0
 // dashboard, mcis 에서 사용
-function calculateMcisStatusCount(mcisData){
+function calculateMcisStatusCount(mcisData) {
     console.log("calculateMcisStatusCount")
     console.log(mcisData)
     var mcisStatusCountMap = new Map();
     mcisStatusCountMap.set("running", 0);
     mcisStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
     mcisStatusCountMap.set("terminate", 0);
-    try{
+    try {
         var mcisStatus = mcisData.status
         var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
 
-        if( mcisStatus != ""){// mcis status 가 없는 경우는 skip
-            if( mcisStatusCountMap.has(mcisDispStatus) ){
+        if (mcisStatus != "") {// mcis status 가 없는 경우는 skip
+            if (mcisStatusCountMap.has(mcisDispStatus)) {
                 mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
             }
         }
-    }catch(e){
+    } catch (e) {
         console.log("mcis status error")
     }
     console.log(mcisStatusCountMap);
@@ -840,7 +840,7 @@ function calculateMcisStatusCount(mcisData){
 
 // 1개 mcis 아래의 vm 들의 status만 계산
 // dashboard, mcis 에서 사용
-function calculateVmStatusCount(vmList){
+function calculateVmStatusCount(vmList) {
     console.log("calculateVmStatusCount")
     console.log(vmList)
     var sumVmCnt = 0;
@@ -848,8 +848,8 @@ function calculateVmStatusCount(vmList){
     vmStatusCountMap.set("running", 0);
     vmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
     vmStatusCountMap.set("terminate", 0);
-    try{
-        for(var vmIndex in vmList) {
+    try {
+        for (var vmIndex in vmList) {
             var aVm = vmList[vmIndex];
             var vmStatus = aVm.status;
             var vmDispStatus = getVmStatusDisp(vmStatus);
@@ -860,19 +860,19 @@ function calculateVmStatusCount(vmList){
                 }
             }
         }
-    }catch(e){
+    } catch (e) {
         console.log("mcis status error")
     }
     return vmStatusCountMap;
 }
 
 // mcis내 vm들의 provider별 connection count
-function calculateConnectionCount(vmList){
+function calculateConnectionCount(vmList) {
     console.log("calculateConnectionCount")
     console.log(vmList)
     var vmCloudConnectionCountMap = new Map();
 
-    for(var vmIndex in vmList) {
+    for (var vmIndex in vmList) {
         var aVm = vmList[vmIndex]
         var location = aVm.location;
         if (!isEmpty(location)) {
@@ -997,7 +997,7 @@ function filterTableWithKeywords(tableId, filterColumnName, filterKeywordList) {
             console.log(filterKeywordList);
             var keywordsSize = filterKeywordList.length;
             var foundKeywordsSize = 0;
-            $.each(filterKeywordList, function(index, value){
+            $.each(filterKeywordList, function (index, value) {
                 var filter = value.toUpperCase();
                 if (filter == "ALL") {
                     foundKeywordsSize = keywordsSize;
@@ -1009,7 +1009,7 @@ function filterTableWithKeywords(tableId, filterColumnName, filterKeywordList) {
                 }
             });
 
-            if ( keywordsSize == foundKeywordsSize) {
+            if (keywordsSize == foundKeywordsSize) {
                 trObj[i].style.display = "";
             } else {
                 trObj[i].style.display = "none";
@@ -1083,22 +1083,23 @@ function filterTableByHiddenColumn(tableId, hiddenColumnName, filterKeyword) {
 // caller = 이미 입력된 keyword 들 및 구분자
 function searchKeyword(keyword, caller) {
     if (keyword.trim() !== "") {
+        showBtnDelAll();
         var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
 
-        if( caller == "mcislistfilter"){
+        if (caller == "mcislistfilter") {
             var keywordObjId = "searchMcisKeywords";
             var targetTableObjId = "mcisListTable";
             var targetColumnName = "Name";// 기본값은 Name Column ( Table에 'Name' 이라는 Column이 있어야 함 )
 
             $("#" + keywordObjId).append(addKeyword);
             var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
-            $("[name='keyword_" + caller + "']").each(function( idx, ele){
-               keywords.push($(this).text());
+            $("[name='keyword_" + caller + "']").each(function (idx, ele) {
+                keywords.push($(this).text());
             });
             keywords.push(keyword);
             // filterTableWithKeywords('mcisListTable', "Name", keywords);
             filterTableWithKeywords(targetTableObjId, targetColumnName, keywords);
-        }else if( caller == "searchVmImageAssistAtReg"){
+        } else if (caller == "searchVmImageAssistAtReg") {
             // <div>
             //     <input type="text" id="searchImageAssistKeywords" placeholder="Input Keyword" className="pline image"
             //            onKeyUp="searchKeywordByEnter(event, 'VmRegAssistImage')"/>
@@ -1114,7 +1115,7 @@ function searchKeyword(keyword, caller) {
             var keywordObjId = "searchAssistImageKeywords";
             $("#" + keywordObjId).append(addKeyword);
             var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
-            $("[name='keyword_" + caller + "']").each(function( idx, ele){
+            $("[name='keyword_" + caller + "']").each(function (idx, ele) {
                 keywords.push($(this).text());
             });
             keywords.push(keyword);
@@ -1134,13 +1135,13 @@ function searchKeyword(keyword, caller) {
 
 // Enter Key가 눌리면 keywordId 의 값으로 조회로직 호출
 function searchKeywordByEnter(keyEvent, caller) {
-    if( keyEvent.keyCode === 13){
-        if( caller == "mcislistfilter") {
+    if (keyEvent.keyCode === 13) {
+        if (caller == "mcislistfilter") {
             searchKeyword($(this).val(), caller);
-        }else{
+        } else {
             console.log($(this))
             //VmRegAssistImage
-            searchKeyword($(this).val(),  caller);
+            searchKeyword($(this).val(), caller);
         }
     }
 }
@@ -1148,31 +1149,44 @@ function searchKeywordByEnter(keyEvent, caller) {
 function delSearchKeyword(event, caller) {
     console.log("remove keyword");
     $(event.target).parent().remove();
-    if( caller == "mcislistfilter"){
+    if (caller == "mcislistfilter") {
         var targetColumnName = "Name";// 기본값은 Name Column ( Table에 'Name' 이라는 Column이 있어야 함 )
         var targetTableObjId = "mcisListTable";
 
         var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
-        $("[name='keyword_" + caller + "']").each(function( idx, ele){
+        $("[name='keyword_" + caller + "']").each(function (idx, ele) {
             keywords.push($(this).text());
         });
-        if( keywords.length > 0){
+        if (keywords.length > 0) {
             filterTableWithKeywords(targetTableObjId, targetColumnName, keywords);
-        }else{
+        } else {
             filterTable(targetTableObjId, targetColumnName, 'ALL');
+            hideBtnDelAll();
         }
     }
 }
 
-function delAllKeyword( caller) {
+function delAllKeyword(caller) {
     console.log("delAllKeyword " + caller)
-    if( caller == "mcislistfilter"){
+    if (caller == "mcislistfilter") {
         var keywordObjId = "searchMcisKeywords";
         var targetTableObjId = "mcisListTable";
 
-        $("#" + keywordObjId).each(function (i, item) {
+        $("#" + keywordObjId).children().each(function (i, item) {
             $(item).remove();
         })
         filterTable(targetTableObjId, 'Name', 'ALL');
     }
+    hideBtnDelAll();
+
+}
+
+//필터 지우기 버튼 보이기
+function showBtnDelAll() {
+    $(".btn_del_all").css("display", "inline");
+}
+
+//필터 지우기 버튼 숨기기
+function hideBtnDelAll() {
+    $(".btn_del_all").css("display", "none");
 }
