@@ -67,6 +67,7 @@ function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam){
             'Content-Type' : "application/json"
         }
     }).then(result=>{
+        console.log(result);
         console.log("get NameSpace Data : ",result.data);
         // var data = result.data.ns;
         var data = result.data;
