@@ -58,7 +58,7 @@ $(document).ready(function () {
     setTableHeightForScroll("mcisListTable", 700);
 
 
-    // 상세 Tab 선택시 monitoring일 때 monitoring 조회
+    // 상세 Tab 선택시 tab=monitoring일 때 monitoring 조회
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href") // activated tab
         if (target == '#McisMonitoring') {
@@ -81,7 +81,6 @@ $(document).ready(function () {
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
         refreshMcisData();
     })
-
 
     // "NameSpaceList":      nsList,
     // "CloudOSList":                   cloudOsList,
@@ -118,12 +117,14 @@ $(document).ready(function () {
 });
 
 
+var TotalCloudConnectionList = new Array();
 ////////// 화면 Load 시 가져온 값들을 set하는 function들
 function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sortType) {
     var totalProviderCount = 0;
     var totalConnectionConfigCount = 0;
     var providerConnectionMap = new Map();
     if (!isEmpty(connectionConfigList) && connectionConfigList.length) {
+        TotalCloudConnectionList = connectionConfigList;
         totalConnectionConfigCount = connectionConfigList.length;
 
         var providerArr = new Array();
@@ -754,12 +755,14 @@ function clickListOfMcis(mcisID, mcisIndex) {
 
     // MCIS Info 에 mcis id 표시
     $("#mcis_id").val(mcisID);
-    $("#selected_mcis_id").val(mcisID);
-    $("#selected_mcis_index").val(mcisIndex);
+    // $("#selected_mcis_id").val(mcisID);
+    // $("#selected_mcis_index").val(mcisIndex);
+
+    getCommonMcisData("refreshmcisdata", mcisID)
 
     // MCIS Info area set
     //showServerListAndStatusArea(mcisID,mcisIndex);
-    displayMcisInfoArea(totalMcisListObj[mcisIndex]);
+    //displayMcisInfoArea(totalMcisListObj[mcisIndex]);
 
 
 
@@ -984,20 +987,36 @@ function refreshVmDetailInfo() {
 
 // VM 목록에서 VM 클릭시 해당 VM의 상세정보
 function vmDetailInfo(mcisID, mcisName, vmID) {
-    var url = "/operation/manages/mcismng/" + mcisID + "/vm/" + vmID
-    axios.get(url, {})
-        .then(result => {
-            console.log("get  Data : ", result.data);
+    // var url = "/operation/manages/mcismng/" + mcisID + "/vm/" + vmID
+    // axios.get(url, {})
+    //     .then(result => {
+    //         console.log("get  Data : ", result.data);
 
-            var statusCode = result.data.status;
-            var message = result.data.message;
+            // var statusCode = result.data.status;
+            // var message = result.data.message;
+            //
+            // if (statusCode != 200 && statusCode != 201) {
+            //     commonAlert(message + "(" + statusCode + ")");
+            //     return;
+            // }
+            var aMcis = new Object();
+            for (var mcisIndex in totalMcisListObj) {
+                aMcis = totalMcisListObj[mcisIndex]
+                break;
+            }// end of mcis loop
 
-            if (statusCode != 200 && statusCode != 201) {
-                commonAlert(message + "(" + statusCode + ")");
-                return;
+            var vmList = aMcis.vm;
+            var data = new Object();
+            for (var vmIndex in vmList) {
+                var aVm = vmList[vmIndex]
+                if (vmID == aVm.id) {
+                    //aVm = vmData;
+                    data = aVm;
+                    break;
+                }
             }
-            var data = result.data.VmInfo;
-            var connectionConfig = result.data.ConnectionConfigInfo;
+            // var data = result.data.VmInfo;
+            // var connectionConfig = result.data.ConnectionConfigInfo;
 
             var vmId = data.id;
             var vmName = data.name;
@@ -1157,13 +1176,21 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             $("#server_info_connection_name").val(connectionName)
             $("#server_connection_view_connection_name").val(connectionName)
 
-            // credential and driver info
-            console.log("connectionConfig : ", connectionConfig)
-            if (connectionConfig) {
-                var credentialName = connectionConfig.CredentialName
-                var driverName = connectionConfig.DriverName
-                $("#server_connection_view_credential_name").val(credentialName)
-                $("#server_connection_view_driver_name").val(driverName)
+            // credential and driver info : 가져오지 않음으로
+            // console.log("connectionConfig : ", connectionConfig)
+            // if (connectionConfig) {
+            //     var credentialName = connectionConfig.CredentialName
+            //     var driverName = connectionConfig.DriverName
+            //     $("#server_connection_view_credential_name").val(credentialName)
+            //     $("#server_connection_view_driver_name").val(driverName)
+            // }
+            for(cIndex in TotalCloudConnectionList){ // TODO : connection의 driver와 connection set.
+                var connInfo = TotalCloudConnectionList[cIndex];
+                if( connectionName == connInfo.ConfigName) {
+                    $("#server_connection_view_credential_name").val(connInfo.CredentialName)
+                    $("#server_connection_view_driver_name").val(connInfo.DriverName)
+                    break;
+                }
             }
 
             // server id / system id
@@ -1256,19 +1283,19 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             // $("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
             $("#exportFileName").val(mcisID + "_" + vmID);
             $("#exportScript").val(vmCreateScript);
-        }
+        // }
             // ).catch(function(error){
             //     var statusCode = error.response.data.status;
             //     var message = error.response.data.message;
             //     commonErrorAlert(statusCode, message)
             // });
-        ).catch((error) => {
-            console.warn(error);
-            console.log(error.response)
-            var errorMessage = error.response.statusText;
-            var statusCode = error.response.status;
-            commonErrorAlert(statusCode, errorMessage)
-        });
+        // ).catch((error) => {
+        //     console.warn(error);
+        //     console.log(error.response)
+        //     var errorMessage = error.response.statusText;
+        //     var statusCode = error.response.status;
+        //     commonErrorAlert(statusCode, errorMessage)
+        // });
 
     // $("#Detail").show();// 첫번째 Detail tab 표시.
     $('[href="#Detail"]').tab('show');
@@ -1694,7 +1721,7 @@ function getMcisDataCallbackFail(error) {
 
 // 지도에 marker로 region 표시.
 // Map 관련 설정
-
+var locationMap = new Object();
 function setMap(locationInfo) {
     //show_mcis2(url,JZMap);
     //function show_mcis2(url, map){
@@ -2115,17 +2142,19 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
     try {
         mcisTableRow += '<tr onclick="clickListOfMcis(\'' + aMcisData.id + '\', ' + mcisIndex + ' );" id="server_info_tr_' + mcisIndex + '" item="' + aMcisData.id + '|' + mcisIndex + '">'
 
-        mcisTableRow += '<td class="overlay hidden td_left column-14percent" data-th="Status">'
-        mcisTableRow += '<div style="display: flex; align-items: center;"><img id="mcisInfo_mcisStatus_icon_' + mcisIndex + '" src="/assets/img/contents/icon_' + mcisDispStatus + '.png" class="icon" alt=""/><span id="mcisInfo_mcisstatus_' + mcisIndex + '">' + mcisStatus + '</span><span class="ov off"></span></div>'
+        mcisTableRow += '<td class="overlay hidden td_left column-20percent" data-th="Status">'
+        mcisTableRow += '   <div style="display: flex; align-items: center;"><img id="mcisInfo_mcisStatus_icon_' + mcisIndex + '" src="/assets/img/contents/icon_' + mcisDispStatus + '.png" class="icon" alt=""/><span id="mcisInfo_mcisstatus_' + mcisIndex + '">' + mcisStatus + '</span><span class="ov off"></span></div>'
         mcisTableRow += '</td>'
-        mcisTableRow += '<td class="btn_mtd ovm column-14percent" data-th="Name">'
-        mcisTableRow += '<div style="display: inline-flex; align-items: center;">'
+        mcisTableRow += '<td class="btn_mtd ovm column-20percent" data-th="Name">'
+        mcisTableRow += '   <div style="display: inline-flex; align-items: center;">'
 
-        mcisTableRow += '<div id="mcisInfo_mcisName_' + mcisIndex + '">' + aMcisData.name + '</div>'
+        mcisTableRow += '       <div id="mcisInfo_mcisName_' + mcisIndex + '">' + aMcisData.name + '</div>'
         if (aMcisData.systemLabel === "Managed by MCKS") {
-            mcisTableRow += '<img class="mcks-icon" src="/assets/img/contents/icon_kubernetes_gray.png"/>'
+            mcisTableRow += '   <img class="mcks-icon" src="/assets/img/contents/icon_kubernetes_gray.png"/>'
         }
-        mcisTableRow += '<span class="ov"></span></div></td>'
+        mcisTableRow += '       <span class="ov"></span>'
+        mcisTableRow += '   </div>'
+        mcisTableRow += '</td>'
         mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Cloud Connection"><div id="mcisInfo_mcisProviderNames_' + mcisIndex + '">' + mcisProviderNames + '</div></td>'
 
         mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Total Infras"><div id="mcisInfo_totalVmCountOfMcis_' + mcisIndex + '">' + totalVmCountOfMcis + '</div></td>'
@@ -2136,7 +2165,7 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
         mcisTableRow += '<span class="bar" >/</span> <span title="terminate" id="mcisInfo_vmstatus_terminate_' + mcisIndex + '">' + vmStatusCountMap.get('terminate') + '</span>'
         mcisTableRow += '</td>'
 
-        mcisTableRow += '<td class="overlay hidden" data-th="Description"><div id="mcisInfo_mcisDescription_' + mcisIndex + '">' + aMcisData.description + '</div></td>'
+        // mcisTableRow += '<td class="overlay hidden" data-th="Description"><div id="mcisInfo_mcisDescription_' + mcisIndex + '">' + aMcisData.description + '</div></td>'
 
         mcisTableRow += '<td class="overlay hidden column-60px"  data-th="">'
         mcisTableRow += '<input type="checkbox" name="chk" value="' + aMcisData.id + '" id="td_ch_' + mcisIndex + '" title="" />'
@@ -2263,7 +2292,7 @@ function displayServerStatusList(mcisID, vmList) {
 
         vmLi += '<li id="server_status_icon_' + vmID + '" class="sel_cr ' + vmStatusClass + '"><a href="javascript:void(0);" onclick="vmDetailInfo(\'' + mcisID + '\',\'' + mcisName + '\',\'' + vmID + '\')"><span class="txt">' + vmName + '</span></a></li>';
     }// end of mcis loop
-    console.log(vmLi)
+    // console.log(vmLi)
     $("#mcis_server_info_box").empty();
     $("#mcis_server_info_box").append(vmLi);
     //Manage MCIS Server List on/off

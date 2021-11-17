@@ -149,9 +149,14 @@ function map_init(){
     const osmLayer = new ol.layer.Tile({
       source: new ol.source.OSM(),
     });
-
+    var control = new ol.control.FullScreen();
     var m = new ol.Map({
         target: 'map',
+        logo: false,
+        // controls: ol.control.defaults().extend([
+        //     new ol.control.FullScreen()
+        // ]),
+        controls: [control],
         layers: [
             osmLayer
         ],
@@ -337,39 +342,50 @@ function drawPoligon(JZMap,polygon, colorIndex){
   console.log("polygon : ",wkt)
   var format = new ol.format.WKT();
 
-  var polyColor = '#fc8d16'
+  var polyColor = '#fc8d16';
+  var polyLineColor = 'fc8d10';
     if( colorIndex) {
         switch (colorIndex) {
             case 0 :
-                polyColor = '#93b3b7';
+                polyColor = '#83a3b7';
+                polyLineColor = '#93b3a7';
                 break;
             case 1 :
-                polyColor = '#eaa18a';
+                polyColor = '#e01a70';
+                polyLineColor = '#eaa180';
                 break;
             case 2 :
-                polyColor = '#ffcbcb';
+                polyColor = '#f0c0c0';
+                polyLineColor = '#ffcbc0';
                 break;
             case 3 :
                 polyColor = '#ffcc00';
+                polyLineColor = '#ffcb00';
                 break;
             case 4 :
                 polyColor = '#7fc638';
+                polyLineColor = '#7fc620';
                 break;
             case 5 :
                 polyColor = '#b4c6b7';
+                polyLineColor = '#b4c6a7';
                 break;
             case 6 :
                 polyColor = '#586fab';
+                polyLineColor = '#586fa0';
                 break;
             case 7 :
                 polyColor = '#754100';
+                polyLineColor = '#754000';
                 break;
             case 8 :
                 polyColor = '#444c57';
+                polyLineColor = '#444c50';
                 break;
 
             default :
                 polyColor = '#fc8d16';
+                polyLineColor = '#fc8d10';
         }
     }
 
@@ -382,13 +398,24 @@ function drawPoligon(JZMap,polygon, colorIndex){
     features : [feature]
   })
 
+    var styles = new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: polyColor,
+            weight: 1
+        }),
+        stroke: new ol.style.Stroke({
+            color: polyLineColor,
+            width: 1
+        })
+    });
   //   var styles = [ new ol.style.Style({ stroke: new ol.style.Stroke({ color: polyColor, width: 3, }), }) ];
   // var stackLayer = new ol.layer.Vector({
   //   source: stackVectorMap,
   //     style: styles
   // })
     var stackLayer = new ol.layer.Vector({
-        source: stackVectorMap
+        source: stackVectorMap,
+        style: styles
     })
   JZMap.addLayer(stackLayer);
   
