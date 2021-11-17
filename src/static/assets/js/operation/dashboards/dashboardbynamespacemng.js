@@ -347,12 +347,12 @@ function setMap() {
         var fromLonLat = longitudeValue + " " + latitudeValue;
         console.log(longitudeValue + " : " + latitudeValue);
         if (longitudeValue && latitudeValue) {
-            // polyArr.push(fromLonLat)
+            polyArr.push(fromLonLat)
             drawMap(JZMap, longitudeValue, latitudeValue, vms)
 
-            var polygon = "POLYGON((" + fromLonLat + "))";
+            // var polygon = "POLYGON((" + fromLonLat + "))";
             // drawPoligon(JZMap,fromLonLat);
-            drawPoligon(JZMap, polygon);
+            // drawPoligon(JZMap, polygon);
         }
         // for(var i in mcis){
         //     for(var o in vms){
@@ -387,6 +387,17 @@ function setMap() {
         //           }
         //     }
     })
+    var polygon = "";
+     console.log("poly arr : ",polyArr);
+     if(polyArr.length > 1){
+       polygon = polyArr.join(", ")
+       polygon = "POLYGON(("+polygon+"))";
+     }else{
+       polygon = "POLYGON(("+polyArr[0]+"))";
+     }
+     if(polyArr.length >1){
+        drawPoligon(JZMap,polygon, 1);
+      }
 }
 
 

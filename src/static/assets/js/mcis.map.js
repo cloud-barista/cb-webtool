@@ -183,32 +183,33 @@ function map_init(){
   
   // });
         JZMap.on('click',function(evt){
-     
-            var feature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
+            var selectedFeature
+            var selectedFeature = JZMap.forEachFeatureAtPixel(evt.pixel,function(feature){
                 return feature;
             })
-            console.log(feature)
-            console.log("feature click info : ",feature.get("id"));//Cannot read property 'get' of undefined at e.<anonymous> (mcis.map.js:196)
-            var id = feature.get("id")
-            if(feature.get("id") != null){
-                JZMap.removeOverlay(JZMap.getOverlayById(id));
-            }
-            if(feature){
+            if(selectedFeature){
+                console.log(selectedFeature)
+                console.log("feature click info : ",selectedFeature.get("id"));//Cannot read property 'get' of undefined at e.<anonymous> (mcis.map.js:196)
+                var id = selectedFeature.get("id")
+                if(selectedFeature.get("id") != null){
+                    JZMap.removeOverlay(JZMap.getOverlayById(id));
+                }
+
                 var element = document.createElement('div');
                 element.setAttribute("class", "popover");
                 element.setAttribute("onclick", "$(this).hide()");
-                element.innerHTML="<div data-toggle='popover' style='width:100%;min-width: 100px;'>"+feature.get("title")+"</div>"
+                element.innerHTML="<div data-toggle='popover' style='width:100%;min-width: 100px;'>"+selectedFeature.get("title")+"</div>"
 
-                feature.set("element");
+                selectedFeature.set("element");
 
                 var popup = new ol.Overlay({
                     element: element,
                     positioning: 'auto',
                     stopEvent: false,
                     offset: [0, 0],
-                    id:feature.get("id")
+                    id:selectedFeature.get("id")
                 });
-                var coordinates = feature.getGeometry().getCoordinates();
+                var coordinates = selectedFeature.getGeometry().getCoordinates();
                 popup.setPosition(coordinates);
             // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
 
@@ -239,9 +240,9 @@ function map_init(){
             //   offset: [0, -50]
             // });
 
-         
+
             JZMap.addOverlay(popup);
-        
+
             $(element).popover('show');
         }else{
             $(element).popover('hide');
@@ -331,22 +332,64 @@ function drawMap(map,long,lat,info){
  
 }
 
-function drawPoligon(JZMap,polygon){
+function drawPoligon(JZMap,polygon, colorIndex){
   var wkt = polygon;
   console.log("polygon : ",wkt)
   var format = new ol.format.WKT();
+
+  var polyColor = '#fc8d16'
+    if( colorIndex) {
+        switch (colorIndex) {
+            case 0 :
+                polyColor = '#93b3b7';
+                break;
+            case 1 :
+                polyColor = '#eaa18a';
+                break;
+            case 2 :
+                polyColor = '#ffcbcb';
+                break;
+            case 3 :
+                polyColor = '#ffcc00';
+                break;
+            case 4 :
+                polyColor = '#7fc638';
+                break;
+            case 5 :
+                polyColor = '#b4c6b7';
+                break;
+            case 6 :
+                polyColor = '#586fab';
+                break;
+            case 7 :
+                polyColor = '#754100';
+                break;
+            case 8 :
+                polyColor = '#444c57';
+                break;
+
+            default :
+                polyColor = '#fc8d16';
+        }
+    }
 
   var feature = format.readFeature(wkt, {
     dataProjection: "EPSG:4326",
     featureProjection: "EPSG:3857"
   });
+
   var stackVectorMap = new ol.source.Vector({
     features : [feature]
   })
 
-  var stackLayer = new ol.layer.Vector({
-    source: stackVectorMap
-  })
+  //   var styles = [ new ol.style.Style({ stroke: new ol.style.Stroke({ color: polyColor, width: 3, }), }) ];
+  // var stackLayer = new ol.layer.Vector({
+  //   source: stackVectorMap,
+  //     style: styles
+  // })
+    var stackLayer = new ol.layer.Vector({
+        source: stackVectorMap
+    })
   JZMap.addLayer(stackLayer);
   
 }
