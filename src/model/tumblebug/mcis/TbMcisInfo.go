@@ -5,6 +5,7 @@ type TbMcisInfo struct {
 	Description     string `json:"description"`
 	InstallMonAgent string `json:"installMonAgent"`
 	Label           string `json:"label"`
+	SystemLabel     string `json:"systemLabel"`
 	Name            string `json:"name"`
 	PlacementAlgo   string `json:"placementAlgo"`
 	Status          string `json:"status"`
