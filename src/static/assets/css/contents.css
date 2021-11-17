@@ -48,8 +48,15 @@
 .btn_search2 { position:relative; top:-2px; right:1px; width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat; }
 .btn_search_image{width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat;}
 .btn_search_spec{width:35px; height:35px; outline:none; border:none; background:none; padding:0; margin:0; background:url(../img/contents/icon_search.png) center center no-repeat;}
-.btn_del_all{outline:none; border:1px solid #000; border-radius:5px; background:none; padding:5px; margin:5px; display: none;}
+.btn_del_all{outline:none; border:1px solid #000; border-radius:5px; background:none; padding:10px 5px; margin:10px 5px 5px; display: none;}
 .btn_hide { position:relative; top:-2px; right:1px; width:100%; right:51px; text-align:right; outline:none; border:none; background:none; padding:0; margin:0; float : right; display:none;}
+
+.mcks-icon{width:20px; height: 20px; margin-left: 5px;}
+.provider_icon{ width: calc(100% / 4 - 15px / 4);}
+.provider_icon:not(:last-of-type){ margin-right: 5px;}
+.provider_icon_info{width: 30px;}
+.provider_icon_info:not(:last-of-type){ margin-right: 10px;}
+#mcis_info_cloud_connection{width: 50%;display: inline-flex;text-align: left;align-items: center;vertical-align: middle;margin-top: 10px;}
 
 .dashboard { margin:33px 0 0 0; }
 .dashboard:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
@@ -519,7 +526,7 @@ table tbody tr {
 .dataTable thead th input[type="checkbox"]:checked + label { background:url(../img/contents/btn_chtd1_on.png) center center no-repeat; }
 */
 .dataTable thead th span { color:rgba(255,255,255,0.4); font-size:14px; line-height:14px; display:block; margin:6px 0 0 0; }
-.dataTable tbody td { position:relative;  padding:16px 5px; color:#5e636c; font-size:16px; font-weight:300; text-align:center; letter-spacing:-0.5px; border:1px solid #ccc; border-width:1px 1px 1px 0; }
+.dataTable tbody td { position:relative;  padding:16px 20px; color:#5e636c; font-size:16px; font-weight:300; text-align:center; letter-spacing:-0.5px; border:1px solid #ccc; border-width:1px 1px 1px 0; }
 .dataTable tbody td:last-child { border-right:none; }
 .dataTable tbody tr:first-child td { border-top:none; }
 .dataTable tbody td span.bar { display:inline-block; margin:0 8px; }

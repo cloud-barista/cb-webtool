@@ -1,6 +1,6 @@
 {{define "McisInfo"}}
 <!-- Info -->
-<div class="dashboard dashboard_cont server_status">
+<div class="dashboard dashboard_cont server_status" id="mcis_info_box">
 
 	<div class="d_box box_m box_w100">
 		<div class="titbox">
@@ -23,7 +23,8 @@
 					</li> -->
 					<li>
 						<a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt="" /></a>
-						<a href="javascript:void(0);" onClick="refreshMcisData()"><img src="/assets/img/common/icon_refresh.png" alt="" /></a>
+						<a href="javascript:void(0);" onClick="refreshMcisData()"><img
+								src="/assets/img/common/icon_refresh.png" alt="" /></a>
 					</li>
 				</ul>
 			</div>
@@ -36,8 +37,8 @@
 					<span class="txt">서비스 상태<br /> 아이콘</span>
 					<input type="file" id="file" name="file" class="file_ip_hidden" title="" />
 					<input type="button" name="" value="" class="btn_file" title="" />
-					<div class="img" id="mcis_info_status_icon"><img id="mcis_info_status_icon_img" src="/assets/img/contents/icon_running_db.png"
-							alt=""></div>
+					<div class="img" id="mcis_info_status_icon"><img id="mcis_info_status_icon_img"
+							src="/assets/img/contents/icon_running_db.png" alt=""></div>
 				</div>
 				<div class="boxlist ipbox ip1">
 					<ul>
@@ -72,9 +73,10 @@
 				<div class="boxlist ipbox ip3">
 					<ul>
 						<li>
-							<label>Cloud Connections</label>
-							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
-								id="mcis_info_cloud_connection" readonly />
+							<label>Provider</label>
+							<!-- <input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
+								id="mcis_info_cloud_connection" readonly /> -->
+							<span id="mcis_info_cloud_connection"></span>
 						</li>
 						<li>
 							<label>Deployment <span>Algorithm</span></label>
