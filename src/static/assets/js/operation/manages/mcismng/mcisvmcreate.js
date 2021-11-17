@@ -72,8 +72,23 @@ $(document).ready(function () {
     // spec assist 가 닫힐 때, connection set
     $('#networkAssist').on('hide.bs.modal', function (e) {
     });
-    networkAssist
 
+
+    $('#securityGroupAssist').on('show.bs.modal', function (e) {
+        setConnectionOfSearchCondition('securityGroupAssist');
+    });
+
+    // spec assist 가 닫힐 때, connection set
+    $('#securityGroupAssist').on('hide.bs.modal', function (e) {
+    });
+
+    $('#sshKeyAssist').on('show.bs.modal', function (e) {
+        setConnectionOfSearchCondition('sshKeyAssist');
+    });
+
+    // spec assist 가 닫힐 때, connection set
+    $('#sshKeyAssist').on('hide.bs.modal', function (e) {
+    });
 
     // $("input[name='vmInfoType']:radio").change(function () {
     //     //라디오 버튼 값을 가져온다.
@@ -138,13 +153,12 @@ function setConnectionOfSearchCondition(caller){
     var esSelectedProvider = $("#es_regProvider option:selected").val();
     var esSelectedRegion = $("#es_regRegion option:selected").val();
     var esSelectedConnectionName = $("#es_regConnectionName option:selected").val();
-
+    console.log("setConnectionOfSearchCondition = " + caller + " : " + esSelectedConnectionName)
     if( caller == "imageAssist"){
         var assistProviderId = "assistImageProviderName";
         var assistConnectionId = "assistImageConnectionName"
         if (esSelectedProvider) {
             $("#" + assistProviderId).val(esSelectedProvider);
-            $("#" + assistProviderId).attr('disabled', 'true');
         }
         // if (esSelectedRegion) {
         //     $("#assist_select_resion").val(esSelectedRegion);
@@ -153,6 +167,7 @@ function setConnectionOfSearchCondition(caller){
         filterConnectionByProvider(esSelectedProvider, assistConnectionId)
         if (esSelectedConnectionName) {
             $("#" + assistConnectionId).val(esSelectedConnectionName);
+            $("#" + assistProviderId).attr('disabled', 'true');
             $("#" + assistConnectionId).attr('disabled', 'true');
         }
     }else if( caller == "specAssist"){
@@ -168,6 +183,8 @@ function setConnectionOfSearchCondition(caller){
         filterConnectionByProvider(esSelectedProvider, assistConnectionId)
         if (esSelectedConnectionName) {
             $("#" + assistConnectionId).val(esSelectedConnectionName);
+            $("#" + assistProviderId).attr('disabled', 'true');
+            $("#" + assistConnectionId).attr('disabled', 'true');
         }
     }else if( caller == "networkAssist"){
         var assistProviderId = "assistNetworkProviderName";
@@ -182,6 +199,46 @@ function setConnectionOfSearchCondition(caller){
         filterConnectionByProvider(esSelectedProvider, assistConnectionId)
         if (esSelectedConnectionName) {
             $("#" + assistConnectionId).val(esSelectedConnectionName);
+            $("#" + assistProviderId).attr('disabled', 'true');
+            $("#" + assistConnectionId).attr('disabled', 'true');
+            var keywords = new Array();
+            filterNetworkList(keywords, caller);
+        }
+    }else if( caller == "securityGroupAssist"){
+        var assistProviderId = "assistSecurityGroupProviderName";
+        var assistConnectionId = "assistSecurityGroupConnectionName"
+        if (esSelectedProvider) {
+            $("#" + assistProviderId).val(esSelectedProvider);
+        }
+        // if (esSelectedRegion) {
+        //     $("#assist_select_resion").val(esSelectedRegion);
+        // }
+
+        filterConnectionByProvider(esSelectedProvider, assistConnectionId)
+        if (esSelectedConnectionName) {
+            $("#" + assistConnectionId).val(esSelectedConnectionName);
+            $("#" + assistProviderId).attr('disabled', 'true');
+            $("#" + assistConnectionId).attr('disabled', 'true');
+            var keywords = new Array();
+            filterSecurityGroupList(keywords, caller)
+        }
+    }else if( caller == "sshKeyAssist"){
+        var assistProviderId = "assistSshKeyProviderName";
+        var assistConnectionId = "assistSshKeyConnectionName"
+        if (esSelectedProvider) {
+            $("#" + assistProviderId).val(esSelectedProvider);
+        }
+        // if (esSelectedRegion) {
+        //     $("#assist_select_resion").val(esSelectedRegion);
+        // }
+
+        filterConnectionByProvider(esSelectedProvider, assistConnectionId)
+        if (esSelectedConnectionName) {
+            $("#" + assistConnectionId).val(esSelectedConnectionName);
+            $("#" + assistProviderId).attr('disabled', 'true');
+            $("#" + assistConnectionId).attr('disabled', 'true');
+            var keywords = new Array();
+            filterSshKeyList(keywords, caller)
         }
     }
 }
@@ -442,7 +499,6 @@ function getVmList() {
     console.log("getVmList()")
     var mcis_id = $("#mcis_id").val();
 
-
     // /operation/manages/mcis/:mcisID
     var url = "/operation/manages/mcismng/" + mcis_id
     axios.get(url, {})
@@ -456,11 +512,9 @@ function getVmList() {
             console.log("Result Status : ", statusCode);
             console.log("Result message : ", message);
 
-
             if (result.status == 201 || result.status == 200) {
                 var mcis = result.data.McisInfo
-                console.log(mcis)
-
+                console.log(mcis);
 
                 var vms = mcis.vm
                 if (vms) {
@@ -590,6 +644,7 @@ function getNetworkListCallbackFail(caller, error) {
     $("#e_vNetListTbody").append(html)
 }
 
+// 전체 목록에서 filter
 function filterNetworkList(keywords, caller){
     // provider
     // connection
@@ -655,6 +710,7 @@ function filterNetworkList(keywords, caller){
     $("#assistVnetList").empty()
     $("#assistVnetList").append(html)
 }
+
 // expert mode일 때 나타나는 vnetList
 function setNetworkListToExpertMode(data, caller){
     var html = ""
@@ -780,6 +836,78 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList){
     }
 }
 
+// 전체 목록에서 filter
+function filterSecurityGroupList(keywords, caller){
+    // provider
+    // connection
+    var assistProviderName = "";
+    var assistConnectionName = "";
+    var html = "";
+    // if( caller == "searchSecurityGroupAssistAtReg"){
+    //     assistProviderName = $("#assistSecurityGroupProviderName option:selected").val();
+    //     assistConnectionName = $("#assistSecurityGroupConnectionName option:selected").val();
+    // }
+    var selectedConnectionName = $("#assistSecurityGroupConnectionName option:selected").val();
+    if( selectedConnectionName ){
+        assistConnectionName = selectedConnectionName;
+    }
+    console.log("assistConnectionName=" + assistConnectionName)
+    totalSecurityGroupListByNamespace.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
+        if( assistConnectionName == "" || assistConnectionName == vSecurityGroupItem.connectionName) {
+            // keyword가 있는 것들 중에서
+            var keywordExist = false
+            var keywordLength = keywords.length
+            var findCount = 0;
+            keywords.forEach(function (keywordValue, keywordIndex) {
+                if( vSecurityGroupItem.name.indexOf(keywordValue) > -1){
+                    findCount++;
+                }
+            })
+            if( keywordLength != findCount){
+                return true;
+            }
+
+            var firewallRulesArr = vSecurityGroupItem.firewallRules;
+            var firewallRules = firewallRulesArr[0];
+            console.log("firewallRules");
+            console.log(firewallRules);
+            html += '<tr>'
+
+                + '<td class="overlay hidden column-50px" data-th="">'
+                + '     <input type="checkbox" name="securityGroupAssist_chk" id="securityGroupAssist_Raw_' + vSecurityGroupIndex + '" title="" />'
+                + '     <input type="hidden" name="securityGroupAssist_id" id="securityGroupAssist_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
+                + '     <input type="hidden" name="securityGroupAssist_name" id="securityGroupAssist_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
+                + '     <input type="hidden" name="securityGroupAssist_vNetId" id="securityGroupAssist_vNetId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.vNetId + '"/>'
+
+                + '     <input type="hidden" name="securityGroupAssist_connectionName" id="securityGroupAssist_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
+                + '     <input type="hidden" name="securityGroupAssist_description" id="securityGroupAssist_description_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
+
+                + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupId" id="securityGroupAssist_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.cspSecurityGroupId + '"/>'
+                + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupName" id="securityGroupAssist_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.cspSecurityGroupName + '"/>'
+                + '     <input type="hidden" name="securityGroupAssist_firewallRules_cidr" id="securityGroupAssist_firewallRules_cidr_' + vSecurityGroupIndex + '" value="'+ firewallRules.cidr + '"/>'
+                + '     <input type="hidden" name="securityGroupAssist_firewallRules_direction" id="securityGroupAssist_firewallRules_direction_' + vSecurityGroupIndex + '" value="'+ firewallRules.direction + '"/>'
+
+                + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort_' + vSecurityGroupIndex + '" value="'+ firewallRules.fromPort + '"/>'
+                + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort_' + vSecurityGroupIndex + '" value="'+ firewallRules.toPort + '"/>'
+                + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol_' + vSecurityGroupIndex + '" value="'+ firewallRules.ipProtocol + '"/>'
+
+                + '     <label for="td_ch1"></label> <span class="ov off"></span>'
+                + '</td>'
+                + '<td class="btn_mtd ovm td_left" data-th="Name">'
+                + vSecurityGroupItem.name
+                + '</td>'
+                + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                + vSecurityGroupItem.vNetId
+                + '</td>'
+                + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
+
+                + '</tr>'
+        }
+    });
+    $("#assistSecurityGroupList").empty()
+    $("#assistSecurityGroupList").append(html)
+
+}
 var totalSecurityGroupListByNamespace = new Array();
 function getSecurityGroupListCallbackSuccess(caller, data){
     // expert에서 사용할 securityGroup
@@ -790,49 +918,51 @@ function getSecurityGroupListCallbackSuccess(caller, data){
             var html = ""
             if (data.length > 0) {
                 totalSecurityGroupListByNamespace = data;
-                data.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
-                    // <th>Name</th>
-                    // <th>VPC Id</th>
-                    // <th>Description</th>
-                    // <th>Firewall RuleSet</th>
-                    var firewallRulesArr = vSecurityGroupItem.firewallRules;
-                    var firewallRules = firewallRulesArr[0];
-                    console.log("firewallRules");
-                    console.log(firewallRules);
-                    html += '<tr>'
-
-                        + '<td class="overlay hidden column-50px" data-th="">'
-                        + '     <input type="checkbox" name="securityGroupAssist_chk" id="securityGroupAssist_Raw_' + vSecurityGroupIndex + '" title="" />'
-                        + '     <input type="hidden" name="securityGroupAssist_id" id="securityGroupAssist_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_name" id="securityGroupAssist_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_vNetId" id="securityGroupAssist_vNetId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.vNetId + '"/>'
-
-                        + '     <input type="hidden" name="securityGroupAssist_connectionName" id="securityGroupAssist_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_description" id="securityGroupAssist_description_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
-
-                        + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupId" id="securityGroupAssist_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.cspSecurityGroupId + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupName" id="securityGroupAssist_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.cspSecurityGroupName + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_firewallRules_cidr" id="securityGroupAssist_firewallRules_cidr_' + vSecurityGroupIndex + '" value="'+ firewallRules.cidr + '"/>'
-                        + '     <input type="hidden" name="securityGroupAssist_firewallRules_direction" id="securityGroupAssist_firewallRules_direction_' + vSecurityGroupIndex + '" value="'+ firewallRules.direction + '"/>'
-
-                        + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort_' + vSecurityGroupIndex + '" value="'+ firewallRules.fromPort + '"/>'
-                        + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort_' + vSecurityGroupIndex + '" value="'+ firewallRules.toPort + '"/>'
-                        + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol_' + vSecurityGroupIndex + '" value="'+ firewallRules.ipProtocol + '"/>'
-
-                        + '     <label for="td_ch1"></label> <span class="ov off"></span>'
-                        + '</td>'
-                        + '<td class="btn_mtd ovm td_left" data-th="Name">'
-                        + vSecurityGroupItem.name
-                        + '</td>'
-                        + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
-                        + vSecurityGroupItem.vNetId
-                        + '</td>'
-                        + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
-
-                        + '</tr>'
-                })
-                $("#assistSecurityGroupList").empty()
-                $("#assistSecurityGroupList").append(html)
+                var keywords = new Array();
+                filterSecurityGroupList(keywords, caller)
+                // data.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
+                //     // <th>Name</th>
+                //     // <th>VPC Id</th>
+                //     // <th>Description</th>
+                //     // <th>Firewall RuleSet</th>
+                //     var firewallRulesArr = vSecurityGroupItem.firewallRules;
+                //     var firewallRules = firewallRulesArr[0];
+                //     console.log("firewallRules");
+                //     console.log(firewallRules);
+                //     html += '<tr>'
+                //
+                //         + '<td class="overlay hidden column-50px" data-th="">'
+                //         + '     <input type="checkbox" name="securityGroupAssist_chk" id="securityGroupAssist_Raw_' + vSecurityGroupIndex + '" title="" />'
+                //         + '     <input type="hidden" name="securityGroupAssist_id" id="securityGroupAssist_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
+                //         + '     <input type="hidden" name="securityGroupAssist_name" id="securityGroupAssist_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
+                //         + '     <input type="hidden" name="securityGroupAssist_vNetId" id="securityGroupAssist_vNetId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.vNetId + '"/>'
+                //
+                //         + '     <input type="hidden" name="securityGroupAssist_connectionName" id="securityGroupAssist_connectionName_' + vSecurityGroupIndex +'" value="' + vSecurityGroupItem.connectionName + '"/>'
+                //         + '     <input type="hidden" name="securityGroupAssist_description" id="securityGroupAssist_description_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.description + '"/>'
+                //
+                //         + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupId" id="securityGroupAssist_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.cspSecurityGroupId + '"/>'
+                //         + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupName" id="securityGroupAssist_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="'+ vSecurityGroupItem.cspSecurityGroupName + '"/>'
+                //         + '     <input type="hidden" name="securityGroupAssist_firewallRules_cidr" id="securityGroupAssist_firewallRules_cidr_' + vSecurityGroupIndex + '" value="'+ firewallRules.cidr + '"/>'
+                //         + '     <input type="hidden" name="securityGroupAssist_firewallRules_direction" id="securityGroupAssist_firewallRules_direction_' + vSecurityGroupIndex + '" value="'+ firewallRules.direction + '"/>'
+                //
+                //         + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort_' + vSecurityGroupIndex + '" value="'+ firewallRules.fromPort + '"/>'
+                //         + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort_' + vSecurityGroupIndex + '" value="'+ firewallRules.toPort + '"/>'
+                //         + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol_' + vSecurityGroupIndex + '" value="'+ firewallRules.ipProtocol + '"/>'
+                //
+                //         + '     <label for="td_ch1"></label> <span class="ov off"></span>'
+                //         + '</td>'
+                //         + '<td class="btn_mtd ovm td_left" data-th="Name">'
+                //         + vSecurityGroupItem.name
+                //         + '</td>'
+                //         + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                //         + vSecurityGroupItem.vNetId
+                //         + '</td>'
+                //         + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
+                //
+                //         + '</tr>'
+                // })
+                // $("#assistSecurityGroupList").empty()
+                // $("#assistSecurityGroupList").append(html)
 
             }
         }
@@ -872,6 +1002,7 @@ function getSecurityGroupListCallbackFail(error){
 
 }
 
+var totalSshKeyListByNamespace = new Array();
 function getSshKeyListCallbackSuccess(caller, data){
     // expert에서 사용할 sshkey
     if (data == null || data == undefined || data == "null") {
@@ -879,21 +1010,24 @@ function getSshKeyListCallbackSuccess(caller, data){
     } else {// 아직 data가 1건도 없을 수 있음
         var html = ""
         if (data.length > 0) {
-            data.forEach(function (vSshKeyItem, vSshKeyIndex) {
-
-                html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
-                    + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
-                    + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
-                    + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
-                    + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
-                    + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
-                    + '<td class="overlay hidden" data-th="ConnectionName">' + vSshKeyItem.connectionName + '</td>'
-                    + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
-                    + '</td>'
-                    + '</tr>'
-            })
-            $("#assistSshKeyList").empty()
-            $("#assistSshKeyList").append(html)
+            totalSshKeyListByNamespace = data;
+            var keywords = new Array();
+            filterSshKeyList(keywords, caller)
+            // data.forEach(function (vSshKeyItem, vSshKeyIndex) {
+            //
+            //     html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
+            //         + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+            //         + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
+            //         + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+            //         + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
+            //         + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
+            //         + '<td class="overlay hidden" data-th="ConnectionName">' + vSshKeyItem.connectionName + '</td>'
+            //         + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
+            //         + '</td>'
+            //         + '</tr>'
+            // })
+            // $("#assistSshKeyList").empty()
+            // $("#assistSshKeyList").append(html)
 
             // data.forEach(function (vSshKeyItem, vSshKeyIndex) {
             //
@@ -920,6 +1054,55 @@ function getSshKeyListCallbackSuccess(caller, data){
 
 function getSshKeyListCallbackFail(caller, error){
 
+}
+
+// 전체 목록에서 filter
+function filterSshKeyList(keywords, caller){
+    // provider
+    // connection
+    var assistProviderName = "";
+    var assistConnectionName = "";
+    var html = "";
+    console.log("filter " + caller);
+    // if( caller == "searchSshKeyAssistAtReg"){
+    //     assistProviderName = $("#assistSshKeyProviderName option:selected").val();
+    //     assistConnectionName = $("#assistSshKeyConnectionName option:selected").val();
+    // }
+    var selectedConnectionName = $("#assistSecurityGroupConnectionName option:selected").val();
+    if( selectedConnectionName ){
+        assistConnectionName = selectedConnectionName;
+    }
+
+    var calNetIndex = 0;
+    totalSshKeyListByNamespace.forEach(function (vSshKeyItem, vSshKeyIndex) {
+        if( assistConnectionName == "" || assistConnectionName == vSshKeyItem.connectionName) {
+            // keyword가 있는 것들 중에서
+            var keywordExist = false
+            var keywordLength = keywords.length
+            var findCount = 0;
+            keywords.forEach(function (keywordValue, keywordIndex) {
+                if( vSshKeyItem.name.indexOf(keywordValue) > -1){
+                    findCount++;
+                }
+            })
+            if( keywordLength != findCount){
+                return true;
+            }
+
+            html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
+                + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
+                + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
+                + '<td class="overlay hidden" data-th="ConnectionName">' + vSshKeyItem.connectionName + '</td>'
+                + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
+                + '</td>'
+                + '</tr>'
+        }
+    });
+    $("#assistSshKeyList").empty()
+    $("#assistSshKeyList").append(html)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -957,6 +1140,80 @@ function searchNetworkByKeyword(caller){
 
     //getCommonSearchVmImageList(keywords, caller);
     filterNetworkList(keywords, caller)
+}
+
+// EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
+function searchAssistSecurityGroupByEnter(event, caller){
+    if( event.keyCode === 13) {
+        searchSecurityGroupByKeyword(caller);
+    }
+}
+
+//
+function searchSecurityGroupByKeyword(caller){
+    var keyword = "";
+    var keywordObjId = "";
+    console.log(caller)
+    if( caller == "searchSecurityGroupAssistAtReg"){
+        keyword = $("#keywordAssistSecurityGroup").val();
+        keywordObjId = "searchAssistNetworkKeywords";
+        // securityGroup api에 connection으로 filter하는 기능이 없으므로
+        //totalSecurityGroupListByNamespace : page Load시 가져온 securityGroup List가 있으므로 해당 목록을 Filter한다.
+    }
+
+    // connection
+
+    //
+    if( !keyword ){
+        commonAlert("At least a keyword required");
+        return;
+    }
+    var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
+
+    $("#" + keywordObjId).append(addKeyword);
+    var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
+    $("[name='keyword_" + caller + "']").each(function( idx, ele){
+        keywords.push($(this).text());
+    });
+
+    filterSecurityGroupList(keywords, caller)
+}
+
+// EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
+function searchAssistSshKeyByEnter(event, caller){
+    if( event.keyCode === 13) {
+        searchSshKeyByKeyword(caller);
+    }
+}
+
+//
+function searchSshKeyByKeyword(caller){
+    var keyword = "";
+    var keywordObjId = "";
+    if( caller == "searchSshKeyAssistAtReg"){
+        keyword = $("#keywordAssistSshKey").val();
+        keywordObjId = "searchAssistSshKeyKeywords";
+        // network api에 connection으로 filter하는 기능이 없으므로
+        //totalSshKeyListByNamespace : page Load시 가져온 sshKey List가 있으므로 해당 목록을 Filter한다.
+    }
+
+    // connection
+
+    //
+    if( !keyword ){
+        commonAlert("At least a keyword required");
+        return;
+    }
+    var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
+
+    $("#" + keywordObjId).append(addKeyword);
+    var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
+    $("[name='keyword_" + caller + "']").each(function( idx, ele){
+        keywords.push($(this).text());
+    });
+
+    //getCommonSearchVmImageList(keywords, caller);
+    filterSshKeyList(keywords, caller)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)

@@ -728,7 +728,7 @@ function applyAssistValues(caller){
 
       securityGroupIds += $("#" + orgPrefix + "id_" + sgIndex).val()
       $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + sgIndex).val());
-      $("#" + targetPrefix + "vNetId").val($("#" + orgPrefix + "vNetId_" + sgIndex).val());
+      $("#" + targetPrefix + "vpcId").val($("#" + orgPrefix + "vNetId_" + sgIndex).val());
       $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + sgIndex).val());
       $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + sgIndex).val());
 
@@ -803,6 +803,9 @@ function applyAssistValues(caller){
     $("#e_sshKeyId").val($("#" + orgPrefix + "id_" + selectedIndex).val());
   }
 
+  console.log("apply connection =" + applyConnectionName);
+  $("#e_connectionName").val(applyConnectionName);
+  $("#es_regConnectionName").val(applyConnectionName);
 }
 // diffConnectionCheck
 // 1. 다르면 -> confirm에서 OK면 -> applyAssistValues(caller) 호출하여 set되도록
@@ -858,7 +861,6 @@ function applyAssistValidCheck(caller){
     //commonConfirmOpen("DifferentConnectionAtSecurityGroup");
     commonConfirmOpen("DifferentConnectionAtAssistPopup", caller)
   } else {
-    $("#e_connectionName").val(selectedConnectionName);
     applyAssistValues(caller)
   }
 }

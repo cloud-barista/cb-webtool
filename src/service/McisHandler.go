@@ -836,7 +836,7 @@ func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle) (*webtool.McisLifeCycle
 	mcisID := mcisLifeCycle.McisID
 	lifeCycleType := mcisLifeCycle.LifeCycleType
 
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}?action={type}"
+	var originalUrl = "/ns/{nsId}/control/mcis/{mcisId}?action={type}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -847,8 +847,9 @@ func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle) (*webtool.McisLifeCycle
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + mcisLifeCycle.NameSpaceID + "/mcis/" + mcisLifeCycle.McisID + "?action=" + mcisLifeCycle.LifeCycleType
 	//// var url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"?action="+type
-	pbytes, _ := json.Marshal(mcisLifeCycle)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
+	//pbytes, _ := json.Marshal(mcisLifeCycle)
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 	resultMcisLifeCycle := webtool.McisLifeCycle{}
 	if err != nil {
 		fmt.Println("McisLifeCycle err")
@@ -897,7 +898,7 @@ func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle) (*webtool.McisLifeCycle
 
 // MCIS의 VM Status변경 : 요청에 대한 응답이 바로 오므로 async 만들지 않음
 func McisVmLifeCycle(vmLifeCycle *webtool.VmLifeCycle) (*webtool.VmLifeCycle, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}?action={type}"
+	var originalUrl = "/ns/{nsId}/control/mcis/{mcisId}/vm/{vmId}?action={type}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = vmLifeCycle.NameSpaceID
@@ -909,8 +910,9 @@ func McisVmLifeCycle(vmLifeCycle *webtool.VmLifeCycle) (*webtool.VmLifeCycle, mo
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + vmLifeCycle.NameSpaceID + "/mcis/" + vmLifeCycle.McisID + "/vm/" + vmLifeCycle.VmID + "?action=" + vmLifeCycle.LifeCycleType
 	///url = CommonURL+"/ns/"+nameSpace+"/mcis/"+mcis_id+"/vm/"+vm_id+"?action="+type
-	pbytes, _ := json.Marshal(vmLifeCycle)
-	resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
+	//pbytes, _ := json.Marshal(vmLifeCycle)
+	//resp, err := util.CommonHttp(url, pbytes, http.MethodGet) // POST로 받기는 했으나 실제로는 Get으로 날아감.
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 	resultVmLifeCycle := webtool.VmLifeCycle{}
 	if err != nil {
 		fmt.Println(err)
