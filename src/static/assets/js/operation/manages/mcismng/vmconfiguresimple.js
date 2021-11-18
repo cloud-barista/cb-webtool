@@ -261,8 +261,8 @@
 
 				}
 				$(".simple_servers_config").removeClass("active");
-				//$("#mcis_server_list").prepend(add_server_html)
-				$("#mcis_server_list").append(add_server_html)
+				$("#mcis_server_list").prepend(add_server_html)
+				// $("#mcis_server_list").append(add_server_html)
 				console.log("simple btn click and simple form data : ",simple_form)
 				console.log("simple data array : ",Simple_Server_Config_Arr);
 				simple_data_cnt++;
