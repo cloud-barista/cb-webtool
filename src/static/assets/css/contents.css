@@ -258,8 +258,8 @@ table thead {
 	/* display: block; */
     /* width: calc(100% - 0.91em); */
 	/* width: calc(100% - 1.4em); */
-	width: calc(100% - 1.2em);
-	/* width: 100%; */
+	/* width: calc(100% - 1.2em); */
+	width: 100%;
 } 
 table thead tr {
 	display: table-row;
@@ -2033,6 +2033,7 @@ table tbody tr {
 .dashboard .create_box .servers_config .top_box .ip_box .svc_ipbox .ipbox .spec_select_box { width:calc(60% + 2px); min-height:37px; display:inline-block; text-align:left; }
 .dashboard .create_box .servers_config .top_box .ip_box .svc_ipbox .ipbox .spec_select_box .s_slider_box { display:inline-block; vertical-align:middle; padding-top:5px; }
 .dashboard .create_box .servers_config .top_box .ip_box .svc_ipbox .ipbox .spec_select_box .stxt { display:inline-block; vertical-align:middle; margin:7px 0 0 4px; color:#999ea7; font-size:14px; font-weight:200; }
+.dashboard .create_box .servers_config .top_box .ip_box .svc_ipbox .ipbox input.count {width: calc(60% + 3.5px);}
 
 @media screen and (max-width:1650px){
 	.dashboard .create_box .top_ipbox .ipbox .selectbox.sel_1 { width:50%; }

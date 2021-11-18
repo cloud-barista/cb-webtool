@@ -992,310 +992,310 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
     //     .then(result => {
     //         console.log("get  Data : ", result.data);
 
-            // var statusCode = result.data.status;
-            // var message = result.data.message;
-            //
-            // if (statusCode != 200 && statusCode != 201) {
-            //     commonAlert(message + "(" + statusCode + ")");
-            //     return;
-            // }
-            var aMcis = new Object();
-            for (var mcisIndex in totalMcisListObj) {
-                aMcis = totalMcisListObj[mcisIndex]
+    // var statusCode = result.data.status;
+    // var message = result.data.message;
+    //
+    // if (statusCode != 200 && statusCode != 201) {
+    //     commonAlert(message + "(" + statusCode + ")");
+    //     return;
+    // }
+    var aMcis = new Object();
+    for (var mcisIndex in totalMcisListObj) {
+        aMcis = totalMcisListObj[mcisIndex]
+        break;
+    }// end of mcis loop
+
+    var vmList = aMcis.vm;
+    var data = new Object();
+    for (var vmIndex in vmList) {
+        var aVm = vmList[vmIndex]
+        if (vmID == aVm.id) {
+            //aVm = vmData;
+            data = aVm;
+            break;
+        }
+    }
+    // var data = result.data.VmInfo;
+    // var connectionConfig = result.data.ConnectionConfigInfo;
+
+    var vmId = data.id;
+    var vmName = data.name;
+    var vmStatus = data.status;
+    var vmDescription = data.description;
+    var vmPublicIp = data.publicIP == undefined ? "" : data.publicIP;
+    var vmSshKeyID = data.sshKeyId;
+    //vm info
+    $("#vm_id").val(vmId);
+    $("#vm_name").val(vmName);
+    console.log("vm_id " + vmId + ", vm_name " + vmName + ", vm_SshKeyID " + vmSshKeyID)
+
+    $("#manage_mcis_popup_vm_id").val(vmId)
+    $("#manage_mcis_popup_mcis_id").val(mcisID)
+    $("#manage_mcis_popup_sshkey_name").val(vmSshKeyID)
+
+    $("#server_info_text").text('[' + vmName + '/' + mcisName + ']')
+    $("#server_detail_info_text").text('[' + vmName + '/' + mcisName + ']')
+
+
+    var vmBadge = ""
+    var vmStatusIcon = getVmStatusIcon(vmStatus)
+    // var vmStatusIcon = "icon_running_db.png";
+    // if(vmStatus == "Running"){
+    //     vmStatusIcon = "icon_running_db.png";
+    // }else if(vmStatus == "include"){
+    //     vmStatusIcon = "icon_stop_db.png";
+    // }else if(vmStatus == "Suspended"){
+    //     vmStatusIcon = "icon_stop_db.png";
+    // }else if(vmStatus == "Terminated"){
+    //     vmStatusIcon = "icon_terminate_db.png";
+    // }else{
+    //     vmStatusIcon = "icon_stop_db.png";
+    // }
+    //var vmBadge = '<img src="/assets/img/contents/' + vmStatusIcon +'" alt="' + vmStatus + '"/>'
+
+    $("#server_detail_view_server_status").val(vmStatus);
+    // $("#server_info_status_img").empty()
+    // $("#server_info_status_img").append(vmBadge)
+    $("#server_info_status_icon_img\n").attr("src", vmStatusIcon);
+
+    $("#server_info_name").val(vmName + "/" + vmID)
+    $("#server_info_desc").val(vmDescription)
+
+    // ip information
+    $("#server_info_public_ip").val(vmPublicIp)
+    $("#server_detail_info_public_ip_text").text("Public IP : " + vmPublicIp)
+    $("#server_info_public_dns").val(data.publicDNS)
+    $("#server_info_private_ip").val(data.privateIP)
+    $("#server_info_private_dns").val(data.privateDNS)
+
+    $("#server_detail_view_public_ip").val(vmPublicIp)
+    $("#server_detail_view_public_dns").val(data.publicDNS)
+    $("#server_detail_view_private_ip").val(data.privateIP)
+    $("#server_detail_view_private_dns").val(data.privateDNS)
+
+    $("#manage_mcis_popup_public_ip").val(vmPublicIp)
+
+    //////vm detail tab////
+    var vmDetail = data.cspViewVmDetail;
+    //    //cspvmdetail
+    // var vmDetailKeyValueList = vmDetail.KeyValueList
+    var vmDetailKeyValueList = vmDetail.keyValueList
+    var architecture = "";
+    if (vmDetailKeyValueList) {
+        for (var keyIndex in vmDetailKeyValueList) {
+            if (vmDetailKeyValueList[keyIndex].key == "Architecture") {// ?? 이게 뭐지?
+                architecture = vmDetailKeyValueList[keyIndex].value
                 break;
-            }// end of mcis loop
-
-            var vmList = aMcis.vm;
-            var data = new Object();
-            for (var vmIndex in vmList) {
-                var aVm = vmList[vmIndex]
-                if (vmID == aVm.id) {
-                    //aVm = vmData;
-                    data = aVm;
-                    break;
-                }
             }
-            // var data = result.data.VmInfo;
-            // var connectionConfig = result.data.ConnectionConfigInfo;
-
-            var vmId = data.id;
-            var vmName = data.name;
-            var vmStatus = data.status;
-            var vmDescription = data.description;
-            var vmPublicIp = data.publicIP == undefined ? "" : data.publicIP;
-            var vmSshKeyID = data.sshKeyId;
-            //vm info
-            $("#vm_id").val(vmId);
-            $("#vm_name").val(vmName);
-            console.log("vm_id " + vmId + ", vm_name " + vmName + ", vm_SshKeyID " + vmSshKeyID)
-
-            $("#manage_mcis_popup_vm_id").val(vmId)
-            $("#manage_mcis_popup_mcis_id").val(mcisID)
-            $("#manage_mcis_popup_sshkey_name").val(vmSshKeyID)
-
-            $("#server_info_text").text('[' + vmName + '/' + mcisName + ']')
-            $("#server_detail_info_text").text('[' + vmName + '/' + mcisName + ']')
-
-
-            var vmBadge = ""
-            var vmStatusIcon = getVmStatusIcon(vmStatus)
-            // var vmStatusIcon = "icon_running_db.png";
-            // if(vmStatus == "Running"){
-            //     vmStatusIcon = "icon_running_db.png";
-            // }else if(vmStatus == "include"){
-            //     vmStatusIcon = "icon_stop_db.png";
-            // }else if(vmStatus == "Suspended"){
-            //     vmStatusIcon = "icon_stop_db.png";
-            // }else if(vmStatus == "Terminated"){
-            //     vmStatusIcon = "icon_terminate_db.png";
-            // }else{
-            //     vmStatusIcon = "icon_stop_db.png";
-            // }
-            //var vmBadge = '<img src="/assets/img/contents/' + vmStatusIcon +'" alt="' + vmStatus + '"/>'
-
-            $("#server_detail_view_server_status").val(vmStatus);
-            // $("#server_info_status_img").empty()
-            // $("#server_info_status_img").append(vmBadge)
-            $("#server_info_status_icon_img\n").attr("src", vmStatusIcon);
-
-            $("#server_info_name").val(vmName + "/" + vmID)
-            $("#server_info_desc").val(vmDescription)
-
-            // ip information
-            $("#server_info_public_ip").val(vmPublicIp)
-            $("#server_detail_info_public_ip_text").text("Public IP : " + vmPublicIp)
-            $("#server_info_public_dns").val(data.publicDNS)
-            $("#server_info_private_ip").val(data.privateIP)
-            $("#server_info_private_dns").val(data.privateDNS)
-
-            $("#server_detail_view_public_ip").val(vmPublicIp)
-            $("#server_detail_view_public_dns").val(data.publicDNS)
-            $("#server_detail_view_private_ip").val(data.privateIP)
-            $("#server_detail_view_private_dns").val(data.privateDNS)
-
-            $("#manage_mcis_popup_public_ip").val(vmPublicIp)
-
-            //////vm detail tab////
-            var vmDetail = data.cspViewVmDetail;
-            //    //cspvmdetail
-            // var vmDetailKeyValueList = vmDetail.KeyValueList
-            var vmDetailKeyValueList = vmDetail.keyValueList
-            var architecture = "";
-            if (vmDetailKeyValueList) {
-                for (var keyIndex in vmDetailKeyValueList) {
-                    if (vmDetailKeyValueList[keyIndex].key == "Architecture") {// ?? 이게 뭐지?
-                        architecture = vmDetailKeyValueList[keyIndex].value
-                        break;
-                    }
-                }
-                // architecture = vmDetailKeyValueList.filter(item => item.Key === "Architecture")
-                // console.log("architecture : ",architecture.length)
-                // if(architecture.length > 0){
-                //     architecture = architecture[0].Value
-                //     console.log("architecture2 : ",architecture)
-                // }
-                // console.log("architecture = " + architecture)
-                $("#server_info_archi").val(architecture)
-                $("#server_detail_view_archi").val(architecture)
-            }
-            //    // server spec
-            // var vmSecName = data.VmSpecName
-            var vmSpecName = vmDetail.vmspecName;
-            $("#server_info_vmspec_name").val(vmSpecName)
-            $("#server_detail_view_server_spec").text(vmSpecName)
-            //var spec_id = data.specId
-            var specId = data.specId
-            // set_vmSpecInfo(spec_id);// memory + cpu  : TODO : spec정보는 자주변경되는것이 아닌데.. 매번 통신할 필요있나...
-
-            var startTime = vmDetail.startTime
-            $("#server_info_start_time").val(startTime)
-
-
-            var locationInfo = data.location;
-            var cloudType = locationInfo.cloudType;
-            var cspIcon = ""
-            if (cloudType == "aws") {
-                cspIcon = "img_logo1"
-            } else if (cloudType == "azure") {
-                cspIcon = "img_logo5"
-            } else if (cloudType == "gcp") {
-                cspIcon = "img_logo7"
-            } else if (cloudType == "cloudit") {
-                cspIcon = "img_logo6"
-            } else if (cloudType == "openstack") {
-                cspIcon = "img_logo9"
-            } else if (cloudType == "alibaba") {
-                cspIcon = "img_logo4"
-            } else {
-                csp_icon = '<img src="/assets/img/contents/img_logo1.png" alt=""/>'
-            }
-            $("#server_info_csp_icon").empty()
-            $("#server_info_csp_icon").append('<img src="/assets/img/contents/' + cspIcon + '.png" alt=""/>')
-            $("#server_connection_view_csp").val(cloudType)
-            $("#manage_mcis_popup_csp").val(cloudType)
-
-
-            var latitude = locationInfo.latitude;
-            var longitude = locationInfo.longitude;
-            var briefAddr = locationInfo.briefAddr;
-            var nativeRegion = locationInfo.nativeRegion;
-
-            if (locationInfo) {
-                $("#server_location_latitude").val(latitude)
-                $("#server_location_longitude").val(longitude)
-
-                // // 지도 표시
-                // var pointInfo = new Object();
-                // pointInfo.id = "1"
-                // pointInfo.name = nativeRegion;
-                // pointInfo.cloudType = cloudType;//server_connection_view_csp
-                // pointInfo.latitude = latitude;//server_location_latitude
-                // pointInfo.longitude = longitude//server_location_longitude
-                // pointInfo.markerIndex = 1
-                // setMap(pointInfo);
-            }
-            // region zone locate
-
-            //var region = data.region.region
-            var region = data.region.region
-            // var zone = data.region.zone
-            var zone = data.region.zone
-            console.log(vmDetail.iid);
-            $("#server_info_region").val(briefAddr + ":" + region)
-            $("#server_info_zone").val(zone)
-            $("#server_info_cspVMID").val("cspVMID : " + vmDetail.iid.nameId)
-
-            $("#server_detail_view_region").val(briefAddr + " : " + region)
-            $("#server_detail_view_zone").val(zone)
-
-            $("#server_connection_view_region").val(briefAddr + "(" + region + ")")
-            $("#server_connection_view_zone").val(zone)
-
-            // connection name
-            var connectionName = data.connectionName;
-            $("#server_info_connection_name").val(connectionName)
-            $("#server_connection_view_connection_name").val(connectionName)
-
-            // credential and driver info : 가져오지 않음으로
-            // console.log("connectionConfig : ", connectionConfig)
-            // if (connectionConfig) {
-            //     var credentialName = connectionConfig.CredentialName
-            //     var driverName = connectionConfig.DriverName
-            //     $("#server_connection_view_credential_name").val(credentialName)
-            //     $("#server_connection_view_driver_name").val(driverName)
-            // }
-            for(cIndex in TotalCloudConnectionList){ // TODO : connection의 driver와 connection set.
-                var connInfo = TotalCloudConnectionList[cIndex];
-                if( connectionName == connInfo.ConfigName) {
-                    $("#server_connection_view_credential_name").val(connInfo.CredentialName)
-                    $("#server_connection_view_driver_name").val(connInfo.DriverName)
-                    break;
-                }
-            }
-
-            // server id / system id
-            $("#server_detail_view_server_id").val(data.id)
-            // systemid 를 사용할 경우 아래 꺼 사용
-            $("#server_detail_view_server_id").val(vmDetail.iid.systemId)
-
-            // image id
-            var imageIId = vmDetail.imageIId.nameId
-            var imageId = data.imageId
-            getCommonVmImageInfo('mcisvmdetail', imageId) //
-            $("#server_detail_view_image_id").text(imageId + "(" + imageIId + ")")
-
-            //vpc subnet
-            var vpcId = vmDetail.vpcIID.nameId
-            var vpcSystemId = vmDetail.vpcIID.systemId
-            var subnetId = vmDetail.subnetIID.nameId
-            var subnetSystemId = vmDetail.subnetIID.systemId
-            var eth = vmDetail.networkInterface
-            $("#server_detail_view_vpc_id").text(vpcId + "(" + vpcSystemId + ")")
-            // set_vmVPCInfo(vpcId, subnetId);
-
-            $("#server_detail_view_subnet_id").text(subnetId + "(" + subnetSystemId + ")")
-            $("#server_detail_view_eth").val(eth)
-
-            // user account
-            $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId + "/ *** ")
-            $("#server_detail_view_user_id_pass").val(data.vmUserAccount + "/ *** ")
-            $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
-
-
-            var append_sg = ''
-
-            var sg_arr = vmDetail.securityGroupIIds
-            console.log(sg_arr);
-            if (sg_arr) {
-                sg_arr.map((item, index) => {
-                    console.log("item index = " + index)
-                    append_sg += '<a href="javascript:void(0);" onclick="getCommonVmSecurityGroupInfo(\'mcisvm\',\'' + item.nameId + '\');"title="' + item.nameId + '" >' + item.nameId + '</a> '
-                })
-            }
-            console.log("append sg : ", append_sg)
-
-            $("#server_detail_view_security_group").empty()
-            $("#server_detail_view_security_group").append(append_sg);
-
-            $("#server_detail_view_keypair_name").val(vmDetail.keyPairIId.nameId)
-            // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인
-            ////// vm connection tab //////
-
-
-            $("#selected_mcis_id").val(mcisID);
-            $("#selected_vm_id").val(vmID);
-            var installMonAgent = data.monAgentStatus;
-            console.log("install mon agent : ", installMonAgent)
-            if (installMonAgent == "installed") {
-                var isWorking = checkDragonFlyMonitoringAgent(mcisID, vmID);
-                if (isWorking) {
-                    $("#mcis_detail_info_check_monitoring").prop("checked", true)
-                    $("#mcis_detail_info_check_monitoring").attr("disabled", true)
-                } else {
-                    $("#mcis_detail_info_check_monitoring").prop("checked", false)
-                    $("#mcis_detail_info_check_monitoring").attr("disabled", false)
-                }
-            } else {
-                $("#mcis_detail_info_check_monitoring").prop("checked", false)
-                $("#mcis_detail_info_check_monitoring").attr("disabled", false)
-            }
-
-            ////// vm mornitoring tab 으로 이동 //////
-            // install Mon agent
-            // showVmMonitoring(mcisID,vmID)
-
-            // script 생성
-            console.log("vmScriptExport start")
-            // 위 값으로 mcisIndex, vmIndex 를 찾자
-            // var mcisIndex = 0;
-            // var vmIndex = 0;
-            // $("[id^='mcisVmID_']").each(function(){
-            //     if( vmID == $(this).val()){
-            //         var mcisVm = $(this).attr("id").split("_")
-            //         mcisIndex = mcisVm[1]
-            //         vmIndex = mcisVm[2]
-            //         return false;
-            //     }
-            // });
-
-            var vmCreateScript = JSON.stringify(data)
-            // $("#m_exportFileName_" + mcisIndex + "_"+ vmIndex).val(vmName);
-            // $("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
-            $("#exportFileName").val(mcisID + "_" + vmID);
-            $("#exportScript").val(vmCreateScript);
+        }
+        // architecture = vmDetailKeyValueList.filter(item => item.Key === "Architecture")
+        // console.log("architecture : ",architecture.length)
+        // if(architecture.length > 0){
+        //     architecture = architecture[0].Value
+        //     console.log("architecture2 : ",architecture)
         // }
-            // ).catch(function(error){
-            //     var statusCode = error.response.data.status;
-            //     var message = error.response.data.message;
-            //     commonErrorAlert(statusCode, message)
-            // });
-        // ).catch((error) => {
-        //     console.warn(error);
-        //     console.log(error.response)
-        //     var errorMessage = error.response.statusText;
-        //     var statusCode = error.response.status;
-        //     commonErrorAlert(statusCode, errorMessage)
-        // });
+        // console.log("architecture = " + architecture)
+        $("#server_info_archi").val(architecture)
+        $("#server_detail_view_archi").val(architecture)
+    }
+    //    // server spec
+    // var vmSecName = data.VmSpecName
+    var vmSpecName = vmDetail.vmspecName;
+    $("#server_info_vmspec_name").val(vmSpecName)
+    $("#server_detail_view_server_spec").text(vmSpecName)
+    //var spec_id = data.specId
+    var specId = data.specId
+    // set_vmSpecInfo(spec_id);// memory + cpu  : TODO : spec정보는 자주변경되는것이 아닌데.. 매번 통신할 필요있나...
+
+    var startTime = vmDetail.startTime
+    $("#server_info_start_time").val(startTime)
+
+
+    var locationInfo = data.location;
+    var cloudType = locationInfo.cloudType;
+    var cspIcon = ""
+    if (cloudType == "aws") {
+        cspIcon = "img_logo1"
+    } else if (cloudType == "azure") {
+        cspIcon = "img_logo5"
+    } else if (cloudType == "gcp") {
+        cspIcon = "img_logo7"
+    } else if (cloudType == "cloudit") {
+        cspIcon = "img_logo6"
+    } else if (cloudType == "openstack") {
+        cspIcon = "img_logo9"
+    } else if (cloudType == "alibaba") {
+        cspIcon = "img_logo4"
+    } else {
+        csp_icon = '<img src="/assets/img/contents/img_logo1.png" alt=""/>'
+    }
+    $("#server_info_csp_icon").empty()
+    $("#server_info_csp_icon").append('<img src="/assets/img/contents/' + cspIcon + '.png" alt=""/>')
+    $("#server_connection_view_csp").val(cloudType)
+    $("#manage_mcis_popup_csp").val(cloudType)
+
+
+    var latitude = locationInfo.latitude;
+    var longitude = locationInfo.longitude;
+    var briefAddr = locationInfo.briefAddr;
+    var nativeRegion = locationInfo.nativeRegion;
+
+    if (locationInfo) {
+        $("#server_location_latitude").val(latitude)
+        $("#server_location_longitude").val(longitude)
+
+        // // 지도 표시
+        // var pointInfo = new Object();
+        // pointInfo.id = "1"
+        // pointInfo.name = nativeRegion;
+        // pointInfo.cloudType = cloudType;//server_connection_view_csp
+        // pointInfo.latitude = latitude;//server_location_latitude
+        // pointInfo.longitude = longitude//server_location_longitude
+        // pointInfo.markerIndex = 1
+        // setMap(pointInfo);
+    }
+    // region zone locate
+
+    //var region = data.region.region
+    var region = data.region.region
+    // var zone = data.region.zone
+    var zone = data.region.zone
+    console.log(vmDetail.iid);
+    $("#server_info_region").val(briefAddr + ":" + region)
+    $("#server_info_zone").val(zone)
+    $("#server_info_cspVMID").val("cspVMID : " + vmDetail.iid.nameId)
+
+    $("#server_detail_view_region").val(briefAddr + " : " + region)
+    $("#server_detail_view_zone").val(zone)
+
+    $("#server_connection_view_region").val(briefAddr + "(" + region + ")")
+    $("#server_connection_view_zone").val(zone)
+
+    // connection name
+    var connectionName = data.connectionName;
+    $("#server_info_connection_name").val(connectionName)
+    $("#server_connection_view_connection_name").val(connectionName)
+
+    // credential and driver info : 가져오지 않음으로
+    // console.log("connectionConfig : ", connectionConfig)
+    // if (connectionConfig) {
+    //     var credentialName = connectionConfig.CredentialName
+    //     var driverName = connectionConfig.DriverName
+    //     $("#server_connection_view_credential_name").val(credentialName)
+    //     $("#server_connection_view_driver_name").val(driverName)
+    // }
+    for (cIndex in TotalCloudConnectionList) { // TODO : connection의 driver와 connection set.
+        var connInfo = TotalCloudConnectionList[cIndex];
+        if (connectionName == connInfo.ConfigName) {
+            $("#server_connection_view_credential_name").val(connInfo.CredentialName)
+            $("#server_connection_view_driver_name").val(connInfo.DriverName)
+            break;
+        }
+    }
+
+    // server id / system id
+    $("#server_detail_view_server_id").val(data.id)
+    // systemid 를 사용할 경우 아래 꺼 사용
+    $("#server_detail_view_server_id").val(vmDetail.iid.systemId)
+
+    // image id
+    var imageIId = vmDetail.imageIId.nameId
+    var imageId = data.imageId
+    getCommonVmImageInfo('mcisvmdetail', imageId) //
+    $("#server_detail_view_image_id").text(imageId + "(" + imageIId + ")")
+
+    //vpc subnet
+    var vpcId = vmDetail.vpcIID.nameId
+    var vpcSystemId = vmDetail.vpcIID.systemId
+    var subnetId = vmDetail.subnetIID.nameId
+    var subnetSystemId = vmDetail.subnetIID.systemId
+    var eth = vmDetail.networkInterface
+    $("#server_detail_view_vpc_id").text(vpcId + "(" + vpcSystemId + ")")
+    // set_vmVPCInfo(vpcId, subnetId);
+
+    $("#server_detail_view_subnet_id").text(subnetId + "(" + subnetSystemId + ")")
+    $("#server_detail_view_eth").val(eth)
+
+    // user account
+    $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId + "/ *** ")
+    $("#server_detail_view_user_id_pass").val(data.vmUserAccount + "/ *** ")
+    $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
+
+
+    var append_sg = ''
+
+    var sg_arr = vmDetail.securityGroupIIds
+    console.log(sg_arr);
+    if (sg_arr) {
+        sg_arr.map((item, index) => {
+            console.log("item index = " + index)
+            append_sg += '<a href="javascript:void(0);" onclick="getCommonVmSecurityGroupInfo(\'mcisvm\',\'' + item.nameId + '\');"title="' + item.nameId + '" >' + item.nameId + '</a> '
+        })
+    }
+    console.log("append sg : ", append_sg)
+
+    $("#server_detail_view_security_group").empty()
+    $("#server_detail_view_security_group").append(append_sg);
+
+    $("#server_detail_view_keypair_name").val(vmDetail.keyPairIId.nameId)
+    // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인
+    ////// vm connection tab //////
+
+
+    $("#selected_mcis_id").val(mcisID);
+    $("#selected_vm_id").val(vmID);
+    var installMonAgent = data.monAgentStatus;
+    console.log("install mon agent : ", installMonAgent)
+    if (installMonAgent == "installed") {
+        var isWorking = checkDragonFlyMonitoringAgent(mcisID, vmID);
+        if (isWorking) {
+            $("#mcis_detail_info_check_monitoring").prop("checked", true)
+            $("#mcis_detail_info_check_monitoring").attr("disabled", true)
+        } else {
+            $("#mcis_detail_info_check_monitoring").prop("checked", false)
+            $("#mcis_detail_info_check_monitoring").attr("disabled", false)
+        }
+    } else {
+        $("#mcis_detail_info_check_monitoring").prop("checked", false)
+        $("#mcis_detail_info_check_monitoring").attr("disabled", false)
+    }
+
+    ////// vm mornitoring tab 으로 이동 //////
+    // install Mon agent
+    // showVmMonitoring(mcisID,vmID)
+
+    // script 생성
+    console.log("vmScriptExport start")
+    // 위 값으로 mcisIndex, vmIndex 를 찾자
+    // var mcisIndex = 0;
+    // var vmIndex = 0;
+    // $("[id^='mcisVmID_']").each(function(){
+    //     if( vmID == $(this).val()){
+    //         var mcisVm = $(this).attr("id").split("_")
+    //         mcisIndex = mcisVm[1]
+    //         vmIndex = mcisVm[2]
+    //         return false;
+    //     }
+    // });
+
+    var vmCreateScript = JSON.stringify(data)
+    // $("#m_exportFileName_" + mcisIndex + "_"+ vmIndex).val(vmName);
+    // $("#m_vmExportScript_" + mcisIndex + "_"+vmIndex).val(vmCreateScript);
+    $("#exportFileName").val(mcisID + "_" + vmID);
+    $("#exportScript").val(vmCreateScript);
+    // }
+    // ).catch(function(error){
+    //     var statusCode = error.response.data.status;
+    //     var message = error.response.data.message;
+    //     commonErrorAlert(statusCode, message)
+    // });
+    // ).catch((error) => {
+    //     console.warn(error);
+    //     console.log(error.response)
+    //     var errorMessage = error.response.statusText;
+    //     var statusCode = error.response.status;
+    //     commonErrorAlert(statusCode, errorMessage)
+    // });
 
     // $("#Detail").show();// 첫번째 Detail tab 표시.
     $('[href="#Detail"]').tab('show');
@@ -2157,9 +2157,9 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
         mcisTableRow += '</td>'
         mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Cloud Connection"><div id="mcisInfo_mcisProviderNames_' + mcisIndex + '">' + mcisProviderNames + '</div></td>'
 
-        mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Total Infras"><div id="mcisInfo_totalVmCountOfMcis_' + mcisIndex + '">' + totalVmCountOfMcis + '</div></td>'
+        mcisTableRow += '<td class="overlay hidden column-18percent" data-th="Total Infras"><div id="mcisInfo_totalVmCountOfMcis_' + mcisIndex + '">' + totalVmCountOfMcis + '</div></td>'
 
-        mcisTableRow += '<td class="overlay hidden column-14percent" data-th="# of Servers">'
+        mcisTableRow += '<td class="overlay hidden column-18percent" data-th="# of Servers">'
         mcisTableRow += '<span class="bar" ></span> <span title="running" id="mcisInfo_vmstatus_running_' + mcisIndex + '">' + vmStatusCountMap.get('running') + '</span>'
         mcisTableRow += '<span class="bar" >/</span> <span title="stop" id="mcisInfo_vmstatus_stop_' + mcisIndex + '">' + vmStatusCountMap.get('stop') + '</span>'
         mcisTableRow += '<span class="bar" >/</span> <span title="terminate" id="mcisInfo_vmstatus_terminate_' + mcisIndex + '">' + vmStatusCountMap.get('terminate') + '</span>'
@@ -2255,7 +2255,8 @@ function displayMcisInfoArea(mcisData) {
 
     $("#mcis_name").val(mcisName)
 
-
+    var offset = $("#mcis_info_box").offset();
+    $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 300);
 
     // id="mcis_info_txt"   // <span class="stxt" id="mcis_info_txt">[ ]</span>
     // id="service_status_icon"
@@ -2298,22 +2299,22 @@ function displayServerStatusList(mcisID, vmList) {
     //Manage MCIS Server List on/off
     $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function () {
         console.log("sel_cr");
-        var $sel_list = $(this),
-            $detail = $(".server_info");
+        var $sel_list = $(this);
+        // $detail = $(".server_info");
         $sel_list.off("click").click(function () {
             $sel_list.addClass("active");
             $sel_list.siblings().removeClass("active");
-            $detail.addClass("active");
-            $detail.siblings().removeClass("active");
+            // $detail.addClass("active");
+            // $detail.siblings().removeClass("active");
             $sel_list.off("click").click(function () {
                 if ($(this).hasClass("active")) {
                     $sel_list.removeClass("active");
-                    $detail.removeClass("active");
+                    // $detail.removeClass("active");
                 } else {
                     $sel_list.addClass("active");
                     $sel_list.siblings().removeClass("active");
-                    $detail.addClass("active");
-                    $detail.siblings().removeClass("active");
+                    // $detail.addClass("active");
+                    // $detail.siblings().removeClass("active");
                 }
             });
         });
