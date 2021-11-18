@@ -1011,13 +1011,13 @@ body {
 .bgbox_running {
   background-color: #06a9b7;
 }
-.bgbox_stopped {
+.bgbox_stop {
   background-color: #ffc800;
 }
 .bgbox_suspended {
   background-color: #ffc800;
 }
-.bgbox_terminated {
+.bgbox_terminate {
   background-color: #fc1656;
 }
 .bgbox_etc {
