@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    getCommonMcisList("mcismonitoringmng", true, status)
+    getCommonMcisList("mcismonitoringmng", true, "status")
     resizeContent();
 });
 $(window).resize(function() {
