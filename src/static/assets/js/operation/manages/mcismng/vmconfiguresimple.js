@@ -240,8 +240,6 @@
 						var new_vm_name = server_name+"-"+i;
 						var object = cloneObj(simple_form)
 						object.name = new_vm_name
-						
-						add_server_html +='<li onclick="view_simple(\''+simple_data_cnt+'\')">'
 								+'<div class="server server_on bgbox_b">'
 								+'<div class="icon"></div>'
 								+'<div class="txt">'+new_vm_name+'</div>'

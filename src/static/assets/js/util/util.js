@@ -202,6 +202,7 @@ function commonConfirmOpen(targetAction, caller) {
             ["ExportScriptOfMcis", "Would you like to export MCIS script? "],
 
             ["AddNewVmOfMcis", "Would you like to add a new VM to this MCIS ?"],
+            ["DeployServer", "Would you likt to deploy?"],
 
             ["VmLifeCycle", "Would you like to view Server ?"],
             ["VmLifeCycleReboot", "Would you like to reboot VM ?"], //onclick="vm_life_cycle('reboot')"
@@ -397,7 +398,8 @@ function commonConfirmOk() {
         changePage(targetUrl)
     } else if (targetAction == "DeleteMcis") {
         deleteMCIS();
-
+    } else if (targetAction == "DeployServer") {
+        btn_deploy();
     } else if (targetAction == "ImportScriptOfMcis") {
         mcisScriptImport();
     } else if (targetAction == "ExportScriptOfMcis") {
