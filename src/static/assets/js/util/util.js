@@ -816,8 +816,8 @@ function getRegionListByProviderForSelectbox(provider, targetObjID) {
 // 해당 mcis에서 상태값들을 count : 1개 mcis의 상태는 1개만 있으므로 running, stop, terminate 중 1개만 1, 나머지는 0
 // dashboard, mcis 에서 사용
 function calculateMcisStatusCount(mcisData) {
-    console.log("calculateMcisStatusCount")
-    console.log(mcisData)
+    // console.log("calculateMcisStatusCount")
+    // console.log(mcisData)
     var mcisStatusCountMap = new Map();
     mcisStatusCountMap.set("running", 0);
     mcisStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
@@ -834,15 +834,15 @@ function calculateMcisStatusCount(mcisData) {
     } catch (e) {
         console.log("mcis status error")
     }
-    console.log(mcisStatusCountMap);
+    // console.log(mcisStatusCountMap);
     return mcisStatusCountMap;
 }
 
 // 1개 mcis 아래의 vm 들의 status만 계산
 // dashboard, mcis 에서 사용
 function calculateVmStatusCount(vmList) {
-    console.log("calculateVmStatusCount")
-    console.log(vmList)
+    // console.log("calculateVmStatusCount")
+    // console.log(vmList)
     var sumVmCnt = 0;
     var vmStatusCountMap = new Map();
     vmStatusCountMap.set("running", 0);
@@ -868,8 +868,8 @@ function calculateVmStatusCount(vmList) {
 
 // mcis내 vm들의 provider별 connection count
 function calculateConnectionCount(vmList) {
-    console.log("calculateConnectionCount")
-    console.log(vmList)
+    // console.log("calculateConnectionCount")
+    // console.log(vmList)
     var vmCloudConnectionCountMap = new Map();
 
     for (var vmIndex in vmList) {

@@ -30,6 +30,7 @@ function getWebToolUrl(controllerKeyName){
             ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
 
             ["McisData", "/operation/manages/mcismng/:mcisID"],
+            ["McisStatusData", "/operation/manages/mcismng/:mcisID?option=status"],
             ["VmOfMcisData", "/operation/manages/mcismng/:mcisID/vm/:vmID"]
         ]
     );
@@ -673,12 +674,37 @@ function getCommonMcisData(caller, mcisID){
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
     var url = setUrlByParam(getWebToolUrl('McisData'), urlParamMap)
+    console.log(url);
     axios.get(url, {
 
     }).then(result => {
         console.log(result);
         if(result.data.status == 200 || result.data.status == 201){
-            getMcisDataCallbackSuccess(caller, result.data.McisInfo)
+            getMcisDataCallbackSuccess(caller, result.data.McisInfo, mcisID)
+        }else{
+            //getMcisDataCallbackFail(caller, data)
+            commonErrorAlert(result.data.status, "MCIS Data Search Failed");
+        }
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+    });
+}
+
+// MCIS 상세정보 조회
+function getCommonMcisStatusData(caller, mcisID){
+    var urlParamMap = new Map();
+    urlParamMap.set(":mcisID", mcisID)
+    var url = setUrlByParam(getWebToolUrl('McisStatusData'), urlParamMap)
+    axios.get(url, {
+
+    }).then(result => {
+        console.log(result);
+        if(result.data.status == 200 || result.data.status == 201){
+            getCommonMcisStatusDataCallbackSuccess(caller, result.data.McisStatusInfo)
         }else{
             //getMcisDataCallbackFail(caller, data)
             commonErrorAlert(result.data.status, "MCIS Data Search Failed");
