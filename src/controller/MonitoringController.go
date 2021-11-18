@@ -40,9 +40,11 @@ func McisMonitoringMngForm(c echo.Context) error {
 
 	// 해당 Namespace의 모든 MCIS 조회
 	// mcisList, _ := service.GetMcisList(defaultNameSpaceID)
-	optionParam := c.QueryParam("option")
-	mcisList, _ := service.GetMcisList(defaultNameSpaceID, optionParam)
-	log.Println(" mcisList  ", mcisList)
+	//optionParam := c.QueryParam("option")
+	//mcisList, _ := service.GetMcisList(defaultNameSpaceID, optionParam)
+	//log.Println(" mcisList  ", mcisList)
+
+	initParam := c.QueryParam("mcisId")
 
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/monitorings/mcismonitoring/McisMonitoringMng", // 파일명
@@ -50,7 +52,8 @@ func McisMonitoringMngForm(c echo.Context) error {
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
-			"McisList":           mcisList,
+			//"McisList":           mcisList,
+			"initMcisId": initParam,
 		})
 
 }
