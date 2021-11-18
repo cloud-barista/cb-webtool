@@ -324,18 +324,20 @@ function setMap() {
 
     // $("[id^='vmID_']").each(function(){
     $("input[name='vmID']").each(function (vmIndex, item) {
-        // var vmID = $(this).attr("id");
-        // var vmIndex = vmID.split ("_")[1];
-
+        var vmIDArr = $(this).attr("id").split("_");
+        var mcisIndex = vmIDArr[vmIDArr.length-2];
+        var vmIndex = vmIDArr[vmIDArr.length-1];
+        console.log("mcisIndex " + mcisIndex)
         console.log("vmIndex " + vmIndex)
         console.log("id " + $(this).attr("id"));
 
-        var vmIDValue = $("#vmID_" + vmIndex).val();
-        var vmNameValue = $("#vmName_" + vmIndex).val();
-        var vmStatusValue = $("#vmStatus_" + vmIndex).val();
-        var longitudeValue = $("#longitude_" + vmIndex).val();
-        var latitudeValue = $("#latitude_" + vmIndex).val();
-        var mapPinIndexValue = $("#mapPinIndex_" + vmIndex).val();
+
+        var vmIDValue = $("#vmID_" + mcisIndex + "_" + vmIndex).val();
+        var vmNameValue = $("#vmName_" + mcisIndex + "_" + vmIndex).val();
+        var vmStatusValue = $("#vmStatus_" + mcisIndex + "_" + vmIndex).val();
+        var longitudeValue = $("#longitude_" + mcisIndex + "_" + vmIndex).val();
+        var latitudeValue = $("#latitude_" + mcisIndex + "_" + vmIndex).val();
+        var mapPinIndexValue = $("#mapPinIndex_" + mcisIndex + "_" + vmIndex).val();
 
         var vms = new Object();
         vms.id = vmIDValue;
@@ -349,12 +351,12 @@ function setMap() {
         var fromLonLat = longitudeValue + " " + latitudeValue;
         console.log(longitudeValue + " : " + latitudeValue);
         if (longitudeValue && latitudeValue) {
-            // polyArr.push(fromLonLat)
+            polyArr.push(fromLonLat)
             drawMap(JZMap, longitudeValue, latitudeValue, vms)
 
-            var polygon = "POLYGON((" + fromLonLat + "))";
+            // var polygon = "POLYGON((" + fromLonLat + "))";
             // drawPoligon(JZMap,fromLonLat);
-            drawPoligon(JZMap, polygon);
+            // drawPoligon(JZMap, polygon);
         }
         // for(var i in mcis){
         //     for(var o in vms){
@@ -389,6 +391,17 @@ function setMap() {
         //           }
         //     }
     })
+    var polygon = "";
+     console.log("poly arr : ",polyArr);
+     if(polyArr.length > 1){
+       polygon = polyArr.join(", ")
+       polygon = "POLYGON(("+polygon+"))";
+     }else{
+       polygon = "POLYGON(("+polyArr[0]+"))";
+     }
+     if(polyArr.length >1){
+        drawPoligon(JZMap,polygon, 1);
+      }
 }
 
 
@@ -545,12 +558,12 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
                 // for map : 원래는 vmId, Name등의 정보가 보여져야하나, mcis를 simple로 가져오면 해당 정보가 비어있어 화면상의 mcis이름 과 vm index를 보여주게 함
                 // addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aVm.vmID + '"/>'
                 // addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + aVm.vmName + '"/>'
-                addVm += '        <input type="hidden" name="mapPinIndex" id="mapPinIndex_' + vmIndex + '" value="' + mcisIndex + '"/>'
-                addVm += '        <input type="hidden" name="vmID" id="vmID_' + vmIndex + '" value="' + aMcisData.name + '"/>'
-                addVm += '        <input type="hidden" name="vmName" id="vmName_' + vmIndex + '" value="' + (Number(vmIndex) + 1).toString() + '"/>'
-                addVm += '        <input type="hidden" name="vmStatus" id="vmStatus_' + vmIndex + '" value="' + vmDispStatus + '"/>'
-                addVm += '        <input type="hidden" name="longitude" id="longitude_' + vmIndex + '" value="' + location.longitude + '"/>'
-                addVm += '        <input type="hidden" name="latitude" id="latitude_' + vmIndex + '" value="' + location.latitude + '"/>'
+                addVm += '        <input type="hidden" name="mapPinIndex" id="mapPinIndex_' + mcisIndex + '_' + vmIndex + '" value="' + mcisIndex + '"/>'
+                addVm += '        <input type="hidden" name="vmID" id="vmID_' + mcisIndex + '_' + vmIndex + '" value="' + aMcisData.name + '"/>'
+                addVm += '        <input type="hidden" name="vmName" id="vmName_' + mcisIndex + '_' + vmIndex + '" value="' + (Number(vmIndex) + 1).toString() + '"/>'
+                addVm += '        <input type="hidden" name="vmStatus" id="vmStatus_' + mcisIndex + '_' + vmIndex + '" value="' + vmDispStatus + '"/>'
+                addVm += '        <input type="hidden" name="longitude" id="longitude_' + mcisIndex + '_' + vmIndex + '" value="' + location.longitude + '"/>'
+                addVm += '        <input type="hidden" name="latitude" id="latitude_' + mcisIndex + '_' + vmIndex + '" value="' + location.latitude + '"/>'
                 addVm += '</div>'
             }
         }
