@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	//tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	"io"
 	"log"
 	"net/http"
@@ -193,25 +194,12 @@ func GetMcisData(nameSpaceID string, mcisID string) (*tbmcis.TbMcisInfo, model.W
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
+
+	optionParamVal := "?option=default"
+
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis/" + mcisID
-
-	// 	// resp, err := http.Get(url)
-	// 	// if err != nil {
-	// 	// 	fmt.Println("request URL : ", url)
-	// 	// }
-
-	// 	// defer resp.Body.Close()
-	// 	body := HttpGetHandler(url)
-	// 	defer body.Close()
-	// 	info := map[string][]McisInfo{}
-	// 	json.NewDecoder(body).Decode(&info)
-	// 	fmt.Println("info : ", info["mcis"][0].ID)
-	// 	return info["ns"]
-
-	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	url := util.TUMBLEBUG + urlParam + optionParamVal
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	// defer body.Close()
@@ -243,6 +231,96 @@ func GetMcisData(nameSpaceID string, mcisID string) (*tbmcis.TbMcisInfo, model.W
 	// fmt.Println(string(pbytes))
 
 	return &mcisInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+func GetMcisDataByStatus(nameSpaceID string, mcisID string, optionParam string) (tbmcis.McisStatusInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+
+	optionParamVal := "?option=default"
+	// install, init, cpus, cpum, memR, memW, fioR, fioW, dbR, dbW, rtt, mrtt, clean
+	if optionParam != "" {
+		optionParamVal = "?option=" + optionParam
+	}
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam + optionParamVal
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	// defer body.Close()
+	//mcisStatusInfo := tbmcis.McisStatusInfo{}
+	//mcisStatusInfo := tbmcis.McisStatusInfo{}
+	mcisStatusInfo := map[string]tbmcis.McisStatusInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failStatusInfo := tbmcis.McisStatusInfo{}
+		return failStatusInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// util.DisplayResponse(resp) // 수신내용 확인
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		failStatusInfo := tbmcis.McisStatusInfo{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return failStatusInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&mcisStatusInfo)
+	fmt.Println(mcisStatusInfo)
+
+	// resultBody, err := ioutil.ReadAll(respBody)
+	// if err == nil {
+	// 	str := string(resultBody)
+	// 	println(str)
+	// }
+	// pbytes, _ := json.Marshal(respBody)
+	// fmt.Println(string(pbytes))
+
+	return mcisStatusInfo["status"], model.WebStatus{StatusCode: respStatus}
+}
+
+func GetMcisDataByID(nameSpaceID string, mcisID string) (*tbcommon.TbIdList, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+
+	optionParamVal := "?option=id"
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam + optionParamVal
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	// defer body.Close()
+	vmIDList := tbcommon.TbIdList{}
+	if err != nil {
+		fmt.Println(err)
+		return &vmIDList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// util.DisplayResponse(resp) // 수신내용 확인
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return &vmIDList, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	//json.NewDecoder(respBody).Decode(&mcisStatusInfo)
+	//fmt.Println(mcisStatusInfo)
+
+	return &vmIDList, model.WebStatus{StatusCode: respStatus}
 }
 
 // MCIS 등록. VM도 함께 등록
