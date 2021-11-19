@@ -79,6 +79,7 @@ $(document).ready(function () {
     });
 
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
+        console.log("alertResultArea")
         refreshMcisStatusData();
     })
 
@@ -537,7 +538,7 @@ function callMcisLifeCycle(type) {
 
 // McisLifeCycle을 호출 한 뒤 return값 처리
 function callbackMcisLifeCycle(resultStatus, resultData, type) {
-    var message = "MCIS " + type + " complete!."
+    var message = "MCIS " + type + " requested!."
     if (resultStatus == 200 || resultStatus == 201) {
         // commonAlert(message);
         console.log("callbackMcisLifeCycle" + message);
@@ -617,7 +618,7 @@ function deleteMCIS() {
     }
 
     // TODO : 삭제 호출부분 function으로 뺼까?
-    var url = "/operation/manages/mcismng/" + mcisID;
+    var url = "/operation/manages/mcismng/" + mcisID + "?option=force";
     axios.delete(url, {})
         .then(result => {
             console.log("get  Data : ", result.data);
@@ -629,9 +630,10 @@ function deleteMCIS() {
                 commonAlert(message + "(" + statusCode + ")");
                 return;
             } else {
-                commonAlert(message);
+                // commonAlert(message);
                 // TODO : MCIS List 조회
-                location.reload();
+                // location.reload();
+                commonResultAlert(message);
             }
 
         }).catch((error) => {
@@ -702,7 +704,7 @@ function vmLifeCycle(type) {
 
     console.log("life cycle3 url : ", url);
 
-    var message = vmName + " " + type + " complete!."
+    var message = vmName + " " + type + " requested!."
     var obj = {
         mcisID: mcisID,
         vmID: vmID,
@@ -979,6 +981,7 @@ function getCommonMcisStatusDataCallbackSuccess(caller, mcisStatusInfo){
     }// end of mcis loop
 
     // set mcis
+    console.log(aMcis.status + " : " + mcisStatusInfo.status)
     aMcis.status = mcisStatusInfo.status;
     aMcis.targetAction = mcisStatusInfo.targetAction;
     aMcis.targetStatus = mcisStatusInfo.targetStatus;
@@ -2100,7 +2103,7 @@ function getProviderNamesOfMcis(mcisID) {
             //mcisProviderNames += key + " ";
             switch (key) {
                 case "aws":
-                    mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo_a.png' alt=''/>";
+                    mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo_" + key + ".png' alt='" + key + "'/>";
                     break;
                 case "gcp":
                     mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo7.png' alt=''/>";
@@ -2189,6 +2192,7 @@ function displayMcisListTable() {
 function setMcisListTableRow(aMcisData, mcisIndex) {
     var mcisTableRow = "";
     var mcisStatus = aMcisData.status
+    var vmCloudConnectionMap = totalCloudConnectionMap.get(aMcisData.id);
     var mcisProviderNames = getProviderNamesOfMcis(aMcisData.id);//MCIS에 사용 된 provider
     var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
 
@@ -2226,7 +2230,18 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
         mcisTableRow += '       <span class="ov"></span>'
         mcisTableRow += '   </div>'
         mcisTableRow += '</td>'
-        mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Cloud Connection"><div id="mcisInfo_mcisProviderNames_' + mcisIndex + '">' + mcisProviderNames + '</div></td>'
+        mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Cloud Connection">'
+        mcisTableRow += '    <div id="mcisInfo_mcisProviderNames_' + mcisIndex + '">'
+
+        if( vmCloudConnectionMap) {
+            vmCloudConnectionMap.forEach((value, key) => {
+                // + mcisProviderNames +
+                mcisTableRow += '    <img class="provider_icon" src="/assets/img/contents/img_logo_' + key + '.png" alt="' + key +'/>';
+
+            })
+        }
+        mcisTableRow += '   </div>'
+        mcisTableRow +='</td>'
 
         mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Total Infras"><div id="mcisInfo_totalVmCountOfMcis_' + mcisIndex + '">' + totalVmCountOfMcis + '</div></td>'
 
@@ -2258,7 +2273,8 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
 
 // MCIS List table의 1개 Row Update
 function updateMcisListTableRow(aMcisData, mcisIndex) {
-
+    console.log("updateMcisListTableRow " + mcisIndex);
+    console.log(aMcisData);
     var mcisStatus = aMcisData.status
     var mcisProviderNames = getProviderNamesOfMcis(aMcisData.id);//MCIS에 사용 된 provider
     var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
@@ -2267,7 +2283,6 @@ function updateMcisListTableRow(aMcisData, mcisIndex) {
     var mcisStatusImg = "/assets/img/contents/icon_" + mcisDispStatus + ".png"
 
     if( vmStatusCountMap) {
-
 
         var sumVmCountRunning = vmStatusCountMap.get("running")
         var sumVmCountStop = vmStatusCountMap.get("stop")
@@ -2283,7 +2298,9 @@ function updateMcisListTableRow(aMcisData, mcisIndex) {
         // id="mcisInfo_mcisName_" + mcisIndex
         $("#mcisInfo_mcisName_" + mcisIndex).text(aMcisData.name)
         // id="mcisInfo_mcisProviderNames_" + mcisIndex
-        $("#mcisInfo_mcisProviderNames_" + mcisIndex).text(mcisProviderNames)
+
+        $("#mcisInfo_mcisProviderNames_" + mcisIndex).empty()
+        $("#mcisInfo_mcisProviderNames_" + mcisIndex).append(mcisProviderNames)
         // id="mcisInfo_totalVmCountOfMcis_" + mcisIndex
         $("#mcisInfo_totalVmCountOfMcis_" + mcisIndex).text(sumVmCount)
         // id="mcisInfo_vmstatus_running_" + mcisIndex
@@ -2416,7 +2433,7 @@ function updateMcisData(aMcisData, mcisID) {
     setTotalVmStatus();// mcis 의 vm들 상태표시 를 위해 필요
     setTotalConnection();// Mcis의 provider별 connection 표시를 위해 필요
 
-    updateMcisListTableRow(aMcisData);
+    updateMcisListTableRow(aMcisData, mcisIndex);
 
     $("#mcis_id").val(mcisID);
     $("#selected_mcis_id").val(mcisID);
