@@ -1752,15 +1752,15 @@ function getSecurityGroupCallbackFail(error) {
 function getMcisDataCallbackSuccess(caller, data, mcisID) {
     if (caller == "mcisexport") {
 
-        // var mcisIndex = 0;
+        var mcisIndex = 0;
         // console.log("mcisScriptExport start " + mcisID)
         // console.log(data);
-        // $("[id^='mcisID']").each(function () {
-        //     if (mcisID == $(this).val()) {
-        //         mcisIndex = $(this).attr("id").replace("mcisID", "")
-        //         return false;
-        //     }
-        // });
+        $("[id^='mcisID']").each(function () {
+            if (mcisID == $(this).val()) {
+                mcisIndex = $(this).attr("id").replace("mcisID", "")
+                return false;
+            }
+        });
         //
         // var mcisNameVal = $("#m_mcisName_" + mcisIndex).val();
         var mcisCreateScript = JSON.stringify(data)
