@@ -992,8 +992,10 @@ function getCommonMcisStatusDataCallbackSuccess(caller, mcisStatusInfo){
         aMcis.vm = mcisStatusInfo.vm
     }else{
         var vmList = mcisStatusInfo.vm;
+        // 가져온 상태값
         vmList.forEach(function (vmItem, vmIndex){
             var isExist = false;
+            // 기존 상태값
             for( var aIndex in mcisStatusInfo.vm){
                 var aVm = aMcis.vm[aIndex];
                 if( vmItem.id == aVm.id){
@@ -1992,7 +1994,7 @@ function setTotalVmStatus() {
     try {
         for (var mcisIndex in totalMcisListObj) {
             var aMcis = totalMcisListObj[mcisIndex]
-            var vmStatusCountMap = calculateVmStatusCount(aMcis.vm);
+            var vmStatusCountMap = calculateVmStatusCount(aMcis);
             totalVmStatusMap.set(aMcis.id, vmStatusCountMap)
         }
     } catch (e) {

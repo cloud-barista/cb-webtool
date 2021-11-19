@@ -449,7 +449,7 @@ function setTotalVmStatus() {
         for (var mcisIndex in totalMcisListObj) {
             var aMcis = totalMcisListObj[mcisIndex]
             console.log(aMcis);
-            var vmStatusCountMap = calculateVmStatusCount(aMcis.vm);
+            var vmStatusCountMap = calculateVmStatusCount(aMcis);
             totalVmStatusMap.set(aMcis.id, vmStatusCountMap)
         }
     } catch (e) {
@@ -544,7 +544,10 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
             for (var vmIndex in vmListOfMcis) {
                 var aVm = vmListOfMcis[vmIndex];
                 var vmDispStatus = getVmStatusDisp(aVm.status);
-
+                var sumVmCountRunning = vmStatusCountMap.get("running")
+                var sumVmCountStop = vmStatusCountMap.get("stop")
+                var sumVmCountTerminate = vmStatusCountMap.get("terminate")
+                var sumVmCount = sumVmCountRunning + sumVmCountStop + sumVmCountTerminate
                 // connections
                 var location = aVm.location;
                 if (!isEmpty(location)) {
@@ -582,15 +585,15 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
 
         mcisTableRow += '            <div class="numbox">'
         mcisTableRow += '                infra <strong class="color_b">' + totalVmCountOfMcis + '</strong>'
-        mcisTableRow += '                <span class="line">(</span> <span class="num color_b">' + vmStatusCountMap.get("running") + '</span>'
-        mcisTableRow += '                <span class="line">/</span> <span class="num color_y">' + vmStatusCountMap.get("stop") + '</span>'
-        mcisTableRow += '                <span class="line">/</span> <span class="num color_r">' + vmStatusCountMap.get("terminate") + '</span>'
+        mcisTableRow += '                <span class="line">(</span> <span class="num color_b">' + sumVmCountRunning + '</span>'
+        mcisTableRow += '                <span class="line">/</span> <span class="num color_y">' + sumVmCountStop + '</span>'
+        mcisTableRow += '                <span class="line">/</span> <span class="num color_r">' + sumVmCountTerminate + '</span>'
         mcisTableRow += '                <span class="line">)</span>'
         mcisTableRow += '            </div>'
 
         // 이 항목은 크게 의미가 없는데??
         mcisTableRow += '            <div class="numinfo">'
-        mcisTableRow += '                <div class="num">server ' + vmStatusCountMap.get("total") + '</div>'
+        mcisTableRow += '                <div class="num">server ' + sumVmCount + '</div>'
         mcisTableRow += '            </div>'
 
         mcisTableRow += '            <div class="shotbox">'
