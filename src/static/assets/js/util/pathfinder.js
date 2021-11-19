@@ -674,7 +674,6 @@ function getCommonMcisData(caller, mcisID){
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
     var url = setUrlByParam(getWebToolUrl('McisData'), urlParamMap)
-    console.log(url);
     axios.get(url, {
 
     }).then(result => {
