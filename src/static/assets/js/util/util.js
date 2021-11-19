@@ -202,6 +202,7 @@ function commonConfirmOpen(targetAction, caller) {
             ["ExportScriptOfMcis", "Would you like to export MCIS script? "],
 
             ["AddNewVmOfMcis", "Would you like to add a new VM to this MCIS ?"],
+            ["DeployServer", "Would you likt to deploy?"],
 
             ["VmLifeCycle", "Would you like to view Server ?"],
             ["VmLifeCycleReboot", "Would you like to reboot VM ?"], //onclick="vm_life_cycle('reboot')"
@@ -397,7 +398,8 @@ function commonConfirmOk() {
         changePage(targetUrl)
     } else if (targetAction == "DeleteMcis") {
         deleteMCIS();
-
+    } else if (targetAction == "DeployServer") {
+        btn_deploy();
     } else if (targetAction == "ImportScriptOfMcis") {
         mcisScriptImport();
     } else if (targetAction == "ExportScriptOfMcis") {
@@ -816,8 +818,8 @@ function getRegionListByProviderForSelectbox(provider, targetObjID) {
 // 해당 mcis에서 상태값들을 count : 1개 mcis의 상태는 1개만 있으므로 running, stop, terminate 중 1개만 1, 나머지는 0
 // dashboard, mcis 에서 사용
 function calculateMcisStatusCount(mcisData) {
-    console.log("calculateMcisStatusCount")
-    console.log(mcisData)
+    // console.log("calculateMcisStatusCount")
+    // console.log(mcisData)
     var mcisStatusCountMap = new Map();
     mcisStatusCountMap.set("running", 0);
     mcisStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
@@ -834,29 +836,57 @@ function calculateMcisStatusCount(mcisData) {
     } catch (e) {
         console.log("mcis status error")
     }
-    console.log(mcisStatusCountMap);
+    // console.log(mcisStatusCountMap);
     return mcisStatusCountMap;
 }
 
 // 1개 mcis 아래의 vm 들의 status만 계산
 // dashboard, mcis 에서 사용
-function calculateVmStatusCount(vmList) {
-    console.log("calculateVmStatusCount")
-    console.log(vmList)
+function calculateVmStatusCount(aMcis) {
+    // console.log("calculateVmStatusCount")
+    // console.log(vmList)
     var sumVmCnt = 0;
     var vmStatusCountMap = new Map();
     vmStatusCountMap.set("running", 0);
     vmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
     vmStatusCountMap.set("terminate", 0);
-    try {
-        for (var vmIndex in vmList) {
-            var aVm = vmList[vmIndex];
-            var vmStatus = aVm.status;
-            var vmDispStatus = getVmStatusDisp(vmStatus);
 
-            if (vmStatus != "") {// vm status 가 없는 경우는 skip
-                if (vmStatusCountMap.has(vmDispStatus)) {
-                    vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)
+    try {
+        if( aMcis.statusCount){
+            console.log("statusCount part")
+            var statusCountObj = aMcis.statusCount;
+            console.log(statusCountObj)
+            var countCreating = statusCountObj.countCreating;
+            var countFailed = statusCountObj.countFailed;
+            var countRebooting = statusCountObj.countRebooting;
+            var countResuming = statusCountObj.countResuming;
+            var countRunning = statusCountObj.countRunning;
+            var countSuspended = statusCountObj.countSuspended;
+            var countSuspending = statusCountObj.countSuspending;
+            var countTerminated = statusCountObj.countTerminated;
+            var countTerminating = statusCountObj.countTerminating;
+            var countTotal = statusCountObj.countTotal;
+            var countUndefined = statusCountObj.countUndefined;
+            console.log("sss")
+            var sumEtc = Number(countCreating) + Number(countFailed) + Number(countRebooting) + Number(countResuming)
+                + Number(countSuspending) + Number(countTerminated)+ Number(countTerminating)+ Number(countUndefined);
+            console.log("sss2")
+            vmStatusCountMap.set("running", Number(countRunning));
+            vmStatusCountMap.set("stop", Number(countSuspended));  // partial 도 stop으로 보고있음.
+            vmStatusCountMap.set("terminate", sumEtc);
+
+        }else if ( aMcis.vm ) {
+            console.log("statusCount part list part")
+            vmList = aMcis.vm;
+            for (var vmIndex in vmList) {
+                var aVm = vmList[vmIndex];
+                var vmStatus = aVm.status;
+                var vmDispStatus = getVmStatusDisp(vmStatus);
+
+                if (vmStatus != "") {// vm status 가 없는 경우는 skip
+                    if (vmStatusCountMap.has(vmDispStatus)) {
+                        vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)
+                    }
                 }
             }
         }
@@ -868,8 +898,8 @@ function calculateVmStatusCount(vmList) {
 
 // mcis내 vm들의 provider별 connection count
 function calculateConnectionCount(vmList) {
-    console.log("calculateConnectionCount")
-    console.log(vmList)
+    // console.log("calculateConnectionCount")
+    // console.log(vmList)
     var vmCloudConnectionCountMap = new Map();
 
     for (var vmIndex in vmList) {
