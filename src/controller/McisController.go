@@ -570,6 +570,26 @@ func GetMcisInfoData(c echo.Context) error {
 
 	mcisID := c.Param("mcisID")
 	log.Println("mcisID= " + mcisID)
+	optionParam := c.QueryParam("option")
+	log.Println("optionParam= " + optionParam)
+
+	if optionParam == "id" {
+		resultMcisInfo, _ := service.GetMcisDataByID(defaultNameSpaceID, mcisID)
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":  "success",
+			"status":   200,
+			"McisInfo": resultMcisInfo,
+		})
+	} else if optionParam == "status" {
+		resultMcisStatusInfo, _ := service.GetMcisDataByStatus(defaultNameSpaceID, mcisID, optionParam)
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":        "success",
+			"status":         200,
+			"McisStatusInfo": resultMcisStatusInfo,
+		})
+	}
 
 	resultMcisInfo, _ := service.GetMcisData(defaultNameSpaceID, mcisID)
 
