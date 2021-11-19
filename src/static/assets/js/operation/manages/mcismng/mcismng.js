@@ -2380,6 +2380,11 @@ function displayServerStatusList(mcisID, vmList) {
             });
         });
     });
+    if ($("#mcis_info_box").hasClass("view")) {
+        var offset = $("#mcis_info_box").offset();
+        console.log("position", offset.top);
+        $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 300);
+    }
 }
 
 // update McisData
