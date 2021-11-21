@@ -25,8 +25,8 @@ $(document).ready(function () {
         $sel_list.off("click").click(function () {
             $sel_list.addClass("active");
             $sel_list.siblings().removeClass("active");
-            $detail.addClass("active");
-            $detail.siblings().removeClass("active");
+            // $detail.addClass("active");
+            // $detail.siblings().removeClass("active");
             $status.addClass("view");
             $sel_list.off("click").click(function () {
                 if ($(this).hasClass("active")) {
@@ -36,8 +36,8 @@ $(document).ready(function () {
                 } else {
                     $sel_list.addClass("active");
                     $sel_list.siblings().removeClass("active");
-                    $detail.addClass("active");
-                    $detail.siblings().removeClass("active");
+                    // $detail.addClass("active");
+                    // $detail.siblings().removeClass("active");
                     $status.addClass("view");
                 }
             });
