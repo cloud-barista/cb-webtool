@@ -25,8 +25,8 @@ $(document).ready(function () {
         $sel_list.off("click").click(function () {
             $sel_list.addClass("active");
             $sel_list.siblings().removeClass("active");
-            $detail.addClass("active");
-            $detail.siblings().removeClass("active");
+            // $detail.addClass("active");
+            // $detail.siblings().removeClass("active");
             $status.addClass("view");
             $sel_list.off("click").click(function () {
                 if ($(this).hasClass("active")) {
@@ -36,8 +36,8 @@ $(document).ready(function () {
                 } else {
                     $sel_list.addClass("active");
                     $sel_list.siblings().removeClass("active");
-                    $detail.addClass("active");
-                    $detail.siblings().removeClass("active");
+                    // $detail.addClass("active");
+                    // $detail.siblings().removeClass("active");
                     $status.addClass("view");
                 }
             });
@@ -642,12 +642,12 @@ function deleteMCIS() {
             }
 
         }).catch((error) => {
-        console.warn(error);
-        console.log(error.response)
-        var errorMessage = error.response.statusText;
-        var statusCode = error.response.status;
-        commonErrorAlert(statusCode, errorMessage)
-    });
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.statusText;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage)
+        });
 
 }
 ////////////// MCIS Handling end ////////////////
@@ -985,20 +985,20 @@ function setMcisServerInfoBox(mcisIndex, vmIndex) {
 function refreshMcisStatusData() {
     var mcisID = $("#mcis_id").val();
     console.log("refreshMcisData=" + mcisID)
-    if( mcisID) {
+    if (mcisID) {
         getCommonMcisStatusData("refreshmcisdata", mcisID);//
     }
 }
 
 // 1개 MCIS 상태 변경
-function getCommonMcisStatusDataCallbackSuccess(caller, mcisStatusInfo){
+function getCommonMcisStatusDataCallbackSuccess(caller, mcisStatusInfo) {
     console.log("caller " + caller)
     console.log(mcisStatusInfo)
     var mcisID = mcisStatusInfo.id;
     var aMcis = new Object();
     for (var mcisIndex in totalMcisListObj) {
         var tempMcis = totalMcisListObj[mcisIndex]
-        if ( mcisID == tempMcis.id){
+        if (mcisID == tempMcis.id) {
             aMcis = tempMcis;
             break;
         }
@@ -1012,17 +1012,17 @@ function getCommonMcisStatusDataCallbackSuccess(caller, mcisStatusInfo){
 
     // set vm list of mcis
     vmList = aMcis.vm;
-    if( vmList){
+    if (vmList) {
         aMcis.vm = mcisStatusInfo.vm
-    }else{
+    } else {
         var vmList = mcisStatusInfo.vm;
         // 가져온 상태값
-        vmList.forEach(function (vmItem, vmIndex){
+        vmList.forEach(function (vmItem, vmIndex) {
             var isExist = false;
             // 기존 상태값
-            for( var aIndex in mcisStatusInfo.vm){
+            for (var aIndex in mcisStatusInfo.vm) {
                 var aVm = aMcis.vm[aIndex];
-                if( vmItem.id == aVm.id){
+                if (vmItem.id == aVm.id) {
                     aVm.status = vmItem.status;
                     aVm.installMonAgent = vmItem.installMonAgent;
                     aVm.systemLabel = vmItem.systemLabel
@@ -1038,12 +1038,12 @@ function getCommonMcisStatusDataCallbackSuccess(caller, mcisStatusInfo){
     updateMcisData(aMcis, mcisID);
 }
 // MCIS의 상태값만 변경
-function refreshMcisStatus(mcisID){
+function refreshMcisStatus(mcisID) {
     //
 }
 
 // 특정 Vm의 상태만 변경
-function refreshVmStatus(mcisID, vmID){
+function refreshVmStatus(mcisID, vmID) {
 
 }
 
@@ -1084,7 +1084,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
     var aMcis = new Object();
     for (var mcisIndex in totalMcisListObj) {
         var tempMcis = totalMcisListObj[mcisIndex]
-        if( mcisID == tempMcis.id){
+        if (mcisID == tempMcis.id) {
             aMcis = tempMcis;
             break;
         }
@@ -1102,7 +1102,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
             break;
         }
     }
-    if( !vmExist ){
+    if (!vmExist) {
         console.log("vm is not exist");
         console.log(vmList)
     }
@@ -1276,9 +1276,9 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
     //     $("#server_connection_view_credential_name").val(credentialName)
     //     $("#server_connection_view_driver_name").val(driverName)
     // }
-    for(cIndex in TotalCloudConnectionList){ // TODO : connection의 driver와 connection set.
+    for (cIndex in TotalCloudConnectionList) { // TODO : connection의 driver와 connection set.
         var connInfo = TotalCloudConnectionList[cIndex];
-        if( connectionName == connInfo.ConfigName) {
+        if (connectionName == connInfo.ConfigName) {
             $("#server_connection_view_credential_name").val(connInfo.CredentialName)
             $("#server_connection_view_driver_name").val(connInfo.DriverName)
             break;
@@ -1759,11 +1759,11 @@ function getSecurityGroupCallbackSuccess(caller, data) {
 
     $("#register_box").modal()
     firewallRules.map(item => (html += '<tr>'
-            + '<td class="btn_mtd" data-th="fromPort">' + item.fromPort + ' <span class="ov off"></span></td>'
-            + '<td class="overlay hidden" data-th="toPort">' + item.toPort + '</td>'
-            + '<td class="overlay hidden" data-th="toProtocol">' + item.ipProtocol + '</td>'
-            + '<td class="overlay hidden " data-th="direction">' + item.direction + '</td>'
-            + '</tr>'
+        + '<td class="btn_mtd" data-th="fromPort">' + item.fromPort + ' <span class="ov off"></span></td>'
+        + '<td class="overlay hidden" data-th="toPort">' + item.toPort + '</td>'
+        + '<td class="overlay hidden" data-th="toProtocol">' + item.ipProtocol + '</td>'
+        + '<td class="overlay hidden " data-th="direction">' + item.direction + '</td>'
+        + '</tr>'
     ))
     $("#manage_mcis_popup_sg").empty()
     $("#manage_mcis_popup_sg").append(html)
@@ -2027,7 +2027,7 @@ function setTotalVmStatus() {
     displayVmStatusArea();
 }
 // mcis의 vm들 상태값 변경
-function setVmStatus(mcisIndex, mcisIs){
+function setVmStatus(mcisIndex, mcisIs) {
 
 }
 
@@ -2124,26 +2124,9 @@ function displayConnectionCountArea() {
 function getProviderNamesOfMcis(mcisID) {
     var mcisProviderNames = "";
     var vmCloudConnectionMap = totalCloudConnectionMap.get(mcisID);
-    if( vmCloudConnectionMap) {
+    if (vmCloudConnectionMap) {
         vmCloudConnectionMap.forEach((value, key) => {
-            //mcisProviderNames += key + " ";
-            switch (key) {
-                case "aws":
-                    mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo_" + key + ".png' alt='" + key + "'/>";
-                    break;
-                case "gcp":
-                    mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo7.png' alt=''/>";
-                    break;
-                case "alibaba":
-                    mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo4.png' alt=''/>";
-                    break;
-                case "azure":
-                    mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo5.png' alt=''/>";
-                    break;
-                default:
-                    mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo6.png' alt=''/>";
-                    break;
-            }
+            mcisProviderNames += "<img class='provider_icon' src='/assets/img/contents/img_logo_" + key + ".png' alt='" + key + "'/>";
         });
     }
     return mcisProviderNames;
@@ -2152,26 +2135,9 @@ function getProviderNamesOfMcis(mcisID) {
 function getMCISInfoProviderNames(mcisID) {
     var mcisProviderNames = "";
     var vmCloudConnectionMap = totalCloudConnectionMap.get(mcisID);
-    if( vmCloudConnectionMap ) {
+    if (vmCloudConnectionMap) {
         vmCloudConnectionMap.forEach((value, key) => {
-            //mcisProviderNames += key + " ";
-            switch (key) {
-                case "aws":
-                    mcisProviderNames += "<img class='provider_icon_info' src='/assets/img/contents/img_logo_a.png' alt=''/>";
-                    break;
-                case "gcp":
-                    mcisProviderNames += "<img class='provider_icon_info' src='/assets/img/contents/img_logo7.png' alt=''/>";
-                    break;
-                case "alibaba":
-                    mcisProviderNames += "<img class='provider_icon_info' src='/assets/img/contents/img_logo4.png' alt=''/>";
-                    break;
-                case "azure":
-                    mcisProviderNames += "<img class='provider_icon_info' src='/assets/img/contents/img_logo5.png' alt=''/>";
-                    break;
-                default:
-                    mcisProviderNames += "<img class='provider_icon_info' src='/assets/img/contents/img_logo6.png' alt=''/>";
-                    break;
-            }
+            mcisProviderNames += "<img class='provider_icon_info' src='/assets/img/contents/img_logo_" + key + ".png' alt='" + key + "'/>";
         });
     }
     return mcisProviderNames;
@@ -2259,19 +2225,19 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
         mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Cloud Connection">'
         mcisTableRow += '    <div id="mcisInfo_mcisProviderNames_' + mcisIndex + '">'
 
-        if( vmCloudConnectionMap) {
+        if (vmCloudConnectionMap) {
             vmCloudConnectionMap.forEach((value, key) => {
                 // + mcisProviderNames +
-                mcisTableRow += '    <img class="provider_icon" src="/assets/img/contents/img_logo_' + key + '.png" alt="' + key +'/>';
+                mcisTableRow += '    <img class="provider_icon" src="/assets/img/contents/img_logo_' + key + '.png" alt="' + key + '/>';
 
             })
         }
         mcisTableRow += '   </div>'
-        mcisTableRow +='</td>'
+        mcisTableRow += '</td>'
 
-        mcisTableRow += '<td class="overlay hidden column-14percent" data-th="Total Infras"><div id="mcisInfo_totalVmCountOfMcis_' + mcisIndex + '">' + totalVmCountOfMcis + '</div></td>'
+        mcisTableRow += '<td class="overlay hidden column-18percent" data-th="Total Infras"><div id="mcisInfo_totalVmCountOfMcis_' + mcisIndex + '">' + totalVmCountOfMcis + '</div></td>'
 
-        mcisTableRow += '<td class="overlay hidden column-14percent" data-th="# of Servers">'
+        mcisTableRow += '<td class="overlay hidden column-18percent" data-th="# of Servers">'
         mcisTableRow += '<span class="bar" ></span> <span title="running" id="mcisInfo_vmstatus_running_' + mcisIndex + '">' + vmStatusCountMap.get('running') + '</span>'
         mcisTableRow += '<span class="bar" >/</span> <span title="stop" id="mcisInfo_vmstatus_stop_' + mcisIndex + '">' + vmStatusCountMap.get('stop') + '</span>'
         mcisTableRow += '<span class="bar" >/</span> <span title="terminate" id="mcisInfo_vmstatus_terminate_' + mcisIndex + '">' + vmStatusCountMap.get('terminate') + '</span>'
@@ -2308,7 +2274,7 @@ function updateMcisListTableRow(aMcisData, mcisIndex) {
     var vmStatusCountMap = totalVmStatusMap.get(aMcisData.id);
     var mcisStatusImg = "/assets/img/contents/icon_" + mcisDispStatus + ".png"
 
-    if( vmStatusCountMap) {
+    if (vmStatusCountMap) {
 
         var sumVmCountRunning = vmStatusCountMap.get("running")
         var sumVmCountStop = vmStatusCountMap.get("stop")
@@ -2354,7 +2320,7 @@ function displayMcisInfoArea(mcisData) {
     var mcisProviderNames = getMCISInfoProviderNames(mcisData.id);//MCIS에 사용 된 provider
 
     var vmStatusCountMap = totalVmStatusMap.get(mcisData.id);
-    if( vmStatusCountMap) {
+    if (vmStatusCountMap) {
         var sumVmCountOfMcis = vmStatusCountMap.get('running') + vmStatusCountMap.get('stop') + vmStatusCountMap.get('terminate');
 
 
@@ -2438,6 +2404,11 @@ function displayServerStatusList(mcisID, vmList) {
             });
         });
     });
+    if ($("#mcis_info_box").hasClass("view")) {
+        var offset = $("#mcis_info_box").offset();
+        console.log("position", offset.top);
+        $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 300);
+    }
 }
 
 // update McisData
@@ -2451,7 +2422,7 @@ function updateMcisData(aMcisData, mcisID) {
             break;
         }
     }
-    if( mcisIndex > -1) {
+    if (mcisIndex > -1) {
         totalMcisListObj.push(aMcisData);
     }
 

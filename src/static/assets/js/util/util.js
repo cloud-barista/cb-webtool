@@ -202,7 +202,7 @@ function commonConfirmOpen(targetAction, caller) {
             ["ExportScriptOfMcis", "Would you like to export MCIS script? "],
 
             ["AddNewVmOfMcis", "Would you like to add a new VM to this MCIS ?"],
-            ["DeployServer", "Would you likt to deploy?"],
+            ["DeployServer", "Would you like to deploy?"],
 
             ["VmLifeCycle", "Would you like to view Server ?"],
             ["VmLifeCycleReboot", "Would you like to reboot VM ?"], //onclick="vm_life_cycle('reboot')"
@@ -852,7 +852,7 @@ function calculateVmStatusCount(aMcis) {
     vmStatusCountMap.set("terminate", 0);
 
     try {
-        if( aMcis.statusCount){
+        if (aMcis.statusCount) {
             console.log("statusCount part")
             var statusCountObj = aMcis.statusCount;
             console.log(statusCountObj)
@@ -869,13 +869,13 @@ function calculateVmStatusCount(aMcis) {
             var countUndefined = statusCountObj.countUndefined;
             console.log("sss")
             var sumEtc = Number(countCreating) + Number(countFailed) + Number(countRebooting) + Number(countResuming)
-                + Number(countSuspending) + Number(countTerminated)+ Number(countTerminating)+ Number(countUndefined);
+                + Number(countSuspending) + Number(countTerminated) + Number(countTerminating) + Number(countUndefined);
             console.log("sss2")
             vmStatusCountMap.set("running", Number(countRunning));
             vmStatusCountMap.set("stop", Number(countSuspended));  // partial 도 stop으로 보고있음.
             vmStatusCountMap.set("terminate", sumEtc);
 
-        }else if ( aMcis.vm ) {
+        } else if (aMcis.vm) {
             console.log("statusCount part list part")
             vmList = aMcis.vm;
             for (var vmIndex in vmList) {
