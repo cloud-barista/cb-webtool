@@ -5,7 +5,10 @@ $(document).ready(function () {
     getCommonCloudConnectionList("dashboard", true)
 
     getCommonMcisList("dashboard", true, "", "status")
+
+    JZMap = map_init();
 })
+var JZMap;
 
 // CloudConnectionList가져온 결과를 set
 function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sortType) {
@@ -49,7 +52,7 @@ function getMcisListCallbackSuccess(caller, mcisList) {
 
     displayMcisDashboard();
 
-    setMap();// MCIS를 가져와서 화면에 뿌려지면 vm정보가 있으므로 Map그리기
+    // setMap();// MCIS를 가져와서 화면에 뿌려지면 vm정보가 있으므로 Map그리기
 
     AjaxLoadingShow(false);
 
@@ -278,6 +281,16 @@ function selectMcis(id, name, target, obj) {
     $("#mcis_id").val(mcis_id)
     $("#mcis_name").val(mcis_name)
     console.log(" mcis_id =" + mcis_id + ", mcis_name = " + mcis_name);
+
+    // 지도 그리기
+    var aMcis;
+    for(var idx in totalMcisListObj){
+        if( mcis_id == totalMcisListObj[idx].id ){
+            setMapByMcis(totalMcisListObj[idx], idx)
+            break;
+        }
+    }
+
 }
 
 // callMcisLifeCycle -> McisLifeCycle -> callbackMcisLifeCycle
@@ -392,16 +405,69 @@ function setMap() {
         //     }
     })
     var polygon = "";
-     console.log("poly arr : ",polyArr);
-     if(polyArr.length > 1){
-       polygon = polyArr.join(", ")
-       polygon = "POLYGON(("+polygon+"))";
-     }else{
-       polygon = "POLYGON(("+polyArr[0]+"))";
-     }
-     if(polyArr.length >1){
+    console.log("poly arr : ",polyArr);
+    if(polyArr.length > 1){
+        polygon = polyArr.join(", ")
+        polygon = "POLYGON(("+polygon+"))";
+    }else{
+        polygon = "POLYGON(("+polyArr[0]+"))";
+    }
+    if(polyArr.length >1){
         drawPoligon(JZMap,polygon, 1);
-      }
+    }
+}
+
+var maxPinIndex = 0;
+function setMapByMcis(aMcis, mcisIndex) {
+    clearLayers(JZMap);
+    //지도 그리기 관련
+    // 포인트 찍고 -> 모아서 폴리 그리고
+    var polyArr = new Array();
+    var vmArr = new Array();
+    var vms = aMcis.vm;
+    vms.forEach(function(vmItem, vmIndex) {
+        var vmIDValue = vmItem.id;
+        var vmNameValue = vmItem.name;
+        var vmStatusValue = vmItem.status;
+        var longitudeValue = vmItem.location.longitude;
+        var latitudeValue = vmItem.location.latitude;
+        var mapPinIndexValue = maxPinIndex++;
+
+        var fromLonLat = longitudeValue + " " + latitudeValue;
+
+        var vmObj = new Object();
+        vmObj.id = vmIDValue;
+        vmObj.name = vmNameValue;
+        vmObj.longitudeValue = longitudeValue;
+        vmObj.latitudeValue = latitudeValue;
+        vmObj.status = vmStatusValue;
+        vmObj.markerIndex = mcisIndex;//동일한 mcis는 같은 index
+        vmObj.pinIndex = mapPinIndexValue;
+
+        if (longitudeValue && latitudeValue) {
+            polyArr.push(fromLonLat)
+            vmArr.push(vmObj);
+        }
+    });
+
+    var polygon = "";
+    console.log("poly arr : ",polyArr);
+    if(polyArr.length > 1){
+        polygon = polyArr.join(", ")
+        polygon = "POLYGON(("+polygon+"))";
+    }else{
+        polygon = "POLYGON(("+polyArr[0]+"))";
+    }
+
+    if(polyArr.length >1){
+        drawPoligon(JZMap, polygon, aMcis.id, mcisIndex%10);
+    }
+
+    // Poly 위에 그려야 클릭이 원활하게 됨. poly를 나중에 그리면 해당 영역 내 pin은 체크가 되지 않음
+    for (var ii in vmArr) {
+        var aVm = vmArr[ii];
+        drawMap(JZMap, aVm.longitudeValue, aVm.latitudeValue, aVm)
+    }
 }
 
 

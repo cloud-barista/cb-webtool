@@ -206,7 +206,7 @@ function selectMonitoringMcis(mcisId){
     // })
 }
 
-function getMcisDataCallbackSuccess(caller, mcisInfo){
+function getCommonMcisDataCallbackSuccess(caller, mcisInfo){
 
         console.log(mcisInfo)
     var mcisId = mcisInfo.id
