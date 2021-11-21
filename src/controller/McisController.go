@@ -773,21 +773,25 @@ func McisLifeCycle(c echo.Context) error {
 
 	//
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
-	log.Println("McisLifeCycle service returned")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+
+	//_, respStatus := service.McisLifeCycle(mcisLifeCycle)
+	go service.McisLifeCycleByAsync(mcisLifeCycle, c)
+
+	//log.Println("McisLifeCycle service returned")
+	//if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	//	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	//	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	//		"error":  respStatus.Message,
+	//		"status": respStatus.StatusCode,
+	//	})
+	//}
 
 	// 성공의 경우 요청만 들어간 상태이고 실제 상태는 status를 따로 날려야 알 수 있음. 그러므로 호출 전 requested 가 set 되었으므로 완료에 대한 상태는 추가로 넣지 않음.
 	// service.StoreWebsocketMessage("mcislifecycle", taskKey, mcisLifeCycle.LifeCycleType, "completed", c) // session에 작업내용 저장
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus.StatusCode,
+		"status":  "200",
+		//"status":  respStatus.StatusCode,
 	})
 }
 
@@ -817,19 +821,21 @@ func McisVmLifeCycle(c echo.Context) error {
 	taskKey := defaultNameSpaceID + "||" + "vm" + "||" + vmLifeCycle.McisID + "||" + vmLifeCycle.VmID
 	service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
 
-	_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
-	log.Println("McisVmLifeCycle service returned")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+	go service.McisVmLifeCycleByAsync(vmLifeCycle, c)
+	//_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
+	//log.Println("McisVmLifeCycle service returned")
+	//if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	//	service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	//	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	//		"error":  respStatus.Message,
+	//		"status": respStatus.StatusCode,
+	//	})
+	//}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus.StatusCode,
+		"status":  "200",
+		//"status":  respStatus.StatusCode,
 	})
 }
 

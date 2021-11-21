@@ -679,7 +679,7 @@ function getCommonMcisData(caller, mcisID){
     }).then(result => {
         console.log(result);
         if(result.data.status == 200 || result.data.status == 201){
-            getMcisDataCallbackSuccess(caller, result.data.McisInfo, mcisID)
+            getCommonMcisDataCallbackSuccess(caller, result.data.McisInfo, mcisID)
         }else{
             //getMcisDataCallbackFail(caller, data)
             commonErrorAlert(result.data.status, "MCIS Data Search Failed");

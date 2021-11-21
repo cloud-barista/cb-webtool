@@ -46,14 +46,15 @@ $(document).ready(function () {
 
 
 
-    selectedMcisID = $("#selected_mcis_id").val();
+    // selectedMcisID = $("#selected_mcis_id").val();
 
     // console.log(selectedMcisID);
     // Dashboard 등에서 선택한 MCIS Mng를 하면 해당 Mcis로만 보이도록 (전체에서 filter 기능만 수행)
-    if (selectedMcisID != undefined && selectedMcisID != "") {
-        // mcisList filter
-        filterTable("mcisListTable", "Name", selectedMcisID);
-    }
+    // if (selectedMcisID != undefined && selectedMcisID != "") {
+    //     // mcisList filter
+    //     // filterTable("mcisListTable", "Name", selectedMcisID);
+    //     clickListOfMcis(selectedMcisID);
+    // }
 
     setTableHeightForScroll("mcisListTable", 700);
 
@@ -164,7 +165,11 @@ function getMcisListCallbackSuccess(caller, mcisList) {
     if (caller == "mcismngready") {
         var selectedMcisID = $("#selected_mcis_id").val();
         console.log(" selectedMcisID for filter " + selectedMcisID)
-        filterTable("mcisListTable", "Name", selectedMcisID);
+        // filterTable("mcisListTable", "Name", selectedMcisID);
+        if( checkEmptyString(selectedMcisID) ) {
+            clickListOfMcis(selectedMcisID);
+        }
+
     }
     AjaxLoadingShow(false);
     // // MCIS Status
@@ -662,6 +667,25 @@ function vmLifeCycle(type) {
     var vmID = $("#vm_id").val();
     var vmName = $("#vm_name").val();
 
+
+    // MCIS에서 MCKS관련 리소스는 handling하지 않음.
+    var aMcis = new Object();
+    for (var mcisIndex in totalMcisListObj) {
+        var tempMcis = totalMcisListObj[mcisIndex]
+        if ( mcisID == tempMcis.id){
+            aMcis = tempMcis;
+            var systemLabel = tempMcis.systemLabel;
+            if( systemLabel ){
+                systemLabel = systemLabel.toLowerCase();
+                if( systemLabel.indexOf("mcks")) {
+                    // commonAlert("MCKS's VM is cannot be handled")
+                    // return;
+                }
+            }
+            break;
+        }
+    }// end of mcis loop
+
     // var checked =""
     // $("[id^='td_ch_'").each(function(){
     //     if($(this).is(":checked")){
@@ -752,23 +776,23 @@ const config_arr = new Array();
 // List Of MCIS 클릭 시
 // mcis 테이블의 선택한 row 강조( on )
 // 해당 MCIS의 VM 상태목록 보여주는 함수 호출
-function clickListOfMcis(mcisID, mcisIndex) {
+function clickListOfMcis(mcisID) {
     console.log("click view mcis id :", mcisID)
+    if( mcisID != "" ) {
+        // MCIS Info 에 mcis id 표시
+        $("#mcis_id").val(mcisID);
+        $("#selected_mcis_id").val(mcisID);
+        // $("#selected_mcis_index").val(mcisIndex);
 
-    // MCIS Info 에 mcis id 표시
-    $("#mcis_id").val(mcisID);
-    // $("#selected_mcis_id").val(mcisID);
-    // $("#selected_mcis_index").val(mcisIndex);
+        getCommonMcisData("refreshmcisdata", mcisID)
 
-    getCommonMcisData("refreshmcisdata", mcisID)
-
-    // MCIS Info area set
-    //showServerListAndStatusArea(mcisID,mcisIndex);
-    //displayMcisInfoArea(totalMcisListObj[mcisIndex]);
+        // MCIS Info area set
+        //showServerListAndStatusArea(mcisID,mcisIndex);
+        //displayMcisInfoArea(totalMcisListObj[mcisIndex]);
 
 
-
-    //makeMcisScript(index);// export를 위한 script 준비 -> Export 실행할 때 가져오는 것으로 변경( MCIS정보는 option=simple로 가져오므로)
+        //makeMcisScript(index);// export를 위한 script 준비 -> Export 실행할 때 가져오는 것으로 변경( MCIS정보는 option=simple로 가져오므로)
+    }
 }
 
 const mcisInfoDataList = new Array()// test_arr : mcisInfo 1개 전체, pageLoad될 때, refresh 할때 data를 set. mcis클릭시 상세내용 보여주기용 조회
@@ -1749,7 +1773,7 @@ function getSecurityGroupCallbackFail(error) {
 
 }
 
-function getMcisDataCallbackSuccess(caller, data, mcisID) {
+function getCommonMcisDataCallbackSuccess(caller, data, mcisID) {
     if (caller == "mcisexport") {
 
         var mcisIndex = 0;
@@ -2217,7 +2241,7 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
     console.log("label = " + aMcisData.systemLabel);
     // List of Mcis table
     try {
-        mcisTableRow += '<tr onclick="clickListOfMcis(\'' + aMcisData.id + '\', ' + mcisIndex + ' );" id="server_info_tr_' + mcisIndex + '" item="' + aMcisData.id + '|' + mcisIndex + '">'
+        mcisTableRow += '<tr onclick="clickListOfMcis(\'' + aMcisData.id + '\');" id="server_info_tr_' + mcisIndex + '" item="' + aMcisData.id + '|' + mcisIndex + '">'
 
         mcisTableRow += '<td class="overlay hidden td_left column-20percent" data-th="Status">'
         mcisTableRow += '   <div style="display: flex; align-items: center;"><img id="mcisInfo_mcisStatus_icon_' + mcisIndex + '" src="/assets/img/contents/icon_' + mcisDispStatus + '.png" class="icon" alt=""/><span id="mcisInfo_mcisstatus_' + mcisIndex + '">' + mcisStatus + '</span><span class="ov off"></span></div>'
