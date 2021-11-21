@@ -761,3 +761,13 @@ function setTableHeightForScroll(tableId, limitHeight) {
 		$("#" + tableId).css({ height: limitHeight });
 	}
 }
+
+// 비어있으면 false, 안비어있으면 true
+function checkEmptyString(stringVal) {
+	if (stringVal == null ||
+		stringVal == undefined ||
+		stringVal == 0) {
+		return false;
+	}
+	return true;
+}

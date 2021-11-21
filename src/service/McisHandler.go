@@ -973,6 +973,47 @@ func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle) (*webtool.McisLifeCycle
 	return &resultMcisLifeCycle, model.WebStatus{StatusCode: respStatus}
 
 }
+func McisLifeCycleByAsync(mcisLifeCycle *webtool.McisLifeCycle, c echo.Context) {
+	nameSpaceID := mcisLifeCycle.NameSpaceID
+	mcisID := mcisLifeCycle.McisID
+	lifeCycleType := mcisLifeCycle.LifeCycleType
+
+	var originalUrl = "/ns/{nsId}/control/mcis/{mcisId}?action={type}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{type}"] = lifeCycleType
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+
+	taskKey := nameSpaceID + "||" + "mcis" + "||" + mcisLifeCycle.McisID
+	////////////
+	if err != nil {
+		fmt.Println("McisLifeCycle err")
+		fmt.Println(err)
+
+		// websocket으로 전달할 data set
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("McisLifeCycle ", failResultInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	} else {
+		resultMcisLifeCycle := webtool.McisLifeCycle{}
+		json.NewDecoder(respBody).Decode(resultMcisLifeCycle)
+		fmt.Println(resultMcisLifeCycle)
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+	}
+}
 
 // MCIS의 VM Status변경 : 요청에 대한 응답이 바로 오므로 async 만들지 않음
 func McisVmLifeCycle(vmLifeCycle *webtool.VmLifeCycle) (*webtool.VmLifeCycle, model.WebStatus) {
@@ -1012,6 +1053,44 @@ func McisVmLifeCycle(vmLifeCycle *webtool.VmLifeCycle) (*webtool.VmLifeCycle, mo
 	fmt.Println(resultVmLifeCycle)
 
 	return &resultVmLifeCycle, model.WebStatus{StatusCode: respStatus}
+}
+
+func McisVmLifeCycleByAsync(vmLifeCycle *webtool.VmLifeCycle, c echo.Context) {
+	var originalUrl = "/ns/{nsId}/control/mcis/{mcisId}/vm/{vmId}?action={type}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = vmLifeCycle.NameSpaceID
+	paramMapper["{mcisId}"] = vmLifeCycle.McisID
+	paramMapper["{vmId}"] = vmLifeCycle.VmID
+	paramMapper["{type}"] = vmLifeCycle.LifeCycleType
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	resultVmLifeCycle := webtool.VmLifeCycle{}
+
+	taskKey := vmLifeCycle.NameSpaceID + "||" + "vm" + "||" + vmLifeCycle.McisID + "||" + vmLifeCycle.VmID
+
+	if err != nil {
+		fmt.Println(err)
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("McisVmLifeCycle ", failResultInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	}
+
+	// 응답에 생성한 객체값이 옴
+	json.NewDecoder(respBody).Decode(resultVmLifeCycle)
+	fmt.Println(resultVmLifeCycle)
+	StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+	//return &resultVmLifeCycle, model.WebStatus{StatusCode: respStatus}
 }
 
 // 벤치마크?? MCIS 조회. 근데 왜 결과는 resultarray지?

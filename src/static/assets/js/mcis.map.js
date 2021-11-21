@@ -195,10 +195,13 @@ function map_init(){
             if(selectedFeature){
                 console.log(selectedFeature)
                 console.log("feature click info : ",selectedFeature.get("id"));//Cannot read property 'get' of undefined at e.<anonymous> (mcis.map.js:196)
-                var id = selectedFeature.get("id")
-                if(selectedFeature.get("id") != null){
-                    JZMap.removeOverlay(JZMap.getOverlayById(id));
-                }
+                var overlayId = selectedFeature.get("id")
+                if(selectedFeature.get("id") == undefined){ return;}
+                //     JZMap.removeOverlay(JZMap.getOverlayById(overlayId));
+                // }
+                JZMap.getOverlays().forEach(function(overlay) {
+                    JZMap.removeOverlay(overlay);
+                });
 
                 var element = document.createElement('div');
                 element.setAttribute("class", "popover");
@@ -267,7 +270,7 @@ function getMarkerSrc(markerIndex){
     console.log("markerIndex " + markerIndex + " : " + remainder)
     switch(remainder){
         case 0 :
-            markerSrc = "/assets/img/marker/black.png"
+            markerSrc = "/assets/img/marker/purple.png"
             break;
         case 1 :
             markerSrc = "/assets/img/marker/blue.png"
@@ -282,7 +285,7 @@ function getMarkerSrc(markerIndex){
             markerSrc = "/assets/img/marker/orange.png"
             break;
         case 5 :
-            markerSrc = "/assets/img/marker/purple.png"
+            markerSrc = "/assets/img/marker/black.png"
             break;
         case 6 :
             markerSrc = "/assets/img/marker/red.png"
@@ -334,57 +337,58 @@ function drawMap(map,long,lat,info){
         source: stackVectorMap
     })
     JZMap.addLayer(stackLayer)
+    layersMap.set("pin_"+info.pinIndex, stackLayer)
  
 }
 
-function drawPoligon(JZMap,polygon, colorIndex){
+function drawPoligon(JZMap, polygon, polygonId, colorIndex){
   var wkt = polygon;
   console.log("polygon : ",wkt)
   var format = new ol.format.WKT();
 
-  var polyColor = '#fc8d16';
+  var polyColor = 'rgba(100, 100, 100, 0.1)';
   var polyLineColor = 'fc8d10';
     if( colorIndex) {
         switch (colorIndex) {
             case 0 :
-                polyColor = '#83a3b7';
-                polyLineColor = '#93b3a7';
+                polyColor = 'rgba(100, 0, 0, 0.1)';
+                polyLineColor = '#cb00f5';//purple
                 break;
             case 1 :
-                polyColor = '#e01a70';
-                polyLineColor = '#eaa180';
+                polyColor = 'rgba(0, 255, 0, 0.1)';;
+                polyLineColor = '#1e2b67';//blue
                 break;
             case 2 :
-                polyColor = '#f0c0c0';
-                polyLineColor = '#ffcbc0';
+                polyColor = 'rgba(0, 0, 1, 0.1)';
+                polyLineColor = '#86b049';//green
                 break;
             case 3 :
-                polyColor = '#ffcc00';
-                polyLineColor = '#ffcb00';
+                polyColor = 'rgba(255, 1, 0, 0.1)';
+                polyLineColor = '#545b62';//grey
                 break;
             case 4 :
-                polyColor = '#7fc638';
-                polyLineColor = '#7fc620';
+                polyColor = 'rgba(255, 1, 1, 0.1)';
+                polyLineColor = '#ff6700';//orange
                 break;
             case 5 :
-                polyColor = '#b4c6b7';
-                polyLineColor = '#b4c6a7';
+                polyColor = 'rgba(0, 255, 0, 0.1)';
+                polyLineColor = '#f1dddf';//black
                 break;
-            case 6 :
-                polyColor = '#586fab';
-                polyLineColor = '#586fa0';
+            case 6 ://OK
+                polyColor = 'rgba(255, 2, 1, 0.1)';
+                polyLineColor = '#bf3c41';//red
                 break;
             case 7 :
-                polyColor = '#754100';
-                polyLineColor = '#754000';
+                polyColor = 'rgba(255, 3, 2, 0.1)';
+                polyLineColor = '#754000';//white
                 break;
             case 8 :
-                polyColor = '#444c57';
-                polyLineColor = '#444c50';
+                polyColor = 'rgba(255, 4, 3, 0.1)';
+                polyLineColor = '#ffcb17';//yellow
                 break;
 
             default :
-                polyColor = '#fc8d16';
+                polyColor = 'rgba(255, 0, 0, 0.1)';
                 polyLineColor = '#fc8d10';
         }
     }
@@ -398,6 +402,7 @@ function drawPoligon(JZMap,polygon, colorIndex){
     features : [feature]
   })
 
+    console.log("colorIndex = " + colorIndex + ", polyColor = " + polyColor)
     var styles = new ol.style.Style({
         fill: new ol.style.Fill({
             color: polyColor,
@@ -413,14 +418,41 @@ function drawPoligon(JZMap,polygon, colorIndex){
   //   source: stackVectorMap,
   //     style: styles
   // })
+
     var stackLayer = new ol.layer.Vector({
         source: stackVectorMap,
         style: styles
     })
   JZMap.addLayer(stackLayer);
-  
+    layersMap.set("polygon_" + polygonId, stackLayer)
 }
 
+// 지도에 그려진 polygon 초기화, exceptionIndex가 -1 이면 전체 clear, 아니면 해당 index 배고 clear
+var layersMap = new Map();//polygon layer들이 생성되면 넣는 map
+//function clearPolygon(JZMap){
+function clearLayers(JZMap){
+    console.log("clearPolygon");
+
+    layersMap.forEach((value, key) => {
+        console.log("clearPolygon = " + key)
+        console.log(value)
+        JZMap.removeLayer(value);
+    })
+    // console.log("clearPolygon ")
+    // console.log(mapLayerMap);
+    // for(let key in mapLayerMap){
+    //     layerIndex = mapLayerMap[key];
+    //     console.log("layerIndex " + layerIndex)
+    //     if( exceptionIndex > -1){
+    //         if( layerIndex == exceptionIndex )continue;
+    //
+    //         JZMap.getLayers().getArray()[layerIndex].getSource().clear();
+    //     }else{
+    //         JZMap.getLayers().getArray()[layerIndex].getSource().clear();
+    //     }
+    // }
+
+}
 
 
 function escapeXml(string) {
