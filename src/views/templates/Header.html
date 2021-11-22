@@ -90,9 +90,7 @@
   <div id="container">
     <!-- header -->
     <div class="header">
-      <div class="logo">
-        <img src="/assets/img/common/img_logo.png" alt="Cloud Barista" />
-      </div>
+
 
       <a href="javascript:;" id="btn_menu"><span></span></a>
       <input type="hidden" id="returnMessage" value="{{ .Message }}" />
@@ -172,7 +170,7 @@
                             tdStatus.innerHTML = messageData[idx].status;
 
                             // 처음 open시에는 badge표시 안함
-                            if( lastCallTimeValue == 0){continue;}
+                            if (lastCallTimeValue == 0) { continue; }
 
                             badge.innerHTML = ++badgeIdx;
                             badge.style.display = "inline-block";
