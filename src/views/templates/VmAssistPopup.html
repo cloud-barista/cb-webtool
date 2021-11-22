@@ -463,7 +463,7 @@
 									onclick="searchSpecsByRange('searchVmSpecAssistAtReg')" />
 								<ul>
 									<li class="reg_1">
-										<label>Cloud Provider</label>
+										<label class="assistLabel">Cloud Provider</label>
 										<select class="selectbox white pline w3" name="assistSpecProviderName"
 											id="assistSpecProviderName"
 											onchange="filterConnectionByProvider(this.value, 'assistSpecConnectionName')">
@@ -476,7 +476,7 @@
 
 									</li>
 									<li class="reg_1">
-										<label></span>Connection Name</label>
+										<label class="assistLabel"></span>Connection Name</label>
 										<select class="selectbox white pline w3" name="assistSpecConnectionName"
 											id="assistSpecConnectionName"
 											onchange="clearAssistSpecList('assistSpecList')">
@@ -699,7 +699,7 @@
 								<label>Search</label>
 								<ul>
 									<li class="reg_1">
-										<label>Cloud Provider</label>
+										<label class="assistLabel">Cloud Provider</label>
 										<select class="selectbox white pline w3" name="AssistImageProviderName"
 											id="assistImageProviderName"
 											onchange="filterConnectionByProvider(this.value, 'assistImageConnectionName')">
@@ -712,7 +712,7 @@
 
 									</li>
 									<li class="reg_1">
-										<label></span>Connection Name</label>
+										<label class="assistLabel"></span>Connection Name</label>
 										<select class="selectbox white pline w3" name="assistImageConnectionName"
 											id="assistImageConnectionName">
 											<option value="" selected>Selected ConnectionName</option>
@@ -843,7 +843,7 @@
 								<label>Search</label>
 								<ul>
 									<li class="reg_1">
-										<label>Cloud Provider</label>
+										<label class="assistLabel">Cloud Provider</label>
 										<select class="selectbox white pline w3" name="AssistLookupImageProviderName"
 											id="assistLookupImageProviderName"
 											onchange="getConnectionListForSelectbox(this.value, 'assistLookupImageConnectionName')">
@@ -856,7 +856,7 @@
 
 									</li>
 									<li class="reg_1">
-										<label></span>Connection Name</label>
+										<label class="assistLabel"></span>Connection Name</label>
 										<select class="selectbox white pline w3" name="assistLookupImageConnectionName"
 											id="assistLookupImageConnectionName"
 											onchange="clearLookupAssistImageList('assistLookupVmImageList')">
@@ -993,7 +993,7 @@
 									onclick="lookupSpecList()" />
 								<ul>
 									<li class="reg_1">
-										<label>Cloud Provider</label>
+										<label class="assistLabel">Cloud Provider</label>
 										<select class="selectbox white pline w3" name="assistLookupSpecProviderName"
 											id="assistLookupSpecProviderName"
 											onchange="getConnectionListForSelectbox(this.value, 'assistLookupSpecConnectionName')">
@@ -1006,7 +1006,7 @@
 
 									</li>
 									<li class="reg_1">
-										<label></span>Connection Name</label>
+										<label class="assistLabel"></span>Connection Name</label>
 										<select class="selectbox white pline w3" name="assistLookupSpecConnectionName"
 											id="assistLookupSpecConnectionName"
 											onchange="clearLookupAssistSpecList('assistLookupSpecList')">
@@ -1216,7 +1216,7 @@
 								<label>Search</label>
 								<ul>
 									<li class="reg_1">
-										<label>Cloud Provider</label>
+										<label class="assistLabel">Cloud Provider</label>
 										<select class="selectbox white pline w3" name="AssistNetworkProviderName"
 											id="assistNetworkProviderName"
 											onchange="getConnectionListForSelectbox(this.value, 'assistNetworkConnectionName')">
@@ -1228,7 +1228,7 @@
 
 									</li>
 									<li class="reg_1">
-										<label></span>Connection Name</label>
+										<label class="assistLabel"></span>Connection Name</label>
 										<select class="selectbox white pline w3" name="assistNetworkConnectionName"
 											id="assistNetworkConnectionName">
 											<option value="" selected>Selected ConnectionName</option>
@@ -1353,7 +1353,7 @@
 								<label>Search</label>
 								<ul>
 									<li class="reg_1">
-										<label>Cloud Provider</label>
+										<label class="assistLabel">Cloud Provider</label>
 										<select class="selectbox white pline w3" name="assistSecurityGroupProviderName"
 											id="assistSecurityGroupProviderName"
 											onchange="filterConnectionByProvider(this.value, 'assistSecurityGroupConnectionName')">
@@ -1366,7 +1366,7 @@
 
 									</li>
 									<li class="reg_1">
-										<label></span>Connection Name</label>
+										<label class="assistLabel"></span>Connection Name</label>
 										<select class="selectbox white pline w3"
 											name="assistSecurityGroupConnectionName"
 											id="assistSecurityGroupConnectionName">
@@ -1383,75 +1383,76 @@
 								<input type="button" name="" class="btn_search_image" title="" value=""
 									onclick="searchSecurityGroupByKeyword('searchSecurityGroupAssistAtReg')" />
 							</div>
-							<div class="keyword_box" id="searchAssistSecurityGroupKeywords">
-								<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
-									onclick="delAllKeyword()" />
-							</div>
-
-							<div class="top_info">
-								<ul>
-									<li>
-										<a href="javascript:void(0);">Filter</a>
-										<div class="infobox">
-											<div class="box">
-												<ul>
-													<li><a href="javascript:void(0);"
-															onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image
-															ID</a></li>
-													<li><a href="javascript:void(0);"
-															onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image
-															Name</a></li>
-												</ul>
-											</div>
-										</div>
-									</li>
-									<li>
-										<a href="javascript:void(0);">Sort</a>
-										<div class="infobox">
-											<div class="box">
-												<ul>
-													<li><a href="javascript:void(0);"
-															onclick="tableSort('assistSecurityGroupList', 'Name')">Name</a>
-													</li>
-													<li><a href="javascript:void(0);"
-															onclick="tableSort('assistSecurityGroupList', 'Status')">Status</a>
-													</li>
-													<li><a href="javascript:void(0);"
-															onclick="tableSort('assistSecurityGroupList', 'GuestOS')">GuestOS</a>
-													</li>
-													<li><a href="javascript:void(0);"
-															onclick="tableSort('assistSecurityGroupList', 'IID nameId')">IID
-															nameId</a></li>
-												</ul>
-											</div>
-										</div>
-									</li>
-									<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png"
-												alt="" /></a>
-									</li>
-								</ul>
-							</div>
-							<!-- table scrollbar -->
-							<div class="dtbox scrollbar-inner">
-								<div class="dataTable dt_overlay">
-									<table cellpadding="0" cellspacing="0" summary="" id="popAssistSecurityGroupTable">
-										<!-- <colgroup><col width="35%"><col width="25%"><col width=""></colgroup> -->
-										<thead>
-											<tr>
-												<th>Name</th>
-												<th>VPC Id</th>
-												<th>Description</th>
-												<th>Firewall RuleSet</th>
-											</tr>
-										</thead>
-										<tbody id="assistSecurityGroupList">
-
-										</tbody>
-									</table>
-								</div>
-							</div>
-							<!-- //table scrollbar -->
 						</div>
+						<div class="keyword_box" id="searchAssistSecurityGroupKeywords">
+							<input type="submit" name="" class="btn_del_all" title="" value="필터 지우기"
+								onclick="delAllKeyword()" />
+						</div>
+
+						<div class="top_info">
+							<ul>
+								<li>
+									<a href="javascript:void(0);">Filter</a>
+									<div class="infobox">
+										<div class="box">
+											<ul>
+												<li><a href="javascript:void(0);"
+														onclick="commonPromptOpen('RsFltSrvImgId', 'serverImageList')">Image
+														ID</a></li>
+												<li><a href="javascript:void(0);"
+														onclick="commonPromptOpen('RsFltSrvImgName', 'serverImageList')">Image
+														Name</a></li>
+											</ul>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Sort</a>
+									<div class="infobox">
+										<div class="box">
+											<ul>
+												<li><a href="javascript:void(0);"
+														onclick="tableSort('assistSecurityGroupList', 'Name')">Name</a>
+												</li>
+												<li><a href="javascript:void(0);"
+														onclick="tableSort('assistSecurityGroupList', 'Status')">Status</a>
+												</li>
+												<li><a href="javascript:void(0);"
+														onclick="tableSort('assistSecurityGroupList', 'GuestOS')">GuestOS</a>
+												</li>
+												<li><a href="javascript:void(0);"
+														onclick="tableSort('assistSecurityGroupList', 'IID nameId')">IID
+														nameId</a></li>
+											</ul>
+										</div>
+									</div>
+								</li>
+								<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png"
+											alt="" /></a>
+								</li>
+							</ul>
+						</div>
+						<!-- table scrollbar -->
+						<div class="dtbox scrollbar-inner">
+							<div class="dataTable dt_overlay">
+								<table cellpadding="0" cellspacing="0" summary="" id="popAssistSecurityGroupTable">
+									<!-- <colgroup><col width="35%"><col width="25%"><col width=""></colgroup> -->
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>VPC Id</th>
+											<th>Description</th>
+											<th>Firewall RuleSet</th>
+										</tr>
+									</thead>
+									<tbody id="assistSecurityGroupList">
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- //table scrollbar -->
+
 					</div>
 				</div>
 				<div class="btnbox">
@@ -1489,7 +1490,7 @@
 								<label>Search</label>
 								<ul>
 									<li class="reg_1">
-										<label>Cloud Provider</label>
+										<label class="assistLabel">Cloud Provider</label>
 										<select class="selectbox white pline w3" name="assistSshKeyProviderName"
 											id="assistSshKeyProviderName"
 											onchange="filterConnectionByProvider(this.value, 'assistSshKeyConnectionName')">
@@ -1502,7 +1503,7 @@
 
 									</li>
 									<li class="reg_1">
-										<label></span>Connection Name</label>
+										<label class="assistLabel"></span>Connection Name</label>
 										<select class="selectbox white pline w3" name="assistSshKeyConnectionName"
 											id="assistSshKeyConnectionName">
 											<option value="" selected>Selected ConnectionName</option>
