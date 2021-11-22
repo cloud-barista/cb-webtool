@@ -185,7 +185,7 @@
 .dashboard.dashboard_cont .d_box.box_b2 .mapcont { padding:2% 44px 2.5% 44px; text-align:center; }
 .dashboard.dashboard_cont .d_box.box_b2 .map { border-radius:10px; background-color:#e7ebee; }
 .dashboard.dashboard_cont .d_box.box_b2 .map img { max-width:400px; width:100%; }
-.dashboard.dashboard_cont .top_info { position:absolute; top:50%; right:29px; transform:translateY(-50%); z-index:99; }
+.dashboard.dashboard_cont .top_info { position:absolute; top:50%; right:29px; transform:translateY(-50%); z-index:8; }
 .dashboard.dashboard_cont .top_info > ul > li { position:relative; display:inline-block; margin:0 0 0 67px; color:#5e636c;font-size:14px; line-height:14px; font-weight:300; }
 .dashboard.dashboard_cont .top_info > ul > li:before { content:''; display:block; width:8px; height:7px; background:url(../img/contents/icon_down.png) center center no-repeat; position:absolute; right:-14px; top:3px; }
 .dashboard.dashboard_cont .top_info > ul > li:last-child { margin:0 0 0 39px; }
@@ -638,7 +638,7 @@ table tbody tr {
 .dashboard .ds_cont .iparea .ipbox { position:relative; }
 .dashboard .ds_cont .iparea .ipbox li { margin:3px 0 0 0; text-align:right; }
 .dashboard .ds_cont .iparea .ipbox li:first-child { margin:0; }
-.dashboard .ds_cont .iparea .ipbox label { display:inline-block; vertical-align:middle; text-align:right; margin:0 14px 0 0; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
+.dashboard .ds_cont .iparea .ipbox label { display:inline-block; vertical-align:middle; text-align:right; margin:0 14px 0 0; color:#5e636c; font-size:16px; line-height:38px; font-weight:500; }
 .dashboard .ds_cont .iparea .ipbox label.ta { vertical-align:top; margin-top:6px; }
 .dashboard .ds_cont .iparea .ipbox input[type="text"],
 .dashboard .ds_cont .iparea .ipbox input[type="password"] { display:inline-block; vertical-align:middle; width:50%; height:38px; padding:15px 12px; border:none; border-radius:5px; font-size:16px; font-weight:300; color:#5e636c; outline:none; background-color:#fff; box-sizing:border-box; }
@@ -722,7 +722,7 @@ table tbody tr {
 	.dashboard .ds_cont .iparea .ip1 { width:100%; }
 	.dashboard .ds_cont .iparea .ip2 { width:100%; margin:3px 0 0 0; }
 	.dashboard .ds_cont .iparea .ip3 { width:100%; margin:3px 0 0 0; float:left; }
-	.dashboard .ds_cont .iparea .ip3 li:nth-child(1) { float:left; width:100%;}
+	.dashboard .ds_cont .iparea .ip3 li:nth-child(1) { float:left; width:60%;}
 	.dashboard .ds_cont .iparea .ip3 li:nth-child(2) { float:left; width:100%;}
 	.dashboard.dashboard_detail .ds_cont .iparea .ipbox input[type="text"],
 	.dashboard.dashboard_detail .ds_cont .iparea .ipbox input[type="password"],
@@ -737,7 +737,7 @@ table tbody tr {
 	.dashboard .ds_cont .iparea .ip1 { width:50%; }
 	.dashboard .ds_cont .iparea .ip2 { width:50%; margin:3px 0 0 0; }
 	.dashboard .ds_cont .iparea .ip3 { width:100%; margin:0 0 0 0; float:left; }
-	.dashboard .ds_cont .iparea .ip3 li:nth-child(1) { float:left; width:50%;}
+	.dashboard .ds_cont .iparea .ip3 li:nth-child(1) { float:left; width:39%;}
 	.dashboard .ds_cont .iparea .ip3 li:nth-child(2) { float:right; width:50%;}
 	.dashboard .ds_cont .area_cont .box { padding:15px 30px 30px 30px; }
 	.dashboard .ds_cont .area_cont .box .titbox .top_info > ul > li:last-child { margin:50px 0 0 40px; }
@@ -758,7 +758,7 @@ table tbody tr {
 	.dashboard .ds_cont .iparea .ip1 { width:100%; }
 	.dashboard .ds_cont .iparea .ip2 { width:100%; margin:3px 0 0 0; }
 	.dashboard .ds_cont .iparea .ip3 { width:100%; margin:3px 0 0 0; float:left; }
-	.dashboard .ds_cont .iparea .ip3 li:nth-child(1) { float:left; width:100%;}
+	.dashboard .ds_cont .iparea .ip3 li:nth-child(1) { float:left; width:60%;}
 	.dashboard .ds_cont .iparea .ip3 li:nth-child(2) { float:left; width:100%;}
 	.dashboard .ds_cont .area_cont .listbox { overflow:auto; height:265px; }
 	.dashboard .ds_cont .iparea .d_ip1,
@@ -776,6 +776,7 @@ table tbody tr {
 	.dashboard.dashboard_detail .titbox .tit strong { display:block; }
 	.dashboard.dashboard_detail .titbox .tit span.stxt { margin-left:0; }
 	.dashboard .ds_cont .iparea { position:relative; padding:0; }
+	.dashboard .ds_cont .iparea .ip3 li:nth-child(1) { float:left; width:100%;}
 	.dashboard .ds_cont .iparea .ipbox input[type="text"],
 	.dashboard .ds_cont .iparea .ipbox input[type="password"] { width:50%; }
 	.dashboard .ds_cont .area_cont .box .titbox { margin:0 0 30px 0; }
@@ -785,6 +786,7 @@ table tbody tr {
 }
 @media screen and (max-width:480px){
 	.dashboard .ds_cont .iparea { position:relative; padding:0; margin:0 0 10px 0;  }
+	.dashboard .ds_cont .iparea .ip3 li:nth-child(1) { float:left; width:80%;}
 	.dashboard .ds_cont .iparea .iconbox,
 	.dashboard.dashboard_detail .ds_cont .iparea .iconbox  { position:relative; left:0; margin:0 auto 10px auto; }
 	.dashboard.dashboard_detail .ds_cont .iparea .d_ip4 .iconbox { margin-top:15px; }
