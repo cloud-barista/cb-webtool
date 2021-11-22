@@ -48,8 +48,7 @@ function getMcisListCallbackSuccess(caller, mcisList){
         }
         $("#mcisList").empty()
         $("#mcisList").append(addMcis)
-        if (initMcis != "") {
-
+        if (initMcis) {
         }else{
             initMcis = mcisList[0]
         }
