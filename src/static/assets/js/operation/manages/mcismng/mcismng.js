@@ -506,9 +506,13 @@ function changeLifeCycle(type) {
             console.log("checked")
             aMcisData = totalMcisListObj[mcisIndex];
             console.log(aMcisData);
-            if (aMcisData.label == "mcks") {
-                isMcks = true;
-                return false;
+            var systemLabel = aMcisData.systemLabel;
+            if( systemLabel ){
+                systemLabel = systemLabel.toLowerCase();
+                if( systemLabel.indexOf("mcks")) {
+                    isMcks = true;
+                    return false;
+                }
             }
         } else {
             console.log("checked nothing")
@@ -581,9 +585,13 @@ function deleteCheckMCIS(type) {
             mcisID = $(this).val();
             aMcisData = totalMcisListObj[mcisIndex];
             console.log(aMcisData);
-            if (aMcisData.label == "mcks") {
-                isMcks = true;
-                return false;
+            var systemLabel = aMcisData.systemLabel;
+            if( systemLabel ){
+                systemLabel = systemLabel.toLowerCase();
+                if( systemLabel.indexOf("mcks")) {
+                    isMcks = true;
+                    return false;
+                }
             }
         } else {
             console.log("checked nothing")
@@ -678,6 +686,7 @@ function vmLifeCycle(type) {
 
     // MCIS에서 MCKS관련 리소스는 handling하지 않음.
     var aMcis = new Object();
+    var isMcks = false;
     for (var mcisIndex in totalMcisListObj) {
         var tempMcis = totalMcisListObj[mcisIndex]
         if ( mcisID == tempMcis.id){
@@ -686,11 +695,12 @@ function vmLifeCycle(type) {
             if( systemLabel ){
                 systemLabel = systemLabel.toLowerCase();
                 if( systemLabel.indexOf("mcks")) {
-                    // commonAlert("MCKS's VM is cannot be handled")
+                    // commonAlert("MCKS life cycle cannot be changed")
                     // return;
+                    isMcks = true;
+                    break;
                 }
             }
-            break;
         }
     }// end of mcis loop
 
@@ -711,6 +721,9 @@ function vmLifeCycle(type) {
     if (!vmID) {
         commonAlert("Please Select VM!!")
         return;
+    }
+    if( isMcks) {
+
     }
 
     // var nameSpace = NAMESPACE;
@@ -1505,6 +1518,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
 
 
 // 조회 성공 시 Monitoring Tab 표시
+var vmChartArr = new Array();
 function showVmMonitoring(mcisID, vmID) {
     $("#mcis_detail_info_check_monitoring").prop("checked", true)
     $("#mcis_detail_info_check_monitoring").attr("disabled", true)
@@ -1516,7 +1530,9 @@ function showVmMonitoring(mcisID, vmID) {
     var statisticsCriteria = "last";
     // TODO : Analytics View 는 안보이게
     for (var i in metric_arr) {
-        getVmMetric("canvas_" + i, metric_arr[i], mcisID, vmID, metric_arr[i], period_type, statisticsCriteria, duration);
+        var vmChart;
+        vmChart = getVmMetric(vmChart,"canvas_" + i, metric_arr[i], mcisID, vmID, metric_arr[i], period_type, statisticsCriteria, duration);
+        vmChartArr.push(vmChart);
     }
     //$("#Monitoring_tab").hide();
 
