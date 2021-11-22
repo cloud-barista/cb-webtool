@@ -77,6 +77,9 @@ func MainForm(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 	// store := echosession.FromContext(c)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
 	workingStep := map[string]string{}
 
 	//option := c.QueryParam("option")
@@ -129,8 +132,6 @@ func MainForm(c echo.Context) error {
 	// } else {
 	workingStep["DRIVER"] = "FAIL"
 	// }
-
-	// defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	// vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
 	// store.Set("vnet", vNetInfoList)
@@ -206,10 +207,11 @@ func MainForm(c echo.Context) error {
 	// if len(nameSpaceInfoList) == 1 { // namespace가 1개이면 mcis 체크
 	// 	defaultNameSpace := nameSpaceInfoList[0]
 	// 	// mcis가 있으면 dashboard로 ( dashboard에서 mcis가 없으면 mcis 생성화면으로 : TODO 현재 미완성으로 MCIS관리화면으로 이동)
-	// 	mcisList, _ := service.GetMcisList(defaultNameSpace.ID)
-	// 	if len(mcisList) > 0 {
-	// 		log.Println(" mcisList  ", len(mcisList))
-	// 		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/mngform")
+	mcisList, _ := service.GetMcisListByID(defaultNameSpaceID)
+	if len(mcisList) > 0 {
+		log.Println(" mcisList  ", len(mcisList))
+		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/mngform")
+	}
 	// 	} else {
 	// 		log.Println(" mcisList is null ", mcisList)
 	// 		return c.Redirect(http.StatusTemporaryRedirect, "/operation/manages/mcismng/regform")
