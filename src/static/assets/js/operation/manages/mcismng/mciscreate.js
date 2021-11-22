@@ -1,75 +1,75 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
     // 생성 완료 시 List화면으로 page이동
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
-    //$('#alertResultArea').on('hidden', function () {// bootstrap 2.3 이전
+        //$('#alertResultArea').on('hidden', function () {// bootstrap 2.3 이전
         let targetUrl = "/operation/manages/mcismng/mngform"
         changePage(targetUrl)
     })
     //Servers Expert on/off
-//     var check = $(".switch .ch");
-//     var $Servers = $(".servers_config");
-//     var $NewServers = $(".new_servers_config");
-//     var $SimpleServers = $(".simple_servers_config");
-//     var simple_config_cnt = 0;
-//     var expert_config_cnt = 0;
-    
-//     check.click(function(){
-//         $(".switch span.txt_c").toggle();
-//         $NewServers.removeClass("active");
-//     });
-   
-//   //Expert add
-//     $('.servers_box .server_add').click(function(){
-//         $NewServers.toggleClass("active");
-//         if($Servers.hasClass("active")) {
-//         $Servers.toggleClass("active");
-//         } else {
-//             $Servers.toggleClass("active");
-//         }
-//     });
-//     // Simple add
-//     $(".servers_box .switch").change(function() {
-//         if ($(".switch .ch").is(":checked")) {	
-//                 $('.servers_box .server_add').click(function(){	
-                    
-//                     $NewServers.addClass("active");
-//                     $SimpleServers.removeClass("active");		
-//                 });
-//         } else {
-//             $('.servers_box .server_add').click(function(){
-            
-//                 $NewServers.removeClass("active");
-//                 $SimpleServers.addClass("active");
-            
-            
-//             });		
-//         }
-//     });
+    //     var check = $(".switch .ch");
+    //     var $Servers = $(".servers_config");
+    //     var $NewServers = $(".new_servers_config");
+    //     var $SimpleServers = $(".simple_servers_config");
+    //     var simple_config_cnt = 0;
+    //     var expert_config_cnt = 0;
+
+    //     check.click(function(){
+    //         $(".switch span.txt_c").toggle();
+    //         $NewServers.removeClass("active");
+    //     });
+
+    //   //Expert add
+    //     $('.servers_box .server_add').click(function(){
+    //         $NewServers.toggleClass("active");
+    //         if($Servers.hasClass("active")) {
+    //         $Servers.toggleClass("active");
+    //         } else {
+    //             $Servers.toggleClass("active");
+    //         }
+    //     });
+    //     // Simple add
+    //     $(".servers_box .switch").change(function() {
+    //         if ($(".switch .ch").is(":checked")) {	
+    //                 $('.servers_box .server_add').click(function(){	
+
+    //                     $NewServers.addClass("active");
+    //                     $SimpleServers.removeClass("active");		
+    //                 });
+    //         } else {
+    //             $('.servers_box .server_add').click(function(){
+
+    //                 $NewServers.removeClass("active");
+    //                 $SimpleServers.addClass("active");
+
+
+    //             });		
+    //         }
+    //     });
 });
 
 // 서버 더하기버튼 클릭시 서버정보 입력area 보이기/숨기기
 // isExpert의 체크 여부에 따라 바뀜.
 // newServers 와 simpleServers가 있음.
-function displayNewServerForm(){
-   
+function displayNewServerForm() {
+
     var simpleServerConfig = $("#simpleServerConfig");
-    var expertServerConfig = $("#expertServerConfig");    
+    var expertServerConfig = $("#expertServerConfig");
     var importServerConfig = $("#importServerConfig");
 
     if ($("#isImport").is(":checked")) {
         simpleServerConfig.removeClass("active");
         expertServerConfig.removeClass("active");
         importServerConfig.addClass("active");
-    }else if ($("#isExpert").is(":checked")) {
+    } else if ($("#isExpert").is(":checked")) {
         simpleServerConfig.removeClass("active");
         expertServerConfig.addClass("active");
-        importServerConfig.removeClass("active");        
-    }else{
+        importServerConfig.removeClass("active");
+    } else {
         //simpleServerConfig        
         simpleServerConfig.addClass("active");
         expertServerConfig.removeClass("active");
-        importServerConfig.removeClass("active");        
+        importServerConfig.removeClass("active");
     }
 }
 
@@ -80,9 +80,9 @@ function displayNewServerForm(){
 var TotalServerConfigArr = new Array();
 // deploy 버튼 클릭시 등록한 서버목록을 배포.
 // function btn_deploy(){
-function deployMcis(){
+function deployMcis() {
     var mcis_name = $("#mcis_name").val();
-    if(!mcis_name){
+    if (!mcis_name) {
         commonAlert("Please Input MCIS Name!!!!!")
         return;
     }
@@ -91,10 +91,10 @@ function deployMcis(){
     var installMonAgent = $("#installMonAgent").val();
 
     var new_obj = {}
-    
+
     var vm_len = 0;
 
-    if(IsImport){
+    if (IsImport) {
         // ImportedMcisScript.name = mcis_name;
         // ImportedMcisScript.description = mcis_desc;
         // ImportedMcisScript.installMonAgent = installMonAgent;
@@ -103,34 +103,34 @@ function deployMcis(){
         //$("#mcisImportScriptPretty").val(fmt);	
         new_obj = $("#mcisImportScriptPretty").val();
         new_obj.id = "";// id는 비워준다.
-    }else{
-//         console.log(Simple_Server_Config_Arr)
-        
+    } else {
+        //         console.log(Simple_Server_Config_Arr)
+
         // mcis 생성이므로 mcisID가 없음
         new_obj['name'] = mcis_name
         new_obj['description'] = mcis_desc
         new_obj['installMonAgent'] = installMonAgent
-    
-        if( Simple_Server_Config_Arr ){
-            vm_len = Simple_Server_Config_Arr.length;			
-            for(var i in Simple_Server_Config_Arr){
+
+        if (Simple_Server_Config_Arr) {
+            vm_len = Simple_Server_Config_Arr.length;
+            for (var i in Simple_Server_Config_Arr) {
                 TotalServerConfigArr.push(Simple_Server_Config_Arr[i]);
             }
         }
 
-        if( Expert_Server_Config_Arr ){
-            vm_len = Expert_Server_Config_Arr.length;			
-            for(var i in Expert_Server_Config_Arr){
+        if (Expert_Server_Config_Arr) {
+            vm_len = Expert_Server_Config_Arr.length;
+            for (var i in Expert_Server_Config_Arr) {
                 TotalServerConfigArr.push(Expert_Server_Config_Arr[i]);
             }
         }
-        
-        if(TotalServerConfigArr){
-            vm_len = TotalServerConfigArr.length;			
-            console.log("Server_Config_Arr length: ",vm_len);
+
+        if (TotalServerConfigArr) {
+            vm_len = TotalServerConfigArr.length;
+            console.log("Server_Config_Arr length: ", vm_len);
             new_obj['vm'] = TotalServerConfigArr;
-            console.log("new obj is : ",new_obj);
-        }else{
+            console.log("new obj is : ", new_obj);
+        } else {
             commonAlert("Please Input Servers");
             $(".simple_servers_config").addClass("active");
             $("#s_name").focus();
@@ -139,19 +139,19 @@ function deployMcis(){
 
     // var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
     var url = "/operation/manages/mcismng/reg/proc"
-    try{
-        axios.post(url,new_obj,{
-            headers :{
+    try {
+        axios.post(url, new_obj, {
+            headers: {
                 'Content-type': 'application/json',
-                },
-        }).then(result=>{
-            console.log("MCIR Register data : ",result);
-            console.log("Result Status : ",result.status); 
-            if(result.status == 201 || result.status == 200){
+            },
+        }).then(result => {
+            console.log("MCIR Register data : ", result);
+            console.log("Result Status : ", result.status);
+            if (result.status == 201 || result.status == 200) {
                 commonResultAlert("Register Success")
                 // var targetUrl = "/operation/manages/mcismng/mngform"
                 // changePage(targetUrl)
-            }else{
+            } else {
                 commonAlert("Register Fail")
                 //location.reload(true);
             }
@@ -160,17 +160,17 @@ function deployMcis(){
             console.log(error.response)
             var errorMessage = error.response.data.error;
             var statusCode = error.response.status;
-            commonErrorAlert(statusCode, errorMessage) 
-            
+            commonErrorAlert(statusCode, errorMessage)
+
         })
-    }catch(error){
-		commonAlert(error);
-		console.log(error);
-	}    
+    } catch (error) {
+        commonAlert(error);
+        console.log(error);
+    }
 }
 
 // MCIS Create 와 VM Create의 function이름이 같음
-function displayMcisImportServerFormByImport(importType){
+function displayMcisImportServerFormByImport(importType) {
     // var $SimpleServers = $("#simpleServerConfig");
     // var $ExpertServers = $("#expertServerConfig");
     // var $ImportServers = $("#importServerConfig");
@@ -185,20 +185,23 @@ function displayMcisImportServerFormByImport(importType){
     // }
 
     var addMcisByScriptArea = $("#addMcisByScript");
+    var addMcisByScriptBtn = $("#addMcisCancel");
     var addVmListArea = $("#addVmList");
     var mcisInfoboxArea = $("#mcisInfobox");
-    
-    if( importType){
+
+    if (importType) {
         addMcisByScriptArea.css("display", "block");
+        addMcisByScriptBtn.css("display", "inline");
         addVmListArea.css("display", "none");
         mcisInfoboxArea.css("display", "none");
         // addMcisByScriptArea.addClass("active");
         // addVmListArea.removeClass("active");
 
         importMCISInfoFromFile();// import창 띄우기 
-    }else{
-        $("#mcisImportScriptPretty").val("");	
+    } else {
+        $("#mcisImportScriptPretty").val("");
         addMcisByScriptArea.css("display", "none");
+        addMcisByScriptBtn.css("display", "none");
         addVmListArea.css("display", "block");
         mcisInfoboxArea.css("display", "block");
     }
@@ -210,7 +213,7 @@ function importMCISInfoFromFile() {
     var input = document.createElement("input");
     input.type = "file";
     // input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
-	input.accept = ".json";
+    input.accept = ".json";
     input.onchange = function (event) {
         importMcisFileProcess(event.target.files[0]);
     };
@@ -221,58 +224,58 @@ function importMCISInfoFromFile() {
 var ImportedMcisScript = "";
 var IsImport = false;
 function importMcisFileProcess(file) {
-	try{
-		var reader = new FileReader();
-		reader.onload = function () {
-			console.log(reader.result);
-			console.log("---1")
-			// $("#fileContent").val(reader.result);
-			
-			var jsonStr = JSON.stringify(reader.result)
-			console.log(JSON.stringify(jsonStr));
+    try {
+        var reader = new FileReader();
+        reader.onload = function () {
+            console.log(reader.result);
+            console.log("---1")
+            // $("#fileContent").val(reader.result);
 
-			ImportedMcisScript= $.parseJSON(reader.result);
+            var jsonStr = JSON.stringify(reader.result)
+            console.log(JSON.stringify(jsonStr));
 
-			setMcisInfoToForm(ImportedMcisScript);
-			mcisTojsonFormatter(ImportedMcisScript)
-			
-		};
-		//reader.readAsText(file, /* optional */ "euc-kr");
-		reader.readAsText(file);
-	}catch(error){
-		commonAlert("File Load Failed");
-		console.log(error);
-	}
+            ImportedMcisScript = $.parseJSON(reader.result);
+
+            setMcisInfoToForm(ImportedMcisScript);
+            mcisTojsonFormatter(ImportedMcisScript)
+
+        };
+        //reader.readAsText(file, /* optional */ "euc-kr");
+        reader.readAsText(file);
+    } catch (error) {
+        commonAlert("File Load Failed");
+        console.log(error);
+    }
 }
 
 // json 객체를 textarea에 표시할 때 예쁘게
-function mcisTojsonFormatter(mcisInfoObj){
-	var fmt = JSON.stringify(mcisInfoObj, null, 4);    // stringify with 4 spaces at each level
-	$("#mcisImportScriptPretty").val(fmt);	
+function mcisTojsonFormatter(mcisInfoObj) {
+    var fmt = JSON.stringify(mcisInfoObj, null, 4);    // stringify with 4 spaces at each level
+    $("#mcisImportScriptPretty").val(fmt);
 }
 
 // 화면의 mcis 의 값이 변경되면 적용
-function setMcisValue(mcisObjId, mcisObjValue){
-    if( IsImport ){
-        if( mcisObjId == "mcis_name"){
-            ImportedMcisScript.name = mcisObjValue;            
-        }else if( mcisObjId == "mcis_desc"){
+function setMcisValue(mcisObjId, mcisObjValue) {
+    if (IsImport) {
+        if (mcisObjId == "mcis_name") {
+            ImportedMcisScript.name = mcisObjValue;
+        } else if (mcisObjId == "mcis_desc") {
             ImportedMcisScript.description = mcisObjValue;
-        }else if( mcisObjId == "installMonAgent"){            
+        } else if (mcisObjId == "installMonAgent") {
             ImportedMcisScript.installMonAgent = mcisObjValue;
         }
         mcisTojsonFormatter(ImportedMcisScript)
     }
 }
 // 선택한 파일을 읽어 form에 Set
-function setMcisInfoToForm(mcisInfoObj){
-    	//export form
-	$("#mcis_name").val(mcisInfoObj.name);
-	$("#mcis_desc").val(mcisInfoObj.description);
-	// $("#label").val(mcisInfoObj.label);
+function setMcisInfoToForm(mcisInfoObj) {
+    //export form
+    $("#mcis_name").val(mcisInfoObj.name);
+    $("#mcis_desc").val(mcisInfoObj.description);
+    // $("#label").val(mcisInfoObj.label);
     $("#installMonAgent").val(mcisInfoObj.installMonAgent);
-	
-	// // 수신한 obj를 바로 deploy로 던질까?
+
+    // // 수신한 obj를 바로 deploy로 던질까?
     // var url = "/operation/manages/mcismng/reg/proc"
     // try{        
     //     axios.post(url,mcisInfoObj,{
@@ -300,13 +303,13 @@ function setMcisInfoToForm(mcisInfoObj){
     //         var errorMessage = error.response.data.error;
     //         var statusCode = error.response.status;
     //         commonErrorAlert(statusCode, errorMessage) 
-            
+
     //     })
     // }finally{
     //     // AjaxLoadingShow(false);
     // }  
 
-	
+
 }
 
 
