@@ -1944,6 +1944,7 @@ table tbody tr {
 .dashboard .create_box li { margin:3px 0 0 0; }
 .dashboard .create_box li label { position:relative; text-align:left; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .dashboard .create_box li label span.ch { color:#ff0000; display:inline-block; margin:0 4px 0 0;}
+.dashboard .create_box li label.assistLabel{line-height:38px;}
 .dashboard .create_box li label span.txt_sb { display:block; font-size:15px; font-weight:300; }
 .dashboard .create_box li .selectbox { width:150px; display:inline-block; vertical-align:middle; text-align:left; }
 .dashboard .create_box li input[type="text"],
