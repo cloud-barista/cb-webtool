@@ -367,7 +367,7 @@ function selectNS(ns){
 function clickOK(){
     var select_ns =   $("#sel_ns").val();
     console.log("slect ns is : ",select_ns);
-    setNS(select_ns);   
+    setNS(select_ns);
 }
 
 function setNS(nsid){
@@ -382,8 +382,15 @@ function setNS(nsid){
         }).then(result=>{
             var data = result.data
             console.log(data);
+
+            var mcisList = data.McisList;
+            if( mcisList){
+                location.href = "/operation/dashboards/dashboardnamespace/mngform"
+            }else{
+                location.href = "/main"
+            }
             //location.href = "/Dashboard/NS"
-            location.href = "/main"
+            //location.href = "/main"
         }).catch(function (error) {
             if (error.response) {
                 console.log(error.response)              
