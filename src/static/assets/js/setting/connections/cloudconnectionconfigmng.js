@@ -44,7 +44,6 @@ $(document).ready(function () {
             $("input[name=chk]").prop("checked", false);
         }
     })
-
     //table 스크롤바 제한
     $(window).on("load resize", function () {
         var vpwidth = $(window).width();
@@ -1149,6 +1148,9 @@ function setMap(locationInfo){
     }
 
     console.log("setMap")
+    console.log(locationInfo)
+    $("#map").empty();
+
     var JZMap = map_init()// mcis.map.js 파일에 정의되어 있으므로 import 필요.  TODO : map click할 때 feature 에 id가 없어 tooltip 에러나고 있음. 해결필요
 
     //지도 그리기 관련
@@ -1158,7 +1160,9 @@ function setMap(locationInfo){
     var latitudeValue = locationInfo.latitude;
     console.log(longitudeValue + " : " + latitudeValue);
     if (longitudeValue && latitudeValue) {
+        console.log("drawMap before")
         drawMap(JZMap, longitudeValue, latitudeValue, locationInfo)
+        console.log("drawMap after")
     }
 }
 

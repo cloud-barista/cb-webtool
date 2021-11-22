@@ -555,7 +555,7 @@ function callbackMcisLifeCycle(resultStatus, resultData, type) {
     if (resultStatus == 200 || resultStatus == 201) {
         // commonAlert(message);
         console.log("callbackMcisLifeCycle" + message);
-        commonResultAlert(message);
+        commonResultAlert("");
         //location.reload();//완료 후 페이지를 reload -> 해당 mcis만 reload
 
         // 해당 mcis 조회
@@ -1003,6 +1003,16 @@ function getCommonMcisStatusDataCallbackSuccess(caller, mcisStatusInfo) {
     console.log("caller " + caller)
     console.log(mcisStatusInfo)
     var mcisID = mcisStatusInfo.id;
+
+    // 받아온 값이 없는 경우는 mcis삭제이므로 table부터 다시그려야 함.
+    if( !mcisID){
+        // mcis목록 조회
+        getCommonMcisList("mcismngready", true, "", "simple")
+        $(".server_status").removeClass("view");
+        $(".server_info").removeClass("active");
+        return;
+    }
+
     var aMcis = new Object();
     for (var mcisIndex in totalMcisListObj) {
         var tempMcis = totalMcisListObj[mcisIndex]
