@@ -18,29 +18,13 @@ $(document).ready(function () {
         var $sel_list = $(this);
         var $detail = $(".server_info");
         $status = $(".server_status")
-        // console.log($sel_list);
-        // console.log($detail);
 
-        console.log(">>>>>");
+
         $sel_list.off("click").click(function () {
-            $sel_list.addClass("active");
-            $sel_list.siblings().removeClass("active");
-            // $detail.addClass("active");
-            // $detail.siblings().removeClass("active");
-            $status.addClass("view");
-            $sel_list.off("click").click(function () {
-                if ($(this).hasClass("active")) {
-                    $sel_list.removeClass("active");
-                    $detail.removeClass("active");
-                    $status.removeClass("view");
-                } else {
-                    $sel_list.addClass("active");
-                    $sel_list.siblings().removeClass("active");
-                    // $detail.addClass("active");
-                    // $detail.siblings().removeClass("active");
-                    $status.addClass("view");
-                }
-            });
+            console.log("sel_list")
+            console.log($sel_list);
+            console.log("this---")
+            console.log($(this))
         });
     });
 
@@ -118,6 +102,30 @@ $(document).ready(function () {
     getCommonMcisList("mcismngready", true, "", "simple")
 });
 
+// server info 영역 보이기/숨기기
+function showServerInfoArea(){
+    // $status = $(".server_status")// mcis의 server 목록
+    // var $detail = $(".server_info");// server 상세정보  -> 여기에서는 바로 보여줄 필요 없는데....
+    // // mcis list table에 선택한 mcis tr을 active, 다른 것들은 active 제거
+    // $sel_list.addClass("active");
+    // $sel_list.siblings().removeClass("active");
+    //
+    // // server info
+    // $status.addClass("view");
+    // $sel_list.off("click").click(function () {
+    //     if ($(this).hasClass("active")) {
+    //         $sel_list.removeClass("active");
+    //         $detail.removeClass("active");
+    //         $status.removeClass("view");
+    //     } else {
+    //         $sel_list.addClass("active");
+    //         $sel_list.siblings().removeClass("active");
+    //         // $detail.addClass("active");
+    //         // $detail.siblings().removeClass("active");
+    //         $status.addClass("view");
+    //     }
+    // });
+}
 
 var TotalCloudConnectionList = new Array();
 ////////// 화면 Load 시 가져온 값들을 set하는 function들
@@ -2329,7 +2337,17 @@ function displayMcisInfoArea(mcisData) {
         $("#mcis_server_info_status").empty();
         $("#mcis_server_info_status").append('<strong>Server List / Status</strong>  <span class="stxt">[ ' + mcisName + ' ]</span>  Server(' + sumVmCountOfMcis + ')')
 
-        //
+        // mcis info area
+        clearMcisInfoAreaData();// 이전에 set된 data가 있으면 clear시킨다.
+        // 이미 보여주고 있으면, 상세정보는 숨긴다.
+        console.log("displayMcisInfoArea show " + $(".server_status").hasClass("view"))
+        if ($(".server_status").hasClass("view") ){
+            $(".server_info").removeClass("active");
+        }else {
+            $(".server_status").addClass("view");
+        }
+        // 초기화 후 set해야하나?
+
         $("#server_info_status_icon_img").attr("src", mcisStatusIcon);
         $("#mcis_info_name").val(mcisName + " / " + mcisID);
         $("#mcis_info_id").val(mcisID);
@@ -2360,6 +2378,19 @@ function displayMcisInfoArea(mcisData) {
     }
 }
 
+// Mcis Info Area를 data를 초기화 한다.
+function clearMcisInfoAreaData(){
+    $("#server_info_status_icon_img").attr("src", '');
+    $("#mcis_info_name").val('');
+    $("#mcis_info_id").val('');
+    $("#mcis_info_description").val('');
+    $("#mcis_info_targetStatus").val('');
+    $("#mcis_info_targetAction").val('');
+    $("#mcis_info_cloud_connection").empty();
+
+    $("#mcis_name").val('')
+}
+
 // vm 상태별 icon으로 표시
 function displayServerStatusList(mcisID, vmList) {
     console.log("displayServerStatusList")
@@ -2386,7 +2417,7 @@ function displayServerStatusList(mcisID, vmList) {
         console.log("sel_cr");
         var $sel_list = $(this),
             $detail = $(".server_info");
-        $sel_list.off("click").click(function () {
+            $sel_list.off("click").click(function () {
             $sel_list.addClass("active");
             $sel_list.siblings().removeClass("active");
             $detail.addClass("active");
