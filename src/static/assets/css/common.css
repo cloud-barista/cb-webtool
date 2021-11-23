@@ -71,6 +71,9 @@ body {
   text-align: center;
   width: 100%;
 }
+#lnb .topbox .info .thumb {
+  margin-bottom: 35px;
+}
 #lnb .topbox .info .thumb span {
   /* padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
