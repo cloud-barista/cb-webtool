@@ -364,11 +364,11 @@ func PutMonigoringConfig(monitoringConfigReg *dragonfly.MonitoringConfigReg) (*d
 	if convertErr != nil {
 		log.Println(convertErr)
 	}
-	
+
 	fmt.Println(urlValues)
-	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
-	// pbytes, _ := json.Marshal(monitoringConfigReg)
-	// resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	//resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPut)
+	pbytes, _ := json.Marshal(monitoringConfigReg)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
 	resultMonitoringConfig := dragonfly.MonitoringConfig{}
 
 	if err != nil {
@@ -923,7 +923,7 @@ func GetMonitoringAlertLogList(taskName string, logLevel string) ([]dragonfly.Vm
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	//
 	url := util.DRAGONFLY + urlParam
-	
+
 	//resp, err := util.CommonHttpFormData(url, nil, http.MethodGet)
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 

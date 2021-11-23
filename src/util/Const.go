@@ -51,6 +51,10 @@ var MCKS_STATUS_TERMINATED = "terminated"
 var MCKS_STATUS_PARTIAL = "partial"
 var MCKS_STATUS_ETC = "etc"
 
+var MONITORING_POLICY_STATUS_REG = "regist"
+var MONITORING_POLICY_STATUS_FAIL = "fail"
+var MONITORING_THRESHOLD_REG = "regist"
+
 var STATUS_ARRAY = []string{"running", "stopped", "terminated"}
 
 // VM 의 life cycle // socket통신에서 사용
@@ -100,6 +104,8 @@ var TASK_TYPE_VNET = "vnet"
 var TASK_TYPE_SECURITYGROUP = "securitygroup"
 var TASK_TYPE_VMIMAGE = "vmimage"
 var TASK_TYPE_VMSPEC = "vmspec"
+var TASK_TYPE_MONITORING_POLICY = "monitoringpolicy"
+var TASK_TYPE_MONITORINGTHRESHOLD_EVENTHANDLER = "monitoringthresholdeventhandler"
 
 // 요청상태 : socket 으로 전달하는 요청 상태
 var TASK_STATUS_REQUEST = "requested"
