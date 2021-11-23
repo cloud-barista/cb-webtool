@@ -715,10 +715,10 @@ body {
   vertical-align: middle;
 }
 
-#contents .header .topmenu .infobox .notice_table thead #thName,
-#contents .header .topmenu .infobox .notice_table tbody #tdName
+#contents .header .topmenu .infobox .notice_table thead #thDescription,
+#contents .header .topmenu .infobox .notice_table tbody #tdDescription
 {
-  width: 35%;
+  width: 60%;
 }
 
 #contents .header .topmenu .infobox .notice_table thead {

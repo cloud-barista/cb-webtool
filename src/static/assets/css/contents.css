@@ -258,8 +258,8 @@ table thead {
 	/* display: block; */
     /* width: calc(100% - 0.91em); */
 	/* width: calc(100% - 1.4em); */
-	/* width: calc(100% - 1.2em); */
-	width: 100%;
+	width: calc(100% - 1.2em);
+	/* width: 100%; */
 } 
 table thead tr {
 	display: table-row;
