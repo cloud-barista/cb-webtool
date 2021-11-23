@@ -2422,7 +2422,7 @@ function displayServerStatusList(mcisID, vmList) {
     console.log("displayServerStatusList")
     var mcisName = mcisID;// TODO : vmDetailInfo() 에서 mcisName을 가져올 수 있도록 보완 필요
     var vmLi = "";
-
+    vmList.sort();
     for (var vmIndex in vmList) {
         var aVm = vmList[vmIndex]
 

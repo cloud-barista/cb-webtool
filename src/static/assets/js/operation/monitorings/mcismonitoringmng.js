@@ -37,6 +37,7 @@ function getMcisListCallbackSuccess(caller, mcisList){
     addMcis += '<option>Choose a Target MCIS for Monitoring</option>';
     if(!isEmpty(mcisList) && mcisList.length > 0 ){
         var initMcis = $("#init_mcis").val();
+        var mcisExist = false;// monitoring할 mcis가 없을 수도 있음.
         console.log(mcisList)
         for(var i in mcisList){
             // if(i == 0 ){
@@ -45,11 +46,16 @@ function getMcisListCallbackSuccess(caller, mcisList){
             //     addMcis +='<option value="'+mcisList[i].id+'" >'+mcisList[i].name+"|"+mcisList[i].status+"|"+mcisList[i].description
             // }
             addMcis +='<option value="'+mcisList[i]+'">'+mcisList[i] + '</option>';
+            if( initMcis == mcisList[i]){
+                mcisExist = true;
+            }
         }
         $("#mcisList").empty()
         $("#mcisList").append(addMcis)
-        if (initMcis) {
+        if (initMcis && mcisExist) {
+            console.log("initMcis = " + initMcis)
         }else{
+            console.log("initMcis is not exists");
             initMcis = mcisList[0]
         }
 
@@ -213,8 +219,9 @@ function getCommonMcisDataCallbackSuccess(caller, mcisInfo){
     console.log(vms)
     var vm_badge ="";
     var vm_options = "";
-    var init_vm = vms[0].id
+
     if(vms){
+        // var init_vm = vms[0].id
         vm_len = vms.length
         for(var o in vms){
             var vm_status = vms[o].status
