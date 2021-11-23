@@ -200,6 +200,7 @@ function commonConfirmOpen(targetAction, caller) {
             ["DeleteMcis", "Are you sure to delete this MCIS? "],
             ["ImportScriptOfMcis", "Would you like to import MCIS script? "],
             ["ExportScriptOfMcis", "Would you like to export MCIS script? "],
+            ["ShowMonitoring", "Would you like to go to the Monitoring page?"],
 
             ["AddNewVmOfMcis", "Would you like to add a new VM to this MCIS ?"],
             ["DeployServer", "Would you like to deploy?"],
@@ -404,6 +405,10 @@ function commonConfirmOk() {
         mcisScriptImport();
     } else if (targetAction == "ExportScriptOfMcis") {
         mcisScriptExport();
+    } else if (targetAction == "ShowMonitoring"){
+        var mcisID = $("#mcis_id").val();
+        var targetUrl = "/operation/monitorings/mcismonitoring/mngform?mcisId=" + mcisID;
+        changePage(targetUrl)
     } else if (targetAction == "VmLifeCycle") {
         alert("수행할 function 정의되지 않음");
     } else if (targetAction == "VmLifeCycleReboot") {

@@ -339,7 +339,6 @@ func SetNameSpace(c echo.Context) error {
 
 	// storedUser["defaultnamespaceid"] = nameSpaceID
 	fmt.Println("storedUser : ", storedUser)
-
 	store.Set(loginInfo.UserID, storedUser)
 
 	storeErr := store.Save()
@@ -350,11 +349,15 @@ func SetNameSpace(c echo.Context) error {
 		})
 	}
 
+	mcisList, _ := service.GetMcisListByID(loginInfo.DefaultNameSpaceID)
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":   "success",
 		"status":    "200",
 		"LoginInfo": loginInfo,
+		"McisList":  mcisList,
 	})
+
 }
 
 // 기본 namespace get. get default Namespace

@@ -18,29 +18,13 @@ $(document).ready(function () {
         var $sel_list = $(this);
         var $detail = $(".server_info");
         $status = $(".server_status")
-        // console.log($sel_list);
-        // console.log($detail);
 
-        console.log(">>>>>");
+
         $sel_list.off("click").click(function () {
-            $sel_list.addClass("active");
-            $sel_list.siblings().removeClass("active");
-            // $detail.addClass("active");
-            // $detail.siblings().removeClass("active");
-            $status.addClass("view");
-            $sel_list.off("click").click(function () {
-                if ($(this).hasClass("active")) {
-                    $sel_list.removeClass("active");
-                    $detail.removeClass("active");
-                    $status.removeClass("view");
-                } else {
-                    $sel_list.addClass("active");
-                    $sel_list.siblings().removeClass("active");
-                    // $detail.addClass("active");
-                    // $detail.siblings().removeClass("active");
-                    $status.addClass("view");
-                }
-            });
+            console.log("sel_list")
+            console.log($sel_list);
+            console.log("this---")
+            console.log($(this))
         });
     });
 
@@ -118,6 +102,30 @@ $(document).ready(function () {
     getCommonMcisList("mcismngready", true, "", "simple")
 });
 
+// server info 영역 보이기/숨기기
+function showServerInfoArea(){
+    // $status = $(".server_status")// mcis의 server 목록
+    // var $detail = $(".server_info");// server 상세정보  -> 여기에서는 바로 보여줄 필요 없는데....
+    // // mcis list table에 선택한 mcis tr을 active, 다른 것들은 active 제거
+    // $sel_list.addClass("active");
+    // $sel_list.siblings().removeClass("active");
+    //
+    // // server info
+    // $status.addClass("view");
+    // $sel_list.off("click").click(function () {
+    //     if ($(this).hasClass("active")) {
+    //         $sel_list.removeClass("active");
+    //         $detail.removeClass("active");
+    //         $status.removeClass("view");
+    //     } else {
+    //         $sel_list.addClass("active");
+    //         $sel_list.siblings().removeClass("active");
+    //         // $detail.addClass("active");
+    //         // $detail.siblings().removeClass("active");
+    //         $status.addClass("view");
+    //     }
+    // });
+}
 
 var TotalCloudConnectionList = new Array();
 ////////// 화면 Load 시 가져온 값들을 set하는 function들
@@ -498,9 +506,13 @@ function changeLifeCycle(type) {
             console.log("checked")
             aMcisData = totalMcisListObj[mcisIndex];
             console.log(aMcisData);
-            if (aMcisData.label == "mcks") {
-                isMcks = true;
-                return false;
+            var systemLabel = aMcisData.systemLabel;
+            if( systemLabel ){
+                systemLabel = systemLabel.toLowerCase();
+                if( systemLabel.indexOf("mcks")) {
+                    isMcks = true;
+                    return false;
+                }
             }
         } else {
             console.log("checked nothing")
@@ -547,7 +559,7 @@ function callbackMcisLifeCycle(resultStatus, resultData, type) {
     if (resultStatus == 200 || resultStatus == 201) {
         // commonAlert(message);
         console.log("callbackMcisLifeCycle" + message);
-        commonResultAlert(message);
+        commonResultAlert("");
         //location.reload();//완료 후 페이지를 reload -> 해당 mcis만 reload
 
         // 해당 mcis 조회
@@ -573,9 +585,13 @@ function deleteCheckMCIS(type) {
             mcisID = $(this).val();
             aMcisData = totalMcisListObj[mcisIndex];
             console.log(aMcisData);
-            if (aMcisData.label == "mcks") {
-                isMcks = true;
-                return false;
+            var systemLabel = aMcisData.systemLabel;
+            if( systemLabel ){
+                systemLabel = systemLabel.toLowerCase();
+                if( systemLabel.indexOf("mcks")) {
+                    isMcks = true;
+                    return false;
+                }
             }
         } else {
             console.log("checked nothing")
@@ -670,6 +686,7 @@ function vmLifeCycle(type) {
 
     // MCIS에서 MCKS관련 리소스는 handling하지 않음.
     var aMcis = new Object();
+    var isMcks = false;
     for (var mcisIndex in totalMcisListObj) {
         var tempMcis = totalMcisListObj[mcisIndex]
         if ( mcisID == tempMcis.id){
@@ -678,11 +695,12 @@ function vmLifeCycle(type) {
             if( systemLabel ){
                 systemLabel = systemLabel.toLowerCase();
                 if( systemLabel.indexOf("mcks")) {
-                    // commonAlert("MCKS's VM is cannot be handled")
+                    // commonAlert("MCKS life cycle cannot be changed")
                     // return;
+                    isMcks = true;
+                    break;
                 }
             }
-            break;
         }
     }// end of mcis loop
 
@@ -703,6 +721,9 @@ function vmLifeCycle(type) {
     if (!vmID) {
         commonAlert("Please Select VM!!")
         return;
+    }
+    if( isMcks) {
+
     }
 
     // var nameSpace = NAMESPACE;
@@ -995,6 +1016,16 @@ function getCommonMcisStatusDataCallbackSuccess(caller, mcisStatusInfo) {
     console.log("caller " + caller)
     console.log(mcisStatusInfo)
     var mcisID = mcisStatusInfo.id;
+
+    // 받아온 값이 없는 경우는 mcis삭제이므로 table부터 다시그려야 함.
+    if( !mcisID){
+        // mcis목록 조회
+        getCommonMcisList("mcismngready", true, "", "simple")
+        $(".server_status").removeClass("view");
+        $(".server_info").removeClass("active");
+        return;
+    }
+
     var aMcis = new Object();
     for (var mcisIndex in totalMcisListObj) {
         var tempMcis = totalMcisListObj[mcisIndex]
@@ -1487,6 +1518,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
 
 
 // 조회 성공 시 Monitoring Tab 표시
+var vmChartArr = new Array();
 function showVmMonitoring(mcisID, vmID) {
     $("#mcis_detail_info_check_monitoring").prop("checked", true)
     $("#mcis_detail_info_check_monitoring").attr("disabled", true)
@@ -1498,7 +1530,9 @@ function showVmMonitoring(mcisID, vmID) {
     var statisticsCriteria = "last";
     // TODO : Analytics View 는 안보이게
     for (var i in metric_arr) {
-        getVmMetric("canvas_" + i, metric_arr[i], mcisID, vmID, metric_arr[i], period_type, statisticsCriteria, duration);
+        var vmChart;
+        vmChart = getVmMetric(vmChart,"canvas_" + i, metric_arr[i], mcisID, vmID, metric_arr[i], period_type, statisticsCriteria, duration);
+        vmChartArr.push(vmChart);
     }
     //$("#Monitoring_tab").hide();
 
@@ -2329,7 +2363,17 @@ function displayMcisInfoArea(mcisData) {
         $("#mcis_server_info_status").empty();
         $("#mcis_server_info_status").append('<strong>Server List / Status</strong>  <span class="stxt">[ ' + mcisName + ' ]</span>  Server(' + sumVmCountOfMcis + ')')
 
-        //
+        // mcis info area
+        clearMcisInfoAreaData();// 이전에 set된 data가 있으면 clear시킨다.
+        // 이미 보여주고 있으면, 상세정보는 숨긴다.
+        console.log("displayMcisInfoArea show " + $(".server_status").hasClass("view"))
+        if ($(".server_status").hasClass("view") ){
+            $(".server_info").removeClass("active");
+        }else {
+            $(".server_status").addClass("view");
+        }
+        // 초기화 후 set해야하나?
+
         $("#server_info_status_icon_img").attr("src", mcisStatusIcon);
         $("#mcis_info_name").val(mcisName + " / " + mcisID);
         $("#mcis_info_id").val(mcisID);
@@ -2360,6 +2404,19 @@ function displayMcisInfoArea(mcisData) {
     }
 }
 
+// Mcis Info Area를 data를 초기화 한다.
+function clearMcisInfoAreaData(){
+    $("#server_info_status_icon_img").attr("src", '');
+    $("#mcis_info_name").val('');
+    $("#mcis_info_id").val('');
+    $("#mcis_info_description").val('');
+    $("#mcis_info_targetStatus").val('');
+    $("#mcis_info_targetAction").val('');
+    $("#mcis_info_cloud_connection").empty();
+
+    $("#mcis_name").val('')
+}
+
 // vm 상태별 icon으로 표시
 function displayServerStatusList(mcisID, vmList) {
     console.log("displayServerStatusList")
@@ -2386,7 +2443,7 @@ function displayServerStatusList(mcisID, vmList) {
         console.log("sel_cr");
         var $sel_list = $(this),
             $detail = $(".server_info");
-        $sel_list.off("click").click(function () {
+            $sel_list.off("click").click(function () {
             $sel_list.addClass("active");
             $sel_list.siblings().removeClass("active");
             $detail.addClass("active");

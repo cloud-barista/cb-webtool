@@ -44,13 +44,13 @@
 					<ul>
 						<li>
 							<label>Name</label>
-							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+							<input type="text" name="" value="" placeholder="-" title="" readonly
 								id="mcis_info_name" />
 							<input type="hidden" id="mcis_info_id" />
 						</li>
 						<li>
 							<label>Description</label>
-							<input type="text" name="" value="" placeholder="description" title="" readonly
+							<input type="text" name="" value="" placeholder="-" title="" readonly
 								id="mcis_info_description" />
 						</li>
 					</ul>
@@ -60,12 +60,12 @@
 					<ul>
 						<li>
 							<label>targetStatus</label>
-							<input type="text" name="" value="" placeholder="None" title="" readonly
+							<input type="text" name="" value="" placeholder="-" title="" readonly
 								id="mcis_info_targetStatus" />
 						</li>
 						<li>
 							<label>targetAction</label>
-							<input type="text" name="" value="" placeholder="None" title="" readonly
+							<input type="text" name="" value="" placeholder="-" title="" readonly
 								id="mcis_info_targetAction" />
 						</li>
 					</ul>
@@ -81,7 +81,7 @@
 						</li>
 						<li>
 							<label>Deployment <span>Algorithm</span></label>
-							<input type="text" name="" value="" placeholder="Name (ID)" title="" readonly />
+							<input type="text" name="" value="" placeholder="-" title="" readonly />
 						</li>
 					</ul>
 				</div>
@@ -171,7 +171,11 @@
 														</li>
 														<li><a href="javascript:void(0);" data-toggle="modal"
 																data-target="#VM_n_New"
-																onClick="commonPromptOpen('RemoteCommandVmOfMcis')">RemoteCommand</a>
+																onClick="commonConfirmOpen('ShowMonitoring')">ShowMonitoring</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+															   data-target="#VM_n_New"
+															   onClick="commonPromptOpen('RemoteCommandVmOfMcis')">RemoteCommand</a>
 														</li>
 													</ul>
 												</li>
