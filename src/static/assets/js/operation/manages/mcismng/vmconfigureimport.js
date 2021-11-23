@@ -78,6 +78,9 @@ function importDone_btn(){
 
 	// server List에 추가
 	$("#mcis_server_list").prepend(add_server_html)
+	// $("#mcis_server_list").append(add_server_html)
+	$("#plusVmIcon").remove();
+	$("#mcis_server_list").prepend(getPlusVm());
 	console.log("import btn click and import form data : ",import_form)
 	console.log("import data array : ",Import_Server_Config_Arr);
 	import_data_cnt++;

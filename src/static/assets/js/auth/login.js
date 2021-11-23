@@ -49,7 +49,7 @@ $(document).ready(function(){
                         getNameSpace();
                  }else{
                      //commonAlert("ID or PASSWORKD MISMATCH!!Check yourself!")
-                     alert("ID or PASSWORKD MISMATCH!!Check yourself!")
+                     commonAlert("ID or PASSWORKD MISMATCH!!Check yourself!")
                     //  location.reload(true); 
                  }
             //  }).catch(function(error){

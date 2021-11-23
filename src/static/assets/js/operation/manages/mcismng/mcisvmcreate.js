@@ -493,6 +493,7 @@ function vmCreateCallback(resultVmKey, resultStatus) {
     commonResultAlert("VM creation request completed");
 }
 
+
 // 현재 mcis의 vm 목록 조회 : deploy후 상태볼 때 사용
 function getVmList() {
 
@@ -521,22 +522,15 @@ function getVmList() {
                     vm_len = vms.length
 
                     $("#mcis_server_list *").remove();
-                    var appendLi = "";
 
-                    // + 버튼은 가장 첫번째에
-                    appendLi = appendLi + '<li>';
-                    appendLi = appendLi + '<div class="server server_add" onClick="displayNewServerForm()">';
-                    appendLi = appendLi + '</div>';
-                    appendLi = appendLi + '</li>';
+                    var appendLi = getPlusVm();// + 버튼은 가장 첫번째에
                     for (var o in vms) {
                         var vm_status = vms[o].status
                         var vm_name = vms[o].name
 
                         console.log(o + "번째 " + vm_name + " : " + vm_status)
                         // mcis_server_list 밑의 li들을 1개빼고 삭제. 
-                        // 가져온 vm list 를 add? (1개는 더하기 버튼이므로)                    
-
-
+                        // 가져온 vm list 를 add? (1개는 더하기 버튼이므로)
                         appendLi = appendLi + '<li>';
                         appendLi = appendLi + '<div class="server server_on bgbox_g">';
                         appendLi = appendLi + '<div class="icon"></div>';
