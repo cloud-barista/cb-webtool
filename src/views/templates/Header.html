@@ -1,6 +1,7 @@
 {{define "Header"}}
 <script type="text/javascript">
   var lastCallTime = "0"; // 호출하면 호출시간을 return하여 해당시간 이후Data만 가져오도록
+  var messageData = "";//받아온 Data
   var loc = window.location;
   var uri = "ws:";
   var ws;
@@ -35,9 +36,8 @@
     switch (recData.event) {
       case "res":
         var out = document.getElementById("callTime");
-        var jsonStr = JSON.stringify(recData);
         lastCallTime = recData.callTime;
-        out.value += lastCallTime;
+        messageData = recData.message;
         console.log(recData);
         break;
       default:
@@ -77,15 +77,20 @@
     var out = document.getElementById("callTime");
     out.innerHTML = lastCallTime;
   }
+
+  // 날짜(data)를 넘기면 yyyymmddhh24miss 형태로 반환
+  function yyyymmddhh24miss(d) {
+    function pad(n) { return n < 10 ? "0" + n : n }
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds())
+  }
+
 </script>
 <div id="contents">
   <!-- container -->
   <div id="container">
     <!-- header -->
     <div class="header">
-      <div class="logo">
-        <img src="/assets/img/common/img_logo.png" alt="Cloud Barista" />
-      </div>
+
 
       <a href="javascript:;" id="btn_menu"><span></span></a>
       <input type="hidden" id="returnMessage" value="{{ .Message }}" />
@@ -94,14 +99,9 @@
       <div class="topmenu">
         <ul>
           <li class="logout">
-            <a
-              href="javascript:void(0);"
-              data-toggle="modal"
-              data-target="#logout"
-              onClick="commonConfirmOpen('Logout')"
-            >
-              <img src="/assets/img/common/icon_logout.png" alt="" /> Logout</a
-            >
+            <a href="javascript:void(0);" data-toggle="modal" data-target="#logout"
+              onClick="commonConfirmOpen('Logout')">
+              <img src="/assets/img/common/icon_logout.png" alt="" /> Logout</a>
           </li>
           <!-- <li class="add">
 						<img src="/assets/img/common/icon_add.png" alt=""/>
@@ -118,31 +118,71 @@
                 <table>
                   <thead>
                     <tr>
-                      <th>No.</th>
                       <th>Time</th>
+                      <th>Type</th>
+                      <th id="thDescription">Description</th>
                     </tr>
                   </thead>
                   <tbody id="callTime">
                     <script>
                       var previous = "0";
-                      var idx = 0;
+                      var badgeIdx = 0;
+                      var maxProcessTime = new Date("0").valueOf();
+                      let lastCallTimeValue = new Date(lastCallTime / 1000).valueOf();
                       var out = document.getElementById("callTime");
                       var badge = document.getElementById("badge");
                       setInterval(function () {
-                        badge.style.display = "inline-block";
-                        if (previous !== lastCallTime) {
-                          var tr = document.createElement("tr");
-                          var th = document.createElement("th");
-                          var td = document.createElement("td");
-                          out.appendChild(tr);
-                          tr.appendChild(th);
-                          tr.appendChild(td);
-                          th.innerHTML = ++idx;
-                          badge.innerHTML = idx;
-                          td.innerHTML = lastCallTime;
-                          previous = lastCallTime;
-                        }
-                      }, 30000); // 30초마다
+                        // console.log("lastcalltime:", lastCallTime);
+                        // console.log("lastcalltimevalue:", lastCallTimeValue);
+                        // console.log(messageData);
+
+                        var maxIdx = 0;
+                        if (messageData.length === 0) { return; } //메세지 없음
+
+                        console.log("append data")
+                        for (idx in messageData) {
+                          let processTime = new Date(messageData[idx].processTime).valueOf();
+                          if (maxProcessTime < processTime) {
+                            maxProcessTime = new Date(messageData[idx].processTime).valueOf();
+                            maxIdx = idx;
+                          }
+                          console.log("compare time ::: " + lastCallTimeValue + " : " + processTime);
+                          if (processTime > lastCallTimeValue) {
+                            var tr = document.createElement("tr");
+                            var th = document.createElement("th");
+                            var tdType = document.createElement("td");
+                            var tdDescription = document.createElement("td");
+                            tdDescription.setAttribute("id", "tdDescription");
+                            out.appendChild(tr);
+                            tr.appendChild(th);
+                            tr.appendChild(tdType);
+                            tr.appendChild(tdDescription);
+                            th.innerHTML = yyyymmddhh24miss(new Date(messageData[idx].processTime))
+                            tdType.innerHTML = messageData[idx].taskType;
+                            var splited = messageData[idx].taskKey.split("||");
+                            var splitedIdx = splited.length - 1;
+                            tdDescription.innerHTML = splited[splitedIdx] + " " + messageData[idx].lifeCycle + " " + messageData[idx].status;
+
+                            // 처음 open시에는 badge표시 안함
+                            if (lastCallTimeValue == 0) { continue; }
+
+                            badge.innerHTML = ++badgeIdx;
+                            badge.style.display = "inline-block";
+                          }
+
+
+                        };
+                        //td.innerHTML = valueString
+                        // var valueString = messageData.taskType + " : " + messageData.lifeCycle + " : " + messageData.status
+                        // valueString += "<br> taskKey : " + messageData.taskKey
+                        // valueString += "<br> " + messageData.processTime
+                        // td.innerHTML = valueString
+                        lastCallTimeValue = new Date(messageData[maxIdx].processTime).valueOf();
+                        messageData = "";
+
+
+
+                      }, 1000);
                     </script>
                   </tbody>
                 </table>
@@ -156,21 +196,14 @@
 						</div>
 					</li> -->
           <li class="setting">
-            <a href="javascript:void(0);"
-              ><img src="/assets/img/common/icon_setting.png" alt=""
-            /></a>
+            <a href="javascript:void(0);"><img src="/assets/img/common/icon_setting.png" alt="" /></a>
             <div class="infobox">
               <div class="box">
                 <p>Cloud Setting</p>
                 <ul>
                   <li>
-                    <a
-                      href="javascript:void(0);"
-                      data-toggle="modal"
-                      data-target="#Connection"
-                      onClick="commonConfirmOpen('MoveToConnection')"
-                      >[Cloud] Connection</a
-                    >
+                    <a href="javascript:void(0);" data-toggle="modal" data-target="#Connection"
+                      onClick="commonConfirmOpen('MoveToConnection')">[Cloud] Connection</a>
                   </li>
                 </ul>
               </div>
@@ -178,10 +211,7 @@
           </li>
           <li class="question">
             <a href="javascript:void(0);" onclick="showHelp()">
-              <img
-                src="/assets/img/common/icon_question.png"
-                alt="Api call test"
-              />
+              <img src="/assets/img/common/icon_question.png" alt="Api call test" />
             </a>
           </li>
         </ul>
@@ -190,14 +220,15 @@
     <!-- //header -->
 
     <!-- Loading bar -->
-    <div
-      class="loading-container"
-      id="loadingContainer"
-      tabindex="-1"
-      style="display: none"
-    >
+    <div class="loading-container" id="loadingContainer" tabindex="-1" style="display: none">
       <div class="loading"></div>
       <div id="loading-text">loading</div>
+    </div>
+    <!-- // Loading bar -->
+    <!-- Loading bar -->
+    <div class="loading-container" id="Ajax_Loading" tabindex="-1" style="display: none">
+      <div class="loading"></div>
+      <div>loading</div>
     </div>
     <!-- // Loading bar -->
 

@@ -255,15 +255,30 @@ func GetNameSpaceList(c echo.Context) error {
 	fmt.Println("====== GET NAMESPACE LIST ========")
 	// store := echosession.FromContext(c)
 	// nameSpaceInfoList, nsStatus := service.GetNameSpaceList()
-	nameSpaceInfoList, nsStatus := service.GetStoredNameSpaceList(c)
-	if nsStatus.StatusCode == 500 {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": nsStatus.Message,
-			"status":  nsStatus.StatusCode,
-		})
-	}
 
-	return c.JSON(http.StatusOK, nameSpaceInfoList)
+	optionParam := c.QueryParam("option")
+
+	if optionParam == "id" {
+		nameSpaceInfoList, nsStatus := service.GetNameSpaceListByOptionID(optionParam)
+		if nsStatus.StatusCode == 500 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": nsStatus.Message,
+				"status":  nsStatus.StatusCode,
+			})
+		}
+		return c.JSON(http.StatusOK, nameSpaceInfoList)
+	} else {
+		nameSpaceInfoList, nsStatus := service.GetNameSpaceListByOption(optionParam)
+		if nsStatus.StatusCode == 500 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": nsStatus.Message,
+				"status":  nsStatus.StatusCode,
+			})
+		}
+		return c.JSON(http.StatusOK, nameSpaceInfoList)
+	}
+	//nameSpaceInfoList, nsStatus := service.GetStoredNameSpaceList(c)
+
 }
 
 // 기본 namespace set. set default Namespace
@@ -324,7 +339,6 @@ func SetNameSpace(c echo.Context) error {
 
 	// storedUser["defaultnamespaceid"] = nameSpaceID
 	fmt.Println("storedUser : ", storedUser)
-
 	store.Set(loginInfo.UserID, storedUser)
 
 	storeErr := store.Save()
@@ -335,11 +349,15 @@ func SetNameSpace(c echo.Context) error {
 		})
 	}
 
+	mcisList, _ := service.GetMcisListByID(loginInfo.DefaultNameSpaceID)
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":   "success",
 		"status":    "200",
 		"LoginInfo": loginInfo,
+		"McisList":  mcisList,
 	})
+
 }
 
 // 기본 namespace get. get default Namespace

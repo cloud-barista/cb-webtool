@@ -266,7 +266,7 @@ func main() {
 			"operation/manages/mcismng/VmConfigureExpert",
 			"operation/manages/mcismng/VmConfigureImport",
 
-			"operation/manages/mcismng/VmAssistPopup",
+			"templates/VmAssistPopup",
 
 			"operation/manages/mcismng/VmOsHardware",
 			"operation/manages/mcismng/VmNetwork",
@@ -348,6 +348,7 @@ func main() {
 			"templates/Header",
 			"templates/Modal",
 			"templates/Footer",
+			"templates/VmAssistPopup",
 		},
 		DisableCache: true,
 	})
@@ -463,9 +464,9 @@ func main() {
 	//e.GET("/ws", hello)  // 이것도 인증 거친것들만 해야하지 않나?? 그런데 경로가.. ws:: 이라...
 	// e.GET("ws/helloWS", controller.HelloNetWebSocket)
 	e.GET("ws/helloGorilla", controller.HelloGorillaWebSocket)
-	e.GET("ws/websocketdata", controller.GetWebSocketData)
+	e.GET("ws/websocketdata", controller.GetWebSocketData) //TODO :  naming rule상 목록조회이므로 List로 바꿀 것
 
-	e.GET("ws/oneshot", controller.WebSocketOneShot)
+	//e.GET("ws/oneshot", controller.WebSocketOneShot)
 
 	//////  Websocket end /////////
 
@@ -603,7 +604,7 @@ func main() {
 	mcksRegGroup.GET("", controller.McksRegForm)                              // MCKS 생성 + Node생성 form
 	mcksRegGroup.GET("/:clusterUID/:clusterName", controller.McksNodeRegForm) // MCKS의 Node생성 : name까지 주는 이유는 별도처리하지 않고 node추가화면으로 바로 보내기 때문
 
-	e.GET("/operation/manages/mcksmng/list", controller.GetMcisList)
+	e.GET("/operation/manages/mcksmng/list", controller.GetMcksList)
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
 	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName", controller.McksDelProc)
 	e.POST("/operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc", controller.NodeRegProc)
@@ -693,7 +694,8 @@ func main() {
 	e.GET("/setting/resources/machineimage/lookupimage", controller.LookupVirtualMachineImageData) // TODO : Image 상세 정보인가? 확인필요
 	e.POST("/setting/resources/machineimage/fetchimages", controller.FetchVirtualMachineImageList) // TODO : Image 정보 갱신인가? 확인필요
 
-	resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
+	//resourcesGroup.GET("/machineimage/searchimage", controller.SearchVirtualMachineImageList)
+	e.POST("/setting/resources/machineimage/searchimage", controller.SearchVirtualMachineImageList)
 
 	resourcesGroup.GET("/vmspec/mngform", controller.VmSpecMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
 	resourcesGroup.GET("/vmspec/list", controller.GetVmSpecList)

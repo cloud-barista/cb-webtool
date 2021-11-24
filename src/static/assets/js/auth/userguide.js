@@ -8,39 +8,39 @@ $(document).ready(function () {
 	// 	return result;
 	// }
 	console.log("start!! " + Date.now());
-	// namespace
-	getCommonNameSpaceList("mainnamespace")
+	// namespace  caller, isCallback, targetObjId, searchOption
+	getCommonNameSpaceList("mainnamespace", true, '', "id")
 	console.log("getCommonNameSpaceList!! " + Date.now());
 	// connection
 	// credential
-	getCommonCredentialList("maincredential");
+	getCommonCredentialList("maincredential", "id");
 	console.log("getCommonCredentialList!! " + Date.now());
 	// region
-	getCommonRegionList("mainregion");
+	getCommonRegionList("mainregion", "id");
 	console.log("getCommonRegionList!! " + Date.now());
 	// driver
-	getCommonDriverList("maindriver");
+	getCommonDriverList("maindriver", "id");
 	console.log("getCommonDriverList!! " + Date.now());
 	// resource
 	// network(vnet)
-	getCommonNetworkList("mainnetwork")
+	getCommonNetworkList("mainnetwork", "id")
 	console.log("getCommonNetworkList!! " + Date.now());
 	// securitygroup
-	getCommonSecurityGroupList("mainsecuritygroup")
+	getCommonSecurityGroupList("mainsecuritygroup", "", "id")
 	console.log("getCommonSecurityGroupList!! " + Date.now());
 	// sshkey
-	getCommonSshKeyList("mainsshkey")
+	getCommonSshKeyList("mainsshkey", "id")
 	console.log("getCommonSshKeyList!! " + Date.now());
 	
 	// image
-	getCommonVirtualMachineImageList("mainimage")
+	getCommonVirtualMachineImageList("mainimage", "", "id")
 
 	// spec
-	getCommonVirtualMachineSpecList("mainspec")
+	getCommonVirtualMachineSpecList("mainspec", "", "id")
 	
-	getCommonMcisList("mainmcis")
+	getCommonMcisList("mainmcis", true, "", "id")
 
-	getCommonMcksList("mainmcks")
+	getCommonMcksList("mainmcks", "id")
 	//$("#guideArea").modal();
 });                   
 

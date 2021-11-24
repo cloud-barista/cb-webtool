@@ -8,6 +8,7 @@
 					<div class="txt"><span id="confirmText"/></div>
 					<div class="btnbox">
 						<input type="hidden" id="confirmOkAction" value=""><!-- modal에서 OK버튼 클릭 시 수행할 action 지정-->
+						<input type="hidden" id="confirmCaller" value=""><!-- 구분자-->
 						<button type="button" class="btn_cancel" data-dismiss="modal" onclick="commonConfirmClose()">Cancel</button>
 						<button type="button" class="btn_ok" data-dismiss="modal" onclick="commonConfirmOk()">OK</button>
 					</div>
@@ -25,7 +26,7 @@
 				<div class="modal-body">
 					<div class="txt"><span id="promptQuestion"/></div>
 					<div class="txt">
-						<input type="text" name="promptText" id="promptText"/>
+						<input type="text" name="promptText" id="promptText" onkeyup="commonPromptEnter(event);"/>
 					</div>
 					<div class="btnbox">
 						<input type="hidden" id="promptOkAction" value=""><!-- modal에서 OK버튼 클릭 시 수행할 action 지정-->

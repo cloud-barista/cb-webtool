@@ -315,20 +315,38 @@ func GetMcisList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	// mcisList, respStatus := service.GetMcisList(defaultNameSpaceID)
 	optionParam := c.QueryParam("option")
-	mcisList, respStatus := service.GetMcisList(defaultNameSpaceID, optionParam)
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
+
+	if optionParam == "id" {
+		mcisList, respStatus := service.GetMcisListByID(defaultNameSpaceID)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"McisList":           mcisList,
+		})
+	} else {
+		mcisList, respStatus := service.GetMcisListByOption(defaultNameSpaceID, optionParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"McisList":           mcisList,
 		})
 	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":            "success",
-		"status":             respStatus.StatusCode,
-		"DefaultNameSpaceID": defaultNameSpaceID,
-		"McisList":           mcisList,
-	})
 }
 
 // MCIS 등록
@@ -511,12 +529,12 @@ func McisVmRegForm(c echo.Context) error {
 	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
 	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
 
-	//// namespace에 등록 된 resource 정보들 //////
-	virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
-	vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
-	vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
-	securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
-	sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
+	//// namespace에 등록 된 resource 정보들 : connection 선택 이후 가져옴 //////
+	//virtualMachineImageInfoList, _ := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
+	//vmSpecInfoList, _ := service.GetVmSpecInfoList(defaultNameSpaceID)
+	//vNetInfoList, _ := service.GetVnetList(defaultNameSpaceID)
+	//securityGroupInfoList, _ := service.GetSecurityGroupList(defaultNameSpaceID)
+	//sshKeyInfoList, _ := service.GetSshKeyInfoList(defaultNameSpaceID)
 
 	// status, filepath, return params
 	return echotemplate.Render(c, http.StatusOK,
@@ -532,11 +550,11 @@ func McisVmRegForm(c echo.Context) error {
 			"CloudOSList":                   cloudOsList,
 			"RegionList":                    regionInfoList,
 			"CloudConnectionConfigInfoList": cloudConnectionConfigInfoList,
-			"VMImageList":                   virtualMachineImageInfoList,
-			"VMSpecList":                    vmSpecInfoList,
-			"VNetList":                      vNetInfoList,
-			"SecurityGroupList":             securityGroupInfoList,
-			"SshKeyList":                    sshKeyInfoList,
+			//"VMImageList":                   virtualMachineImageInfoList,
+			//"VMSpecList":                    vmSpecInfoList,
+			//"VNetList":                      vNetInfoList,
+			//"SecurityGroupList":             securityGroupInfoList,
+			//"SshKeyList":                    sshKeyInfoList,
 		})
 }
 
@@ -552,6 +570,26 @@ func GetMcisInfoData(c echo.Context) error {
 
 	mcisID := c.Param("mcisID")
 	log.Println("mcisID= " + mcisID)
+	optionParam := c.QueryParam("option")
+	log.Println("optionParam= " + optionParam)
+
+	if optionParam == "id" {
+		resultMcisInfo, _ := service.GetMcisDataByID(defaultNameSpaceID, mcisID)
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":  "success",
+			"status":   200,
+			"McisInfo": resultMcisInfo,
+		})
+	} else if optionParam == "status" {
+		resultMcisStatusInfo, _ := service.GetMcisDataByStatus(defaultNameSpaceID, mcisID, optionParam)
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":        "success",
+			"status":         200,
+			"McisStatusInfo": resultMcisStatusInfo,
+		})
+	}
 
 	resultMcisInfo, _ := service.GetMcisData(defaultNameSpaceID, mcisID)
 
@@ -735,21 +773,25 @@ func McisLifeCycle(c echo.Context) error {
 
 	//
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
-	_, respStatus := service.McisLifeCycle(mcisLifeCycle)
-	log.Println("McisLifeCycle service returned")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+
+	//_, respStatus := service.McisLifeCycle(mcisLifeCycle)
+	go service.McisLifeCycleByAsync(mcisLifeCycle, c)
+
+	//log.Println("McisLifeCycle service returned")
+	//if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	//	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	//	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	//		"error":  respStatus.Message,
+	//		"status": respStatus.StatusCode,
+	//	})
+	//}
 
 	// 성공의 경우 요청만 들어간 상태이고 실제 상태는 status를 따로 날려야 알 수 있음. 그러므로 호출 전 requested 가 set 되었으므로 완료에 대한 상태는 추가로 넣지 않음.
 	// service.StoreWebsocketMessage("mcislifecycle", taskKey, mcisLifeCycle.LifeCycleType, "completed", c) // session에 작업내용 저장
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus.StatusCode,
+		"status":  "200",
+		//"status":  respStatus.StatusCode,
 	})
 }
 
@@ -779,19 +821,21 @@ func McisVmLifeCycle(c echo.Context) error {
 	taskKey := defaultNameSpaceID + "||" + "vm" + "||" + vmLifeCycle.McisID + "||" + vmLifeCycle.VmID
 	service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
 
-	_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
-	log.Println("McisVmLifeCycle service returned")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+	go service.McisVmLifeCycleByAsync(vmLifeCycle, c)
+	//_, respStatus := service.McisVmLifeCycle(vmLifeCycle)
+	//log.Println("McisVmLifeCycle service returned")
+	//if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	//	service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, vmLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	//	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	//		"error":  respStatus.Message,
+	//		"status": respStatus.StatusCode,
+	//	})
+	//}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
-		"status":  respStatus.StatusCode,
+		"status":  "200",
+		//"status":  respStatus.StatusCode,
 	})
 }
 

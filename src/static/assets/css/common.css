@@ -71,15 +71,18 @@ body {
   text-align: center;
   width: 100%;
 }
+#lnb .topbox .info .thumb {
+  margin-bottom: 35px;
+}
 #lnb .topbox .info .thumb span {
-  padding: 10px;
+  /* padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 100px;
-  display: inline-block;
+  display: inline-block; */
 }
 #lnb .topbox .info .thumb span > img {
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 100px;
+  /* border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 100px; */
 }
 #lnb .topbox .info .txt_1 {
   margin: 13px 0 0 0;
@@ -676,12 +679,12 @@ body {
 
 #contents .header .topmenu .infobox {
   display: none;
-  position: absolute;
-  left: 50%;
-  top: 36px;
-  transform: translateX(-50%);
-  background-color: #5e636c;
-  border-radius: 8px;
+    position: absolute;
+    right: 0;
+    top: 36px;
+    transform: translateX(15%);
+    background-color: #5e636c;
+    border-radius: 8px;
 }
 /* #contents .header .topmenu .infobox:after {
   content: "";
@@ -707,22 +710,33 @@ body {
   font-size: 14px;
 }
 #contents .header .topmenu .infobox .notice_table {
-  min-width: 300px;
+  min-width: 900px;
   font-size: 14px;
   vertical-align: middle;
 }
+
+#contents .header .topmenu .infobox .notice_table thead #thDescription,
+#contents .header .topmenu .infobox .notice_table tbody #tdDescription
+{
+  width: 60%;
+}
+
 #contents .header .topmenu .infobox .notice_table thead {
   color: #fff;
   margin: 12px 15px 10px;
 }
+#contents .header .topmenu .infobox .notice_table thead tr {
+ text-align: center;
+}
 #contents .header .topmenu .infobox .notice_table tbody {
   margin: 3px 5px 10px;
-  padding: 5px 15px;
+  padding: 5px 0 5px 10px;
   height: 300px;
   overflow-y: auto;
 }
 #contents .header .topmenu .infobox .notice_table tbody tr {
   margin: 5px 0;
+  text-align: center;
 }
 #contents .header .topmenu .infobox .box p {
   color: #06a9b7;
@@ -1000,13 +1014,13 @@ body {
 .bgbox_running {
   background-color: #06a9b7;
 }
-.bgbox_stopped {
+.bgbox_stop {
   background-color: #ffc800;
 }
 .bgbox_suspended {
   background-color: #ffc800;
 }
-.bgbox_terminated {
+.bgbox_terminate {
   background-color: #fc1656;
 }
 .bgbox_etc {

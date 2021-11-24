@@ -155,7 +155,7 @@
                             {{ end }}
 
                             {{range $index, $item := .SshKeyList}}
-                            <tr onclick="showSshKeyInfo('{{$item.CspSshKeyName}}');">
+                            <tr onclick="showSshKeyInfo('{{$item.ID}}');">
                                 <td class="overlay hidden column-50px" data-th="">
                                     <input type="hidden" id="ssh_info_{{$index}}" value="{{$item.Name}}|{{$item.ConnectionName}}|{{$item.CspSshKeyName}}"/>
                                     <input type="checkbox" name="chk" value="{{$item.Name}}" id="raw_{{$index}}" title="" />
