@@ -319,7 +319,6 @@ function setMcisInfoToForm(mcisInfoObj) {
 
 var totalCloudConnectionList = new Array();
 function getCloudConnectionListCallbackSuccess(caller, data, sortType) {
-    console.log("getCloudConnectionListCallbackSuccess")
     totalCloudConnectionList = data;
 }
 // target Object(selectbox) 에 해당 provider목록만 표시
@@ -329,7 +328,6 @@ function filterConnectionByProvider(provider, targetObjId) {
     $('#' + targetObjId).append('<option value="">Selected Connection</option>')
     for (var connIndex in totalCloudConnectionList) {
         var aConnection = totalCloudConnectionList[connIndex];
-        console.log(aConnection)
         if (provider == "" || provider == aConnection.ProviderName) {
             $('#' + targetObjId).append('<option value="' + aConnection.ConfigName + '">' + aConnection.ConfigName + '</option>')
         }
