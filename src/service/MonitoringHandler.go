@@ -97,9 +97,11 @@ func RegMonitoringAgentInVm(nameSpaceID string, mcisID string, vmMonitoringAgent
 	if convertErr != nil {
 		log.Println(convertErr)
 	}
-
+	//vmMonitoringInstallReg
 	fmt.Println(urlValues)
-	resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
+	//resp, err := util.CommonHttpFormData(url, urlValues, http.MethodPost)
+	pbytes, _ := json.Marshal(vmMonitoringAgentReg)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	webStatus := model.WebStatus{}
 	if err != nil {
