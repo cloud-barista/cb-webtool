@@ -817,6 +817,7 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList) {
         var assistProviderName = $("#assistImageProviderName option:selected").val();
         var assistConnectionName = $("#assistImageConnectionName option:selected").val();
         console.log("getCommonSearchVmImageListCallbackSuccess")
+        var addRowCount = 0;
         vmImageList.forEach(function (vImageItem, vImageIndex) {
             console.log(assistConnectionName + " : " + vImageItem.connectionName)
             if (assistConnectionName == "" || assistConnectionName == vImageItem.connectionName) {
@@ -837,8 +838,14 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList) {
                     // + '<td class="overlay hidden" data-th="GuestOS">' + vImageItem.guestOS + '</td>'
                     // + '<td class="overlay hidden" data-th="Description">' + vImageItem.description + '</td>'
                     + '</tr>'
+                addRowCount++
             }
         });
+        if( addRowCount == 0){
+            html = '<tr>'
+                + '<td class="overlay hidden" data-th="Name" rowspan="2">Nodata</td>'
+                + '</tr>'
+        }
         $("#assistVmImageList").empty()
         $("#assistVmImageList").append(html)
 
@@ -855,6 +862,13 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList) {
                 }
             })
         })
+    }else{
+        html += '<tr>'
+
+            + '<td class="overlay hidden" data-th="Name" rowspan="2">Nodata</td>'
+            + '</tr>'
+        $("#assistVmImageList").empty()
+        $("#assistVmImageList").append(html)
     }
 }
 
@@ -1078,296 +1092,6 @@ function getSshKeyListCallbackFail(caller, error) {
 
 }
 
-// 전체 목록에서 filter
-function filterSshKeyList(keywords, caller) {
-    // provider
-    // connection
-    var assistProviderName = "";
-    var assistConnectionName = "";
-    var html = "";
-    console.log("filter " + caller);
-    // if( caller == "searchSshKeyAssistAtReg"){
-    //     assistProviderName = $("#assistSshKeyProviderName option:selected").val();
-    //     assistConnectionName = $("#assistSshKeyConnectionName option:selected").val();
-    // }
-    var selectedConnectionName = $("#assistSecurityGroupConnectionName option:selected").val();
-    if (selectedConnectionName) {
-        assistConnectionName = selectedConnectionName;
-    }
-
-    var calNetIndex = 0;
-    totalSshKeyListByNamespace.forEach(function (vSshKeyItem, vSshKeyIndex) {
-        if (assistConnectionName == "" || assistConnectionName == vSshKeyItem.connectionName) {
-            // keyword가 있는 것들 중에서
-            var keywordExist = false
-            var keywordLength = keywords.length
-            var findCount = 0;
-            keywords.forEach(function (keywordValue, keywordIndex) {
-                if (vSshKeyItem.name.indexOf(keywordValue) > -1) {
-                    findCount++;
-                }
-            })
-            if (keywordLength != findCount) {
-                return true;
-            }
-
-            html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
-                + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
-                + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
-                + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
-                + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
-                + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
-                + '<td class="overlay hidden" data-th="ConnectionName">' + vSshKeyItem.connectionName + '</td>'
-                + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
-                + '</td>'
-                + '</tr>'
-        }
-    });
-    $("#assistSshKeyList").empty()
-    $("#assistSshKeyList").append(html)
-
-    $("#assistSshKeyList tr").each(function () {
-        $selector = $(this)
-
-        $selector.on("click", function () {
-
-            if ($(this).hasClass("on")) {
-                $(this).removeClass("on");
-            } else {
-                $(this).addClass("on")
-                $(this).siblings().removeClass("on");
-            }
-        })
-    })
-}
-
-// EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
-function searchAssistNetworkByEnter(event, caller) {
-    if (event.keyCode === 13) {
-        searchNetworkByKeyword(caller);
-    }
-}
-
-//
-function searchNetworkByKeyword(caller) {
-    var keyword = "";
-    var keywordObjId = "";
-    if (caller == "searchNetworkAssistAtReg") {
-        keyword = $("#keywordAssistNetwork").val();
-        keywordObjId = "searchAssistNetworkKeywords";
-        // network api에 connection으로 filter하는 기능이 없으므로
-        //totalNetworkListByNamespace : page Load시 가져온 network List가 있으므로 해당 목록을 Filter한다.
-    }
-
-    // connection
-
-    //
-    if (!keyword) {
-        commonAlert("At least a keyword required");
-        return;
-    }
-    var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
-
-    $("#" + keywordObjId).append(addKeyword);
-    var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
-    $("[name='keyword_" + caller + "']").each(function (idx, ele) {
-        keywords.push($(this).text());
-    });
-
-    //getCommonSearchVmImageList(keywords, caller);
-    filterNetworkList(keywords, caller)
-}
-
-// EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
-function searchAssistSecurityGroupByEnter(event, caller) {
-    if (event.keyCode === 13) {
-        searchSecurityGroupByKeyword(caller);
-    }
-}
-
-//
-function searchSecurityGroupByKeyword(caller) {
-    var keyword = "";
-    var keywordObjId = "";
-    console.log(caller)
-    if (caller == "searchSecurityGroupAssistAtReg") {
-        keyword = $("#keywordAssistSecurityGroup").val();
-        keywordObjId = "searchAssistNetworkKeywords";
-        // securityGroup api에 connection으로 filter하는 기능이 없으므로
-        //totalSecurityGroupListByNamespace : page Load시 가져온 securityGroup List가 있으므로 해당 목록을 Filter한다.
-    }
-
-    // connection
-
-    //
-    if (!keyword) {
-        commonAlert("At least a keyword required");
-        return;
-    }
-    var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
-
-    $("#" + keywordObjId).append(addKeyword);
-    var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
-    $("[name='keyword_" + caller + "']").each(function (idx, ele) {
-        keywords.push($(this).text());
-    });
-
-    filterSecurityGroupList(keywords, caller)
-}
-
-// EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
-function searchAssistSshKeyByEnter(event, caller) {
-    if (event.keyCode === 13) {
-        searchSshKeyByKeyword(caller);
-    }
-}
-
-//
-function searchSshKeyByKeyword(caller) {
-    var keyword = "";
-    var keywordObjId = "";
-    if (caller == "searchSshKeyAssistAtReg") {
-        keyword = $("#keywordAssistSshKey").val();
-        keywordObjId = "searchAssistSshKeyKeywords";
-        // network api에 connection으로 filter하는 기능이 없으므로
-        //totalSshKeyListByNamespace : page Load시 가져온 sshKey List가 있으므로 해당 목록을 Filter한다.
-    }
-
-    // connection
-
-    //
-    if (!keyword) {
-        commonAlert("At least a keyword required");
-        return;
-    }
-    var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
-
-    $("#" + keywordObjId).append(addKeyword);
-    var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
-    $("[name='keyword_" + caller + "']").each(function (idx, ele) {
-        keywords.push($(this).text());
-    });
-
-    //getCommonSearchVmImageList(keywords, caller);
-    filterSshKeyList(keywords, caller)
-}
-
-// EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
-function searchAssistImageByEnter(event, caller) {
-    if (event.keyCode === 13) {
-        // searchKeyword(keyword, caller);
-        searchVmImageByKeyword(caller);
-        // searchKeyword($(this).val(), caller)
-    }
-}
-
-//
-function searchVmImageByKeyword(caller) {
-    var keyword = "";
-    var keywordObjId = "";
-    if (caller == "searchVmImageAssistAtReg") {
-        keyword = $("#keywordAssistImage").val();
-        keywordObjId = "searchAssistImageKeywords";
-    }
-
-    if (!keyword) {
-        commonAlert("At least a keyword required");
-        return;
-    }
-    var addKeyword = '<div class="keyword" name="keyword_' + caller + '">' + keyword.trim() + '<button class="btn_del_image" onclick="delSearchKeyword(event, \'' + caller + '\')"></button></div>';
-
-    $("#" + keywordObjId).append(addKeyword);
-    var keywords = new Array();// 기존에 있는 keyword에 받은 keyword 추가하여 filter적용
-    $("[name='keyword_" + caller + "']").each(function (idx, ele) {
-        keywords.push($(this).text());
-    });
-
-    getCommonSearchVmImageList(keywords, caller);
-}
-// Assist Spec filter Search버튼 클릭시
-function searchSpecsByRange(caller) {
-    // var specFilter = new Object();
-
-    var assistSpecConnectionNameVal = $("#assistSpecConnectionName option:selected").val();
-    if (caller == 'searchVmSpecAssistAtReg') {
-
-    }
-    // if (assistSpecConnectionNameVal) {
-    //     specFilter.connectionName = assistSpecConnectionNameVal
-    // }
-
-    // storage
-    var storageMin = $("#assist_num_storage_min").val();
-    var storageMax = $("#assist_num_storage_max").val();
-
-    var storageObj = new Object();
-    storageObj.min = Number(storageMin)
-    storageObj.max = Number(storageMax)
-
-    // Core
-    var coreMin = $("#assist_num_core_min").val();
-    var coreMax = $("#assist_num_core_max").val();
-    var coreObj = new Object();
-    coreObj.min = Number(coreMin)
-    coreObj.max = Number(coreMax)
-
-    // specFilter.numCore = { "min": coreMin, "max": coreMax };
-
-    // vCPU
-    var vCpuMin = $("#assist_num_vCPU_min").val();
-    var vCpuMax = $("#assist_num_vCPU_max").val();
-    var vCpuObj = new Object();
-    vCpuObj.min = Number(vCpuMin)
-    vCpuObj.max = Number(vCpuMax)
-    // specFilter.numvCPU = { "min": vCpuMin, "max": vCpuMax };
-
-    // memory
-
-    var specFilter = {
-        connectionName: assistSpecConnectionNameVal,
-        maxTotalStorageTiB: storageObj,
-        numCore: coreObj,
-        numvCPU: vCpuObj,
-    }
-    getCommonFilterVmSpecListByRange(specFilter, caller)
-
-    // ID             string `json:"id"`
-    // Name           string `json:"name"`
-    // Description    string `json:"description"`
-    // ConnectionName string `json:"connectionName"`
-    // CspSpecName    string `json:"cspSpecName"`
-    // OsType         string `json:"osType"`
-    //
-    // CostPerHour Range `json:"costPerHour"`
-    // EbsBwMbps   Range `json:"ebsBwMbps"`
-    //
-    // EvaluationScore01 Range  `json:"evaluationScore01"`
-    // EvaluationScore02 Range  `json:"evaluationScore02"`
-    // EvaluationScore03 Range  `json:"evaluationScore03"`
-    // EvaluationScore04 Range  `json:"evaluationScore04"`
-    // EvaluationScore05 Range  `json:"evaluationScore05"`
-    // EvaluationScore06 Range  `json:"evaluationScore06"`
-    // EvaluationScore07 Range  `json:"evaluationScore07"`
-    // EvaluationScore08 Range  `json:"evaluationScore08"`
-    // EvaluationScore09 Range  `json:"evaluationScore09"`
-    // EvaluationScore10 Range  `json:"evaluationScore10"`
-    // EvaluationStatus  string `json:"evaluationStatus"`
-    //
-    // GpuModel string `json:"gpuModel"`
-    // GpuP2p   string `json:"gpuP2p"`
-    //
-    // MaxNumStorage      Range `json:"maxNumStorage"`
-    // MaxTotalStorageTiB Range `json:"maxTotalStorageTiB"`
-    // MemGiB             Range `json:"memGiB"`
-    //
-    // NetBwGbps  Range `json:"netBwGbps"`
-    // NumCore    Range `json:"numCore"`
-    // NumGpu     Range `json:"numGpu"`
-    // NumStorage Range `json:"numStorage"`
-    // NumVCPU    Range `json:"numvCPU"`
-    // StorageGiB Range `json:"storageGiB"`
-}
-
 // 등록된 spec조회 성공 시 table에 뿌려주고, 클릭시 spec 내용 set.
 function getCommonFilterVmSpecListCallbackSuccess(caller, vmSpecList) {
     // function getCommonFilterVmImageListCallbackSuccess(caller, vmSpecList){
@@ -1455,6 +1179,72 @@ function getCommonFilterVmSpecListCallbackSuccess(caller, vmSpecList) {
 
     }
 }
+
+// 전체 목록에서 filter
+function filterSshKeyList(keywords, caller) {
+    // provider
+    // connection
+    var assistProviderName = "";
+    var assistConnectionName = "";
+    var html = "";
+    console.log("filter " + caller);
+    // if( caller == "searchSshKeyAssistAtReg"){
+    //     assistProviderName = $("#assistSshKeyProviderName option:selected").val();
+    //     assistConnectionName = $("#assistSshKeyConnectionName option:selected").val();
+    // }
+    var selectedConnectionName = $("#assistSecurityGroupConnectionName option:selected").val();
+    if (selectedConnectionName) {
+        assistConnectionName = selectedConnectionName;
+    }
+
+    var calNetIndex = 0;
+    totalSshKeyListByNamespace.forEach(function (vSshKeyItem, vSshKeyIndex) {
+        if (assistConnectionName == "" || assistConnectionName == vSshKeyItem.connectionName) {
+            // keyword가 있는 것들 중에서
+            var keywordExist = false
+            var keywordLength = keywords.length
+            var findCount = 0;
+            keywords.forEach(function (keywordValue, keywordIndex) {
+                if (vSshKeyItem.name.indexOf(keywordValue) > -1) {
+                    findCount++;
+                }
+            })
+            if (keywordLength != findCount) {
+                return true;
+            }
+
+            html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
+                + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
+                + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
+                + '<td class="overlay hidden" data-th="ConnectionName">' + vSshKeyItem.connectionName + '</td>'
+                + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
+                + '</td>'
+                + '</tr>'
+        }
+    });
+    $("#assistSshKeyList").empty()
+    $("#assistSshKeyList").append(html)
+
+    $("#assistSshKeyList tr").each(function () {
+        $selector = $(this)
+
+        $selector.on("click", function () {
+
+            if ($(this).hasClass("on")) {
+                $(this).removeClass("on");
+            } else {
+                $(this).addClass("on")
+                $(this).siblings().removeClass("on");
+            }
+        })
+    })
+}
+
+
+
 
 function clearAssistSpecList(targetTableList) {
     $("#" + targetTableList).empty()

@@ -77,8 +77,8 @@ $(document).ready(function(){
                 }
                 console.log(error.config);
                 console.log("login error : ",error);
-                //commonAlert(error.message)
-                alert(error.message)
+                commonAlert(error.message)
+                // alert(error.message)
                 //  location.reload(true);
              })
          }catch(e){
@@ -326,7 +326,7 @@ function createNameSpace(){
                 var namespaceList = result.data.nsList;
                 //getUserNamespace(namespaceList)
                 
-                commonAlert("Success Create NameSpace")
+                //commonAlert("Success Create NameSpace")
 
                 getNameSpace();// 생성 후 namespace목록 조회
                 $("#btnToggleNamespace").click()
@@ -334,7 +334,7 @@ function createNameSpace(){
                 // $("#nsDesc").val('')
                 clearNameSpaceCreateForm();
             }else{
-                alert("Fail Create NameSpace")
+                commonAlert("Fail Create NameSpace")
             }
         }).catch(function (error) {
             if (error.response) {

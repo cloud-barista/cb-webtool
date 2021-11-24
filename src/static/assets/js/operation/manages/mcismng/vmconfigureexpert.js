@@ -673,7 +673,10 @@ function applyAssistValues(caller) {
   if (caller == "vmImageAssist") {
     var orgPrefix = "vmImageAssist_";
     var targetPrefix = "tab_vmImage_";
-
+    console.log("vmImageAssist----")
+    console.log(targetPrefix + "cspImageId")
+    console.log(orgPrefix + "cspImageId_" + selectedIndex)
+    console.log($("#" + orgPrefix + "cspImageId_" + selectedIndex).val())
     $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
     $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
     $("#" + targetPrefix + "cspImageId").val($("#" + orgPrefix + "cspImageId_" + selectedIndex).val());
@@ -692,7 +695,7 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
     $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
     // $("#" + targetPrefix + "cspSpecId").val($("#" + orgPrefix + "cspSpecId_" + selectedIndex).val());
-    $("#" + targetPrefix + "cspSpecName_").val($("#" + orgPrefix + "cspSpecName_" + selectedIndex).val());
+    $("#" + targetPrefix + "cspSpecName").val($("#" + orgPrefix + "cspSpecName_" + selectedIndex).val());
     $("#" + targetPrefix + "memGiB").val($("#" + orgPrefix + "memGiB_" + selectedIndex).val());
     $("#" + targetPrefix + "numvCPU").val($("#" + orgPrefix + "numvCPU_" + selectedIndex).val());
     $("#" + targetPrefix + "numGpu").val($("#" + orgPrefix + "numGpu_" + selectedIndex).val());
