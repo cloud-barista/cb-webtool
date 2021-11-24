@@ -138,7 +138,8 @@ function getSshKeyList(sort_type) {
                 if (sort_type) {
                     console.log("check : ", sort_type);
                     data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                        html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">'
+                        //html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">'
+                        html += '<tr onclick="showSshKeyInfo(\'' + item.id + '\');">'
                         + '<td class="overlay hidden column-50px" data-th="">'
                         + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSshKeyName + '"/>'
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
@@ -152,7 +153,8 @@ function getSshKeyList(sort_type) {
                     ))
                 } else {
                     data.filter((list) => list.name !== "").map((item, index) => (
-                        html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">'
+                        //html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">'
+                        html += '<tr onclick="showSshKeyInfo(\'' + item.id + '\');">'
                         + '<td class="overlay hidden column-50px" data-th="">'
                         + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '"/>'
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'

@@ -771,3 +771,13 @@ function checkEmptyString(stringVal) {
 	}
 	return true;
 }
+
+// plus 버튼을 추가하는 script
+function getPlusVm(){
+	var append = "";
+	append = append + '<li id="plusVmIcon" >';
+	append = append + '<div class="server server_add" onClick="displayNewServerForm()">';
+	append = append + '</div>';
+	append = append + '</li>';
+	return append;
+}

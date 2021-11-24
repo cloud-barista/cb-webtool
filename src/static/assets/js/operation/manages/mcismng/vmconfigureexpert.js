@@ -384,6 +384,9 @@ function expertDone_btn() {
   }
   $(".expert_servers_config").removeClass("active");
   $("#mcis_server_list").prepend(add_server_html)
+  // $("#mcis_server_list").append(add_server_html)
+  $("#plusVmIcon").remove();
+  $("#mcis_server_list").prepend(getPlusVm());
   console.log("expert btn click and expert form data : ", expert_form)
   console.log("expert data array : ", Expert_Server_Config_Arr);
   expert_data_cnt++;
