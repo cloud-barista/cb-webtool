@@ -263,6 +263,9 @@ function simpleDone_btn() {
 	console.log("add server html");
 	$("#mcis_server_list").prepend(add_server_html)
 	// $("#mcis_server_list").append(add_server_html)
+	$("#plusVmIcon").remove();
+	$("#mcis_server_list").prepend(getPlusVm());
+
 	console.log("simple btn click and simple form data : ", simple_form)
 	console.log("simple data array : ", Simple_Server_Config_Arr);
 	simple_data_cnt++;
