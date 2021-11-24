@@ -555,11 +555,11 @@ function callMcisLifeCycle(type) {
 
 // McisLifeCycle을 호출 한 뒤 return값 처리
 function callbackMcisLifeCycle(resultStatus, resultData, type) {
-    var message = "MCIS " + type + " requested!."
+    var message = "MCIS " + type + " requested!"
     if (resultStatus == 200 || resultStatus == 201) {
         // commonAlert(message);
         console.log("callbackMcisLifeCycle" + message);
-        commonResultAlert("");
+        commonResultAlert(message);
         //location.reload();//완료 후 페이지를 reload -> 해당 mcis만 reload
 
         // 해당 mcis 조회
