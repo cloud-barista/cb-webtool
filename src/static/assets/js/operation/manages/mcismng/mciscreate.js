@@ -5,7 +5,11 @@ $(document).ready(function () {
         //$('#alertResultArea').on('hidden', function () {// bootstrap 2.3 이전
         let targetUrl = "/operation/manages/mcismng/mngform"
         changePage(targetUrl)
-    })
+    });
+
+    console.log("mcisCreate.js ")
+    getCommonCloudConnectionList('mciscreate', '', true)
+
     //Servers Expert on/off
     //     var check = $(".switch .ch");
     //     var $Servers = $(".servers_config");
@@ -312,6 +316,25 @@ function setMcisInfoToForm(mcisInfoObj) {
 
 }
 
+
+var totalCloudConnectionList = new Array();
+function getCloudConnectionListCallbackSuccess(caller, data, sortType) {
+    console.log("getCloudConnectionListCallbackSuccess")
+    totalCloudConnectionList = data;
+}
+// target Object(selectbox) 에 해당 provider목록만 표시
+// mcisvmcreate.js에도 동일한 function이 있으므로 추후 통합해야 함.
+function filterConnectionByProvider(provider, targetObjId) {
+    $('#' + targetObjId).find('option').remove();
+    $('#' + targetObjId).append('<option value="">Selected Connection</option>')
+    for (var connIndex in totalCloudConnectionList) {
+        var aConnection = totalCloudConnectionList[connIndex];
+        console.log(aConnection)
+        if (provider == "" || provider == aConnection.ProviderName) {
+            $('#' + targetObjId).append('<option value="' + aConnection.ConfigName + '">' + aConnection.ConfigName + '</option>')
+        }
+    }
+}
 
 // $(document).ready(function() {
 //     //OS_HW popup table scrollbar
