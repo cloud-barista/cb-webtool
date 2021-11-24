@@ -1201,42 +1201,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
 
     $("#manage_mcis_popup_public_ip").val(vmPublicIp)
 
-    //////vm detail tab////
-    var vmDetail = data.cspViewVmDetail;
-    //    //cspvmdetail
-    // var vmDetailKeyValueList = vmDetail.KeyValueList
-    var vmDetailKeyValueList = vmDetail.keyValueList
-    var architecture = "";
-    if (vmDetailKeyValueList) {
-        for (var keyIndex in vmDetailKeyValueList) {
-            if (vmDetailKeyValueList[keyIndex].key == "Architecture") {// ?? 이게 뭐지?
-                architecture = vmDetailKeyValueList[keyIndex].value
-                break;
-            }
-        }
-        // architecture = vmDetailKeyValueList.filter(item => item.Key === "Architecture")
-        // console.log("architecture : ",architecture.length)
-        // if(architecture.length > 0){
-        //     architecture = architecture[0].Value
-        //     console.log("architecture2 : ",architecture)
-        // }
-        // console.log("architecture = " + architecture)
-        $("#server_info_archi").val(architecture)
-        $("#server_detail_view_archi").val(architecture)
-    }
-    //    // server spec
-    // var vmSecName = data.VmSpecName
-    var vmSpecName = vmDetail.vmspecName;
-    $("#server_info_vmspec_name").val(vmSpecName)
-    $("#server_detail_view_server_spec").text(vmSpecName)
-    //var spec_id = data.specId
-    var specId = data.specId
-    // set_vmSpecInfo(spec_id);// memory + cpu  : TODO : spec정보는 자주변경되는것이 아닌데.. 매번 통신할 필요있나...
-
-    var startTime = vmDetail.startTime
-    $("#server_info_start_time").val(startTime)
-
-
+    // connection tab
     var locationInfo = data.location;
     var cloudType = locationInfo.cloudType;
     var cspIcon = ""
@@ -1319,53 +1284,90 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
         }
     }
 
-    // server id / system id
-    $("#server_detail_view_server_id").val(data.id)
-    // systemid 를 사용할 경우 아래 꺼 사용
-    $("#server_detail_view_server_id").val(vmDetail.iid.systemId)
+    //////vm detail tab////
+    var vmDetail = data.cspViewVmDetail;
+    if( vmDetail) {
+        //    //cspvmdetail
+        // var vmDetailKeyValueList = vmDetail.KeyValueList
+        var vmDetailKeyValueList = vmDetail.keyValueList
+        var architecture = "";
+        if (vmDetailKeyValueList) {
+            for (var keyIndex in vmDetailKeyValueList) {
+                if (vmDetailKeyValueList[keyIndex].key == "Architecture") {// ?? 이게 뭐지?
+                    architecture = vmDetailKeyValueList[keyIndex].value
+                    break;
+                }
+            }
+            // architecture = vmDetailKeyValueList.filter(item => item.Key === "Architecture")
+            // console.log("architecture : ",architecture.length)
+            // if(architecture.length > 0){
+            //     architecture = architecture[0].Value
+            //     console.log("architecture2 : ",architecture)
+            // }
+            // console.log("architecture = " + architecture)
+            $("#server_info_archi").val(architecture)
+            $("#server_detail_view_archi").val(architecture)
+        }
+        //    // server spec
+        // var vmSecName = data.VmSpecName
+        var vmSpecName = vmDetail.vmspecName;
+        $("#server_info_vmspec_name").val(vmSpecName)
+        $("#server_detail_view_server_spec").text(vmSpecName)
+        //var spec_id = data.specId
+        var specId = data.specId
+        // set_vmSpecInfo(spec_id);// memory + cpu  : TODO : spec정보는 자주변경되는것이 아닌데.. 매번 통신할 필요있나...
 
-    // image id
-    var imageIId = vmDetail.imageIId.nameId
-    var imageId = data.imageId
-    getCommonVmImageInfo('mcisvmdetail', imageId) //
-    $("#server_detail_view_image_id").text(imageId + "(" + imageIId + ")")
+        var startTime = vmDetail.startTime
+        $("#server_info_start_time").val(startTime)
 
-    //vpc subnet
-    var vpcId = vmDetail.vpcIID.nameId
-    var vpcSystemId = vmDetail.vpcIID.systemId
-    var subnetId = vmDetail.subnetIID.nameId
-    var subnetSystemId = vmDetail.subnetIID.systemId
-    var eth = vmDetail.networkInterface
-    $("#server_detail_view_vpc_id").text(vpcId + "(" + vpcSystemId + ")")
-    // set_vmVPCInfo(vpcId, subnetId);
+        // server id / system id
+        $("#server_detail_view_server_id").val(data.id)
+        // systemid 를 사용할 경우 아래 꺼 사용
+        $("#server_detail_view_server_id").val(vmDetail.iid.systemId)
 
-    $("#server_detail_view_subnet_id").text(subnetId + "(" + subnetSystemId + ")")
-    $("#server_detail_view_eth").val(eth)
+        // image id
+        var imageIId = vmDetail.imageIId.nameId
+        var imageId = data.imageId
+        getCommonVmImageInfo('mcisvmdetail', imageId) //
+        $("#server_detail_view_image_id").text(imageId + "(" + imageIId + ")")
 
-    // user account
-    $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId + "/ *** ")
-    $("#server_detail_view_user_id_pass").val(data.vmUserAccount + "/ *** ")
-    $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
+        //vpc subnet
+        var vpcId = vmDetail.vpcIID.nameId
+        var vpcSystemId = vmDetail.vpcIID.systemId
+        var subnetId = vmDetail.subnetIID.nameId
+        var subnetSystemId = vmDetail.subnetIID.systemId
+        var eth = vmDetail.networkInterface
+        $("#server_detail_view_vpc_id").text(vpcId + "(" + vpcSystemId + ")")
+        // set_vmVPCInfo(vpcId, subnetId);
+
+        $("#server_detail_view_subnet_id").text(subnetId + "(" + subnetSystemId + ")")
+        $("#server_detail_view_eth").val(eth)
+
+        // user account
+        $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId + "/ *** ")
+        $("#server_detail_view_user_id_pass").val(data.vmUserAccount + "/ *** ")
+        $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
 
 
-    var append_sg = ''
+        var append_sg = ''
 
-    var sg_arr = vmDetail.securityGroupIIds
-    console.log(sg_arr);
-    if (sg_arr) {
-        sg_arr.map((item, index) => {
-            console.log("item index = " + index)
-            append_sg += '<a href="javascript:void(0);" onclick="getCommonVmSecurityGroupInfo(\'mcisvm\',\'' + item.nameId + '\');"title="' + item.nameId + '" >' + item.nameId + '</a> '
-        })
-    }
-    console.log("append sg : ", append_sg)
+        var sg_arr = vmDetail.securityGroupIIds
+        console.log(sg_arr);
+        if (sg_arr) {
+            sg_arr.map((item, index) => {
+                console.log("item index = " + index)
+                append_sg += '<a href="javascript:void(0);" onclick="getCommonVmSecurityGroupInfo(\'mcisvm\',\'' + item.nameId + '\');"title="' + item.nameId + '" >' + item.nameId + '</a> '
+            })
+        }
+        console.log("append sg : ", append_sg)
 
-    $("#server_detail_view_security_group").empty()
-    $("#server_detail_view_security_group").append(append_sg);
+        $("#server_detail_view_security_group").empty()
+        $("#server_detail_view_security_group").append(append_sg);
 
-    $("#server_detail_view_keypair_name").val(vmDetail.keyPairIId.nameId)
-    // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인
-    ////// vm connection tab //////
+        $("#server_detail_view_keypair_name").val(vmDetail.keyPairIId.nameId)
+        // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인
+    }// end of vm detail
+        ////// vm connection tab //////
 
 
     $("#selected_mcis_id").val(mcisID);
@@ -2118,35 +2120,18 @@ function displayVmStatusArea() {
 var totalCloudConnectionMap = new Map();
 function setTotalConnection() {
     try {
+        console.log("setTotalConnection")
         for (var mcisIndex in totalMcisListObj) {
             var aMcis = totalMcisListObj[mcisIndex]
-            var cloudConnectionCountMap = calculateConnectionCount(aMcis.vm);
-            totalCloudConnectionMap.set(aMcis.id, cloudConnectionCountMap)
+            // var cloudConnectionCountMap = ;
+            totalCloudConnectionMap.set(aMcis.id, calculateConnectionCount(aMcis.vm) )
         }
     } catch (e) {
         console.log("mcis status error")
     }
     displayConnectionCountArea();
 }
-// function calculateConnectionCount(vmList){
-//     console.log("calculateConnectionCount")
-//     console.log(vmList)
-//     var vmCloudConnectionCountMap = new Map();
-//
-//     for(var vmIndex in vmList) {
-//         var aVm = vmList[vmIndex]
-//         var location = aVm.location;
-//         if (!isEmpty(location)) {
-//             var cloudType = location.cloudType;
-//             if (vmCloudConnectionCountMap.has(cloudType)) {
-//                 vmCloudConnectionCountMap.set(cloudType, vmCloudConnectionCountMap.get(cloudType) + 1)
-//             } else {
-//                 vmCloudConnectionCountMap.set(cloudType, 0)
-//             }
-//         }
-//     }
-//     return vmCloudConnectionCountMap;
-// }
+
 function displayConnectionCountArea() {
     // mcis별 합계이므로 total을 구해서 표시해야 함.
     var sumCloudConnectionMap = new Map();
@@ -2222,7 +2207,7 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
     var mcisTableRow = "";
     var mcisStatus = aMcisData.status
     var vmCloudConnectionMap = totalCloudConnectionMap.get(aMcisData.id);
-    var mcisProviderNames = getProviderNamesOfMcis(aMcisData.id);//MCIS에 사용 된 provider
+    var mcisProviderNamesa = getProviderNamesOfMcis(aMcisData.id);//MCIS에 사용 된 provider
     var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
 
     var vmStatusCountMap = totalVmStatusMap.get(aMcisData.id);
@@ -2265,7 +2250,7 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
         if (vmCloudConnectionMap) {
             vmCloudConnectionMap.forEach((value, key) => {
                 // + mcisProviderNames +
-                mcisTableRow += '    <img class="provider_icon" src="/assets/img/contents/img_logo_' + key + '.png" alt="' + key + '/>';
+                mcisTableRow += '    <img class="provider_icon" src="/assets/img/contents/img_logo_' + key + '.png" alt="' + key + '"/>';
 
             })
         }
