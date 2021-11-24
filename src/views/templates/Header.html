@@ -161,7 +161,7 @@
                             tdType.innerHTML = messageData[idx].taskType;
                             var splited = messageData[idx].taskKey.split("||");
                             var splitedIdx = splited.length - 1;
-                            tdDescription.innerHTML = splited[splitedIdx] + "의 " + messageData[idx].lifeCycle + "가 " + messageData[idx].status + "되었습니다.";
+                            tdDescription.innerHTML = splited[splitedIdx] + " " + messageData[idx].lifeCycle + " " + messageData[idx].status;
 
                             // 처음 open시에는 badge표시 안함
                             if (lastCallTimeValue == 0) { continue; }
