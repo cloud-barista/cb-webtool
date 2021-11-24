@@ -703,6 +703,20 @@ function filterNetworkList(keywords, caller) {
     });
     $("#assistVnetList").empty()
     $("#assistVnetList").append(html)
+
+    $("#assistVnetList tr").each(function () {
+        $selector = $(this)
+
+        $selector.on("click", function () {
+
+            if ($(this).hasClass("on")) {
+                $(this).removeClass("on");
+            } else {
+                $(this).addClass("on")
+                $(this).siblings().removeClass("on");
+            }
+        })
+    })
 }
 
 // expert mode일 때 나타나는 vnetList
@@ -827,6 +841,20 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList) {
         });
         $("#assistVmImageList").empty()
         $("#assistVmImageList").append(html)
+
+        $("#assistVmImageList tr").each(function () {
+            $selector = $(this)
+
+            $selector.on("click", function () {
+
+                if ($(this).hasClass("on")) {
+                    $(this).removeClass("on");
+                } else {
+                    $(this).addClass("on")
+                    $(this).siblings().removeClass("on");
+                }
+            })
+        })
     }
 }
 
@@ -1097,6 +1125,20 @@ function filterSshKeyList(keywords, caller) {
     });
     $("#assistSshKeyList").empty()
     $("#assistSshKeyList").append(html)
+
+    $("#assistSshKeyList tr").each(function () {
+        $selector = $(this)
+
+        $selector.on("click", function () {
+
+            if ($(this).hasClass("on")) {
+                $(this).removeClass("on");
+            } else {
+                $(this).addClass("on")
+                $(this).siblings().removeClass("on");
+            }
+        })
+    })
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -1358,6 +1400,20 @@ function getCommonFilterVmSpecListCallbackSuccess(caller, vmSpecList) {
             })
             $("#assistSpecList").empty()
             $("#assistSpecList").append(html)
+
+            $("#assistSpecList tr").each(function () {
+                $selector = $(this)
+
+                $selector.on("click", function () {
+
+                    if ($(this).hasClass("on")) {
+                        $(this).removeClass("on");
+                    } else {
+                        $(this).addClass("on")
+                        $(this).siblings().removeClass("on");
+                    }
+                })
+            })
         }
 
         // "associatedObjectList": null,
