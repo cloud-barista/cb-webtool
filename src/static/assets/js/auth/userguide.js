@@ -53,13 +53,15 @@ function processMap(caller){
 	var keyValue = guideMap.get(caller);
 	if( keyValue > 0){
 		$("#goto" + caller).html("")
-		console.log(" gogogogo ")
 		$("#goto" + caller).html("생성완료")
-		console.log(" gogogogo22 ")
 	}else{
 		console.log("-- goto" + caller)
 		document.getElementById("goto" + caller).style.display = "";
-		if( caller.indexOf("credential") > 0 || caller.indexOf("driver") > 0 || caller.indexOf("region") > 0){
+		if( caller.indexOf("credential") > -1
+			|| caller.indexOf("driver") > -1
+			|| caller.indexOf("region") > -1
+			|| caller.indexOf("mcis") > -1 ){
+			console.log("guide area modal ")
 			$("#guideArea").modal();
 		}
 	}
