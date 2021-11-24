@@ -405,7 +405,7 @@ function commonConfirmOk() {
         mcisScriptImport();
     } else if (targetAction == "ExportScriptOfMcis") {
         mcisScriptExport();
-    } else if (targetAction == "ShowMonitoring"){
+    } else if (targetAction == "ShowMonitoring") {
         var mcisID = $("#mcis_id").val();
         var targetUrl = "/operation/monitorings/mcismonitoring/mngform?mcisId=" + mcisID;
         changePage(targetUrl)
@@ -1225,3 +1225,4 @@ function showBtnDelAll() {
 function hideBtnDelAll() {
     $(".btn_del_all").css("display", "none");
 }
+

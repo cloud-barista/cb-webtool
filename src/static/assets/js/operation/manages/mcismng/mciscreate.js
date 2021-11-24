@@ -5,10 +5,12 @@ $(document).ready(function () {
         //$('#alertResultArea').on('hidden', function () {// bootstrap 2.3 이전
         let targetUrl = "/operation/manages/mcismng/mngform"
         changePage(targetUrl)
+
     });
 
     console.log("mcisCreate.js ")
     getCommonCloudConnectionList('mciscreate', '', true)
+
 
     //Servers Expert on/off
     //     var check = $(".switch .ch");
