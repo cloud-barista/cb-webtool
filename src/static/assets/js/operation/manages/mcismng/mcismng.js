@@ -2381,7 +2381,7 @@ function displayMcisInfoArea(mcisData) {
 
         var offset = $("#mcis_info_box").position();
         console.log("position", offset.top);
-        $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 300);
+        $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 500);
 
 
         // 초기화 후 set해야하나?

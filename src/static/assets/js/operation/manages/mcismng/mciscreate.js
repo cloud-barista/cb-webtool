@@ -6,6 +6,7 @@ $(document).ready(function () {
         let targetUrl = "/operation/manages/mcismng/mngform"
         changePage(targetUrl)
     })
+
     //Servers Expert on/off
     //     var check = $(".switch .ch");
     //     var $Servers = $(".servers_config");

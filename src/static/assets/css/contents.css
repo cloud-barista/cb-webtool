@@ -959,7 +959,7 @@ table tbody tr {
 .dashboard .g_detail_view { display:none; transition:all 0.4s ease-in-out; margin:30px 0 0 0; padding:40px 45px 25px 45px; background-color:#fff; border-radius:10px; box-shadow:2px 2px 5px 0  #f0f1f2, -2px -2px 5px 0  #f0f1f2; }
 .dashboard .g_detail_view.active { display:block; transition:all 0.4s ease-in-out; }
 .dashboard .g_detail_view .top_tit { font-size:18px; font-weight:400; color:#06a9b7; line-height:18px; }
-.dashboard .g_detail_view .view_ip { padding:37px 0 0 0; }
+/* .dashboard .g_detail_view .view_ip { padding:37px 0 0 0; } */
 .dashboard .g_detail_view .view_ip:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .g_detail_view .view_ip ul:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .g_detail_view .view_ip >  ul > li { float:left; margin:3px 0 0 0; text-align:right; }
@@ -983,13 +983,15 @@ table tbody tr {
 .dashboard .g_detail_view .view_ip li.m4 input[type="text"],
 .dashboard .g_detail_view .view_ip li.m4 input[type="password"] { width:75%; }
 .dashboard .g_detail_view .view_ip li.m5 .selectbox { width:60%; }
-.dashboard .g_detail_view .view_ip li span.sbox { margin:3px 0 0 0; display:block; text-align:right; }
+.dashboard .g_detail_view .view_ip li span.sbox { margin:3px 0 0 0; display:block; text-align:right; margin-left: 8px;}
 .dashboard .g_detail_view .view_ip li .btn_view { position:relative; display:inline-block; vertical-align:middle; cursor:pointer; padding:0 12px; min-width:50px; height:37px; line-height:37px; border:none; color:#fff; font-size:12px; font-weight:500; outline:none; border-radius:5px; background-color:#999ea7; } 
 .dashboard .g_detail_view .view_ipbox .graphbox { margin:30px 0 0 0; background-color:#f8f9fa; border-radius:10px; }
 .dashboard .g_detail_view .view_ipbox .graphbox img { width:100%; border-radius:10px; }
-.dashboard .g_detail_view .view_ip .mvbox { float:left; width:50%; }
+.dashboard .g_detail_view .view_ip .mvbox { float:left; /*width:50%;*/ }
 .dashboard .g_detail_view .view_ip .mvbox label { text-align:right; margin:8px 14px 0 0; display:inline-block; vertical-align:top; color:#5e636c; font-size:16px; line-height:16px; font-weight:500; }
 .dashboard .g_detail_view .view_ip .mvbox.v_ip2 { text-align:right; }
+.dashboard .g_detail_view .view_ip .mvbox.v_ip2 ul{ display: flex; }
+.dashboard .g_detail_view .view_ip .mvbox.v_ip2 ul li{ display: flex; margin-left: 15px;}
 .dashboard .g_detail_view .view_ip .mvbox .selectbox { width:60%; }
 .dashboard .g_detail_view .view_ip .mvbox.v_ip2 .selectbox { width:50%; }
 .dashboard .g_detail_view .view_ip .mvbox .mt_2 .selectbox { width:120px; }
@@ -1312,7 +1314,8 @@ table tbody tr {
 .ds_cont_mbox .mtbox .g_list .listbox li.bgbox_y { background-color:#ffc800; border:4px solid #ffc800; }
 .ds_cont_mbox.g_detail_view {  display:none; margin:20px 0 0 0; background-color:#f8f9fa; box-shadow:none; }
 .ds_cont_mbox.g_detail_view.active { display:block; }
-.ds_cont_mbox.g_detail_view .view_ip { padding:37px 0 0 0; }
+.ds_cont_mbox.g_detail_view .view-cont{display: flex;}
+.ds_cont_mbox.g_detail_view .view_ip { /*padding:37px 0 0 0;*/ width: 100%;}
 .ds_cont_mbox.g_detail_view .view_ip:nth-child(1) { padding:0; }
 @media screen and (max-width:1550px){
 	.ds_cont_mbox { padding:30px 40px; }
@@ -1981,6 +1984,7 @@ table tbody tr {
 .dashboard .create_box .servers_box .list { padding:0 0 0 160px; margin:-10px 0 0 -10px;}
 .dashboard .create_box .servers_box .list ul:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .create_box .servers_box .list li { float:left; margin:10px 0 0 10px; }
+.dashboard .create_box .servers_box .list #plusVmIcon{cursor: pointer;}
 .dashboard .create_box .servers_box .list li .server { width:110px; height:110px; padding-top:15px; text-align:center; border-radius:20px; margin:0 auto;}
 .dashboard .create_box .servers_box .list li .server .icon { width:45px; height:53px; margin:0 auto; background:url(../img/contents/icon_server.png) center center no-repeat; }
 .dashboard .create_box .servers_box .list li .server .txt { color:#fff; font-weight:500; font-size:16px; line-height:16px; margin:8px 0 0 0; }
