@@ -436,19 +436,18 @@ function searchSpecsByRange(caller) {
 	// }
 
 	// storage
-	var storageMin = $("#assist_num_storage_min").val();
-	var storageMax = $("#assist_num_storage_max").val();
-
-	var storageObj = new Object();
-	storageObj.min = Number(storageMin)
-	storageObj.max = Number(storageMax)
+	// var storageMin = $("#assist_num_storage_min").val();
+	// var storageMax = $("#assist_num_storage_max").val();
+	// var storageObj = new Object();
+	// storageObj.min = Number(storageMin)
+	// storageObj.max = Number(storageMax)
 
 	// Core
-	var coreMin = $("#assist_num_core_min").val();
-	var coreMax = $("#assist_num_core_max").val();
-	var coreObj = new Object();
-	coreObj.min = Number(coreMin)
-	coreObj.max = Number(coreMax)
+	// var coreMin = $("#assist_num_core_min").val();
+	// var coreMax = $("#assist_num_core_max").val();
+	// var coreObj = new Object();
+	// coreObj.min = Number(coreMin)
+	// coreObj.max = Number(coreMax)
 
 	// specFilter.numCore = { "min": coreMin, "max": coreMax };
 
@@ -461,12 +460,18 @@ function searchSpecsByRange(caller) {
 	// specFilter.numvCPU = { "min": vCpuMin, "max": vCpuMax };
 
 	// memory
+	var memGiBMin = $("#assist_num_memory_min").val();
+	var memGiBMax = $("#assist_num_memory_max").val();
+	var memGiBObj = new Object();
+	memGiBObj.min = Number(vCpuMin)
+	memGiBObj.max = Number(vCpuMax)
 
 	var specFilter = {
 		connectionName: assistSpecConnectionNameVal,
-		maxTotalStorageTiB: storageObj,
-		numCore: coreObj,
+		// maxTotalStorageTiB: storageObj,
+		// numCore: coreObj,
 		numvCPU: vCpuObj,
+		memGib: memGiBObj,
 	}
 	getCommonFilterVmSpecListByRange(specFilter, caller)
 
