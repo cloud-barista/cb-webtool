@@ -1251,10 +1251,10 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
     var region = data.region.region
     // var zone = data.region.zone
     var zone = data.region.zone
-    console.log(vmDetail.iid);
+    // console.log(vmDetail.iid);
     $("#server_info_region").val(briefAddr + ":" + region)
     $("#server_info_zone").val(zone)
-    $("#server_info_cspVMID").val("cspVMID : " + vmDetail.iid.nameId)
+    // $("#server_info_cspVMID").val("cspVMID : " + vmDetail.iid.nameId)// vmDetail에 있는 항목으로 vmDetail에서 처리
 
     $("#server_detail_view_region").val(briefAddr + " : " + region)
     $("#server_detail_view_zone").val(zone)
@@ -1365,6 +1365,10 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
         $("#server_detail_view_security_group").append(append_sg);
 
         $("#server_detail_view_keypair_name").val(vmDetail.keyPairIId.nameId)
+
+        console.log(vmDetail.iid);
+        $("#server_info_cspVMID").val("cspVMID : " + vmDetail.iid.nameId)
+
         // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인
     }// end of vm detail
         ////// vm connection tab //////
