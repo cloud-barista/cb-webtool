@@ -92,8 +92,9 @@
 											<tr onclick="clickListOfMcks('{{$clusterItem.UID}}', '{{$clusterIndex}}' );" id="node_info_tr_{{$clusterIndex}}" item="{{$clusterItem.UID}}|{{$clusterIndex}}">
 												<!-- { {$clusterItem} } -->
 												<td class="overlay hidden td_left" data-th="Status">
-													<img src="/assets/img/contents/icon_{{$clusterItem.McksStatus}}.png" class="icon" alt=""/>{{$clusterItem.Status}}<span class="ov off"></span>
-													
+<!--													<img src="/assets/img/contents/icon_{{$clusterItem.McksStatus}}.png" class="icon" alt=""/>{{$clusterItem.Status}}<span class="ov off"></span>-->
+													<img src="/assets/img/contents/icon_running.png" class="icon" alt=""/>{{$clusterItem.Status}}<span class="ov off"></span>
+
 												</td>
 												<td class="btn_mtd ovm" data-th="Name">{{$clusterItem.Name}}<span class="ov"></span></td>
 												<td class="btn_mtd ovm" data-th="TotalNodeCount">{{$clusterItem.TotalNodeCount}}<span class="ov"></span></td>
