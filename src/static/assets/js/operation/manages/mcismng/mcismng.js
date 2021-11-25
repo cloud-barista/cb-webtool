@@ -2363,14 +2363,12 @@ function displayMcisInfoArea(mcisData) {
             $(".server_info").removeClass("active");
         } else {
             $(".server_status").addClass("view");
-            //if ($("#mcis_info_box").hasClass("view")) {
-
-            //    }
+            var offset = $("#mcis_info_box").position();
+            console.log("position", offset.top);
+            $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 300);
         }
 
-        var offset = $("#mcis_info_box").position();
-        console.log("position", offset.top);
-        $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 300);
+
 
 
         // 초기화 후 set해야하나?
