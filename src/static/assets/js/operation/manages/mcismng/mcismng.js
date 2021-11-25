@@ -1286,7 +1286,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
 
     //////vm detail tab////
     var vmDetail = data.cspViewVmDetail;
-    if( vmDetail) {
+    if (vmDetail) {
         //    //cspvmdetail
         // var vmDetailKeyValueList = vmDetail.KeyValueList
         var vmDetailKeyValueList = vmDetail.keyValueList
@@ -1367,7 +1367,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
         $("#server_detail_view_keypair_name").val(vmDetail.keyPairIId.nameId)
         // ... TODO : 우선 제어명령부터 처리. 나중에 해당항목 mapping하여 확인
     }// end of vm detail
-        ////// vm connection tab //////
+    ////// vm connection tab //////
 
 
     $("#selected_mcis_id").val(mcisID);
@@ -2124,7 +2124,7 @@ function setTotalConnection() {
         for (var mcisIndex in totalMcisListObj) {
             var aMcis = totalMcisListObj[mcisIndex]
             // var cloudConnectionCountMap = ;
-            totalCloudConnectionMap.set(aMcis.id, calculateConnectionCount(aMcis.vm) )
+            totalCloudConnectionMap.set(aMcis.id, calculateConnectionCount(aMcis.vm))
         }
     } catch (e) {
         console.log("mcis status error")
@@ -2359,14 +2359,10 @@ function displayMcisInfoArea(mcisData) {
             $(".server_info").removeClass("active");
         } else {
             $(".server_status").addClass("view");
-            //if ($("#mcis_info_box").hasClass("view")) {
-
-            //    }
+            var offset = $("#mcis_info_box").position();
+            console.log("position", offset.top);
+            $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 500);
         }
-
-        var offset = $("#mcis_info_box").position();
-        console.log("position", offset.top);
-        $("#TopWrap").animate({ scrollTop: offset.top * 1.3 }, 500);
 
 
         // 초기화 후 set해야하나?
