@@ -1317,7 +1317,7 @@ table tbody tr {
 .ds_cont_mbox.g_detail_view {  display:none; margin:20px 0 0 0; background-color:#f8f9fa; box-shadow:none; }
 .ds_cont_mbox.g_detail_view.active { display:block; }
 .ds_cont_mbox.g_detail_view .view-cont{display: flex;}
-.ds_cont_mbox.g_detail_view .view_ip { /*padding:37px 0 0 0;*/ width: 100%;}
+.ds_cont_mbox.g_detail_view .view_ip { /*padding:37px 0 0 0; width: 100%;*/}
 .ds_cont_mbox.g_detail_view .view_ip:nth-child(1) { padding:0; }
 @media screen and (max-width:1550px){
 	.ds_cont_mbox { padding:30px 40px; }
