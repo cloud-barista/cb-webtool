@@ -322,6 +322,9 @@ table tbody tr {
 .column-40percent {
     width: 40%;
 }
+.column-60percent {
+    width: 60%;
+}
 
 @media screen and (max-width: 768px) { 
 
@@ -1967,6 +1970,8 @@ table tbody tr {
 .dashboard .create_box .top_ipbox {}
 .dashboard .create_box .top_ipbox:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .create_box .top_ipbox .ipbox { float:left; }
+.dashboard .create_box .top_ipbox .ipbox.first {width: 35%;}
+.dashboard .create_box .top_ipbox .ipbox.second {width: 65%;}
 .dashboard .create_box .top_ipbox .ipbox.ipbox1 { width:45%; }
 .dashboard .create_box .top_ipbox .ipbox.ipbox2 { width:55%; }
 .dashboard .create_box .top_ipbox .ipbox > ul { padding-right:18%; text-align:right; }
@@ -2064,6 +2069,8 @@ table tbody tr {
 	.dashboard .create_box .servers_config .top_box .titbox_sc .config_location { display:block; margin:15px 0 0 0; }
 }
 @media screen and (max-width:1400px){
+	.dashboard .create_box .top_ipbox .ipbox.first,
+	.dashboard .create_box .top_ipbox .ipbox.second,
 	.dashboard .create_box .top_ipbox .ipbox.ipbox1,
 	.dashboard .create_box .top_ipbox .ipbox.ipbox2 { width:100%; }
 	.dashboard .create_box .top_ipbox .ipbox > ul { padding-right:0; }
