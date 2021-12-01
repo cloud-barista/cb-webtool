@@ -116,7 +116,7 @@ function btn_deploy(){
             console.log("Result message : ",message); 
 
             if(result.status == 201 || result.status == 200){
-                commonResultAlert("MCKS successful createion request")
+                commonResultAlert("MCKS create request success")
                 // var targetUrl = "/operation/manages/mcksmng/mngform"
                 // changePage(targetUrl);
             
