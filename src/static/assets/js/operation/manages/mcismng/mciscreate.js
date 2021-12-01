@@ -62,8 +62,9 @@ function displayNewServerForm() {
     var simpleServerConfig = $("#simpleServerConfig");
     var expertServerConfig = $("#expertServerConfig");
     var importServerConfig = $("#importServerConfig");
-
-    if ($("#isImport").is(":checked")) {
+    console.log("is import = " + IsImport + " , is expert " + $("#isExpert").is(":checked"))
+    // if ($("#isImport").is(":checked")) {
+    if (IsImport) {
         simpleServerConfig.removeClass("active");
         expertServerConfig.removeClass("active");
         importServerConfig.addClass("active");
@@ -203,6 +204,11 @@ function displayMcisImportServerFormByImport(importType) {
         // addMcisByScriptArea.addClass("active");
         // addVmListArea.removeClass("active");
 
+        // 하단에 열려있는 영역이 있으면 닫는다.
+        $("#simpleServerConfig").removeClass("active");
+        $("#expertServerConfig").removeClass("active");
+        $("#importServerConfig").removeClass("active");
+
         importMCISInfoFromFile();// import창 띄우기 
     } else {
         $("#mcisImportScriptPretty").val("");
@@ -212,6 +218,8 @@ function displayMcisImportServerFormByImport(importType) {
         mcisInfoboxArea.css("display", "block");
     }
     IsImport = importType;// 전역으로 set
+
+    // displayNewServerForm();
 }
 
 // mcis export한 파일 선택하여 읽기
