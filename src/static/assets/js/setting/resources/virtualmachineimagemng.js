@@ -94,7 +94,7 @@ function displayVirtualMachineImageInfo(targetAction) {
         $("#regDescription").val('')
 
         $("#assistVmImage").css("display", "block");
-
+        goFocus('virtualMachineImageCreateBox');
     } else if (targetAction == "REG_SUCCESS") {
         $('#virtualMachineImageCreateBox').removeClass("active");
         $('#virtualMachineImageInfoBox').removeClass("view");
@@ -524,11 +524,11 @@ function showVirtualMachinImageInfo(target) {
 // }
 
 // Assist Popup
-function showImageAssistPopup(){
+function showImageAssistPopup() {
     $("#imageLookupAssist").modal();
 
     var regProviderName = $("#regProviderName").val();
-    if( regProviderName ){
+    if (regProviderName) {
         $("#assistImageProviderName").val(regProviderName);
         // $("#assistImageProviderName option[value=" + configName + "]").prop('selected', true).change();
     }
@@ -642,11 +642,11 @@ function clearCspImageInfo() {
 }
 
 // assistPopup의 connection 정보가 바뀌면 image정보도 초기화 시킨다.
-function clearAssistImageList(targetTableList){
+function clearAssistImageList(targetTableList) {
     $("#" + targetTableList).empty()
 }
 // assistPopup의 connection 정보가 바뀌면 image정보도 초기화 시킨다.
-function clearAssistLookupImageList(targetTableList){
+function clearAssistLookupImageList(targetTableList) {
     $("#" + targetTableList).empty()
 }
 //입력한 keyword 화면에 표시
