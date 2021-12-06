@@ -7,21 +7,21 @@
 
 // map에 담긴 Key를 value로 바꿔 url을 return한다.
 // url에는 main.go 에서 사용하는 path를 넣는다.
-function setUrlByParam(url, urlParamMap){
+function setUrlByParam(url, urlParamMap) {
     //resultVmCreateMap.set(resultVmKey, resultStatus)
     // var url = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";    
     var returnUrl = url;
-    for (let key of urlParamMap.keys()) { 
-        console.log("urlParamMap " + key + " : " + urlParamMap.get(key) );
-        
+    for (let key of urlParamMap.keys()) {
+        console.log("urlParamMap " + key + " : " + urlParamMap.get(key));
+
         var urlParamValue = urlParamMap.get(key)
-        returnUrl = returnUrl.replace(key, urlParamValue);        
+        returnUrl = returnUrl.replace(key, urlParamValue);
     }
     return returnUrl;
 }
 
 // conteroller의 methodName으로 main.go에 정의된 url값을 가져온다.
-function getWebToolUrl(controllerKeyName){
+function getWebToolUrl(controllerKeyName) {
     // ex ) monitoringGroup.GET("/operation/monitorings/mcismonitoring/mngform", controller.McisMonitoringMngForm)    
     let controllerMethodNameMap = new Map(
         [
@@ -36,18 +36,18 @@ function getWebToolUrl(controllerKeyName){
     );
 
     var webtoolUrl = controllerMethodNameMap.get(controllerKeyName);
-    
+
     return webtoolUrl;
 }
 
 // main 화면인 경우에는 apitest로 보내고
 // 그 외에는 helpArea를 보여준다.
 // helpKey가 있는 경우에는 해당 key에 맞는 help 정보를 보여준다.
-function showHelp(helpKey){
+function showHelp(helpKey) {
     var path = window.location.pathname;
-    if( path == "/main"){
-        location.href="/main/apitestmng"
-    }else{
+    if (path == "/main") {
+        location.href = "/main/apitestmng"
+    } else {
         //$("#helpArea").modal()        
         changePage("/operation/about/about");// About으로 이동
     }
@@ -56,41 +56,41 @@ function showHelp(helpKey){
 //////////////// api -> local server -> target api  호출 ///////////////
 // 한 화면에서 서로다른 형태로 호출이 가능하므로 caller(호출자) 를 callback에 같이 넘겨서 구분할 수 있게 함.
 // isCallback = false 이고 targetObjId 가 있는 경우 해당 obj set
-function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam){
+function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam) {
     var url = "/setting/namespaces/namespace/list";
 
-    if(optionParam != ""){
-        url += "?option=" +optionParam;
+    if (optionParam != "") {
+        url += "?option=" + optionParam;
     }
 
-    axios.get(url,{
-        headers:{
-            'Content-Type' : "application/json"
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
         }
-    }).then(result=>{
+    }).then(result => {
         console.log(result);
-        console.log("get NameSpace Data : ",result.data);
+        console.log("get NameSpace Data : ", result.data);
         // var data = result.data.ns;
         var data = result.data;
-        
-        if( !isCallback && targetObjId != undefined ){
+
+        if (!isCallback && targetObjId != undefined) {
             setLeftMenuNamespaceList(targetObjId, data);
-        }else{            
+        } else {
             getNameSpaceListCallbackSuccess(caller, data);
-        }   
+        }
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         // commonErrorAlert(statusCode, errorMessage) 
-        if( !isCallback && targetObjId != undefined ){
+        if (!isCallback && targetObjId != undefined) {
             setLeftMenuNamespaceList(targetObjId, data);
-        }else{            
+        } else {
             getNameSpaceListCallbackFail(caller, error);
-        }  
-        
-        
+        }
+
+
     });
 }
 // namespaceList를 해당 targetObjeId에 set
@@ -111,31 +111,31 @@ function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam){
 
 // namespaceList를 좌측메뉴에 set. 
 // common.js나 util.js로 넘길까?
-function setLeftMenuNamespaceList(targetObjId, namespaceList){
+function setLeftMenuNamespaceList(targetObjId, namespaceList) {
     console.log("setLeftMenuNamespaceList targetObj=" + targetObjId)
-    if(!isEmpty(namespaceList) && namespaceList.length){            
-        for(var itemIndex in namespaceList){
+    if (!isEmpty(namespaceList) && namespaceList.length) {
+        for (var itemIndex in namespaceList) {
             console.log(namespaceList[itemIndex])
-            $("#" + targetObjId).append('<li><a href="javascript:void(0);" onclick="selectDefaultNameSpace(\'TobBox\', \'' + namespaceList[itemIndex].id +'\' )" data-toggle="modal" data-target="#NameSpace">' + namespaceList[itemIndex].name + '</a></li>');
+            $("#" + targetObjId).append('<li><a href="javascript:void(0);" onclick="selectDefaultNameSpace(\'TobBox\', \'' + namespaceList[itemIndex].id + '\' )" data-toggle="modal" data-target="#NameSpace">' + namespaceList[itemIndex].name + '</a></li>');
         }
     }
 }
 
 // caller 구분자, sortType : 오름.내림, isCallback
-function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId){
+function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId) {
     var url = "/setting/connections/cloudconnectionconfig/list";
-    axios.get(url,{
-        headers:{
-                'Content-Type' : "application/json"
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
         }
-    }).then(result=>{
-        console.log("get CloudConnection Data : ",result.data);
+    }).then(result => {
+        console.log("get CloudConnection Data : ", result.data);
         var data = result.data.ConnectionConfig;
 
-        if( !isCallback && targetObjId != undefined ){
-        }else{
+        if (!isCallback && targetObjId != undefined) {
+        } else {
             getCloudConnectionListCallbackSuccess(caller, data, sortType);
-        }        
+        }
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
@@ -144,18 +144,18 @@ function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId)
     });
 }
 
-function getCommonCredentialList(caller, optionParam){
+function getCommonCredentialList(caller, optionParam) {
     var url = "/setting/connections/credential";
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
-    axios.get(url,{
-        headers:{
-                'Content-Type' : "application/json"
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
         }
-    }).then(result=>{
-        console.log("get Credential Data : ",result.data);
+    }).then(result => {
+        console.log("get Credential Data : ", result.data);
         var data = result.data.Credential;
         getCredentialListCallbackSuccess(caller, data);
     }).catch((error) => {
@@ -167,17 +167,17 @@ function getCommonCredentialList(caller, optionParam){
 }
 
 
-function getCommonRegionList(caller, optionParam){
+function getCommonRegionList(caller, optionParam) {
     var url = "/setting/connections/region"
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
 
-    axios.get(url,{
+    axios.get(url, {
 
-    }).then(result=>{
-        console.log("get Region Data : ",result.data);
+    }).then(result => {
+        console.log("get Region Data : ", result.data);
         var data = result.data.Region;
         getRegionListCallbackSuccess(caller, data);
     }).catch((error) => {
@@ -190,20 +190,20 @@ function getCommonRegionList(caller, optionParam){
 }
 
 
-function getCommonDriverList(caller, optionParam){
-    var url = "/setting/connections"+"/driver";
+function getCommonDriverList(caller, optionParam) {
+    var url = "/setting/connections" + "/driver";
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
 
-    axios.get(url,{
+    axios.get(url, {
         // headers:{
         //     'Authorization': "{{ .apiInfo}}",
         //     'Content-Type' : "application/json"
         // }
-    }).then(result=>{
-        console.log("get Driver Data : ",result.data);
+    }).then(result => {
+        console.log("get Driver Data : ", result.data);
         var data = result.data.Driver;
         getDriverListCallbackSuccess(caller, data);
     }).catch((error) => {
@@ -216,23 +216,23 @@ function getCommonDriverList(caller, optionParam){
     });
 }
 
-function getCommonNetworkList(caller, optionParam){
+function getCommonNetworkList(caller, optionParam) {
     console.log("vnet : ");
-    
+
     var url = "/setting/resources/network/list"
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
 
-    axios.get(url,{
-        headers:{
+    axios.get(url, {
+        headers: {
             // 'Authorization': apiInfo
         }
-    }).then(result=>{
+    }).then(result => {
         data = result.data.VNetList;
-        console.log("vNetwork Info : ",result);
-        console.log("vNetwork data : ",data);
+        console.log("vNetwork Info : ", result);
+        console.log("vNetwork data : ", data);
         getNetworkListCallbackSuccess(caller, data);
     }).catch(error => {
         console.warn(error);
@@ -248,7 +248,7 @@ function getCommonNetworkList(caller, optionParam){
 function getCommonSecurityGroupList(caller, sortType, optionParam) {
     var url = "/setting/resources/securitygroup/list";
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
 
@@ -260,32 +260,32 @@ function getCommonSecurityGroupList(caller, sortType, optionParam) {
     }).then(result => {
         console.log("get SG Data : ", result.data);
         var data = result.data.SecurityGroupList; // exception case : if null 
-        
+
         console.log("Data : ", data);
-        if( caller == "securitygroupmng"){
-			console.log("return get Data securitygroupmng")
-			setSecurityGroupListAtServerImage(data, sortType)			
-		}else if( caller == "mcissimpleconfigure"){
-			console.log("return get Data")
-			setSecurityGroupListAtSimpleConfigure(data)			
-		}else if( caller == "mainsecuritygroup"){
-			console.log("return get Data")
-			getSecurityGroupListCallbackSuccess(caller, data)			
-		}else {
+        if (caller == "securitygroupmng") {
+            console.log("return get Data securitygroupmng")
+            setSecurityGroupListAtServerImage(data, sortType)
+        } else if (caller == "mcissimpleconfigure") {
+            console.log("return get Data")
+            setSecurityGroupListAtSimpleConfigure(data)
+        } else if (caller == "mainsecuritygroup") {
+            console.log("return get Data")
+            getSecurityGroupListCallbackSuccess(caller, data)
+        } else {
             getSecurityGroupListCallbackSuccess(caller, data)
         }
 
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         getSecurityGroupListCallbackFail(error)
-	});
+    });
 }
 
 function getCommonSshKeyList(caller, optionParam) {
     var url = "/setting/resources/sshkey/list"
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
 
@@ -317,7 +317,7 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam) {
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/machineimage/list"
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
 
@@ -328,25 +328,25 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam) {
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
-        
+
         var data = result.data.VirtualMachineImageList;
         // Data가져온 뒤 set할 method 호출
-		if( caller == "virtualmachineimagemng"){
-			console.log("return get Data")
-			setVirtualMachineImageListAtServerImage(data, sortType)			
-		}else if( caller == "mcissimpleconfigure"){
-			console.log("return get Data")
-			setVirtualMachineImageListAtSimpleConfigure(data, sortType)			
-		}else if( caller == "mainimage"){
-			console.log("return get Data")
-			getImageListCallbackSuccess(caller, data)
-        }else if( caller == "vmcreate"){
+        if (caller == "virtualmachineimagemng") {
+            console.log("return get Data")
+            setVirtualMachineImageListAtServerImage(data, sortType)
+        } else if (caller == "mcissimpleconfigure") {
+            console.log("return get Data")
+            setVirtualMachineImageListAtSimpleConfigure(data, sortType)
+        } else if (caller == "mainimage") {
+            console.log("return get Data")
+            getImageListCallbackSuccess(caller, data)
+        } else if (caller == "vmcreate") {
             console.log("return get Data")
             getImageListCallbackSuccess(caller, data)
         }
-    // }).catch(function(error){
-    //     console.log("list error : ",error);        
-    // });
+        // }).catch(function(error){
+        //     console.log("list error : ",error);        
+        // });
     }).catch(error => {
         console.warn(error);
         console.log(error.response)
@@ -361,7 +361,7 @@ function getCommonVirtualMachineSpecList(caller, sortType, optionParam) {
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/vmspec/list"
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
 
@@ -372,29 +372,29 @@ function getCommonVirtualMachineSpecList(caller, sortType, optionParam) {
         }
     }).then(result => {
         console.log("get Spec List : ", result.data);
-        
+
         var data = result.data.VmSpecList;
 
-        if ( caller == "virtualmachinespecmng") {
+        if (caller == "virtualmachinespecmng") {
             console.log("return get Data");
-            virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
+            virtualMachineSpecListCallbackSuccess(caller, data, sortType);
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
-        }else if( caller == "mainspec"){
-			console.log("return get Data")
-			getSpecListCallbackSuccess(caller, data)
-        }else if( caller == "vmcreate"){
+        } else if (caller == "mainspec") {
+            console.log("return get Data")
+            getSpecListCallbackSuccess(caller, data)
+        } else if (caller == "vmcreate") {
             console.log("return get Data")
             getSpecListCallbackSuccess(caller, data)
         }
     }).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+        console.warn(error);
+        console.log(error.response)
         getSpecListCallbackFail(error)
-	});
+    });
 }
 
 // /lookupSpecs
-function getCommonLookupSpecList(caller, connectionName) {    
+function getCommonLookupSpecList(caller, connectionName) {
     var url = "/setting/resources/vmspec/lookupvmspecs"
     axios.get(url, {
         headers: {
@@ -406,26 +406,26 @@ function getCommonLookupSpecList(caller, connectionName) {
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
-        
+
         var data = result.data.CspVmSpecList;
-        
-		// Data가져온 뒤 set할 method 호출
-		if( caller == "vmspecmng"){
-			console.log("return get Data")			
-			lookupSpecListCallbackSuccess(caller, data)		
-		}
-    // }).catch(function(error){
-    //     console.log("list error : ",error);        
-    // });
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+
+        // Data가져온 뒤 set할 method 호출
+        if (caller == "vmspecmng") {
+            console.log("return get Data")
+            lookupSpecListCallbackSuccess(caller, data)
+        }
+        // }).catch(function(error){
+        //     console.log("list error : ",error);        
+        // });
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         lookupSpecListCallbackSuccess(error)
-	});
+    });
 }
 
 // /lookupSpecs
-function getCommonLookupSpec(caller, connectionName, cspSpecName) {    
+function getCommonLookupSpec(caller, connectionName, cspSpecName) {
     var url = "/setting/resources/vmspec/lookupvmspec"
     axios.get(url, {
         headers: {
@@ -434,30 +434,30 @@ function getCommonLookupSpec(caller, connectionName, cspSpecName) {
         },
         params: {
             connectionName: connectionName,
-            cspSpecName : cspSpecName
+            cspSpecName: cspSpecName
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
-        
+
         var data = result.data.CspVmSpecList;
-        
-		// Data가져온 뒤 set할 method 호출
-		if( caller == "vmspecmng"){
-			console.log("return get Data")			
-			lookupSpecListCallbackSuccess(caller, data)		
-		}
-    // }).catch(function(error){
-    //     console.log("list error : ",error);        
-    // });
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+
+        // Data가져온 뒤 set할 method 호출
+        if (caller == "vmspecmng") {
+            console.log("return get Data")
+            lookupSpecListCallbackSuccess(caller, data)
+        }
+        // }).catch(function(error){
+        //     console.log("list error : ",error);        
+        // });
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         lookupSpecListCallbackSuccess(error)
-	});
+    });
 }
 
 // 현재 선택 된 
-function putFetchSpecs(connectionName){
+function putFetchSpecs(connectionName) {
     var url = "/setting/resources/vmspec/fetchvmspec"
     axios.post(url, {
         headers: {
@@ -465,26 +465,26 @@ function putFetchSpecs(connectionName){
         },
         params: {
             connectionName: connectionName
-        }      
+        }
     }).then(result => {
         console.log(result);
-        if(result.data.status == 200 || result.data.status == 201){
-            commonAlert("Spec Fetched");                
+        if (result.data.status == 200 || result.data.status == 201) {
+            commonAlert("Spec Fetched");
             // Region 갱신 
-            getRegionList();   
-        }else{
+            getRegionList();
+        } else {
             commonAlert("Fail to Spec Fetched");
         }
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage);
-	});
+    });
 }
 
-function getCommonFilterSpecsByRange(caller, searchObj){
+function getCommonFilterSpecsByRange(caller, searchObj) {
     var url = "/setting/resources/vmspec/filterspecsbyrange";
 
     // 똑같은데... 얘는 param을 못받음
@@ -493,8 +493,8 @@ function getCommonFilterSpecsByRange(caller, searchObj){
     //                 'Content-type': 'application/json',
     //             },
     //     searchObj       
-    axios.post(url,searchObj,{
-        headers: { 
+    axios.post(url, searchObj, {
+        headers: {
             'Content-type': 'application/json',
             // 'Authorization': apiInfo, 
         }
@@ -509,25 +509,25 @@ function getCommonFilterSpecsByRange(caller, searchObj){
         // }
         var data = result.data.VmSpecList;
         console.log("caller " + caller)
-        if ( caller == "virtualmachinespecmng") {
+        if (caller == "virtualmachinespecmng") {
             console.log("return get Data");
-            virtualMachineSpecListCallbackSuccess(caller, data, sortType);	
+            virtualMachineSpecListCallbackSuccess(caller, data, sortType);
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
-        }else if ( caller == "vmassistpopup"){
+        } else if (caller == "vmassistpopup") {
             filterSpecsByRangeCallbackSuccess(caller, data);
         }
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage);
-	});
+    });
 
 }
 
 // /lookupImages
-function getCommonLookupImageList(caller, connectionName) {    
+function getCommonLookupImageList(caller, connectionName) {
     //var url = "/setting/resources/vmimage/lookupvmimagelist"
     var url = "/setting/resources/machineimage/lookupimages"
     axios.get(url, {
@@ -540,26 +540,26 @@ function getCommonLookupImageList(caller, connectionName) {
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
-        
+
         var data = result.data.VirtualMachineImageList;
-        
-		// Data가져온 뒤 set할 method 호출
-		if( caller == "vmimagemng"){
-			console.log("return get Data")			
-			lookupVmImageListCallbackSuccess(caller, data)		
-		}
-    // }).catch(function(error){
-    //     console.log("list error : ",error);        
-    // });
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+
+        // Data가져온 뒤 set할 method 호출
+        if (caller == "vmimagemng") {
+            console.log("return get Data")
+            lookupVmImageListCallbackSuccess(caller, data)
+        }
+        // }).catch(function(error){
+        //     console.log("list error : ",error);        
+        // });
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         lookupVmImageListCallbackFail(error)
-	});
+    });
 }
 
 // /lookupImages
-function getCommonLookupImage(caller, connectionName, cspImageID) {    
+function getCommonLookupImage(caller, connectionName, cspImageID) {
     //var url = "/setting/resources/vmimage/lookupvmimagelist"
     var url = "/setting/resources/machineimage/lookupimages"
     axios.get(url, {
@@ -569,26 +569,26 @@ function getCommonLookupImage(caller, connectionName, cspImageID) {
         },
         params: {
             connectionName: connectionName,
-            cspImageID : cspImageID
+            cspImageID: cspImageID
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
-        
+
         var data = result.data.VirtualMachineImageList;
-        
-		// Data가져온 뒤 set할 method 호출
-		if( caller == "vmimagemng"){
-			console.log("return get Data")			
-			lookupVmImageListCallbackSuccess(caller, data)		
-		}
-    // }).catch(function(error){
-    //     console.log("list error : ",error);        
-    // });
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+
+        // Data가져온 뒤 set할 method 호출
+        if (caller == "vmimagemng") {
+            console.log("return get Data")
+            lookupVmImageListCallbackSuccess(caller, data)
+        }
+        // }).catch(function(error){
+        //     console.log("list error : ",error);        
+        // });
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         lookupVmImageListCallbackFail(error)
-	});
+    });
 }
 
 //
@@ -598,29 +598,29 @@ function getCommonFetchImages(caller, connectionName) {
     axios.post(url, {
         headers: {
             'Content-Type': "application/json"
-        }        
+        }
     }).then(result => {
         console.log(result);
-        if(result.data.status == 200 || result.data.status == 201){
-            commonAlert("Image Fetched");                            
-        }else{
+        if (result.data.status == 200 || result.data.status == 201) {
+            commonAlert("Image Fetched");
+        } else {
             commonAlert("Fail to Image Fetched");
         }
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage);
-	});
+    });
 }
 
 
 // MCIS 목록 존재여부
-function getCommonMcisList(caller, isCallback, targetObjId, optionParam){
+function getCommonMcisList(caller, isCallback, targetObjId, optionParam) {
     var url = "/operation/manages/mcismng/list"
 
-    if ( optionParam != ""){
+    if (optionParam != "") {
         url += "?option=" + optionParam
     }
     axios.get(url, {
@@ -629,18 +629,18 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam){
         }
     }).then(result => {
         console.log("get Mcis List : ", result.data);
-        
+
         var data = result.data.McisList;
 
         // if ( caller == "mainmcis") {
-            console.log("return get Data");            
-			getMcisListCallbackSuccess(caller, data)		
-		// }
+        console.log("return get Data");
+        getMcisListCallbackSuccess(caller, data)
+        // }
     }).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+        console.warn(error);
+        console.log(error.response)
         getMcisListCallbackFail(error)
-	});
+    });
 }
 
 // 왜 똑같은게 있지?? 주석처리 함. 문제없으면 삭제할 것
@@ -668,7 +668,7 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam){
 // }
 
 // MCIS 상세정보 조회
-function getCommonMcisData(caller, mcisID){
+function getCommonMcisData(caller, mcisID) {
     //var orgUrl = "/operation/manages/mcismng/:mcisID";
     // McisData
     var urlParamMap = new Map();
@@ -678,9 +678,9 @@ function getCommonMcisData(caller, mcisID){
 
     }).then(result => {
         console.log(result);
-        if(result.data.status == 200 || result.data.status == 201){
+        if (result.data.status == 200 || result.data.status == 201) {
             getCommonMcisDataCallbackSuccess(caller, result.data.McisInfo, mcisID)
-        }else{
+        } else {
             //getMcisDataCallbackFail(caller, data)
             commonErrorAlert(result.data.status, "MCIS Data Search Failed");
         }
@@ -694,7 +694,7 @@ function getCommonMcisData(caller, mcisID){
 }
 
 // MCIS 상세정보 조회
-function getCommonMcisStatusData(caller, mcisID){
+function getCommonMcisStatusData(caller, mcisID) {
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
     var url = setUrlByParam(getWebToolUrl('McisStatusData'), urlParamMap)
@@ -702,9 +702,9 @@ function getCommonMcisStatusData(caller, mcisID){
 
     }).then(result => {
         console.log(result);
-        if(result.data.status == 200 || result.data.status == 201){
+        if (result.data.status == 200 || result.data.status == 201) {
             getCommonMcisStatusDataCallbackSuccess(caller, result.data.McisStatusInfo)
-        }else{
+        } else {
             //getMcisDataCallbackFail(caller, data)
             commonErrorAlert(result.data.status, "MCIS Data Search Failed");
         }
@@ -720,7 +720,7 @@ function getCommonMcisStatusData(caller, mcisID){
 function getCommonMcksList(caller, optionParam) {
     var url = "/operation/manages/mcksmng/list"
 
-    if ( optionParam != undefined ){
+    if (optionParam != undefined) {
         url += "?option=" + optionParam;
     }
 
@@ -730,62 +730,62 @@ function getCommonMcksList(caller, optionParam) {
         }
     }).then(result => {
         console.log("get Mcks List : ", result.data);
-        
+
         var data = result.data.McksList;
 
         // if ( caller == "mainmcis") {
-            console.log("return get Data");            
-			getMcksListCallbackSuccess(caller, data)		
-		// }
+        console.log("return get Data");
+        getMcksListCallbackSuccess(caller, data)
+        // }
     }).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+        console.warn(error);
+        console.log(error.response)
         getMcksListCallbackFail(error)
-	});
+    });
 }
 
 
-function getCommonVmSecurityGroupInfo(caller, securityGroupId){
+function getCommonVmSecurityGroupInfo(caller, securityGroupId) {
     var url = "/setting/resources/securitygroup/" + securityGroupId
-    
-    axios.get(url,{
+
+    axios.get(url, {
         headers: {
             'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get SecurityGroup List : ", result.data);
-        
+
         var data = result.data.SecurityGroupInfo;
 
         // if ( caller == "mainmcis") {
-            console.log("return get Data");            
-			getSecurityGroupCallbackSuccess(caller, data)		
-		// }
+        console.log("return get Data");
+        getSecurityGroupCallbackSuccess(caller, data)
+        // }
     }).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+        console.warn(error);
+        console.log(error.response)
         getSecurityGroupCallbackFail(error)
-	});
+    });
 }
 
-function getCommonVmImageInfo(caller, imageId){
-    
+function getCommonVmImageInfo(caller, imageId) {
+
     //var url = CommonURL+"/ns/"+NAMESPACE+"/resources/image/"+imageId
     // var apiInfo = ApiInfo
     var url = "/setting/resources/machineimage/" + imageId
-    axios.get(url,{
+    axios.get(url, {
         // headers:{
         //     'Authorization': apiInfo
         // }
-    }).then(result=>{
+    }).then(result => {
         console.log(result);
-        getCommonVmImageInfoCallbackSuccess(caller, result.data.VirtualMachineImageInfo);        
+        getCommonVmImageInfoCallbackSuccess(caller, result.data.VirtualMachineImageInfo);
     })
 
 }
 
 // 등록된 VM 들을 keyword로 조회
-function getCommonSearchVmImageList(keywordList, caller){
+function getCommonSearchVmImageList(keywordList, caller) {
     // console.log("keywordObjId = " + keywordObjId)
     // var keywords = $("#" + keywordObjId).val().split(" ");
     // console.log("keywords = " + keywords)
@@ -795,32 +795,32 @@ function getCommonSearchVmImageList(keywordList, caller){
     // }
 
     var url = "/setting/resources/machineimage/searchimage";
-    axios.post(url,{
+    axios.post(url, {
         // headers:{
         //     'Authorization': apiInfo
         // }
         keywords: keywordList
-    }).then(result=>{
-        console.log(result);
+    }).then(result => {
+        console.log("result", result);
 
-        if ( result.data.VirtualMachineImageList == null || result.data.VirtualMachineImageList == undefined || result.data.VirtualMachineImageList == "null"){
+        if (result.data.VirtualMachineImageList == null || result.data.VirtualMachineImageList == undefined || result.data.VirtualMachineImageList == "null") {
             commonAlert("There is no result")
-        }else{
+        } else {
             getCommonSearchVmImageListCallbackSuccess(caller, result.data.VirtualMachineImageList);
         }
     })
 }
 
-function getCommonFilterVmSpecListByRange(specFilterObj, caller){
+function getCommonFilterVmSpecListByRange(specFilterObj, caller) {
     console.log(specFilterObj)
     var url = "/setting/resources/vmspec/filterspecsbyrange";
-    axios.post(url,specFilterObj
-    ).then(result=>{
+    axios.post(url, specFilterObj
+    ).then(result => {
         console.log(result);
 
-        if ( result.data.VmSpecList == null || result.data.VmSpecList == undefined || result.data.VmSpecList == "null" || result.data.VmSpecList.length == 0){
+        if (result.data.VmSpecList == null || result.data.VmSpecList == undefined || result.data.VmSpecList == "null") {
             commonAlert("There is no result")
-        }else{
+        } else {
             getCommonFilterVmSpecListCallbackSuccess(caller, result.data.VmSpecList);
         }
     }).catch(error => {
@@ -832,36 +832,36 @@ function getCommonFilterVmSpecListByRange(specFilterObj, caller){
 
 
 // MCIS에 명령어 날리기
-function postRemoteCommandMcis(mcisID, commandWord){
+function postRemoteCommandMcis(mcisID, commandWord) {
     var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID";
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
     var url = setUrlByParam(orgUrl, urlParamMap)
 
-    console.log(" command = " + commandWord)    
+    console.log(" command = " + commandWord)
     axios.post(url, {
         // headers: {
         //     'Content-Type': "application/json"
         // },
-        command: commandWord        
+        command: commandWord
     }).then(result => {
         console.log(result);
-        if(result.data.status == 200 || result.data.status == 201){
+        if (result.data.status == 200 || result.data.status == 201) {
             commonAlert("Success to Send the Command " + result.data.message);
-        }else{
+        } else {
             commonAlert("Fail to Send the Command " + result.data.message);
         }
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage);
-	});
+    });
 }
 
 // VM에 명령어 날리기
-function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord){    
+function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord) {
     //RemoteCommandVmOfMcis
     var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID";
     var urlParamMap = new Map();
@@ -869,39 +869,39 @@ function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord){
     urlParamMap.set(":vmID", vmID)
     var url = setUrlByParam(orgUrl, urlParamMap)
 
-    console.log(" command = " + commandWord)    
+    console.log(" command = " + commandWord)
     axios.post(url, {
         // headers: {
         //     'Content-Type': "application/json"
         // },
-        command: commandWord        
+        command: commandWord
     }).then(result => {
         console.log(result);
-        if(result.data.status == 200 || result.data.status == 201){
+        if (result.data.status == 200 || result.data.status == 201) {
             commonAlert("Success to Send the Command " + result.data.message);
-        }else{
+        } else {
             commonAlert("Fail to Send the Command " + result.data.message);
         }
-	}).catch(error => {
-		console.warn(error);
-		console.log(error.response) 
+    }).catch(error => {
+        console.warn(error);
+        console.log(error.response)
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage);
-	});
+    });
 }
 
 // dragonfly monitoring agent 설치 및 동작여부
-function checkDragonFlyMonitoringAgent(mcisID, vmID){
-  return true;
+function checkDragonFlyMonitoringAgent(mcisID, vmID) {
+    return true;
 }
 // form 화면에서 조회에 문제가 있는 경우 표시
 // 모든 form 화면 시작할 때(onLoad 시) 체크하도록
 // Header.html 에 정의
-function checkLoadStatus(){
+function checkLoadStatus() {
     var returnMessage = $("#returnMessage").val();
     var returnStatusCode = $("#returnStatusCode").val();
-    if( returnStatusCode != 200 && returnStatusCode != 201){
+    if (returnStatusCode != 200 && returnStatusCode != 201) {
         commonErrorAlert(returnStatusCode, returnMessage);
     }
 }
