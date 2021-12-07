@@ -503,13 +503,12 @@ function changeLifeCycle(type) {
 
         if ($(this).is(":checked")) {
             checked_nothing++;
-            console.log("checked")
             aMcisData = totalMcisListObj[mcisIndex];
             console.log(aMcisData);
             var systemLabel = aMcisData.systemLabel;
             if (systemLabel) {
                 systemLabel = systemLabel.toLowerCase();
-                if (systemLabel.indexOf("mcks")) {
+                if (systemLabel.indexOf("mcks") > -1) {
                     isMcks = true;
                     return false;
                 }
@@ -588,7 +587,7 @@ function deleteCheckMCIS(type) {
             var systemLabel = aMcisData.systemLabel;
             if (systemLabel) {
                 systemLabel = systemLabel.toLowerCase();
-                if (systemLabel.indexOf("mcks")) {
+                if (systemLabel.indexOf("mcks") > -1) {
                     isMcks = true;
                     return false;
                 }
