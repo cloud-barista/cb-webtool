@@ -52,7 +52,7 @@
 .btn_hide { position:relative; top:-2px; right:1px; width:100%; right:51px; text-align:right; outline:none; border:none; background:none; padding:0; margin:0; float : right; display:none;}
 
 .mcks-icon{width:20px; height: 20px; margin-left: 5px;}
-.provider_icon{ width: calc(100% / 4 - 15px / 4);}
+.provider_icon{ width: calc(100% / 5 - 15px / 5);}
 .provider_icon:not(:last-of-type){ margin-right: 5px;}
 .provider_icon_info{width: 30px;}
 .provider_icon_info:not(:last-of-type){ margin-right: 10px;}
@@ -319,6 +319,9 @@ table tbody tr {
 }
 .column-40percent {
     width: 40%;
+}
+.column-60percent {
+    width: 60%;
 }
 
 @media screen and (max-width: 768px) { 
@@ -1315,7 +1318,7 @@ table tbody tr {
 .ds_cont_mbox.g_detail_view {  display:none; margin:20px 0 0 0; background-color:#f8f9fa; box-shadow:none; }
 .ds_cont_mbox.g_detail_view.active { display:block; }
 .ds_cont_mbox.g_detail_view .view-cont{display: flex;}
-.ds_cont_mbox.g_detail_view .view_ip { /*padding:37px 0 0 0;*/ width: 100%;}
+.ds_cont_mbox.g_detail_view .view_ip { /*padding:37px 0 0 0; width: 100%;*/}
 .ds_cont_mbox.g_detail_view .view_ip:nth-child(1) { padding:0; }
 @media screen and (max-width:1550px){
 	.ds_cont_mbox { padding:30px 40px; }
@@ -1965,6 +1968,8 @@ table tbody tr {
 .dashboard .create_box .top_ipbox {}
 .dashboard .create_box .top_ipbox:after {content:""; display:block; visibility:hidden; clear:both; height:0; }
 .dashboard .create_box .top_ipbox .ipbox { float:left; }
+.dashboard .create_box .top_ipbox .ipbox.first {width: 35%;}
+.dashboard .create_box .top_ipbox .ipbox.second {width: 65%;}
 .dashboard .create_box .top_ipbox .ipbox.ipbox1 { width:45%; }
 .dashboard .create_box .top_ipbox .ipbox.ipbox2 { width:55%; }
 .dashboard .create_box .top_ipbox .ipbox > ul { padding-right:18%; text-align:right; }
@@ -2062,6 +2067,8 @@ table tbody tr {
 	.dashboard .create_box .servers_config .top_box .titbox_sc .config_location { display:block; margin:15px 0 0 0; }
 }
 @media screen and (max-width:1400px){
+	.dashboard .create_box .top_ipbox .ipbox.first,
+	.dashboard .create_box .top_ipbox .ipbox.second,
 	.dashboard .create_box .top_ipbox .ipbox.ipbox1,
 	.dashboard .create_box .top_ipbox .ipbox.ipbox2 { width:100%; }
 	.dashboard .create_box .top_ipbox .ipbox > ul { padding-right:0; }

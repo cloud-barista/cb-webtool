@@ -76,7 +76,7 @@ function displayVmSpecInfo(targetAction) {
         // form 초기화
         $("#regSpecName").val('')
         $("#regCspSpecName").val('')
-
+        goFocus('vmSpecCreateBox');
     } else if (targetAction == "REG_SUCCESS") {
         $('#vmSpecCreateBox').removeClass("active");
         $('#vmSpecInfoBox').removeClass("view");
@@ -444,20 +444,20 @@ function deleteVmSpec() {
     });
 }
 
-function clearCspSpecInfo(){
+function clearCspSpecInfo() {
     $("#regSpecName").val();
     $("#regCspSpecName").val();
 }
 
-function clearLookupAssistSpecList(targetTableList){
+function clearLookupAssistSpecList(targetTableList) {
     $("#" + targetTableList).empty()
 }
-function showSpecAssistPopup(){
+function showSpecAssistPopup() {
     console.log("showSpecAssistPopup")
     $("#specLookupAssist").modal();
 
     var regProviderName = $("#regProvider").val();
-    if( regProviderName ){
+    if (regProviderName) {
         $("#assistSpecProviderName").val(regProviderName);
         // $("#assistImageProviderName option[value=" + configName + "]").prop('selected', true).change();
     }

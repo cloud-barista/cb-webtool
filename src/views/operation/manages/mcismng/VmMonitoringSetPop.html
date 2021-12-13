@@ -278,12 +278,14 @@
 <!-- //popup Apply -->
 <script>
 	function install_agent() {
+		var nsID = $("#topboxDefaultNameSpaceID").val();
 		var mcisID = $("#manage_mcis_popup_mcis_id").val();
 		var vmID = $("#manage_mcis_popup_vm_id").val();
 		var cspType = $("#manage_mcis_popup_csp").val();
 		var publicIp = $("#manage_mcis_popup_public_ip").val();
 		var userName = $("#manage_mcis_popup_user_name").val();
 		var sshKeyName = $("#manage_mcis_popup_sshkey_name").val();
+		var port = "22";
 
 		///////////
 		// TODO : install agent form 방식으로 dragonfly 로 전송할 것
@@ -306,13 +308,14 @@
 		// Port        int    `json:"port"`
 		// var obj = $("#manage_mcis_popup_form").serializeObject()
 		var obj = {
+			ns_id: nsID,
 			mcis_id: mcisID,
 			vm_id: vmID,
 			public_ip: publicIp,
 			user_name: userName,
 			ssh_key_name: sshKeyName,
-			cspType: cspType
-			// Port : 
+			cspType: cspType,
+			port : port
 		}
 		// var formData = new FormData(document.getElementById("manage_mcis_popup_form"));			
 		axios.post(url, obj, {
