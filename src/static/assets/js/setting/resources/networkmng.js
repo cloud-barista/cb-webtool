@@ -251,7 +251,7 @@ function displayVNetInfo(targetAction) {
         $("#regDescription").val('')
         $("#regCidrBlock").val('')
         $("#regSubnet").val('')
-
+        goFocus('vnetCreateBox');
     } else if (targetAction == "REG_SUCCESS") {
         $('#vnetCreateBox').removeClass("active");
         $('#vNetInfoBox').removeClass("view");

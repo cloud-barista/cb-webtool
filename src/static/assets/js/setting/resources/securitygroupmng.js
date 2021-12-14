@@ -62,7 +62,7 @@ function displaySecurityGroupInfo(targetAction) {
         $("#regDescription").val('')
         $("#regCidrBlock").val('')
         $("#regSubnet").val('')
-
+        goFocus('securityGroupCreateBox');
     } else if (targetAction == "REG_SUCCESS") {
         $('#securityGroupCreateBox').removeClass("active");
         $('#securityGroupInfoBox').removeClass("view");

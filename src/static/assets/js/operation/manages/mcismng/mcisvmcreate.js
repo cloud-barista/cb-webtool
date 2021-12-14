@@ -701,6 +701,10 @@ function filterNetworkList(keywords, caller) {
             });
         }
     });
+
+    if (calNetIndex === 0) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="4">No Data</td></tr>'
+    }
     $("#assistVnetList").empty()
     $("#assistVnetList").append(html)
 
@@ -841,7 +845,7 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList) {
                 addRowCount++
             }
         });
-        if( addRowCount == 0){
+        if (addRowCount == 0) {
             html = '<tr>'
                 + '<td class="overlay hidden" data-th="Name" rowspan="2">Nodata</td>'
                 + '</tr>'
@@ -862,7 +866,7 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList) {
                 }
             })
         })
-    }else{
+    } else {
         html += '<tr>'
 
             + '<td class="overlay hidden" data-th="Name" rowspan="2">Nodata</td>'
@@ -878,6 +882,7 @@ function filterSecurityGroupList(keywords, caller) {
     // connection
     var assistProviderName = "";
     var assistConnectionName = "";
+    var rowCount = 0;
     var html = "";
     // if( caller == "searchSecurityGroupAssistAtReg"){
     //     assistProviderName = $("#assistSecurityGroupProviderName option:selected").val();
@@ -907,6 +912,7 @@ function filterSecurityGroupList(keywords, caller) {
             var firewallRules = firewallRulesArr[0];
             console.log("firewallRules");
             console.log(firewallRules);
+            rowCount++;
             html += '<tr>'
 
                 + '<td class="overlay hidden column-50px" data-th="">'
@@ -940,6 +946,9 @@ function filterSecurityGroupList(keywords, caller) {
                 + '</tr>'
         }
     });
+    if (rowCount === 0) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="4">No Data</td></tr>'
+    }
     $("#assistSecurityGroupList").empty()
     $("#assistSecurityGroupList").append(html)
 
@@ -1100,10 +1109,12 @@ function getCommonFilterVmSpecListCallbackSuccess(caller, vmSpecList) {
 
     } else {// 아직 data가 1건도 없을 수 있음
         var html = ""
+        var rowCount = 0;
         if (vmSpecList.length > 0) {
             vmSpecList.forEach(function (vSpecItem, vSpecIndex) {
                 //connectionName
                 //cspSpecName
+                rowCount++;
                 html += '<tr onclick="setAssistValue(' + vSpecIndex + ');">'
                     + '     <input type="hidden" id="vmSpecAssist_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
                     + '     <input type="hidden" id="vmSpecAssist_name_' + vSpecIndex + '" value="' + vSpecItem.name + '"/>'
@@ -1122,23 +1133,29 @@ function getCommonFilterVmSpecListCallbackSuccess(caller, vmSpecList) {
                     + '<td class="overlay hidden" data-th="GPU">' + vSpecItem.numGpu + '</td>'
                     + '</tr>'
             })
-            $("#assistSpecList").empty()
-            $("#assistSpecList").append(html)
 
-            $("#assistSpecList tr").each(function () {
-                $selector = $(this)
-
-                $selector.on("click", function () {
-
-                    if ($(this).hasClass("on")) {
-                        $(this).removeClass("on");
-                    } else {
-                        $(this).addClass("on")
-                        $(this).siblings().removeClass("on");
-                    }
-                })
-            })
         }
+
+        if (rowCount === 0) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+        }
+
+        $("#assistSpecList").empty()
+        $("#assistSpecList").append(html)
+
+        $("#assistSpecList tr").each(function () {
+            $selector = $(this)
+
+            $selector.on("click", function () {
+
+                if ($(this).hasClass("on")) {
+                    $(this).removeClass("on");
+                } else {
+                    $(this).addClass("on")
+                    $(this).siblings().removeClass("on");
+                }
+            })
+        })
 
         // "associatedObjectList": null,
         // "connectionName": "aws-conn-osaka",
@@ -1197,7 +1214,7 @@ function filterSshKeyList(keywords, caller) {
         assistConnectionName = selectedConnectionName;
     }
 
-    var calNetIndex = 0;
+    var rowCount = 0;
     totalSshKeyListByNamespace.forEach(function (vSshKeyItem, vSshKeyIndex) {
         if (assistConnectionName == "" || assistConnectionName == vSshKeyItem.connectionName) {
             // keyword가 있는 것들 중에서
@@ -1213,6 +1230,7 @@ function filterSshKeyList(keywords, caller) {
                 return true;
             }
 
+            rowCount++;
             html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
                 + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
                 + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
@@ -1225,6 +1243,10 @@ function filterSshKeyList(keywords, caller) {
                 + '</tr>'
         }
     });
+
+    if (rowCount === 0) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="3">No Data</td></tr>'
+    }
     $("#assistSshKeyList").empty()
     $("#assistSshKeyList").append(html)
 
@@ -1242,6 +1264,8 @@ function filterSshKeyList(keywords, caller) {
         })
     })
 }
+
+
 
 
 

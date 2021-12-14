@@ -69,7 +69,7 @@ function displaySshKeyInfo(targetAction) {
         $("#regCspSshKeyName").val('');
         //$("#regProvider").val('');
         //$("#regCregConnectionNameidrBlock").val('');
-
+        goFocus('sshKeyCreateBox');
     } else if (targetAction == "REG_SUCCESS") {
         $('#sshKeyCreateBox').removeClass("active");
         $('#sskKeyInfoBox').removeClass("view");
