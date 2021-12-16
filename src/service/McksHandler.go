@@ -211,7 +211,7 @@ func RegClusterByAsync(nameSpaceID string, clusterReq *ladybug.ClusterRegReq, c 
 		//returnStatus.Message = errorInfo.Message
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("RegMcisByAsync ", failResultInfo)
+		log.Println("RegMcksByAsync ", failResultInfo)
 		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 
 	} else {
@@ -304,7 +304,7 @@ func DelClusterByAsync(nameSpaceID string, clusterName string, c echo.Context) {
 		//returnStatus.Message = errorInfo.Message
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("RegMcisByAsync ", failResultInfo)
+		log.Println("DelMcksByAsync ", failResultInfo)
 		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 
 	} else {
