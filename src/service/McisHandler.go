@@ -3,6 +3,8 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+
 	//tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	"io"
 	"log"
@@ -642,6 +644,85 @@ func RegVmGroup(nameSpaceID string, mcisID string, vmGroupInfo *tbmcis.TbVmReq) 
 
 	// return respBody, respStatusCode
 	return &returnMcisInfo, returnStatus
+}
+
+// Create MCIS Dynamically from common spec and image
+// async 로 만들 지
+func RegMcisDynamic(nameSpaceID string, mcisDynamicReq *tbmcis.TbMcisDynamicReq) (*tbmcis.TbMcisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcisDynamic"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(mcisDynamicReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	returnMcisInfo := tbmcis.TbMcisInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	returnStatus.StatusCode = respStatus
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegMcisDynamic ", failResultInfo)
+		return &returnMcisInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&returnMcisInfo)
+	fmt.Println(returnMcisInfo)
+
+	return &returnMcisInfo, returnStatus
+}
+
+// Recommend MCIS plan (filter and priority)
+// 실제로는 추천 image 목록
+// async 로 만들 지
+func RegMcisRecommendVm(nameSpaceID string, mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbSpecInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcisRecommendVm"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID // default는 common
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(mcisDeploymentPlan)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	returnVmSpecs := []tbmcir.TbSpecInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	returnStatus.StatusCode = respStatus
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegMcisDynamic ", failResultInfo)
+		return returnVmSpecs, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&returnVmSpecs)
+	fmt.Println(returnVmSpecs)
+
+	return returnVmSpecs, returnStatus
 }
 
 ////////////////
