@@ -3,7 +3,7 @@ $(document).ready(function () {
     // 생성 완료 시 List화면으로 page이동
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
         //$('#alertResultArea').on('hidden', function () {// bootstrap 2.3 이전
-        console.log("test");
+
         let targetUrl = "/operation/manages/mcismng/mngform"
         changePage(targetUrl)
 
