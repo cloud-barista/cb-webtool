@@ -17,6 +17,7 @@ type TbSecurityGroupInfo struct {
 
 	KeyValueList []tbcommon.TbKeyValue `json:"keyValueList"`
 	Name         string                `json:"name"`
+	SystemLabel  string                `json:"systemLabel"`
 	VNetID       string                `json:"vNetId"`
 }
 

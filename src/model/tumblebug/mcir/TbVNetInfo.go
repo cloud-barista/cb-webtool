@@ -20,6 +20,7 @@ type TbVNetInfo struct {
 	Name           string         `json:"name"`
 	Statue         string         `json:"status"`
 	SubnetInfoList []TbSubnetInfo `json:"subnetInfoList"`
+	SystemLabel    string         `json:"systemLabel"`
 }
 
 type TbVNetInfos []TbVNetInfo

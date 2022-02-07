@@ -1,5 +1,20 @@
+# v.0.5.0-Affogato (2021.12.16)
+### API Change
+- 성능개선 : MCIS/MCKS Manage에 go routin 적용
+- cb-spider v0.4.19, cb-tumblebug v0.4.16, cb-mcks v0.4.6, cb-dragonfly v0.4.4 버전의 변경된 API 반영
 
-# v0.4.0-CafeMocha (2021.06.30.)
+### Feature
+- 작업내역 표시 추가
+- MCIS, VM Create 고도화
+- 처리결과 return 방식 통합
+- 지도 표시 추가
+
+### Bug Fix
+- chart 표시 보완
+
+
+
+# v0.4.0-CafeMocha (2021.06.30)
 ### API Change
 - 모니터링 Ploicy, Threshold 추가
 - UI에서 직접 Framework 직접호출 방식 -> go server를 통해 호출하는 방식으로 변경
