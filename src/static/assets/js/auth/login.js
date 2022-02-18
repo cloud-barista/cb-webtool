@@ -444,6 +444,7 @@ var startApp = function () {
     });
 };
 
+
 function attachSignin(element) {
     console.log(element.id);
     auth2.attachClickHandler(element, {},
