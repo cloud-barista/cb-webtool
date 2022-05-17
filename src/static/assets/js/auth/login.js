@@ -138,7 +138,6 @@ function showHideByButton(origin, target) {
 
 // 엔터키가 눌렸을 때 실행할 내용
 function enterKeyForLogin() {
-    alert("enter!");
     if (window.event.keyCode == 13) {
         $("#sign_btn").click();
     }
