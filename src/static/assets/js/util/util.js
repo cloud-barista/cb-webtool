@@ -1398,7 +1398,7 @@ function moveToPage(tableId, targetPageNum){
 
     ///////// table 출력 /////////
     var listData = paginationMap.get("listData")//
-    for (var i = beginRowNum; i < endRowNum; i++) {
+    for (var i = beginRowNum; i <= endRowNum; i++) {
         //html += addVNetRow(listData[i], i)// TODO : 공통으로 addRow할 수 있는 방안은??
         html += window[addRowFunctionName](listData[i], i);
     }
