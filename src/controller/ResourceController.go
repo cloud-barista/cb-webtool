@@ -179,7 +179,8 @@ func VpcRegProc(c echo.Context) error {
 		})
 	}
 	// log.Println(vNetRegInfo)
-	resultVNetInfo, respStatus := service.RegVpc(defaultNameSpaceID, vNetRegInfo)
+	optionParam := c.QueryParam("option")
+	resultVNetInfo, respStatus := service.RegVpc(defaultNameSpaceID, optionParam, vNetRegInfo)
 	// respBody, respStatus := service.RegVpc(defaultNameSpaceID, vNetRegInfo)
 	// fmt.Println("=============respStatus =============", respStatus)
 	// fmt.Println("=============respBody ===============", respBody)
@@ -370,7 +371,8 @@ func SecirityGroupRegProc(c echo.Context) error {
 		})
 	}
 
-	resultSecurityGroupInfo, respStatus := service.RegSecurityGroup(defaultNameSpaceID, securityGroupRegInfo)
+	optionParam := c.QueryParam("option")
+	resultSecurityGroupInfo, respStatus := service.RegSecurityGroup(defaultNameSpaceID, optionParam, securityGroupRegInfo)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -553,7 +555,8 @@ func SshKeyRegProc(c echo.Context) error {
 		})
 	}
 
-	resultSshKeyInfo, respStatus := service.RegSshKey(defaultNameSpaceID, sshKeyRegInfo)
+	optionParam := c.QueryParam("option")
+	resultSshKeyInfo, respStatus := service.RegSshKey(defaultNameSpaceID, optionParam, sshKeyRegInfo)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -597,6 +600,45 @@ func SshKeyDelProc(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": respMessage.Message,
 		"status":  respStatus.StatusCode,
+	})
+}
+
+
+func SshKeyUpdateProc(c echo.Context) error {
+	log.Println("SshKeyDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramSshKeyID := c.Param("sshKeyID")
+
+	sshKeyRegInfo := new(tbmcir.TbSshKeyReq)
+	if err := c.Bind(sshKeyRegInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	resultSshKeyInfo, respStatus := service.RegSshKey(defaultNameSpaceID, paramSshKeyID, sshKeyRegInfo)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":    "success",
+		"status":     respStatus.StatusCode,
+		"SshKeyInfo": resultSshKeyInfo,
 	})
 }
 

@@ -688,12 +688,9 @@ func RegMcisDynamic(nameSpaceID string, mcisDynamicReq *tbmcis.TbMcisDynamicReq)
 // Recommend MCIS plan (filter and priority)
 // 실제로는 추천 image 목록
 // async 로 만들 지
-func RegMcisRecommendVm(nameSpaceID string, mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbSpecInfo, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcisRecommendVm"
-
-	var paramMapper = make(map[string]string)
-	paramMapper["{nsId}"] = nameSpaceID // default는 common
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+func GetMcisRecommendVm(mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbSpecInfo, model.WebStatus) {
+	var originalUrl = "/mcisRecommendVm"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
 	url := util.TUMBLEBUG + urlParam
 
@@ -725,6 +722,40 @@ func RegMcisRecommendVm(nameSpaceID string, mcisDeploymentPlan *tbmcis.Deploymen
 	return returnVmSpecs, returnStatus
 }
 
+// Check avaiable ConnectionConfig list for creating MCIS Dynamically
+func RegMcisDynamicCheck(mcisReq *tbmcis.McisConnectionConfigCandidatesReq) (*tbmcis.CheckMcisDynamicReqInfo, model.WebStatus) {
+	var originalUrl = "/mcisDynamicCheckRequest"
+	urlParam := util.MappingUrlParameter(originalUrl, nil)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(mcisReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	returnVmSpecs := tbmcis.CheckMcisDynamicReqInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	returnStatus.StatusCode = respStatus
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegMcisDynamic ", failResultInfo)
+		return &returnVmSpecs, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&returnVmSpecs)
+	fmt.Println(returnVmSpecs)
+
+	return &returnVmSpecs, returnStatus
+}
 ////////////////
 // func GetVMStatus(vm_name string, connectionConfig string) string {
 // 	url := SpiderUrl + "/vmstatus/" + vm_name + "?connection_name=" + connectionConfig
@@ -1472,7 +1503,7 @@ func DelAllMcis(nameSpaceID string, optionParam string) (tbcommon.TbSimpleMsg, m
 }
 
 // MCIS 삭제. TODO : 해당 namespace의 MCIS만 삭제 가능... 창 두개에서 1개는 MCIS삭제, 1개는 namespace 변경이 있을 수 있으므로 UI에서 namespace도 넘겨서 비교할 것.
-// optionParam은 없거나 force 가 있음.
+// optionParam은 없거나 force, terminate 가 있음.
 func DelMcis(nameSpaceID string, mcisID string, optionParam string) (io.ReadCloser, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}"
 
@@ -1648,6 +1679,122 @@ func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.TbVmInfo
 	return &vmInfo, model.WebStatus{StatusCode: respStatus}
 }
 
+
+func RegCspVm(nameSpaceID string, mcisReq *tbmcis.TbMcisReq) (*tbmcis.TbMcisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/registerCspVm"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(mcisReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	returnMcisInfo := tbmcis.TbMcisInfo{}
+	returnStatus := model.WebStatus{}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&returnMcisInfo)
+		fmt.Println(returnMcisInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &returnMcisInfo, returnStatus
+}
+
+func RegAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis.NetworkReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/network/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(networkReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	agentInstallContentWrapper := tbmcis.AgentInstallContentWrapper{}
+	returnStatus := model.WebStatus{}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if err != nil {
+		fmt.Println(err)
+		return &agentInstallContentWrapper, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&agentInstallContentWrapper)
+		fmt.Println(agentInstallContentWrapper)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &agentInstallContentWrapper, returnStatus
+}
+
+func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis.NetworkReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/network/mcis/{mcisId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(networkReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+
+	agentInstallContentWrapper := tbmcis.AgentInstallContentWrapper{}
+	returnStatus := model.WebStatus{}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if err != nil {
+		fmt.Println(err)
+		return &agentInstallContentWrapper, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&agentInstallContentWrapper)
+		fmt.Println(agentInstallContentWrapper)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &agentInstallContentWrapper, returnStatus
+}
+
+
+
 // Get MCIS recommendation
 // Deprecated at 0.4.5
 // func GetMcisRecommand(nameSpaceID string, mcisID string, mcisRecommandReq *tumblebug.McisRecommendReq) (*tumblebug.McisRecommendInfo, model.WebStatus) {
@@ -1711,3 +1858,5 @@ func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.TbVmInfo
 
 // 	// return respBody, model.WebStatus{StatusCode: respStatus}
 // }
+
+

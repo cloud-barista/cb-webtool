@@ -437,6 +437,33 @@ func McisRegProc(c echo.Context) error {
 
 }
 
+func McisRecommendVm(c echo.Context) error {
+	log.Println("McisRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	mcisDeploymentPlan := &tbmcis.DeploymentPlan{}
+	if err := c.Bind(mcisDeploymentPlan); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(mcisDeploymentPlan)
+
+	resultSpecInfo, _ := service.GetMcisRecommendVm(mcisDeploymentPlan)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "success",
+		"status":   200,
+		"McisInfo": resultSpecInfo,
+	})
+}
+
 // MCIS 삭제
 func McisDelProc(c echo.Context) error {
 	log.Println("McisDelProc : ")
