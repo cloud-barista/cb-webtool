@@ -19,8 +19,10 @@ $(document).ready(function () {
             $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
         }
 
-        setTableHeightForScroll('vpcListTable', 300);
+        setTableHeightForScroll('vpcListTable', 250);
     });
+
+    getVpcList("name");
 });
 
 // TODO : filter 기능, sort 기능
@@ -113,6 +115,7 @@ function deleteVPC() {
     });
 }
 
+var tableMap = new Map();
 function getVpcList(sort_type) {
     console.log(sort_type);
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/vNet";
@@ -139,44 +142,46 @@ function getVpcList(sort_type) {
 
             ModalDetail()
         } else {
-            if (data.length) {
-                if (sort_type) {
-                    cnt++;
-                    console.log("check : ", sort_type);
-                    data.filter(list => list.Name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                        html += addVNetRow(item, index)
-                        // html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
-                        //     + '<td class="overlay hidden" data-th="">' 
-                        //     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name + '|' + item.CidrBlock + '"/>' 
-                        //     + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_'  + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        //     + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '</td>'
-                        //     + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
-                        //     + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>'  
-                        //     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        //     + '</tr>'
-                    ))
-                } else {
-                    data.filter((list) => list.Name !== "").map((item, index) => (
-                        html += addVNetRow(item, index)
-                        // html += '<tr onclick="showVNetInfo(\'' + item.Name + '\');">' 
-                        //     + '<td class="overlay hidden" data-th="">' 
-                        //     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.Name  + '"/>'
-                        //     + '<input type="checkbox" name="chk" value="' + item.Name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
-                        //     + '<td class="btn_mtd ovm" data-th="name">' + item.Name + '<span class="ov"></span></td>' 
-                        //     + '<td class="overlay hidden" data-th="cidrBlock">' + item.CidrBlock + '</td>' 
-                        //     + '<td class="overlay hidden" data-th="description">' + item.Description + '</td>' 
-                        //     + '<td class="overlay hidden" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
-                        //     + '</tr>'
-                    ))
-                }
+            // if (data.length) {
+            //     if (sort_type) {
+            //         cnt++;
+            //         console.log("check : ", sort_type);
+            //         data.filter(list => list.Name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+            //             html += addVNetRow(item, index)
+            //         ))
+            //     } else {
+            //         data.filter((list) => list.Name !== "").map((item, index) => (
+            //             html += addVNetRow(item, index)
+            //         ))
+            //     }
+            //
+            //     $("#vpcList").empty()
+            //     $("#vpcList").append(html)
+            //
+            //     ModalDetail()
+            // }
 
-                $("#vpcList").empty()
-                $("#vpcList").append(html)
+            if (data.length) {
+                var tableId = "vpcList";// paging이 구현 될 table의 ID
+                // pagination 정보가 있는 tableId : page_ + tableId
+                // ex) page_vpcList
+                var paginationMap = new Map();
+
+                paginationMap.set("addRowFunctionName", "addVNetRow");// addRow를 구현한 function 이름
+                paginationMap.set("totalCount", data.length);// 전체 갯수
+                paginationMap.set("visiblePages", 10);// 한번에 보여지는 page 갯수. pre, next 로 해당 단위씩 이동
+                paginationMap.set("itemsOnPage", 5);// 한 페이지 당 갯수
+                paginationMap.set("currentPageNum", 1);// 현재 page 번호
+                // paginationMap.set("lastPageNum", 0);// 마지막 page번호 // set에서 설정
+                paginationMap.set("listData", data)//
+
+                setTablePagination(tableId, paginationMap)
+
+                moveToPage(tableId, 1)
 
                 ModalDetail()
             }
         }
-
 
         // }).catch(function(error){
         //     console.log("Network list error : ",error);        
@@ -202,7 +207,7 @@ function addVNetRow(item, index) {
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
         + '<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>'
         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'
-        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>'
         + '</tr>'
     return html;
 }

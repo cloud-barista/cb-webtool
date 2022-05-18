@@ -156,32 +156,37 @@
 							</tr>
 						</thead>
 						<tbody id="vpcList">
-							{{ $length := len .VNetList }}
-							{{ if eq $length 0 }}
-							<tr>
-								<td class="overlay hidden" data-th="" colspan="5">No Data</td>
-							</tr>
-							{{ end }}
-							{{range $index, $item := .VNetList}}
-							<tr onclick="showVNetInfo('{{$item.Name}}');">
-								<td class="overlay hidden column-50px" data-th="">
-									<input type="hidden" id="sg_info_{{$index}}" value="{{$item.Name}}" />
-									<input type="checkbox" name="chk" value="{{$item.Name}}" id="raw_{{$index}}"
-										title="" />
-									<label for="td_ch1"></label> <span class="ov off"></span>
-								</td>
-								<td class="btn_mtd ovm" data-th="name">{{$item.Name}}<span class="ov"></span></td>
-								<td class="overlay hidden" data-th="cidrBlock">{{$item.CidrBlock}}</td>
-								<td class="overlay hidden" data-th="description">{{$item.Description}}</td>
-								<!-- <td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);">
-													<img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>
-												</td> -->
-							</tr>
-							{{ end }}
+<!--							{ { $length := len .VNetList } }-->
+<!--							{ { if eq $length 0 } }-->
+<!--							<tr>-->
+<!--								<td class="overlay hidden" data-th="" colspan="5">No Data</td>-->
+<!--							</tr>-->
+<!--							{ { end } }-->
+<!--							{ {range $index, $item := .VNetList} }-->
+<!--							<tr onclick="showVNetInfo('{ {$item.Name} }');">-->
+<!--								<td class="overlay hidden column-50px" data-th="">-->
+<!--									<input type="hidden" id="sg_info_{ {$index} }" value="{ {$item.Name} }" />-->
+<!--									<input type="checkbox" name="chk" value="{ {$item.Name} }" id="raw_{ {$index} }"-->
+<!--										title="" />-->
+<!--									<label for="td_ch1"></label> <span class="ov off"></span>-->
+<!--								</td>-->
+<!--								<td class="btn_mtd ovm" data-th="name">{ {$item.Name} }<span class="ov"></span></td>-->
+<!--								<td class="overlay hidden" data-th="cidrBlock">{ {$item.CidrBlock} }</td>-->
+<!--								<td class="overlay hidden" data-th="description">{ {$item.Description} }</td>-->
+<!--								&lt;!&ndash; <td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);">-->
+<!--													<img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a>-->
+<!--												</td> &ndash;&gt;-->
+<!--							</tr>-->
+<!--							{ { end } }-->
 						</tbody>
 					</table>
 				</div>
-
+				<div class="dataTable status_list" id="page_vNetListTable">
+					<table cellpadding="0" cellspacing="0" border="1" summary="" id="page_vpcListTable">
+						<tbody id="page_vpcList">
+						</tbody>
+					</table>
+				</div>
 			</div>
 
 		</div>

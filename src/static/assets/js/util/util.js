@@ -1226,3 +1226,184 @@ function hideBtnDelAll() {
     $(".btn_del_all").css("display", "none");
 }
 
+// table의 pagination 설정
+// 1. 사용할 화면의 js파일에 var tableMap = new Map(); 정의
+// 2. util.js의 setTablePagination() 에 해당 table 정보 설정
+// 3. util.js의 paginationTable() 을 호출하여 화면에 paging 된 table 정보 표시
+// 3-1. paginationTable() 내에서 pagination 표시 정보 호출 displayPaginationInfo()
+
+// 바로 paginationMap을 return해도 되지만 설정시점과 사용시점의 분리를 위해 return은 따로 하지 않음.
+var TotalPaginationMap = new Map();// paging을 위한 map
+// pagination 정보 Set.
+// 기본정보 : tatalCount, itemsOnPage, visiblePages
+// 가변정보 : currentPageNum,
+function setTablePagination(tableId, paginationMap){
+    //
+    // var paginationMap = new Map();
+    // paginationMap.set("addRowFunctionName", "addRowVpcNet");// addRow를 구현한 function이름 : 반드시 필요.
+    // paginationMap.set("totalCount", 0);// 전체 갯수
+    // paginationMap.set("itemsOnPage", 5);// 한 페이지 당 갯수
+    // paginationMap.set("visiblePages", 10);// 한번에 보여지는 page 갯수. pre, next 로 해당 단위씩 이동
+    // paginationMap.set("currentPageNum", 0);// 현재 page 번호
+    // paginationMap.set("lastPageNum", 0);// 마지막 page번호
+    // paginationMap.set("listData", listData)//
+
+    var listData = paginationMap.get("listData");
+    var currentPageNum = paginationMap.get("currentPageNum")== "" ? "1": paginationMap.get("currentPageNum")
+    var addRowFunctionName = paginationMap.get("addRowFunctionName");
+
+    if( addRowFunctionName == "" || addRowFunctionName == undefined){
+        console.log("there is no addRowFunctionName")
+        return
+    }
+
+    // 현재 정보 set
+    if (listData.length) {
+        if (currentPageNum < 1) currentPageNum = 1
+
+        var countPerPage = paginationMap.get("itemsOnPage");// TODO : screen size에 따라 한번에 보여주는 객수 다르게
+        var visiblePages = paginationMap.get("visiblePages");// 한번에 보여지는 page 수
+
+        var totalRowCount = listData.length;// 총 개수
+        var totalPageNum = parseInt(totalRowCount / countPerPage);// 총 페이지 수
+        if (parseInt(totalRowCount % countPerPage) > 0) totalPageNum++;// 나머지가 있으면 page 수는 1 추가
+
+        var beginPageNum = (parseInt(currentPageNum / visiblePages) * visiblePages) + 1
+        var endPageNum = beginPageNum + visiblePages
+        if (totalPageNum < endPageNum) endPageNum = totalPageNum
+
+        var beginRowNum = (currentPageNum - 1) * countPerPage;
+        var lastPageRowNum = listData.length % countPerPage;// 마지막 page의 rowNum
+        var endRowNum = listData.length
+
+        if (endRowNum < beginRowNum + countPerPage) {
+            endRowNum = beginRowNum + lastPageRowNum -1
+        } else if (endRowNum > beginRowNum + countPerPage) {
+            endRowNum = beginRowNum + countPerPage -1
+        }
+
+        console.log("beginPageNum:" + beginPageNum)
+        console.log("endPageNum:" + endPageNum)
+        console.log("beginRowNum:" + beginRowNum)
+        console.log("endRowNum:" + endRowNum)
+        paginationMap.set("beginPageNum", beginPageNum)
+        paginationMap.set("endPageNum", endPageNum)
+        paginationMap.set("beginRowNum", beginRowNum)//
+        paginationMap.set("endRowNum", endRowNum)//
+        paginationMap.set("totalPageNum", totalPageNum)//
+
+    }
+
+    TotalPaginationMap.set(tableId, paginationMap)
+}
+
+// 페이지 정보 보여주기
+// [처음][이전] 1 2 3 ... [다음][마지막]
+// paginationTable 에서 넘겨주는 param으로 생성.
+function displayPaginationInfo(tableId, currentPageNum) {
+    var paginationMap = TotalPaginationMap.get(tableId);
+    var html="";
+
+    /////////
+    // var countPerPage = paginationMap.get("itemsOnPage");// TODO : screen size에 따라 한번에 보여주는 객수 다르게
+    // var visiblePages = paginationMap.get("visiblePages");// 한번에 보여지는 page 수
+    var totalRowNum = paginationMap.get("totalCount");// 총 개수
+    // var listData = paginationMap.get("listData")
+
+    var beginPageNum = paginationMap.get("beginPageNum")
+    var endPageNum = paginationMap.get("endPageNum")
+    // var beginRowNum = paginationMap.get("beginRowNum")
+    // var endRowNum = paginationMap.get("endRowNum")
+    var totalPageNum = paginationMap.get("totalPageNum")
+
+
+    var html = ""
+
+    if( currentPageNum != 1) {
+        html += '<td onclick="moveToPage(\'' + tableId+ '\' ,1 );">FIRST</td>'
+    }
+    if( currentPageNum > 1) {
+        html += '<td onclick="moveToPage(\'' + tableId+ '\' ,' + (currentPageNum-1) + ' );">PREV</td>'
+    }
+
+    for( var i = beginPageNum; i <= endPageNum; i++){
+        if( i == currentPageNum ){
+            // 현재 page는 링크 제외
+            html += '<td>c' + i + '</td>'
+        }else{
+            html += '<td onclick="moveToPage(\'' + tableId+ '\' ,' + i + ' );">' + i + '</td>'
+        }
+    }
+
+    if( endPageNum > currentPageNum) {
+        html += '<td onclick="moveToPage(\'' + tableId+ '\' ,' + (currentPageNum+1) + ' );">NEXT</td>'
+    }
+    if( endPageNum != currentPageNum) {
+        html += '<td onclick="moveToPage(\'' + tableId+ '\' ,' + endPageNum + ' );">LAST</td>'
+    }
+
+    html+="<td></td>"
+    html+="<td>" + currentPageNum + " / " + totalPageNum + "</td>"
+    html+="<td> total : " + totalRowNum + "</td>"
+
+    //vpcPagination
+    $("#page_"+ tableId).empty()
+    $("#page_"+ tableId).append(html)
+}
+
+// 이전page로 이동
+function prevPage(tableId, currentPageNum){
+    moveToPage(tableId, currentPageNum-1 )
+}
+// 다음 page로 이동
+function nextPage(tableId, currentPageNum){
+    moveToPage(tableId, currentPageNum+1 )
+}
+
+// 해당 page로 이동
+function moveToPage(tableId, targetPageNum){
+    var paginationMap = TotalPaginationMap.get(tableId);
+    var html="";
+
+    /////////
+    var addRowFunctionName = paginationMap.get("addRowFunctionName");// 반드시 있어야 함 : table에 addRow를 하는 function 이름
+    var countPerPage = paginationMap.get("itemsOnPage");// TODO : screen size에 따라 한번에 보여주는 객수 다르게
+    var visiblePages = paginationMap.get("visiblePages");// 한번에 보여지는 page 수
+    var totalRowCount = paginationMap.get("totalCount");// 총 개수
+    var listData = paginationMap.get("listData")
+
+    var totalPageNum = parseInt(totalRowCount / countPerPage);// 총 페이지 수
+    if (parseInt(totalRowCount % countPerPage) > 0) totalPageNum++;// 나머지가 있으면 page 수는 1 추가
+
+    var beginPageNum = (parseInt(targetPageNum / visiblePages) * visiblePages) + 1
+    var endPageNum = beginPageNum + visiblePages
+    if (totalPageNum < endPageNum) endPageNum = totalPageNum
+
+    var beginRowNum = (targetPageNum - 1) * countPerPage;
+    var lastPageRowNum = listData.length % countPerPage;// 마지막 page의 rowNum
+    var endRowNum = listData.length
+
+    if (endRowNum < beginRowNum + countPerPage) {
+        endRowNum = beginRowNum + lastPageRowNum -1
+    } else if (endRowNum > beginRowNum + countPerPage) {
+        endRowNum = beginRowNum + countPerPage -1
+    }
+
+    paginationMap.set("beginPageNum", beginPageNum)
+    paginationMap.set("endPageNum", endPageNum)
+    paginationMap.set("beginRowNum", beginRowNum)//
+    paginationMap.set("endRowNum", endRowNum)//
+    paginationMap.set("totalPageNum", totalPageNum)//
+
+
+    ///////// table 출력 /////////
+    var listData = paginationMap.get("listData")//
+    for (var i = beginRowNum; i < endRowNum; i++) {
+        //html += addVNetRow(listData[i], i)// TODO : 공통으로 addRow할 수 있는 방안은??
+        html += window[addRowFunctionName](listData[i], i);
+    }
+    $("#" + tableId).empty()
+    $("#" + tableId).append(html)
+
+    displayPaginationInfo(tableId, targetPageNum)// page정보 표시
+}
