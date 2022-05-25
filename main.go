@@ -573,7 +573,7 @@ func main() {
 	e.POST("/operation/manages/mcismng/reg/proc", controller.McisRegProc)
 	e.DELETE("/operation/manages/mcismng/:mcisID", controller.McisDelProc)
 
-	//e.POST("/operation/manages/mcismng/proc/mcisrecommendvm", controller.McisRecommendVm)
+	e.POST("/operation/manages/mcismng/proc/mcisrecommendvm", controller.McisRecommendVm)
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
 	e.GET("/operation/manages/mcismng/:mcisID", controller.GetMcisInfoData)
