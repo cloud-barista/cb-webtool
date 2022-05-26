@@ -1,6 +1,15 @@
-// $(document).ready(function(){
+$(document).ready(function () {
+	$('.btn_recommend').on('click', function () {
+		showRecommendAssistPopup();
+	});
 
-// })
+})
+
+function showRecommendAssistPopup() {
+	console.log("showRecommendAssistPopup")
+	$("#recommendVmAssist").modal();
+
+}
 
 // getConnectionListForSelectbox 로 변경
 // function changeProvider(provider, target){
@@ -384,3 +393,5 @@ function importFileProcess(file) {
 		console.log(error);
 	}
 }
+
+
