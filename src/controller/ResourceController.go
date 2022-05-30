@@ -179,8 +179,7 @@ func VpcRegProc(c echo.Context) error {
 		})
 	}
 	// log.Println(vNetRegInfo)
-	optionParam := c.QueryParam("option")
-	resultVNetInfo, respStatus := service.RegVpc(defaultNameSpaceID, optionParam, vNetRegInfo)
+	resultVNetInfo, respStatus := service.RegVpc(defaultNameSpaceID, vNetRegInfo)
 	// respBody, respStatus := service.RegVpc(defaultNameSpaceID, vNetRegInfo)
 	// fmt.Println("=============respStatus =============", respStatus)
 	// fmt.Println("=============respBody ===============", respBody)
@@ -371,8 +370,7 @@ func SecirityGroupRegProc(c echo.Context) error {
 		})
 	}
 
-	optionParam := c.QueryParam("option")
-	resultSecurityGroupInfo, respStatus := service.RegSecurityGroup(defaultNameSpaceID, optionParam, securityGroupRegInfo)
+	resultSecurityGroupInfo, respStatus := service.RegSecurityGroup(defaultNameSpaceID, securityGroupRegInfo)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -388,7 +386,7 @@ func SecirityGroupRegProc(c echo.Context) error {
 	})
 }
 
-// 삭제
+// SecurityGroup 삭제
 func SecirityGroupDelProc(c echo.Context) error {
 	log.Println("SecirityGroupDelProc : ")
 
@@ -419,6 +417,83 @@ func SecirityGroupDelProc(c echo.Context) error {
 	})
 }
 
+// firewall rule등록 :
+func FirewallRegProc(c echo.Context) error {
+	log.Println("FirewallRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramSecurityGroupID := c.Param("securityGroupID")
+
+	firewallRuleReq := new(tbmcir.TbFirewallRulesWrapper)
+	if err := c.Bind(firewallRuleReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	resultSecurityGroupInfo, respStatus := service.RegFirewallRules(defaultNameSpaceID, paramSecurityGroupID, firewallRuleReq)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":           "success",
+		"status":            respStatus.StatusCode,
+		"SecurityGroupInfo": resultSecurityGroupInfo,
+	})
+}
+
+// firewall rule 삭제 :
+func FirewallDelProc(c echo.Context) error {
+	log.Println("FirewallDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramSecurityGroupID := c.Param("securityGroupID")
+
+	firewallRuleReq := new(tbmcir.TbFirewallRulesWrapper)
+	if err := c.Bind(firewallRuleReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	respMessage, respStatus := service.DelFirewallRules(defaultNameSpaceID, paramSecurityGroupID, firewallRuleReq)
+	fmt.Println("=============respMessage =============", respMessage)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": respMessage.Message,
+		"status":  respStatus.StatusCode,
+	})
+}
+
+// SshKey 등록 form
 func SshKeyMngForm(c echo.Context) error {
 	fmt.Println("SshKeyMngForm ************ : ")
 
@@ -555,8 +630,7 @@ func SshKeyRegProc(c echo.Context) error {
 		})
 	}
 
-	optionParam := c.QueryParam("option")
-	resultSshKeyInfo, respStatus := service.RegSshKey(defaultNameSpaceID, optionParam, sshKeyRegInfo)
+	resultSshKeyInfo, respStatus := service.RegSshKey(defaultNameSpaceID, sshKeyRegInfo)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -603,9 +677,9 @@ func SshKeyDelProc(c echo.Context) error {
 	})
 }
 
-
+// SSHKey Update
 func SshKeyUpdateProc(c echo.Context) error {
-	log.Println("SshKeyDelProc : ")
+	log.Println("SshKeyUpdateProc : ")
 
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -617,8 +691,8 @@ func SshKeyUpdateProc(c echo.Context) error {
 
 	paramSshKeyID := c.Param("sshKeyID")
 
-	sshKeyRegInfo := new(tbmcir.TbSshKeyReq)
-	if err := c.Bind(sshKeyRegInfo); err != nil {
+	sshKeyInfo := new(tbmcir.TbSshKeyInfo)
+	if err := c.Bind(sshKeyInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
@@ -626,7 +700,7 @@ func SshKeyUpdateProc(c echo.Context) error {
 		})
 	}
 
-	resultSshKeyInfo, respStatus := service.RegSshKey(defaultNameSpaceID, paramSshKeyID, sshKeyRegInfo)
+	resultSshKeyInfo, respStatus := service.UpdateSshKey(defaultNameSpaceID, paramSshKeyID, sshKeyInfo)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{

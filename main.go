@@ -573,7 +573,8 @@ func main() {
 	e.POST("/operation/manages/mcismng/reg/proc", controller.McisRegProc)
 	e.DELETE("/operation/manages/mcismng/:mcisID", controller.McisDelProc)
 
-	e.POST("/operation/manages/mcismng/proc/mcisrecommendvm", controller.McisRecommendVm)
+	e.POST("/operation/manages/mcismng/proc/mcisrecommendvm", controller.McisRecommendVmProc)
+	e.POST("/operation/manages/mcismng/proc/mcisDynamic", controller.McisDynamicRegProc)
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
 	e.GET("/operation/manages/mcismng/:mcisID", controller.GetMcisInfoData)
@@ -677,6 +678,9 @@ func main() {
 	resourcesGroup.GET("/securitygroup/:securityGroupID", controller.GetSecirityGroupData)
 	resourcesGroup.POST("/securitygroup/reg", controller.SecirityGroupRegProc)
 	resourcesGroup.DELETE("/securitygroup/del/:securityGroupID", controller.SecirityGroupDelProc)
+
+	e.POST("/setting/resources/securitygroup/:securityGroupID/firewallrules/reg", controller.FirewallRegProc)
+	e.DELETE("/setting/resources/securitygroup/:securityGroupID/firewallrules/del", controller.FirewallDelProc)
 
 	resourcesGroup.GET("/sshkey/mngform", controller.SshKeyMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
 	resourcesGroup.GET("/sshkey/list", controller.GetSshKeyList)

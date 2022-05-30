@@ -437,7 +437,8 @@ func McisRegProc(c echo.Context) error {
 
 }
 
-func McisRecommendVm(c echo.Context) error {
+// Recommend MCIS plan ( filter and priority )
+func McisRecommendVmProc(c echo.Context) error {
 	log.Println("McisRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -998,5 +999,54 @@ func CommandVmOfMcis(c echo.Context) error {
 		"message":       respStatus.Message,
 		"status":        respStatus.StatusCode,
 		"commandResult": respMessage,
+	})
+}
+
+// Create Mcis Dynamically
+func McisDynamicRegProc(c echo.Context) error {
+	log.Println("McisDynamicReg : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	log.Println("bind")
+	mcisDynamicReq := &tbmcis.TbMcisDynamicReq{}
+	if err := c.Bind(mcisDynamicReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(mcisDynamicReq)
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
+
+	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisDynamicReq.Name                                           // TODO : 공통 function으로 뺄 것.
+	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	// TODO : async로 호출하는지 확인하여 변경 결정할 것.
+	//go service.RegMcisDynamicAsync(defaultNameSpaceID, mcisDynamicReq, c)
+	//// 원래는 호출 결과를 return하나 go routine으로 바꾸면서 요청성공으로 return
+	//log.Println("before return")
+	//return c.JSON(http.StatusOK, map[string]interface{}{
+	//	"message": "success",
+	//	"status":  200,
+	//})
+
+	_, respStatus := service.RegMcisDynamic(defaultNameSpaceID, mcisDynamicReq)
+	log.Println("RegMcisDynamic service returned")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  respStatus.StatusCode,
 	})
 }
