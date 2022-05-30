@@ -666,6 +666,7 @@ func main() {
 
 	resourcesGroup := e.Group("/setting/resources", resourceTemplate)
 	e.POST("/getinspectresources", controller.GetInspectResourceList)
+	e.POST("/setting/resources/registercspresources", controller.RegisterCspResourcesProc)
 	resourcesGroup.GET("/network/mngform", controller.VpcMngForm)
 	resourcesGroup.GET("/network/list", controller.GetVpcList)
 	resourcesGroup.GET("/network/:vNetID", controller.GetVpcData)

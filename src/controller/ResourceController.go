@@ -1385,6 +1385,7 @@ func FilterVmSpecListByRange(c echo.Context) error {
 	})
 }
 
+
 func GetInspectResourceList(c echo.Context) error {
 	log.Println("GetInspectResourceList : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -1407,5 +1408,40 @@ func GetInspectResourceList(c echo.Context) error {
 		"message":                  "success",
 		"status":                   respStatus,
 		"InspectResourcesResponse": inspectResourcesResponse,
+	})
+}
+
+// Register CSP Native Resources to CB-Tumblebug
+func RegisterCspResourcesProc(c echo.Context) error {
+	log.Println("RegisterCspResourcesProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	resourcesRequest := new(tbcommon.RestRegisterCspNativeResourcesRequest)
+	if err := c.Bind(resourcesRequest); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	// log.Println(vNetRegInfo)
+	optionParam := c.QueryParam("option")
+	registerResourceResult, respStatus := service.RegCspResources(resourcesRequest, optionParam)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "success",
+		"status":   respStatus.StatusCode,
+		"registerResource": registerResourceResult,
 	})
 }
