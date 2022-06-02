@@ -702,6 +702,44 @@ func VmRegProc(c echo.Context) error {
 
 }
 
+// Register existing VM in a CSP to Cloud-Barista MCIS
+func RegisterCspVm(c echo.Context) error {
+	log.Println("RegisterCspVm : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	mcisReq := &tbmcis.TbMcisReq{}
+	if err := c.Bind(mcisReq); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(mcisReq)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	resultMcisInfo, respStatus := service.RegCspVm(defaultNameSpaceID, mcisReq)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "success",
+		"status":   200,
+		"McisInfo": resultMcisInfo,
+	})
+	
+}
+
 // MCIS 의 특정 VM의 정보를 가져온다. 단. 텀블벅 조회가 아니라 이미 저장되어 있는 store에서 꺼낸다.
 func GetVmInfoData(c echo.Context) error {
 	log.Println("GetVmInfoData")

@@ -419,6 +419,42 @@ func SecirityGroupDelProc(c echo.Context) error {
 	})
 }
 
+// security group rule 추가
+func FirewallRegProc(c echo.Context) error {
+	log.Println("SecirityGroupRulesRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	firewallRuleReq := new(tbmcir.TbFirewallRulesWrapper)
+	if err := c.Bind(firewallRuleReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	paramSecurityGroupID := c.Param("securityGroupID")
+	resultSecurityGroupInfo, respStatus := service.RegFirewallRules(defaultNameSpaceID, paramSecurityGroupID, firewallRuleReq)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":           "success",
+		"status":            respStatus.StatusCode,
+		"SecurityGroupInfo": resultSecurityGroupInfo,
+	})
+}
+
 func SshKeyMngForm(c echo.Context) error {
 	fmt.Println("SshKeyMngForm ************ : ")
 

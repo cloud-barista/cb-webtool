@@ -572,6 +572,7 @@ func main() {
 	e.GET("/operation/manages/mcismng/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
 	e.POST("/operation/manages/mcismng/reg/proc", controller.McisRegProc)
 	e.DELETE("/operation/manages/mcismng/:mcisID", controller.McisDelProc)
+	e.POST("/operation/manages/mcismng/registercspvm", controller.RegisterCspVm)
 
 	//e.POST("/operation/manages/mcismng/proc/mcisrecommendvm", controller.McisRecommendVm)
 
@@ -678,6 +679,9 @@ func main() {
 	resourcesGroup.GET("/securitygroup/:securityGroupID", controller.GetSecirityGroupData)
 	resourcesGroup.POST("/securitygroup/reg", controller.SecirityGroupRegProc)
 	resourcesGroup.DELETE("/securitygroup/del/:securityGroupID", controller.SecirityGroupDelProc)
+
+	e.POST("/setting/resources/securitygroup/:securityGroupID/firewallrules/reg", controller.FirewallRegProc)
+
 
 	resourcesGroup.GET("/sshkey/mngform", controller.SshKeyMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
 	resourcesGroup.GET("/sshkey/list", controller.GetSshKeyList)
