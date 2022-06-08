@@ -731,13 +731,12 @@ func RegisterCspVm(c echo.Context) error {
 		})
 	}
 
-
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",
 		"status":   200,
 		"McisInfo": resultMcisInfo,
 	})
-	
+
 }
 
 // MCIS 의 특정 VM의 정보를 가져온다. 단. 텀블벅 조회가 아니라 이미 저장되어 있는 store에서 꺼낸다.
@@ -1037,4 +1036,37 @@ func CommandVmOfMcis(c echo.Context) error {
 		"status":        respStatus.StatusCode,
 		"commandResult": respMessage,
 	})
+}
+
+func McisDynamicCheck(c echo.Context) error {
+	log.Println("McisDynamicCheck : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	mcisReq := new(tbmcis.McisConnectionConfigCandidatesReq)
+	if err := c.Bind(mcisReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	checkMcisDynamicReqInfo, respStatus := service.RegMcisDynamicCheck(mcisReq)
+	log.Println("RegMcisDynamicCheck result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":         respStatus.Message,
+		"status":          respStatus.StatusCode,
+		"mcisDynamicInfo": checkMcisDynamicReqInfo,
+	})
+
 }
