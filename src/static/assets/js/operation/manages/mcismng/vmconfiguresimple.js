@@ -241,33 +241,34 @@ function simpleDone_btn() {
 	var simple_form = $("#simple_form").serializeObject()
 	var server_name = simple_form.name
 	var server_cnt = parseInt(simple_form.s_vm_add_cnt)
+	simple_form.vmGroupSize = server_cnt
 	console.log('server_cnt : ', server_cnt)
 	var add_server_html = "";
 
-	if (server_cnt > 1) {
-		for (var i = 1; i <= server_cnt; i++) {
-			var new_vm_name = server_name + "-" + i;
-			var object = cloneObj(simple_form)
-			object.name = new_vm_name
-			add_server_html += '<li onclick="view_simple(\'' + simple_data_cnt + '\')">'
-				+ '<div class="server server_on bgbox_b">'
-				+ '<div class="icon"></div>'
-				+ '<div class="txt">' + new_vm_name + '</div>'
-				+ '</div>'
-				+ '</li>';
-			Simple_Server_Config_Arr.push(object)
-			console.log(i + "번째 Simple form data 입니다. : ", object);
-		}
-	} else {
+	// if (server_cnt > 1) {
+	// 	for (var i = 1; i <= server_cnt; i++) {
+	// 		var new_vm_name = server_name + "-" + i;
+	// 		var object = cloneObj(simple_form)
+	// 		object.name = new_vm_name
+	// 		add_server_html += '<li onclick="view_simple(\'' + simple_data_cnt + '\')">'
+	// 			+ '<div class="server server_on bgbox_b">'
+	// 			+ '<div class="icon"></div>'
+	// 			+ '<div class="txt">' + new_vm_name + '</div>'
+	// 			+ '</div>'
+	// 			+ '</li>';
+	// 		Simple_Server_Config_Arr.push(object)
+	// 		console.log(i + "번째 Simple form data 입니다. : ", object);
+	// 	}
+	// } else {
 		Simple_Server_Config_Arr.push(simple_form)
 		add_server_html += '<li onclick="view_simple(\'' + simple_data_cnt + '\')">'
 			+ '<div class="server server_on bgbox_b">'
 			+ '<div class="icon"></div>'
-			+ '<div class="txt">' + server_name + '</div>'
+			+ '<div class="txt">' + server_name + '(' + server_cnt + ')' +'</div>'
 			+ '</div>'
 			+ '</li>';
 
-	}
+	// }
 	$(".simple_servers_config").removeClass("active");
 	console.log("add server html");
 	$("#mcis_server_list").prepend(add_server_html)
