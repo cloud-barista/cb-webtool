@@ -232,14 +232,12 @@ func GetVpcData(nameSpaceID string, vNetID string) (*tbmcir.TbVNetInfo, model.We
 }
 
 // vpc 등록
-// func RegVpc(nameSpaceID string, vnetRegInfo *tbmcir.TbVNetReq) (io.ReadCloser, int) {
+// option=register 항목은 TB에서 자동으로 넣을 때 사용하는 param으로 webtool에서 사용하지 않음.
 func RegVpc(nameSpaceID string, vnetRegInfo *tbmcir.TbVNetReq) (*tbmcir.TbVNetInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/vNet"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	//urlParam += "?option=" + optionParam
-	urlParam += "?option=register"
 
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
@@ -487,6 +485,7 @@ func GetSecurityGroupData(nameSpaceID string, securityGroupID string) (*tbmcir.T
 }
 
 // SecurityGroup 등록
+// option=register 항목은 TB에서 자동으로 넣을 때 사용하는 param으로 webtool에서 사용하지 않음.
 func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *tbmcir.TbSecurityGroupReq) (*tbmcir.TbSecurityGroupInfo, model.WebStatus) {
 	fmt.Println("RegSecurityGroup : ")
 
@@ -494,7 +493,6 @@ func RegSecurityGroup(nameSpaceID string, securityGroupRegInfo *tbmcir.TbSecurit
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	urlParam += "?option=register"
 
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/securityGroup"
@@ -749,12 +747,12 @@ func GetSshKeyData(nameSpaceID string, sshKeyID string) (*tbmcir.TbSshKeyInfo, m
 }
 
 // sshKey 등록
+// option=register 항목은 TB에서 자동으로 넣을 때 사용하는 param으로 webtool에서 사용하지 않음.
 func RegSshKey(nameSpaceID string, sshKeyRegInfo *tbmcir.TbSshKeyReq) (*tbmcir.TbSshKeyInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/sshKey"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	urlParam += "?option=register"
 
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
