@@ -591,6 +591,8 @@ func main() {
 	e.POST("/operation/manages/mcismng/cmd/mcis/:mcisID", controller.CommandMcis)
 	e.POST("/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID", controller.CommandVmOfMcis)
 
+	e.POST("/operation/manages/mcismng/network/mcis/:mcisID", controller.RegAdaptiveNetwork)
+	e.PUT("/operation/manages/mcismng/network/mcis/:mcisID", controller.UpdateAdaptiveNetwork)
 	// e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)

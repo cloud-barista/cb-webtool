@@ -1070,3 +1070,75 @@ func McisDynamicCheck(c echo.Context) error {
 	})
 
 }
+
+func RegAdaptiveNetwork(c echo.Context) error {
+	log.Println("RegAdaptiveNetwork : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	networkReq := new(tbmcis.NetworkReq)
+	if err := c.Bind(networkReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	agentInstallContentWrapper, respStatus := service.RegAdaptiveNetwork(defaultNameSpaceID, mcisID, networkReq)
+	log.Println("RegAdaptiveNetwork result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       respStatus.Message,
+		"status":        respStatus.StatusCode,
+		"networkResult": agentInstallContentWrapper,
+	})
+
+}
+
+func UpdateAdaptiveNetwork(c echo.Context) error {
+	log.Println("UpdateAdaptiveNetwork : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	networkReq := new(tbmcis.NetworkReq)
+	if err := c.Bind(networkReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	agentInstallContentWrapper, respStatus := service.UpdateAdaptiveNetwork(defaultNameSpaceID, mcisID, networkReq)
+	log.Println("RegAdaptiveNetwork result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":       respStatus.Message,
+		"status":        respStatus.StatusCode,
+		"networkResult": agentInstallContentWrapper,
+	})
+
+}

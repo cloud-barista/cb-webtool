@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 
 	//tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
@@ -756,6 +757,7 @@ func RegMcisDynamicCheck(mcisReq *tbmcis.McisConnectionConfigCandidatesReq) (*tb
 
 	return &returnVmSpecs, returnStatus
 }
+
 ////////////////
 // func GetVMStatus(vm_name string, connectionConfig string) string {
 // 	url := SpiderUrl + "/vmstatus/" + vm_name + "?connection_name=" + connectionConfig
@@ -1679,7 +1681,6 @@ func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.TbVmInfo
 	return &vmInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-
 func RegCspVm(nameSpaceID string, mcisReq *tbmcis.TbMcisReq) (*tbmcis.TbMcisInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/registerCspVm"
 
@@ -1717,6 +1718,7 @@ func RegCspVm(nameSpaceID string, mcisReq *tbmcis.TbMcisReq) (*tbmcis.TbMcisInfo
 	return &returnMcisInfo, returnStatus
 }
 
+// Configure Cloud Adaptive Network (cb-network agent) to MCIS
 func RegAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis.NetworkReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/network/mcis/{mcisId}"
 
@@ -1755,6 +1757,7 @@ func RegAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis.Ne
 	return &agentInstallContentWrapper, returnStatus
 }
 
+// Inject Cloud Information For Cloud Adaptive Network
 func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis.NetworkReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/network/mcis/{mcisId}"
 
@@ -1792,8 +1795,6 @@ func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis
 
 	return &agentInstallContentWrapper, returnStatus
 }
-
-
 
 // Get MCIS recommendation
 // Deprecated at 0.4.5
@@ -1858,5 +1859,3 @@ func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis
 
 // 	// return respBody, model.WebStatus{StatusCode: respStatus}
 // }
-
-
