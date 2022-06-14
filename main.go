@@ -573,9 +573,9 @@ func main() {
 	e.POST("/operation/manages/mcismng/reg/proc", controller.McisRegProc)
 	e.DELETE("/operation/manages/mcismng/:mcisID", controller.McisDelProc)
 	e.POST("/operation/manages/mcismng/registercspvm", controller.RegisterCspVm)
-	e.POST("/operation/manages/mcismng/mcisdynamiccheck", controller.McisDynamicCheck)
+	e.POST("/operation/manages/mcismng/list", controller.GetConnectionConfigCandidateList)
 
-	//e.POST("/operation/manages/mcismng/proc/mcisrecommendvm", controller.McisRecommendVm)
+	e.POST("/operation/manages/mcismng/mcisrecommendvm/list", controller.GetMcisRecommendVmSpecList) // 경로를 mcismng 아래로 해야할 지
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
 	e.GET("/operation/manages/mcismng/:mcisID", controller.GetMcisInfoData)
@@ -669,8 +669,11 @@ func main() {
 	cloudConnectionGroup.DELETE("/config/del/:configID", controller.ConfigDelProc)
 
 	resourcesGroup := e.Group("/setting/resources", resourceTemplate)
-	e.POST("/getinspectresources", controller.GetInspectResourceList)
+	e.POST("/setting/resources/inspectresources/list", controller.GetInspectResourceList)
+	e.POST("/setting/resources/inspectresourcesoverview", controller.GetInspectResourcesOverview)
 	e.POST("/setting/resources/registercspresources", controller.RegisterCspResourcesProc)
+	e.POST("/setting/resources/registercspresourcesall", controller.RegisterCspResourcesAllProc)
+
 	resourcesGroup.GET("/network/mngform", controller.VpcMngForm)
 	resourcesGroup.GET("/network/list", controller.GetVpcList)
 	resourcesGroup.GET("/network/:vNetID", controller.GetVpcData)

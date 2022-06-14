@@ -639,7 +639,6 @@ func SshKeyDelProc(c echo.Context) error {
 	})
 }
 
-
 func SshKeyUpdateProc(c echo.Context) error {
 	log.Println("SshKeyDelProc : ")
 
@@ -1421,7 +1420,10 @@ func FilterVmSpecListByRange(c echo.Context) error {
 	})
 }
 
-
+/*
+	connection에 대해 resource 목록 CSP와 Tumblebug을 비교
+    비교 가능 resource : vnet/securityGroup/sshKey/vm
+*/
 func GetInspectResourceList(c echo.Context) error {
 	log.Println("GetInspectResourceList : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -1429,8 +1431,8 @@ func GetInspectResourceList(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	inspectResource := new(tbcommon.RestInspectResourcesRequest)
-	if err := c.Bind(inspectResource); err != nil {
+	paramInspectResource := new(tbcommon.RestInspectResourcesRequest)
+	if err := c.Bind(paramInspectResource); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
@@ -1438,12 +1440,32 @@ func GetInspectResourceList(c echo.Context) error {
 		})
 	}
 
-	inspectResourcesResponse, respStatus := service.GetInspectResourceList(inspectResource)
+	inspectResource, respStatus := service.GetInspectResourceList(paramInspectResource)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":         "success",
+		"status":          respStatus,
+		"inspectResource": inspectResource,
+	})
+}
+
+/*
+	connection에 대해 resource 목록 CSP와 Tumblebug을 비교
+    비교 가능 resource : vnet/securityGroup/sshKey/vm
+*/
+func GetInspectResourcesOverview(c echo.Context) error {
+	log.Println("GetInspectResourceList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	inspectResourceAllResult, respStatus := service.GetInspectResourcesOverview()
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":                  "success",
 		"status":                   respStatus,
-		"InspectResourcesResponse": inspectResourcesResponse,
+		"inspectResourceAllResult": inspectResourceAllResult,
 	})
 }
 
@@ -1476,8 +1498,42 @@ func RegisterCspResourcesProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":  "success",
-		"status":   respStatus.StatusCode,
+		"message":          "success",
+		"status":           respStatus.StatusCode,
+		"registerResource": registerResourceResult,
+	})
+}
+
+func RegisterCspResourcesAllProc(c echo.Context) error {
+	log.Println("RegisterCspResourcesProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	resourcesRequest := new(tbcommon.RestRegisterCspNativeResourcesRequestAll)
+	if err := c.Bind(resourcesRequest); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	// log.Println(vNetRegInfo)
+	optionParam := c.QueryParam("option")
+	registerResourceResult, respStatus := service.RegCspResourcesAll(resourcesRequest, optionParam)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":          "success",
+		"status":           respStatus.StatusCode,
 		"registerResource": registerResourceResult,
 	})
 }

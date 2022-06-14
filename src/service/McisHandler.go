@@ -689,7 +689,7 @@ func RegMcisDynamic(nameSpaceID string, mcisDynamicReq *tbmcis.TbMcisDynamicReq)
 // Recommend MCIS plan (filter and priority)
 // 실제로는 추천 image 목록
 // async 로 만들 지
-func GetMcisRecommendVm(mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbSpecInfo, model.WebStatus) {
+func GetMcisRecommendVmSpecList(mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbSpecInfo, model.WebStatus) {
 	var originalUrl = "/mcisRecommendVm"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
@@ -723,8 +723,14 @@ func GetMcisRecommendVm(mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbS
 	return returnVmSpecs, returnStatus
 }
 
-// Check avaiable ConnectionConfig list for creating MCIS Dynamically
-func RegMcisDynamicCheck(mcisReq *tbmcis.McisConnectionConfigCandidatesReq) (*tbmcis.CheckMcisDynamicReqInfo, model.WebStatus) {
+/*
+// Checkavaiable ConnectionConfig list for creating MCIS Dynamically
+	사용 가능한 connectionConfig 목록 조회 : 동적생성에서 사용
+	해당 spec들을 사용할 수 있는 conection 정보 목록
+	ex) "commonSpec": ["aws-ap-northeast-2-t2-small","gcp-us-west1-g1-small"]
+		-> spec : "aws-ap-northeast-2-t2-small", connectionName : "conn-abc", region : "ap-northeast-2" ...
+*/
+func GetMcisDynamicCheckList(mcisReq *tbmcis.McisConnectionConfigCandidatesReq) (*tbmcis.CheckMcisDynamicReqInfo, model.WebStatus) {
 	var originalUrl = "/mcisDynamicCheckRequest"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 

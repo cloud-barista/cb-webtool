@@ -23,7 +23,6 @@ import (
 	"github.com/labstack/echo"
 )
 
-
 func RegFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleReq *tbmcir.TbFirewallRulesWrapper) (*tbmcir.TbFirewallRuleInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/securityGroup/{securityGroupId}/rules"
 	var paramMapper = make(map[string]string)
@@ -70,13 +69,13 @@ func DelFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleRe
 	pbytes, _ := json.Marshal(firewallRuleReq)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
-	
+
 	webStatus := model.WebStatus{}
 	if err != nil {
 		fmt.Println(err)
 		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	
+
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 	resultInfo := model.ResultInfo{}
@@ -92,7 +91,6 @@ func DelFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleRe
 	webStatus.Message = resultInfo.Message
 	return webStatus, model.WebStatus{StatusCode: respStatus}
 }
-
 
 // 해당 namespace의 vpc 목록 조회
 //func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
@@ -812,11 +810,10 @@ func UpdateSshKey(nameSpaceID string, sshKeyId string, sshKeyInfo *tbmcir.TbSshK
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 	log.Println("respBody = ", respBody)
-	
 
 	json.NewDecoder(respBody).Decode(&sshKeyInfoResponse)
 	fmt.Println(sshKeyInfoResponse)
-	
+
 	return &sshKeyInfoResponse, model.WebStatus{StatusCode: respStatus}
 }
 
@@ -1049,7 +1046,6 @@ func GetVirtualMachineImageData(nameSpaceID string, virtualMachineImageID string
 	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-
 func UpdateVirtualMachineImage(nameSpaceID string, virtualMachineImageID string, imageInfo *tbmcir.TbImageInfo) (*tbmcir.TbImageInfo, model.WebStatus) {
 	fmt.Println("UpdateVirtualMachineImageData ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/image/{imageId}"
@@ -1077,7 +1073,6 @@ func UpdateVirtualMachineImage(nameSpaceID string, virtualMachineImageID string,
 
 	return &virtualMachineImageInfo, model.WebStatus{StatusCode: respStatus}
 }
-
 
 // VirtualMachineImage 등록 registeringMethod = imageID
 func RegVirtualMachineImage(nameSpaceID string, registType string, virtualMachineImageRegInfo *tbmcir.TbImageReq) (*tbmcir.TbImageInfo, model.WebStatus) {
@@ -1278,6 +1273,10 @@ func GetInspectResourceList(inspectResource *tbcommon.RestInspectResourcesReques
 
 }
 
+/*
+	CSP와 Tumblebug에 등록된 모든 리소스 비교
+	전체이므로 별도의 parameter 없음.
+*/
 func GetInspectResourcesOverview() (*tbmcis.InspectResourceAllResult, model.WebStatus) {
 	fmt.Println("Inspect Resources Overview (vNet, securityGroup, sshKey, vm) registered in CB-Tumblebug and CSP for all connections")
 	var originalUrl = "/inspectResourcesOverview"
@@ -2103,7 +2102,7 @@ func DelDefaultResources(nameSpaceID string) (*tbcommon.TbIdList, model.WebStatu
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.TUMBLEBUG + urlParam
-	
+
 	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
 	idList := tbcommon.TbIdList{}
 
@@ -2114,7 +2113,6 @@ func DelDefaultResources(nameSpaceID string) (*tbcommon.TbIdList, model.WebStatu
 	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	
 
 	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
@@ -2139,14 +2137,14 @@ func LoadDefaultResources(nameSpaceID string, optionParam string, connectionName
 		urlParam += "?connectionName=" + connectionName
 	}
 	url := util.TUMBLEBUG + urlParam
-	
+
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	webStatus := model.WebStatus{}
 	if err != nil {
 		fmt.Println(err)
 		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-	
+
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 	resultInfo := model.ResultInfo{}
