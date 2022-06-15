@@ -1269,6 +1269,10 @@ func GetInspectResourceList(inspectResource *tbcommon.RestInspectResourcesReques
 
 }
 
+/*
+	CSP와 Tumblebug에 등록된 모든 리소스 비교
+	전체이므로 별도의 parameter 없음.
+*/
 func GetInspectResourcesOverview() (*tbmcis.InspectResourceAllResult, model.WebStatus) {
 	fmt.Println("Inspect Resources Overview (vNet, securityGroup, sshKey, vm) registered in CB-Tumblebug and CSP for all connections")
 	var originalUrl = "/inspectResourcesOverview"

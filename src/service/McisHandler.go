@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 
 	//tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
@@ -688,7 +689,7 @@ func RegMcisDynamic(nameSpaceID string, mcisDynamicReq *tbmcis.TbMcisDynamicReq)
 // Recommend MCIS plan (filter and priority)
 // 실제로는 추천 image 목록
 // async 로 만들 지
-func GetMcisRecommendVm(mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbSpecInfo, model.WebStatus) {
+func GetMcisRecommendVmSpecList(mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbSpecInfo, model.WebStatus) {
 	var originalUrl = "/mcisRecommendVm"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
@@ -722,8 +723,14 @@ func GetMcisRecommendVm(mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tbmcir.TbS
 	return returnVmSpecs, returnStatus
 }
 
-// Check avaiable ConnectionConfig list for creating MCIS Dynamically
-func RegMcisDynamicCheck(mcisReq *tbmcis.McisConnectionConfigCandidatesReq) (*tbmcis.CheckMcisDynamicReqInfo, model.WebStatus) {
+/*
+// Checkavaiable ConnectionConfig list for creating MCIS Dynamically
+	사용 가능한 connectionConfig 목록 조회 : 동적생성에서 사용
+	해당 spec들을 사용할 수 있는 conection 정보 목록
+	ex) "commonSpec": ["aws-ap-northeast-2-t2-small","gcp-us-west1-g1-small"]
+		-> spec : "aws-ap-northeast-2-t2-small", connectionName : "conn-abc", region : "ap-northeast-2" ...
+*/
+func GetMcisDynamicCheckList(mcisReq *tbmcis.McisConnectionConfigCandidatesReq) (*tbmcis.CheckMcisDynamicReqInfo, model.WebStatus) {
 	var originalUrl = "/mcisDynamicCheckRequest"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
 
@@ -756,6 +763,7 @@ func RegMcisDynamicCheck(mcisReq *tbmcis.McisConnectionConfigCandidatesReq) (*tb
 
 	return &returnVmSpecs, returnStatus
 }
+
 ////////////////
 // func GetVMStatus(vm_name string, connectionConfig string) string {
 // 	url := SpiderUrl + "/vmstatus/" + vm_name + "?connection_name=" + connectionConfig
@@ -1679,7 +1687,6 @@ func GetVmData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.TbVmInfo
 	return &vmInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-
 func RegCspVm(nameSpaceID string, mcisReq *tbmcis.TbMcisReq) (*tbmcis.TbMcisInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/registerCspVm"
 
@@ -1717,6 +1724,7 @@ func RegCspVm(nameSpaceID string, mcisReq *tbmcis.TbMcisReq) (*tbmcis.TbMcisInfo
 	return &returnMcisInfo, returnStatus
 }
 
+// Configure Cloud Adaptive Network (cb-network agent) to MCIS
 func RegAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis.NetworkReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/network/mcis/{mcisId}"
 
@@ -1755,6 +1763,7 @@ func RegAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis.Ne
 	return &agentInstallContentWrapper, returnStatus
 }
 
+// Inject Cloud Information For Cloud Adaptive Network
 func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis.NetworkReq) (*tbmcis.AgentInstallContentWrapper, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/network/mcis/{mcisId}"
 
@@ -1792,8 +1801,6 @@ func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis
 
 	return &agentInstallContentWrapper, returnStatus
 }
-
-
 
 // Get MCIS recommendation
 // Deprecated at 0.4.5
@@ -1858,5 +1865,3 @@ func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis
 
 // 	// return respBody, model.WebStatus{StatusCode: respStatus}
 // }
-
-

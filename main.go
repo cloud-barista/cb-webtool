@@ -572,9 +572,12 @@ func main() {
 	e.GET("/operation/manages/mcismng/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
 	e.POST("/operation/manages/mcismng/reg/proc", controller.McisRegProc)
 	e.DELETE("/operation/manages/mcismng/:mcisID", controller.McisDelProc)
+	e.POST("/operation/manages/mcismng/registercspvm", controller.RegisterCspVm)
+	e.POST("/operation/manages/mcismng/list", controller.GetConnectionConfigCandidateList)
 
-	e.POST("/operation/manages/mcismng/proc/mcisrecommendvm", controller.McisRecommendVmProc)
-	e.POST("/operation/manages/mcismng/proc/mcisDynamic", controller.McisDynamicRegProc)
+
+	e.POST("/operation/manages/mcismng/mcisrecommendvm/list", controller.GetMcisRecommendVmSpecList) // 경로를 mcismng 아래로 해야할 지
+
 
 	// TODO : namespace는 서버에 저장된 것을 사용하는데... 자칫하면 namespace와 다른 mcis의 vm으로 날아갈 수 있지 않나???
 	e.GET("/operation/manages/mcismng/:mcisID", controller.GetMcisInfoData)
@@ -590,6 +593,8 @@ func main() {
 	e.POST("/operation/manages/mcismng/cmd/mcis/:mcisID", controller.CommandMcis)
 	e.POST("/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID", controller.CommandVmOfMcis)
 
+	e.POST("/operation/manages/mcismng/network/mcis/:mcisID", controller.RegAdaptiveNetwork)
+	e.PUT("/operation/manages/mcismng/network/mcis/:mcisID", controller.UpdateAdaptiveNetwork)
 	// e.POST("/operation/manages/mcis/proc/vmmonitoring", controller.GetVmMonitoring)
 
 	// e.GET("/mcis/list/:mcis_id/:mcis_name", controller.McisListFormWithParam)
@@ -666,7 +671,11 @@ func main() {
 	cloudConnectionGroup.DELETE("/config/del/:configID", controller.ConfigDelProc)
 
 	resourcesGroup := e.Group("/setting/resources", resourceTemplate)
-	e.POST("/getinspectresources", controller.GetInspectResourceList)
+	e.POST("/setting/resources/inspectresources/list", controller.GetInspectResourceList)
+	e.POST("/setting/resources/inspectresourcesoverview", controller.GetInspectResourcesOverview)
+	e.POST("/setting/resources/registercspresources", controller.RegisterCspResourcesProc)
+	e.POST("/setting/resources/registercspresourcesall", controller.RegisterCspResourcesAllProc)
+
 	resourcesGroup.GET("/network/mngform", controller.VpcMngForm)
 	resourcesGroup.GET("/network/list", controller.GetVpcList)
 	resourcesGroup.GET("/network/:vNetID", controller.GetVpcData)
@@ -680,7 +689,9 @@ func main() {
 	resourcesGroup.DELETE("/securitygroup/del/:securityGroupID", controller.SecirityGroupDelProc)
 
 	e.POST("/setting/resources/securitygroup/:securityGroupID/firewallrules/reg", controller.FirewallRegProc)
+
 	e.DELETE("/setting/resources/securitygroup/:securityGroupID/firewallrules/del", controller.FirewallDelProc)
+
 
 	resourcesGroup.GET("/sshkey/mngform", controller.SshKeyMngForm) // Form + SshKeyMng 같이 앞으로 넘길까?
 	resourcesGroup.GET("/sshkey/list", controller.GetSshKeyList)
