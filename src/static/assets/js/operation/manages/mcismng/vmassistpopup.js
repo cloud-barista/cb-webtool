@@ -629,7 +629,7 @@ function getRecommendVmInfo() {
 	var limit = $("#recommendVmLimit").val()
 	var lon = $("#longitude").val()
 	var lat = $("#latitude").val()
-	var url = "/operation/manages/mcismng/proc/mcisrecommendvm"
+	var url = "/operation/manages/mcismng/mcisrecommendvm/list"
 	var obj = {
 		"filter": {
 			"policy": [
@@ -702,7 +702,7 @@ function getRecommendVmInfo() {
 		if (statusCode == 200 || statusCode == 201) {
 
 			console.log("recommend vm result: ", result.data);
-			recommendVmSpecListCallbackSuccess(result.data.McisInfo)
+			recommendVmSpecListCallbackSuccess(result.data.VmSpecList)
 
 		} else {
 			var message = result.data.message;
@@ -730,7 +730,7 @@ function recommendVmSpecListCallbackSuccess(data) {
 		if (data.length) {
 
 			data.map((item, index) => (
-				html += '<tr onclick="setAssistValue(' + index + ');">'
+				html += '<tr onclick="getConnectionConfigCandidateInfo(' + index + ');">'
 				+ '     <input type="hidden" id="recommendVmAssist_id_' + index + '" value="' + item.id + '"/>'
 				+ '     <input type="hidden" id="recommendVmAssist_provider_' + index + '" value="' + item.providerName + '"/>'
 				+ '     <input type="hidden" id="recommendVmAssist_connectionName_' + index + '" value="' + item.connectionName + '"/>'
@@ -753,3 +753,37 @@ function recommendVmSpecListCallbackSuccess(data) {
 		}
 	}
 }
+
+function getConnectionConfigCandidateInfo(index) {
+	$("#assistSelectedIndex").val(index);
+	var specName = $("#recommendVmAssist_name_" + index).val()
+	console.log(specName);
+	var url = "/operation/manages/mcismng/mcisdynamiccheck/list"
+	var obj = {
+		"commonSpec": [specName]
+	}
+	axios.post(url, obj, {
+		headers: {
+			'Content-type': 'application/json',
+		}
+	}).then(result => {
+		console.log("result connection : ", result);
+		var statusCode = result.data.status;
+		if (statusCode == 200 || statusCode == 201) {
+
+			console.log("connection result: ", result.data);
+
+		} else {
+			var message = result.data.message;
+			commonAlert("Get Connection List Failed : " + message + "(" + statusCode + ")");
+
+		}
+
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response)
+		var errorMessage = error.response.data.error;
+		var statusCode = error.response.status;
+		commonErrorAlert(statusCode, errorMessage);
+	});
+} 
