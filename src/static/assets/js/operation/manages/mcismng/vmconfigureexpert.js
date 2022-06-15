@@ -764,9 +764,26 @@ function applyAssistValues(caller) {
 
     applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
     $("#sshKeyAssist").modal("hide");
+  } else if (caller == "recommendVmAssist") {
+
+    var orgPrefix = "recommendVmAssist_";
+
+    $("#s_regProvider").val($("#" + orgPrefix + "provider_" + selectedIndex).val().toUpperCase());
+    $("#s_regConnectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
+    $("#s_spec").val($("#" + orgPrefix + "name_" + selectedIndex).val());
+
+    console.log("regProvider:", $("#" + orgPrefix + "provider_" + selectedIndex).val())
+    console.log("regConnectionName:", $("#" + orgPrefix + "connectionName_" + selectedIndex).val())
+    console.log("spec:", $("#" + orgPrefix + "name_" + selectedIndex).val())
+
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    $("#recommendVmAssist").modal("hide");
   }
 
-  console.log($("#e_connectionName").val())
+  console.log("s_regProvider:", $("#s_regProvider").val())
+  console.log("s_regConnectionName:", $("#s_regConnectionName").val())
+  console.log("s_spec:", $("#s_spec").val())
+  console.log("e_connectionName:", $("#e_connectionName").val())
   console.log("applyConnectionName = " + applyConnectionName)
   //선택된 connection과 기존 connection이 다른 tab의 data는 초기화하고 set한다
   if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != applyConnectionName) {
@@ -856,6 +873,9 @@ function applyAssistValidCheck(caller) {
 
   } else if (caller == "sshKeyAssist") {
     var orgPrefix = "sshKeyAssist_";
+    selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+  } else if (caller == "recommendVmAssist") {
+    var orgPrefix = "recommendVmAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
   }
 

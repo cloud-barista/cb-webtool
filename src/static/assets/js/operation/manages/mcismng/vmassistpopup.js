@@ -1,43 +1,150 @@
 
-$(document).ready(function(){
-	
+$(document).ready(function () {
 	//btn_spec
 	// #ID 에 .클래스명_assist
 	//	대상 class명.toggleClass
-	$('#OS_HW_Spec_Assist .btn_spec_assist').click(function(){
+	$('#OS_HW_Spec_Assist .btn_spec_assist').click(function () {
 		$(".spec_select_box").toggleClass("active");
-	
+
 	});
 
-	$('#OS_HW_Spec .btn_image_assist').click(function(){
+	$('#OS_HW_Spec .btn_image_assist').click(function () {
 		$(".spec_select_box").toggleClass("active");
 	});
+
+
+	// 방안 1. shown 이후 sleep 3초
+	// 방안 2. z-index 변경
+	// 방안 3. 지도 클릭이 필수가 아니면 priority option 선택 시 지도 div를 show. 기본은 hide
+	$("#recommendVmAssist").on("shown.bs.modal", function (e) {
+		console.log("shown.bs.modal")
+		console.log(e)
+		sleep(2000)
+		showMap()
+	});
+
+	$("#recommendVmAssist").on("show.bs.modal", function (e) {
+		console.log("show.bs.modal")
+		console.log(e)
+	});
 });
-															
+
+function sleep(ms) {
+	const wakeUpTime = Date.now() + ms;
+	while (Date.now() < wakeUpTime) { }
+}
+
+var JZMap;
+function showMap() {
+	// //
+	//
+	// var locationInfo = new Object();
+	// locationInfo.id = "1"
+	// locationInfo.name = "pin"
+	// locationInfo.cloudType = "aws";
+	// locationInfo.latitude = "34.3800";
+	// locationInfo.longitude = "131.7000"
+	// locationInfo.markerIndex = 1
+	// setMap(locationInfo)
+	JZMap = map_init_target("recommend_map")
+	addClickPin(JZMap)
+}
+
+// Map 관련 설정
+function setMap(locationInfo) {
+	//show_mcis2(url,JZMap);
+	//function show_mcis2(url, map){
+	// var JZMap = map;
+
+	if (locationInfo == undefined) {
+		var locationInfo = new Object();
+		locationInfo.id = "1"
+		locationInfo.name = "pin"
+		locationInfo.cloudType = "aws";
+		locationInfo.latitude = "34.3800";
+		locationInfo.longitude = "131.7000"
+		locationInfo.markerIndex = 1
+	}
+
+	console.log("setMap")
+	console.log(locationInfo)
+	$("#map").empty();
+
+	var JZMap = map_init()// mcis.map.js 파일에 정의되어 있으므로 import 필요.  TODO : map click할 때 feature 에 id가 없어 tooltip 에러나고 있음. 해결필요
+
+	//지도 그리기 관련
+	var polyArr = new Array();
+
+	var longitudeValue = locationInfo.longitude;
+	var latitudeValue = locationInfo.latitude;
+	console.log(longitudeValue + " : " + latitudeValue);
+	if (longitudeValue && latitudeValue) {
+		console.log("drawMap before")
+		drawMap(JZMap, longitudeValue, latitudeValue, locationInfo)
+		console.log("drawMap after")
+	}
+}
+
+// // var JZMap;
+// var locationMap = new Object();
+// function setMap(locationInfo) {
+// 	//show_mcis2(url,JZMap);
+// 	//function show_mcis2(url, map){
+// 	// var JZMap = map;
+// 	console.log(recommendVmAssist)
+// 	if (locationInfo == undefined) {
+// 		var locationInfo = new Object();
+// 		locationInfo.id = "1"
+// 		locationInfo.name = "pin"
+// 		locationInfo.cloudType = "aws";
+// 		locationInfo.latitude = "34.3800";
+// 		locationInfo.longitude = "131.7000"
+// 		locationInfo.markerIndex = 1
+// 	}
+// 	alert(1)
+// 	console.log("setMap")
+// 	//지도 그리기 관련
+// 	var polyArr = new Array();
+//
+// 	var longitudeValue = locationInfo.longitude;
+// 	var latitudeValue = locationInfo.latitude;
+// 	console.log(longitudeValue + " : " + latitudeValue);
+// 	alert(2)
+// 	if (longitudeValue && latitudeValue) {
+// 		$("#map").empty()
+// 		var locationMap = map_init()// mcis.map.js 파일에 정의되어 있으므로 import 필요.  TODO : map click할 때 feature 에 id가 없어 tooltip 에러나고 있음. 해결필요
+// 		drawMap(locationMap, longitudeValue, latitudeValue, locationInfo)
+// 		alert(3)
+// 	}
+// 	alert(4)
+// 	console.log(recommendVmAssist)
+// }
+
+
 function openTextFile() {
-    var input = document.createElement("input");
-    input.type = "file";
-    input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
-    input.onchange = function (event) {
-        processFile(event.target.files[0]);
-    };
-    input.click();
+	var input = document.createElement("input");
+	input.type = "file";
+	input.accept = "text/plain"; // 확장자가 xxx, yyy 일때, ".xxx, .yyy"
+	input.onchange = function (event) {
+		processFile(event.target.files[0]);
+	};
+	input.click();
 }
 
 // 선택한 파일을 읽어 화면에 보여줌
 function processFile(file) {
-    var reader = new FileReader();
-    reader.onload = function () {
+	var reader = new FileReader();
+	reader.onload = function () {
 		console.log(reader.result);
-        $("#fileContent").val(reader.result);
-    };
-    //reader.readAsText(file, /* optional */ "euc-kr");
+		$("#fileContent").val(reader.result);
+	};
+	//reader.readAsText(file, /* optional */ "euc-kr");
 	reader.readAsText(file);
 }
 
 
 // function exportVmScript(vmIndex){
-	
+
 // 	var connectionNameVal = $("#p_connectionName_" + vmIndex).val();
 // 	var descriptionVal = $("#p_description_" + vmIndex).val();
 // 	var imageIdVal = $("#p_imageId_" + vmIndex).val();
@@ -71,7 +178,7 @@ function processFile(file) {
 // 	vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
 // 	vmCreateScript += '}';
 
-	
+
 // 	$("#exportFileName").val(nameVal);
 // 	$("#vmExportScript").val(vmCreateScript);
 // }
@@ -79,7 +186,7 @@ function processFile(file) {
 // function saveVmInfoToFile(){
 // 	var fileName = $("#exportFileName").val();
 // 	var exportScript = $("#vmExportScript").val();
-	
+
 // 	var element = document.createElement('a');
 // 	// element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
 // 	element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
@@ -96,14 +203,14 @@ function processFile(file) {
 // }
 
 // assist에서 provider 선택시 retion filter
-function getRegionListFilterAtAssist(provider, targetRegionObj){
+function getRegionListFilterAtAssist(provider, targetRegionObj) {
 	// region 목록 filter
 	selectBoxFilterByText(targetRegionObj, provider)
 	$("#" + targetRegionObj + " option:eq(0)").attr("selected", "selected");
 }
 
 // assist popup에서 조회조건에 맞는 spec을 검색
-function assistFilterSpec(){
+function assistFilterSpec() {
 	var conditionArr = new Array();
 	conditionArr.push("cost_per_hour");
 	conditionArr.push("ebs_bw_Mbps");
@@ -128,11 +235,11 @@ function assistFilterSpec(){
 	// conditionArr.push("num_storage");
 	conditionArr.push("num_vCPU");
 	// conditionArr.push("storage_GiB");
-	
+
 	// 
 	var searchObj = {}
 	searchObj['connectionName'] = $("#assist_select_connectionName").val();
-	
+
 	// var condition_CostPerHour = {}
 	// condition_CostPerHour['max'] = 100
 	// condition_CostPerHour['min'] = 10
@@ -143,12 +250,12 @@ function assistFilterSpec(){
 	// condition_ebsBwMbps['min'] = Number(ebsBwMbpsMax)
 	// searchObj['ebs_bw_Mbps'] = condition_ebsBwMbps;
 	// assist_num_vCPU_min
-	for( var i = 0 ; i < conditionArr.length; i++){
+	for (var i = 0; i < conditionArr.length; i++) {
 		var conditionMaxValue = $("#assist_" + conditionArr[i] + "_max").val();
 		var conditionMinValue = $("#assist_" + conditionArr[i] + "_min").val();
 		console.log("conditionMinValue=" + conditionMinValue);
 		console.log("conditionMaxValue=" + conditionMaxValue);
-		if( conditionMaxValue && conditionMinValue){
+		if (conditionMaxValue && conditionMinValue) {
 			var conditionParam = {};
 			// conditionParam['max'] = conditionMaxValue;
 			// conditionParam['min'] = conditionMinValue;
@@ -156,7 +263,7 @@ function assistFilterSpec(){
 			conditionParam['min'] = Number(conditionMinValue);
 			searchObj[conditionArr[i]] = conditionParam;
 		}
-	}	
+	}
 	// console.log(searchObj);
 	// axios 전송
 	getCommonFilterSpecsByRange("vmassistpopup", searchObj);
@@ -164,69 +271,69 @@ function assistFilterSpec(){
 }
 
 // Spec Range 조회 성공
-function filterSpecsByRangeCallbackSuccess(caller, data){
+function filterSpecsByRangeCallbackSuccess(caller, data) {
 	console.log(data)
-    console.log("caller = " + caller + ", " + data.length)
+	console.log("caller = " + caller + ", " + data.length)
 
-    var html = ""
-    var vmSpecList = data;
-    // cost_per_hour
-    // ebs_bw_Mbps
-    // evaluationScore_01
-    // evaluationStatus
-    // gpumem_GiB
-    // max_num_storage
-    // max_total_storage_TiB
-    // mem_GiB
-    // net_bw_Gbps
-    // num_core
-    // num_gpu
-    // num_storage
-    // num_vCPU
-    // storage_GiB
-    $("#register_box").modal()    
-    if(data.length){
-        vmSpecList.forEach(function(item, index) {     
-            html +='<tr onclick="setAssistSpecId(\''+item.id+'\', \''+item.name+'\', \''+item.cspSpecName+'\', \''+item.connectionName+'\')">'
-            +'<td class="btn_mtd" data-th="spec ID">'+item.id+'<span class="ov off"></span></td>'
-            +'<td class="overlay hidden" data-th="spec Name">'+item.name+'</td>'
-            +'<td class="overlay hidden" data-th="csp spec Name">'+item.cspSpecName+'</td>'
-            +'<td class="overlay hidden" data-th="connection name">'+item.connectionName+'</td>'
-            +'<td class="overlay hidden" data-th="os type">'+item.os_type+'</td>'
-            +'<td class="overlay hidden" data-th="Cpu / core / mem / disk">CPU : '+item.num_vCPU+'<br>Core : ' + item.num_core + '<br>Disk : ' + item.storage_GiB + '</td>'
-            +'<td class="overlay hidden" data-th="description">'+item.description+'</td>'
-            +'</tr>'
-        })
+	var html = ""
+	var vmSpecList = data;
+	// cost_per_hour
+	// ebs_bw_Mbps
+	// evaluationScore_01
+	// evaluationStatus
+	// gpumem_GiB
+	// max_num_storage
+	// max_total_storage_TiB
+	// mem_GiB
+	// net_bw_Gbps
+	// num_core
+	// num_gpu
+	// num_storage
+	// num_vCPU
+	// storage_GiB
+	$("#register_box").modal()
+	if (data.length) {
+		vmSpecList.forEach(function (item, index) {
+			html += '<tr onclick="setAssistSpecId(\'' + item.id + '\', \'' + item.name + '\', \'' + item.cspSpecName + '\', \'' + item.connectionName + '\')">'
+				+ '<td class="btn_mtd" data-th="spec ID">' + item.id + '<span class="ov off"></span></td>'
+				+ '<td class="overlay hidden" data-th="spec Name">' + item.name + '</td>'
+				+ '<td class="overlay hidden" data-th="csp spec Name">' + item.cspSpecName + '</td>'
+				+ '<td class="overlay hidden" data-th="connection name">' + item.connectionName + '</td>'
+				+ '<td class="overlay hidden" data-th="os type">' + item.os_type + '</td>'
+				+ '<td class="overlay hidden" data-th="Cpu / core / mem / disk">CPU : ' + item.num_vCPU + '<br>Core : ' + item.num_core + '<br>Disk : ' + item.storage_GiB + '</td>'
+				+ '<td class="overlay hidden" data-th="description">' + item.description + '</td>'
+				+ '</tr>'
+		})
 		$("#assist_specList").empty()
-    	$("#assist_specList").append(html)
-    }else{
+		$("#assist_specList").append(html)
+	} else {
 		commonAlert("No result Found")
 	}
 
-    
+
 
 }
 // Spec Range 조회 실패
-function filterSpecsByRangeCallbackFail(){
+function filterSpecsByRangeCallbackFail() {
 	commonAlert("Failt to Search Specs")
 }
 
 // table에서 spec 선택시 hidden으로 set
-function setAssistSpecId(speID, specName, cspSpecName, connectionName){
+function setAssistSpecId(speID, specName, cspSpecName, connectionName) {
 	console.log(speID + ":" + specName + ":" + cspSpecName + ":" + connectionName)
-    $("#assist_vmSpec_id").val(speID);
-    $("#assist_vmSpec_specName").val(specName);
-    $("#assist_vmSpec_cspSpecName").val(cspSpecName);
-    $("#assist_vmSpec_connectionName").val(connectionName);
+	$("#assist_vmSpec_id").val(speID);
+	$("#assist_vmSpec_specName").val(specName);
+	$("#assist_vmSpec_cspSpecName").val(cspSpecName);
+	$("#assist_vmSpec_connectionName").val(connectionName);
 	$("#assist_vmSpec_info").val(speID + "|" + specName + "|" + connectionName + "|" + cspSpecName);
 
 }
 
 // apply버튼 클릭시
-function applyAssistSpec(){
-    var selectedSpecID = $("#assist_vmSpec_id").val();	
-    if( selectedSpecID){
-//<tr onclick="setValueToFormObj('es_imageList', 'tab_vmImage', 'vmImage', '{{$vmInageIndex}}', 'e_imageId');">
+function applyAssistSpec() {
+	var selectedSpecID = $("#assist_vmSpec_id").val();
+	if (selectedSpecID) {
+		//<tr onclick="setValueToFormObj('es_imageList', 'tab_vmImage', 'vmImage', '{{$vmInageIndex}}', 'e_imageId');">
 		// $("#tab_vmSpecInfo")
 		var selectedConnectionName = $("#assist_vmSpec_connectionName").val();
 		var selectedCspSpecName = $("#assist_vmSpec_cspSpecName").val();
@@ -235,49 +342,49 @@ function applyAssistSpec(){
 		$("#tab_vmSpecInfo").val(selectedSpecInfo);
 		$("#tab_vmSpec_cspSpecName").val(selectedCspSpecName);
 		$("#tab_vmSpecConnectionName").val(selectedConnectionName);
-		$("#e_specId" ).val(selectedSpecID);
-		
+		$("#e_specId").val(selectedSpecID);
+
 		var esSelectedConnectionName = $("#es_regConnectionName option:selected").val()
-		if( esSelectedConnectionName == ""){// 선택한 connectionName이 없으면 set
-		$("#es_regConnectionName").val(selectedConnectionName);
+		if (esSelectedConnectionName == "") {// 선택한 connectionName이 없으면 set
+			$("#es_regConnectionName").val(selectedConnectionName);
 		}
 		$("#e_connectionName").val(selectedConnectionName);
-    }
+	}
 
-    // 초기화
-    $("#assist_select_provider").val('');
+	// 초기화
+	$("#assist_select_provider").val('');
 	$("#assist_select_resion").val('');
 	$("#assist_select_connectionName").val('');
 
 	$("#assist_vmSpec_id").val("");
-    $("#assist_vmSpec_specName").val("");
-    $("#assist_vmSpec_cspSpecName").val("");
-    $("#assist_vmSpec_connectionName").val("");
+	$("#assist_vmSpec_specName").val("");
+	$("#assist_vmSpec_cspSpecName").val("");
+	$("#assist_vmSpec_connectionName").val("");
 	$("#assist_vmSpec_info").val("");
 
 
-    $("#OS_HW_Spec_Assist").modal("hide")    
+	$("#OS_HW_Spec_Assist").modal("hide")
 }
 
 
-function setSpecValueToFormObj(selectedId, selectedSpecName, cspSpecName, selectedConnectionName){
-    var econnectionName = $("#e_connectionName").val();
-    if(econnectionName != "" && econnectionName != selectedConnectionName){
-      $("#t_connectionName").val(selectedConnectionName);// confirm을 통해서 form에 set 되므로 임시(t_connectionName)로 저장.
-      commonConfirmOpen("DifferentConnection");
-    }else{
-      var esSelectedConnectionName = $("#es_regConnectionName option:selected").val()
-      if( esSelectedConnectionName == ""){// 선택한 connectionName이 없으면 set
-        $("#es_regConnectionName").val(selectedConnectionName);
-      }
+function setSpecValueToFormObj(selectedId, selectedSpecName, cspSpecName, selectedConnectionName) {
+	var econnectionName = $("#e_connectionName").val();
+	if (econnectionName != "" && econnectionName != selectedConnectionName) {
+		$("#t_connectionName").val(selectedConnectionName);// confirm을 통해서 form에 set 되므로 임시(t_connectionName)로 저장.
+		commonConfirmOpen("DifferentConnection");
+	} else {
+		var esSelectedConnectionName = $("#es_regConnectionName option:selected").val()
+		if (esSelectedConnectionName == "") {// 선택한 connectionName이 없으면 set
+			$("#es_regConnectionName").val(selectedConnectionName);
+		}
 
-      $("#e_connectionName").val(selectedConnectionName);
-      $("#e_imageId" + targetObjId).val(selectedId);
-      
-      //<input type="hidden" name="vmImage_info" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>
-      $("#tab_vmImageInfo").val(selectedId + "|" + selectedSpecName + "|" + selectedConnectionName + "|"  + cspSpecName);      
-    }  
-  }
+		$("#e_connectionName").val(selectedConnectionName);
+		$("#e_imageId" + targetObjId).val(selectedId);
+
+		//<input type="hidden" name="vmImage_info" id="vmImage_info_{{$vmInageIndex}}" value="{{$vmImageItem.ID}}|{{$vmImageItem.Name}}|{{$vmImageItem.ConnectionName}}|{{$vmImageItem.CspImageId}}|{{$vmImageItem.CspImageName}}|{{$vmImageItem.GuestOS}}|{{$vmImageItem.Description}}"/>
+		$("#tab_vmImageInfo").val(selectedId + "|" + selectedSpecName + "|" + selectedConnectionName + "|" + cspSpecName);
+	}
+}
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
 function searchAssistNetworkByEnter(event, caller) {
@@ -510,4 +617,139 @@ function searchSpecsByRange(caller) {
 	// NumStorage Range `json:"numStorage"`
 	// NumVCPU    Range `json:"numvCPU"`
 	// StorageGiB Range `json:"storageGiB"`
+}
+
+function getRecommendVmInfo() {
+	var max_cpu = $("#num_vCPU_max").val()
+	var min_cpu = $("#num_vCPU_min").val()
+	var max_mem = $("#num_memory_max").val()
+	var min_mem = $("#num_memory_min").val()
+	var max_cost = $("#num_cost_max").val()
+	var min_cost = $("#num_cost_min").val()
+	var limit = $("#recommendVmLimit").val()
+	var lon = $("#longitude").val()
+	var lat = $("#latitude").val()
+	var url = "/operation/manages/mcismng/proc/mcisrecommendvm"
+	var obj = {
+		"filter": {
+			"policy": [
+				{
+					"condition": [
+						{
+							"operand": max_cpu,
+							"operator": "<="
+						},
+						{
+							"operand": min_cpu,
+							"operator": ">="
+						}
+					],
+					"metric": "cpu"
+				},
+				{
+					"condition": [
+						{
+							"operand": max_mem,
+							"operator": "<="
+						},
+						{
+							"operand": min_mem,
+							"operator": ">="
+						}
+					],
+					"metric": "memory"
+				},
+				{
+					"condition": [
+						{
+							"operand": max_cost,
+							"operator": "<="
+						},
+						{
+							"operand": min_cost,
+							"operator": ">="
+						}
+					],
+					"metric": "cost"
+				}
+			]
+		},
+		"limit": limit,
+		"priority": {
+			"policy": [
+				{
+					"metric": "location",
+					"parameter": [
+						{
+							"key": "coordinateClose",
+							"val": [
+								lon + "/" + lat
+							]
+						}
+					],
+					"weight": "0.3"
+				}
+			]
+		}
+	}
+	axios.post(url, obj, {
+		headers: {
+			'Content-type': 'application/json',
+		}
+	}).then(result => {
+		console.log("result spec : ", result);
+		var statusCode = result.data.status;
+		if (statusCode == 200 || statusCode == 201) {
+
+			console.log("recommend vm result: ", result.data);
+			recommendVmSpecListCallbackSuccess(result.data.McisInfo)
+
+		} else {
+			var message = result.data.message;
+			commonAlert("Fail Create Spec : " + message + "(" + statusCode + ")");
+
+		}
+
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response)
+		var errorMessage = error.response.data.error;
+		var statusCode = error.response.status;
+		commonErrorAlert(statusCode, errorMessage);
+	});
+}
+
+function recommendVmSpecListCallbackSuccess(data) {
+	var html = ""
+	if (data == null || data.length == 0) {
+		html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
+		$("#assistRecommendSpecList").empty()
+		$("#assistRecommendSpecList").append(html)
+	} else {
+		if (data.length) {
+
+			data.map((item, index) => (
+				html += '<tr onclick="setAssistValue(' + index + ');">'
+				+ '     <input type="hidden" id="recommendVmAssist_id_' + index + '" value="' + item.id + '"/>'
+				+ '     <input type="hidden" id="recommendVmAssist_provider_' + index + '" value="' + item.providerName + '"/>'
+				+ '     <input type="hidden" id="recommendVmAssist_connectionName_' + index + '" value="' + item.connectionName + '"/>'
+				+ '     <input type="hidden" id="recommendVmAssist_name_' + index + '" value="' + item.name + '"/>'
+				+ '<td class="overlay hidden" data-th="provider">' + item.providerName + '</td>'
+				+ '<td class="overlay hidden" data-th="region">' + item.regionName + '</td>'
+				+ '<td class="btn_mtd ovm" data-th="name ">' + item.name + '<span class="ov"></span></td>'
+				+ '<td class="overlay hidden" data-th="cspSpec">' + item.cspSpecName + '</td>'
+				+ '<td class="overlay hidden" data-th="price">' + item.costPerHour + '</td>'
+				+ '<td class="btn_mtd ovm" data-th="mem ">' + item.memGiB + '<span class="ov"></span></td>'
+				+ '<td class="overlay hidden" data-th="vcpu">' + item.numvCPU + '</td>'
+				+ '<td class="overlay hidden" data-th="evaluationScore01">' + item.evaluationScore01 + '</td>'
+				+ '</tr>'
+			))
+
+
+			$("#assistRecommendSpecList").empty()
+			$("#assistRecommendSpecList").append(html)
+			console.log("setRecommendVmSpec completed");
+		}
+	}
 }

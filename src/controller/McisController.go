@@ -437,9 +437,11 @@ func McisRegProc(c echo.Context) error {
 
 }
 
+
 // 추천 vm spec 조회
 // Recommend MCIS plan (filter and priority)
 func GetMcisRecommendVmSpecList(c echo.Context) error {
+
 	log.Println("McisRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -1040,6 +1042,7 @@ func CommandVmOfMcis(c echo.Context) error {
 	})
 }
 
+
 /*
 // Check avaiable ConnectionConfig list for creating MCIS Dynamically
 	사용 가능한 connection config  목록 조회
@@ -1047,10 +1050,12 @@ GetMcisListByID
 */
 func GetConnectionConfigCandidateList(c echo.Context) error {
 	log.Println("McisDynamicCheck : ")
+
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
+
 
 	mcisReq := new(tbmcis.McisConnectionConfigCandidatesReq)
 	if err := c.Bind(mcisReq); err != nil {
@@ -1123,6 +1128,7 @@ func UpdateAdaptiveNetwork(c echo.Context) error {
 
 	networkReq := new(tbmcis.NetworkReq)
 	if err := c.Bind(networkReq); err != nil {
+
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
@@ -1130,22 +1136,26 @@ func UpdateAdaptiveNetwork(c echo.Context) error {
 		})
 	}
 
+
 	mcisID := c.Param("mcisID")
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	agentInstallContentWrapper, respStatus := service.UpdateAdaptiveNetwork(defaultNameSpaceID, mcisID, networkReq)
 	log.Println("RegAdaptiveNetwork result")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
 			"status": respStatus.StatusCode,
 		})
 	}
 
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":       respStatus.Message,
 		"status":        respStatus.StatusCode,
 		"networkResult": agentInstallContentWrapper,
 	})
+
 
 }
