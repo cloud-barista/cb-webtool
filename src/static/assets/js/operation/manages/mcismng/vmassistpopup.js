@@ -31,11 +31,11 @@ $(document).ready(function () {
 
 function sleep(ms) {
 	const wakeUpTime = Date.now() + ms;
-	while (Date.now() < wakeUpTime) {}
+	while (Date.now() < wakeUpTime) { }
 }
 
 var JZMap;
-function showMap(){
+function showMap() {
 	// //
 	//
 	// var locationInfo = new Object();
@@ -51,12 +51,12 @@ function showMap(){
 }
 
 // Map 관련 설정
-function setMap(locationInfo){
+function setMap(locationInfo) {
 	//show_mcis2(url,JZMap);
 	//function show_mcis2(url, map){
 	// var JZMap = map;
 
-	if( locationInfo == undefined) {
+	if (locationInfo == undefined) {
 		var locationInfo = new Object();
 		locationInfo.id = "1"
 		locationInfo.name = "pin"
@@ -701,7 +701,7 @@ function getRecommendVmInfo() {
 		var statusCode = result.data.status;
 		if (statusCode == 200 || statusCode == 201) {
 
-			console.log(result.data);
+			console.log("recommend vm result: ", result.data);
 			recommendVmSpecListCallbackSuccess(result.data.McisInfo)
 
 		} else {
@@ -730,7 +730,11 @@ function recommendVmSpecListCallbackSuccess(data) {
 		if (data.length) {
 
 			data.map((item, index) => (
-				html += '<tr>'
+				html += '<tr onclick="setAssistValue(' + index + ');">'
+				+ '     <input type="hidden" id="recommendVmAssist_id_' + index + '" value="' + item.id + '"/>'
+				+ '     <input type="hidden" id="recommendVmAssist_provider_' + index + '" value="' + item.providerName + '"/>'
+				+ '     <input type="hidden" id="recommendVmAssist_connectionName_' + index + '" value="' + item.connectionName + '"/>'
+				+ '     <input type="hidden" id="recommendVmAssist_name_' + index + '" value="' + item.name + '"/>'
 				+ '<td class="overlay hidden" data-th="provider">' + item.providerName + '</td>'
 				+ '<td class="overlay hidden" data-th="region">' + item.regionName + '</td>'
 				+ '<td class="btn_mtd ovm" data-th="name ">' + item.name + '<span class="ov"></span></td>'
