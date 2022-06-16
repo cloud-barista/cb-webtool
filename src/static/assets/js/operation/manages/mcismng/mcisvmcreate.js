@@ -733,7 +733,8 @@ function setNetworkListToExpertMode(data, caller) {
     }
 }
 
-
+// e_specListTbody 없는 애를 호출하고 있음.
+// 현재 namespace에 등록된 모든 spec 목록
 function getSpecListCallbackSuccess(caller, data) {
     console.log(data);
     if (data == null || data == undefined || data == "null") {
@@ -741,24 +742,39 @@ function getSpecListCallbackSuccess(caller, data) {
     } else {// 아직 data가 1건도 없을 수 있음
         var html = ""
         if (data.length > 0) {
+            // data.forEach(function (vSpecItem, vSpecIndex) {
+            //     // simple server configuration area 내 spec
+            //     html += '<tr onclick="setValueToFormObj(\'tab_vmSpec\', \'vmSpec\',' + vSpecIndex + ', \'e_specId\');">'
+            //         + '     <input type="hidden" id="vmSpec_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
+            //         + '     <input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
+            //         + '     <input type="hidden" name="vmSpec_info" id="vmSpec_info_' + vSpecIndex + '" value="' + vSpecItem.id + '|' + vSpecItem.name + '|' + vSpecItem.connectionName + '|' + vSpecItem.cspImageId + '|' + vSpecItem.cspImageName + '|' + vSpecItem.guestOS + '|' + vSpecItem.description + '"/>'
+            //         + '<td class="overlay hidden" data-th="Name">' + vSpecItem.name + '</td>'
+            //         + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+            //         + vSpecItem.connectionName
+            //         + '</td>'
+            //         + '<td class="overlay hidden" data-th="CspSpecName">' + vSpecItem.cspSpecName + '</td>'
+            //
+            //         + '<td class="overlay hidden" data-th="Description">' + vSpecItem.description + '</td>'
+            //         + '</tr>'
+            //
+            // })
+            // $("#e_specListTbody").empty()
+            // $("#e_specListTbody").append(html)
+            // console.log($("#e_specListTbody"))
+
+
+            // assist popu 의 connection에 따른 spec 목록 에서 사용 ( selectConnectionConfig )
             data.forEach(function (vSpecItem, vSpecIndex) {
-
-                html += '<tr onclick="setValueToFormObj(\'tab_vmSpec\', \'vmSpec\',' + vSpecIndex + ', \'e_specId\');">'
-                    + '     <input type="hidden" id="vmSpec_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
-                    + '     <input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
-                    + '     <input type="hidden" name="vmSpec_info" id="vmSpec_info_' + vSpecIndex + '" value="' + vSpecItem.id + '|' + vSpecItem.name + '|' + vSpecItem.connectionName + '|' + vSpecItem.cspImageId + '|' + vSpecItem.cspImageName + '|' + vSpecItem.guestOS + '|' + vSpecItem.description + '"/>'
-                    + '<td class="overlay hidden" data-th="Name">' + vSpecItem.name + '</td>'
-                    + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
-                    + vSpecItem.connectionName
-                    + '</td>'
-                    + '<td class="overlay hidden" data-th="CspSpecName">' + vSpecItem.cspSpecName + '</td>'
-
-                    + '<td class="overlay hidden" data-th="Description">' + vSpecItem.description + '</td>'
-                    + '</tr>'
-
+                console.log(vSpecItem)
+                    html += '<tr id="connectionAssist_tr_' + vSpecIndex + '" onclick="setConnectionAndSpec(' + vSpecIndex + ');" style="display:none">'
+                        + '     <input type="hidden" id="connectionAssist_specName_' + vSpecIndex + '" value="' + vSpecItem.name + '"/>'
+                        + '     <input type="hidden" id="connectionAssist_connection_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
+                        + '<td class="overlay hidden" data-th="connection">' + vSpecItem.connectionName + '</td>'
+                        + '<td class="overlay hidden" data-th="spec">' + vSpecItem.name + ' </td>'
+                        + '</tr>'
             })
-            $("#e_specListTbody").empty()
-            $("#e_specListTbody").append(html)
+            $("#assistConnectionList").empty()
+            $("#assistConnectionList").append(html)
         }
     }
 }

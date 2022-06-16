@@ -19,7 +19,6 @@ $(document).ready(function () {
 	$("#recommendVmAssist").on("shown.bs.modal", function (e) {
 		console.log("shown.bs.modal")
 		console.log(e)
-		sleep(2000)
 		showMap()
 	});
 
@@ -46,6 +45,9 @@ function showMap() {
 	// locationInfo.longitude = "131.7000"
 	// locationInfo.markerIndex = 1
 	// setMap(locationInfo)
+
+	$("#recommend_map").empty();
+	sleep(2000)
 	JZMap = map_init_target("recommend_map")
 	addClickPin(JZMap)
 }
@@ -629,6 +631,12 @@ function getRecommendVmInfo() {
 	var limit = $("#recommendVmLimit").val()
 	var lon = $("#longitude").val()
 	var lat = $("#latitude").val()
+
+	console.log(" lon " + lon + ", lat " + lat)
+	if( lon == "" || lat == "" ){
+		commonAlert(" 지도에서 위치를 선택하세요 ")
+		return;
+	}
 	var url = "/operation/manages/mcismng/mcisrecommendvm/list"
 	var obj = {
 		"filter": {
@@ -774,9 +782,9 @@ function getConnectionConfigCandidateInfo(index) {
 
 			console.log("connection result: ", result.data);
 			var connectionCandidates = result.data.mcisDynamicInfo.reqCheck[0].connectionConfigCandidates
-			if (connectionCandidates.length > 1) {
-				selectConnectionConfig(connectionCandidates)
-			}
+			//if (connectionCandidates.length > 1) {
+				selectConnectionConfig(connectionCandidates, specName)
+			//}
 		} else {
 			var message = result.data.message;
 			commonAlert("Get Connection List Failed : " + message + "(" + statusCode + ")");
@@ -793,28 +801,65 @@ function getConnectionConfigCandidateInfo(index) {
 }
 
 // connection 후보 보여주기
-function selectConnectionConfig(data) {
-	var html = ""
+// 가져온 connection 목록과 일치하는 spec 정보 보여주기
+// page Load 시 이미 해당 namespace의 전체 목록을 가져 옴.
+function selectConnectionConfig(connections, selectedSpecName) {
+	// assistConnectionList
+	var table = document.getElementById("assistConnectionList");
+	var displayItemsCount = 0;
+	connections.forEach(function (candidateConnectionName, connectionIndex) {
+		for (var i = 0, trRow; trRow = table.rows[i]; i++) {
+			// console.log(trRow)
 
-	if (data.length) {
+			// connection 이 일치하면 show
+			var connectionTr = $("#connectionAssist_tr_" + i).val();
+			var connectionName = $("#connectionAssist_connection_" + i).val();
+			var specName = $("#connectionAssist_specName_" + i).val();
+			console.log( connectionName + " : " + connectionNameRow + " , " + specNameRow)
 
-		data.map((item, index) => (
-			html += '<tr onclick="setConnectionAndSpec(' + index + ');">'
-			+ '     <input type="hidden" id="connectionAssist_name_' + index + '" value="' + item + '"/>'
-			+ '<td class="overlay hidden" data-th="connection">' + item + '</td>'
-			+ '<td class="overlay hidden" data-th="spec"> aws-test-spec-t2-micro </td>'
-			+ '</tr>'
-		))
+			//connectionName = "aws-test-conn2" // 해당 connection에 등록된 spec 2개 있음.
+			if ( candidateConnectionName == connectionName){
+				trRow.style.display = '';
+				displayItemsCount++
+				// 해당 connection에 spec이 없는 경우 보여줘야 할 지....
+				// if ( selectedSpecName == specName )
+			}
+		}// end of for
+	});
 
-
-		$("#assistConnectionList").empty()
-		$("#assistConnectionList").append(html)
-		console.log("setConnectionList completed");
-	}
-
-	if (html != "") {
+	if( displayItemsCount == 0){
+		// specName을 입력하면 namespace, connection, cspSpecId, specName으로 생성 처리.
+		commonAlert("현재 해당 connection에서 사용가능한 spec 이 없습니다. 등록 하시겠습니까?")
+	}else {
 		showConnectionAssistPopup()
 	}
+	///// TODO : ApplyButton Click 시
+	///// - expert 모드인 경우에는 applyAssistValidCheck(caller) 에서 처리하면 됨
+	///// - simple 모드에서는 비슷한 function 추가 필요. : changeConnectionInfo(configName) 으로 새로 가져와서 셋 한 뒤에
+	/////   선택한 connection으로 set
+
+
+	//row.style.display = '';
+
+	// var html = ""
+	// if (data.length) {
+		// data.map((item, index) => (
+		// 	html += '<tr onclick="setConnectionAndSpec(' + index + ');">'
+		// 	+ '     <input type="hidden" id="connectionAssist_name_' + index + '" value="' + item + '"/>'
+		// 	+ '<td class="overlay hidden" data-th="connection">' + item + '</td>'
+		// 	+ '<td class="overlay hidden" data-th="spec"> aws-test-spec-t2-micro </td>'
+		// 	+ '</tr>'
+		// ))
+		// $("#assistConnectionList").empty()
+		// $("#assistConnectionList").append(html)
+		// console.log("setConnectionList completed");
+
+		//
+	// }
+
+	// if (html != "") {
+	// 	showConnectionAssistPopup()
+	// }
 }
 
 // 앞서 setting한 connection과 선택한 connection이 같으면 그대로 set
