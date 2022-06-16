@@ -11,6 +11,12 @@ function showRecommendAssistPopup() {
 
 }
 
+function showConnectionAssistPopup() {
+	console.log("showConnectionAssistPopup")
+	$("#connectionAssist").modal();
+
+}
+
 // getConnectionListForSelectbox 로 변경
 // function changeProvider(provider, target){
 // }
@@ -260,13 +266,13 @@ function simpleDone_btn() {
 	// 		console.log(i + "번째 Simple form data 입니다. : ", object);
 	// 	}
 	// } else {
-		Simple_Server_Config_Arr.push(simple_form)
-		add_server_html += '<li onclick="view_simple(\'' + simple_data_cnt + '\')">'
-			+ '<div class="server server_on bgbox_b">'
-			+ '<div class="icon"></div>'
-			+ '<div class="txt">' + server_name + '(' + server_cnt + ')' +'</div>'
-			+ '</div>'
-			+ '</li>';
+	Simple_Server_Config_Arr.push(simple_form)
+	add_server_html += '<li onclick="view_simple(\'' + simple_data_cnt + '\')">'
+		+ '<div class="server server_on bgbox_b">'
+		+ '<div class="icon"></div>'
+		+ '<div class="txt">' + server_name + '(' + server_cnt + ')' + '</div>'
+		+ '</div>'
+		+ '</li>';
 
 	// }
 	$(".simple_servers_config").removeClass("active");

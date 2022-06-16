@@ -754,6 +754,7 @@ function recommendVmSpecListCallbackSuccess(data) {
 	}
 }
 
+// mcisDynamicCheckRequest -> 해당 spec에 대해 가능한 connection 구하기
 function getConnectionConfigCandidateInfo(index) {
 	$("#assistSelectedIndex").val(index);
 	var specName = $("#recommendVmAssist_name_" + index).val()
@@ -772,7 +773,10 @@ function getConnectionConfigCandidateInfo(index) {
 		if (statusCode == 200 || statusCode == 201) {
 
 			console.log("connection result: ", result.data);
-
+			var connectionCandidates = result.data.mcisDynamicInfo.reqCheck[0].connectionConfigCandidates
+			if (connectionCandidates.length > 1) {
+				selectConnectionConfig(connectionCandidates)
+			}
 		} else {
 			var message = result.data.message;
 			commonAlert("Get Connection List Failed : " + message + "(" + statusCode + ")");
@@ -786,4 +790,37 @@ function getConnectionConfigCandidateInfo(index) {
 		var statusCode = error.response.status;
 		commonErrorAlert(statusCode, errorMessage);
 	});
-} 
+}
+
+// connection 후보 보여주기
+function selectConnectionConfig(data) {
+	var html = ""
+
+	if (data.length) {
+
+		data.map((item, index) => (
+			html += '<tr onclick="setConnectionAndSpec(' + index + ');">'
+			+ '     <input type="hidden" id="connectionAssist_name_' + index + '" value="' + item + '"/>'
+			+ '<td class="overlay hidden" data-th="connection">' + item + '</td>'
+			+ '<td class="overlay hidden" data-th="spec"> aws-test-spec-t2-micro </td>'
+			+ '</tr>'
+		))
+
+
+		$("#assistConnectionList").empty()
+		$("#assistConnectionList").append(html)
+		console.log("setConnectionList completed");
+	}
+
+	if (html != "") {
+		showConnectionAssistPopup()
+	}
+}
+
+// 앞서 setting한 connection과 선택한 connection이 같으면 그대로 set
+// 다르면 바꿀건지 물어보고 새로운 connection으로 set 
+function setConnectionAndSpec(index) {
+	selectedConnection = $("#connectionAssist_name_" + index).val()
+	$("#connectionAssist").modal("hide");
+	$("#recommendVmAssist").modal("hide");
+}
