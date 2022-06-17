@@ -401,4 +401,17 @@ function importFileProcess(file) {
 	}
 }
 
+// Provider변경시 connection 정보 filter
+// function getConnectionListFilterForSimpleSelectbox(referenceObj, targetConnectionObj) {
+// 	var referenceVal = $('#' + referenceObj).val();
+// 	//var regionValue = region.substring(region.indexOf("]") ).trim();  
+// 	// console.log(region + ", regionValue = " + regionValue);
+// 	selectBoxFilterByText(targetConnectionObj, referenceVal)
+
+
+// 	// $("#" + targetConnectionObj + " option:eq(0)").attr("selected", "selected");
+// 	$("#es_regConnectionName").val("");
+// 	setConnectionValue("");// val("")을 했을 때 자동으로 설정이 안되어서 setConnectionValue("")으로 값 set.
+
+// }
 

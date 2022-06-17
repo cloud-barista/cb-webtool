@@ -1,11 +1,5 @@
 $(document).ready(function () {
-    getVmList()
-    getCommonCloudConnectionList('vmcreate', '', true)
-    getCommonNetworkList('vmcreate')
-    getCommonVirtualMachineImageList('vmcreate')
-    getCommonVirtualMachineSpecList('vmcreate')
-    getCommonSecurityGroupList('vmcreate')
-    getCommonSshKeyList('vmcreate')
+    getResources('vmcreate')
     // e_vNetListTbody
 
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
@@ -765,13 +759,13 @@ function getSpecListCallbackSuccess(caller, data) {
 
             // assist popu 의 connection에 따른 spec 목록 에서 사용 ( selectConnectionConfig )
             data.forEach(function (vSpecItem, vSpecIndex) {
-                console.log(vSpecItem)
-                    html += '<tr id="connectionAssist_tr_' + vSpecIndex + '" onclick="setConnectionAndSpec(' + vSpecIndex + ');" style="display:none">'
-                        + '     <input type="hidden" id="connectionAssist_specName_' + vSpecIndex + '" value="' + vSpecItem.name + '"/>'
-                        + '     <input type="hidden" id="connectionAssist_connection_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
-                        + '<td class="overlay hidden" data-th="connection">' + vSpecItem.connectionName + '</td>'
-                        + '<td class="overlay hidden" data-th="spec">' + vSpecItem.name + ' </td>'
-                        + '</tr>'
+                console.log("vSpecItem:", vSpecItem)
+                html += '<tr id="connectionAssist_tr_' + vSpecIndex + '" onclick="setConnectionAndSpec(' + vSpecIndex + ');" style="display:none">'
+                    + '     <input type="hidden" id="connectionAssist_specName_' + vSpecIndex + '" value="' + vSpecItem.name + '"/>'
+                    + '     <input type="hidden" id="connectionAssist_connection_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
+                    + '<td class="overlay hidden" data-th="connection">' + vSpecItem.connectionName + '</td>'
+                    + '<td class="overlay hidden" data-th="spec">' + vSpecItem.name + ' </td>'
+                    + '</tr>'
             })
             $("#assistConnectionList").empty()
             $("#assistConnectionList").append(html)
@@ -1288,4 +1282,40 @@ function filterSshKeyList(keywords, caller) {
 
 function clearAssistSpecList(targetTableList) {
     $("#" + targetTableList).empty()
+}
+
+function getResources(caller) {
+    getVmList()
+    getCommonCloudConnectionList(caller, '', true)
+    getCommonNetworkList(caller)
+    getCommonVirtualMachineImageList(caller)
+    getCommonVirtualMachineSpecList(caller)
+    getCommonSecurityGroupList(caller)
+    getCommonSshKeyList(caller)
+}
+
+
+// 아래처럼 만들어주었으나 total{리소스}ByNamespace라는 Array에 이미 저장되고 있음
+// total{리소스}ByNamespace에 spec, image는 없음 -> 만들어야함
+var totalNetworkList = new Array()
+var totalVmSpecList = new Array()
+var totalImageList = new Array()
+var totalSecurityGroupList = new Array()
+var totalSshkeyList = new Array()
+
+function setTotalNetworkList(data) {
+    totalNetworkList = data
+}
+
+function setTotalVmSpecList(data) {
+    totalVmSpecList = data
+}
+function setTotalImageList(data) {
+    totalImageList = data
+}
+function setTotalSecurityGroupList(data) {
+    totalSecurityGroupList = data
+}
+function setTotalSshkeyList(data) {
+    totalSshkeyList = data
 }

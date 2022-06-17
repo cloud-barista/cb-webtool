@@ -1226,3 +1226,29 @@ function hideBtnDelAll() {
     $(".btn_del_all").css("display", "none");
 }
 
+// TODO : util.js로 옮길 것
+// select box의 option text에 compareText가 있으면 show 없으면 hide
+function selectBoxFilterByText(targetObject, compareText) {
+    $('#' + targetObject + ' option').filter(function () {
+        if (this.value == "") return;
+        console.log(this.text + " : " + compareText)
+        console.log(this.text.indexOf(compareText) > -1)
+        this.text.indexOf(compareText) > -1 ? $(this).show() : $(this).hide();
+    });
+}
+
+// TODO : util.js로 옮길 것
+// select box의 option text에 compareText1 && compareText2가 모두 있으면 show 없으면 hide
+function selectBoxFilterBy2Texts(targetObject, compareText1, compareText2) {
+    $('#' + targetObject + ' option').filter(function () {
+        if (this.value == "") return;
+        console.log(this.text + " : " + compareText1)
+        console.log(this.text.indexOf(compareText1) > -1)
+        if (this.text.indexOf(compareText1) > -1 && this.text.indexOf(compareText2) > -1) {
+            $(this).show()
+        } else {
+            $(this).hide();
+        }
+    });
+}
+

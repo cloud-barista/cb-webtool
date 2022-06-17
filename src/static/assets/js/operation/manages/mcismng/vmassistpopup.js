@@ -633,7 +633,7 @@ function getRecommendVmInfo() {
 	var lat = $("#latitude").val()
 
 	console.log(" lon " + lon + ", lat " + lat)
-	if( lon == "" || lat == "" ){
+	if (lon == "" || lat == "") {
 		commonAlert(" 지도에서 위치를 선택하세요 ")
 		return;
 	}
@@ -765,7 +765,8 @@ function recommendVmSpecListCallbackSuccess(data) {
 // mcisDynamicCheckRequest -> 해당 spec에 대해 가능한 connection 구하기
 function getConnectionConfigCandidateInfo(index) {
 	$("#assistSelectedIndex").val(index);
-	var specName = $("#recommendVmAssist_name_" + index).val()
+	//var specName = $("#recommendVmAssist_name_" + index).val()
+	var specName = "aws-ap-northeast-1-t2-micro"
 	console.log(specName);
 	var url = "/operation/manages/mcismng/mcisdynamiccheck/list"
 	var obj = {
@@ -783,7 +784,7 @@ function getConnectionConfigCandidateInfo(index) {
 			console.log("connection result: ", result.data);
 			var connectionCandidates = result.data.mcisDynamicInfo.reqCheck[0].connectionConfigCandidates
 			//if (connectionCandidates.length > 1) {
-				selectConnectionConfig(connectionCandidates, specName)
+			selectConnectionConfig(connectionCandidates, specName)
 			//}
 		} else {
 			var message = result.data.message;
@@ -806,19 +807,20 @@ function getConnectionConfigCandidateInfo(index) {
 function selectConnectionConfig(connections, selectedSpecName) {
 	// assistConnectionList
 	var table = document.getElementById("assistConnectionList");
+	console.log("table:", table);
 	var displayItemsCount = 0;
 	connections.forEach(function (candidateConnectionName, connectionIndex) {
 		for (var i = 0, trRow; trRow = table.rows[i]; i++) {
-			// console.log(trRow)
+			console.log("trRow: ", trRow)
 
 			// connection 이 일치하면 show
 			var connectionTr = $("#connectionAssist_tr_" + i).val();
 			var connectionName = $("#connectionAssist_connection_" + i).val();
 			var specName = $("#connectionAssist_specName_" + i).val();
-			console.log( connectionName + " : " + connectionNameRow + " , " + specNameRow)
+			console.log(candidateConnectionName + " : " + connectionName + " , " + specName)
 
-			//connectionName = "aws-test-conn2" // 해당 connection에 등록된 spec 2개 있음.
-			if ( candidateConnectionName == connectionName){
+			candidateConnectionName = "aws-test-conn2" // 해당 connection에 등록된 spec 2개 있음.
+			if (candidateConnectionName == connectionName) {
 				trRow.style.display = '';
 				displayItemsCount++
 				// 해당 connection에 spec이 없는 경우 보여줘야 할 지....
@@ -827,10 +829,10 @@ function selectConnectionConfig(connections, selectedSpecName) {
 		}// end of for
 	});
 
-	if( displayItemsCount == 0){
+	if (displayItemsCount == 0) {
 		// specName을 입력하면 namespace, connection, cspSpecId, specName으로 생성 처리.
 		commonAlert("현재 해당 connection에서 사용가능한 spec 이 없습니다. 등록 하시겠습니까?")
-	}else {
+	} else {
 		showConnectionAssistPopup()
 	}
 	///// TODO : ApplyButton Click 시
@@ -843,18 +845,18 @@ function selectConnectionConfig(connections, selectedSpecName) {
 
 	// var html = ""
 	// if (data.length) {
-		// data.map((item, index) => (
-		// 	html += '<tr onclick="setConnectionAndSpec(' + index + ');">'
-		// 	+ '     <input type="hidden" id="connectionAssist_name_' + index + '" value="' + item + '"/>'
-		// 	+ '<td class="overlay hidden" data-th="connection">' + item + '</td>'
-		// 	+ '<td class="overlay hidden" data-th="spec"> aws-test-spec-t2-micro </td>'
-		// 	+ '</tr>'
-		// ))
-		// $("#assistConnectionList").empty()
-		// $("#assistConnectionList").append(html)
-		// console.log("setConnectionList completed");
+	// data.map((item, index) => (
+	// 	html += '<tr onclick="setConnectionAndSpec(' + index + ');">'
+	// 	+ '     <input type="hidden" id="connectionAssist_name_' + index + '" value="' + item + '"/>'
+	// 	+ '<td class="overlay hidden" data-th="connection">' + item + '</td>'
+	// 	+ '<td class="overlay hidden" data-th="spec"> aws-test-spec-t2-micro </td>'
+	// 	+ '</tr>'
+	// ))
+	// $("#assistConnectionList").empty()
+	// $("#assistConnectionList").append(html)
+	// console.log("setConnectionList completed");
 
-		//
+	//
 	// }
 
 	// if (html != "") {
@@ -865,7 +867,10 @@ function selectConnectionConfig(connections, selectedSpecName) {
 // 앞서 setting한 connection과 선택한 connection이 같으면 그대로 set
 // 다르면 바꿀건지 물어보고 새로운 connection으로 set 
 function setConnectionAndSpec(index) {
-	selectedConnection = $("#connectionAssist_name_" + index).val()
+	selectedConnection = $("#connectionAssist_connection_" + index).val()
+	selcetedSpecName = $("#connectionAssist_specName_" + index).val()
+	$("#s_regConnectionName").val(selectedConnection);
+	$("#s_spec").val(selcetedSpecName);
 	$("#connectionAssist").modal("hide");
 	$("#recommendVmAssist").modal("hide");
 }
