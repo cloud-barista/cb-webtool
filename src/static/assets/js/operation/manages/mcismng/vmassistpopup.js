@@ -782,9 +782,10 @@ function getConnectionConfigCandidateInfo(index) {
 		if (statusCode == 200 || statusCode == 201) {
 
 			console.log("connection result: ", result.data);
-			var connectionCandidates = result.data.mcisDynamicInfo.reqCheck[0].connectionConfigCandidates
+			var connectionInfo = result.data.mcisDynamicInfo.reqCheck[0]
+			var connectionCandidates = connectionInfo.connectionConfigCandidates
 			//if (connectionCandidates.length > 1) {
-			selectConnectionConfig(connectionCandidates, specName)
+			selectConnectionConfig(connectionCandidates, specName, connectionInfo.region.providerName)
 			//}
 		} else {
 			var message = result.data.message;
@@ -804,7 +805,7 @@ function getConnectionConfigCandidateInfo(index) {
 // connection 후보 보여주기
 // 가져온 connection 목록과 일치하는 spec 정보 보여주기
 // page Load 시 이미 해당 namespace의 전체 목록을 가져 옴.
-function selectConnectionConfig(connections, selectedSpecName) {
+function selectConnectionConfig(connections, selectedSpecName, selectedProvider) {
 	// assistConnectionList
 	var table = document.getElementById("assistConnectionList");
 	console.log("table:", table);
@@ -815,6 +816,7 @@ function selectConnectionConfig(connections, selectedSpecName) {
 
 			// connection 이 일치하면 show
 			var connectionTr = $("#connectionAssist_tr_" + i).val();
+			$("#connectionAssist_provider_" + i).val(selectedProvider)
 			var connectionName = $("#connectionAssist_connection_" + i).val();
 			var specName = $("#connectionAssist_specName_" + i).val();
 			console.log(candidateConnectionName + " : " + connectionName + " , " + specName)
@@ -867,10 +869,84 @@ function selectConnectionConfig(connections, selectedSpecName) {
 // 앞서 setting한 connection과 선택한 connection이 같으면 그대로 set
 // 다르면 바꿀건지 물어보고 새로운 connection으로 set 
 function setConnectionAndSpec(index) {
+	selectedProvider = $("#connectionAssist_provider_" + index).val()
 	selectedConnection = $("#connectionAssist_connection_" + index).val()
 	selcetedSpecName = $("#connectionAssist_specName_" + index).val()
-	$("#s_regConnectionName").val(selectedConnection);
-	$("#s_spec").val(selcetedSpecName);
+	regConnection = $("#ss_regConnectionName").val()
+	console.log("regConnection: ", regConnection);
+
+	$("#t_regProvider").val(selectedProvider)
+	$("#t_regConnectionName").val(selectedConnection)
+	$("#t_spec").val(selcetedSpecName)
+
+	// 다르면 바꿀건지 물어봄
+	if (selectedConnection != regConnection) {
+		commonConfirmOpen("ChangeConnection")
+	} else {
+		$("#ss_spec").val($("#t_spec").val())
+	}
+
 	$("#connectionAssist").modal("hide");
 	$("#recommendVmAssist").modal("hide");
+}
+
+// selct box option 세팅
+function setConnectionsForOptions(connectionList, selctedProvider) {
+	var html = ""
+	connectionList.forEach(function (connItem, connIndex) {
+		if (selctedProvider == connItem.ProviderName) {
+			html += '<option value="' + connItem.ConfigName + '">' + connItem.ConfigName + '</option>'
+		}
+	})
+	$("#ss_regConnectionName").empty()
+	$("#ss_regConnectionName").append(html)
+}
+
+// selct box option 세팅
+function setResourcesForOptions(resourceType, resourceList, selectedConnetion) {
+	var html = ""
+	html += '<option value=""> Select ' + resourceType + '</option>'
+	resourceList.forEach(function (resourceItem, resourceIndex) {
+		if (selectedConnetion == resourceItem.connectionName) {
+			html += '<option value="' + resourceItem.name + '">' + resourceItem.name + '</option>'
+		}
+	})
+
+	if (resourceType == "Spec") {
+		$("#ss_spec").empty()
+		$("#ss_spec").append(html)
+
+	} else if (resourceType == "OS Platform") {
+		$("#ss_imageId").empty()
+		$("#ss_imageId").append(html)
+
+	} else if (resourceType == "SSH Key") {
+		$("#ss_sshKey").empty()
+		$("#ss_sshKey").append(html)
+	}
+}
+
+// commonConfirmOpen("ChangeConnection")에서 ok했을 때 실행
+function changeCloudConnection() {
+	var selectedProvider = $("#t_regProvider").val()
+	var selectedConnection = $("#t_regConnectionName").val()
+	var selcetedSpecName = $("#t_spec").val()
+	// provider setting
+	$("#ss_regProvider").val(selectedProvider)
+
+	// filtering
+	setConnectionsForOptions(totalCloudConnectionList, selectedProvider)
+	setResourcesForOptions("Spec", totalVmSpecListByNamespace, selectedConnection)
+	setResourcesForOptions("OS Platform", totalImageListByNamespace, selectedConnection)
+	setResourcesForOptions("SSH Key", totalSshKeyListByNamespace, selectedConnection)
+	getSecurityInfo(selectedConnection);
+	getVnetInfo(selectedConnection);
+
+	// connection & spec setting
+	$("#ss_regConnectionName").val(selectedConnection)
+	$("#ss_spec").val(selcetedSpecName)
+
+	$("#t_regProvider").val("")
+	$("#t_regConnectionName").val("")
+	$("#t_spec").val("")
 }

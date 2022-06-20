@@ -742,9 +742,9 @@ function applyAssistValues(caller) {
 
     var orgPrefix = "recommendVmAssist_";
 
-    $("#s_regProvider").val($("#" + orgPrefix + "provider_" + selectedIndex).val().toUpperCase());
-    $("#s_regConnectionName").val("aws-test-conn");
-    $("#s_spec").val("aws-test-spec-t2-micro");
+    $("#ss_regProvider").val($("#" + orgPrefix + "provider_" + selectedIndex).val().toUpperCase());
+    $("#ss_regConnectionName").val("aws-test-conn");
+    $("#ss_spec").val("aws-test-spec-t2-micro");
 
     applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
     $("#recommendVmAssist").modal("hide");

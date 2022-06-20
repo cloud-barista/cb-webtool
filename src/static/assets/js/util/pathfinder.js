@@ -233,7 +233,7 @@ function getCommonNetworkList(caller, optionParam) {
         data = result.data.VNetList;
         console.log("vNetwork Info : ", result);
         console.log("vNetwork data : ", data);
-        setTotalNetworkList(data)
+        //setTotalNetworkList(data)
         getNetworkListCallbackSuccess(caller, data);
     }).catch(error => {
         console.warn(error);
@@ -261,7 +261,7 @@ function getCommonSecurityGroupList(caller, sortType, optionParam) {
     }).then(result => {
         console.log("get SG Data : ", result.data);
         var data = result.data.SecurityGroupList; // exception case : if null 
-        setTotalSecurityGroupList(data)
+        //setTotalSecurityGroupList(data)
         console.log("Data : ", data);
         if (caller == "securitygroupmng") {
             console.log("return get Data securitygroupmng")
@@ -298,7 +298,7 @@ function getCommonSshKeyList(caller, optionParam) {
     }).then(result => {
         console.log("get SSH Data : ", result.data);
         var data = result.data.SshKeyList; // exception case : if null 
-        setTotalSshkeyList(data)
+        //setTotalSshkeyList(data)
         getSshKeyListCallbackSuccess(caller, data)
     }).catch(error => {
         console.warn(error);
@@ -332,7 +332,7 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam) {
         console.log("get Image List : ", result.data);
 
         var data = result.data.VirtualMachineImageList;
-        setTotalImageList(data)
+        //setTotalImageList(data)
         // Data가져온 뒤 set할 method 호출
         if (caller == "virtualmachineimagemng") {
             console.log("return get Data")
@@ -377,7 +377,7 @@ function getCommonVirtualMachineSpecList(caller, sortType, optionParam) {
         console.log("get Spec List : ", result.data);
 
         var data = result.data.VmSpecList;
-        setTotalVmSpecList(data)
+        //setTotalVmSpecList(data)
         if (caller == "virtualmachinespecmng") {
             console.log("return get Data");
             virtualMachineSpecListCallbackSuccess(caller, data, sortType);

@@ -546,10 +546,15 @@ function getVmList() {
         })
 }
 
-// 모든 커넥션 목록 ( expert mode, assist에서 사용 )
+// 모든 커넥션 목록
 var totalCloudConnectionList = new Array();
 function getCloudConnectionListCallbackSuccess(caller, data, sortType) {
+    console.log("connection result: ", data);
     totalCloudConnectionList = data;
+}
+
+function setTotalConnectionList() {
+    totalCloudConnectionList
 }
 // 화면 Load시 가져오나 굳이?
 var totalNetworkListByNamespace = new Array();
@@ -729,8 +734,10 @@ function setNetworkListToExpertMode(data, caller) {
 
 // e_specListTbody 없는 애를 호출하고 있음.
 // 현재 namespace에 등록된 모든 spec 목록
+var totalVmSpecListByNamespace = new Array()
 function getSpecListCallbackSuccess(caller, data) {
     console.log(data);
+    totalVmSpecListByNamespace = data
     if (data == null || data == undefined || data == "null") {
 
     } else {// 아직 data가 1건도 없을 수 있음
@@ -761,6 +768,7 @@ function getSpecListCallbackSuccess(caller, data) {
             data.forEach(function (vSpecItem, vSpecIndex) {
                 console.log("vSpecItem:", vSpecItem)
                 html += '<tr id="connectionAssist_tr_' + vSpecIndex + '" onclick="setConnectionAndSpec(' + vSpecIndex + ');" style="display:none">'
+                    + '     <input type="hidden" id="connectionAssist_provider_' + vSpecIndex + '" value=""/>'
                     + '     <input type="hidden" id="connectionAssist_specName_' + vSpecIndex + '" value="' + vSpecItem.name + '"/>'
                     + '     <input type="hidden" id="connectionAssist_connection_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
                     + '<td class="overlay hidden" data-th="connection">' + vSpecItem.connectionName + '</td>'
@@ -782,8 +790,10 @@ function getSpecListCallbackFail(caller, error) {
     $("#e_specListTbody").append(html)
 }
 
+var totalImageListByNamespace = new Array()
 function getImageListCallbackSuccess(caller, data) {
     console.log(data);
+    totalImageListByNamespace = data
     if (data == null || data == undefined || data == "null") {
 
     } else {// 아직 data가 1건도 없을 수 있음
@@ -1297,25 +1307,25 @@ function getResources(caller) {
 
 // 아래처럼 만들어주었으나 total{리소스}ByNamespace라는 Array에 이미 저장되고 있음
 // total{리소스}ByNamespace에 spec, image는 없음 -> 만들어야함
-var totalNetworkList = new Array()
-var totalVmSpecList = new Array()
-var totalImageList = new Array()
-var totalSecurityGroupList = new Array()
-var totalSshkeyList = new Array()
+// var totalNetworkList = new Array()
+// var totalVmSpecList = new Array()
+// var totalImageList = new Array()
+// var totalSecurityGroupList = new Array()
+// var totalSshkeyList = new Array()
 
-function setTotalNetworkList(data) {
-    totalNetworkList = data
-}
+// function setTotalNetworkList(data) {
+//     totalNetworkList = data
+// }
 
-function setTotalVmSpecList(data) {
-    totalVmSpecList = data
-}
-function setTotalImageList(data) {
-    totalImageList = data
-}
-function setTotalSecurityGroupList(data) {
-    totalSecurityGroupList = data
-}
-function setTotalSshkeyList(data) {
-    totalSshkeyList = data
-}
+// function setTotalVmSpecList(data) {
+//     totalVmSpecList = data
+// }
+// function setTotalImageList(data) {
+//     totalImageList = data
+// }
+// function setTotalSecurityGroupList(data) {
+//     totalSecurityGroupList = data
+// }
+// function setTotalSshkeyList(data) {
+//     totalSshkeyList = data
+// }

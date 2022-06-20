@@ -150,6 +150,7 @@ function commonConfirmOpen(targetAction, caller) {
             ["Provider", "Would you like to set Cloud Provider ?"],
 
             ["MoveToConnection", "Would you like to set Cloud config ?"],
+            ["ChangeConnection", "Would you like to change Cloud connection ?"],
             ["DeleteCloudConnection", "Would you like to delete <br /> the Cloud connection? "],
 
             ["DeleteCredential", "Would you like to delete <br /> the Credential? "],
@@ -281,6 +282,8 @@ function commonConfirmOk() {
     } else if (targetAction == "MoveToConnection") {
         var targetUrl = "/setting/connections/cloudconnectionconfig/mngform"
         changePage(targetUrl)
+    } else if (targetAction == "ChangeConnection") { // recommendvm에서 다른 connection 선택 시
+        changeCloudConnection()
     } else if (targetAction == "DeleteCloudConnection") {
         deleteCloudConnection();
     } else if (targetAction == "Config") {
