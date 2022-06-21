@@ -743,6 +743,7 @@ function recommendVmSpecListCallbackSuccess(data) {
 				+ '     <input type="hidden" id="recommendVmAssist_provider_' + index + '" value="' + item.providerName + '"/>'
 				+ '     <input type="hidden" id="recommendVmAssist_connectionName_' + index + '" value="' + item.connectionName + '"/>'
 				+ '     <input type="hidden" id="recommendVmAssist_name_' + index + '" value="' + item.name + '"/>'
+				+ '     <input type="hidden" id="recommendVmAssist_cspSpec_' + index + '" value="' + item.cspSpecName + '"/>'
 				+ '<td class="overlay hidden" data-th="provider">' + item.providerName + '</td>'
 				+ '<td class="overlay hidden" data-th="region">' + item.regionName + '</td>'
 				+ '<td class="btn_mtd ovm" data-th="name ">' + item.name + '<span class="ov"></span></td>'
@@ -765,8 +766,10 @@ function recommendVmSpecListCallbackSuccess(data) {
 // mcisDynamicCheckRequest -> 해당 spec에 대해 가능한 connection 구하기
 function getConnectionConfigCandidateInfo(index) {
 	$("#assistSelectedIndex").val(index);
-	//var specName = $("#recommendVmAssist_name_" + index).val()
-	var specName = "aws-ap-northeast-1-t2-micro"
+	var specName = $("#recommendVmAssist_name_" + index).val()
+	var cspSpecName = $("#recommendVmAssist_cspSpec_" + index).val()
+	console.log(specName);
+	//var specName = "aws-ap-northeast-1-t2-micro"
 	console.log(specName);
 	var url = "/operation/manages/mcismng/mcisdynamiccheck/list"
 	var obj = {
@@ -785,7 +788,7 @@ function getConnectionConfigCandidateInfo(index) {
 			var connectionInfo = result.data.mcisDynamicInfo.reqCheck[0]
 			var connectionCandidates = connectionInfo.connectionConfigCandidates
 			//if (connectionCandidates.length > 1) {
-			selectConnectionConfig(connectionCandidates, specName, connectionInfo.region.providerName)
+			selectConnectionConfig(connectionCandidates, cspSpecName, connectionInfo.region.providerName)
 			//}
 		} else {
 			var message = result.data.message;
@@ -805,11 +808,13 @@ function getConnectionConfigCandidateInfo(index) {
 // connection 후보 보여주기
 // 가져온 connection 목록과 일치하는 spec 정보 보여주기
 // page Load 시 이미 해당 namespace의 전체 목록을 가져 옴.
-function selectConnectionConfig(connections, selectedSpecName, selectedProvider) {
+function selectConnectionConfig(connections, selectedCspSpecName, selectedProvider) {
 	// assistConnectionList
 	var table = document.getElementById("assistConnectionList");
 	console.log("table:", table);
+	console.log("selected csp spec :", selectedCspSpecName);
 	var displayItemsCount = 0;
+	var regCandidateConnection = ""
 	connections.forEach(function (candidateConnectionName, connectionIndex) {
 		for (var i = 0, trRow; trRow = table.rows[i]; i++) {
 			console.log("trRow: ", trRow)
@@ -819,24 +824,40 @@ function selectConnectionConfig(connections, selectedSpecName, selectedProvider)
 			$("#connectionAssist_provider_" + i).val(selectedProvider)
 			var connectionName = $("#connectionAssist_connection_" + i).val();
 			var specName = $("#connectionAssist_specName_" + i).val();
+			var cspSpecName = $("#connectionAssist_cspSpecName_" + i).val();
 			console.log(candidateConnectionName + " : " + connectionName + " , " + specName)
 
-			candidateConnectionName = "aws-test-conn2" // 해당 connection에 등록된 spec 2개 있음.
+			//candidateConnectionName = "aws-test-conn2" // 해당 connection에 등록된 spec 2개 있음.
 			if (candidateConnectionName == connectionName) {
-				trRow.style.display = '';
-				displayItemsCount++
+				if (selectedCspSpecName == cspSpecName) {
+					trRow.style.display = '';
+					displayItemsCount++
+				} else {
+					// 일치하는 connection은 있지만, 해당 connection에 spec이 없는 경우 -> spec 등록을 위해 해당 conn 저장해둠
+					// 그냥 보여주고 선택하게 하는 게 나을 듯 -> 수정 필요
+					regCandidateConnection = connectionName
+				}
+
 				// 해당 connection에 spec이 없는 경우 보여줘야 할 지....
 				// if ( selectedSpecName == specName )
 			}
 		}// end of for
 	});
 
-	if (displayItemsCount == 0) {
-		// specName을 입력하면 namespace, connection, cspSpecId, specName으로 생성 처리.
-		commonAlert("현재 해당 connection에서 사용가능한 spec 이 없습니다. 등록 하시겠습니까?")
-	} else {
-		showConnectionAssistPopup()
+	//if (displayItemsCount == 0) {
+	// specName을 입력하면 namespace, connection, cspSpecId, specName으로 생성 처리.
+	// 수정 필요
+	if (regCandidateConnection != "") {
+		$("#t_regRecommendConn").val(regCandidateConnection)
+		$("#t_regRecommendCspSpec").val(selectedCspSpecName)
+		commonConfirmOpen("RegisterRecommendSpec")
+	} else if (displayItemsCount == 0) {
+		commonAlert("해당 spec을 생성할 수 있는 connection이 없습니다.")
 	}
+
+	// } else {
+	// 	showConnectionAssistPopup()
+	// }
 	///// TODO : ApplyButton Click 시
 	///// - expert 모드인 경우에는 applyAssistValidCheck(caller) 에서 처리하면 됨
 	///// - simple 모드에서는 비슷한 function 추가 필요. : changeConnectionInfo(configName) 으로 새로 가져와서 셋 한 뒤에
@@ -871,13 +892,13 @@ function selectConnectionConfig(connections, selectedSpecName, selectedProvider)
 function setConnectionAndSpec(index) {
 	selectedProvider = $("#connectionAssist_provider_" + index).val()
 	selectedConnection = $("#connectionAssist_connection_" + index).val()
-	selcetedSpecName = $("#connectionAssist_specName_" + index).val()
+	selectedSpecName = $("#connectionAssist_specName_" + index).val()
 	regConnection = $("#ss_regConnectionName").val()
 	console.log("regConnection: ", regConnection);
 
 	$("#t_regProvider").val(selectedProvider)
 	$("#t_regConnectionName").val(selectedConnection)
-	$("#t_spec").val(selcetedSpecName)
+	$("#t_spec").val(selectedSpecName)
 
 	// 다르면 바꿀건지 물어봄
 	if (selectedConnection != regConnection) {
@@ -905,32 +926,39 @@ function setConnectionsForOptions(connectionList, selctedProvider) {
 // selct box option 세팅
 function setResourcesForOptions(resourceType, resourceList, selectedConnetion) {
 	var html = ""
+	var resourceObj = ""
 	html += '<option value=""> Select ' + resourceType + '</option>'
 	resourceList.forEach(function (resourceItem, resourceIndex) {
 		if (selectedConnetion == resourceItem.connectionName) {
-			html += '<option value="' + resourceItem.name + '">' + resourceItem.name + '</option>'
+			if (resourceType == "Spec") {
+				html += '<option value="' + resourceItem.id + '">' + resourceItem.name + '(' + resourceItem.cspSpecName + ')</option>'
+			} else if (resourceType == "SSH Key") {
+				html += '<option value="' + resourceItem.id + '">' + resourceItem.cspSshKeyName + '(' + resourceItem.id + ')</option>'
+			} else {
+				html += '<option value="' + resourceItem.id + '">' + resourceItem.name + '(' + resourceItem.id + ')</option>'
+			}
 		}
 	})
 
 	if (resourceType == "Spec") {
-		$("#ss_spec").empty()
-		$("#ss_spec").append(html)
-
+		resourceObj = "ss_spec"
 	} else if (resourceType == "OS Platform") {
-		$("#ss_imageId").empty()
-		$("#ss_imageId").append(html)
-
+		resourceObj = "ss_imageId"
 	} else if (resourceType == "SSH Key") {
-		$("#ss_sshKey").empty()
-		$("#ss_sshKey").append(html)
+		resourceObj = "ss_sshKey"
 	}
+
+	$("#" + resourceObj).empty()
+	$("#" + resourceObj).append(html)
+
 }
 
 // commonConfirmOpen("ChangeConnection")에서 ok했을 때 실행
 function changeCloudConnection() {
 	var selectedProvider = $("#t_regProvider").val()
 	var selectedConnection = $("#t_regConnectionName").val()
-	var selcetedSpecName = $("#t_spec").val()
+	var selectedSpecName = $("#t_spec").val()
+
 	// provider setting
 	$("#ss_regProvider").val(selectedProvider)
 
@@ -939,12 +967,14 @@ function changeCloudConnection() {
 	setResourcesForOptions("Spec", totalVmSpecListByNamespace, selectedConnection)
 	setResourcesForOptions("OS Platform", totalImageListByNamespace, selectedConnection)
 	setResourcesForOptions("SSH Key", totalSshKeyListByNamespace, selectedConnection)
+
+	// security group, vnet setting
 	getSecurityInfo(selectedConnection);
 	getVnetInfo(selectedConnection);
 
 	// connection & spec setting
 	$("#ss_regConnectionName").val(selectedConnection)
-	$("#ss_spec").val(selcetedSpecName)
+	$("#ss_spec").val(selectedSpecName)
 
 	$("#t_regProvider").val("")
 	$("#t_regConnectionName").val("")

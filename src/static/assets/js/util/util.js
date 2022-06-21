@@ -230,6 +230,8 @@ function commonConfirmOpen(targetAction, caller) {
 
             ["AddMonitoringAlertEventHandler", "Would you like to add<br />Monitoring Alert Event-Handler ?"],
             ["deleteMonitoringAlertEventHandler", "Are you sure to delete<br />this Monitoring Alert Event-Handler?"],
+
+            ["RegisterRecommendSpec", "현재 해당 connection에서 사용가능한 spec 이 없습니다. 등록 하시겠습니까?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -458,6 +460,8 @@ function commonConfirmOk() {
         deleteMonitoringAlertEventHandler();
     } else if (targetAction == "DeleteMcks") {
         deleteMCKS();
+    } else if (targetAction == "RegisterRecommendSpec") {
+        commonPromptOpen("RegisterRecommendSpec")
     } else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
@@ -526,6 +530,8 @@ function commonPromptOpen(targetAction, targetObjId) {
 
             ["RemoteCommandMcis", "Please enter a command to execute"],
             ["RemoteCommandVmOfMcis", "Please enter a command to execute"],
+
+            ["RegisterRecommendSpec", "등록할 Spec의 이름을 입력하세요"],
 
         ]
     );
@@ -680,6 +686,8 @@ function commonPromptOk() {
         if (targetValue) {
             remoteCommandVmMcis(targetValue);
         }
+    } else if (targetAction == 'RegisterRecommendSpec') {
+        createRecommendSpec(targetValue);
     }
 
 

@@ -34,9 +34,9 @@ function changeConnectionInfo(configName) {
 	getSpecInfo(configName);
 }
 
-function getVmiInfo() {
+function getVmiInfo(configName) {
 
-	var configName = $("#ss_regConnectionName option:selected").val();
+	//var configName = $("#ss_regConnectionName option:selected").val();
 
 	console.log("2 : ", configName);
 	// getCommonVirtualMachineImageList("mcissimpleconfigure", "name"); setCommonVirtualMachineImageList()
@@ -62,7 +62,7 @@ function getVmiInfo() {
 			return;
 		}
 
-		html += "<option value=''>Select Image</option>"
+		html += "<option value=''>Select OS Platform</option>"
 		for (var i in data) {
 			if (data[i].connectionName == configName) {
 				html += '<option value="' + data[i].id + '" >' + data[i].name + '(' + data[i].id + ')</option>';
@@ -137,7 +137,7 @@ function getSpecInfo(configName) {
 		var data = result.data.VmSpecList
 		console.log("spec result : ", data)
 		if (data) {
-			html += "<option value=''>Select SpecName</option>"
+			html += "<option value=''>Select Spec</option>"
 			data.filter(csp => csp.connectionName === configName).map(item => (
 				html += '<option value="' + item.id + '">' + item.name + '(' + item.cspSpecName + ')</option>'
 			))
