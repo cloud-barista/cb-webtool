@@ -738,49 +738,12 @@ var totalVmSpecListByNamespace = new Array()
 function getSpecListCallbackSuccess(caller, data) {
     console.log(data);
     totalVmSpecListByNamespace = data
-    if (data == null || data == undefined || data == "null") {
 
-    } else {// 아직 data가 1건도 없을 수 있음
-        var html = ""
-        if (data.length > 0) {
-            // data.forEach(function (vSpecItem, vSpecIndex) {
-            //     // simple server configuration area 내 spec
-            //     html += '<tr onclick="setValueToFormObj(\'tab_vmSpec\', \'vmSpec\',' + vSpecIndex + ', \'e_specId\');">'
-            //         + '     <input type="hidden" id="vmSpec_id_' + vSpecIndex + '" value="' + vSpecItem.id + '"/>'
-            //         + '     <input type="hidden" name="vmSpec_connectionName" id="vmSpec_connectionName_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
-            //         + '     <input type="hidden" name="vmSpec_info" id="vmSpec_info_' + vSpecIndex + '" value="' + vSpecItem.id + '|' + vSpecItem.name + '|' + vSpecItem.connectionName + '|' + vSpecItem.cspImageId + '|' + vSpecItem.cspImageName + '|' + vSpecItem.guestOS + '|' + vSpecItem.description + '"/>'
-            //         + '<td class="overlay hidden" data-th="Name">' + vSpecItem.name + '</td>'
-            //         + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
-            //         + vSpecItem.connectionName
-            //         + '</td>'
-            //         + '<td class="overlay hidden" data-th="CspSpecName">' + vSpecItem.cspSpecName + '</td>'
-            //
-            //         + '<td class="overlay hidden" data-th="Description">' + vSpecItem.description + '</td>'
-            //         + '</tr>'
-            //
-            // })
-            // $("#e_specListTbody").empty()
-            // $("#e_specListTbody").append(html)
-            // console.log($("#e_specListTbody"))
-
-
-            // assist popu 의 connection에 따른 spec 목록 에서 사용 ( selectConnectionConfig )
-            data.forEach(function (vSpecItem, vSpecIndex) {
-                console.log("vSpecItem:", vSpecItem)
-                html += '<tr id="connectionAssist_tr_' + vSpecIndex + '" onclick="setConnectionAndSpec(' + vSpecIndex + ');" style="display:none">'
-                    + '     <input type="hidden" id="connectionAssist_provider_' + vSpecIndex + '" value=""/>'
-                    + '     <input type="hidden" id="connectionAssist_specName_' + vSpecIndex + '" value="' + vSpecItem.name + '"/>'
-                    + '     <input type="hidden" id="connectionAssist_cspSpecName_' + vSpecIndex + '" value="' + vSpecItem.cspSpecName + '"/>'
-                    + '     <input type="hidden" id="connectionAssist_connection_' + vSpecIndex + '" value="' + vSpecItem.connectionName + '"/>'
-                    + '<td class="overlay hidden" data-th="connection">' + vSpecItem.connectionName + '</td>'
-                    + '<td class="overlay hidden" data-th="spec">' + vSpecItem.name + ' </td>'
-                    + '</tr>'
-            })
-            $("#assistConnectionList").empty()
-            $("#assistConnectionList").append(html)
-        }
+    if (caller == "addedspec") {
+        changeCloudConnection()
     }
 }
+
 function getSpecListCallbackFail(caller, error) {
     // no data
     var html = ""
@@ -1300,7 +1263,6 @@ function createRecommendSpec(recSpecName) {
         return;
     }
 
-    // var apiInfo = "{{ .apiInfo}}";
     var url = "/setting/resources" + "/vmspec/reg"
     console.log("URL : ", url)
     var obj = {
@@ -1321,26 +1283,18 @@ function createRecommendSpec(recSpecName) {
             console.log("result spec : ", result);
             var statusCode = result.data.status;
             if (statusCode == 200 || statusCode == 201) {
-                // if (result.status == 200 || result.status == 201) {
+                $("#t_regConnectionName").val(connectionName)
+                $("#t_spec").val(specName)
+                getCommonVirtualMachineSpecList('addedspec')
                 commonAlert("Success Create Spec!!")
-                //등록하고 나서 화면을 그냥 고칠 것인가?
-                //displayVmSpecInfo("REG_SUCCESS");
-                //getVmSpecList("name");
-                //아니면 화면을 리로딩 시킬것인가?
-                // location.reload();
-                // $("#btn_add2").click()
-                // $("#namespace").val('')
-                // $("#nsDesc").val('')
+                $("#connectionAssist").modal("hide");
+                $("#recommendVmAssist").modal("hide");
+
             } else {
                 var message = result.data.message;
                 commonAlert("Fail Create Spec : " + message + "(" + statusCode + ")");
-                // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
             }
-            // }).catch(function(error){
-            //     console.log("get create error : ");
-            //     console.log(error);
-            //     commonAlert(error);// TODO : error처리하자.
-            // });
+
         }).catch((error) => {
             console.warn(error);
             console.log(error.response)
@@ -1350,7 +1304,7 @@ function createRecommendSpec(recSpecName) {
         });
     } else {
         commonlert("Input Spec Name")
-        //$("#regSpecName").focus()
+
         return;
     }
 }
@@ -1365,38 +1319,3 @@ function clearAssistSpecList(targetTableList) {
     $("#" + targetTableList).empty()
 }
 
-function getResources(caller) {
-    getVmList()
-    getCommonCloudConnectionList(caller, '', true)
-    getCommonNetworkList(caller)
-    getCommonVirtualMachineImageList(caller)
-    getCommonVirtualMachineSpecList(caller)
-    getCommonSecurityGroupList(caller)
-    getCommonSshKeyList(caller)
-}
-
-
-// 아래처럼 만들어주었으나 total{리소스}ByNamespace라는 Array에 이미 저장되고 있음
-// total{리소스}ByNamespace에 spec, image는 없음 -> 만들어야함
-// var totalNetworkList = new Array()
-// var totalVmSpecList = new Array()
-// var totalImageList = new Array()
-// var totalSecurityGroupList = new Array()
-// var totalSshkeyList = new Array()
-
-// function setTotalNetworkList(data) {
-//     totalNetworkList = data
-// }
-
-// function setTotalVmSpecList(data) {
-//     totalVmSpecList = data
-// }
-// function setTotalImageList(data) {
-//     totalImageList = data
-// }
-// function setTotalSecurityGroupList(data) {
-//     totalSecurityGroupList = data
-// }
-// function setTotalSshkeyList(data) {
-//     totalSshkeyList = data
-// }

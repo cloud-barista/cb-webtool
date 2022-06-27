@@ -346,6 +346,9 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam) {
         } else if (caller == "vmcreate") {
             console.log("return get Data")
             getImageListCallbackSuccess(caller, data)
+        } else if (caller == "mciscreate") {
+            console.log("return get Data")
+            getImageListCallbackSuccess(caller, data)
         }
         // }).catch(function(error){
         //     console.log("list error : ",error);        
@@ -382,13 +385,18 @@ function getCommonVirtualMachineSpecList(caller, sortType, optionParam) {
             console.log("return get Data");
             virtualMachineSpecListCallbackSuccess(caller, data, sortType);
             // setVirtualMachineSpecListAtServerSpec(data, sortType);
-        } else if (caller == "mainspec") {
-            console.log("return get Data")
-            getSpecListCallbackSuccess(caller, data)
-        } else if (caller == "vmcreate") {
-            console.log("return get Data")
+        } else {
             getSpecListCallbackSuccess(caller, data)
         }
+        // } else if (caller == "mainspec") {
+        //     console.log("return get Data")
+        //     getSpecListCallbackSuccess(caller, data)
+        // } else if (caller == "vmcreate") {
+        //     console.log("return get Data")
+        //     getSpecListCallbackSuccess(caller, data)
+        // } else if (caller == "addedspec") {
+        //     getSpecListCallbackSuccess(caller, data)
+        // }
     }).catch(error => {
         console.warn(error);
         console.log(error.response)
@@ -907,4 +915,17 @@ function checkLoadStatus() {
     if (returnStatusCode != 200 && returnStatusCode != 201) {
         commonErrorAlert(returnStatusCode, returnMessage);
     }
+}
+
+
+function getResources(caller) {
+    if (caller == 'vmcreate') {
+        getVmList()
+    }
+    getCommonCloudConnectionList(caller, '', true)
+    getCommonNetworkList(caller)
+    getCommonVirtualMachineImageList(caller)
+    getCommonVirtualMachineSpecList(caller)
+    getCommonSecurityGroupList(caller)
+    getCommonSshKeyList(caller)
 }

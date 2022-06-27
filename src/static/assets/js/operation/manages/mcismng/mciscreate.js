@@ -10,7 +10,10 @@ $(document).ready(function () {
     });
 
     console.log("mcisCreate.js ")
-    getCommonCloudConnectionList('mciscreate', '', true)
+    // getCommonCloudConnectionList('mciscreate', '', true)
+    // getCommonVirtualMachineSpecList('mciscreate')
+
+    getResources('mciscreate')
 
 
     //Servers Expert on/off
@@ -346,6 +349,12 @@ function filterConnectionByProvider(provider, targetObjId) {
 }
 
 // 등록 된 vm search 결과
+var totalImageListByNamespace = new Array()
+function getImageListCallbackSuccess(caller, data) {
+    console.log(data);
+    totalImageListByNamespace = data
+}
+
 function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList) {
     //console.log(vmImageList);
     var html = ""
@@ -403,6 +412,17 @@ function getCommonSearchVmImageListCallbackSuccess(caller, vmImageList) {
             }
         })
     })
+}
+
+// 현재 namespace에 등록된 모든 spec 목록
+var totalVmSpecListByNamespace = new Array()
+function getSpecListCallbackSuccess(caller, data) {
+    console.log("mciscreate spec:", data);
+    totalVmSpecListByNamespace = data
+
+    if (caller == "addedspec") {
+        changeCloudConnection()
+    }
 }
 
 // 등록된 spec조회 성공 시 table에 뿌려주고, 클릭시 spec 내용 set.
@@ -598,6 +618,11 @@ function filterNetworkList(keywords, caller) {
     })
 }
 
+// patchfinder.js에서 호출하기 때문에 임시로 만들어 둠
+function getNetworkListCallbackFail(caller, error) {
+    // no data
+}
+
 var totalSecurityGroupListByNamespace = new Array();
 // 전체 목록에서 filter
 function filterSecurityGroupList(keywords, caller) {
@@ -677,7 +702,15 @@ function filterSecurityGroupList(keywords, caller) {
 
 }
 
+// pathfinder.js에서 호출하기 때문에 임시로 만들어 둠
+function getSecurityGroupListCallbackFail(error) {
+
+}
+
 var totalSshKeyListByNamespace = new Array();
+function getSshKeyListCallbackSuccess(caller, data) {
+    totalSshKeyListByNamespace = data;
+}
 // 전체 목록에서 filter
 function filterSshKeyList(keywords, caller) {
     // provider
@@ -744,4 +777,63 @@ function filterSshKeyList(keywords, caller) {
             }
         })
     })
+}
+
+function createRecommendSpec(recSpecName) {
+    console.log(recSpecName);
+
+    var specId = recSpecName
+    var specName = recSpecName
+    var connectionName = $("#t_regRecommendConn").val()
+    var cspSpecName = $("#t_regRecommendCspSpec").val()
+
+    if (!specName) {
+        alert("Input New Spec Name")
+        return;
+    }
+
+    var url = "/setting/resources" + "/vmspec/reg"
+    console.log("URL : ", url)
+    var obj = {
+        id: specId,
+        name: specName,
+        connectionName: connectionName,
+        cspSpecName: cspSpecName
+    }
+    console.log("info image obj Data : ", obj);
+
+    if (specName) {
+        axios.post(url, obj, {
+            headers: {
+                'Content-type': 'application/json',
+                // 'Authorization': apiInfo,
+            }
+        }).then(result => {
+            console.log("result spec : ", result);
+            var statusCode = result.data.status;
+            if (statusCode == 200 || statusCode == 201) {
+                $("#t_regConnectionName").val(connectionName)
+                $("#t_spec").val(specName)
+                getCommonVirtualMachineSpecList('addedspec')
+                commonAlert("Success Create Spec!!")
+                $("#connectionAssist").modal("hide");
+                $("#recommendVmAssist").modal("hide");
+
+            } else {
+                var message = result.data.message;
+                commonAlert("Fail Create Spec : " + message + "(" + statusCode + ")");
+            }
+
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage);
+        });
+    } else {
+        commonlert("Input Spec Name")
+
+        return;
+    }
 }
