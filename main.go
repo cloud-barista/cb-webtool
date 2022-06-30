@@ -571,6 +571,7 @@ func main() {
 
 	e.GET("/operation/manages/mcismng/list", controller.GetMcisList) // 등록된 namespace의 MCIS 목록 조회. Tumblebuck 호출
 	e.POST("/operation/manages/mcismng/reg/proc", controller.McisRegProc)
+	e.POST("/operation/manages/mcismng/mcisdynamic/proc", controller.McisDynamicRegProc)
 	e.DELETE("/operation/manages/mcismng/:mcisID", controller.McisDelProc)
 	e.POST("/operation/manages/mcismng/registercspvm", controller.RegisterCspVm)
 	e.POST("/operation/manages/mcismng/list", controller.GetConnectionConfigCandidateList)

@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 
@@ -541,6 +542,12 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq, c echo.Context) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
 
+	vmGroupSize, err := strconv.ParseInt(vmInfo.VmGroupSize, 10, 64)
+
+	if vmGroupSize > 1 { // vmGroupSize가 2개 이상일 때
+		originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup"
+	}
+
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
@@ -684,6 +691,43 @@ func RegMcisDynamic(nameSpaceID string, mcisDynamicReq *tbmcis.TbMcisDynamicReq)
 	fmt.Println(returnMcisInfo)
 
 	return &returnMcisInfo, returnStatus
+}
+
+func RegMcisDynamicByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisDynamicReq, c echo.Context) {
+	var originalUrl = "/ns/{nsId}/mcisDynamic"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(mcisInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	taskKey := nameSpaceID + "||" + "mcis" + "||" + mcisInfo.Name // TODO : 공통 function으로 뺄 것.
+
+	if err != nil {
+		fmt.Println(err)
+		log.Println("RegMcisDynamicByAsync ", err)
+
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegMcisDynamicByAsync ", failResultInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	} else {
+
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+	}
 }
 
 // Recommend MCIS plan (filter and priority)

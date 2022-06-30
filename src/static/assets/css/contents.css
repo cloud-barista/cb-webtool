@@ -8710,6 +8710,7 @@ table tbody tr {
 
 .dashboard .create_box .servers_config .top_box .ip_box {
 	margin: 45px 0 0 0;
+	padding-right: 42px;
 }
 
 .dashboard .create_box .servers_config .top_box .ip_box .tit {
@@ -8774,6 +8775,15 @@ table tbody tr {
 .dashboard .create_box .servers_config .top_box .ip_box .svc_ipbox .ipbox.ipbox3,
 .dashboard .create_box .servers_config .top_box .ip_box .svc_ipbox .ipbox.ipbox4 {
 	width: 50%;
+}
+
+.dashboard .create_box .servers_config .top_box .ip_box .svc_ipbox .ipbox.ipbox3 a {
+	position: absolute;
+	margin: 10px 0 0 10px;
+	text-decoration: underline;
+	color: #06a9b7;
+	font-size: 14px;
+	font-weight: 200;
 }
 
 .dashboard .create_box .servers_config .top_box .ip_box .svc_ipbox .ipbox.ipbox2>ul {
