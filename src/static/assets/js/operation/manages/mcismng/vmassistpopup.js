@@ -908,7 +908,7 @@ function setConnectionAndSpec(index) {
 	$("#t_regConnectionName").val(selectedConnection)
 	$("#t_spec").val(selectedSpecName)
 
-	// 다르면 바꿀건지 물어봄
+	// Connection이 다르면 바꿀건지 물어봄
 	console.log("change conn");
 	if (regConnection != "" && selectedConnection != regConnection) {
 		commonConfirmOpen("ChangeConnection")
@@ -991,4 +991,15 @@ function changeCloudConnection() {
 	$("#t_regProvider").val("")
 	$("#t_regConnectionName").val("")
 	$("#t_spec").val("")
+}
+
+// mcis 이름을 입력했는지 확인 
+function checkMcisNameExist() {
+	var mcisName = $("#mcis_name").val()
+	console.log(mcisName);
+	if (mcisName) {
+		commonConfirmOpen("AddNewMcisDynamic")
+	} else {
+		commonPromptOpen("AddNewMcisDynamic")
+	}
 }

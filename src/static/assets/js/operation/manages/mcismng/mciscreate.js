@@ -800,7 +800,7 @@ function createRecommendSpec(recSpecName) {
         connectionName: connectionName,
         cspSpecName: cspSpecName
     }
-    console.log("info image obj Data : ", obj);
+    console.log("info image obj Data : ", obj)
 
     if (specName) {
         axios.post(url, obj, {
@@ -816,24 +816,74 @@ function createRecommendSpec(recSpecName) {
                 $("#t_spec").val(specName)
                 getCommonVirtualMachineSpecList('addedspec')
                 commonAlert("Success Create Spec!!")
-                $("#connectionAssist").modal("hide");
-                $("#recommendVmAssist").modal("hide");
+                $("#connectionAssist").modal("hide")
+                $("#recommendVmAssist").modal("hide")
 
             } else {
                 var message = result.data.message;
-                commonAlert("Fail Create Spec : " + message + "(" + statusCode + ")");
+                commonAlert("Fail Create Spec : " + message + "(" + statusCode + ")")
             }
 
         }).catch((error) => {
-            console.warn(error);
+            console.warn(error)
+            console.log(error.response)
+            var errorMessage = error.response.data.error
+            var statusCode = error.response.status
+            commonErrorAlert(statusCode, errorMessage)
+        })
+    } else {
+        commonAlert("Input Spec Name")
+
+        return;
+    }
+}
+
+function createMcisDynamic() {
+    var specIndex = $("#assistSelectedIndex").val();
+    var mcisName = $("#mcis_name").val()
+    var mcisDesc = $("#mcis_desc").val()
+    var specName = $("#recommendVmAssist_name_" + specIndex).val()
+
+    if (!mcisDesc) {
+        mcisDesc = "Made in CB-TB"
+    }
+
+    console.log(specName);
+    var url = "/operation/manages/mcismng/mcisdynamic/proc"
+    var obj = {
+        "description": mcisDesc,
+        "name": mcisName,
+        "vm": [
+            {
+                "commonImage": "ubuntu18.04",
+                "commonSpec": specName,
+                "vmGroupSize": "3"
+            }
+        ]
+    }
+
+    try {
+        axios.post(url, obj, {
+            headers: {
+                'Content-type': 'application/json',
+            },
+        }).then(result => {
+            console.log("MCIR Register data : ", result)
+            console.log("Result Status : ", result.status)
+            if (result.status == 201 || result.status == 200) {
+                commonResultAlert("Register Success")
+            } else {
+                commonAlert("Register Fail")
+            }
+        }).catch((error) => {
             console.log(error.response)
             var errorMessage = error.response.data.error;
             var statusCode = error.response.status;
-            commonErrorAlert(statusCode, errorMessage);
-        });
-    } else {
-        commonlert("Input Spec Name")
+            commonErrorAlert(statusCode, errorMessage)
 
-        return;
+        })
+    } catch (error) {
+        commonAlert(error);
+        console.log(error);
     }
 }

@@ -1073,18 +1073,25 @@ func GetVMofMcisData(nameSpaceID string, mcisID string, vmID string) (*tbmcis.Tb
 
 // MCIS의 Status변경
 // LifeCycle 의 경우 요청에 대한 응답이 바로 오므로 asyncMethod를 따로 만들지 않음. 응답시간이 오래걸리는 경우 syncXXX 를 만들고 echo 를 같이 넘겨 결과 처리하도록 해야 함.
-func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle) (*webtool.McisLifeCycle, model.WebStatus) {
+func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle, queryParams []string) (*webtool.McisLifeCycle, model.WebStatus) {
 	nameSpaceID := mcisLifeCycle.NameSpaceID
 	mcisID := mcisLifeCycle.McisID
-	lifeCycleType := mcisLifeCycle.LifeCycleType
 
 	var originalUrl = "/ns/{nsId}/control/mcis/{mcisId}?action={type}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
-	paramMapper["{type}"] = lifeCycleType
+
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	var delimeter = "?"
+	for idx, queryParam := range queryParams {
+		if idx != 0 {
+			delimeter = "&"
+		}
+		urlParam += delimeter + queryParam
+	}
 
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + mcisLifeCycle.NameSpaceID + "/mcis/" + mcisLifeCycle.McisID + "?action=" + mcisLifeCycle.LifeCycleType
@@ -1137,18 +1144,25 @@ func McisLifeCycle(mcisLifeCycle *webtool.McisLifeCycle) (*webtool.McisLifeCycle
 	return &resultMcisLifeCycle, model.WebStatus{StatusCode: respStatus}
 
 }
-func McisLifeCycleByAsync(mcisLifeCycle *webtool.McisLifeCycle, c echo.Context) {
+func McisLifeCycleByAsync(mcisLifeCycle *webtool.McisLifeCycle, queryParams []string, c echo.Context) {
 	nameSpaceID := mcisLifeCycle.NameSpaceID
 	mcisID := mcisLifeCycle.McisID
-	lifeCycleType := mcisLifeCycle.LifeCycleType
 
-	var originalUrl = "/ns/{nsId}/control/mcis/{mcisId}?action={type}"
+	var originalUrl = "/ns/{nsId}/control/mcis/{mcisId}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
-	paramMapper["{type}"] = lifeCycleType
+
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	var delimeter = "?"
+	for idx, queryParam := range queryParams {
+		if idx != 0 {
+			delimeter = "&"
+		}
+		urlParam += delimeter + queryParam
+	}
 
 	url := util.TUMBLEBUG + urlParam
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
@@ -1160,7 +1174,7 @@ func McisLifeCycleByAsync(mcisLifeCycle *webtool.McisLifeCycle, c echo.Context) 
 		fmt.Println(err)
 
 		// websocket으로 전달할 data set
-		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, queryParams[0], util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 	}
 
 	respBody := resp.Body
@@ -1170,12 +1184,12 @@ func McisLifeCycleByAsync(mcisLifeCycle *webtool.McisLifeCycle, c echo.Context) 
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		log.Println("McisLifeCycle ", failResultInfo)
-		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, queryParams[0], util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 	} else {
 		resultMcisLifeCycle := webtool.McisLifeCycle{}
 		json.NewDecoder(respBody).Decode(resultMcisLifeCycle)
 		fmt.Println(resultMcisLifeCycle)
-		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, queryParams[0], util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
 	}
 }
 

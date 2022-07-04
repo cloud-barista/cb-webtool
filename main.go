@@ -630,11 +630,11 @@ func main() {
 	// // e.POST("/NS/reg/proc", controller.NsRegController)
 	// // e.GET("/GET/ns", controller.GetNameSpace)
 	namespaceGroup := e.Group("/setting/namespaces", namespaceTemplate)
-	namespaceGroup.GET("/namespace/mngform", controller.NameSpaceMngForm)      // namespace 보여주는 form 표시. DashboardController로 이동?
-	namespaceGroup.GET("/namespace/list", controller.GetNameSpaceList)         // 등록된 namespace 목록 조회. Tumblebuck 호출
-	namespaceGroup.GET("/namespace/set/:nameSpaceID", controller.SetNameSpace) // default namespace set
-	namespaceGroup.POST("/namespace/reg/proc", controller.NameSpaceRegProc)    // namespace 등록 처리
-	// namespaceGroup.PUT("/namespace/update/proc", controller.NameSpaceUpdateProc)// namespace 수정 : TB에 해당기능없음.
+	namespaceGroup.GET("/namespace/mngform", controller.NameSpaceMngForm)             // namespace 보여주는 form 표시. DashboardController로 이동?
+	namespaceGroup.GET("/namespace/list", controller.GetNameSpaceList)                // 등록된 namespace 목록 조회. Tumblebuck 호출
+	namespaceGroup.GET("/namespace/set/:nameSpaceID", controller.SetNameSpace)        // default namespace set
+	namespaceGroup.POST("/namespace/reg/proc", controller.NameSpaceRegProc)           // namespace 등록 처리
+	namespaceGroup.PUT("/namespace/update/proc", controller.NameSpaceUpdateProc)      // namespace 수정
 	namespaceGroup.DELETE("/namespace/del/:nameSpaceID", controller.NameSpaceDelProc) // namespace 삭제 처리
 
 	cloudConnectionGroup := e.Group("/setting/connections", cloudConnectionTemplate)

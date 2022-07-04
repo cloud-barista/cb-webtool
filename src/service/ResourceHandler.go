@@ -23,7 +23,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func RegFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleReq *tbmcir.TbFirewallRulesWrapper) (*tbmcir.TbFirewallRuleInfo, model.WebStatus) {
+func RegFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleReq *tbmcir.TbFirewallRulesWrapper) (*tbmcir.TbSecurityGroupInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/securityGroup/{securityGroupId}/rules"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -34,10 +34,10 @@ func RegFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleRe
 	pbytes, _ := json.Marshal(firewallRuleReq)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
-	firewallRuleInfo := tbmcir.TbFirewallRuleInfo{}
+	securityGroupInfo := tbmcir.TbSecurityGroupInfo{}
 	if err != nil {
 		fmt.Println(err)
-		return &firewallRuleInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &securityGroupInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
@@ -48,17 +48,17 @@ func RegFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleRe
 		errorInfo := model.ErrorInfo{}
 		json.NewDecoder(respBody).Decode(&errorInfo)
 		fmt.Println(errorInfo)
-		return nil, model.WebStatus{StatusCode: 500, Message: errorInfo.Message}
+		return &securityGroupInfo, model.WebStatus{StatusCode: 500, Message: errorInfo.Message}
 	}
 
 	// 응답에 생성한 객체값이 옴
-	json.NewDecoder(respBody).Decode(&firewallRuleInfo)
-	fmt.Println(firewallRuleInfo)
+	json.NewDecoder(respBody).Decode(&securityGroupInfo)
+	fmt.Println(securityGroupInfo)
 	// return respBody, respStatusCode
-	return &firewallRuleInfo, model.WebStatus{StatusCode: respStatus}
+	return &securityGroupInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-func DelFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleReq *tbmcir.TbFirewallRulesWrapper) (model.WebStatus, model.WebStatus) {
+func DelFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleReq *tbmcir.TbFirewallRulesWrapper) (*tbmcir.TbSecurityGroupInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/resources/securityGroup/{securityGroupId}/rules"
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -70,10 +70,10 @@ func DelFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleRe
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 
-	webStatus := model.WebStatus{}
+	securityGroupInfo := tbmcir.TbSecurityGroupInfo{}
 	if err != nil {
 		fmt.Println(err)
-		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &securityGroupInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
@@ -85,11 +85,11 @@ func DelFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleRe
 	log.Println("ResultMessage : " + resultInfo.Message)
 
 	if respStatus != 200 && respStatus != 201 {
-		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+		return &securityGroupInfo, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
 	}
-	webStatus.StatusCode = respStatus
-	webStatus.Message = resultInfo.Message
-	return webStatus, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&securityGroupInfo)
+	fmt.Println(securityGroupInfo)
+	return &securityGroupInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // 해당 namespace의 vpc 목록 조회
@@ -2130,7 +2130,7 @@ func LoadDefaultResources(nameSpaceID string, optionParam string, connectionName
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	urlParam += "?option=" + optionParam
 	if connectionName != "" {
-		urlParam += "?connectionName=" + connectionName
+		urlParam += "&connectionName=" + connectionName
 	}
 	url := util.TUMBLEBUG + urlParam
 

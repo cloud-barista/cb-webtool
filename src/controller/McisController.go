@@ -874,14 +874,14 @@ func McisLifeCycle(c echo.Context) error {
 		})
 	}
 
-	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisLifeCycle.McisID                                           // TODO : 공통 function으로 뺄 것.
-	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.LifeCycleType, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisLifeCycle.McisID                                            // TODO : 공통 function으로 뺄 것.
+	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, mcisLifeCycle.QueryParams[0], util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
 
 	//
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	//_, respStatus := service.McisLifeCycle(mcisLifeCycle)
-	go service.McisLifeCycleByAsync(mcisLifeCycle, c)
+	go service.McisLifeCycleByAsync(mcisLifeCycle, mcisLifeCycle.QueryParams, c)
 
 	//log.Println("McisLifeCycle service returned")
 	//if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {

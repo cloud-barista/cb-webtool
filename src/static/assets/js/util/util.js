@@ -198,6 +198,7 @@ function commonConfirmOpen(targetAction, caller) {
             ["MoveToMcisManagementFromDashboard", "Would you like to manage MCIS ?"],
 
             ["AddNewMcis", "Would you like to create MCIS ?"],
+            ["AddNewMcisDynamic", "Would you like to create MCIS ?"],
             ["DeleteMcis", "Are you sure to delete this MCIS? "],
             ["ImportScriptOfMcis", "Would you like to import MCIS script? "],
             ["ExportScriptOfMcis", "Would you like to export MCIS script? "],
@@ -462,6 +463,8 @@ function commonConfirmOk() {
         deleteMCKS();
     } else if (targetAction == "RegisterRecommendSpec") {
         commonPromptOpen("RegisterRecommendSpec")
+    } else if (targetAction == "AddNewMcisDynamic") {
+        createMcisDynamic()
     } else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
@@ -532,6 +535,7 @@ function commonPromptOpen(targetAction, targetObjId) {
             ["RemoteCommandVmOfMcis", "Please enter a command to execute"],
 
             ["RegisterRecommendSpec", "등록할 Spec의 이름을 입력하세요"],
+            ["AddNewMcisDynamic", "생성할 MCIS의 이름을 입력하세요"],
 
         ]
     );
@@ -688,6 +692,9 @@ function commonPromptOk() {
         }
     } else if (targetAction == 'RegisterRecommendSpec') {
         createRecommendSpec(targetValue);
+    } else if (targetAction == 'AddNewMcisDynamic') {
+        $("#mcis_name").val(targetValue)
+        createMcisDynamic()
     }
 
 

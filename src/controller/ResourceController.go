@@ -417,7 +417,6 @@ func SecirityGroupDelProc(c echo.Context) error {
 	})
 }
 
-
 // security group rule 추가
 func FirewallRegProc(c echo.Context) error {
 	log.Println("SecirityGroupRulesRegProc : ")
@@ -429,7 +428,6 @@ func FirewallRegProc(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-
 	firewallRuleReq := new(tbmcir.TbFirewallRulesWrapper)
 	if err := c.Bind(firewallRuleReq); err != nil {
 		log.Println(err)
@@ -438,7 +436,6 @@ func FirewallRegProc(c echo.Context) error {
 			"status":  "fail",
 		})
 	}
-
 
 	paramSecurityGroupID := c.Param("securityGroupID")
 
@@ -454,10 +451,9 @@ func FirewallRegProc(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":           "success",
 		"status":            respStatus.StatusCode,
-		"SecurityGroupInfo": resultSecurityGroupInfo,
+		"securityGroupInfo": resultSecurityGroupInfo,
 	})
 }
-
 
 // firewall rule 삭제 :
 func FirewallDelProc(c echo.Context) error {
@@ -482,8 +478,7 @@ func FirewallDelProc(c echo.Context) error {
 		})
 	}
 
-	respMessage, respStatus := service.DelFirewallRules(defaultNameSpaceID, paramSecurityGroupID, firewallRuleReq)
-	fmt.Println("=============respMessage =============", respMessage)
+	resultSecurityGroupInfo, respStatus := service.DelFirewallRules(defaultNameSpaceID, paramSecurityGroupID, firewallRuleReq)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -493,8 +488,9 @@ func FirewallDelProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": respMessage.Message,
-		"status":  respStatus.StatusCode,
+		"message":           "success",
+		"status":            respStatus.StatusCode,
+		"securityGroupInfo": resultSecurityGroupInfo,
 	})
 }
 
@@ -681,7 +677,6 @@ func SshKeyDelProc(c echo.Context) error {
 		"status":  respStatus.StatusCode,
 	})
 }
-
 
 func SshKeyUpdateProc(c echo.Context) error {
 	log.Println("SshKeyUpdateProc : ")
