@@ -809,7 +809,7 @@ function saveNewCredential() {
     var credentialInfo = "";
     // provider에 따라 사용하는 key가 불규칙적임.
 
-    if (providerName == "AWS" || providerName == "TENCENT" ) {
+    if (providerName == "AWS" || providerName == "TENCENT") {
         credentialInfo = {
             CredentialName: credentialName,
             ProviderName: providerName,
@@ -1132,12 +1132,12 @@ function selCredentialProvider(providerName) {
 }
 
 // Map 관련 설정
-function setMap(locationInfo){
+function setMap(locationInfo) {
     //show_mcis2(url,JZMap);
     //function show_mcis2(url, map){
     // var JZMap = map;
 
-    if( locationInfo == undefined) {
+    if (locationInfo == undefined) {
         var locationInfo = new Object();
         locationInfo.id = "1"
         locationInfo.name = "pin"
@@ -1167,3 +1167,34 @@ function setMap(locationInfo){
 }
 
 // Map 관련 설정 끝.
+
+function inspectResourcesList() {
+    var connectionName = $("#inspectResourceConnectionName").val()
+    var resourceType = $("#inspectResourcesType").val()
+
+    var url = "/setting/resources/inspectresources/list"
+
+    var obj = {
+        connectionName: connectionName,
+        resourceType: resourceType
+    }
+
+    axios.post(url, obj, {
+
+    }).then(result => {
+        console.log("inspect: ", result);
+        if (result.status == 200 || result.status == 201) {
+
+        } else {
+            commonAlert("Set Inspect Resource List Fail")
+        }
+
+
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage)
+    });
+}

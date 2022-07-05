@@ -331,6 +331,7 @@ func main() {
 			"setting/connections/cloud/RegionModal",
 			"setting/connections/cloud/CredentialModal",
 			"setting/connections/cloud/DriverModal",
+			"setting/connections/cloud/InspectModal",
 			"templates/Footer",
 		},
 		DisableCache: true,
