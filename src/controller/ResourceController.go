@@ -65,7 +65,9 @@ func VpcMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	optionParam := c.QueryParam("option")
-	vNetInfoList, respStatus := service.GetVnetListByOption(defaultNameSpaceID, optionParam)
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
+	vNetInfoList, respStatus := service.GetVnetListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/NetworkMng", // 파일명
@@ -107,8 +109,10 @@ func GetVpcList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
 	if optionParam == "id" {
-		vNetInfoList, respStatus := service.GetVnetListByID(defaultNameSpaceID)
+		vNetInfoList, respStatus := service.GetVnetListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -123,7 +127,7 @@ func GetVpcList(c echo.Context) error {
 			"VNetList":           vNetInfoList,
 		})
 	} else {
-		vNetInfoList, respStatus := service.GetVnetListByOption(defaultNameSpaceID, optionParam)
+		vNetInfoList, respStatus := service.GetVnetListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -258,7 +262,11 @@ func SecirityGroupMngForm(c echo.Context) error {
 	store.Save()
 	log.Println(" nsList  ", nsList)
 
-	securityGroupInfoList, respStatus := service.GetSecurityGroupListByOption(defaultNameSpaceID, "")
+	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
+
+	securityGroupInfoList, respStatus := service.GetSecurityGroupListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/SecurityGroupMng", // 파일명
@@ -298,9 +306,11 @@ func GetSecirityGroupList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
 
 	if optionParam == "id" {
-		securityGroupInfoList, respStatus := service.GetSecurityGroupListByOptionID(defaultNameSpaceID, optionParam)
+		securityGroupInfoList, respStatus := service.GetSecurityGroupListByOptionID(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -314,7 +324,7 @@ func GetSecirityGroupList(c echo.Context) error {
 			"SecurityGroupList":  securityGroupInfoList,
 		})
 	} else {
-		securityGroupInfoList, respStatus := service.GetSecurityGroupListByOption(defaultNameSpaceID, optionParam)
+		securityGroupInfoList, respStatus := service.GetSecurityGroupListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -522,7 +532,9 @@ func SshKeyMngForm(c echo.Context) error {
 	log.Println(" nsList  ", nsList)
 
 	optionParam := c.QueryParam("option")
-	sshKeyInfoList, respStatus := service.GetSshKeyInfoListByOption(defaultNameSpaceID, optionParam)
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
+	sshKeyInfoList, respStatus := service.GetSshKeyInfoListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/SshKeyMng", // 파일명
@@ -560,8 +572,10 @@ func GetSshKeyList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
 	if optionParam == "id" {
-		sshKeyInfoList, respStatus := service.GetSshKeyInfoListByID(defaultNameSpaceID)
+		sshKeyInfoList, respStatus := service.GetSshKeyInfoListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -575,7 +589,7 @@ func GetSshKeyList(c echo.Context) error {
 			"SshKeyList":         sshKeyInfoList,
 		})
 	} else {
-		sshKeyInfoList, respStatus := service.GetSshKeyInfoListByOption(defaultNameSpaceID, optionParam)
+		sshKeyInfoList, respStatus := service.GetSshKeyInfoListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -739,7 +753,11 @@ func VirtualMachineImageMngForm(c echo.Context) error {
 	store.Save()
 	log.Println(" nsList  ", nsList)
 
-	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
+
+	virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/VirtualMachineImageMng", // 파일명
@@ -778,9 +796,11 @@ func GetVirtualMachineImageList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
 
 	if optionParam == "id" {
-		virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoListByID(defaultNameSpaceID)
+		virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -795,7 +815,7 @@ func GetVirtualMachineImageList(c echo.Context) error {
 			"VirtualMachineImageList": virtualMachineImageInfoList,
 		})
 	} else {
-		virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoListByOption(defaultNameSpaceID, optionParam)
+		virtualMachineImageInfoList, respStatus := service.GetVirtualMachineImageInfoListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -1123,7 +1143,11 @@ func VmSpecMngForm(c echo.Context) error {
 	store.Save()
 	log.Println(" nsList  ", nsList)
 
-	vmSpecInfoList, respStatus := service.GetVmSpecInfoList(defaultNameSpaceID)
+	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
+
+	vmSpecInfoList, respStatus := service.GetVmSpecInfoListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return echotemplate.Render(c, http.StatusOK,
 			"setting/resources/VirtualMachineSpecMng", // 파일명
@@ -1161,9 +1185,11 @@ func GetVmSpecList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
 
 	if optionParam == "id" {
-		vmSpecInfoList, respStatus := service.GetVmSpecInfoListByID(defaultNameSpaceID)
+		vmSpecInfoList, respStatus := service.GetVmSpecInfoListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -1178,7 +1204,7 @@ func GetVmSpecList(c echo.Context) error {
 			"VmSpecList":         vmSpecInfoList,
 		})
 	} else {
-		vmSpecInfoList, respStatus := service.GetVmSpecInfoListByOption(defaultNameSpaceID, optionParam)
+		vmSpecInfoList, respStatus := service.GetVmSpecInfoListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,

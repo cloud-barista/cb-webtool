@@ -127,7 +127,7 @@ func GetVnetList(nameSpaceID string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
 }
 
 // ID목록만 조회
-func GetVnetListByID(nameSpaceID string) ([]string, model.WebStatus) {
+func GetVnetListByID(nameSpaceID string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
 	fmt.Println("GetVnetList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/vNet"
 	var paramMapper = make(map[string]string)
@@ -138,6 +138,10 @@ func GetVnetListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	//	urlParam += "?option=" + optionParam
 	//}
 	urlParam += "?option=id"
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
 
@@ -167,7 +171,7 @@ func GetVnetListByID(nameSpaceID string) ([]string, model.WebStatus) {
 }
 
 // List 조회시 optionParam 추가
-func GetVnetListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
+func GetVnetListByOption(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
 	fmt.Println("GetVnetListByOption ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/vNet"
 	var paramMapper = make(map[string]string)
@@ -176,6 +180,10 @@ func GetVnetListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbVNe
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	}
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
 	}
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/vNet"
@@ -380,7 +388,7 @@ func GetSecurityGroupList(nameSpaceID string) ([]tbmcir.TbSecurityGroupInfo, mod
 }
 
 // ID만 조회
-func GetSecurityGroupListByOptionID(nameSpaceID string, optionParam string) ([]string, model.WebStatus) {
+func GetSecurityGroupListByOptionID(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
 	fmt.Println("GetSecurityGroupListByOptionID ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/securityGroup"
 	var paramMapper = make(map[string]string)
@@ -389,6 +397,12 @@ func GetSecurityGroupListByOptionID(nameSpaceID string, optionParam string) ([]s
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
+	}
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
 	}
 
 	url := util.TUMBLEBUG + urlParam
@@ -419,7 +433,7 @@ func GetSecurityGroupListByOptionID(nameSpaceID string, optionParam string) ([]s
 }
 
 // SecurityGroupList 조회 시 Option에 해당하는 값만 조회. GetSecurityGroupList와 TB 호출은 동일하나 option 사용으로 받아오는 param이 다름
-func GetSecurityGroupListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbSecurityGroupInfo, model.WebStatus) {
+func GetSecurityGroupListByOption(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcir.TbSecurityGroupInfo, model.WebStatus) {
 	fmt.Println("GetSecurityGroupListByOption ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/securityGroup"
 	var paramMapper = make(map[string]string)
@@ -428,6 +442,12 @@ func GetSecurityGroupListByOption(nameSpaceID string, optionParam string) ([]tbm
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
+	}
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
 	}
 
 	url := util.TUMBLEBUG + urlParam
@@ -644,7 +664,7 @@ func GetSshKeyInfoList(nameSpaceID string) ([]tbmcir.TbSshKeyInfo, model.WebStat
 
 }
 
-func GetSshKeyInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
+func GetSshKeyInfoListByID(nameSpaceID string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
 	fmt.Println("GetSshKeyInfoListByID ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/sshKey"
 	var paramMapper = make(map[string]string)
@@ -652,6 +672,10 @@ func GetSshKeyInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	//url := util.TUMBLEBUG + urlParam
 	urlParam += "?option=id"
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
 
@@ -681,7 +705,7 @@ func GetSshKeyInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	return sshKeyList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbSshKeyInfo, model.WebStatus) {
+func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcir.TbSshKeyInfo, model.WebStatus) {
 	fmt.Println("GetSshKeyInfoList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/sshKey"
 	var paramMapper = make(map[string]string)
@@ -690,6 +714,10 @@ func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	}
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
 	}
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/sshKey"
@@ -929,7 +957,7 @@ func GetVirtualMachineImageInfoList(nameSpaceID string) ([]tbmcir.TbImageInfo, m
 }
 
 // VirtualMachineImage 목록에서 Option으로 ID 목록만 가져오는 function
-func GetVirtualMachineImageInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
+func GetVirtualMachineImageInfoListByID(nameSpaceID string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
 	fmt.Println("GetVirtualMachineImageInfoListByID ************ : ")
 	// var originalUrl = "/ns/{nsId}/resources/image"
 	var originalUrl = "/ns/{nsId}/resources/image"
@@ -943,6 +971,10 @@ func GetVirtualMachineImageInfoListByID(nameSpaceID string) ([]string, model.Web
 	//	urlParam += "?option=" + optionParam
 	//}
 	urlParam += "?option=id"
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
 	url := util.TUMBLEBUG + urlParam
 	//url := util.TUMBLEBUG + urlParam + optionParamVal
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/image"
@@ -973,7 +1005,7 @@ func GetVirtualMachineImageInfoListByID(nameSpaceID string) ([]string, model.Web
 	return virtualMachineImageIdList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbImageInfo, model.WebStatus) {
+func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcir.TbImageInfo, model.WebStatus) {
 	fmt.Println("GetVirtualMachineImageInfoListByOption ************ : ")
 	// var originalUrl = "/ns/{nsId}/resources/image"
 	var originalUrl = "/ns/{nsId}/resources/image"
@@ -985,6 +1017,12 @@ func GetVirtualMachineImageInfoListByOption(nameSpaceID string, optionParam stri
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
+	}
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
 	}
 	url := util.TUMBLEBUG + urlParam
 	//url := util.TUMBLEBUG + urlParam + optionParamVal
@@ -1566,7 +1604,7 @@ func GetVmSpecInfoList(nameSpaceID string) ([]tbmcir.TbSpecInfo, model.WebStatus
 	return vmSpecList.Spec, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetVmSpecInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
+func GetVmSpecInfoListByID(nameSpaceID string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
 	fmt.Println("GetVMSpecInfoList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/spec"
 	var paramMapper = make(map[string]string)
@@ -1579,6 +1617,10 @@ func GetVmSpecInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	//	urlParam += "?option=" + optionParam
 	//}
 	urlParam += "?option=id"
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"
 
@@ -1604,7 +1646,7 @@ func GetVmSpecInfoListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	return vmSpecList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetVmSpecInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir.TbSpecInfo, model.WebStatus) {
+func GetVmSpecInfoListByOption(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcir.TbSpecInfo, model.WebStatus) {
 	fmt.Println("GetVMSpecInfoList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/spec"
 	var paramMapper = make(map[string]string)
@@ -1614,6 +1656,12 @@ func GetVmSpecInfoListByOption(nameSpaceID string, optionParam string) ([]tbmcir
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
+	}
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
 	}
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/resources/spec"

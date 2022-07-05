@@ -216,13 +216,19 @@ function getCommonDriverList(caller, optionParam) {
     });
 }
 
-function getCommonNetworkList(caller, optionParam) {
+function getCommonNetworkList(caller, optionParam, filterKey, filterVal) {
     console.log("vnet : ");
 
     var url = "/setting/resources/network/list"
 
     if (optionParam != "") {
         url += "?option=" + optionParam
+    } else {
+        url += "?option="
+    }
+    if (filterKey != "" || filterKey != undefined) {
+        url += "&filterKey=" + filterKey
+        url += "&filterVal=" + filterVal
     }
 
     axios.get(url, {
@@ -246,11 +252,17 @@ function getCommonNetworkList(caller, optionParam) {
 }
 
 
-function getCommonSecurityGroupList(caller, sortType, optionParam) {
+function getCommonSecurityGroupList(caller, sortType, optionParam, filterKey, filterVal) {
     var url = "/setting/resources/securitygroup/list";
 
     if (optionParam != "") {
         url += "?option=" + optionParam
+    } else {
+        url += "?option="
+    }
+    if (filterKey != "" || filterKey != undefined) {
+        url += "&filterKey=" + filterKey
+        url += "&filterVal=" + filterVal
     }
 
     axios.get(url, {
@@ -283,11 +295,17 @@ function getCommonSecurityGroupList(caller, sortType, optionParam) {
     });
 }
 
-function getCommonSshKeyList(caller, optionParam) {
+function getCommonSshKeyList(caller, optionParam, filterKey, filterVal) {
     var url = "/setting/resources/sshkey/list"
 
     if (optionParam != "") {
         url += "?option=" + optionParam
+    } else {
+        url += "?option="
+    }
+    if (filterKey != "" || filterKey != undefined) {
+        url += "&filterKey=" + filterKey
+        url += "&filterVal=" + filterVal
     }
 
     axios.get(url, {
@@ -314,13 +332,19 @@ function getCommonSshKeyList(caller, optionParam) {
 
 // connection 정보가 바뀔 때 해당 connection에 등록 된 vmi(virtual machine image) 목록 조회.
 // 공통으로 사용해야하므로 호출후 결과만 리턴... 그러나, ajax로 호출이라 결과 받기 전에 return되므로 해결방안 필요
-function getCommonVirtualMachineImageList(caller, sortType, optionParam) {
+function getCommonVirtualMachineImageList(caller, sortType, optionParam, filterKey, filterVal) {
     var sortType = sortType;
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/machineimage/list"
 
     if (optionParam != "") {
         url += "?option=" + optionParam
+    } else {
+        url += "?option="
+    }
+    if (filterKey != "" || filterKey != undefined) {
+        url += "&filterKey=" + filterKey
+        url += "&filterVal=" + filterVal
     }
 
     axios.get(url, {
@@ -361,14 +385,22 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam) {
 }
 
 
-function getCommonVirtualMachineSpecList(caller, sortType, optionParam) {
+function getCommonVirtualMachineSpecList(caller, sortType, optionParam, filterKey, filterVal) {
     console.log("CommonSpecCaller : " + caller);
     console.log("CommonSpecSortType : " + sortType);
+    console.log("filterKey : " + filterKey);
+    console.log("filterVal : " + filterVal);
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/vmspec/list"
 
     if (optionParam != "") {
         url += "?option=" + optionParam
+    } else {
+        url += "?option="
+    }
+    if (filterKey != "" || filterKey != undefined) {
+        url += "&filterKey=" + filterKey
+        url += "&filterVal=" + filterVal
     }
 
     axios.get(url, {

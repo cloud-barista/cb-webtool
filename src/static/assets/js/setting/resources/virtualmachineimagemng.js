@@ -198,7 +198,7 @@ function deleteVirtualMachineImage() {
 function getVirtualMachineImageList(sort_type) {
     console.log("여기 : ", sort_type);
     var sortType = sort_type;
-    console.log("sortType : ", sortType);
+    console.log("sortType : ", sortType)
 
     getCommonVirtualMachineImageList("virtualmachineimagemng", sortType)
     // console.log(sort_type);

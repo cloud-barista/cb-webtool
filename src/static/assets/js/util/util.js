@@ -580,52 +580,63 @@ function commonPromptOk() {
             filterTable(targetObjId, "Credential", targetValue)
         }
     } else if (targetAction == 'RsFltVPCName') {// Name이라는 Column을 Filtering
+        var filterKey = "name"
         if (targetValue) {
-            filterTable(targetObjId, "VPC Name", targetValue)
+            getCommonSecurityGroupList("", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltCIDRBlock') {// Name이라는 Column을 Filtering
+        var filterKey = "cidrBlock"
         if (targetValue) {
-            filterTable(targetObjId, "CIDR Block", targetValue)
+            getCommonSecurityGroupList("", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltSecurityGroupName') {// Name이라는 Column을 Filtering
+        var filterKey = "cspSecurityGroupName"
         if (targetValue) {
-            filterTable(targetObjId, "SecurityGroup Name", targetValue)
+            getCommonSecurityGroupList("securitygroupmng", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltConnectionName') {// Name이라는 Column을 Filtering
+        var filterKey = "connectionName"
         if (targetValue) {
-            filterTable(targetObjId, "Connection Name", targetValue)
+            getCommonSecurityGroupList("securitygroupmng", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltSshName') {// Name이라는 Column을 Filtering
         if (targetValue) {
             filterTable(targetObjId, "Name", targetValue)
         }
     } else if (targetAction == 'RsFltSshConnName') {// Name이라는 Column을 Filtering
+        var filterKey = "connectionName"
         if (targetValue) {
-            filterTable(targetObjId, "Connection Name", targetValue)
+            getCommonSshKeyList("", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltSshKeyName') {// Name이라는 Column을 Filtering
+        var filterKey = "name"
         if (targetValue) {
-            filterTable(targetObjId, "SSH KEY Name", targetValue)
+            getCommonSshKeyList("", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltSrvImgId') {// Name이라는 Column을 Filtering
+        var filterKey = "cspImageId"
         if (targetValue) {
-            filterTable(targetObjId, "Image ID", targetValue)
+            getCommonVirtualMachineImageList("virtualmachineimagemng", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltSrvImgName') {// Name이라는 Column을 Filtering
+        var filterKey = "name"
         if (targetValue) {
-            filterTable(targetObjId, "Image Name", targetValue)
+            getCommonVirtualMachineImageList("virtualmachineimagemng", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltSrvSpecName') {// Name이라는 Column을 Filtering
+        var filterKey = "name"
         if (targetValue) {
-            filterTable(targetObjId, "Name", targetValue)
+            getCommonVirtualMachineSpecList("virtualmachinespecmng", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltSrvSpecConnName') {// Name이라는 Column을 Filtering
+        var filterKey = "connectionName"
         if (targetValue) {
-            filterTable(targetObjId, "Connection Name", targetValue)
+            getCommonVirtualMachineSpecList("virtualmachinespecmng", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'RsFltSrvCspSpecName') {// Name이라는 Column을 Filtering
+        var filterKey = "cspSpecName"
         if (targetValue) {
-            filterTable(targetObjId, "CSP Spec Name", targetValue)
+            getCommonVirtualMachineSpecList("virtualmachinespecmng", "name", "", filterKey, targetValue)
         }
     } else if (targetAction == 'NSFltName') {// Name이라는 Column을 Filtering
         if (targetValue) {
