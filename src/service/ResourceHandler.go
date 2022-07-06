@@ -1300,7 +1300,7 @@ func GetInspectResourceList(inspectResource *tbcommon.RestInspectResourcesReques
 		return &inspectResourcesResponse, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
 	}
 
-	json.NewDecoder(respBody).Decode(inspectResourcesResponse)
+	json.NewDecoder(respBody).Decode(&inspectResourcesResponse)
 	fmt.Println(inspectResourcesResponse)
 
 	return &inspectResourcesResponse, model.WebStatus{StatusCode: respStatus}

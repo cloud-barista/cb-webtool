@@ -1168,7 +1168,7 @@ function setMap(locationInfo) {
 
 // Map 관련 설정 끝.
 
-function inspectResourcesList() {
+function setInspectResourcesList() {
     var connectionName = $("#inspectResourceConnectionName").val()
     var resourceType = $("#inspectResourcesType").val()
 
@@ -1184,7 +1184,9 @@ function inspectResourcesList() {
     }).then(result => {
         console.log("inspect: ", result);
         if (result.status == 200 || result.status == 201) {
-
+            console.log(result.data.inspectResource.resources);
+            var data = result.data.inspectResource.resources
+            setInspectResourcesListCallbackSuccess(data)
         } else {
             commonAlert("Set Inspect Resource List Fail")
         }
@@ -1197,4 +1199,75 @@ function inspectResourcesList() {
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage)
     });
+}
+
+function setInspectResourcesListCallbackSuccess(data) {
+    var onCspTotal = data.onCspTotal.info
+    var onSpider = data.onSpider.info
+    var onTumblebug = data.onTumblebug.info
+    var html = ""
+    var totalList = new Array()
+
+    if (onCspTotal) {
+        onCspTotal.map((item, index) => (
+            totalList.push({
+                id: item.idByCsp,
+                name: item.refNameOrId,
+                spider: "",
+                tumblebug: "",
+            })
+        ))
+    }
+
+    if (onSpider) {
+        onSpider.map((spider, index) => {
+            var isExist = false
+            totalList.map((item, idx) => {
+                if (item.id == spider.idByCsp) {
+                    item.spider = spider.idBySp
+                    isExist = true
+                }
+            })
+
+            // onCspTotal에 없는 리소스인 경우 추가
+            if (!isExist) {
+                totalList.push({
+                    id: spider.idByCsp,
+                    name: "",
+                    spider: spider.idBySp,
+                    tumblebug: "",
+                })
+            }
+        })
+    }
+
+    if (onTumblebug) {
+        onTumblebug.map((tumblebug, index) => {
+            totalList.map((item, idx) => {
+                if (item.id == tumblebug.idByCsp) {
+                    item.tumblebug = tumblebug.idByTb
+                }
+            })
+
+        })
+    }
+
+    console.log(totalList);
+
+    if (totalList.length == 0) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="3">No Data</td></tr>'
+    } else {
+        totalList.map((item, index) => {
+            html += '<tr>'
+                + '<input type="hidden" id="inspect_resource_id" value=' + item.id + '/>'
+                + '<td class="overlay hidden" data-th="name">' + item.name + '</td>'
+                + '<td class="overlay hidden" data-th="spider">' + item.spider + '</td>'
+                + '<td class="overlay hidden" data-th="tumblebug">' + item.tumblebug + '</td>'
+                + '</tr>'
+        })
+    }
+
+    $("#inspectResourcesList").empty()
+    $("#inspectResourcesList").append(html)
+
 }

@@ -21,7 +21,7 @@
                                     <label class="assistLabel">Connection Name</label>
                                     <select class="selectbox white pline w3" name="inspectResourceConnectionName"
                                         id="inspectResourceConnectionName">
-                                        <option value="" selected>Select Cloud Provider</option>
+                                        <option value="" selected>Select Conncetion Name</option>
                                         {{ range $item := .CloudConnectionConfigList}}
                                         <option value="{{ $item.ConfigName }}">{{ $item.ConfigName }}</option>
                                         {{ end }}
@@ -32,7 +32,7 @@
                                     <label class="assistLabel"></span>Resource Type</label>
                                     <select class="selectbox white pline w3" name="inspectResourcesType"
                                         id="inspectResourcesType">
-                                        <option value="" selected>Selected ConnectionName</option>
+                                        <option value="" selected>Selected Resource Type</option>
                                         <option value="vNet">VNet</option>
                                         <option value="securityGroup">Security Group</option>
                                         <option value="sshKey">SSH Key</option>
@@ -41,7 +41,7 @@
                                 </li>
                                 <li>
                                     <input type="submit" name="" class="btn_search_image" title="" value=""
-                                        onclick="inspectResourcesList()" />
+                                        onclick="setInspectResourcesList()" />
                                 </li>
                             </ul>
                         </div>
@@ -50,14 +50,11 @@
                         <div class="dtbox scrollbar-inner">
                             <div class="dataTable dt_overlay">
                                 <table cellpadding="0" cellspacing="0" summary="" id="inspectResourcesListTable">
-                                    <!-- <colgroup><col width="35%"><col width="25%"><col width=""></colgroup> -->
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Status</th>
-                                            <th>GuestOS</th>
-                                            <th>IID nameId</th>
-                                            <th>IID systemId</th>
+                                            <th>Spider</th>
+                                            <th>Tumblebug</th>
                                         </tr>
                                     </thead>
                                     <tbody id="inspectResourcesList">
@@ -74,7 +71,6 @@
 
                 <div class="btnbox">
                     <div class="btn_right">
-                        <button name="" value="" class="btn_co btn_cr_g" onclick=''><span>OK</span></button>
                         <button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
