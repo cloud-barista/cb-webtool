@@ -1,6 +1,6 @@
 ```
 [NOTE]
-cb-webtool is currently under development. (the latest version is 0.5 affogato)
+cb-webtool is currently under development. (the latest version is v0.6.0 (Cafe Latte))
 So, we do not recommend using the current release in production.
 Please note that the functionalities of cb-webtool are not stable and secure yet.
 If you have any difficulties in using cb-webtool, please let us know.
@@ -29,10 +29,10 @@ cb-webtool은 1.16 이상의 Go 버전이 설치된 다양한 환경에서 실�
 
 ## [의존성]
 cb-webtool은 내부적으로 cb-tumblebug & cb-spider & cb-dragonfly의 개방형 API를 이용하기 때문에 각 서버의 연동이 필요합니다.<br>
-- [https://github.com/cloud-barista/cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug) README 참고하여 설치 및 실행 (검증된 버전 : cb-tumblebug v0.4.18)
-- [https://github.com/cloud-barista/cb-spider](https://github.com/cloud-barista/cb-spider) README 참고하여 설치 및 실행 (검증된 버전 : cb-spider v0.4.19)
-- [https://github.com/cloud-barista/cb-dragonfly](https://github.com/cloud-barista/cb-dragonfly) README 참고하여 설치 및 실행 (검증된 버전 : cb-dragonfly v0.2.8)
-- [https://github.com/cloud-barista/cb-mcks](https://github.com/cloud-barista/cb-mcks) README 참고하여 설치 및 실행 (검증된 버전 : cb-mcks v0.4.6)
+- [https://github.com/cloud-barista/cb-tumblebug](https://github.com/cloud-barista/cb-tumblebug) README 참고하여 설치 및 실행 (검증된 버전 : cb-tumblebug v0.5.11)
+- [https://github.com/cloud-barista/cb-spider](https://github.com/cloud-barista/cb-spider) README 참고하여 설치 및 실행 (검증된 버전 : cb-spider v0.5.12-p1)
+- [https://github.com/cloud-barista/cb-dragonfly](https://github.com/cloud-barista/cb-dragonfly) README 참고하여 설치 및 실행 (검증된 버전 : cb-dragonfly v0.5.2)
+- [https://github.com/cloud-barista/cb-mcks](https://github.com/cloud-barista/cb-mcks) README 참고하여 설치 및 실행 (검증된 버전 : cb-mcks v0.5.3)
 
 <br>
 
