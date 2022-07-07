@@ -14,6 +14,12 @@ $(document).ready(function () {
         changePage(targetUrl)
     })
 
+
+    $('#Inspect_Resources_All').on('shown.bs.modal', function () {// bootstrap 3 또는 4
+        setInspectResourcesListAll()
+    });
+
+
     // css class 의 .btn_ok 에 대한 event를 따로 정의 함.
     // $('#AddBox .btn_ok.register').click(function(){
     // }
@@ -1186,7 +1192,7 @@ function setInspectResourcesList() {
         if (result.status == 200 || result.status == 201) {
             console.log(result.data.inspectResource.resources);
             var data = result.data.inspectResource.resources
-            setInspectResourcesListCallbackSuccess(data)
+            inspectResourcesListCallbackSuccess(data)
         } else {
             commonAlert("Set Inspect Resource List Fail")
         }
@@ -1201,7 +1207,7 @@ function setInspectResourcesList() {
     });
 }
 
-function setInspectResourcesListCallbackSuccess(data) {
+function inspectResourcesListCallbackSuccess(data) {
     var onCspTotal = data.onCspTotal.info
     var onSpider = data.onSpider.info
     var onTumblebug = data.onTumblebug.info
@@ -1269,5 +1275,59 @@ function setInspectResourcesListCallbackSuccess(data) {
 
     $("#inspectResourcesList").empty()
     $("#inspectResourcesList").append(html)
+
+}
+
+function setInspectResourcesListAll() {
+    var url = "/setting/resources/inspectresourcesoverview"
+
+    axios.post(url, {
+
+    }).then(result => {
+        console.log("inspect all: ", result);
+        if (result.status == 200 || result.status == 201) {
+            console.log(result.data.inspectResourceAllResult);
+            var data = result.data.inspectResourceAllResult
+            inspectResourcesListAllCallbackSuccess(data)
+        } else {
+            commonAlert("Set Inspect Resource List Fail")
+        }
+
+
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage)
+    });
+}
+
+function inspectResourcesListAllCallbackSuccess(data) {
+    var inspectResult = data.inspectResult
+    var cspOnlyOverview = data.cspOnlyOverview
+    var tumblebugOverview = data.tumblebugOverview
+    var inspectResult = data.inspectResult
+    var html = ""
+    var cspOnlyOverviewHtml = 'VNet:' + cspOnlyOverview.vNet + ', Security Group: ' + cspOnlyOverview.securityGroup + ', SSH Key: ' + cspOnlyOverview.sshKey + ', VM: ' + cspOnlyOverview.vm
+    var tumblebugHtml = 'VNet:' + tumblebugOverview.vNet + ', Security Group: ' + tumblebugOverview.securityGroup + ', SSH Key: ' + tumblebugOverview.sshKey + ', VM: ' + tumblebugOverview.vm
+
+    inspectResult.map((item, index) => {
+        html += '<tr>'
+            + '<input type="hidden" id="inspect_resource_all_id" value=' + item.connectionName + '/>'
+            + '<td class="overlay hidden" data-th="connection_name">' + item.connectionName + '</td>'
+            + '<td class="overlay hidden" data-th="csp_only_resource"> VNet:' + item.cspOnlyOverview.vNet + '<br/> Security Group: ' + item.cspOnlyOverview.securityGroup + '<br/> SSH Key: ' + item.cspOnlyOverview.sshKey + '<br/> VM: ' + item.cspOnlyOverview.vm + '</td>'
+            + '<td class="overlay hidden" data-th="tumblebug_resource"> VNet:' + item.tumblebugOverview.vNet + '<br/> Security Group: ' + item.tumblebugOverview.securityGroup + '<br/> SSH Key: ' + item.tumblebugOverview.sshKey + '<br/> VM: ' + item.tumblebugOverview.vm + '</td>'
+            + '</tr>'
+    })
+
+    $("#inspect_csp_only").empty()
+    $("#inspect_csp_only").append(cspOnlyOverviewHtml)
+
+    $("#inspect_tumblebug").empty()
+    $("#inspect_tumblebug").append(tumblebugHtml)
+
+    $("#inspectResourcesAllList").empty()
+    $("#inspectResourcesAllList").append(html)
 
 }

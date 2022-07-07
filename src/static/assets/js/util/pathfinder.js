@@ -221,12 +221,12 @@ function getCommonNetworkList(caller, optionParam, filterKey, filterVal) {
 
     var url = "/setting/resources/network/list"
 
-    if (optionParam != "") {
+    if (optionParam != "" && optionParam != undefined) {
         url += "?option=" + optionParam
     } else {
         url += "?option="
     }
-    if (filterKey != "" || filterKey != undefined) {
+    if (filterKey != "" && filterKey != undefined) {
         url += "&filterKey=" + filterKey
         url += "&filterVal=" + filterVal
     }
@@ -255,12 +255,12 @@ function getCommonNetworkList(caller, optionParam, filterKey, filterVal) {
 function getCommonSecurityGroupList(caller, sortType, optionParam, filterKey, filterVal) {
     var url = "/setting/resources/securitygroup/list";
 
-    if (optionParam != "") {
+    if (optionParam != "" && optionParam != undefined) {
         url += "?option=" + optionParam
     } else {
         url += "?option="
     }
-    if (filterKey != "" || filterKey != undefined) {
+    if (filterKey != "" && filterKey != undefined) {
         url += "&filterKey=" + filterKey
         url += "&filterVal=" + filterVal
     }
@@ -298,12 +298,12 @@ function getCommonSecurityGroupList(caller, sortType, optionParam, filterKey, fi
 function getCommonSshKeyList(caller, optionParam, filterKey, filterVal) {
     var url = "/setting/resources/sshkey/list"
 
-    if (optionParam != "") {
+    if (optionParam != "" && optionParam != undefined) {
         url += "?option=" + optionParam
     } else {
         url += "?option="
     }
-    if (filterKey != "" || filterKey != undefined) {
+    if (filterKey != "" && filterKey != undefined) {
         url += "&filterKey=" + filterKey
         url += "&filterVal=" + filterVal
     }
@@ -337,12 +337,12 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam, filterK
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/machineimage/list"
 
-    if (optionParam != "") {
+    if (optionParam != "" && optionParam != undefined) {
         url += "?option=" + optionParam
     } else {
         url += "?option="
     }
-    if (filterKey != "" || filterKey != undefined) {
+    if (filterKey != "" && filterKey != undefined) {
         url += "&filterKey=" + filterKey
         url += "&filterVal=" + filterVal
     }
@@ -393,15 +393,17 @@ function getCommonVirtualMachineSpecList(caller, sortType, optionParam, filterKe
     // var url = CommonURL + "/ns/" + NAMESPACE + "/resources/image";
     var url = "/setting/resources" + "/vmspec/list"
 
-    if (optionParam != "") {
+    if (optionParam != "" && optionParam != undefined) {
         url += "?option=" + optionParam
     } else {
         url += "?option="
     }
-    if (filterKey != "" || filterKey != undefined) {
+    if (filterKey != "" && filterKey != undefined) {
         url += "&filterKey=" + filterKey
         url += "&filterVal=" + filterVal
     }
+
+    console.log("url: ", url);
 
     axios.get(url, {
         headers: {

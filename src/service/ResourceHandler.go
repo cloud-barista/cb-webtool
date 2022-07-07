@@ -1333,7 +1333,7 @@ func GetInspectResourcesOverview() (*tbmcis.InspectResourceAllResult, model.WebS
 		return &inspectResourceAllResult, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
 	}
 
-	json.NewDecoder(respBody).Decode(inspectResourceAllResult)
+	json.NewDecoder(respBody).Decode(&inspectResourceAllResult)
 	fmt.Println(inspectResourceAllResult)
 
 	return &inspectResourceAllResult, model.WebStatus{StatusCode: respStatus}

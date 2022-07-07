@@ -164,6 +164,7 @@ function getCloudConnectionListCallbackSuccess(caller, connectionConfigList, sor
 // MCIS 목록 조회 후 화면에 Set
 function getMcisListCallbackSuccess(caller, mcisList) {
     totalMcisListObj = mcisList;
+    console.log("total mcis:", totalMcisListObj);
     setToTalMcisStatus();// mcis상태 표시 를 위해 필요
     setTotalVmStatus();// mcis 의 vm들 상태표시 를 위해 필요
     setTotalConnection();// Mcis의 provider별 connection 표시를 위해 필요

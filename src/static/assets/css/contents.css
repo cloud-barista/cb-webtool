@@ -10296,6 +10296,14 @@ table tbody tr {
 	font-weight: 200;
 }
 
+.popup_editBox .modal-body .pop-body .pop-cont #inspect_csp_only {
+	margin-left: 20px;
+}
+
+.popup_editBox .modal-body .pop-body .pop-cont #inspect_tumblebug {
+	margin-left: 5px;
+}
+
 /*spec assist*/
 .popup_editBox .modal-body .pop-body .pop-cont .spec_box {
 	padding: 10px 25px 25px 25px;
