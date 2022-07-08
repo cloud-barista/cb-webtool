@@ -1,3 +1,18 @@
+# v.0.6.0-CafeLatte (2022.07.08)
+### API Change
+- cb-tumblebug 변경된 API 반영
+
+### Feature
+- MCIS/VM 생성 시 최적배치 기능 추가
+- MCIS 동적 생성 기능 추가
+- 리소스 Inspecting 기능 추가
+
+### Bug Fix
+- CSP 아이콘 출력 방식 개선
+- MCKS Add/Delete Node 보완
+
+
+
 # v.0.5.0-Affogato (2021.12.16)
 ### API Change
 - 성능개선 : MCIS/MCKS Manage에 go routin 적용
