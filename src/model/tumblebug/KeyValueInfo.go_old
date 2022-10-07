@@ -7,3 +7,6 @@ type KeyValueInfo struct {
 }
 
 type KeyValueInfos []KeyValueInfos
+
+
+// common.TBKeyValue.go 로 이동
