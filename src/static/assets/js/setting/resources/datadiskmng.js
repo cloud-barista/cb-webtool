@@ -25,19 +25,19 @@ $(document).ready(function () {
 
 // function goDelete() {
 function deleteDataDisk() {
-    var datadiskId = "";
+    var dataDiskId = "";
     var count = 0;
 
     $("input[name='chk']:checked").each(function () {
         count++;
-        datadiskId = datadiskId + $(this).val() + ",";
+        dataDiskId = dataDiskId + $(this).val() + ",";
     });
-    datadiskId = datadiskId.substring(0, datadiskId.lastIndexOf(","));
+    dataDiskId = dataDiskId.substring(0, dataDiskId.lastIndexOf(","));
 
-    console.log("datadiskId : ", datadiskId);
+    console.log("dataDiskId : ", dataDiskId);
     console.log("count : ", count);
 
-    if (datadiskId == '') {
+    if (dataDiskId == '') {
         commonAlert("삭제할 대상을 선택하세요.");
         return false;
     }
@@ -47,8 +47,8 @@ function deleteDataDisk() {
         return false;
     }
 
-    var url = "/setting/resources" + "/datadisk/del/" + datadiskId
-    console.log("del datadisk url : ", url);
+    var url = "/setting/resources" + "/datadisk/del/" + dataDiskId
+    console.log("del dataDisk url : ", url);
 
     axios.delete(url, {
         headers: {
@@ -60,7 +60,7 @@ function deleteDataDisk() {
         console.log(data);
         if (result.status == 200 || result.status == 201) {
             commonAlert(data.message)
-            displayDatadiskInfo("DEL_SUCCESS")
+            displayDataDiskInfo("DEL_SUCCESS")
         } else {
             commonAlert(result.data.error)
         }
@@ -83,8 +83,8 @@ function getDataDiskList(sort_type) {
         }
     }).then(result => {
         console.log("get VPC List : ", result.data);
-        // var data = result.data.datadisk;
-        var data = result.data.datadiskList;
+        // var data = result.data.dataDisk;
+        var data = result.data.dataDiskList;
 
         var html = ""
         var cnt = 0;
@@ -92,8 +92,8 @@ function getDataDiskList(sort_type) {
         if (data == null) {
             html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
 
-            $("#vpcList").empty()
-            $("#vpcList").append(html)
+            $("#dataDiskList").empty()
+            $("#dataDiskList").append(html)
 
             ModalDetail()
         } else {
@@ -110,8 +110,8 @@ function getDataDiskList(sort_type) {
                     ))
                 }
 
-                $("#vpcList").empty()
-                $("#vpcList").append(html)
+                $("#dataDiskList").empty()
+                $("#dataDiskList").append(html)
 
                 ModalDetail()
             }
@@ -125,7 +125,7 @@ function getDataDiskList(sort_type) {
     });
 }
 
-// datadisk목록에 Item 추가
+// dataDisk목록에 Item 추가
 function addDataDiskRow(item, index) {
     console.log("addDataDiskRow " + index);
     console.log(item)
@@ -173,12 +173,12 @@ function ModalDetail() {
     });
 }
 
-function displayDatadiskInfo(targetAction) {
+function displayDataDiskInfo(targetAction) {
     if (targetAction == "REG") {
-        $('#datadiskCreateBox').toggleClass("active");
-        $('#datadiskInfoBox').removeClass("view");
-        $('#datadiskListTable').removeClass("on");
-        var offset = $("#datadiskCreateBox").offset();
+        $('#dataDiskkCreateBox').toggleClass("active");
+        $('#dataDiskkInfoBox').removeClass("view");
+        $('#dataDiskkListTable').removeClass("on");
+        var offset = $("#dataDiskkCreateBox").offset();
         // var offset = $("#" + target+"").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 300);
 
@@ -187,13 +187,13 @@ function displayDatadiskInfo(targetAction) {
         $("#regDescription").val('')
         $("#regCidrBlock").val('')
         $("#regSubnet").val('')
-        goFocus('datadiskCreateBox');
+        goFocus('dataDiskkCreateBox');
     } else if (targetAction == "REG_SUCCESS") {
-        $('#datadiskCreateBox').removeClass("active");
-        $('#datadiskInfoBox').removeClass("view");
-        $('#datadiskListTable').addClass("on");
+        $('#dataDiskkCreateBox').removeClass("active");
+        $('#dataDiskkInfoBox').removeClass("view");
+        $('#dataDiskkListTable').addClass("on");
 
-        var offset = $("#datadiskCreateBox").offset();
+        var offset = $("#dataDiskkCreateBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
 
         // form 초기화
@@ -203,28 +203,28 @@ function displayDatadiskInfo(targetAction) {
         $("#regSubnet").val('')
         getVpcList("name");
     } else if (targetAction == "DEL") {
-        $('#datadiskCreateBox').removeClass("active");
-        $('#datadiskInfoBox').addClass("view");
-        $('#datadiskListTable').removeClass("on");
+        $('#dataDiskkCreateBox').removeClass("active");
+        $('#dataDiskkInfoBox').addClass("view");
+        $('#dataDiskkListTable').removeClass("on");
 
-        var offset = $("#datadiskInfoBox").offset();
+        var offset = $("#dataDiskkInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 300);
 
     } else if (targetAction == "DEL_SUCCESS") {
-        $('#datadiskCreateBox').removeClass("active");
-        $('#datadiskInfoBox').removeClass("view");
-        $('#datadiskListTable').addClass("on");
+        $('#dataDiskkCreateBox').removeClass("active");
+        $('#dataDiskkInfoBox').removeClass("view");
+        $('#dataDiskkListTable').addClass("on");
 
-        var offset = $("#datadiskInfoBox").offset();
+        var offset = $("#dataDiskkInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
 
         getVpcList("name");
     } else if (targetAction == "CLOSE") {
-        $('#datadiskCreateBox').removeClass("active");
-        $('#datadiskInfoBox').removeClass("view");
-        $('#datadiskListTable').addClass("on");
+        $('#dataDiskkCreateBox').removeClass("active");
+        $('#dataDiskkInfoBox').removeClass("view");
+        $('#dataDiskkListTable').addClass("on");
 
-        var offset = $("#datadiskInfoBox").offset();
+        var offset = $("#dataDiskkInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
     }
 }
@@ -267,41 +267,7 @@ function getConnectionInfo(provider) {
     });
 }
 
-// 팝업의 subnet을 set
-function applySubnet() {
-    var subnetNameValue = $("input[name='reg_subnetName']").length;
-    var subnetCIDRBlockValue = $("input[name='reg_subnetCidrBlock']").length;
 
-    var subnetNameData = new Array(subnetNameValue);
-    var subnetCIDRBlockData = new Array(subnetCIDRBlockValue);
-
-    for (var i = 0; i < subnetNameValue; i++) {
-        subnetNameData[i] = $("input[name='reg_subnetName']")[i].value;
-        console.log("subnetNameData" + [i] + " : ", subnetNameData[i]);
-    }
-    for (var i = 0; i < subnetCIDRBlockValue; i++) {
-        subnetCIDRBlockData[i] = $("input[name='reg_subnetCidrBlock']")[i].value;
-        console.log("subnetCIDRBlockData" + [i] + " : ", subnetCIDRBlockData[i]);
-    }
-
-    subnetJsonList = new Array();//subnet 저장할 array. 전역으로 선언
-
-    for (var i = 0; i < subnetNameValue; i++) {
-        var SNData = "SNData" + i;
-        var SNData = new Object();
-        SNData.name = subnetNameData[i];
-        SNData.ipv4_CIDR = subnetCIDRBlockData[i];
-        subnetJsonList.push(SNData);
-    }
-
-    var infoshow = "";
-    for (var i in subnetJsonList) {
-        infoshow += subnetJsonList[i].name + " (" + subnetJsonList[i].ipv4_CIDR + ") ";
-    }
-    $("#regSubnet").empty();
-    $("#regSubnet").val(infoshow);
-    $("#subnetRegisterBox").modal("hide");
-}
 
 function createDatadisk() {
     var vpcName = $("#regVpcName").val();
@@ -313,10 +279,9 @@ function createDatadisk() {
         $("#regVpcName").focus()
         return;
     }
-    console.log(subnetJsonList);
-
-    var url = "/setting/resources" + "/network/reg"
-    console.log("datadisk Reg URL : ", url)
+    
+    var url = "/setting/resources" + "/datadisk/reg"
+    console.log("dataDisk Reg URL : ", url)
     var obj = {
         CidrBlock: cidrBlock,
         ConnectionName: connectionName,
@@ -324,7 +289,7 @@ function createDatadisk() {
         Name: vpcName,
         SubnetInfoList: subnetJsonList
     }
-    console.log("info datadisk obj Data : ", obj);
+    console.log("info dataDisk obj Data : ", obj);
 
     if (vpcName) {
         axios.post(url, obj, {
@@ -332,7 +297,7 @@ function createDatadisk() {
                 'Content-type': 'application/json',
             }
         }).then(result => {
-            console.log("result datadisk : ", result);
+            console.log("result dataDisk : ", result);
             var data = result.data;
             console.log(data);
             if (data.status == 200 || data.status == 201) {
@@ -356,20 +321,20 @@ function createDatadisk() {
     }
 }
 
-// 선택한 datadisk의 상세정보 : 이미 가져왔는데 다시 가져올 필요있나?? datadiskID
-function showDataDiskInfo(vpcName) {
+// 선택한 dataDisk의 상세정보 : 이미 가져왔는데 다시 가져올 필요있나?? dataDiskID
+function showDataDiskInfo(dataDiskName) {
     console.log("showDataDiskInfo : ", vpcName);
     
     $('#networkVpcName').text(vpcName)
 
-    var url = "/setting/resources" + "/network/" + encodeURIComponent(vpcName);
-    console.log("datadisk detail URL : ", url)
+    var url = "/setting/resources" + "/datadisk/" + encodeURIComponent(dataDiskName);
+    console.log("dataDisk detail URL : ", url)
 
     return axios.get(url, {
     }).then(result => {
         console.log(result);
         console.log(result.data);
-        var data = result.data.datadiskInfo
+        var data = result.data.dataDiskInfo
         console.log("Show Data : ", data);
 
         var dtlVpcName = data.name;
@@ -408,32 +373,3 @@ function showDataDiskInfo(vpcName) {
     });
 }
 
-function displaySubnetRegModal(isShow) {
-    if (isShow) {
-        $("#subnetRegisterBox").modal();
-        $('.dtbox.scrollbar-inner').scrollbar();
-    } else {
-        $("#datadiskCreateBox").toggleClass("active");
-    }
-}
-var subnetJsonList = "";//저장시 subnet목록을 담을 array 
-var addStaffText = '<tr name="tr_Input">'
-    + '<td class="btn_mtd column-40percent" data-th="subnet Name"><input type="text" id="regSubnetName" name="reg_subnetName" value="" placeholder="" class="pline" title="" /> <span class="ov up" name="td_ov"]></span></td>'
-    + '<td class="overlay" data-th="cidrBlock"><input type="text" id="regSubnetCidrBlock" name="reg_subnetCidrBlock" value="" placeholder="" class="pline" title="" /></td>'
-    + '<td class="overlay column-100px">'
-    + '<button class="btn btn_add" name="addSubnet" value="">add</button>'
-    + '<button class="btn btn_del" name="delSubnet" value="">del</button>'
-    + '</td>'
-    + '</tr>';
-
-$(document).on("click", "button[name=addSubnet]", function () {
-    console.log("add subnet clicked")
-    var subnetNameValue = $("input[name='reg_subnetName']").length;
-    var trHtml = $("tr[name=tr_Input]:last");
-    trHtml.after(addStaffText);
-});
-$(document).on("click", "button[name=delSubnet]", function () {
-    console.log("del subnet clicked")
-    var trHtml = $(this).parent().parent();
-    trHtml.remove();
-});
