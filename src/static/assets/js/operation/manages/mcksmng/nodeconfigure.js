@@ -136,8 +136,7 @@ function nodeDone_btn(){
 
             if(result.status == 201 || result.status == 200){
                 commonAlert("Node Add Success")
-                var targetUrl = "/operation/manages/mcksmng/mngform"
-                changePage(targetUrl);
+                changePage("McksMngForm");
             
             }else{
                 commonErrorAlert(statusCode, message) 

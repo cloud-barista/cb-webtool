@@ -2,60 +2,11 @@ $(document).ready(function () {
 
     // 생성 완료 시 List화면으로 page이동
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
-        //$('#alertResultArea').on('hidden', function () {// bootstrap 2.3 이전
-        console.log("test");
-        let targetUrl = "/operation/manages/mcismng/mngform"
-        changePage(targetUrl)
-
+        changePage("McisMngForm")
     });
-
-    console.log("mcisCreate.js ")
-    // getCommonCloudConnectionList('mciscreate', '', true)
-    // getCommonVirtualMachineSpecList('mciscreate')
 
     getResources('mciscreate')
 
-
-    //Servers Expert on/off
-    //     var check = $(".switch .ch");
-    //     var $Servers = $(".servers_config");
-    //     var $NewServers = $(".new_servers_config");
-    //     var $SimpleServers = $(".simple_servers_config");
-    //     var simple_config_cnt = 0;
-    //     var expert_config_cnt = 0;
-
-    //     check.click(function(){
-    //         $(".switch span.txt_c").toggle();
-    //         $NewServers.removeClass("active");
-    //     });
-
-    //   //Expert add
-    //     $('.servers_box .server_add').click(function(){
-    //         $NewServers.toggleClass("active");
-    //         if($Servers.hasClass("active")) {
-    //         $Servers.toggleClass("active");
-    //         } else {
-    //             $Servers.toggleClass("active");
-    //         }
-    //     });
-    //     // Simple add
-    //     $(".servers_box .switch").change(function() {
-    //         if ($(".switch .ch").is(":checked")) {	
-    //                 $('.servers_box .server_add').click(function(){	
-
-    //                     $NewServers.addClass("active");
-    //                     $SimpleServers.removeClass("active");		
-    //                 });
-    //         } else {
-    //             $('.servers_box .server_add').click(function(){
-
-    //                 $NewServers.removeClass("active");
-    //                 $SimpleServers.addClass("active");
-
-
-    //             });		
-    //         }
-    //     });
 });
 
 // 서버 더하기버튼 클릭시 서버정보 입력area 보이기/숨기기
@@ -148,8 +99,7 @@ function deployMcis() {
         }
     }
 
-    // var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
-    var url = "/operation/manages/mcismng/reg/proc"
+    var url = getWebToolUrl("McisRegProc")
     try {
         axios.post(url, new_obj, {
             headers: {
@@ -160,11 +110,8 @@ function deployMcis() {
             console.log("Result Status : ", result.status);
             if (result.status == 201 || result.status == 200) {
                 commonResultAlert("Register Success")
-                // var targetUrl = "/operation/manages/mcismng/mngform"
-                // changePage(targetUrl)
             } else {
                 commonAlert("Register Fail")
-                //location.reload(true);
             }
         }).catch((error) => {
             // console.warn(error);
@@ -292,42 +239,6 @@ function setMcisInfoToForm(mcisInfoObj) {
     $("#mcis_desc").val(mcisInfoObj.description);
     // $("#label").val(mcisInfoObj.label);
     $("#installMonAgent").val(mcisInfoObj.installMonAgent);
-
-    // // 수신한 obj를 바로 deploy로 던질까?
-    // var url = "/operation/manages/mcismng/reg/proc"
-    // try{        
-    //     axios.post(url,mcisInfoObj,{
-    //         headers :{
-    //             'Content-type': 'application/json',
-    //             // 'Authorization': apiInfo,
-    //             },
-    //     }).then(result=>{
-    //         console.log("MCIR Register data : ",result);
-    //         console.log("Result Status : ",result.status); 
-    //         if(result.status == 201 || result.status == 200){
-    //             commonAlert("Register Success")
-    //             // location.href = "/Manage/MCIS/list";
-    //             // $('#loadingContainer').show();
-    //             // location.href = "/operation/manages/mcismng/mngform/"
-    //             var targetUrl = "/operation/manages/mcismng/mngform"
-    //             changePage(targetUrl)
-    //         }else{
-    //             commonAlert("Register Fail")
-    //             //location.reload(true);
-    //         }
-    //     }).catch((error) => {
-    //         // console.warn(error);
-    //         console.log(error.response)
-    //         var errorMessage = error.response.data.error;
-    //         var statusCode = error.response.status;
-    //         commonErrorAlert(statusCode, errorMessage) 
-
-    //     })
-    // }finally{
-    //     // AjaxLoadingShow(false);
-    // }  
-
-
 }
 
 

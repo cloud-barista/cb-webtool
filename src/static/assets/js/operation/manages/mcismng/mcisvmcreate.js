@@ -3,9 +3,7 @@ $(document).ready(function () {
     // e_vNetListTbody
 
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
-        //$('#alertResultArea').on('hidden', function () {// bootstrap 2.3 이전
-        let targetUrl = "/operation/manages/mcismng/mngform"
-        changePage(targetUrl)
+        changePage("McisMngForm")
     })
 
     //OS_HW popup table scrollbar
@@ -292,16 +290,8 @@ function btn_deploy() {
 
                         if (result.status == 201 || result.status == 200) {
                             vmCreateCallback(new_obj.name, "Success")
-                            //     commonAlert("Register Success")
-                            //     // location.href = "/Manage/MCIS/list";
-                            //     // $('#loadingContainer').show();
-                            //     // location.href = "/operation/manages/mcis/mngform/"
-                            //     var targetUrl = "/operation/manages/mcis/mngform"
-                            //     changePage(targetUrl)
                         } else {
                             vmCreateCallback(new_obj.name, message)
-                            //     commonAlert("Register Fail")
-                            //     //location.reload(true);
                         }
                     }).catch((error) => {
                         // console.warn(error);
@@ -408,31 +398,17 @@ function btn_deploy() {
 
                         if (result.status == 201 || result.status == 200) {
                             vmCreateCallback("Import" + i, "Success")
-                            //     commonAlert("Register Success")
-                            //     // location.href = "/Manage/MCIS/list";
-                            //     // $('#loadingContainer').show();
-                            //     // location.href = "/operation/manages/mcis/mngform/"
-                            //     var targetUrl = "/operation/manages/mcis/mngform"
-                            //     changePage(targetUrl)
                         } else {
                             vmCreateCallback("Import" + i, message)
-                            //     commonAlert("Register Fail")
-                            //     //location.reload(true);
                         }
                     }).catch((error) => {
-                        // console.warn(error);
                         console.log(error.response)
                         var errorMessage = error.response.data.error;
-                        // commonErrorAlert(statusCode, errorMessage) 
                         vmCreateCallback("Import" + i, errorMessage)
                     })
                 } finally {
 
                 }
-
-                // post로 호출을 했으면 해당 VM의 정보는 비활성시킨 후(클릭 Evnet 안먹게)
-                // 상태값을 모니터링 하여 결과 return 까지 대기.
-                // return 받으면 해당 VM
             }
         }
     }

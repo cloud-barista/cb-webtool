@@ -489,11 +489,7 @@ function setMcisData(mcisInfo, mcisIndex) {
 
 // 등록 form으로 이동
 function createNewMcis() {// Manage_MCIS_Life_Cycle_popup.html
-    var targetUrl = "/operation/manage" + "/mcismng/regform"
-    // location.href = "/Manage/MCIS/reg"
-    // $('#loadingContainer').show();
-    // location.href = url;
-    changePage(targetUrl)
+    changePage("McisRegForm")
 }
 
 function changeLifeCycle(type) {

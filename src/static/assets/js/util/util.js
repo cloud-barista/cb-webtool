@@ -68,8 +68,11 @@ function AjaxLoadingShow(isShow) {
 //========== 로딩 바 종료 =========
 
 // 다른 화면으로 이동 시킬 때 Loading bar 표시를 위해
-function changePage(url) {
+//function changePage(url) {
+function changePage(pathFinderKey) {
     $('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
+    url = getWebToolUrl(pathFinderKey)
+    alert(url + " : " + pathFinderKey)
     location.href = url;
 }
 

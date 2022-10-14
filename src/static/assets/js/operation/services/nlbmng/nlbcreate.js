@@ -2,8 +2,7 @@ $(document).ready(function() {
 
     // 생성 완료 시 List화면으로 page이동
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
-        var targetUrl = "/operation/manages/mcksmng/mngform"
-        changePage(targetUrl);
+        changePage("NlbMngForm");
     })
 
 })
@@ -102,7 +101,7 @@ function btn_deploy(){
 
     try{
         // configurer 는 mcks 선택하고 들어옴. : TODO : MCKS create 와 node create는 버튼 액션을 달리해야
-        var url = "/operation/manages/mcksmng/reg/proc"
+        var url = getWebToolUrl("McksRegProc")
         axios.post(url,new_obj,{
             headers :{
                 },
@@ -117,9 +116,6 @@ function btn_deploy(){
 
             if(result.status == 201 || result.status == 200){
                 commonResultAlert("MCKS create request success")
-                // var targetUrl = "/operation/manages/mcksmng/mngform"
-                // changePage(targetUrl);
-            
             }else{
                 commonErrorAlert(statusCode, message) 
             }

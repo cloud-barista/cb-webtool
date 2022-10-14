@@ -25,13 +25,47 @@ function getWebToolUrl(controllerKeyName) {
     // ex ) monitoringGroup.GET("/operation/monitorings/mcismonitoring/mngform", controller.McisMonitoringMngForm)    
     let controllerMethodNameMap = new Map(
         [
-            ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
+            
             ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
             ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
-
+            
             ["McisData", "/operation/manages/mcismng/:mcisID"],
             ["McisStatusData", "/operation/manages/mcismng/:mcisID?option=status"],
-            ["VmOfMcisData", "/operation/manages/mcismng/:mcisID/vm/:vmID"]
+            ["VmOfMcisData", "/operation/manages/mcismng/:mcisID/vm/:vmID"],
+
+            // resources
+            ["NamespaceMngForm", "/setting/namespaces/namespace/mngform"],
+            ["NamespaceListData", "/setting/namespaces/namespace/list"],
+            ["CloudConnectionMngForm", "/setting/connections/cloudconnectionconfig/mngform"],
+            ["VnetMngForm","/setting/resources/network/mngform"],
+            ["SecurityGroupMngForm", "/setting/resources/securitygroup/mngform"],
+            ["SshKeyMngForm", "/setting/resources/sshkey/mngform"],
+            ["MachineImageMngForm", "/setting/resources/machineimage/mngform"],
+            ["VmSpecMngForm", "/setting/resources/vmspec/mngform"],
+            ["DataDiskMngForm", "/setting/resources/datadisk/mngform"],
+            ["MyImageMngForm", "/setting/resources/myimage/mngform"],
+
+            // operations
+            ["NsDashboardForm", "/operation/dashboards/dashboardnamespace/mngform"],// Dashboard NS
+            ["GlobalDashboardForm", "/operation/dashboards/dashboardglobalnamespace/mngform"],// Dashboard NS
+
+            ["McisMngForm", "/operation/manages/mcismng/mngform"],
+            ["McisRegForm", "/operation/manages/mcismng/regform"],
+            
+            ["McisRegProc", "/operation/manages/mcismng/reg/proc"],
+
+            ["McksMngForm", "/operation/manages/mcksmng/mngform"],
+            ["McksRegForm", "/operation/manages/mcksmng/regform"],
+            ["McksRegProc", "/operation/manages/mcksmng/reg/proc"],
+            ["PmksMngForm", "/operation/manages/pmksmng/mngform"],
+
+            ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
+            ["MonitoringPolicyConfigMngForm", "/operation/policies/monitoringconfigpolicy/mngform"],
+            ["MonitoringPolicyThresholdMngForm", "/operation/policies/monitoringalertpolicy/mngform"],
+            ["NlbMngForm", "/operation/services/nlb/mngform"],
+
+            ["AboutForm", "/operation/about/about"],
+            
         ]
     );
 
@@ -49,7 +83,7 @@ function showHelp(helpKey) {
         location.href = "/main/apitestmng"
     } else {
         //$("#helpArea").modal()        
-        changePage("/operation/about/about");// About으로 이동
+        changePage("AboutForm");// About으로 이동
     }
 }
 
