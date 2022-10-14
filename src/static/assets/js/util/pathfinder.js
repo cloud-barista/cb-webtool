@@ -7,10 +7,12 @@
 
 // map에 담긴 Key를 value로 바꿔 url을 return한다.
 // url에는 main.go 에서 사용하는 path를 넣는다.
-function setUrlByParam(url, urlParamMap) {
+function setUrlByParam(controllerKeyName, urlParamMap) {
     //resultVmCreateMap.set(resultVmKey, resultStatus)
     // var url = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";    
-    var returnUrl = url;
+    
+    //var returnUrl = url;
+    var returnUrl = getWebToolUrl(controllerKeyName)
     for (let key of urlParamMap.keys()) {
         console.log("urlParamMap " + key + " : " + urlParamMap.get(key));
 
@@ -51,13 +53,15 @@ function getWebToolUrl(controllerKeyName) {
             ["GlobalDashboardForm", "/operation/dashboards/dashboardglobalnamespace/mngform"],// Dashboard NS
 
             ["McisMngForm", "/operation/manages/mcismng/mngform"],
-            ["McisRegForm", "/operation/manages/mcismng/regform"],
-            
+            ["McisRegForm", "/operation/manages/mcismng/regform"],            
             ["McisRegProc", "/operation/manages/mcismng/reg/proc"],
+            ["McisCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID"],
+            ["McisVmCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
 
             ["McksMngForm", "/operation/manages/mcksmng/mngform"],
             ["McksRegForm", "/operation/manages/mcksmng/regform"],
             ["McksRegProc", "/operation/manages/mcksmng/reg/proc"],
+            ["McksClusterNodeData", "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName"],
             ["PmksMngForm", "/operation/manages/pmksmng/mngform"],
 
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
@@ -753,7 +757,7 @@ function getCommonMcisData(caller, mcisID) {
     // McisData
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
-    var url = setUrlByParam(getWebToolUrl('McisData'), urlParamMap)
+    var url = setUrlByParam('McisData', urlParamMap)
     axios.get(url, {
 
     }).then(result => {
@@ -777,7 +781,7 @@ function getCommonMcisData(caller, mcisID) {
 function getCommonMcisStatusData(caller, mcisID) {
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
-    var url = setUrlByParam(getWebToolUrl('McisStatusData'), urlParamMap)
+    var url = setUrlByParam('McisStatusData', urlParamMap)
     axios.get(url, {
 
     }).then(result => {
@@ -913,10 +917,10 @@ function getCommonFilterVmSpecListByRange(specFilterObj, caller) {
 
 // MCIS에 명령어 날리기
 function postRemoteCommandMcis(mcisID, commandWord) {
-    var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID";
+    //var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID";
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
-    var url = setUrlByParam(orgUrl, urlParamMap)
+    var url = setUrlByParam('McisCmd', urlParamMap)
 
     console.log(" command = " + commandWord)
     axios.post(url, {
@@ -943,11 +947,11 @@ function postRemoteCommandMcis(mcisID, commandWord) {
 // VM에 명령어 날리기
 function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord) {
     //RemoteCommandVmOfMcis
-    var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID";
+    //var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID";
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
     urlParamMap.set(":vmID", vmID)
-    var url = setUrlByParam(orgUrl, urlParamMap)
+    var url = setUrlByParam('McisVmCmd', urlParamMap)
 
     console.log(" command = " + commandWord)
     axios.post(url, {
