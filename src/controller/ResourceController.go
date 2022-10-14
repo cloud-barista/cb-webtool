@@ -1632,7 +1632,7 @@ func DataDiskMngForm(c echo.Context) error {
 	//dataDiskList, respStatus := service.GetDataDiskList(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"setting/resources/NetworkMng", // 파일명
+		"setting/resources/DataDiskMng", // 파일명
 		map[string]interface{}{
 			"LoginInfo":     loginInfo,
 			"CloudOSList":   cloudOsList,

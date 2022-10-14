@@ -421,7 +421,6 @@ func main() {
 		DisableCache: true,
 	})
 
-	// dashboard 매핑할 middleware 추가
 	nlbTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
@@ -434,6 +433,8 @@ func main() {
 			"templates/Header",
 			"templates/MenuLeft",
 			"templates/Footer",
+			"operation/services/nlbmng/NlbInfo",
+			"operation/services/nlbmng/NlbList",
 		},
 		DisableCache: true,
 	})
