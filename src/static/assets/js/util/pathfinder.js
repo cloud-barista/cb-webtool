@@ -42,6 +42,7 @@ function getWebToolUrl(controllerKeyName) {
             ["SshKeyMngForm", "/setting/resources/sshkey/mngform"],
             ["MachineImageMngForm", "/setting/resources/machineimage/mngform"],
             ["VmSpecMngForm", "/setting/resources/vmspec/mngform"],
+            
             ["DataDiskMngForm", "/setting/resources/datadisk/mngform"],
             ["MyImageMngForm", "/setting/resources/myimage/mngform"],
 

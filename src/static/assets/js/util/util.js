@@ -72,7 +72,6 @@ function AjaxLoadingShow(isShow) {
 function changePage(pathFinderKey) {
     $('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
     url = getWebToolUrl(pathFinderKey)
-    alert(url + " : " + pathFinderKey)
     location.href = url;
 }
 
