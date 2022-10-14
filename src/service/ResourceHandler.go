@@ -93,7 +93,7 @@ func DelFirewallRules(nameSpaceID string, securityGroupID string, firewallRuleRe
 }
 
 // 해당 namespace의 vpc 목록 조회
-//func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
+// func GetVnetList(nameSpaceID string) (io.ReadCloser, error) {
 func GetVnetList(nameSpaceID string) ([]tbmcir.TbVNetInfo, model.WebStatus) {
 	fmt.Println("GetVnetList ************ : ")
 	var originalUrl = "/ns/{nsId}/resources/vNet"
@@ -1308,8 +1308,8 @@ func GetInspectResourceList(inspectResource *tbcommon.RestInspectResourcesReques
 }
 
 /*
-	CSP와 Tumblebug에 등록된 모든 리소스 비교
-	전체이므로 별도의 parameter 없음.
+CSP와 Tumblebug에 등록된 모든 리소스 비교
+전체이므로 별도의 parameter 없음.
 */
 func GetInspectResourcesOverview() (*tbmcis.InspectResourceAllResult, model.WebStatus) {
 	fmt.Println("Inspect Resources Overview (vNet, securityGroup, sshKey, vm) registered in CB-Tumblebug and CSP for all connections")
@@ -2203,4 +2203,268 @@ func LoadDefaultResources(nameSpaceID string, optionParam string, connectionName
 	webStatus.StatusCode = respStatus
 	webStatus.Message = resultInfo.Message
 	return webStatus, model.WebStatus{StatusCode: respStatus}
+}
+
+// DataDisk 목록 조회
+func GetDataDiskList(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcir.TbDataDiskInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/resources/dataDisk"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
+
+	url := util.TUMBLEBUG + urlParam
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	dataDiskInfoList := map[string][]tbmcir.TbDataDiskInfo{}
+	json.NewDecoder(respBody).Decode(&dataDiskInfoList)
+	//spew.Dump(body)
+	fmt.Println(dataDiskInfoList["dataDisk"])
+
+	return dataDiskInfoList["dataDisk"], model.WebStatus{StatusCode: respStatus}
+}
+
+func GetDataDiskListByID(nameSpaceID string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
+	fmt.Println("GetDataDiskListByID ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/dataDisk"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	urlParam += "?option=id"
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
+	url := util.TUMBLEBUG + urlParam
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	//vNetInfoList := map[string][]string{}
+	dataDiskInfoList := tbcommon.TbIdList{}
+	json.NewDecoder(respBody).Decode(&dataDiskInfoList)
+
+	return dataDiskInfoList.IDList, model.WebStatus{StatusCode: respStatus}
+}
+
+// List 조회시 optionParam 추가
+func GetDataDiskListByOption(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcir.TbDataDiskInfo, model.WebStatus) {
+	fmt.Println("GetDataDiskListByOption ************ : ")
+	var originalUrl = "/ns/{nsId}/resources/dataDisk"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	if optionParam != "" {
+		urlParam += "?option=" + optionParam
+	}
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
+	url := util.TUMBLEBUG + urlParam
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// defer body.Close()
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	// return respBody, respStatus
+	log.Println(respBody)
+	dataDiskInfoList := map[string][]tbmcir.TbDataDiskInfo{}
+	json.NewDecoder(respBody).Decode(&dataDiskInfoList)
+	//spew.Dump(body)
+	fmt.Println(dataDiskInfoList["dataDisk"])
+
+	return dataDiskInfoList["dataDisk"], model.WebStatus{StatusCode: respStatus}
+}
+
+func RegDataDisk(nameSpaceID string, dataDiskReqInfo *tbmcir.TbDataDiskReq) (*tbmcir.TbDataDiskInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/resources/dataDisk"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	fmt.Println("dataDiskReqInfo : ", dataDiskReqInfo)
+
+	pbytes, _ := json.Marshal(dataDiskReqInfo)
+	fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+	resultDataDiskInfo := tbmcir.TbDataDiskInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return &resultDataDiskInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	fmt.Println("respStatus ", respStatus)
+
+	if respStatus == 500 {
+		webStatus := model.WebStatus{}
+		json.NewDecoder(respBody).Decode(&webStatus)
+		fmt.Println(webStatus)
+		webStatus.StatusCode = respStatus
+		return &resultDataDiskInfo, webStatus
+	}
+	// 응답에 생성한 객체값이 옴
+	json.NewDecoder(respBody).Decode(&resultDataDiskInfo)
+	fmt.Println(resultDataDiskInfo)
+
+	return &resultDataDiskInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// Namespace내 모든 DataDisk 삭제
+func DelAllDataDisk(nameSpaceID string) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
+
+	var originalUrl = "/ns/{nsId}/resources/dataDisk"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam + "?match=match"
+
+	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+}
+
+// DataDisk 삭제
+func DelDataDisk(nameSpaceID string, dataDiskID string) (model.WebStatus, model.WebStatus) {
+	webStatus := model.WebStatus{}
+
+	var originalUrl = "/ns/{nsId}/resources/dataDisk/{dataDiskId}"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{dataDiskId}"] = dataDiskID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam
+
+	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+
+	if err != nil {
+		fmt.Println(err)
+		return webStatus, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	resultInfo := model.ResultInfo{}
+
+	json.NewDecoder(respBody).Decode(&resultInfo)
+	log.Println(resultInfo)
+	log.Println("ResultMessage : " + resultInfo.Message)
+
+	if respStatus != 200 && respStatus != 201 {
+		return model.WebStatus{}, model.WebStatus{StatusCode: respStatus, Message: resultInfo.Message}
+	}
+	webStatus.StatusCode = respStatus
+	webStatus.Message = resultInfo.Message
+	return webStatus, model.WebStatus{StatusCode: respStatus}
+}
+
+// DataDisk 상세 조회
+func DataDiskGet(nameSpaceID string, dataDiskID string) (*tbmcir.TbDataDiskInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/resources/dataDisk/{dataDiskId}"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{dataDiskId}"] = dataDiskID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam
+
+	fmt.Println("nameSpaceID : ", nameSpaceID)
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	dataDiskInfo := tbmcir.TbDataDiskInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return &dataDiskInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	json.NewDecoder(respBody).Decode(&dataDiskInfo)
+	fmt.Println(dataDiskInfo)
+
+	return &dataDiskInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+func DataDiskPut(nameSpaceID string, dataDiskID string, dataDiskUpsizeReq *tbmcir.TbDataDiskUpsizeReq) (*tbmcir.TbDataDiskInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/resources/dataDisk/{dataDiskId}"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{dataDiskId}"] = dataDiskID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(dataDiskUpsizeReq)
+	fmt.Println(string(pbytes))
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	dataDiskInfoResponse := tbmcir.TbDataDiskInfo{}
+	if err != nil {
+		fmt.Println(err)
+		return &dataDiskInfoResponse, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	log.Println("resp = ", resp)
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	log.Println("respBody = ", respBody)
+
+	json.NewDecoder(respBody).Decode(&dataDiskInfoResponse)
+	fmt.Println(dataDiskInfoResponse)
+
+	return &dataDiskInfoResponse, model.WebStatus{StatusCode: respStatus}
 }

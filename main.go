@@ -421,6 +421,23 @@ func main() {
 		DisableCache: true,
 	})
 
+	// dashboard 매핑할 middleware 추가
+	nlbTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/dashboards/Dashboard",
+		Partials: []string{
+			"templates/OperationTop",
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+		},
+		DisableCache: true,
+	})
+
 	// "setting/connections/CloudConnectionModal", --> Region, Credential, Driver modal로 쪼개짐
 
 	// // mcis 매핑할 middleware 추가
@@ -586,6 +603,12 @@ func main() {
 	e.POST("/operation/manages/mcismng/:mcisID/vm/reg/proc", controller.VmRegProc) // vm 등록이므로 vmID없이 reg/proc
 	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID", controller.GetVmInfoData)
 
+	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:command", controller.DataDiskToVmUpdateProc)      // disk attach detach
+	e.GET("/operation/manages/mcismng/:mcisID/vmgroup", controller.McisVmGroupList)                       // mcis의 vmGroup List
+	e.POST("/operation/manages/mcismng/:mcisID/vmgroup/reg/proc", controller.VmGroupRegProc)              // vm 등록이므로 vmID없이 reg/proc
+	e.GET("/operation/manages/mcismng/:mcisID/vmgroup/:vmGroupID", controller.VmGroupVmList)              // vmGroup 내 vm 목록
+	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:vmGroupID", controller.VmGroupScaleOutUpdateProc) //
+
 	e.POST("/operation/manages/mcismng/proc/mcislifecycle", controller.McisLifeCycle)
 	//var url = "/operation/manage" + "/mcis/" + mcisID + "/operation/" + type
 	e.POST("/operation/manages/mcismng/proc/vmlifecycle", controller.McisVmLifeCycle)
@@ -729,6 +752,25 @@ func main() {
 	resourcesGroup.POST("/vmspec/fetchvmspec", controller.FetchVmSpecList)       // TODO : Image 정보 갱신인가? 확인필요
 	// resourcesGroup.POST("/vmspec/filterspecs", controller.FilterVmSpecList)	// TODO : post방식의 filterspec 생성필요
 	e.POST("/setting/resources/vmspec/filterspecsbyrange", controller.FilterVmSpecListByRange) // TODO : post방식의 filterspec 생성필요
+
+	resourcesGroup.GET("/datadisk/mngform", controller.DataDiskMngForm)
+	e.GET("/setting/resources/datadisk/list", controller.DataDiskList)
+	e.POST("/setting/resources/datadisk/reg", controller.DataDiskRegProc)
+	e.DELETE("/setting/resources/datadisk/del", controller.DataDiskAllDelProc)
+	e.GET("/setting/resources/datadisk/:dataDiskID", controller.DataDiskGet)
+	e.PUT("/setting/resources/datadisk/:dataDiskID", controller.DataDiskPutProc)
+	e.DELETE("/setting/resources/datadisk/del/:dataDiskID", controller.DataDiskDelProc)
+
+	nlbGroup := e.Group("/operation/services/nlb", nlbTemplate)
+	nlbGroup.GET("/mngform", controller.NlbMngForm)
+	e.GET("/operation/services/nlb/list", controller.NlbList)
+	e.POST("/operation/services/nlb/reg", controller.NlbRegProc)
+	e.DELETE("/operation/services/nlb/del", controller.NlbAllDelProc)
+	e.GET("/operation/services/nlb/:nlbID", controller.NlbGet)
+	e.DELETE("/operation/services/nlb/del/:nlbID", controller.NlbDelProc)
+	e.GET("/operation/services/nlb/health/:nlbID", controller.NlbHealthGet)
+	e.POST("/operation/services/nlb/vm/reg/:nblID", controller.NlbVmRegProc)
+	e.DELETE("/operation/services/nlb/vm/del/:nlbID", controller.NlbVmDelProc)
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)

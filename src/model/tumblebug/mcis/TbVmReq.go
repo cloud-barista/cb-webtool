@@ -20,4 +20,6 @@ type TbVmReq struct {
 	VmGroupSize    string `json:"vmGroupSize"`
 	VmUserAccount  string `json:"vmUserAccount"`
 	VmUserPassword string `json:"vmUserPassword"`
+
+	DataDiskIds []string `json:"dataDiskIds"`
 }

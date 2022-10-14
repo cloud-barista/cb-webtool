@@ -1486,8 +1486,8 @@ func FilterVmSpecListByRange(c echo.Context) error {
 }
 
 /*
-	connection에 대해 resource 목록 CSP와 Tumblebug을 비교
-    비교 가능 resource : vnet/securityGroup/sshKey/vm
+		connection에 대해 resource 목록 CSP와 Tumblebug을 비교
+	    비교 가능 resource : vnet/securityGroup/sshKey/vm
 */
 func GetInspectResourceList(c echo.Context) error {
 	log.Println("GetInspectResourceList : ")
@@ -1515,8 +1515,8 @@ func GetInspectResourceList(c echo.Context) error {
 }
 
 /*
-	connection에 대해 resource 목록 CSP와 Tumblebug을 비교
-    비교 가능 resource : vnet/securityGroup/sshKey/vm
+		connection에 대해 resource 목록 CSP와 Tumblebug을 비교
+	    비교 가능 resource : vnet/securityGroup/sshKey/vm
 */
 func GetInspectResourcesOverview(c echo.Context) error {
 	log.Println("GetInspectResourceList : ")
@@ -1600,5 +1600,239 @@ func RegisterCspResourcesAllProc(c echo.Context) error {
 		"message":          "success",
 		"status":           respStatus.StatusCode,
 		"registerResource": registerResourceResult,
+	})
+}
+
+// resourcesGroup.GET("/datadisk/mngform", controller.DataDiskMngForm)
+func DataDiskMngForm(c echo.Context) error {
+	fmt.Println("DataDiskMngForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	//defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	store := echosession.FromContext(c)
+
+	cloudOsList, _ := service.GetCloudOSList()
+	store.Set("cloudos", cloudOsList)
+	log.Println(" cloudOsList  ", cloudOsList)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	store.Save()
+	log.Println(" nsList  ", nsList)
+
+	//optionParam := c.QueryParam("option")
+	//filterKeyParam := c.QueryParam("filterKey")
+	//filterValParam := c.QueryParam("filterVal")
+	//dataDiskList, respStatus := service.GetDataDiskList(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
+
+	return echotemplate.Render(c, http.StatusOK,
+		"setting/resources/NetworkMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":     loginInfo,
+			"CloudOSList":   cloudOsList,
+			"NameSpaceList": nsList,
+			//		"DataDiskList":  dataDiskList,
+			//		"status":        respStatus.StatusCode,
+		})
+}
+
+// e.GET("/setting/resources/datadisk/list", controller.DataDiskList)
+func DataDiskList(c echo.Context) error {
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
+	if optionParam == "id" {
+		dataDiskInfoList, respStatus := service.GetDataDiskListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"DataDiskInfoList":   dataDiskInfoList,
+		})
+	} else {
+		dataDiskInfoList, respStatus := service.GetDataDiskListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"DataDiskInfoList":   dataDiskInfoList,
+		})
+	}
+
+}
+
+// e.POST("/setting/resources/datadisk/reg", controller.DataDiskRegProc)
+// Vpc 등록 :
+func DataDiskRegProc(c echo.Context) error {
+	log.Println("DataDiskRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	dataDiskRegInfo := new(tbmcir.TbDataDiskReq)
+	if err := c.Bind(dataDiskRegInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	resultDataDiskInfo, respStatus := service.RegDataDisk(defaultNameSpaceID, dataDiskRegInfo)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":      "success",
+		"status":       respStatus.StatusCode,
+		"DataDiskInfo": resultDataDiskInfo,
+	})
+}
+
+// e.DELETE("/setting/resources/datadisk/del", controller.)
+func DataDiskAllDelProc(c echo.Context) error {
+	log.Println("ConnectionConfigDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	respMessage, respStatus := service.DelAllDataDisk(defaultNameSpaceID)
+	fmt.Println("=============respMessage =============", respMessage)
+	log.Println("respStatus : ", respStatus)
+	log.Println("respMessage : ", respMessage)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": respMessage.Message,
+		"status":  respMessage.StatusCode,
+	})
+}
+
+// e.GET("/setting/resources/datadisk/:dataDiskID", controller.DataDiskGet)
+func DataDiskGet(c echo.Context) error {
+	log.Println("DataDiskGet : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	dataDiskID := c.Param("dataDiskID")
+	dataDiskInfo, respStatus := service.DataDiskGet(defaultNameSpaceID, dataDiskID)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":      "success",
+		"status":       respStatus,
+		"DataDiskInfo": dataDiskInfo,
+	})
+}
+
+// e.PUT("/setting/resources/datadisk/:dataDiskID", controller.DataDiskPutProc)
+func DataDiskPutProc(c echo.Context) error {
+	log.Println("DataDiskPutProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	dataDiskID := c.Param("dataDiskID")
+	dataDiskUpsizeReq := new(tbmcir.TbDataDiskUpsizeReq)
+	if err := c.Bind(dataDiskUpsizeReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	resultDataDiskInfo, respStatus := service.DataDiskPut(defaultNameSpaceID, dataDiskID, dataDiskUpsizeReq)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":      "success",
+		"status":       respStatus.StatusCode,
+		"DataDiskInfo": resultDataDiskInfo,
+	})
+}
+
+// e.DELETE("/setting/resources/datadisk/del/:dataDiskID", controller.)
+func DataDiskDelProc(c echo.Context) error {
+	log.Println("DataDiskDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	paramDataDiskID := c.Param("dataDiskID")
+
+	respMessage, respStatus := service.DelDataDisk(defaultNameSpaceID, paramDataDiskID)
+	fmt.Println("=============respMessage =============", respMessage)
+	log.Println("respStatus : ", respStatus)
+	log.Println("respMessage : ", respMessage)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": respMessage.Message,
+		"status":  respMessage.StatusCode,
 	})
 }
