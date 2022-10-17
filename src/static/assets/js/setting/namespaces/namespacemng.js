@@ -174,9 +174,9 @@ function createNameSpace() {
     console.log(obj)
     if (namespace) {
         axios.post(url, obj, {
-            //headers: {
-            //    'Content-type': 'application/json',
-            //}
+            headers: {
+                'Content-Type': "application/json"
+            }
         }).then(result => {
             console.log(result);
             if (result.status == 200 || result.status == 201) {
