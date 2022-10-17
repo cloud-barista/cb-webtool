@@ -434,6 +434,7 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer",
 			"operation/services/nlbmng/NlbInfo",
+			"operation/services/nlbmng/NlbCreate",
 			"operation/services/nlbmng/NlbList",
 		},
 		DisableCache: true,
