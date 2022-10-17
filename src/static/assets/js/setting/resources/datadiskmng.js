@@ -82,9 +82,9 @@ function getDataDiskList(sort_type) {
             'Content-Type': "application/json"
         }
     }).then(result => {
-        console.log("get VPC List : ", result.data);
+        console.log("get DataDisk List : ", result.data);
         // var data = result.data.dataDisk;
-        var data = result.data.dataDiskList;
+        var data = result.data.dataDiskInfoList;
 
         var html = ""
         var cnt = 0;
@@ -175,56 +175,56 @@ function ModalDetail() {
 
 function displayDataDiskInfo(targetAction) {
     if (targetAction == "REG") {
-        $('#dataDiskkCreateBox').toggleClass("active");
-        $('#dataDiskkInfoBox').removeClass("view");
-        $('#dataDiskkListTable').removeClass("on");
-        var offset = $("#dataDiskkCreateBox").offset();
+        $('#dataDiskCreateBox').toggleClass("active");
+        $('#dataDiskInfoBox').removeClass("view");
+        $('#dataDiskListTable').removeClass("on");
+        var offset = $("#dataDiskCreateBox").offset();
         // var offset = $("#" + target+"").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 300);
 
         // form 초기화
-        $("#regVpcName").val('')
+        $("#regDataDiskName").val('')
+        $("#regDataDiskSize").val('')
+        $("#regDataDiskType").val('')
         $("#regDescription").val('')
-        $("#regCidrBlock").val('')
-        $("#regSubnet").val('')
-        goFocus('dataDiskkCreateBox');
+        goFocus('dataDiskCreateBox');
     } else if (targetAction == "REG_SUCCESS") {
-        $('#dataDiskkCreateBox').removeClass("active");
-        $('#dataDiskkInfoBox').removeClass("view");
-        $('#dataDiskkListTable').addClass("on");
+        $('#dataDiskCreateBox').removeClass("active");
+        $('#dataDiskInfoBox').removeClass("view");
+        $('#dataDiskListTable').addClass("on");
 
-        var offset = $("#dataDiskkCreateBox").offset();
+        var offset = $("#dataDiskCreateBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
 
         // form 초기화
-        $("#regVpcName").val('')
+        $("#regDataDiskName").val('')
+        $("#regDataDiskSize").val('')
+        $("#regDataDiskType").val('')
         $("#regDescription").val('')
-        $("#regCidrBlock").val('')
-        $("#regSubnet").val('')
-        getVpcList("name");
+        getDataDiskList("name");
     } else if (targetAction == "DEL") {
-        $('#dataDiskkCreateBox').removeClass("active");
-        $('#dataDiskkInfoBox').addClass("view");
-        $('#dataDiskkListTable').removeClass("on");
+        $('#dataDiskCreateBox').removeClass("active");
+        $('#dataDiskInfoBox').addClass("view");
+        $('#dataDiskListTable').removeClass("on");
 
-        var offset = $("#dataDiskkInfoBox").offset();
+        var offset = $("#dataDiskInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 300);
 
     } else if (targetAction == "DEL_SUCCESS") {
-        $('#dataDiskkCreateBox').removeClass("active");
-        $('#dataDiskkInfoBox').removeClass("view");
-        $('#dataDiskkListTable').addClass("on");
+        $('#dataDiskCreateBox').removeClass("active");
+        $('#dataDiskInfoBox').removeClass("view");
+        $('#dataDiskListTable').addClass("on");
 
-        var offset = $("#dataDiskkInfoBox").offset();
+        var offset = $("#dataDiskInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
 
-        getVpcList("name");
+        getDataDiskList("name");
     } else if (targetAction == "CLOSE") {
-        $('#dataDiskkCreateBox').removeClass("active");
-        $('#dataDiskkInfoBox').removeClass("view");
-        $('#dataDiskkListTable').addClass("on");
+        $('#dataDiskCreateBox').removeClass("active");
+        $('#dataDiskInfoBox').removeClass("view");
+        $('#dataDiskListTable').addClass("on");
 
-        var offset = $("#dataDiskkInfoBox").offset();
+        var offset = $("#dataDiskInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
     }
 }
@@ -270,28 +270,26 @@ function getConnectionInfo(provider) {
 
 
 function createDatadisk() {
-    var vpcName = $("#regVpcName").val();
+    var diskName = $("#regDataDiskName").val();
+    var diskSize = $("#regDataDiskSize").val();
+    var diskType = $("#regDataDiskType").val();
     var description = $("#regDescription").val();
+    var provider = $("#provider").val();
     var connectionName = $("#regConnectionName").val();
-    var cidrBlock = $("#regCidrBlock").val();
-    if (!vpcName) {
-        commonAlert("Input New VPC Name")
-        $("#regVpcName").focus()
-        return;
-    }
+    
     
     var url = "/setting/resources" + "/datadisk/reg"
     console.log("dataDisk Reg URL : ", url)
     var obj = {
-        CidrBlock: cidrBlock,
-        ConnectionName: connectionName,
-        Description: description,
-        Name: vpcName,
-        SubnetInfoList: subnetJsonList
+        connectionName,
+        description,
+        name: diskName,
+        diskSize,
+        diskType,        
     }
     console.log("info dataDisk obj Data : ", obj);
 
-    if (vpcName) {
+    if (diskName) {
         axios.post(url, obj, {
             headers: {
                 'Content-type': 'application/json',
@@ -301,12 +299,12 @@ function createDatadisk() {
             var data = result.data;
             console.log(data);
             if (data.status == 200 || data.status == 201) {
-                commonAlert("Success Create Network(VPC)!!")
+                commonAlert("Success Create DataDisk!")
 
                 displayDatadiskInfo("REG_SUCCESS")
 
             } else {
-                commonAlert("Fail Create Network(VPC) " + data.message)
+                commonAlert("Fail Create DataDisk " + data.message)
             }
         }).catch((error) => {
             console.log(error.response)
@@ -315,8 +313,8 @@ function createDatadisk() {
             commonErrorAlert(statusCode, errorMessage)
         });
     } else {
-        commonAlert("Input VPC Name")
-        $("#regVpcName").focus()
+        commonAlert("Input Disk Name")
+        $("#regDataDiskName").focus()
         return;
     }
 }

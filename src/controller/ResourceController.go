@@ -1666,8 +1666,8 @@ func DataDiskList(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message":            "success",
 			"status":             respStatus.StatusCode,
-			"DefaultNameSpaceID": defaultNameSpaceID,
-			"DataDiskInfoList":   dataDiskInfoList,
+			"defaultNameSpaceID": defaultNameSpaceID,
+			"dataDiskInfoList":   dataDiskInfoList,
 		})
 	} else {
 		dataDiskInfoList, respStatus := service.GetDataDiskListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
@@ -1681,8 +1681,8 @@ func DataDiskList(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message":            "success",
 			"status":             respStatus.StatusCode,
-			"DefaultNameSpaceID": defaultNameSpaceID,
-			"DataDiskInfoList":   dataDiskInfoList,
+			"defaultNameSpaceID": defaultNameSpaceID,
+			"dataDiskInfoList":   dataDiskInfoList,
 		})
 	}
 
