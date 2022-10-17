@@ -9,14 +9,13 @@ function displayNlbInfo(targetAction) {
         $('#nlbInfoBox').removeClass("view");
         $('#nlbListTable').removeClass("on");
         var offset = $("#nlbCreateBox").offset();
-        // var offset = $("#" + target+"").offset();
+        
         $("#TopWrap").animate({ scrollTop: offset.top }, 300);
 
         // form 초기화
         $("#regCspSshKeyName").val('');
-        //$("#regProvider").val('');
-        //$("#regCregConnectionNameidrBlock").val('');
         goFocus('nlbCreateBox');
+        
     } else if (targetAction == "REG_SUCCESS") {
         $('#nlbCreateBox').removeClass("active");
         $('#nlbInfoBox').removeClass("view");
@@ -59,18 +58,15 @@ function displayNlbInfo(targetAction) {
 }
 
 // SshKey 목록 조회
-function getSshKeyList(sort_type) {
-    //var url = "{{ .comURL.SpiderURL}}" + "/connectionconfig";
-    // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/nlb";
-    var url = "/setting/resources" + "/sshkey/list"
+function getNlbList(sort_type) {
+    var url = "/setting/resources" + "/nlb/list"
     axios.get(url, {
         headers: {
-            // 'Authorization': "{{ .apiInfo}}",
             'Content-Type': "application/json"
         }
     }).then(result => {
-        console.log("get SSH Data : ", result.data);
-        var data = result.data.SshKeyList; // exception case : if null 
+        console.log("get Nlb Data : ", result.data);
+        var data = result.data.NlbList; // exception case : if null 
         var html = ""
 
         if (data == null) {
@@ -85,46 +81,38 @@ function getSshKeyList(sort_type) {
                 if (sort_type) {
                     console.log("check : ", sort_type);
                     data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                        //html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">'
-                        html += '<tr onclick="showSshKeyInfo(\'' + item.id + '\');">'
+                        html += '<tr onclick="showNlbInfo(\'' + item.id + '\');">'
                         + '<td class="overlay hidden column-50px" data-th="">'
-                        + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSshKeyName + '"/>'
+                        + '<input type="hidden" id="nlb_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSshKeyName + '"/>'
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
                         + '<td class="btn_mtd ovm" data-th="Name">' + item.id
-                        // + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
                         + '</td>'
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>'
                         + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'
-                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                     ))
                 } else {
                     data.filter((list) => list.name !== "").map((item, index) => (
-                        //html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">'
-                        html += '<tr onclick="showSshKeyInfo(\'' + item.id + '\');">'
+                        html += '<tr onclick="showNlbInfo(\'' + item.id + '\');">'
                         + '<td class="overlay hidden column-50px" data-th="">'
-                        + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '"/>'
+                        + '<input type="hidden" id="nlb_info_' + index + '" value="' + item.name + '"/>'
                         + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
                         + '<td class="btn_mtd ovm" data-th="id">' + item.id + '<span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>'
                         + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'
-                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
                         + '</tr>'
                     ))
 
                 }
 
-                $("#sList").empty();
-                $("#sList").append(html);
+                $("#nlbList").empty();
+                $("#nlbList").append(html);
 
                 ModalDetail()
 
             }
         }
 
-        // }).catch(function(error){
-        //     console.log("get nlbList error : ",error);        
-        // });
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
@@ -134,30 +122,20 @@ function getSshKeyList(sort_type) {
     });
 }
 
-// function goFocus(target) {
-
-//     console.log(event)
-//     event.preventDefault()
-
-//     $("#" + target).focus();
-//     fnMove(target)
-// }
-
 function deleteNlb() {
-    // function goDelete() {
-    var selSshKeyId = "";
+    var selNlbId = "";
     var count = 0;
 
     $("input[name='chk']:checked").each(function () {
         count++;
-        selSshKeyId = selSshKeyId + $(this).val() + ",";
+        selNlbId = selNlbId + $(this).val() + ",";
     });
-    selSshKeyId = selSshKeyId.substring(0, selSshKeyId.lastIndexOf(","));
+    selNlbId = selNlbId.substring(0, selNlbId.lastIndexOf(","));
 
-    console.log("nlbId : ", selSshKeyId);
+    console.log("nlbId : ", selNlbId);
     console.log("count : ", count);
 
-    if (selSshKeyId == '') {
+    if (selNlbId == '') {
         alert("삭제할 대상을 선택하세요.");
         return false;
     }
@@ -167,31 +145,24 @@ function deleteNlb() {
         return false;
     }
 
-    var url = "" + "" + selSshKeyId;
+    var url = "" + "" + selNlbId;
     var url = "/operation/services/nlb/list" + "/nlb/" + nlbID;
     axios.delete(url, {
         headers: {
-            // 'Authorization': "{{ .apiInfo}}",
             'Content-Type': "application/json"
         }
     }).then(result => {
         var data = result.data;
         console.log(data);
         if (result.status == 200 || result.status == 201) {
-            // commonAlert("Success Delete SSH Key.");
             commonAlert(data.message);
-            // location.reload(true);
-
-            displaySshKeyInfo("DEL_SUCCESS");
-            //getSshKeyList("name");
-
-            getSshKeyList("name");
+            
+            displayNlbInfo("DEL_SUCCESS");
+            
+            getNlbList("name");
         } else {
             commonAlert(data.error);
         }
-        // }).catch(function(error){
-        //     console.log("get delete error : ",error);        
-        // });
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
@@ -201,22 +172,18 @@ function deleteNlb() {
     });
 }
 
-function showSshKeyInfo(sshKeyId) {
-    console.log("target showSshKeyInfo : ", sshKeyId);
+function showNlbInfo(nlbId) {
+    console.log("target showNlbInfo : ", nlbId);
 
-    $(".stxt").html(sshKeyId);
+    $(".stxt").html(nlbId);
 
-    // var sshKeyId = target;
-    // var apiInfo = "{{ .apiInfo}}";
-    // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey/"+ sshKeyId;
-    var url = "/setting/resources" + "/sshkey/" + sshKeyId;
-    console.log("ssh key URL : ", url)
+    var url = "/operation/services/nlb/" + nlbId;
+    console.log("nlb URL : ", url)
 
     return axios.get(url, {
         headers: {
-            // 'Authorization': apiInfo
+            'Content-Type': "application/json"
         }
-
     }).then(result => {
         var data = result.data.SshKeyInfo
         console.log("Show Data : ", data);
@@ -245,9 +212,7 @@ function showSshKeyInfo(sshKeyId) {
         $('#dtlPublicKey').val(dtlPublicKey);
         $('#dtlPrivateKey').val(dtlPrivateKey);
         $('#dtlFingerprint').val(dtlFingerprint);
-        // }).catch(function(error){
-        //     console.log("get sshKey error : ",error);        
-        // });
+        
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
@@ -257,16 +222,16 @@ function showSshKeyInfo(sshKeyId) {
     });
 }
 
-function createSSHKey() {
-    var cspSshKeyName = $("#regCspSshKeyName").val()
+function createNlb() {
+    var cspNlbName = $("#regCspNlbName").val()
     var connectionName = $("#regConnectionName").val()
 
-    console.log("info param cspSshKeyName : ", cspSshKeyName);
+    console.log("info param cspNlbName : ", cspNlbName);
     console.log("info param connectionName : ", connectionName);
 
-    if (!cspSshKeyName) {
-        alert("Input New SSH Key Name")
-        $("#regCspSshKeyName").focus()
+    if (!cspNlbName) {
+        alert("Input New Nlb Name")
+        $("#regCspNlbName").focus()
         return;
     }
     if (!connectionName) {
@@ -275,40 +240,28 @@ function createSSHKey() {
         return;
     }
 
-    // var apiInfo = "{{ .apiInfo}}";
-    // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
-    var url = "" + "";
-    var url = "/setting/resources" + "/sshkey/reg"
-    console.log("ssh key URL : ", url)
+    var url = "/operation/services" + "/nlb/reg"
+    console.log("nlb URL : ", url)
     var obj = {
-        name: cspSshKeyName,
+        name: cspNlbName,
         connectionName: connectionName
     }
     console.log("info connectionconfig obj Data : ", obj);
-    if (cspSshKeyName) {
+    if (cspNlbName) {
         axios.post(url, obj, {
             headers: {
-                'Content-type': 'application/json',
-                // 'Authorization': apiInfo,
+                'Content-type': "application/json",                
             }
         }).then(result => {
             console.log(result);
             if (result.status == 200 || result.status == 201) {
-                commonAlert("Success Create SSH Key")
+                commonAlert("Success Create Nlb ")
                 //등록하고 나서 화면을 그냥 고칠 것인가?
-                displaySshKeyInfo("REG_SUCCESS");
-                //getSshKeyList("name");
-                //아니면 화면을 리로딩 시킬것인가?
-                // location.reload();
-                // $("#btn_add2").click()
-                // $("#namespace").val('')
-                // $("#nsDesc").val('')
+                displayNlbInfo("REG_SUCCESS");
+                
             } else {
-                commonAlert("Fail Create SSH Key")
+                commonAlert("Fail Create Nlb ")
             }
-            // }).catch(function(error){
-            //     console.log("get create error : ",error);        
-            // });
         }).catch((error) => {
             console.warn(error);
             console.log(error.response)
@@ -323,8 +276,8 @@ function createSSHKey() {
     }
 }
 
-// updateSshKey : TODO : update를 위한 form을 만들 것인가 ... 기존 detail에서 enable 시켜서 사용할 것인가
-function updateSSHKey() {
+// updateNlb : TODO : update를 위한 form을 만들 것인가 ... 기존 detail에서 enable 시켜서 사용할 것인가
+function updateNlb() {
     var sshKeyId = $("#dtlSshKeyId").val()
     var sshKeyName = $("#dtlSshKeyName").val()
     var cspSshKeyId = $("#dtlCspSshKeyId").val()
@@ -355,31 +308,21 @@ function updateSSHKey() {
         username :	username,
         verifiedUsername :	verifiedUsername
     }
-    console.log("info updateSSHKey obj Data : ", obj);
+    console.log("info updateNlb obj Data : ", obj);
     if (cspSshKeyName) {
         axios.post(url, obj, {
             headers: {
-                'Content-type': 'application/json',
-                // 'Authorization': apiInfo,
+                'Content-type': "application/json",
             }
         }).then(result => {
             console.log(result);
             if (result.status == 200 || result.status == 201) {
-                commonAlert(" SSH Key Modification Success")
-                //등록하고 나서 화면을 그냥 고칠 것인가?
-                displaySshKeyInfo("REG_SUCCESS");// TODO : MODIFY 성공일 때 어떻게 처리 할지 정의해서 보완할 것.
-                //getSshKeyList("name");
-                //아니면 화면을 리로딩 시킬것인가?
-                // location.reload();
-                // $("#btn_add2").click()
-                // $("#namespace").val('')
-                // $("#nsDesc").val('')
+                commonAlert(" Nlb Modification Success")
+                displayNlbInfo("REG_SUCCESS");// TODO : MODIFY 성공일 때 어떻게 처리 할지 정의해서 보완할 것.
+                
             } else {
-                commonAlert("Fail Create SSH Key")
+                commonAlert("Fail Create Nlb")
             }
-            // }).catch(function(error){
-            //     console.log("get create error : ",error);
-            // });
         }).catch((error) => {
             console.warn(error);
             console.log(error.response)
@@ -423,44 +366,3 @@ function ModalDetail() {
         });
     });
 }
-
-
-// function getConnectionInfo(provider){
-//     // var url = SpiderURL+"/connectionconfig";
-//     console.log("provider : ",provider)
-//     //var provider = $("#provider option:selected").val();
-//     var html = "";
-//     var apiInfo = ApiInfo
-//     axios.get(url,{
-//         headers:{
-//             'Authorization': apiInfo
-//         }
-//     }).then(result=>{
-//         console.log('getConnectionConfig result: ',result)
-//         var data = result.data.connectionconfig
-//         console.log("connection data : ",data);
-//         var count = 0; 
-//         var configName = "";
-//         var confArr = new Array();
-//         for(var i in data){
-//             if(provider == data[i].ProviderName){ 
-//                 count++;
-//                 html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
-//                 configName = data[i].ConfigName
-//                 confArr.push(data[i].ConfigName)
-
-//             }
-//         }
-//         if(count == 0){
-//             alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
-//                 html +='<option selected>Select Configname</option>';
-//         }
-//         if(confArr.length > 1){
-//             configName = confArr[0];
-//         }
-//         $("#regConnectionName").empty();
-//         $("#regConnectionName").append(html);
-
-
-//     })
-// }
