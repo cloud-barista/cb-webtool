@@ -1768,7 +1768,7 @@ func DataDiskGet(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":      "success",
 		"status":       respStatus,
-		"DataDiskInfo": dataDiskInfo,
+		"dataDiskInfo": dataDiskInfo,
 	})
 }
 

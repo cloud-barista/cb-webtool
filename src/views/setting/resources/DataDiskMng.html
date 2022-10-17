@@ -47,7 +47,7 @@
 								<div class="box">
 									<ul>
 										<li><a href="javascript:void(0);"
-												onclick="commonPromptOpen('RsFltVPCName', 'vpcListTable')">VPC Name</a>
+												onclick="commonPromptOpen('RsFltVPCName', 'vpcListTable')">Disk Name</a>
 										</li>
 										<li><a href="javascript:void(0);"
 												onclick="commonPromptOpen('RsFltCIDRBlock', 'vpcListTable')">CIDR
@@ -105,8 +105,9 @@
 							<tr>
 								<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall"
 										title="" /><label for="th_chall"></label></td>
-								<th>VPC Name</th>
-								<th>CIDR Block</th>
+								<th>Disk Name</th>
+								<th>Disk Type</th>
+								<th>Disk Size</th>
 								<th>Description</th>
 							</tr>
 						</thead>
@@ -128,7 +129,7 @@
 
 		<div class="d_box box_m box_w100">
 			<div class="titbox_n">
-				<div class="tit initial"><strong>Network Info</strong> [ <span class="stxt" id="dataDiskName"></span>
+				<div class="tit initial"><strong>Disk Info</strong> [ <span class="stxt" id="dataDiskName"></span>
 					] </div>
 			</div>
 
@@ -139,9 +140,23 @@
 						<div class="ipbox ipbox1">
 							<ul>
 								<li>
-									<label>VPC Name</label>
+									<label>Disk Name</label>
 									<span class="sbox">
-										<input type="text" id="dtlVpcName" name="dtlVpcName" value="" placeholder=""
+										<input type="text" id="dtlDiskName" name="dtlDiskName" value="" placeholder=""
+											class="gray" title="" disabled />
+									</span>
+								</li>
+								<li>
+									<label>Disk Type</label>
+									<span class="sbox">
+										<input type="text" id="dtlDiskType" name="dtlDiskType" value="" placeholder=""
+											class="gray" title="" disabled />
+									</span>
+								</li>
+								<li>
+									<label>Disk Size</label>
+									<span class="sbox">
+										<input type="text" id="dtlDiskSize" name="dtlDiskSize" value="" placeholder=""
 											class="gray" title="" disabled />
 									</span>
 								</li>
@@ -174,7 +189,7 @@
 									<input type="text" id="dtlConnectionName" name="dtlConnectionName" value=""
 										placeholder="" class="gray" title="" readonly />
 								</li>
-								<li>
+								<!-- <li>
 									<label>CidrBlock</label>
 									<input type="text" id="dtlCidrBlock" name="dtlCidrBlock" value="" placeholder=""
 										class="gray" title="" readonly />
@@ -185,9 +200,9 @@
 										<input type="text" id="dtlSubnet" name="dtlSubnet" value="" placeholder=""
 											class="gray" title="" readonly />
 										<button name="" value="" class="btn_edit btn_register">Edit</button>
-										<!-- subnet 추가버튼-->
+										
 									</span>
-								</li>
+								</li> -->
 							</ul>
 						</div>
 					</div>
@@ -227,14 +242,14 @@
 										placeholder="Input Disk Name" class="pline" title="" />
 								</li>
 								<li>
-									<label><span class="ch">*</span>Disk Size</label>
-									<input type="text" id="regDataDiskSize" name="reg_dataDiskSize" value=""
-										placeholder="Input Disk Size" class="pline" title="" />
-								</li>
-								<li>
 									<label><span class="ch">*</span>Disk Type</label>
 									<input type="text" id="regDataDiskType" name="reg_dataDiskType" value=""
 										placeholder="Input Disk Type" class="pline" title="" />
+								</li>
+								<li>
+									<label><span class="ch">*</span>Disk Size</label>
+									<input type="text" id="regDataDiskSize" name="reg_dataDiskSize" value=""
+										placeholder="Input Disk Size" class="pline" title="" />
 								</li>
 								<li class="ta_1">
 									<label>Description</label>

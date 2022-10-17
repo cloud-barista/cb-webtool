@@ -19,7 +19,7 @@ $(document).ready(function () {
             $(".dashboard_cont .dataTable").removeClass("scrollbar-inner");
         }
 
-        setTableHeightForScroll('vpcListTable', 300);
+        setTableHeightForScroll('dataDiskListTable', 300);
     });
 });
 
@@ -130,14 +130,15 @@ function addDataDiskRow(item, index) {
     console.log("addDataDiskRow " + index);
     console.log(item)
     var html = ""
-    html += '<tr onclick="showDataDiskInfo(\'' + item.name + '\');">'
+    html += '<tr onclick="showDataDiskInfo(\'' + item.id + '\',\'' + item.name + '\');">'
         + '<td class="overlay hidden column-50px" data-th="">'
-        + '<input type="hidden" id="sg_info_' + index + '" value="' + item.name + '"/>'
-        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span>'
-        + '<input type="hidden" value="' + item.systemLabel + '"/>'
+        + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
+        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span>'
+
         + '</td>'
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
-        + '<td class="overlay hidden" data-th="cidrBlock">' + item.cidrBlock + '</td>'
+        + '<td class="overlay hidden" data-th="diskType">' + item.diskType + '</td>'
+        + '<td class="overlay hidden" data-th="diskSize">' + item.diskSize + '</td>'
         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'
         + '</tr>'
     return html;
@@ -320,12 +321,12 @@ function createDatadisk() {
 }
 
 // 선택한 dataDisk의 상세정보 : 이미 가져왔는데 다시 가져올 필요있나?? dataDiskID
-function showDataDiskInfo(dataDiskName) {
-    console.log("showDataDiskInfo : ", vpcName);
+function showDataDiskInfo(dataDiskId, dataDiskName) {
+    console.log("showDataDiskInfo : ", dataDiskName);
     
-    $('#networkVpcName').text(vpcName)
+    $('#dataDiskName').text(dataDiskName)
 
-    var url = "/setting/resources" + "/datadisk/" + encodeURIComponent(dataDiskName);
+    var url = "/setting/resources" + "/datadisk/" + encodeURIComponent(dataDiskId);
     console.log("dataDisk detail URL : ", url)
 
     return axios.get(url, {
@@ -335,30 +336,30 @@ function showDataDiskInfo(dataDiskName) {
         var data = result.data.dataDiskInfo
         console.log("Show Data : ", data);
 
-        var dtlVpcName = data.name;
+        var dtlDiskName = data.name;
         var dtlDescription = data.description;
+        var dtlDiskType = data.diskType;
+        var dtlDiskSize = data.diskSize;
         var dtlConnectionName = data.connectionName;
-        var dtlCidrBlock = data.cidrBlock;
-        var dtlSubnet = "";
+      
+        // var subList = data.subnetInfoList;
+        // for (var i in subList) {
+        //     dtlSubnet += subList[i].id + " (" + subList[i].ipv4_CIDR + ")";
+        // }
+        // console.log("dtlSubnet : ", dtlSubnet);
 
-        var subList = data.subnetInfoList;
-        for (var i in subList) {
-            dtlSubnet += subList[i].id + " (" + subList[i].ipv4_CIDR + ")";
-        }
-        console.log("dtlSubnet : ", dtlSubnet);
-
-        $("#dtlVpcName").empty();
+        $("#dtlDiskName").empty();
+        $("#dtlDiskType").empty();
+        $("#dtlDiskSize").empty();
         $("#dtlDescription").empty();
-        $("#dtlProvider").empty();
         $("#dtlConnectionName").empty();
-        $("#dtlCidrBlock").empty();
-        $("#dtlSubnet").empty();
 
-        $("#dtlVpcName").val(dtlVpcName);
+
+        $("#dtlDiskName").val(dtlDiskName);
+        $("#dtlDiskType").val(dtlDiskType);
+        $("#dtlDiskSize").val(dtlDiskSize);
         $("#dtlDescription").val(dtlDescription);
         $("#dtlConnectionName").val(dtlConnectionName);
-        $("#dtlCidrBlock").val(dtlCidrBlock);
-        $("#dtlSubnet").val(dtlSubnet);
 
         if (dtlConnectionName == '' || dtlConnectionName == undefined) {
             commonAlert("ConnectionName is empty")
