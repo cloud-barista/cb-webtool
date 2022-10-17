@@ -100,7 +100,6 @@ func NlbMngForm(c echo.Context) error {
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"SelectedMcisID":     selectedMcisID, // 선택한 MCIS ID
-
 		})
 }
 

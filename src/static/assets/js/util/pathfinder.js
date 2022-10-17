@@ -68,6 +68,7 @@ function getWebToolUrl(controllerKeyName) {
             ["MonitoringPolicyConfigMngForm", "/operation/policies/monitoringconfigpolicy/mngform"],
             ["MonitoringPolicyThresholdMngForm", "/operation/policies/monitoringalertpolicy/mngform"],
             ["NlbMngForm", "/operation/services/nlb/mngform"],
+            ["NlbRegForm", "/operation/services/nlb/regform"],
 
             ["AboutForm", "/operation/about/about"],
             

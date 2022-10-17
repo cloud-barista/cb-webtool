@@ -1,214 +1,130 @@
 $(document).ready(function () {
-    checkLoadStatus();
-
-    setTableHeightForScroll("mcksListTable", 700);
+    setTableHeightForScroll('nlbList', 300)
 });
 
-function clickListOfMcks(uid, mcksIndex) {
-    console.log("click view mcks id :", uid)
-    $(".server_status").addClass("view");
+// area 표시
+function displayNlbInfo(targetAction) {
+    if (targetAction == "REG") {
+        $('#nlbCreateBox').toggleClass("active");
+        $('#nlbInfoBox').removeClass("view");
+        $('#nlbListTable').removeClass("on");
+        var offset = $("#nlbCreateBox").offset();
+        // var offset = $("#" + target+"").offset();
+        $("#TopWrap").animate({ scrollTop: offset.top }, 300);
 
-    // List Of MCKS에서 선택한 row 외에는 안보이게
-    $("[id^='server_info_tr_']").each(function () {
-        var item = $(this).attr("item").split("|")
-        console.log(item)
-        if (id == item[0]) {
-            $(this).addClass("on")
-        } else {
-            $(this).removeClass("on")
-        }
-    })
+        // form 초기화
+        $("#regCspSshKeyName").val('');
+        //$("#regProvider").val('');
+        //$("#regCregConnectionNameidrBlock").val('');
+        goFocus('nlbCreateBox');
+    } else if (targetAction == "REG_SUCCESS") {
+        $('#nlbCreateBox').removeClass("active");
+        $('#nlbInfoBox').removeClass("view");
+        $('#nlbListTable').addClass("on");
 
-    $("#mcks_uid").val($("#mcksUID" + mcksIndex).val());
-    $("#mcks_name").val($("#mcksName" + mcksIndex).val());
+        var offset = $("#nlbCreateBox").offset();
+        $("#TopWrap").animate({ scrollTop: offset.top }, 0);
 
-    // MCKS Info area set
-    showServerListAndStatusArea(uid, mcksIndex);
-}
+        // form 초기화
+        $("#regCspSshKeyName").val('');
+        $("#regProvider").val('');
+        $("#regCregConnectionNameidrBlock").val('');
 
+        getSshKeyList("name");
+    } else if (targetAction == "DEL") {
+        $('#nlbCreateBox').removeClass("active");
+        $('#nlbInfoBox').addClass("view");
+        $('#nlbListTable').removeClass("on");
 
-// MCKS Info area 안의 Node List 내용 표시
-// 해당 MCKS의 모든 Node 표시
-// TODO : 클릭했을 때 서버에서 조회하는것으로 변경할 것.
-function showServerListAndStatusArea(uid, mcksIndex) {
+        var offset = $("#sskKeyInfoBox").offset();
+        $("#TopWrap").animate({ scrollTop: offset.top }, 300);
 
-    var mcksUID = $("#mcksUID" + mcksIndex).val();
-    var mcksName = $("#mcksName" + mcksIndex).val();
-    var mcksStatus = $("#mcksStatus" + mcksIndex).val();
-    var mcksConfig = $("#mcksConfig" + mcksIndex).val();
-    var nodeTotalCountOfMcks = $("#mcksNodeTotalCount" + mcksIndex).val();
+    } else if (targetAction == "DEL_SUCCESS") {
+        $('#nlbCreateBox').removeClass("active");
+        $('#nlbInfoBox').removeClass("view");
+        $('#nlbListTable').addClass("on");
 
-    $(".server_status").addClass("view")
-    $("#mcks_info_txt").text("[ " + mcksName + " ]");
-    $("#mcks_server_info_status").empty();
-    $("#mcks_server_info_status").append('<strong>Node List </strong>  <span class="stxt">[ ' + mcksName + ' ]</span>  Node(' + nodeTotalCountOfMcks + ')')
+        var offset = $("#sskKeyInfoBox").offset();
+        $("#TopWrap").animate({ scrollTop: offset.top }, 0);
 
-    //
-    $("#mcks_info_name").val(mcksName + " / " + mcksUID)
-    $("#mcks_info_Status").val(mcksStatus)
-    $("#mcks_info_cloud_connection").val(mcksConfig)
+        getSshKeyList("name");
+    } else if (targetAction == "CLOSE") {
+        $('#nlbCreateBox').removeClass("active");
+        $('#nlbInfoBox').removeClass("view");
+        $('#nlbListTable').addClass("on");
 
-    $("#mcks_name").val(mcksName)
-
-    var mcksNodes = "";
-    //var mcksStatusIcon = "";
-    $("[id^='mcksNodeUID_']").each(function () {
-        var mcksNode = $(this).attr("id").split("_")
-        thisMcksIndex = mcksNode[1]
-        nodeIndexOfMcks = mcksNode[2]
-
-        if (thisMcksIndex == mcksIndex) {
-            var nodeID = $("#mcksNodeUID_" + thisMcksIndex + "_" + nodeIndexOfMcks).val();
-            var nodeName = $("#mcksNodeName_" + thisMcksIndex + "_" + nodeIndexOfMcks).val();
-
-            //nodeStatusIcon ="bgbox_g"
-            nodeStatusIcon = "bgbox_b"
-            // node 목록 표시
-            mcksNodes += '<li class="sel_cr ' + nodeStatusIcon + '"><a href="javascript:void(0);" onclick="nodeDetailInfo(\'' + thisMcksIndex + '\',\'' + nodeIndexOfMcks + '\')"><span class="txt">' + nodeName + '</span></a></li>';
-        }
-    });
-    $("#mcks_server_info_box").empty();
-    $("#mcks_server_info_box").append(mcksNodes);
-
-
-    //Manage MCKS Server List on/off : table을 클릭하면 해당 Row 에 active style로 보여주기
-    $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function () {
-        var $sel_list = $(this);
-        var $detail = $(".server_info");
-        console.log($sel_list);
-        console.log($detail);
-        console.log(">>>>>");
-        $sel_list.off("click").click(function () {
-            $sel_list.addClass("active");
-            $sel_list.siblings().removeClass("active");
-            $detail.addClass("active");
-            $detail.siblings().removeClass("active");
-            $sel_list.off("click").click(function () {
-                if ($(this).hasClass("active")) {
-                    $sel_list.removeClass("active");
-                    $detail.removeClass("active");
-                } else {
-                    $sel_list.addClass("active");
-                    $sel_list.siblings().removeClass("active");
-                    $detail.addClass("active");
-                    $detail.siblings().removeClass("active");
-                }
-            });
-        });
-    });
-}
-
-// 해당 mcks에 node 추가
-// mcks가 경로에 들어가야 함. node 등록 form으로 이동
-function addNewNode() {
-    //var clusterId = $("#mcks_uid").val(); // mcks id 값이 없음
-    var clusterId = $("#mcks_name").val();
-    var clusterName = $("#mcks_name").val();
-
-    if (clusterId == "") {
-        commonAlert("MCKS 정보가 올바르지 않습니다.");
-        return;
+        var offset = $("#sskKeyInfoBox").offset();
+        $("#TopWrap").animate({ scrollTop: offset.top }, 0);
     }
-    var url = "/operation/manages/mcksmng/regform/" + clusterId + "/" + clusterName;
-    location.href = url;
 }
 
-// MCKS 삭제
-function deleteMCKS() {
-    var checkedCount = 0;
-    var mcksID = "";
-    var mcksName = "";
-    $("[id^='td_ch_']").each(function () {
-        var checkedIndex = $(this).val();
-        if ($(this).is(":checked")) {
-            checkedCount++;
-            console.log("checked")
-            mcksID = $("#mcksUID" + checkedIndex).val();
-            mcksName = $("#mcksName" + checkedIndex).val();
-            // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
-        } else {
-            console.log("checked nothing")
-        }
-    })
-
-    if (checkedCount == 0) {
-        commonAlert("Please Select MCKS!!")
-        return;
-    } else if (checkedCount > 1) {
-        commonAlert("Please Select One MCKS at a time")
-        return;
-    }
-
-    // TODO : 삭제 호출부분 function으로 뺼까?
-    //var url = "/ns/{namespace}/clusters/{cluster}"
-    var url = "/operation/manages/mcksmng/" + mcksID + "/" + mcksName;
-    axios.delete(url, {})
-        .then(result => {
-            console.log("get  Data : ", result.data);
-            //StatusInfo.code
-            //StatusInfo.kind
-            //StatusInfo.message
-            var statusCode = result.data.status;
-            var message = result.data.message;
-
-            if (statusCode != 200 && statusCode != 201) {
-                commonAlert(message + "(" + statusCode + ")");
-                return;
-            } else {
-                commonAlert(message);
-                // TODO : MCKS List 조회
-                //location.reload();
-            }
-
-        }).catch((error) => {
-            console.warn(error);
-            console.log(error.response)
-            var errorMessage = error.response.data.error;
-            var statusCode = error.response.status;
-            commonErrorAlert(statusCode, errorMessage)
-        });
-
-}
-
-function deleteNodeOfMcks() {
-    // worker만 삭제
-    // 1개씩 삭제
-
-    var selectedMcksUid = $("#mcks_uid").val();
-    var selectedMcksName = $("#mcks_name").val();
-    var selectedNodeUid = $("#node_uid").val();
-    var selectedNodeName = $("#node_name").val();
-    var selectedNodeRole = $("#mcks_node_role").val();
-
-    if (selectedNodeRole.toLowerCase() != "worker") {
-        commonAlert("Only worker node can be deleted")
-        return;
-    }
-
-    var orgUrl = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";
-    var urlParamMap = new Map();
-    urlParamMap.set(":clusteruID", selectedMcksUid)
-    urlParamMap.set(":clusterName", selectedMcksName)
-    urlParamMap.set(":nodeID", selectedNodeUid)
-    urlParamMap.set(":nodeName", selectedNodeName)
-    var url = setUrlByParam(orgUrl, urlParamMap)
-    console.log("URL : ", url)
-    axios.delete(url, {
+// SshKey 목록 조회
+function getSshKeyList(sort_type) {
+    //var url = "{{ .comURL.SpiderURL}}" + "/connectionconfig";
+    // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/nlb";
+    var url = "/setting/resources" + "/sshkey/list"
+    axios.get(url, {
         headers: {
+            // 'Authorization': "{{ .apiInfo}}",
             'Content-Type': "application/json"
         }
     }).then(result => {
-        // var data = result.data;
-        // if (result.status == 200 || result.status == 201) {
-        var statusCode = result.data.status;
-        if (statusCode == 200 || statusCode == 201) {
-            commonAlert("Success Delete Node.");
+        console.log("get SSH Data : ", result.data);
+        var data = result.data.SshKeyList; // exception case : if null 
+        var html = ""
 
+        if (data == null) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
+
+            $("#sList").empty();
+            $("#sList").append(html);
+
+            ModalDetail()
         } else {
-            var message = result.data.message;
-            commonAlert("Fail Delete Node : " + message + "(" + statusCode + ")");
+            if (data.length) { // null exception if not exist
+                if (sort_type) {
+                    console.log("check : ", sort_type);
+                    data.filter(list => list.name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
+                        //html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">'
+                        html += '<tr onclick="showSshKeyInfo(\'' + item.id + '\');">'
+                        + '<td class="overlay hidden column-50px" data-th="">'
+                        + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '|' + item.connectionName + '|' + item.cspSshKeyName + '"/>'
+                        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
+                        + '<td class="btn_mtd ovm" data-th="Name">' + item.id
+                        // + '<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="td_icon" alt=""/></a> <span class="ov"></span></td>'
+                        + '</td>'
+                        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>'
+                        + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'
+                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        + '</tr>'
+                    ))
+                } else {
+                    data.filter((list) => list.name !== "").map((item, index) => (
+                        //html += '<tr onclick="showSshKeyInfo(\'' + item.cspSshKeyName + '\');">'
+                        html += '<tr onclick="showSshKeyInfo(\'' + item.id + '\');">'
+                        + '<td class="overlay hidden column-50px" data-th="">'
+                        + '<input type="hidden" id="ssh_info_' + index + '" value="' + item.name + '"/>'
+                        + '<input type="checkbox" name="chk" value="' + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>'
+                        + '<td class="btn_mtd ovm" data-th="id">' + item.id + '<span class="ov"></span></td>'
+                        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>'
+                        + '<td class="overlay hidden" data-th="cspSshKeyName">' + item.cspSshKeyName + '</td>'
+                        // + '<td class="overlay hidden column-60px" data-th=""><a href="javascript:void(0);"><img src="/assets/img/contents/icon_link.png" class="icon" alt=""/></a></td>' 
+                        + '</tr>'
+                    ))
 
+                }
+
+                $("#sList").empty();
+                $("#sList").append(html);
+
+                ModalDetail()
+
+            }
         }
+
+        // }).catch(function(error){
+        //     console.log("get nlbList error : ",error);        
+        // });
     }).catch((error) => {
         console.warn(error);
         console.log(error.response)
@@ -218,23 +134,333 @@ function deleteNodeOfMcks() {
     });
 }
 
-// 선택한 Node의 상세정보 표시
-function nodeDetailInfo(mcksIndex, nodeIndex) {
-    var nodeUID = $("#mcksNodeUID_" + mcksIndex + "_" + nodeIndex).val();
-    var nodeName = $("#mcksNodeName_" + mcksIndex + "_" + nodeIndex).val();
-    var nodeKind = $("#mcksNodeKind_" + mcksIndex + "_" + nodeIndex).val();
-    var nodeRole = $("#mcksNodeRole_" + mcksIndex + "_" + nodeIndex).val();
+// function goFocus(target) {
 
-    // hidden 값 setting. 삭제 등에서 사용
-    $("#node_uid").val(nodeUID);
-    $("#node_name").val(nodeName);
+//     console.log(event)
+//     event.preventDefault()
 
-    $("#mcks_node_txt").text(nodeName + " / " + nodeUID);
+//     $("#" + target).focus();
+//     fnMove(target)
+// }
 
-    $("#mcks_node_name").val(nodeName);
-    $("#mcks_node_kind").val(nodeKind);
-    $("#mcks_node_role").val(nodeRole);
+function deleteNlb() {
+    // function goDelete() {
+    var selSshKeyId = "";
+    var count = 0;
 
-    $("#mcks_node_detail").css("display", "block");
+    $("input[name='chk']:checked").each(function () {
+        count++;
+        selSshKeyId = selSshKeyId + $(this).val() + ",";
+    });
+    selSshKeyId = selSshKeyId.substring(0, selSshKeyId.lastIndexOf(","));
 
+    console.log("nlbId : ", selSshKeyId);
+    console.log("count : ", count);
+
+    if (selSshKeyId == '') {
+        alert("삭제할 대상을 선택하세요.");
+        return false;
+    }
+
+    if (count != 1) {
+        alert("삭제할 대상을 하나만 선택하세요.");
+        return false;
+    }
+
+    var url = "" + "" + selSshKeyId;
+    var url = "/operation/services/nlb/list" + "/nlb/" + nlbID;
+    axios.delete(url, {
+        headers: {
+            // 'Authorization': "{{ .apiInfo}}",
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        var data = result.data;
+        console.log(data);
+        if (result.status == 200 || result.status == 201) {
+            // commonAlert("Success Delete SSH Key.");
+            commonAlert(data.message);
+            // location.reload(true);
+
+            displaySshKeyInfo("DEL_SUCCESS");
+            //getSshKeyList("name");
+
+            getSshKeyList("name");
+        } else {
+            commonAlert(data.error);
+        }
+        // }).catch(function(error){
+        //     console.log("get delete error : ",error);        
+        // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+    });
 }
+
+function showSshKeyInfo(sshKeyId) {
+    console.log("target showSshKeyInfo : ", sshKeyId);
+
+    $(".stxt").html(sshKeyId);
+
+    // var sshKeyId = target;
+    // var apiInfo = "{{ .apiInfo}}";
+    // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey/"+ sshKeyId;
+    var url = "/setting/resources" + "/sshkey/" + sshKeyId;
+    console.log("ssh key URL : ", url)
+
+    return axios.get(url, {
+        headers: {
+            // 'Authorization': apiInfo
+        }
+
+    }).then(result => {
+        var data = result.data.SshKeyInfo
+        console.log("Show Data : ", data);
+
+        var dtlCspSshKeyName = data.cspSshKeyName;
+        var dtlDescription = data.description;
+        var dtlUserID = data.userID;
+        var dtlConnectionName = data.connectionName;
+        var dtlPublicKey = data.publicKey;
+        var dtlPrivateKey = data.privateKey;
+        var dtlFingerprint = data.fingerprint;
+
+
+        $('#dtlCspSshKeyName').empty();
+        $('#dtlDescription').empty();
+        $('#dtlUserID').empty();
+        $('#dtlConnectionName').empty();
+        $('#dtlPublicKey').empty();
+        $('#dtlPrivateKey').empty();
+        $('#dtlFingerprint').empty();
+
+        $('#dtlCspSshKeyName').val(dtlCspSshKeyName);
+        $('#dtlDescription').val(dtlDescription);
+        $('#dtlUserID').val(dtlUserID);
+        $('#dtlConnectionName').val(dtlConnectionName);
+        $('#dtlPublicKey').val(dtlPublicKey);
+        $('#dtlPrivateKey').val(dtlPrivateKey);
+        $('#dtlFingerprint').val(dtlFingerprint);
+        // }).catch(function(error){
+        //     console.log("get sshKey error : ",error);        
+        // });
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+    });
+}
+
+function createSSHKey() {
+    var cspSshKeyName = $("#regCspSshKeyName").val()
+    var connectionName = $("#regConnectionName").val()
+
+    console.log("info param cspSshKeyName : ", cspSshKeyName);
+    console.log("info param connectionName : ", connectionName);
+
+    if (!cspSshKeyName) {
+        alert("Input New SSH Key Name")
+        $("#regCspSshKeyName").focus()
+        return;
+    }
+    if (!connectionName) {
+        alert("Input Connection Name")
+        $("#regConnectionName").focus()
+        return;
+    }
+
+    // var apiInfo = "{{ .apiInfo}}";
+    // var url = CommonURL+"/ns/"+NAMESPACE+"/resources/sshKey"
+    var url = "" + "";
+    var url = "/setting/resources" + "/sshkey/reg"
+    console.log("ssh key URL : ", url)
+    var obj = {
+        name: cspSshKeyName,
+        connectionName: connectionName
+    }
+    console.log("info connectionconfig obj Data : ", obj);
+    if (cspSshKeyName) {
+        axios.post(url, obj, {
+            headers: {
+                'Content-type': 'application/json',
+                // 'Authorization': apiInfo,
+            }
+        }).then(result => {
+            console.log(result);
+            if (result.status == 200 || result.status == 201) {
+                commonAlert("Success Create SSH Key")
+                //등록하고 나서 화면을 그냥 고칠 것인가?
+                displaySshKeyInfo("REG_SUCCESS");
+                //getSshKeyList("name");
+                //아니면 화면을 리로딩 시킬것인가?
+                // location.reload();
+                // $("#btn_add2").click()
+                // $("#namespace").val('')
+                // $("#nsDesc").val('')
+            } else {
+                commonAlert("Fail Create SSH Key")
+            }
+            // }).catch(function(error){
+            //     console.log("get create error : ",error);        
+            // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.statusText;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage);
+        });
+    } else {
+        commonAlert("Input SSH Key Name")
+        $("#regCspSshKeyName").focus()
+        return;
+    }
+}
+
+// updateSshKey : TODO : update를 위한 form을 만들 것인가 ... 기존 detail에서 enable 시켜서 사용할 것인가
+function updateSSHKey() {
+    var sshKeyId = $("#dtlSshKeyId").val()
+    var sshKeyName = $("#dtlSshKeyName").val()
+    var cspSshKeyId = $("#dtlCspSshKeyId").val()
+    var cspSshKeyName = $("#dtlCspSshKeyName").val()
+    var description = $("#dtlDescription").val()
+    var publicKey = $("#dtlPublicKey").val()
+    var privateKey = $("#dtlPrivateKey").val()
+    var fingerprint = $("#dtlFingerprint").val()
+    var username = $("#dtlUsername").val()
+    var verifiedUsername = $("#dtlVerifiedUsername").val()// TODO : 사용자 이름 입력 받아야 함.
+    var connectionName = $("#dtlConnectionName").val()
+
+    console.log("info param cspSshKeyName : ", cspSshKeyName);
+    console.log("info param connectionName : ", connectionName);
+
+    var url = "/setting/resources" + "/sshkey/del/" + sshKeyId
+    console.log("ssh key URL : ", url)
+    var obj = {
+        connectionName : connectionName,
+        id : sshKeyId,
+        name : sshKeyName,
+        cspSshKeyId	: cspSshKeyId,
+        cspSshKeyName : cspSshKeyName,
+        description	: description,
+        privateKey : privateKey,
+        publicKey :	publicKey,
+        fingerprint	: fingerprint,
+        username :	username,
+        verifiedUsername :	verifiedUsername
+    }
+    console.log("info updateSSHKey obj Data : ", obj);
+    if (cspSshKeyName) {
+        axios.post(url, obj, {
+            headers: {
+                'Content-type': 'application/json',
+                // 'Authorization': apiInfo,
+            }
+        }).then(result => {
+            console.log(result);
+            if (result.status == 200 || result.status == 201) {
+                commonAlert(" SSH Key Modification Success")
+                //등록하고 나서 화면을 그냥 고칠 것인가?
+                displaySshKeyInfo("REG_SUCCESS");// TODO : MODIFY 성공일 때 어떻게 처리 할지 정의해서 보완할 것.
+                //getSshKeyList("name");
+                //아니면 화면을 리로딩 시킬것인가?
+                // location.reload();
+                // $("#btn_add2").click()
+                // $("#namespace").val('')
+                // $("#nsDesc").val('')
+            } else {
+                commonAlert("Fail Create SSH Key")
+            }
+            // }).catch(function(error){
+            //     console.log("get create error : ",error);
+            // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.statusText;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage);
+        });
+    } else {
+        commonAlert("Input SSH Key Name")
+        $("#regCspSshKeyName").focus()
+        return;
+    }
+}
+
+function ModalDetail() {
+    $(".dashboard .status_list tbody tr").each(function () {
+        var $td_list = $(this),
+            $status = $(".server_status"),
+            $detail = $(".server_info");
+        $td_list.off("click").click(function () {
+            $td_list.addClass("on");
+            $td_list.siblings().removeClass("on");
+            $status.addClass("view");
+            $status.siblings().removeClass("on");
+            $(".dashboard.register_cont").removeClass("active");
+            $td_list.off("click").click(function () {
+                if ($(this).hasClass("on")) {
+                    console.log("reg ok button click")
+                    $td_list.removeClass("on");
+                    $status.removeClass("view");
+                    $detail.removeClass("active");
+                } else {
+                    $td_list.addClass("on");
+                    $td_list.siblings().removeClass("on");
+                    $status.addClass("view");
+
+                    $status.siblings().removeClass("view");
+                    $(".dashboard.register_cont").removeClass("active");
+                }
+            });
+        });
+    });
+}
+
+
+// function getConnectionInfo(provider){
+//     // var url = SpiderURL+"/connectionconfig";
+//     console.log("provider : ",provider)
+//     //var provider = $("#provider option:selected").val();
+//     var html = "";
+//     var apiInfo = ApiInfo
+//     axios.get(url,{
+//         headers:{
+//             'Authorization': apiInfo
+//         }
+//     }).then(result=>{
+//         console.log('getConnectionConfig result: ',result)
+//         var data = result.data.connectionconfig
+//         console.log("connection data : ",data);
+//         var count = 0; 
+//         var configName = "";
+//         var confArr = new Array();
+//         for(var i in data){
+//             if(provider == data[i].ProviderName){ 
+//                 count++;
+//                 html += '<option value="'+data[i].ConfigName+'" item="'+data[i].ProviderName+'">'+data[i].ConfigName+'</option>';
+//                 configName = data[i].ConfigName
+//                 confArr.push(data[i].ConfigName)
+
+//             }
+//         }
+//         if(count == 0){
+//             alert("해당 Provider에 등록된 Connection 정보가 없습니다.")
+//                 html +='<option selected>Select Configname</option>';
+//         }
+//         if(confArr.length > 1){
+//             configName = confArr[0];
+//         }
+//         $("#regConnectionName").empty();
+//         $("#regConnectionName").append(html);
+
+
+//     })
+// }
