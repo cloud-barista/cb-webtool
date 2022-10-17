@@ -1,127 +1,157 @@
-{{template "OperationTop" .}}
-<div id="lnb">
-			
-	<div class="bg"></div>
-		
-	<div class="m_box">
-		
-		{{template "TopBox" .}}
+{{define "NlbCreate"}}
+	<!-- Modify -->
+    <div class="dashboard dashboard_cont server_status" id="nlbInfoBox">
 
-		{{template "LNBPopup" .}}
-		
-        <!-- menu -->
-		{{template "MenuLeft" .}}
-		<!-- //menu -->	
-	</div>
-	
-	
-	<div class="bottom"></div>
-	<a href="javascript:;" id="m_close"></a>
-	
-</div>
-{{template "Header" .}}
-{{template "Modal" .}}
-				<script>
-			
-				</script>
-				<!-- contents -->
-				<div class="contbox">
-					
-					<input type="hidden" name="mcis_id"  value="{{ .McksID}}" id="mcis_id" />
-					
-					<div class="titlebox">
-						<div class="tit"><img src="/assets/img/common/icon_cont.png" />Manage / <strong>MCKS</strong></div>
-						<div class="location">Home  <span>></span>  Operation  <span>></span>  Manage  <span>></span>  <strong>MCKS</strong></div>
-					</div>
-						
-					
-					<!-- Node list -->
-					<div class="dashboard dashboard_cont">
-						
-						<div class="d_box box_m box_w100">
-							<div class="titbox line_none">
-								<div class="tit initial"><strong>Extend Nodes</strong> [ {{ .McksID }} / {{ .McksName }} ]</div>
-								
-								<div class="step_box">
-									<div class="on">STEP 1 <div class="bar"></div></div>
-									<div>STEP 2 <div class="bar"></div></div>
-									<div>STEP 3 <div class="bar"></div></div>
-								</div>
+        <div class="d_box box_m box_w100">
+            <div class="titbox_n">
+                <div class="tit initial"><strong>SSH Key Info</strong> [<span class="stxt"></span>]</div>
+            </div>
 
-							</div>
-							
-							
-							<div class="ds_cont">
-								
-								<div class="area_cont">
+            <div class="ds_cont">
+                <div class="register_box">
 
-									<div class="box">
-																				
-										<div class="create_box">
-											
-											<div class="create_top">
-											
-												
-												<!-- Nodes -->
-												<div class="servers_box">
-													<div class="title">Nodes</div>
-													
-													<div class="list">
-	
-														<ul id="node_list">
-															{{ $length := len .NodeList.Items }} 
-															{{ if eq $length 0 }}
-															<tr>
-																<td class="overlay hidden" data-th="" colspan="8">No Data</td>
-															</tr>
-															{{ end }}
-															{{range $nodeIndex, $nodeInfo := .NodeList.Items}}
-															
-															<li>
-																<div class="server server_on bgbox_g">
-																	<div class="icon"></div>
-																	<div class="txt" alt="{{$nodeInfo.Role}}">{{$nodeIndex}} : {{$nodeInfo.Name}}  </div>																													
-																</div>
-															</li>														
+                    <div class="top_ipbox">
+                        <div class="ipbox ipbox1">
+                            <ul>
+                                <li class="reg_1">
+                                    <label>SSH Key Name</label>
+                                    <span class="sbox">
+                                        <input type="hidden" id="dtlCspSshKeyId" name="" value="" placeholder=""
+                                               class="gray" title="" readonly />
+                                        <input type="text" id="dtlCspSshKeyName" name="" value="" placeholder=""
+                                            class="gray" title="" readonly />
+                                        /
+                                        <input type="text" id="dtlSshKeyName" name="" value="" placeholder=""
+                                               class="gray" title="" readonly />
+                                        <input type="hidden" id="dtlSshKeyId" name="" value="" placeholder=""
+                                               class="gray" title="" readonly />
+                                        <!--<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="icon" alt="" /></a>-->
+                                    </span>
+                                </li>
+                                <li class="reg_1">
+                                    <label>Description</label>
+                                    <textarea id="dtlDescription" cols="" rows="" placeholder="" class="gray" title=""
+                                        readonly></textarea>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="ipbox ipbox2">
+                            <ul>
+                                <li class="reg_3">
+                                    <label>Connection Name</label>
+                                    <input type="text" id="dtlConnectionName" name="" value="" placeholder=""
+                                        class="gray" title="" readonly />
+                                </li>
+                                <li class="reg_3">
+                                    <label>publicKey</label>
+                                    <input type="text" id="dtlPublicKey" name="" value="" placeholder="" class="gray"
+                                        title="" readonly />
+                                </li>
+                                <li class="reg_3">
+                                    <label>privateKey</label>
+                                    <textarea id="dtlPrivateKey" cols="" rows="" placeholder="" class="gray" title=""
+                                        readonly></textarea>
+                                    <!-- <input type="text" id="dtlPrivateKey" name="" value="" placeholder="" class="gray" title="" readonly /> -->
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-															{{ end }}
-															
-														</ul>
-													</div>													
-													
-												</div>
-												<!-- //nodes -->												
+                    <div class="top_ipbox bottom_ipbox">
+                        <div class="ipbox ipbox1">
+                            <ul>
+                                <li class="reg_1">
+                                    <label>username</label>
+                                    <input type="text" id="dtlUsername" name="" value="" placeholder="" class="gray"
+                                        title="" readonly />
+                                    <input type="hidden" id="dtlUserID" name="" value="" placeholder="" class="gray"
+                                        title="" readonly />
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="ipbox ipbox2">
+                            <ul>
+                                <li class="reg_3">
+                                    <label>fingerprint</label>
+                                    <!-- <input type="text" name="" value="" placeholder="fingerprint" class="gray" title="" readonly /> -->
+                                    <textarea id="dtlFingerprint" cols="" rows="" placeholder="" class="gray" title=""
+                                        readonly></textarea>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-												<div>
-													<span class="text-center" id="nodeRegistResult">&nbsp;</span>
-												</div>
+                </div>
+            </div>
 
-												{{template "NodeConfigure" .}}
-												
-											</div>
-											<!-- button -->
-											<div class="btnbox spec_select_box">
-												<div class="btnbox spec_select_box">
-													<div class="btn_right">
-														<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="nodeDone_btn();"><span>DONE</span></button> 
-														<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
-														
-													</div>
-												</div>
-											</div>
-											<!-- //button -->											
-										</div>
-									</div>									
-								</div>								
-							</div>
-							
-						</div>
-						
-					</div>
-					<!-- //list -->
-					
-				</div>
-				<!-- //contents -->				
-				<script src="/assets/js/operation/services/nlbmng/nlbcreate.js"></script>
+        </div>
 
-{{template "Footer" .}}			
+    </div>
+    <!-- //Modify -->
+
+    <!-- Register Security -->
+    <div class="dashboard dashboard_cont register_cont" id="nlbCreateBox">
+
+        <div class="d_box box_m box_w100">
+            <div class="titbox_n">
+                <div class="tit initial cg"><strong>Create Nlb</strong></div>
+            </div>
+
+            <div class="ds_cont">
+                <div class="register_box reg">
+
+                    <div class="top_ipbox">
+                        <div class="ipbox ipbox1">
+                            <ul>
+                                <li class="reg_1">
+                                    <label><span class="ch">*</span>Nlb Name</label>
+                                    <input type="text" name="reg_cspSshKeyName" id="regCspSshKeyName" value=""
+                                        placeholder="Input Name" class="pline" title="" />
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="ipbox ipbox2">
+                            <ul>
+                                <li class="reg_3">
+                                    <label>Cloud Provider</label>
+                                    <!-- <input type="text" name="" value="" placeholder="AWS, AZURE, GCP, ALIBABA / Region" class="pline" title="" /> -->
+                                    <select class="selectbox white pline w3" name="ProviderName" id="regProvider"
+                                        onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
+                                        <option value="" selected>Select Cloud Provider</option>
+                                        {{ range $item := .CloudOSList}}
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                        {{ end }}
+                                        <option value="MOCK">MOCK</option> <!-- 임시로 MOCK 추가-->
+                                    </select>
+                                </li>
+
+                                <li class="reg_3">
+                                    <label><span class="ch">*</span>Connection Name</label>
+                                    <!-- <input type="text" name="" value="" placeholder="Select / Input fingerprint" class="pline ip_w1" title="" /> -->
+                                    <!-- <textarea cols="" rows="" placeholder="Description" class="pline ip_w1" title="" readonly></textarea> -->
+                                    <select class="selectbox white pline w3" name="reg_connectionName"
+                                        id="regConnectionName">
+                                        <option value="" selected>Select Connection Name</option>
+                                    </select>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="btnbox">
+                        <div class="btn_center">
+                            <button name="" value="" class="btn_co btn_cr_b w135 btn_cancel"
+                                onclick="displayNlbInfo('CLOSE')">Cancel</button>
+                            <button name="" value="" class="btn_co btn_cr_g w135 btn_ok"
+                                onclick="createNlb()">Ok</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- //Register Security -->
+	{{end}}
