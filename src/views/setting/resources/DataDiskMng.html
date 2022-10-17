@@ -47,14 +47,17 @@
 								<div class="box">
 									<ul>
 										<li><a href="javascript:void(0);"
-												onclick="commonPromptOpen('RsFltVPCName', 'vpcListTable')">Disk Name</a>
+												onclick="commonPromptOpen('RsFltVPCName', 'dataDiskListTable')">Disk Name</a>
 										</li>
 										<li><a href="javascript:void(0);"
-												onclick="commonPromptOpen('RsFltCIDRBlock', 'vpcListTable')">CIDR
-												Block</a></li>
+												onclick="commonPromptOpen('RsFltCIDRBlock', 'dataDiskListTable')">Disk Type</a>
+										</li>
+										<li><a href="javascript:void(0);"
+												onclick="commonPromptOpen('RsFltCIDRBlock', 'dataDiskListTable')">Disk Size</a>
+										</li>
 										<li class="divider"></li>
 										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
-												onClick="getVpcList()">Clear</a></li>
+												onClick="getDataDiskList()">Clear</a></li>
 
 									</ul>
 								</div>
@@ -66,9 +69,11 @@
 								<div class="box">
 									<ul>
 										<li><a href="javascript:void(0);"
-												onclick="tableSort('dataDiskListTable', 'VPC Name')">VPC Name</a></li>
+												onclick="tableSort('dataDiskListTable', 'Disk Name')">Disk Name</a></li>
 										<li><a href="javascript:void(0);"
-												onclick="tableSort('dataDiskListTable', 'CIDR Block')">CIDR Block</a></li>
+												onclick="tableSort('dataDiskListTable', 'Disk Type')">Disk Type</a></li>
+										<li><a href="javascript:void(0);"
+												onclick="tableSort('dataDiskListTable', 'Disk Size')">Disk Size</a></li>
 										<!--
 														<li><a href="javascript:void(0);" onclick="getVpcList('name')">VPC Name</a></li>
 														<li><a href="javascript:void(0);" onclick="getVpcList('cidrBlock')">CIDR Block</a></li>
