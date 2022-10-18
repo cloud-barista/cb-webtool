@@ -604,6 +604,7 @@ func main() {
 
 	e.POST("/operation/manages/mcismng/:mcisID/vm/reg/proc", controller.VmRegProc) // vm 등록이므로 vmID없이 reg/proc
 	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID", controller.GetVmInfoData)
+	e.GET("/operation/manages/mcismng/:mcisID/vnet/:vnetID", controller.GetVmInfoDataByVnet) // MCIS내 특정 Vnet을 사용하는 vm목록
 
 	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:command", controller.DataDiskToVmUpdateProc)      // disk attach detach
 	e.GET("/operation/manages/mcismng/:mcisID/vmgroup", controller.McisVmGroupList)                       // mcis의 vmGroup List

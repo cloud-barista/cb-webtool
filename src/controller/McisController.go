@@ -847,6 +847,44 @@ func GetVmInfoData(c echo.Context) error {
 	})
 }
 
+// MCIS의 특정 vnet을 사용하는 vm 들만 추출
+func GetVmInfoDataByVnet(c echo.Context) error {
+	log.Println("GetVmInfoDataByVnet")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login") // 조회기능에서 바로 login화면으로 돌리지말고 return message로 하는게 낫지 않을까?
+	}
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	mcisID := c.Param("mcisID")
+	vnetID := c.Param("vnetID")
+	log.Println("mcisID= " + mcisID + " , vnetID= " + vnetID)
+
+	resultMcisInfo, respStatus := service.GetMcisData(defaultNameSpaceID, mcisID)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	vmList := resultMcisInfo.Vm
+	resultVmList := []tbmcis.TbVmInfo{}
+	for _, vm := range vmList {
+		if vm.VNetID == vnetID {
+			resultVmList = append(resultVmList, vm)
+		}
+	}
+	resultMcisInfo.Vm = resultVmList
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  respStatus.Message,
+		"status":   respStatus.StatusCode,
+		"McisInfo": resultMcisInfo,
+	})
+}
+
 // MCIS의 status변경
 func McisLifeCycle(c echo.Context) error {
 	log.Println("McisLifeCycle : ")

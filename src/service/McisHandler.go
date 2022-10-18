@@ -483,7 +483,6 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 	// 전송은 vm -> 수신 vm
 	returnVmInfo := tbmcis.TbVmInfo{}
 	returnStatus := model.WebStatus{}
-	fmt.Println("111")
 
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
 	// if len(vmList) == 0 {
@@ -494,7 +493,7 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 	// if mcisID != mcisInfoID {
 	// 	return nil, model.WebStatus{StatusCode: 500, Message: "MCIS Info not valid"}
 	// }
-	fmt.Println("333")
+
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
