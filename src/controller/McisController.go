@@ -379,6 +379,8 @@ func GetMcisList(c echo.Context) error {
 				mcis.Vm = returnVmList
 				returnMcisList = append(returnMcisList, mcis)
 			}
+		} else {
+			returnMcisList = mcisList
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
