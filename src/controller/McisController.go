@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
 	// model "github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/model"
@@ -342,11 +343,49 @@ func GetMcisList(c echo.Context) error {
 			})
 		}
 
+		// 가져온 목록에서 특정 조건의 mcis만 추출
+		provider := c.QueryParam("provider")
+		connectionName := c.QueryParam("connection")
+		vnetID := c.QueryParam("vnet")
+		vmGroupID := c.QueryParam("vmgroup")
+		returnMcisList := []mcis.TbMcisInfo{}
+		if provider != "" || connectionName != "" || vnetID != "" || vmGroupID != "" {
+			for _, mcis := range mcisList {
+				vmList := mcis.Vm
+
+				returnVmList := []tbmcis.TbVmInfo{}
+				for _, vm := range vmList {
+
+					//if provider != "" {	}
+
+					if connectionName != "" && connectionName != vm.ConnectionName {
+						continue
+					}
+
+					if vnetID != "" && vnetID != vm.VNetID {
+						continue
+					}
+
+					if vmGroupID != "" && vmGroupID != vm.VmGroupID {
+						continue
+					}
+					returnVmList = append(returnVmList, vm)
+				}
+
+				if len(returnVmList) == 0 {
+					continue
+				}
+
+				mcis.Vm = returnVmList
+				returnMcisList = append(returnMcisList, mcis)
+			}
+		}
+
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message":            "success",
 			"status":             respStatus.StatusCode,
 			"DefaultNameSpaceID": defaultNameSpaceID,
-			"McisList":           mcisList,
+			"McisList":           returnMcisList,
 		})
 	}
 }
@@ -662,7 +701,26 @@ func GetMcisInfoData(c echo.Context) error {
 		})
 	}
 
+	//"/operation/manages/mcis?provider=:provider&connection=:connection&vnet=:vnet&vmgroup=:vmgroup"
+
 	resultMcisInfo, _ := service.GetMcisData(defaultNameSpaceID, mcisID)
+
+	provider := c.QueryParam("provider")
+	if provider != "" {
+
+	}
+	connectionName := c.QueryParam("connection")
+	if connectionName != "" {
+
+	}
+	vnetID := c.QueryParam("vnet")
+	if vnetID != "" {
+
+	}
+	vmGroupID := c.QueryParam("vmgroup")
+	if vmGroupID != "" {
+
+	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",

@@ -702,11 +702,17 @@ function getCommonFetchImages(caller, connectionName) {
 
 
 // MCIS 목록 존재여부
+// optionParam이 id, status, simple 면 "?option=id", "?option=status" 등으로 호출
+// 그외 optionPapam이거나 2개 이상인 경우는 optionParam을 그대로 넘김. ex) vnet=aaa&bbb=ccc&option=status
 function getCommonMcisList(caller, isCallback, targetObjId, optionParam) {
     var url = "/operation/manages/mcismng/list"
 
     if (optionParam != "") {
+        if(optionParam == "id" || optionParam == "status" || optionParam == "simple"){
         url += "?option=" + optionParam
+        }else{
+            url += optionParam
+        }
     }
     axios.get(url, {
         headers: {
@@ -727,30 +733,6 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam) {
         getMcisListCallbackFail(error)
     });
 }
-
-// 왜 똑같은게 있지?? 주석처리 함. 문제없으면 삭제할 것
-// function getCommonMcisList(caller) {
-//     var url = "/operation/manages/mcismng/list"
-//
-//     axios.get(url, {
-//         headers: {
-//             'Content-Type': "application/json"
-//         }
-//     }).then(result => {
-//         console.log("get Mcis List : ", result.data);
-//
-//         var data = result.data.McisList;
-//
-//         // if ( caller == "mainmcis") {
-//             console.log("return get Data");
-// 			getMcisListCallbackSuccess(caller, data)
-// 		// }
-//     }).catch(error => {
-// 		console.warn(error);
-// 		console.log(error.response)
-//         getMcisListCallbackFail(error)
-// 	});
-// }
 
 // MCIS 상세정보 조회
 function getCommonMcisData(caller, mcisID) {
