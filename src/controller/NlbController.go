@@ -19,8 +19,8 @@ import (
 	util "github.com/cloud-barista/cb-webtool/src/util"
 
 	echotemplate "github.com/foolin/echo-template"
+	echosession "github.com/go-session/echo-session"
 	"github.com/labstack/echo"
-	// echosession "github.com/go-session/echo-session"
 )
 
 // type SecurityGroup struct {
@@ -92,12 +92,26 @@ func NlbMngForm(c echo.Context) error {
 
 	mcisErr := model.WebStatus{}
 
+	store := echosession.FromContext(c)
+
+	cloudOsList, _ := service.GetCloudOSList()
+	store.Set("cloudos", cloudOsList)
+	log.Println(" cloudOsList  ", cloudOsList)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	store.Save()
+	log.Println(" nsList  ", nsList)
+
 	return echotemplate.Render(c, http.StatusOK,
 		"operation/services/nlbmng/NlbMng", // 파일명
 		map[string]interface{}{
 			"Message":            mcisErr.Message,
 			"Status":             200, //mcisErr.StatusCode, // 주요한 객체 return message 를 사용
 			"LoginInfo":          loginInfo,
+			"CloudOSList":   cloudOsList,
+			"NameSpaceList": nsList,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"SelectedMcisID":     selectedMcisID, // 선택한 MCIS ID
 		})
