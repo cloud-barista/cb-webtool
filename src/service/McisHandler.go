@@ -542,10 +542,10 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq, c echo.Context) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
 
-	vmGroupSize, err := strconv.ParseInt(vmInfo.VmGroupSize, 10, 64)
+	subGroupSize, err := strconv.ParseInt(vmInfo.SubGroupSize, 10, 64)
 
-	if vmGroupSize > 1 { // vmGroupSize가 2개 이상일 때
-		originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup"
+	if subGroupSize > 1 { // subGroupSize가 2개 이상일 때
+		originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup"
 	}
 
 	var paramMapper = make(map[string]string)
@@ -599,8 +599,8 @@ func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq, c ech
 }
 
 // MCIS에 VM 추가 등록
-func RegVmGroup(nameSpaceID string, mcisID string, vmGroupInfo *tbmcis.TbVmReq) (*tbmcis.TbMcisInfo, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup" // 여러개 추가할 때
+func RegSubGroup(nameSpaceID string, mcisID string, subGroupInfo *tbmcis.TbVmReq) (*tbmcis.TbMcisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup" // 여러개 추가할 때
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -609,7 +609,7 @@ func RegVmGroup(nameSpaceID string, mcisID string, vmGroupInfo *tbmcis.TbVmReq) 
 
 	url := util.TUMBLEBUG + urlParam
 
-	pbytes, _ := json.Marshal(vmGroupInfo)
+	pbytes, _ := json.Marshal(subGroupInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	// 전송은 vm이나 수신은 mcisInfo (mcis안에 vm목록이 있음.)
@@ -628,7 +628,7 @@ func RegVmGroup(nameSpaceID string, mcisID string, vmGroupInfo *tbmcis.TbVmReq) 
 	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("RegVmGroup ", failResultInfo)
+		log.Println("RegSubGroup ", failResultInfo)
 		return &returnMcisInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
@@ -877,7 +877,7 @@ func GetSimpleVmWithStatusCountMap(mcisInfo tbmcis.TbMcisInfo) ([]webtool.VmSimp
 			VmSshKeyId:         vmInfo.SshKeyID,
 			VmSubnetId:         vmInfo.SubnetID,
 			VmVnetId:           vmInfo.VNetID,
-			VmGroupSize:        1, //? 는 없는데.. vmGroupId만 있는데... 1로 기본 setting
+			SubGroupSize:       1, //? 는 없는데.. subGroupId만 있는데... 1로 기본 setting
 			VmUserAccount:      vmInfo.VmUserAccount,
 			VmUserPassword:     vmInfo.VmUserPassword,
 		}
@@ -1951,9 +1951,9 @@ func AttachDetachDataDisk(nameSpaceID string, mcisID string, vmID string, comman
 	return &vmInfo, returnStatus
 }
 
-// Mcis에 VmGroup 목록 조회
-func McisVmGroupList(nameSpaceID string, mcisID string) (*tbcommon.TbIdList, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup"
+// Mcis에 SubGroup 목록 조회
+func McisSubGroupList(nameSpaceID string, mcisID string) (*tbcommon.TbIdList, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -1977,7 +1977,7 @@ func McisVmGroupList(nameSpaceID string, mcisID string) (*tbcommon.TbIdList, mod
 	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("McisVmGroupList ", failResultInfo)
+		log.Println("McisSubGroupList ", failResultInfo)
 		return &idList, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
@@ -1987,14 +1987,14 @@ func McisVmGroupList(nameSpaceID string, mcisID string) (*tbcommon.TbIdList, mod
 	return &idList, model.WebStatus{StatusCode: respStatus}
 }
 
-// Mcis의 VmGroup 내 VM 목록조회. ID 만 반환
-func VmGroupVmListByID(nameSpaceID string, mcisID string, vmGroupID string) (*tbcommon.TbIdList, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup/{vmgroupId}"
+// Mcis의 SubGroup 내 VM 목록조회. ID 만 반환
+func SubGroupVmListByID(nameSpaceID string, mcisID string, subGroupID string) (*tbcommon.TbIdList, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup/{subgroupId}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
-	paramMapper["{vmgroupId}"] = vmGroupID
+	paramMapper["{subgroupId}"] = subGroupID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam
@@ -2014,7 +2014,7 @@ func VmGroupVmListByID(nameSpaceID string, mcisID string, vmGroupID string) (*tb
 	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("McisVmGroupList ", failResultInfo)
+		log.Println("McisSubGroupList ", failResultInfo)
 		return &idList, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
@@ -2024,15 +2024,15 @@ func VmGroupVmListByID(nameSpaceID string, mcisID string, vmGroupID string) (*tb
 	return &idList, model.WebStatus{StatusCode: respStatus}
 }
 
-// Mcis의 VmGroup 내 VM 목록조회
+// Mcis의 SubGroup 내 VM 목록조회
 // TODO : return형태가 다를 수 있으므로 조회 결과대로 수정할 것.
-func VmGroupVmListByOption(nameSpaceID string, mcisID string, vmGroupID string, optionParam string) (*tbcommon.TbIdList, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup/{vmgroupId}"
+func SubGroupVmListByOption(nameSpaceID string, mcisID string, subGroupID string, optionParam string) (*tbcommon.TbIdList, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup/{subgroupId}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
-	paramMapper["{vmgroupId}"] = vmGroupID
+	paramMapper["{subgroupId}"] = subGroupID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	optionParamVal := ""
@@ -2059,7 +2059,7 @@ func VmGroupVmListByOption(nameSpaceID string, mcisID string, vmGroupID string, 
 	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("McisVmGroupList ", failResultInfo)
+		log.Println("McisSubGroupList ", failResultInfo)
 		return &idList, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
@@ -2069,19 +2069,19 @@ func VmGroupVmListByOption(nameSpaceID string, mcisID string, vmGroupID string, 
 	return &idList, model.WebStatus{StatusCode: respStatus}
 }
 
-// VmGroup의 vm개수 조정
-func ScaleOutVmGroup(nameSpaceID string, mcisID string, vmGroupID string, vmScaleOutReq *mcis.TbScaleOutVmGroupReq) (*mcis.TbMcisInfo, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup/{vmgroupId}"
+// SubGroup의 vm개수 조정
+func ScaleOutSubGroup(nameSpaceID string, mcisID string, subGroupID string, subGroupScaleOutReq *mcis.TbScaleOutSubGroupReq) (*mcis.TbMcisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup/{subgroupId}"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
-	paramMapper["{vmgroupId}"] = vmGroupID
+	paramMapper["{subgroupId}"] = subGroupID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.TUMBLEBUG + urlParam
 
-	pbytes, _ := json.Marshal(vmScaleOutReq)
+	pbytes, _ := json.Marshal(subGroupScaleOutReq)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	returnMcisInfo := tbmcis.TbMcisInfo{}

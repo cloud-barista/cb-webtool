@@ -145,65 +145,6 @@ function processFile(file) {
 }
 
 
-// function exportVmScript(vmIndex){
-
-// 	var connectionNameVal = $("#p_connectionName_" + vmIndex).val();
-// 	var descriptionVal = $("#p_description_" + vmIndex).val();
-// 	var imageIdVal = $("#p_imageId_" + vmIndex).val();
-// 	var labelVal = $("#p_label_" + vmIndex).val();
-// 	var nameVal = $("#p_name_" + vmIndex).val();
-// 	var securityGroupIdsVal = $("#p_securityGroupIds_" + vmIndex).val();
-// 	var specIdVal = $("#p_specId_" + vmIndex).val();
-// 	var sshKeyIdVal = $("#p_sshKeyId_" + vmIndex).val();
-// 	var subnetIdVal = $("#p_subnetId_" + vmIndex).val();
-// 	var vNetIdVal = $("#p_vNetId_" + vmIndex).val();
-// 	var vmGroupSizeVal = $("#p_vmGroupSize_" + vmIndex).val();
-// 	var vmUserAccountVal = $("#p_vmUserAccount_" + vmIndex).val();
-// 	var vmUserPasswordVal = $("#p_vmUserPassword_" + vmIndex).val();
-
-// 	var paramValueAppend = '"';
-// 	var vmCreateScript = "";
-// 	vmCreateScript += '{	';
-// 	vmCreateScript += paramValueAppend + 'connectionName' + paramValueAppend + ' : ' + paramValueAppend + connectionNameVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + descriptionVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'imageId' + paramValueAppend + ' : ' + paramValueAppend + imageIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + labelVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + nameVal + paramValueAppend;
-// 	// vmCreateScript += ',securityGroupIds: ';
-//     // vmCreateScript += '	' + paramValueAppend + securityGroupIdsVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'specId' + paramValueAppend + ' : ' + paramValueAppend + specIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
-// 	vmCreateScript += '}';
-
-
-// 	$("#exportFileName").val(nameVal);
-// 	$("#vmExportScript").val(vmCreateScript);
-// }
-
-// function saveVmInfoToFile(){
-// 	var fileName = $("#exportFileName").val();
-// 	var exportScript = $("#vmExportScript").val();
-
-// 	var element = document.createElement('a');
-// 	// element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
-// 	element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
-// 	// element.setAttribute('download', fileName);
-// 	element.setAttribute('download', fileName + ".json");
-
-// 	element.style.display = 'none';
-// 	document.body.appendChild(element);
-
-// 	element.click();
-
-// 	document.body.removeChild(element);
-
-// }
-
 // assist에서 provider 선택시 retion filter
 function getRegionListFilterAtAssist(provider, targetRegionObj) {
 	// region 목록 filter

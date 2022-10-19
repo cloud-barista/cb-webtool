@@ -768,7 +768,7 @@ function createMcisDynamic() {
             {
                 "commonImage": "ubuntu18.04",
                 "commonSpec": specName,
-                "vmGroupSize": "3"
+                "subGroupSize": "3"
             }
         ]
     }

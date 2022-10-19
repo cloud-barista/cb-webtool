@@ -309,8 +309,8 @@ var expert_data_cnt = 0
 const expertServerCloneObj = obj => JSON.parse(JSON.stringify(obj))
 function expertDone_btn() {
   console.log("expert Done")
-  // TODO : 원래는 같은 VM 을 여러개 만들 때 vmGroupSize를 set 하는 것 같은데... for문으로 돌리고 있음.... 고칠까?
-  // $("#e_vmGroupSize").val( $("#es_vm_add_cnt").val() )
+  // TODO : 원래는 같은 VM 을 여러개 만들 때 subGroupSize를 set 하는 것 같은데... for문으로 돌리고 있음.... 고칠까?
+  // $("#e_subGroupSize").val( $("#es_sub_add_cnt").val() )
   // validation check 
   if ($("#e_name").val() == "") { commonAlert("VM Name is required"); return; }
   if ($("#e_connectionName").val() == "") { commonAlert("Connection is required"); return; }

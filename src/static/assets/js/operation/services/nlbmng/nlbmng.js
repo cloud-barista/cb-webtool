@@ -571,8 +571,8 @@ function displayMcisVmsListTable(mcisList) {
                 addMcis += setMcisListTableRow(aMcis, mcisIndex);
             }
         } // end of mcis loop
-        $("#vmGroupList").empty();
-        $("#vmGroupList").append(addMcis);
+        $("#subGroupList").empty();
+        $("#subGroupList").append(addMcis);
 
         displayVmRegModal(true);
     } else {
@@ -612,8 +612,8 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
                 '<td class="btn_mtd ovm" data-th="name">' +
                 aMcisData.name +
                 "</td>" +
-                '<td class="overlay hidden" data-th="vmGroupId">' +
-                vmList[i].vmGroupId +
+                '<td class="overlay hidden" data-th="subGroupId">' +
+                vmList[i].subGroupId +
                 "</td>" +
                 '<td class="overlay hidden" data-th="vmName">' +
                 vmList[i].name +
@@ -632,23 +632,23 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
     return html;
 }
 
-function applyVmGroup() {
+function applySubGroup() {
     // 선택한 녀석들의 VM LIST 정보를 VMS칸(tg_vms)에다가 입력
-    var vmgrouplistValue = $("input[name='vms_info']").length;
+    var subgrouplistValue = $("input[name='vms_info']").length;
     var chk = $("input[name='chk']");
-    var vmgrouplistData = new Array(vmgrouplistValue);
+    var subgrouplistData = new Array(subgrouplistValue);
     var mcisid = "";
     var infoshow = "";
 
-    for (var i = 0; i < vmgrouplistValue; i++) {
+    for (var i = 0; i < subgrouplistValue; i++) {
         if (chk[i].checked) {
             mcisid = $("input[name='mcisId']")[i].value;
-            vmgrouplistData[i] = $("input[name='vms_info']")[i].value;
-            console.log("vmgrouplistData" + [i] + " : ", vmgrouplistData[i]);
+            subgrouplistData[i] = $("input[name='vms_info']")[i].value;
+            console.log("subgrouplistData" + [i] + " : ", subgrouplistData[i]);
             if (infoshow != "") {
                 infoshow += ", ";
             }
-            infoshow += vmgrouplistData[i];
+            infoshow += subgrouplistData[i];
         }
     }
 

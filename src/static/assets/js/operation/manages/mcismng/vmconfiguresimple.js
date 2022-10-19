@@ -261,8 +261,8 @@ function simpleDone_btn() {
 	console.log(simple_form);
 
 	var server_name = simple_form.name
-	var server_cnt = parseInt(simple_form.vmGroupSize)
-	// simple_form.vmGroupSize = server_cnt
+	var server_cnt = parseInt(simple_form.subGroupSize)
+	// simple_form.subGroupSize = server_cnt
 	console.log('server_cnt : ', server_cnt)
 	var add_server_html = "";
 

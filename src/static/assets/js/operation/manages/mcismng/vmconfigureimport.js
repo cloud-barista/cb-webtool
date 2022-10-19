@@ -24,7 +24,7 @@ function setVmInfoToForm(vmInfoObj){
 	$("#i_vmUserAccount").val(vmInfoObj.vmUserAccount);
 	$("#i_vmUserPassword").val(vmInfoObj.vmUserPassword);
 
-	var addServerCnt = vmInfoObj.vmGroupSize == "" ? 0: vmInfoObj.vmGroupSize;
+	var addServerCnt = vmInfoObj.subGroupSize == "" ? 0: vmInfoObj.subGroupSize;
 	$("#i_vm_add_cnt").val(addServerCnt);
 
 	$("#i_vmImportScript").val(JSON.stringify(vmInfoObj));

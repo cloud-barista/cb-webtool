@@ -347,9 +347,9 @@ func GetMcisList(c echo.Context) error {
 		provider := c.QueryParam("provider")
 		connectionName := c.QueryParam("connection")
 		vnetID := c.QueryParam("vnet")
-		vmGroupID := c.QueryParam("vmgroup")
+		subGroupID := c.QueryParam("subgroup")
 		returnMcisList := []mcis.TbMcisInfo{}
-		if provider != "" || connectionName != "" || vnetID != "" || vmGroupID != "" {
+		if provider != "" || connectionName != "" || vnetID != "" || subGroupID != "" {
 			for _, mcis := range mcisList {
 				vmList := mcis.Vm
 
@@ -366,7 +366,7 @@ func GetMcisList(c echo.Context) error {
 						continue
 					}
 
-					if vmGroupID != "" && vmGroupID != vm.VmGroupID {
+					if subGroupID != "" && subGroupID != vm.SubGroupID {
 						continue
 					}
 					returnVmList = append(returnVmList, vm)
@@ -703,8 +703,6 @@ func GetMcisInfoData(c echo.Context) error {
 		})
 	}
 
-	//"/operation/manages/mcis?provider=:provider&connection=:connection&vnet=:vnet&vmgroup=:vmgroup"
-
 	resultMcisInfo, _ := service.GetMcisData(defaultNameSpaceID, mcisID)
 
 	provider := c.QueryParam("provider")
@@ -719,8 +717,8 @@ func GetMcisInfoData(c echo.Context) error {
 	if vnetID != "" {
 
 	}
-	vmGroupID := c.QueryParam("vmgroup")
-	if vmGroupID != "" {
+	subGroupID := c.QueryParam("subgroup")
+	if subGroupID != "" {
 
 	}
 
@@ -1335,8 +1333,8 @@ func DataDiskToVmUpdateProc(c echo.Context) error {
 	})
 }
 
-// mcis의 vmGroup 목록
-func McisVmGroupList(c echo.Context) error {
+// mcis의 subGroup 목록
+func McisSubGroupList(c echo.Context) error {
 	log.Println("UpdateAdaptiveNetwork : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -1346,7 +1344,7 @@ func McisVmGroupList(c echo.Context) error {
 	mcisID := c.Param("mcisID")
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	idList, respStatus := service.McisVmGroupList(defaultNameSpaceID, mcisID)
+	idList, respStatus := service.McisSubGroupList(defaultNameSpaceID, mcisID)
 	log.Println("RegAdaptiveNetwork result")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 
@@ -1357,22 +1355,22 @@ func McisVmGroupList(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":       respStatus.Message,
-		"status":        respStatus.StatusCode,
-		"vmGroupIdList": idList,
+		"message":        respStatus.Message,
+		"status":         respStatus.StatusCode,
+		"subGroupIdList": idList,
 	})
 }
 
-// mcis에 vmGroup 추가
-func VmGroupRegProc(c echo.Context) error {
+// mcis에 subGroup 추가
+func SubGroupRegProc(c echo.Context) error {
 	log.Println("UpdateAdaptiveNetwork : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	vmGroupReq := new(tbmcis.TbVmReq)
-	if err := c.Bind(vmGroupReq); err != nil {
+	subGroupReq := new(tbmcis.TbVmReq)
+	if err := c.Bind(subGroupReq); err != nil {
 
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -1384,7 +1382,7 @@ func VmGroupRegProc(c echo.Context) error {
 	mcisID := c.Param("mcisID")
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	mcisInfo, respStatus := service.RegVmGroup(defaultNameSpaceID, mcisID, vmGroupReq)
+	mcisInfo, respStatus := service.RegSubGroup(defaultNameSpaceID, mcisID, subGroupReq)
 	log.Println("mcisInfo result")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 
@@ -1401,8 +1399,8 @@ func VmGroupRegProc(c echo.Context) error {
 	})
 }
 
-// vmGroup 내 vm 목록
-func VmGroupVmList(c echo.Context) error {
+// subGroup 내 vm 목록
+func SubGroupVmList(c echo.Context) error {
 	log.Println("UpdateAdaptiveNetwork : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -1420,13 +1418,13 @@ func VmGroupVmList(c echo.Context) error {
 	}
 
 	mcisID := c.Param("mcisID")
-	vmGroupID := c.Param("vmGroupID")
+	subGroupID := c.Param("subGroupID")
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	optionParam := c.QueryParam("option")
 
 	if optionParam == "id" {
-		idList, respStatus := service.VmGroupVmListByID(defaultNameSpaceID, mcisID, vmGroupID)
+		idList, respStatus := service.SubGroupVmListByID(defaultNameSpaceID, mcisID, subGroupID)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -1442,7 +1440,7 @@ func VmGroupVmList(c echo.Context) error {
 		})
 	} else {
 		// 결과값확인 필요.
-		mcisList, respStatus := service.VmGroupVmListByOption(defaultNameSpaceID, mcisID, vmGroupID, optionParam)
+		mcisList, respStatus := service.SubGroupVmListByOption(defaultNameSpaceID, mcisID, subGroupID, optionParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -1459,15 +1457,15 @@ func VmGroupVmList(c echo.Context) error {
 	}
 }
 
-// vmGroup에 vm추가
-func VmGroupScaleOutUpdateProc(c echo.Context) error {
+// subGroup vm추가
+func SubGroupScaleOutUpdateProc(c echo.Context) error {
 	log.Println("UpdateAdaptiveNetwork : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	vmScaleOutReq := new(tbmcis.TbScaleOutVmGroupReq)
+	vmScaleOutReq := new(tbmcis.TbScaleOutSubGroupReq)
 	if err := c.Bind(vmScaleOutReq); err != nil {
 
 		log.Println(err)
@@ -1478,11 +1476,11 @@ func VmGroupScaleOutUpdateProc(c echo.Context) error {
 	}
 
 	mcisID := c.Param("mcisID")
-	vmGroupID := c.Param("vmGroupID")
+	subGroupID := c.Param("subGroupID")
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	mcisInfo, respStatus := service.ScaleOutVmGroup(defaultNameSpaceID, mcisID, vmGroupID, vmScaleOutReq)
-	log.Println("ScaleOutVmGroup result")
+	mcisInfo, respStatus := service.ScaleOutSubGroup(defaultNameSpaceID, mcisID, subGroupID, vmScaleOutReq)
+	log.Println("ScaleOutSubGroup result")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{

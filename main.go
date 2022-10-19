@@ -317,6 +317,24 @@ func main() {
 		DisableCache: true,
 	})
 
+	// PMKS 등록 form Template
+	pmksRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/pmks/pmksmng",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+			"operation/manages/pmksmng/NodeGroupConfigure",
+		},
+		DisableCache: true,
+	})
+
 	cloudConnectionTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
@@ -606,11 +624,11 @@ func main() {
 	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID", controller.GetVmInfoData)
 	e.GET("/operation/manages/mcismng/:mcisID/vnet/:vnetID", controller.GetVmInfoDataByVnet) // MCIS내 특정 Vnet을 사용하는 vm목록
 
-	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:command", controller.DataDiskToVmUpdateProc)      // disk attach detach
-	e.GET("/operation/manages/mcismng/:mcisID/vmgroup", controller.McisVmGroupList)                       // mcis의 vmGroup List
-	e.POST("/operation/manages/mcismng/:mcisID/vmgroup/reg/proc", controller.VmGroupRegProc)              // vm 등록이므로 vmID없이 reg/proc
-	e.GET("/operation/manages/mcismng/:mcisID/vmgroup/:vmGroupID", controller.VmGroupVmList)              // vmGroup 내 vm 목록
-	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:vmGroupID", controller.VmGroupScaleOutUpdateProc) //
+	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:command", controller.DataDiskToVmUpdateProc)        // disk attach detach
+	e.GET("/operation/manages/mcismng/:mcisID/subgroup", controller.McisSubGroupList)                       // mcis의 subGroup List
+	e.POST("/operation/manages/mcismng/:mcisID/subgroup/reg/proc", controller.SubGroupRegProc)              // vm 등록이므로 vmID없이 reg/proc
+	e.GET("/operation/manages/mcismng/:mcisID/subgroup/:subGroupID", controller.SubGroupVmList)             // subGroup 내 vm 목록
+	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:subGroupID", controller.SubGroupScaleOutUpdateProc) //
 
 	e.POST("/operation/manages/mcismng/proc/mcislifecycle", controller.McisLifeCycle)
 	//var url = "/operation/manage" + "/mcis/" + mcisID + "/operation/" + type
@@ -774,6 +792,9 @@ func main() {
 	e.GET("/operation/services/mcis/:mcisID/nlb/health/:nlbID", controller.NlbHealthGet)
 	e.POST("/operation/services/mcis/:mcisID/nlb/vm/reg/:nblID", controller.NlbVmRegProc)
 	e.DELETE("/operation/services/mcis/:mcisID/nlb/vm/del/:nlbID", controller.NlbVmDelProc)
+
+	pmksGroup := e.Group("/operation/services/pmks", pmksRegTemplate)
+	pmksGroup.GET("/mngform", controller.PmksMngForm)
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)

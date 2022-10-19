@@ -1,5 +1,5 @@
 package mcis
 
-type TbScaleOutVmGroupReq struct {
+type TbScaleOutSubGroupReq struct {
 	NumVMsToAdd string `json:"numVMsToAdd"`
 }

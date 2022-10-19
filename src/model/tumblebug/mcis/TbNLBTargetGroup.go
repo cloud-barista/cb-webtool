@@ -8,8 +8,8 @@ type TbNLBTargetGroup struct {
 	Protocol string `json:"protocol"`
 	Port     string `json:"port"`
 
-	VmGroupId string   `json:"vmGroupId"`
-	Vms       []string `json:"vms"`
+	SubGroupId string   `json:"subGroupId"`
+	Vms        []string `json:"vms"`
 
 	KeyValueList []tbcommon.TbKeyValue `json:"keyValueList"`
 }
