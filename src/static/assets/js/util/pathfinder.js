@@ -711,7 +711,7 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam) {
         if(optionParam == "id" || optionParam == "status" || optionParam == "simple"){
         url += "?option=" + optionParam
         }else{
-            url += optionParam
+            url += "?"+optionParam
         }
     }
     axios.get(url, {
