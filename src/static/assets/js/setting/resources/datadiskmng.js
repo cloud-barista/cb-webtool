@@ -113,20 +113,23 @@ function attachDataDisk() {
         commonAlert("Attach할 대상을 선택하세요.");
         return false;
     }
-    var url = "/setting/resources/datadisk/mcisList";
-    axios.get(url,{
 
-    }).then(result=>{
-        var data = result.data;
-        var mcisList = data.McisList
-        mcisList.forEach((item, i)=>{
-            console.log("mcisList i :", i);
-            console.log("mcisList item :", item);
-        })
-        console.log("mcisList : ",mcisList)
-        console.log("mcis list data : ",data);
+    getCommonMcisList("dataDiskMng",true, "","connection="+connectionName)
+   
+    // var url = "/setting/resources/datadisk/mcisList";
+    // axios.get(url,{
 
-    })
+    // }).then(result=>{
+    //     var data = result.data;
+    //     var mcisList = data.McisList
+    //     mcisList.forEach((item, i)=>{
+    //         console.log("mcisList i :", i);
+    //         console.log("mcisList item :", item);
+    //     })
+    //     console.log("mcisList : ",mcisList)
+    //     console.log("mcis list data : ",data);
+
+    // })
 
     // if (count != 1) {
     //     commonAlert("삭제할 대상을 하나만 선택하세요.");
@@ -540,4 +543,8 @@ function displaySubnetRegModal(isShow) {
     } else {
         $("#vnetCreateBox").toggleClass("active");
     }
+}
+
+function getMcisListCallbackSuccess(caller, data){
+    console.log("getMcis List data : ",data);
 }
