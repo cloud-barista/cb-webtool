@@ -145,6 +145,7 @@ function commonConfirmOpen(targetAction, caller) {
     //  [ id , 문구]
     let confirmModalTextMap = new Map(
         [
+            ["DeleteDataDisk", "Would you like to Delete Disk?"],
             ["Logout", "Would you like to logout?"],
             ["Config", "Would you like to set Cloud config ?"],
             ["SDK", "Would you like to set Cloud Driver SDK ?"],
@@ -468,6 +469,9 @@ function commonConfirmOk() {
         commonPromptOpen("RegisterRecommendSpec")
     } else if (targetAction == "AddNewMcisDynamic") {
         createMcisDynamic()
+    } else if (targetAction == "DeleteDataDisk") {
+        deleteDataDisk();
+
     } else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
