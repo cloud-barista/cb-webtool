@@ -536,7 +536,7 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
 }
 
 
-function displaySubnetRegModal(isShow) {
+function displayDiskAttachModal(isShow) {
     if (isShow) {
         $("#subnetRegisterBox").modal();
         $('.dtbox.scrollbar-inner').scrollbar();
@@ -547,4 +547,26 @@ function displaySubnetRegModal(isShow) {
 
 function getMcisListCallbackSuccess(caller, data){
     console.log("getMcis List data : ",data);
+    var html = "";
+    data.forEach((item,i)=>{
+        console.log("vm: ",item.vm);
+        vm_list = item.vm;
+        var mcis_name = item.name;
+        var connection
+        vm_list.forEach((item, i)=>{
+            console.log()
+            html += '<tr onclick="showDataDiskInfo(\'' + item.id + '\',\'' + item.name + '\');">'
+            + '<td class="overlay hidden column-50px" data-th="">'
+            + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
+            + '<input type="checkbox" name="chk" value="' + item.id + '" title="" item="'+item.connectionName+'"/><label for="td_ch1"></label> <span class="ov off"></span>'
+    
+            + '</td>'
+            + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
+            + '<td class="overlay hidden" data-th="diskType">' + item.diskType + '</td>'
+            + '<td class="overlay hidden" data-th="diskSize">' + item.diskSize + '</td>'
+            + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'
+            + '</tr>'
+        })
+    })
+    displayDiskAttachModal(true)
 }
