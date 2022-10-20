@@ -122,7 +122,7 @@ function attachDataDisk() {
         return false;
     }
 
-    getCommonMcisList("dataDiskMng",true, "","connection="+connectionName)
+    getCommonMcisList("dataDiskMng",true, "", "","connection="+connectionName)
    
     // var url = "/setting/resources/datadisk/mcisList";
     // axios.get(url,{
@@ -308,6 +308,7 @@ function addDataDiskRow(item, index) {
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
         + '<td class="overlay hidden" data-th="diskType">' + item.diskType + '</td>'
         + '<td class="overlay hidden" data-th="diskSize">' + item.diskSize + '</td>'
+        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>'
         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'
         + '</tr>'
     return html;
@@ -359,6 +360,20 @@ function displayDataDiskInfo(targetAction) {
         $("#regDescription").val('')
         goFocus('dataDiskCreateBox');
     } else if (targetAction == "REG_SUCCESS") {
+        $('#dataDiskCreateBox').removeClass("active");
+        $('#dataDiskInfoBox').removeClass("view");
+        $('#dataDiskListTable').addClass("on");
+
+        var offset = $("#dataDiskCreateBox").offset();
+        $("#TopWrap").animate({ scrollTop: offset.top }, 0);
+
+        // form 초기화
+        $("#regDataDiskName").val('')
+        $("#regDataDiskSize").val('')
+        $("#regDataDiskType").val('')
+        $("#regDescription").val('')
+        getDataDiskList("name");
+    }  else if (targetAction == "MODIFY_SUCCESS") {
         $('#dataDiskCreateBox').removeClass("active");
         $('#dataDiskInfoBox').removeClass("view");
         $('#dataDiskListTable').addClass("on");
@@ -512,6 +527,8 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
         var dtlDiskType = data.diskType;
         var dtlDiskSize = data.diskSize;
         var dtlConnectionName = data.connectionName;
+        var dtlDiskId = data.id;
+        var dtlPreDiskSize = data.diskSize;
       
         // var subList = data.subnetInfoList;
         // for (var i in subList) {
@@ -524,6 +541,8 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
         $("#dtlDiskSize").empty();
         $("#dtlDescription").empty();
         $("#dtlConnectionName").empty();
+        $("#dtlPreDiskSize").empty();
+        $("#dtlDiskId").empty();
 
 
         $("#dtlDiskName").val(dtlDiskName);
@@ -531,6 +550,8 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
         $("#dtlDiskSize").val(dtlDiskSize);
         $("#dtlDescription").val(dtlDescription);
         $("#dtlConnectionName").val(dtlConnectionName);
+        $("#dtlDiskId").val(dtlDiskId);
+        $("#dtlPreDiskSize").val(dtlPreDiskSize)
 
         if (dtlConnectionName == '' || dtlConnectionName == undefined) {
             commonAlert("ConnectionName is empty")
@@ -541,6 +562,52 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
     }).catch(function (error) {
         console.log("Network detail error : ", error);
     });
+}
+
+function putDataDisk(){
+    var diskId = $("#dtlDiskId").val();
+    var preDiskSize = $("#dtlPreDiskSize").val();
+    var diskSize = $("#dtlDiskSize").val();
+    var diskName = $("#dtlDiskName").val();
+    var description = $("#dtlDescription").val();
+
+    console.log("preDiskSize : ", preDiskSize)
+    console.log("diskSize : ", diskSize)
+    if(preDiskSize == diskSize){
+        commonAlert("변경된 디스크사이즈가 없습니다.")
+        return;
+    }
+    var url = "/setting/resources" + "/datadisk/" + encodeURIComponent(diskId);
+    
+    if(diskId){
+        console.log("disk id : ",diskId)
+        console.log("disk modify by put url :",url);
+        //put
+        var obj = {
+            description,
+            diskSize
+        }
+        console.log("modify disk info : ",obj);
+        axios.put(url, obj, {
+            // headers: {
+            //     'Content-type': 'application/json',
+            //     // 'Authorization': apiInfo,
+            // }
+        }).then(result=>{
+            var data = result.data;
+            console.log(data);
+            if(data.status == 200 || data.status == 201){
+                commonAlert("Success Modify DataDisk!")
+                showDataDiskInfo(diskId, diskName);
+            }else{
+                commonAlert("Fail Create DataDisk " + data.message)
+                showDataDiskInfo(diskId, diskName);
+            }
+        })
+    }else{
+        commonAlert("Disk ID is empty")
+        return;
+    }
 }
 
 
