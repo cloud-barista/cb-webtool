@@ -102,9 +102,9 @@ function deployMcis() {
     var url = getWebToolUrl("McisRegProc")
     try {
         axios.post(url, new_obj, {
-            headers: {
-                'Content-type': 'application/json',
-            },
+            // headers: {
+            //     'Content-type': "application/json",
+            // },
         }).then(result => {
             console.log("MCIR Register data : ", result);
             console.log("Result Status : ", result.status);
@@ -716,7 +716,7 @@ function createRecommendSpec(recSpecName) {
     if (specName) {
         axios.post(url, obj, {
             headers: {
-                'Content-type': 'application/json',
+                'Content-type': "application/json",
                 // 'Authorization': apiInfo,
             }
         }).then(result => {
@@ -776,7 +776,7 @@ function createMcisDynamic() {
     try {
         axios.post(url, obj, {
             headers: {
-                'Content-type': 'application/json',
+                'Content-type': "application/json",
             },
         }).then(result => {
             console.log("MCIR Register data : ", result)
