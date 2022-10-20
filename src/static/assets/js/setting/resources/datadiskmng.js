@@ -81,6 +81,7 @@ function attachDataDisk() {
     var count = 0;
     var connectionName = [];
     var connectionDup = false;
+    var diskName =
 
     $("input[name='chk']:checked").each(function () {
         count++;
@@ -555,9 +556,9 @@ function getMcisListCallbackSuccess(caller, data){
         var connection
         vm_list.forEach((item, i)=>{
             console.log()
-            html += '<tr onclick="showDataDiskInfo(\'' + item.id + '\',\'' + item.name + '\');">'
+            html += '<tr>'
             + '<td class="overlay hidden column-50px" data-th="">'
-            + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
+            + '<input type="hidden" id="vm_info_' + index + '" value="' + item.name + '"/>'
             + '<input type="checkbox" name="chk" value="' + item.id + '" title="" item="'+item.connectionName+'"/><label for="td_ch1"></label> <span class="ov off"></span>'
     
             + '</td>'
