@@ -81,15 +81,22 @@ function attachDataDisk() {
     var count = 0;
     var connectionName = [];
     var connectionDup = false;
-    var diskName =
+    var selectDiskName = [];
 
     $("input[name='chk']:checked").each(function () {
         count++;
         dataDiskId = dataDiskId + $(this).val() + ",";
         var tempConnectionName = $(this).attr("item");
-        connectionName.push(tempConnectionName)
+        var tempDiskName = $(this).attr("diskName");
+        connectionName.push(tempConnectionName);
+        selectDiskName.push(tempDiskName);
     });
     console.log("connectionName arr :",connectionName)
+    console.log("selectDiskName arr :",selectDiskName)
+    // 선택된 디스크 이름 가져와서 뿌려주기
+    var selectDisk = selectDiskName.join(",");
+    $("#selected_disk").val(selectDisk);
+    //connection  다를경우 걸르기
     connectionName.forEach((item)=>{
        if(connectionName[0] == item){
 
@@ -295,7 +302,7 @@ function addDataDiskRow(item, index) {
     html += '<tr onclick="showDataDiskInfo(\'' + item.id + '\',\'' + item.name + '\');">'
         + '<td class="overlay hidden column-50px" data-th="">'
         + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
-        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'"/><label for="td_ch1"></label> <span class="ov off"></span>'
+        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskName="'+item.name+'" /><label for="td_ch1"></label> <span class="ov off"></span>'
 
         + '</td>'
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
@@ -539,7 +546,7 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
 
 function displayDiskAttachModal(isShow) {
     if (isShow) {
-        $("#subnetRegisterBox").modal();
+        $("#vmSelectBox").modal();
         $('.dtbox.scrollbar-inner').scrollbar();
     } else {
         $("#vnetCreateBox").toggleClass("active");
@@ -549,25 +556,31 @@ function displayDiskAttachModal(isShow) {
 function getMcisListCallbackSuccess(caller, data){
     console.log("getMcis List data : ",data);
     var html = "";
-    data.forEach((item,i)=>{
+    data.forEach((item)=>{
+
         console.log("vm: ",item.vm);
         vm_list = item.vm;
         var mcis_name = item.name;
-        var connection
+        var mcis_id = item.id
+        
         vm_list.forEach((item, i)=>{
             console.log()
             html += '<tr>'
             + '<td class="overlay hidden column-50px" data-th="">'
-            + '<input type="hidden" id="vm_info_' + index + '" value="' + item.name + '"/>'
-            + '<input type="checkbox" name="chk" value="' + item.id + '" title="" item="'+item.connectionName+'"/><label for="td_ch1"></label> <span class="ov off"></span>'
+            + '<input type="hidden" id="vm_info_' + i + '" value="' + item.name + '"/>'
+            + '<input type="checkbox" name="chk" value="' + item.id + '" title="" diskId="'+item.id+'" mcisId="'+mcis_id+'"/><label for="td_ch1"></label> <span class="ov off"></span>'
     
             + '</td>'
+            + '<td class="btn_mtd ovm" data-th="name">' + mcis_name + '<span class="ov"></span></td>'
             + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
-            + '<td class="overlay hidden" data-th="diskType">' + item.diskType + '</td>'
-            + '<td class="overlay hidden" data-th="diskSize">' + item.diskSize + '</td>'
-            + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'
+            + '<td class="overlay hidden" data-th="diskType">' + item.connectionName + '</td>'
             + '</tr>'
         })
+       
+
     })
+    console.log(html)
+    $("#vmList").empty()
+    $("#vmList").append(html)
     displayDiskAttachModal(true)
 }
