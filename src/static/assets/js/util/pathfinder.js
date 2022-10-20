@@ -704,15 +704,21 @@ function getCommonFetchImages(caller, connectionName) {
 // MCIS 목록 존재여부
 // optionParam이 id, status, simple 면 "?option=id", "?option=status" 등으로 호출
 // 그외 optionPapam이거나 2개 이상인 경우는 optionParam을 그대로 넘김. ex) vnet=aaa&bbb=ccc&option=status
-function getCommonMcisList(caller, isCallback, targetObjId, optionParam) {
+function getCommonMcisList(caller, isCallback, targetObjId, optionParam, filterKeyVal) {
     var url = "/operation/manages/mcismng/list"
 
+    var hasOptionParam = false
     if (optionParam != "") {
-        if(optionParam == "id" || optionParam == "status" || optionParam == "simple"){
         url += "?option=" + optionParam
+        hasOptionParam = true
+    }
+
+    if (filterKeyVal != ""){
+        if (hasOptionParam){
+            url += "&"+filterKeyVal
         }else{
-            url += "?"+optionParam
-        }
+            url += "?"+filterKeyVal
+        }        
     }
     axios.get(url, {
         headers: {

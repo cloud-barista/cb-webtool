@@ -101,17 +101,22 @@ func GetMcisList(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, m
 	return mcisList["mcis"], returnStatus
 }
 
-func GetMcisListByID(nameSpaceID string) ([]string, model.WebStatus) {
+func GetMcisListByID(nameSpaceID string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
+
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	//if optionParam != ""{
 	//	urlParam += "?option=" + optionParam
 	//}
 	urlParam += "?option=id"
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -144,17 +149,19 @@ func GetMcisListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	return mcisList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetMcisListByOption(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, model.WebStatus) {
+func GetMcisListByOption(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcis.TbMcisInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	if optionParam != "" {
-		urlParam += "?option=" + optionParam
-	}
+	urlParam += "?option=" + optionParam
 
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
@@ -2107,4 +2114,43 @@ func ScaleOutSubGroup(nameSpaceID string, mcisID string, subGroupID string, subG
 	fmt.Println(returnMcisInfo)
 
 	return &returnMcisInfo, returnStatus
+}
+
+func RegSnapshot(nameSpaceID string, mcisID string, vmID string, vmSnapshotReq *mcis.TbVmSnapshotReq) (*mcis.TbCustomImageInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/snapshot"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(vmSnapshotReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	returnCustomImageInfo := tbmcis.TbCustomImageInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnCustomImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	returnStatus.StatusCode = respStatus
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegSnapshot ", failResultInfo)
+		return &returnCustomImageInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&returnCustomImageInfo)
+	fmt.Println(returnCustomImageInfo)
+
+	return &returnCustomImageInfo, returnStatus
 }
