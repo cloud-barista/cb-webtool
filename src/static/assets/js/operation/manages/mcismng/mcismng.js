@@ -1,6 +1,6 @@
 var selectedMcis = "";// 선택 된 mcisId :// 다른 화면 등에서 mcisID를 넘겨주는 경우 사용
 $(document).ready(function () {
-    AjaxLoadingShow(true);
+    //AjaxLoadingShow(true);
     checkLoadStatus();
 
     jQuery('.sc_box.scrollbar-inner').scrollbar();// CP / connectin의 구름 이미지들 창이 작아졌을 때 scroll 생기도록
