@@ -1918,16 +1918,18 @@ func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis
 // }
 
 // VM 에 DataDisk를 Attach 또는 Detach ( commane로 구분 )
-func AttachDetachDataDisk(nameSpaceID string, mcisID string, vmID string, command string, attachDetachDataDiskReq *tbmcir.TbAttachDetachDataDiskReq) (*tbmcis.TbVmInfo, model.WebStatus) {
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/{command}"
+func AttachDetachDataDiskToVM(nameSpaceID string, mcisID string, vmID string, optionParam string, attachDetachDataDiskReq *tbmcir.TbAttachDetachDataDiskReq) (*tbmcis.TbVmInfo, model.WebStatus) {
+	//var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/{command}"
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/dataDisk"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
 	paramMapper["{vmID}"] = vmID
-	paramMapper["{command}"] = command
+
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
+	urlParam += "?option=" + optionParam
 	url := util.TUMBLEBUG + urlParam
 
 	pbytes, _ := json.Marshal(attachDetachDataDiskReq)
@@ -1956,6 +1958,39 @@ func AttachDetachDataDisk(nameSpaceID string, mcisID string, vmID string, comman
 	returnStatus.StatusCode = respStatus
 
 	return &vmInfo, returnStatus
+}
+
+// VM에서 Attach 가능한 DataDisk 목록 : Get available dataDisks for a VM
+func GetAvailableDataDiskListForVM(nameSpaceID string, mcisID string, vmID string) ([]string, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/dataDisk"
+
+	if vmID == "" {
+		vmID = "g1-1"
+	}
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{namespace}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	availableDiskList := []string{}
+	json.NewDecoder(respBody).Decode(&availableDiskList)
+
+	log.Println(respBody)
+
+	return availableDiskList, model.WebStatus{StatusCode: respStatus}
 }
 
 // Mcis에 SubGroup 목록 조회
@@ -2116,7 +2151,8 @@ func ScaleOutSubGroup(nameSpaceID string, mcisID string, subGroupID string, subG
 	return &returnMcisInfo, returnStatus
 }
 
-func RegSnapshot(nameSpaceID string, mcisID string, vmID string, vmSnapshotReq *mcis.TbVmSnapshotReq) (*mcis.TbCustomImageInfo, model.WebStatus) {
+// VM의 snapshot 생성
+func RegVmSnapshot(nameSpaceID string, mcisID string, vmID string, vmSnapshotReq *mcis.TbVmSnapshotReq) (*mcis.TbCustomImageInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/snapshot"
 
 	var paramMapper = make(map[string]string)

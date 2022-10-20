@@ -624,7 +624,10 @@ func main() {
 	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID", controller.GetVmInfoData)
 	e.GET("/operation/manages/mcismng/:mcisID/vnet/:vnetID", controller.GetVmInfoDataByVnet) // MCIS내 특정 Vnet을 사용하는 vm목록
 
-	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:command", controller.DataDiskToVmUpdateProc)        // disk attach detach
+	e.POST("/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/snapshot", controller.VmSnapshotRegProc)                          // vm의 snapshot 생성
+	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/datadisk", controller.AttachDetachDataDiskToVmUpdateProc) // vm에 disk attach detach
+	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/datadisk", controller.GetAvailableDataDiskListForVM)      // vm에 사용가능한 diskId목록
+
 	e.GET("/operation/manages/mcismng/:mcisID/subgroup", controller.McisSubGroupList)                       // mcis의 subGroup List
 	e.POST("/operation/manages/mcismng/:mcisID/subgroup/reg/proc", controller.SubGroupRegProc)              // vm 등록이므로 vmID없이 reg/proc
 	e.GET("/operation/manages/mcismng/:mcisID/subgroup/:subGroupID", controller.SubGroupVmList)             // subGroup 내 vm 목록
