@@ -374,18 +374,7 @@ function displayDataDiskInfo(targetAction) {
         $("#regDescription").val('')
         getDataDiskList("name");
     }  else if (targetAction == "MODIFY_SUCCESS") {
-        $('#dataDiskCreateBox').removeClass("active");
-        $('#dataDiskInfoBox').removeClass("view");
-        $('#dataDiskListTable').addClass("on");
-
-        var offset = $("#dataDiskCreateBox").offset();
-        $("#TopWrap").animate({ scrollTop: offset.top }, 0);
-
-        // form 초기화
-        $("#regDataDiskName").val('')
-        $("#regDataDiskSize").val('')
-        $("#regDataDiskType").val('')
-        $("#regDescription").val('')
+        
         getDataDiskList("name");
     } else if (targetAction == "DEL") {
         $('#dataDiskCreateBox').removeClass("active");
@@ -573,8 +562,9 @@ function putDataDisk(){
 
     console.log("preDiskSize : ", preDiskSize)
     console.log("diskSize : ", diskSize)
-    if(preDiskSize == diskSize){
-        commonAlert("변경된 디스크사이즈가 없습니다.")
+    if(preDiskSize >= diskSize){
+        commonAlert("변경할 디스크 사이즈는 기존 디스크 사이즈 보다 커야 합니다.")
+        $("#dtlDiskSize").focus();
         return;
     }
     var url = "/setting/resources" + "/datadisk/" + encodeURIComponent(diskId);
@@ -598,11 +588,15 @@ function putDataDisk(){
             console.log(data);
             if(data.status == 200 || data.status == 201){
                 commonAlert("Success Modify DataDisk!")
+                displayDataDiskInfo("MODIFY_SUCCESS");
                 showDataDiskInfo(diskId, diskName);
+
             }else{
                 commonAlert("Fail Create DataDisk " + data.message)
                 showDataDiskInfo(diskId, diskName);
             }
+        }).catch(error=>{
+            console.log(error.response);
         })
     }else{
         commonAlert("Disk ID is empty")
