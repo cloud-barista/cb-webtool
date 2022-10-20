@@ -328,6 +328,9 @@
 							<div class="toptxt">
 								<label>Selected Disk : </label>
 								<input type="text" id="selected_disk"name="" value="" placeholder="" class="gray" title="" readonly />
+								<input type="hidden" id="selected_disk_id"name="" value="" placeholder="" class="gray" title="" readonly />
+								<input type="hidden" id="attach_mcis_id" value=""/>
+								<input type="hidden" id="attach_vm_id" value=""/>
 							</div>
 										
 							<!-- table scrollbar -->
@@ -354,7 +357,7 @@
 							</div>
 							<!-- //table scrollbar -->
 
-							<div class="b_txt"><span class="ch">*</span> Select the VM to be attached to DISK by clicking <span class="txt">“Attach”</span></div>
+							<div class="b_txt"><span class="ch">*</span> Select the VM to be attached to DISK by clicking <span class="txt"> “Attach”</span></div>
 						</div>
 
 					</div>
@@ -362,7 +365,7 @@
 					<div class="btnbox">
 						<div class="btn_right">
 							<button name="" value="" class="btn_apply btn_co btn_cr_g"
-								onclick="applyVM()"><span>Attach</span></button>
+								onclick="runAttachDataDisk('attach')"><span>Attach</span></button>
 							<button name="" value="" class="btn_cancel btn_co btn_cr_b"
 								data-dismiss="modal">cancel</button>
 						</div>
