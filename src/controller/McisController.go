@@ -318,9 +318,10 @@ func GetMcisList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	// mcisList, respStatus := service.GetMcisList(defaultNameSpaceID)
 	optionParam := c.QueryParam("option")
-
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
 	if optionParam == "id" {
-		mcisList, respStatus := service.GetMcisListByID(defaultNameSpaceID)
+		mcisList, respStatus := service.GetMcisListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -335,7 +336,7 @@ func GetMcisList(c echo.Context) error {
 			"McisList":           mcisList,
 		})
 	} else {
-		mcisList, respStatus := service.GetMcisListByOption(defaultNameSpaceID, optionParam)
+		mcisList, respStatus := service.GetMcisListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -1294,8 +1295,8 @@ func UpdateAdaptiveNetwork(c echo.Context) error {
 }
 
 // vm에 disk attach/detech
-func DataDiskToVmUpdateProc(c echo.Context) error {
-	log.Println("UpdateAdaptiveNetwork : ")
+func AttachDetachDataDiskToVmUpdateProc(c echo.Context) error {
+	log.Println("AttachDetachDataDiskToVmUpdateProc : ")
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -1313,10 +1314,10 @@ func DataDiskToVmUpdateProc(c echo.Context) error {
 
 	mcisID := c.Param("mcisID")
 	vmID := c.Param("vmID")
-	command := c.Param("command") // attachDataDisk, detachDataDisk
+	optionParam := c.QueryParam("option") // attachDataDisk, detachDataDisk
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	vmInfo, respStatus := service.AttachDetachDataDisk(defaultNameSpaceID, mcisID, vmID, command, attachDetachDataDiskReq)
+	vmInfo, respStatus := service.AttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq)
 	log.Println("AttachDetachDataDisk result")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 
@@ -1330,6 +1331,35 @@ func DataDiskToVmUpdateProc(c echo.Context) error {
 		"message": respStatus.Message,
 		"status":  respStatus.StatusCode,
 		"vmInfo":  vmInfo,
+	})
+}
+
+// VM이 사용가능한 DataDisk 목록
+func GetAvailableDataDiskListForVM(c echo.Context) error {
+	log.Println("GetAvailableDataDiskListForVM : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	mcisID := c.Param("mcisID")
+	vmID := c.Param("vmID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	idList, respStatus := service.GetAvailableDataDiskListForVM(defaultNameSpaceID, mcisID, vmID)
+	log.Println("GetAvailableDataDiskListForVM result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":        respStatus.Message,
+		"status":         respStatus.StatusCode,
+		"datadiskIdList": idList,
 	})
 }
 
@@ -1493,5 +1523,44 @@ func SubGroupScaleOutUpdateProc(c echo.Context) error {
 		"message":  respStatus.Message,
 		"status":   respStatus.StatusCode,
 		"mcisInfo": mcisInfo,
+	})
+}
+
+// vm의 snapshot을 떠서 myImage로 사용
+func VmSnapshotRegProc(c echo.Context) error {
+	log.Println("VmSnapshotRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	vmSnapshotReq := new(tbmcis.TbVmSnapshotReq)
+	if err := c.Bind(vmSnapshotReq); err != nil {
+
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	vmID := c.Param("vmID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	myImageInfo, respStatus := service.RegVmSnapshot(defaultNameSpaceID, mcisID, vmID, vmSnapshotReq)
+	log.Println("RegVmSnapshot result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":     respStatus.Message,
+		"status":      respStatus.StatusCode,
+		"MyImageInfo": myImageInfo,
 	})
 }
