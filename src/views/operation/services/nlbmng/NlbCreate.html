@@ -1,175 +1,4 @@
 {{define "NlbCreate"}}
-<!-- Modify -->
-<div class="dashboard dashboard_cont server_status" id="nlbInfoBox">
-    <div class="d_box box_m box_w100">
-        <div class="titbox_n">
-            <div class="tit initial">
-                <strong>SSH Key Info</strong> [<span class="stxt"></span>]
-            </div>
-        </div>
-
-        <div class="ds_cont">
-            <div class="register_box">
-                <div class="top_ipbox">
-                    <div class="ipbox ipbox1">
-                        <ul>
-                            <li class="reg_1">
-                                <label>SSH Key Name</label>
-                                <span class="sbox">
-                                    <input
-                                        type="hidden"
-                                        id="dtlCspSshKeyId"
-                                        name=""
-                                        value=""
-                                        placeholder=""
-                                        class="gray"
-                                        title=""
-                                        readonly
-                                    />
-                                    <input
-                                        type="text"
-                                        id="dtlCspSshKeyName"
-                                        name=""
-                                        value=""
-                                        placeholder=""
-                                        class="gray"
-                                        title=""
-                                        readonly
-                                    />
-                                    /
-                                    <input
-                                        type="text"
-                                        id="dtlSshKeyName"
-                                        name=""
-                                        value=""
-                                        placeholder=""
-                                        class="gray"
-                                        title=""
-                                        readonly
-                                    />
-                                    <input
-                                        type="hidden"
-                                        id="dtlSshKeyId"
-                                        name=""
-                                        value=""
-                                        placeholder=""
-                                        class="gray"
-                                        title=""
-                                        readonly
-                                    />
-                                    <!--<a href="javascript:void(0);"><img src="/assets/img/contents/icon_copy.png" class="icon" alt="" /></a>-->
-                                </span>
-                            </li>
-                            <li class="reg_1">
-                                <label>Description</label>
-                                <textarea
-                                    id="dtlDescription"
-                                    cols=""
-                                    rows=""
-                                    placeholder=""
-                                    class="gray"
-                                    title=""
-                                    readonly
-                                ></textarea>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="ipbox ipbox2">
-                        <ul>
-                            <li class="reg_3">
-                                <label>Connection Name</label>
-                                <input
-                                    type="text"
-                                    id="dtlConnectionName"
-                                    name=""
-                                    value=""
-                                    placeholder=""
-                                    class="gray"
-                                    title=""
-                                    readonly
-                                />
-                            </li>
-                            <li class="reg_3">
-                                <label>publicKey</label>
-                                <input
-                                    type="text"
-                                    id="dtlPublicKey"
-                                    name=""
-                                    value=""
-                                    placeholder=""
-                                    class="gray"
-                                    title=""
-                                    readonly
-                                />
-                            </li>
-                            <li class="reg_3">
-                                <label>privateKey</label>
-                                <textarea
-                                    id="dtlPrivateKey"
-                                    cols=""
-                                    rows=""
-                                    placeholder=""
-                                    class="gray"
-                                    title=""
-                                    readonly
-                                ></textarea>
-                                <!-- <input type="text" id="dtlPrivateKey" name="" value="" placeholder="" class="gray" title="" readonly /> -->
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="top_ipbox bottom_ipbox">
-                    <div class="ipbox ipbox1">
-                        <ul>
-                            <li class="reg_1">
-                                <label>username</label>
-                                <input
-                                    type="text"
-                                    id="dtlUsername"
-                                    name=""
-                                    value=""
-                                    placeholder=""
-                                    class="gray"
-                                    title=""
-                                    readonly
-                                />
-                                <input
-                                    type="hidden"
-                                    id="dtlUserID"
-                                    name=""
-                                    value=""
-                                    placeholder=""
-                                    class="gray"
-                                    title=""
-                                    readonly
-                                />
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="ipbox ipbox2">
-                        <ul>
-                            <li class="reg_3">
-                                <label>fingerprint</label>
-                                <!-- <input type="text" name="" value="" placeholder="fingerprint" class="gray" title="" readonly /> -->
-                                <textarea
-                                    id="dtlFingerprint"
-                                    cols=""
-                                    rows=""
-                                    placeholder=""
-                                    class="gray"
-                                    title=""
-                                    readonly
-                                ></textarea>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- //Modify -->
 
 <!-- Register Security -->
 <div class="dashboard dashboard_cont register_cont" id="nlbCreateBox">
@@ -210,33 +39,6 @@
                             <div class="tit">
                                 <span class="ch">*</span>Health Check
                             </div>
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>Protocol</label>
-                                <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="hc_protocol"
-                                        name="hc_protocol"
-                                        placeholder="TCP | HTTP | HTTPS"
-                                        class="pline upper_only"
-                                        title=""
-                                    />
-                                </span>
-                            </li>
-
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>Port</label>
-                                <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="hc_port"
-                                        name="hc_port"
-                                        placeholder="1-65535"
-                                        class="pline"
-                                        title=""
-                                    />
-                                </span>
-                            </li>
                             <li class="reg_1">
                                 <label
                                     ><span class="ch">*</span>Threshold</label
@@ -285,31 +87,14 @@
                             <li class="reg_1">
                                 <label><span class="ch">*</span>Protocol</label>
                                 <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="ls_protocol"
-                                        name="ls_protocol"
-                                        placeholder="TCP | UDP"
-                                        class="pline upper_only"
-                                        title=""
-                                    />
+                                    <select id="ls_protocol" class="selectbox2 white pline w_ip1"
+									    required>
+									    <option value="" selected>Select Protocol</option>
+                                        <option value="TCP">TCP</option>
+                                        <option value="UDP">UDP</option>
+                                    </select>   
                                 </span>
                             </li>
-
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>IP</label>
-                                <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="ls_ip"
-                                        name="ls_ip"
-                                        placeholder=""
-                                        class="pline"
-                                        title=""
-                                    />
-                                </span>
-                            </li>
-
                             <li class="reg_1">
                                 <label><span class="ch">*</span>Port</label>
                                 <span class="sbox">
@@ -318,19 +103,6 @@
                                         id="ls_port"
                                         name="ls_port"
                                         placeholder="1-65535"
-                                        class="pline"
-                                        title=""
-                                    />
-                                </span>
-                            </li>
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>DNS Name</label>
-                                <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="ls_dnsName"
-                                        name="ls_dnsName"
-                                        placeholder=""
                                         class="pline"
                                         title=""
                                     />
@@ -388,7 +160,9 @@
                                 <label></label>
                                 <span class="sbox"> </span>
                             </li>
-                            <div class="tit">Target Group</div>
+                            <div class="tit">
+                                <span class="ch">*</span>Target Group
+                            </div>
                             <li class="reg_1">
                                 <span class="sbox">
                                     <input
@@ -427,14 +201,13 @@
                             <li class="reg_1">
                                 <label>Protocol</label>
                                 <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="tg_protocol"
-                                        name="tg_protocol"
-                                        placeholder="TCP | HTTP | HTTPS"
-                                        class="pline upper_only"
-                                        title=""
-                                    />
+                                    <select id="tg_protocol" class="selectbox2 white pline w_ip1"
+									    required>
+									    <option value="" selected>Select Protocol</option>
+                                        <option value="TCP">TCP</option>
+                                        <option value="HTTP">HTTP</option>
+                                        <option value="HTTPS">HTTPS</option>
+                                    </select>
                                 </span>
                             </li>
                             <li class="reg_1">
@@ -447,6 +220,20 @@
                                         placeholder="1-65535"
                                         class="pline"
                                         title=""
+                                    />
+                                </span>
+                            </li>
+                            <li class="reg_1">
+                                <label>Sub Group ID</label>
+                                <span class="sbox">
+                                    <input
+                                        type="text"
+                                        id="tg_subGroupId"
+                                        name="tg_subGroupId"
+                                        placeholder=""
+                                        class="pline gray"
+                                        title=""
+                                        readonly
                                     />
                                 </span>
                             </li>
@@ -492,7 +279,7 @@
             <div class="modal-body">
                 <div class="pop-body">
                     <div class="title_box">
-                        <div class="title">VM Group</div>
+                        <div class="title">VM List</div>
                     </div>
 
                     <div class="pop-cont">
@@ -524,7 +311,7 @@
                                                 /><label for="th_chall"></label>
                                             </th>
                                             <th>MCIS</th>
-                                            <th>VM Group</th>
+                                            <th>Sub Group</th>
                                             <th>VM List</th>
                                         </tr>
                                     </thead>

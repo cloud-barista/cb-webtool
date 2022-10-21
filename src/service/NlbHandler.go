@@ -237,7 +237,7 @@ func DelNlb(nameSpaceID string, mcisID string, nlbID string, optionParam string)
 }
 
 // 특정 NLB 조회
-func GetNlbDataByID(nameSpaceID string, mcisID string, nlbID string) ([]string, model.WebStatus) {
+func GetNlbData(nameSpaceID string, mcisID string, nlbID string) ( tbmcis.TbNLBInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/nlb/{nlbId}"
 
 	var paramMapper = make(map[string]string)
@@ -251,23 +251,22 @@ func GetNlbDataByID(nameSpaceID string, mcisID string, nlbID string) ([]string, 
 
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return tbmcis.TbNLBInfo{}, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	mcisList := tbcommon.TbIdList{}
+	nlbInfo := tbmcis.TbNLBInfo{}
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+		return tbmcis.TbNLBInfo{}, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
-	json.NewDecoder(respBody).Decode(&mcisList)
-	fmt.Println(mcisList.IDList)
+	json.NewDecoder(respBody).Decode(&nlbInfo)
 
-	return mcisList.IDList, model.WebStatus{StatusCode: respStatus}
+	return nlbInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // 특정 NLB의 Health

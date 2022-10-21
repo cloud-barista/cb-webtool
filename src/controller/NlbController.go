@@ -266,7 +266,7 @@ func NlbGet(c echo.Context) error {
 	nlbID := c.Param("nlbID")
 	log.Println("nlbID= " + nlbID)
 
-	resultNlbInfo, respStatus := service.GetNlbDataByID(defaultNameSpaceID, mcisID, nlbID)
+	resultNlbInfo, respStatus := service.GetNlbData(defaultNameSpaceID, mcisID, nlbID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",

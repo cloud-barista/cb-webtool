@@ -59,6 +59,7 @@ function displayNlbInfo(targetAction) {
 
 // SshKey 목록 조회
 function getNLBList(mcisID) {
+    console.log("mcisID : ", mcisID);
     var url = "/operation/services/mcis/" + mcisID + "/nlb/list";
     axios
         .get(url, {
@@ -82,13 +83,13 @@ function getNLBList(mcisID) {
             } else {
                 if (data.length) {
                     // null exception if not exist
-                    if (sort_type) {
-                        console.log("check : ", sort_type);
+                    if (mcisID) {
+                        console.log("check : ", mcisID);
                         data.filter((list) => list.name !== "")
                             .sort((a, b) =>
-                                a[sort_type] < b[sort_type]
+                                a[mcisID] < b[mcisID]
                                     ? -1
-                                    : a[sort_type] > b[sort_type]
+                                    : a[mcisID] > b[mcisID]
                                     ? 1
                                     : 0
                             )
@@ -97,7 +98,7 @@ function getNLBList(mcisID) {
                                     (html +=
                                         // item 값 확인해서 출력 필요.
                                         "<tr onclick=\"showNlbInfo('" +
-                                        item.id +
+                                        mcisID + "', '"+ item.id +
                                         "');\">" +
                                         '<td class="overlay hidden column-50px" data-th="">' +
                                         '<input type="hidden" id="nlb_info_' +
@@ -106,23 +107,33 @@ function getNLBList(mcisID) {
                                         item.name +
                                         "|" +
                                         item.connectionName +
-                                        "|" +
-                                        item.cspSshKeyName +
                                         '"/>' +
                                         '<input type="checkbox" name="chk" value="' +
                                         item.name +
                                         '" id="raw_' +
                                         index +
                                         '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' +
-                                        '<td class="btn_mtd ovm" data-th="Name">' +
-                                        item.id +
-                                        "</td>" +
-                                        '<td class="overlay hidden" data-th="connectionName">' +
-                                        item.connectionName +
-                                        "</td>" +
-                                        '<td class="overlay hidden" data-th="cspSshKeyName">' +
-                                        item.cspSshKeyName +
-                                        "</td>" +
+                                        '<td class="overlay hidden column-80px" data-th="health">' +
+                                        item.status 
+                                        + "</td>" +
+                                        '<td class="btn_mtd ovm" data-th="mcis">' +
+                                        mcisID 
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="nlbName">' +
+                                        item.name 
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="scope">' +
+                                        item.scope 
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="type">' +
+                                        item.type 
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="listenerInfo">' +
+                                        item.listener.protocol + " | " + item.listener.port                                    
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="listenerInfo">' +
+                                        item.targetGroup.protocol + " | " + item.targetGroup.port + " | " + item.targetGroup.subGroupId                                    
+                                        + "</td>" +
                                         "</tr>")
                             );
                     } else {
@@ -130,29 +141,43 @@ function getNLBList(mcisID) {
                             (item, index) =>
                                 (html +=
                                     "<tr onclick=\"showNlbInfo('" +
-                                    item.id +
-                                    "');\">" +
-                                    '<td class="overlay hidden column-50px" data-th="">' +
-                                    '<input type="hidden" id="nlb_info_' +
-                                    index +
-                                    '" value="' +
-                                    item.name +
-                                    '"/>' +
-                                    '<input type="checkbox" name="chk" value="' +
-                                    item.name +
-                                    '" id="raw_' +
-                                    index +
-                                    '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' +
-                                    '<td class="btn_mtd ovm" data-th="id">' +
-                                    item.id +
-                                    '<span class="ov"></span></td>' +
-                                    '<td class="overlay hidden" data-th="connectionName">' +
-                                    item.connectionName +
-                                    "</td>" +
-                                    '<td class="overlay hidden" data-th="cspSshKeyName">' +
-                                    item.cspSshKeyName +
-                                    "</td>" +
-                                    "</tr>")
+                                        mcisID + "', '"+ item.id +
+                                        "');\">" +
+                                        '<td class="overlay hidden column-50px" data-th="">' +
+                                        '<input type="hidden" id="nlb_info_' +
+                                        index +
+                                        '" value="' +
+                                        item.name +
+                                        "|" +
+                                        item.connectionName +
+                                        '"/>' +
+                                        '<input type="checkbox" name="chk" value="' +
+                                        item.name +
+                                        '" id="raw_' +
+                                        index +
+                                        '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' +
+                                        '<td class="overlay hidden column-80px" data-th="health">' +
+                                        item.status 
+                                        + "</td>" +
+                                        '<td class="btn_mtd ovm" data-th="mcis">' +
+                                        mcisID 
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="nlbName">' +
+                                        item.name 
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="scope">' +
+                                        item.scope 
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="type">' +
+                                        item.type 
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="listenerInfo">' +
+                                        item.listener.protocol + " | " + item.listener.port                                    
+                                        + "</td>" +
+                                        '<td class="overlay hidden" data-th="listenerInfo">' +
+                                        item.targetGroup.protocol + " | " + item.targetGroup.port + " | " + item.targetGroup.subGroupId                                    
+                                        + "</td>" +
+                                        "</tr>")
                         );
                     }
 
@@ -225,13 +250,13 @@ function deleteNlb() {
         });
 }
 
-function showNlbInfo(nlbId) {
-    console.log("target showNlbInfo : ", nlbId);
+function showNlbInfo(mcisId, nlbId) {
+    console.log("target showNlbInfo : ", mcisId);
 
     $(".stxt").html(nlbId);
 
-    var url = "/operation/services/nlb/" + nlbId;
-    console.log("nlb URL : ", url);
+    var url = "/operation/services/mcis/" + mcisId + "/nlb/" + nlbId;
+    console.log("n1lb URL : ", url);
 
     return axios
         .get(url, {
@@ -240,7 +265,9 @@ function showNlbInfo(nlbId) {
             },
         })
         .then((result) => {
-            var data = result.data.SshKeyInfo;
+            var data = result.data.NlbInfo;
+            console.log("result DT : ", data);
+            /*
             console.log("Show Data : ", data);
 
             var dtlCspSshKeyName = data.cspSshKeyName;
@@ -266,6 +293,7 @@ function showNlbInfo(nlbId) {
             $("#dtlPublicKey").val(dtlPublicKey);
             $("#dtlPrivateKey").val(dtlPrivateKey);
             $("#dtlFingerprint").val(dtlFingerprint);
+            */
         })
         .catch((error) => {
             console.warn(error);
@@ -526,7 +554,6 @@ function getMcisListCallbackSuccess(caller, mcisList) {
 
     // console.log("caller = " + caller)
     if (caller == "nlbreg") {
-        console.log("VMS 체크");
         console.log(mcisList);
         // 리스트 화면 구현 append
 
@@ -599,6 +626,11 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
                 '" value="' +
                 aMcisData.id +
                 '"/>' +
+                '<input type="hidden" name="subGroupId" id="subGroupId_' +
+                i +
+                '" value="' +
+                vmList[i].subGroupId +
+                '"/>' +
                 '<input type="hidden" name="vms_info" id="vms_info_' +
                 i +
                 '" value="' +
@@ -643,6 +675,7 @@ function applySubGroup() {
     for (var i = 0; i < subgrouplistValue; i++) {
         if (chk[i].checked) {
             mcisid = $("input[name='mcisId']")[i].value;
+            subGroupId = $("input[name='subGroupId']")[i].value;
             subgrouplistData[i] = $("input[name='vms_info']")[i].value;
             console.log("subgrouplistData" + [i] + " : ", subgrouplistData[i]);
             if (infoshow != "") {
@@ -656,5 +689,6 @@ function applySubGroup() {
     $("#tg_mcisId").val(mcisid);
 
     $("#tg_vms").val(infoshow);
+    $("#tg_subGroupId").val(subGroupId);
     $("#vmRegisterBox").modal("hide");
 }
