@@ -91,6 +91,8 @@
 												onClick="displayDataDiskInfo('REG')">Add</a></li>
 										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
 												onClick="displayDataDiskInfo('Attach')">Attach</a></li>
+										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
+												onClick="runDetachDataDisk('detach')">Detach</a></li>
 										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist"
 												onClick="commonConfirmOpen('DeleteDataDisk')">Delete</a></li>
 									</ul>
@@ -110,7 +112,7 @@
 
 						<thead>
 							<tr>
-								<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall"
+								<th class="column-50px"><input type="checkbox" name="chk" value="" id="th_chall"
 										title="" /><label for="th_chall"></label></th>
 								<th>Disk Name</th>
 								<th>Disk Type</th>

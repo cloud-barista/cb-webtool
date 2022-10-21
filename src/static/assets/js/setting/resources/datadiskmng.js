@@ -29,11 +29,25 @@ $(document).ready(function () {
 function deleteDataDisk() {
     var dataDiskId = "";
     var count = 0;
-
+    var diskStatus = "";
     $("input[name='chk']:checked").each(function () {
         count++;
         dataDiskId = dataDiskId + $(this).val() + ",";
+        diskStatus = $(this).attr("diskStatus")
+        if(diskStatus == "attached"){
+            commonAlert("Disk에 할당된 VM이 있어 삭제 할 수 없습니다.");
+            return false;
+        }
     });
+
+    if(diskStatus == "attached"){
+        var checkBox = document.getElementsByName("chk");
+        checkBox.forEach(item=>{
+        item.checked = false;
+        })
+        return false;
+    }
+
     dataDiskId = dataDiskId.substring(0, dataDiskId.lastIndexOf(","));
 
     console.log("dataDiskId : ", dataDiskId);
@@ -104,6 +118,10 @@ function attachDataDisk() {
         
     });
     if(diskStatus == "attached"){
+        var checkBox = document.getElementsByName("chk");
+        checkBox.forEach(item=>{
+        item.checked = false;
+        })  
         return false;
     }
     console.log("connectionName arr :",connectionName)
@@ -144,6 +162,54 @@ function attachDataDisk() {
    
 }
 
+function runDetachDataDisk(command){
+    var count = 0;
+    var diskStatus = "";
+    $("input[name='chk']:checked").each(function (index) {
+        console.log("detach index :", index);
+        count++;
+        diskStatus = $(this).attr("diskstatus")
+        if(diskStatus != "attached"){
+            commonAlert("Disk에 할당된 VM이 없어 Detach 할 수 없습니다.");
+            return false;
+        }else{
+            var mcis_id = $(this).attr("mcis_id");
+            var vm_id = $(this).attr("vm_id");
+            var dataDiskId = $(this).val();
+            var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
+            console.log("datach url : ",url)
+            var obj = {
+                dataDiskId
+            }
+            axios.put(url, obj).then(result=>{
+                var data = result.data;
+                console.log(data);
+                if(data.status == 200 || data.status == 201){
+                    if(index == count-1){
+                        commonAlert("Success Detach DataDisk!")
+                        $("#dataDiskInfoBox").hide();
+                        displayDataDiskInfo("MODIFY_SUCCESS");
+                    }
+        
+                }else{
+                    commonAlert("Fail Detach DataDisk at "+item + data.message)
+                    showDataDiskInfo(diskId, diskName);
+                }
+            }).catch(error=>{
+                console.log(error.response);
+            })
+        }
+        
+    });
+    console.log("disk status at run detach : ",diskStatus)
+    if(diskStatus != "attached"){
+        var checkBox = document.getElementsByName("chk");
+        checkBox.forEach(item=>{
+        item.checked = false;
+        })
+        return false;
+    }
+}
 function runAttachDataDisk(command) {
     var mcis_id = $("#attach_mcis_id").val();
     var vm_id = $("#attach_vm_id").val();
@@ -254,7 +320,7 @@ function addDataDiskRow(item, index) {
     html += '<tr onclick="showDataDiskInfo(\'' + item.id + '\',\'' + item.name + '\');">'
         + '<td class="overlay hidden column-50px" data-th="">'
         + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
-        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskName="'+item.name+'" diskStatus="'+diskStatus+'"/><label for="td_ch1"></label> <span class="ov off"></span>'
+        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskname="'+item.name+'" diskstatus="'+diskStatus+'" mcis_id="'+mcis_id+'" vm_id="'+vm_id+'" /><label for="td_ch1"></label> <span class="ov off"></span>'
 
         + '</td>'
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
