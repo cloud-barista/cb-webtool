@@ -76,6 +76,9 @@ function deleteDataDisk() {
     });
 }
 
+function chkDiskStatus(attr){
+   
+}
 function attachDataDisk() {
     var dataDiskId = "";
     var count = 0;
@@ -83,17 +86,26 @@ function attachDataDisk() {
     var connectionDup = false;
     var selectDiskName = [];
     var chkDiskId = [];
-
+    var diskStatus = "";
     $("input[name='chk']:checked").each(function () {
         count++;
         dataDiskId = dataDiskId + $(this).val() + ",";
         var tempConnectionName = $(this).attr("item");
         var tempDiskName = $(this).attr("diskName");
         var tempDiskId = $(this).val();
+        diskStatus = $(this).attr("diskStatus")
+        if(diskStatus == "attached"){
+            commonAlert("이미 Attach된 Disk 를 선택하셨습니다.");
+            return false;
+        }
         connectionName.push(tempConnectionName);
         selectDiskName.push(tempDiskName);
         chkDiskId.push(tempDiskId);
+        
     });
+    if(diskStatus == "attached"){
+        return false;
+    }
     console.log("connectionName arr :",connectionName)
     console.log("selectDiskName arr :",selectDiskName)
     // 선택된 디스크 이름 가져와서 뿌려주기
@@ -130,51 +142,6 @@ function attachDataDisk() {
 
     getCommonMcisList("dataDiskMng",true, "", "","connection="+connectionName)
    
-    // var url = "/setting/resources/datadisk/mcisList";
-    // axios.get(url,{
-
-    // }).then(result=>{
-    //     var data = result.data;
-    //     var mcisList = data.McisList
-    //     mcisList.forEach((item, i)=>{
-    //         console.log("mcisList i :", i);
-    //         console.log("mcisList item :", item);
-    //     })
-    //     console.log("mcisList : ",mcisList)
-    //     console.log("mcis list data : ",data);
-
-    // })
-
-    // if (count != 1) {
-    //     commonAlert("삭제할 대상을 하나만 선택하세요.");
-    //     return false;
-    // }
-
-    // var url = "/setting/resources" + "/datadisk/del/" + dataDiskId
-    // console.log("del dataDisk url : ", url);
-
-    // axios.delete(url, {
-    //     headers: {
-    //         'Content-Type': "application/json"
-    //     }
-    // }).then(result => {
-    //     var data = result.data;
-    //     console.log(result);
-    //     console.log(data);
-    //     if (result.status == 200 || result.status == 201) {
-    //         commonAlert(data.message)
-    //         displayDataDiskInfo("DEL_SUCCESS")
-           
-    //     } else {
-    //         commonAlert(result.data.error)
-    //     }
-    // }).catch((error) => {
-    //     console.warn(error);
-    //     console.log(error.response)
-    //     var errorMessage = error.response.data.error;
-    //     var statusCode = error.response.status;
-    //     commonErrorAlert(statusCode, errorMessage);
-    // });
 }
 
 function runAttachDataDisk(command) {
@@ -184,6 +151,7 @@ function runAttachDataDisk(command) {
     var diskId = dataDiskId.split(",");    
     console.log("command : ",command);
     var count = diskId.length;
+    console.log("count : ", count);
     diskId.forEach((item,index)=>{
         var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
         console.log("attach url : ",url)
@@ -194,7 +162,7 @@ function runAttachDataDisk(command) {
             var data = result.data;
             console.log(data);
             if(data.status == 200 || data.status == 201){
-                if(index == count){
+                if(index == count-1){
                     commonAlert("Success Attach DataDisk!")
                     displayDataDiskInfo("MODIFY_SUCCESS");
                 }
@@ -267,16 +235,32 @@ function getDataDiskList(sort_type) {
 function addDataDiskRow(item, index) {
     console.log("addDataDiskRow " + index);
     console.log(item)
+    //Disk Attach 여부 확인
+    var assoObjList = item.associatedObjectList;
+    var diskStatus = ""; //disk Attach 여부 상태. 1) attach되어 있을경우 attached 그렇지 않으면 빈값; 
+    var ns = "";
+    var mcis_id = "";
+    var vm_id = "";
+    if(assoObjList.length > 0){
+        var tempAssoObjList = assoObjList[0];
+        var parse = tempAssoObjList.split("/")
+        ns = parse[2];
+        mcis_id = parse[4];
+        vm_id = parse[6];
+        diskStatus = "attached"
+    }
+
     var html = ""
     html += '<tr onclick="showDataDiskInfo(\'' + item.id + '\',\'' + item.name + '\');">'
         + '<td class="overlay hidden column-50px" data-th="">'
         + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
-        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskName="'+item.name+'" /><label for="td_ch1"></label> <span class="ov off"></span>'
+        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskName="'+item.name+'" diskStatus="'+diskStatus+'"/><label for="td_ch1"></label> <span class="ov off"></span>'
 
         + '</td>'
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
         + '<td class="overlay hidden" data-th="diskType">' + item.diskType + '</td>'
         + '<td class="overlay hidden" data-th="diskSize">' + item.diskSize + '</td>'
+        + '<td class="overlay hidden" data-th="attachedVm">' + vm_id + '</td>'
         + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>'
         + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'
         + '</tr>'
@@ -487,6 +471,14 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
         var dtlConnectionName = data.connectionName;
         var dtlDiskId = data.id;
         var dtlPreDiskSize = data.diskSize;
+        var dtlAssoObj = data.associatedObjectList;
+        var vm_id = "";
+        if(dtlAssoObj.length > 0){
+            var parse = dtlAssoObj[0];
+            var temp_parse = parse.split("/");
+            vm_id = temp_parse[6];
+        }
+       
       
         // var subList = data.subnetInfoList;
         // for (var i in subList) {
@@ -501,6 +493,7 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
         $("#dtlConnectionName").empty();
         $("#dtlPreDiskSize").empty();
         $("#dtlDiskId").empty();
+        $("#dtlAssoObj").empty();
 
 
         $("#dtlDiskName").val(dtlDiskName);
@@ -510,6 +503,7 @@ function showDataDiskInfo(dataDiskId, dataDiskName) {
         $("#dtlConnectionName").val(dtlConnectionName);
         $("#dtlDiskId").val(dtlDiskId);
         $("#dtlPreDiskSize").val(dtlPreDiskSize)
+        $("#dtlAssoObj").val(vm_id)
 
         if (dtlConnectionName == '' || dtlConnectionName == undefined) {
             commonAlert("ConnectionName is empty")
