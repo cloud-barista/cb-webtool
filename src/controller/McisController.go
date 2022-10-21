@@ -1314,7 +1314,7 @@ func AttachDetachDataDiskToVmUpdateProc(c echo.Context) error {
 
 	mcisID := c.Param("mcisID")
 	vmID := c.Param("vmID")
-	optionParam := c.Param("command") // attachDataDisk, detachDataDisk
+	optionParam := c.QueryParam("command") // attachDataDisk, detachDataDisk
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
 	vmInfo, respStatus := service.AttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq)
