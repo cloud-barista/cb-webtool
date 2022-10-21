@@ -186,6 +186,7 @@ function runAttachDataDisk(command) {
     var count = diskId.length;
     diskId.forEach((item,index)=>{
         var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
+        console.log("attach url : ",url)
         var obj = {
             dataDiskId : item
         }

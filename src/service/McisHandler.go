@@ -1925,7 +1925,7 @@ func AttachDetachDataDiskToVM(nameSpaceID string, mcisID string, vmID string, op
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
-	paramMapper["{vmID}"] = vmID
+	paramMapper["{vmId}"] = vmID
 
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
