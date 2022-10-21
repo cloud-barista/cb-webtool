@@ -188,7 +188,8 @@ function runDetachDataDisk(command){
                     if(index == count-1){
                         commonAlert("Success Detach DataDisk!")
                         $("#dataDiskInfoBox").hide();
-                        displayDataDiskInfo("MODIFY_SUCCESS");
+                       // displayDataDiskInfo("MODIFY_SUCCESS");
+                        location.reload()
                     }
         
                 }else{
@@ -221,6 +222,7 @@ function runAttachDataDisk(command) {
     diskId.forEach((item,index)=>{
         var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
         console.log("attach url : ",url)
+        console.log("attach diskid : ",item);
         var obj = {
             dataDiskId : item
         }
@@ -231,14 +233,18 @@ function runAttachDataDisk(command) {
                 if(index == count-1){
                     commonAlert("Success Attach DataDisk!")
                     displayDataDiskInfo("MODIFY_SUCCESS");
+                    location.reload();
+                }else{
+                   
                 }
     
             }else{
                 commonAlert("Fail attach DataDisk at "+item + data.message)
                 showDataDiskInfo(diskId, diskName);
+                location.reload();
             }
         }).catch(error=>{
-            console.log(error.response);
+            console.log("error response : ",error.response);
         })
     })
 
