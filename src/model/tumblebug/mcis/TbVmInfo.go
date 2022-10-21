@@ -27,9 +27,10 @@ type TbVmInfo struct {
 	PublicIP           string     `json:"publicIP"`
 	Region             RegionInfo `json:"region"`
 
-	RootDeviceName string `json:"rootDeviceName"`
-	RootDiskSize   string `json:"rootDiskSize"`
-	RootDiskType   string `json:"rootDiskType"`
+	RootDeviceName string   `json:"rootDeviceName"`
+	RootDiskSize   string   `json:"rootDiskSize"`
+	RootDiskType   string   `json:"rootDiskType"`
+	DataDiskIds    []string `json:"dataDiskIds"`
 
 	SecurityGroupIDs []string `json:"securityGroupIds"`
 

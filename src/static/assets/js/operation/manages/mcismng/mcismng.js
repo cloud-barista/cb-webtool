@@ -1056,6 +1056,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
     //////vm detail tab////
     var vmDetail = data.cspViewVmDetail;
     if (vmDetail) {
+        console.log("mcis vm Detail : ",vmDetail);
         //    //cspvmdetail
         // var vmDetailKeyValueList = vmDetail.KeyValueList
         var vmDetailKeyValueList = vmDetail.keyValueList
@@ -1117,7 +1118,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
         $("#server_detail_view_user_id_pass").val(data.vmUserAccount + "/ *** ")
         $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
 
-
+        
         var append_sg = ''
 
         var sg_arr = vmDetail.securityGroupIIds
