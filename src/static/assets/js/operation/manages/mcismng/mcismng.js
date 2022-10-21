@@ -2389,7 +2389,7 @@ function displayDiskAttachModal(isShow) {
         axios.get(url).then(result=>{
             var data = result.dataDisk;
             var html = "";
-            console.log("get available disk : ",data);
+            console.log("get available disk : ",result);
             // if(data){
             //     if(data.length >0){
             //         data.forEach(item=>{

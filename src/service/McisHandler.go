@@ -1969,7 +1969,7 @@ func GetAvailableDataDiskListForVM(nameSpaceID string, mcisID string, vmID strin
 	}
 
 	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
+	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
 	paramMapper["{vmId}"] = vmID
 
