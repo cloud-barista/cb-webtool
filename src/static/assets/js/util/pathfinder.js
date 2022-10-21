@@ -8,10 +8,7 @@
 // map에 담긴 Key를 value로 바꿔 url을 return한다.
 // url에는 main.go 에서 사용하는 path를 넣는다.
 function setUrlByParam(controllerKeyName, urlParamMap) {
-    //resultVmCreateMap.set(resultVmKey, resultStatus)
-    // var url = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";    
-    
-    //var returnUrl = url;
+
     var returnUrl = getWebToolUrl(controllerKeyName)
     for (let key of urlParamMap.keys()) {
         console.log("urlParamMap " + key + " : " + urlParamMap.get(key));
@@ -24,7 +21,6 @@ function setUrlByParam(controllerKeyName, urlParamMap) {
 
 // conteroller의 methodName으로 main.go에 정의된 url값을 가져온다.
 function getWebToolUrl(controllerKeyName) {
-    // ex ) monitoringGroup.GET("/operation/monitorings/mcismonitoring/mngform", controller.McisMonitoringMngForm)    
     let controllerMethodNameMap = new Map(
         [
             
@@ -53,6 +49,7 @@ function getWebToolUrl(controllerKeyName) {
             ["GlobalDashboardForm", "/operation/dashboards/dashboardglobalnamespace/mngform"],// Dashboard NS
 
             ["McisMngForm", "/operation/manages/mcismng/mngform"],
+            ["McisList", "/operation/manages/mcismng/list"],
             ["McisRegForm", "/operation/manages/mcismng/regform"],            
             ["McisRegProc", "/operation/manages/mcismng/reg/proc"],
             ["McisCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID"],
@@ -97,7 +94,8 @@ function showHelp(helpKey) {
 // 한 화면에서 서로다른 형태로 호출이 가능하므로 caller(호출자) 를 callback에 같이 넘겨서 구분할 수 있게 함.
 // isCallback = false 이고 targetObjId 가 있는 경우 해당 obj set
 function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam) {
-    var url = "/setting/namespaces/namespace/list";
+    // var url = "/setting/namespaces/namespace/list";
+    var url = getWebToolUrl("NamespaceListData")
 
     if (optionParam != "") {
         url += "?option=" + optionParam;
@@ -705,7 +703,8 @@ function getCommonFetchImages(caller, connectionName) {
 // optionParam이 id, status, simple 면 "?option=id", "?option=status" 등으로 호출
 // 그외 optionPapam이거나 2개 이상인 경우는 optionParam을 그대로 넘김. ex) vnet=aaa&bbb=ccc&option=status
 function getCommonMcisList(caller, isCallback, targetObjId, optionParam, filterKeyVal) {
-    var url = "/operation/manages/mcismng/list"
+    // var url = "/operation/manages/mcismng/list"
+    var url = getWebToolUrl("McisList")
 
     var hasOptionParam = false
     if (optionParam != "") {
@@ -743,7 +742,6 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam, filterK
 // MCIS 상세정보 조회
 function getCommonMcisData(caller, mcisID) {
     //var orgUrl = "/operation/manages/mcismng/:mcisID";
-    // McisData
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
     var url = setUrlByParam('McisData', urlParamMap)
@@ -754,7 +752,6 @@ function getCommonMcisData(caller, mcisID) {
         if (result.data.status == 200 || result.data.status == 201) {
             getCommonMcisDataCallbackSuccess(caller, result.data.McisInfo, mcisID)
         } else {
-            //getMcisDataCallbackFail(caller, data)
             commonErrorAlert(result.data.status, "MCIS Data Search Failed");
         }
     }).catch(error => {
