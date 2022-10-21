@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	"github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
@@ -1985,12 +1986,12 @@ func GetAvailableDataDiskListForVM(nameSpaceID string, mcisID string, vmID strin
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	availableDiskList := []string{}
+	availableDiskList := mcir.RestGetAvailableDataDisksResponse{}
 	json.NewDecoder(respBody).Decode(&availableDiskList)
 
 	log.Println(respBody)
 
-	return availableDiskList, model.WebStatus{StatusCode: respStatus}
+	return availableDiskList.DataDisk, model.WebStatus{StatusCode: respStatus}
 }
 
 // Mcis에 SubGroup 목록 조회
