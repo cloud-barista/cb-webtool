@@ -624,7 +624,7 @@ func main() {
 	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID", controller.GetVmInfoData)
 	e.GET("/operation/manages/mcismng/:mcisID/vnet/:vnetID", controller.GetVmInfoDataByVnet) // MCIS내 특정 Vnet을 사용하는 vm목록
 
-	e.POST("/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/snapshot", controller.VmSnapshotRegProc)                          // vm의 snapshot 생성
+	e.POST("/operation/manages/mcismng/:mcisID/vm/:vmID/snapshot", controller.VmSnapshotRegProc)                 // vm의 snapshot 생성
 	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/datadisk", controller.AttachDetachDataDiskToVmUpdateProc) // vm에 disk attach detach
 	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID/datadisk", controller.GetAvailableDataDiskListForVM)      // vm에 사용가능한 diskId목록
 
@@ -784,6 +784,13 @@ func main() {
 	e.GET("/setting/resources/datadisk/:dataDiskID", controller.DataDiskGet)
 	e.PUT("/setting/resources/datadisk/:dataDiskID", controller.DataDiskPutProc)
 	e.DELETE("/setting/resources/datadisk/del/:dataDiskID", controller.DataDiskDelProc)
+
+	resourcesGroup.GET("/myimage/mngform", controller.MyImageMngForm)
+	e.GET("/setting/resources/myimage/list", controller.MyImageList)
+	e.POST("/setting/resources/myimage/reg", controller.MyImageRegProc)
+	e.DELETE("/setting/resources/myimage/del", controller.MyImageAllDelProc)
+	e.GET("/setting/resources/myimage/:myImageID", controller.MyImageGet)
+	e.DELETE("/setting/resources/myimage/del/:myImageID", controller.MyImageDelProc)
 
 	nlbGroup := e.Group("/operation/services/nlb", nlbTemplate)
 	nlbGroup.GET("/mngform", controller.NlbMngForm)
