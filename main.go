@@ -805,6 +805,13 @@ func main() {
 
 	pmksGroup := e.Group("/operation/services/pmks", pmksRegTemplate)
 	pmksGroup.GET("/mngform", controller.PmksMngForm)
+	e.GET("/operation/manages/pmksmng/list", controller.GetPmksList)
+	e.POST("/operation/manages/pmksmng/reg/proc", controller.PmksRegProc)
+	e.DELETE("/operation/manages/pmksmng/:clusteruID/:clusterName", controller.PmksDelProc)
+	e.PUT("/operation/manages/pmksmng/:clusteruID/:clusterName", controller.PmksClusterUpdateProc)
+
+	e.POST("/operation/manages/pmksmng/:clusteruID/:clusterName/reg/proc", controller.PmksNodeGroupRegProc)
+	e.DELETE("/operation/manages/pmksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName", controller.PmksNodeGroupDelProc)
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)

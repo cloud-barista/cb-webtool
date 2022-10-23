@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/cloud-barista/cb-webtool/src/model/spider"
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	"github.com/labstack/echo"
 
@@ -155,10 +156,10 @@ func RegPmksCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*lad
 	return &returnClusterInfo, returnStatus
 }
 
-// Cluster 생성
+// PMKS Cluster 생성
 func RegPmksClusterByAsync(nameSpaceID string, clusterReq *ladybug.ClusterRegReq, c echo.Context) {
 
-	var originalUrl = "/ns/{namespace}/clusters"
+	var originalUrl = "/cluster"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{namespace}"] = nameSpaceID
@@ -194,7 +195,35 @@ func RegPmksClusterByAsync(nameSpaceID string, clusterReq *ladybug.ClusterRegReq
 
 }
 
-// Cluster 삭제
+// PmksClusterUpdateProc
+func UpdatePmksCluster(nameSpaceID string, clusterReqInfo *spider.ClusterReqInfo) (spider.ClusterInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}"
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.SPIDER + urlParam
+
+	pbytes, _ := json.Marshal(clusterReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	resultClusterInfo := spider.ClusterInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return resultClusterInfo, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&resultClusterInfo)
+
+	return resultClusterInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// PMKS Cluster 삭제
 func DelPmksCluster(nameSpaceID string, clusterName string) (*ladybug.StatusInfo, model.WebStatus) {
 	var originalUrl = "/ns/{namespace}/clusters/{cluster}"
 
