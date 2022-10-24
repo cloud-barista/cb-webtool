@@ -22,7 +22,7 @@ $(document).ready(function () {
         setTableHeightForScroll('myImageListTable', 300);
     });
 
-    getDataDiskList(order_type);
+    getMyImageList(order_type);
 });
 
 // function goDelete() {
@@ -194,7 +194,7 @@ function runDetachDataDisk(command){
         
                 }else{
                     commonAlert("Fail Detach DataDisk at "+item + data.message)
-                    showDataDiskInfo(diskId, diskName);
+                    showMyImageInfo(diskId, diskName);
                 }
             }).catch(error=>{
                 console.log(error.response);
@@ -240,7 +240,7 @@ function runAttachDataDisk(command) {
     
             }else{
                 commonAlert("Fail attach DataDisk at "+item + data.message)
-                showDataDiskInfo(diskId, diskName);
+                showMyImageInfo(diskId, diskName);
                 location.reload();
             }
         }).catch(error=>{
@@ -263,7 +263,7 @@ function getMyImageList(sort_type) {
     }).then(result => {
         console.log("get MyImage List : ", result.data);
         // var data = result.data.dataDisk;
-        var data = result.data.dataDiskInfoList;
+        var data = result.data.myImageInfoList;
 
         var html = ""
         var cnt = 0;
@@ -280,11 +280,11 @@ function getMyImageList(sort_type) {
                     cnt++;
                     console.log("check : ", sort_type);
                     data.filter(list => list.Name !== "").sort((a, b) => (a[sort_type] < b[sort_type] ? - 1 : a[sort_type] > b[sort_type] ? 1 : 0)).map((item, index) => (
-                        html += addDataDiskRow(item, index)
+                        html += addMyImageRow(item, index)
                     ))
                 } else {
                     data.filter((list) => list.Name !== "").map((item, index) => (
-                        html += addDataDiskRow(item, index)
+                        html += addMyImageRow(item, index)
                     ))
                 }
 
@@ -304,7 +304,7 @@ function getMyImageList(sort_type) {
 }
 
 // dataDisk목록에 Item 추가
-function addDataDiskRow(item, index) {
+function addMyImageRow(item, index) {
     console.log("addMyImageRow " + index);
     console.log(item)
     //Disk Attach 여부 확인
@@ -323,7 +323,7 @@ function addDataDiskRow(item, index) {
     }
 
     var html = ""
-    html += '<tr onclick="showDataDiskInfo(\'' + item.id + '\',\'' + item.name + '\');">'
+    html += '<tr onclick="showMyImageInfo(\'' + item.id + '\',\'' + item.name + '\');">'
         + '<td class="overlay hidden column-50px" data-th="">'
         + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
         + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskname="'+item.name+'" diskstatus="'+diskStatus+'" mcis_id="'+mcis_id+'" vm_id="'+vm_id+'" /><label for="td_ch1"></label> <span class="ov off"></span>'
@@ -521,19 +521,19 @@ function createDataDisk() {
 }
 
 // 선택한 dataDisk의 상세정보 : 이미 가져왔는데 다시 가져올 필요있나?? dataDiskID
-function showDataDiskInfo(dataDiskId, dataDiskName) {
-    console.log("showDataDiskInfo : ", dataDiskName);
+function showMyImageInfo(myImageId, dataDiskName) {
+    console.log("showMyImageInfo : ", dataDiskName);
     
     $('#dataDiskName').text(dataDiskName)
 
-    var url = "/setting/resources" + "/datadisk/" + encodeURIComponent(dataDiskId);
+    var url = "/setting/resources" + "/myimage/" + encodeURIComponent(myImageId);
     console.log("dataDisk detail URL : ", url)
 
     return axios.get(url, {
     }).then(result => {
         console.log(result);
         console.log(result.data);
-        var data = result.data.dataDiskInfo
+        var data = result.data.myImageInfo
         console.log("Show Data : ", data);
 
         var dtlDiskName = data.name;
@@ -624,11 +624,11 @@ function putDataDisk(){
             if(data.status == 200 || data.status == 201){
                 commonAlert("Success Modify DataDisk!")
                 displayDataDiskInfo("MODIFY_SUCCESS");
-                showDataDiskInfo(diskId, diskName);
+                showMyImageInfo(diskId, diskName);
 
             }else{
                 commonAlert("Fail Create DataDisk " + data.message)
-                showDataDiskInfo(diskId, diskName);
+                showMyImageInfo(diskId, diskName);
             }
         }).catch(error=>{
             console.log(error.response);

@@ -1879,7 +1879,7 @@ func MyImageList(c echo.Context) error {
 	filterKeyParam := c.QueryParam("filterKey")
 	filterValParam := c.QueryParam("filterVal")
 	if optionParam == "id" {
-		dataDiskInfoList, respStatus := service.GetMyImageListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
+		myImageInfoList, respStatus := service.GetMyImageListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -1891,10 +1891,10 @@ func MyImageList(c echo.Context) error {
 			"message":            "success",
 			"status":             respStatus.StatusCode,
 			"defaultNameSpaceID": defaultNameSpaceID,
-			"dataDiskInfoList":   dataDiskInfoList,
+			"myImageInfoList":    myImageInfoList,
 		})
 	} else {
-		dataDiskInfoList, respStatus := service.GetMyImageListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
+		myImageInfoList, respStatus := service.GetMyImageListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -1906,7 +1906,7 @@ func MyImageList(c echo.Context) error {
 			"message":            "success",
 			"status":             respStatus.StatusCode,
 			"defaultNameSpaceID": defaultNameSpaceID,
-			"dataDiskInfoList":   dataDiskInfoList,
+			"myImageInfoList":    myImageInfoList,
 		})
 	}
 
