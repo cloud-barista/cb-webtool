@@ -264,7 +264,9 @@ function getMyImageList(sort_type) {
         console.log("get MyImage List : ", result.data);
         // var data = result.data.dataDisk;
         var data = result.data.myImageInfoList;
-
+        if(data == null){
+            data = []
+        }
         var html = ""
         var cnt = 0;
         

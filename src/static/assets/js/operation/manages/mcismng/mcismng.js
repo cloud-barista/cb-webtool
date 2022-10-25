@@ -2387,9 +2387,10 @@ function displayDiskAttachModal(isShow) {
         var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk";
         console.log("check available disk url : ",url);
         axios.get(url).then(result=>{
-            var data = result.dataDisk;
+            console.log("get result : ",result);
+            var data = result.datadiskIdList;
             var html = "";
-            console.log("get available disk : ",result);
+            console.log("get available disk : ",data);
             // if(data){
             //     if(data.length >0){
             //         data.forEach(item=>{
@@ -2398,7 +2399,7 @@ function displayDiskAttachModal(isShow) {
             //     }
             // }
 
-            $("#diskSelectBox").modal();
+            $("#diskSelectBox").show();
             $('.dtbox.scrollbar-inner').scrollbar();
             
         })
