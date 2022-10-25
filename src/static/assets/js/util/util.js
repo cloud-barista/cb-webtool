@@ -145,6 +145,7 @@ function commonConfirmOpen(targetAction, caller) {
     //  [ id , 문구]
     let confirmModalTextMap = new Map(
         [
+            ["CreateSnapshot", "Would you like to Create Snapshot?"],
             ["DeleteDataDisk", "Would you like to Delete Disk?"],
             ["Logout", "Would you like to logout?"],
             ["Config", "Would you like to set Cloud config ?"],
@@ -247,6 +248,7 @@ function commonConfirmOpen(targetAction, caller) {
         //$('#modalText').text(confirmModalTextMap.get(targetAction));
         $('#confirmText').html(confirmModalTextMap.get(targetAction));
         $('#confirmOkAction').val(targetAction);
+        console.log("caller : ",caller);
         $('#confirmCaller').val(caller);
 
         if (targetAction == "Region") {
@@ -474,10 +476,13 @@ function commonConfirmOk() {
     } else if (targetAction == "DeleteDataDisk") {
         deleteDataDisk();
 
+    } else if (targetAction == "CreateSnapshot") {
+        commonPromptOk
+        createSnapshot();
+
     } else if (targetAction == "DeleteNlb") {
         deleteNlb();
-    } 
-    else {
+    } else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
     console.log("commonConfirmOk " + targetAction);
@@ -512,6 +517,7 @@ function commonPromptOpen(targetAction, targetObjId) {
 
     let promptModalTextMap = new Map(
         [
+            ["CreateSnapshot", "스냅샷이름을 입력하세요."],
             ["FilterName", "필터링할 단어를 입력하세요"],
             ["FilterCloudProvider", "필터링할 단어를 입력하세요"],
             ["FilterDriver", "필터링할 단어를 입력하세요"],
@@ -718,6 +724,8 @@ function commonPromptOk() {
     } else if (targetAction == 'AddNewMcisDynamic') {
         $("#mcis_name").val(targetValue)
         createMcisDynamic()
+    } else if (targetAction == 'CreateSnapshot') {
+        createSnapshot(targetValue);
     }
 
 
