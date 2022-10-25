@@ -237,6 +237,8 @@ function commonConfirmOpen(targetAction, caller) {
             ["deleteMonitoringAlertEventHandler", "Are you sure to delete<br />this Monitoring Alert Event-Handler?"],
 
             ["RegisterRecommendSpec", "현재 해당 connection에서 사용가능한 spec 이 없습니다. 등록 하시겠습니까?"],
+
+            ["DeleteNlb","Would you like to delete NLB ?"],
         ]
     );
     console.log(confirmModalTextMap.get(targetAction));
@@ -472,7 +474,10 @@ function commonConfirmOk() {
     } else if (targetAction == "DeleteDataDisk") {
         deleteDataDisk();
 
-    } else {
+    } else if (targetAction == "DeleteNlb") {
+        deleteNlb();
+    } 
+    else {
         alert("수행할 function 정의되지 않음 " + targetAction);
     }
     console.log("commonConfirmOk " + targetAction);

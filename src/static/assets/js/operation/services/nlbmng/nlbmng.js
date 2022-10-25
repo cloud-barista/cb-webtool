@@ -46,7 +46,7 @@ function displayNlbInfo(targetAction) {
         var offset = $("#sskKeyInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
 
-        getNLBList("LB Name");
+        getNLBList("NLB Name");
     } else if (targetAction == "CLOSE") {
         $("#nlbCreateBox").removeClass("active");
         $("#nlbInfoBox").removeClass("view");
@@ -72,72 +72,9 @@ function getNLBList(mcisID) {
             var data = result.data.NlbList; // exception case : if null
             var html = "";
 
-            if (data == null) {
-                html +=
-                    '<tr><td class="overlay hidden" data-th="" colspan="9">No Data</td></tr>';
-                //$("#sList").empty();
-                $("#nlbList").empty();
-                $("#nlbList").append(html);
-
-                ModalDetail();
-            } else {
-                if (data.length) {
+            if (data.length) {
                     // null exception if not exist
-                    if (mcisID) {
-                        console.log("check : ", mcisID);
-                        data.filter((list) => list.name !== "")
-                            .sort((a, b) =>
-                                a[mcisID] < b[mcisID]
-                                    ? -1
-                                    : a[mcisID] > b[mcisID]
-                                    ? 1
-                                    : 0
-                            )
-                            .map(
-                                (item, index) =>
-                                    (html +=
-                                        // item 값 확인해서 출력 필요.
-                                        "<tr onclick=\"showNlbInfo('" +
-                                        mcisID + "', '"+ item.id +
-                                        "');\">" +
-                                        '<td class="overlay hidden column-50px" data-th="">' +
-                                        '<input type="hidden" id="nlb_info_' +
-                                        index +
-                                        '" value="' +
-                                        item.name +
-                                        "|" +
-                                        item.connectionName +
-                                        '"/>' +
-                                        '<input type="checkbox" name="chk" value="' +
-                                        item.name +
-                                        '" id="raw_' +
-                                        index +
-                                        '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' +
-                                        '<td class="overlay hidden column-80px" data-th="health">' +
-                                        item.status 
-                                        + "</td>" +
-                                        '<td class="btn_mtd ovm" data-th="mcis">' +
-                                        mcisID 
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="nlbName">' +
-                                        item.name 
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="scope">' +
-                                        item.scope 
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="type">' +
-                                        item.type 
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="listenerInfo">' +
-                                        item.listener.protocol + " | " + item.listener.port                                    
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="listenerInfo">' +
-                                        item.targetGroup.protocol + " | " + item.targetGroup.port + " | " + item.targetGroup.subGroupId                                    
-                                        + "</td>" +
-                                        "</tr>")
-                            );
-                    } else {
-                        data.filter((list) => list.name !== "").map(
+                       data.filter((list) => list.name !== "").map(
                             (item, index) =>
                                 (html +=
                                     "<tr onclick=\"showNlbInfo('" +
@@ -147,11 +84,15 @@ function getNLBList(mcisID) {
                                         '<input type="hidden" id="nlb_info_' +
                                         index +
                                         '" value="' +
+                                        mcisID  +
+                                        "|" +
                                         item.name +
                                         "|" +
                                         item.connectionName +
                                         '"/>' +
-                                        '<input type="checkbox" name="chk" value="' +
+                                        '<input type="checkbox" name="vmchk" value="' +
+                                        mcisID  +
+                                        "|" +
                                         item.name +
                                         '" id="raw_' +
                                         index +
@@ -179,14 +120,19 @@ function getNLBList(mcisID) {
                                         + "</td>" +
                                         "</tr>")
                         );
-                    }
+                    //}
 
-                    $("#nlbList").empty();
+                    //$("#nlbList").empty();
                     $("#nlbList").append(html);
 
                     ModalDetail();
-                }
-            }
+                } else {
+                    html += "<tr>";
+                    html += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>';
+                    html += "</tr>";
+                    $("#nlbList").empty();
+                    $("#nlbList").append(html);
+                }            
         })
         .catch((error) => {
             console.warn(error);
@@ -198,15 +144,26 @@ function getNLBList(mcisID) {
 }
 
 function deleteNlb() {
+    console.log("deleteNlb!!!");
+    
+    var selValues = "";
+    var selMcisId = "";
     var selNlbId = "";
     var count = 0;
 
-    $("input[name='chk']:checked").each(function () {
-        count++;
-        selNlbId = selNlbId + $(this).val() + ",";
-    });
-    selNlbId = selNlbId.substring(0, selNlbId.lastIndexOf(","));
 
+    $("input[name='vmchk']:checked").each(function () {
+        count++;
+        selValues = selValues + $(this).val() + ",";
+    });
+    console.log("selValues : ", selValues)
+    selValues = selValues.substring(0, selValues.lastIndexOf(","));
+    
+    var splitData = selValues.split("|");
+    selMcisId = selMcisId + splitData[0];
+    selNlbId = selNlbId + splitData[1];
+
+    console.log("selMcisId : ", selMcisId);
     console.log("nlbId : ", selNlbId);
     console.log("count : ", count);
 
@@ -220,8 +177,7 @@ function deleteNlb() {
         return false;
     }
 
-    var url = "" + "" + selNlbId;
-    var url = "/operation/services/nlb/list" + "/nlb/" + nlbID;
+    var url = "/operation/services/mcis/" + selMcisId + "/nlb/del/" + selNlbId;
     axios
         .delete(url, {
             headers: {
@@ -236,7 +192,8 @@ function deleteNlb() {
 
                 displayNlbInfo("DEL_SUCCESS");
 
-                getNlbList("name");
+                getCommonMcisList("nlbOnload", true, "", "id");
+                //getNlbList(mcisId);
             } else {
                 commonAlert(data.error);
             }
@@ -267,33 +224,55 @@ function showNlbInfo(mcisId, nlbId) {
         .then((result) => {
             var data = result.data.NlbInfo;
             console.log("result DT : ", data);
-            /*
-            console.log("Show Data : ", data);
-
-            var dtlCspSshKeyName = data.cspSshKeyName;
+            
+            var dtlNlbName = data.name;
             var dtlDescription = data.description;
-            var dtlUserID = data.userID;
+
+            var dtlHcThreshold = data.healthChecker.threshold;
+            var dtlHcInterval = data.healthChecker.interval;
+            var dtlHcTimeout = data.healthChecker.timeout;
+
+            var dtlLsProtocol = data.listener.protocol;
+            var dtlLsPort = data.listener.port;
+
+            //var dtlProvider = data.;
             var dtlConnectionName = data.connectionName;
-            var dtlPublicKey = data.publicKey;
-            var dtlPrivateKey = data.privateKey;
-            var dtlFingerprint = data.fingerprint;
+            //var dtlVNetId = data.keyValueList.keyValueList;
 
-            $("#dtlCspSshKeyName").empty();
-            $("#dtlDescription").empty();
-            $("#dtlUserID").empty();
-            $("#dtlConnectionName").empty();
-            $("#dtlPublicKey").empty();
-            $("#dtlPrivateKey").empty();
-            $("#dtlFingerprint").empty();
+            var dtlTgVms = data.targetGroup.vms;
+            var dtlTgProtocol = data.targetGroup.protocol;
+            var dtlTgPort = data.targetGroup.port;
+            var dtlTgSubGroupId = data.targetGroup.subGroupId;
+            
+            $("#dtl_nlbName").empty();
+            $("#dtl_description").empty();
+            $("#dtl_hc_threshold").empty();
+            $("#dtl_hc_interval").empty();
+            $("#dtl_hc_timeout").empty();
+            $("#dtl_ls_protocol").empty();
+            $("#dtl_ls_port").empty();
+            $("#dtl_provider").empty();
+            $("#dtl_connectionName").empty();
+            //$("#dtl_vNetId").empty();
+            $("#dtl_tg_vms").empty();
+            $("#dtl_tg_protocol").empty();
+            $("#dtl_tg_port").empty();
+            $("#dtl_tg_subGroupId").empty();
 
-            $("#dtlCspSshKeyName").val(dtlCspSshKeyName);
-            $("#dtlDescription").val(dtlDescription);
-            $("#dtlUserID").val(dtlUserID);
-            $("#dtlConnectionName").val(dtlConnectionName);
-            $("#dtlPublicKey").val(dtlPublicKey);
-            $("#dtlPrivateKey").val(dtlPrivateKey);
-            $("#dtlFingerprint").val(dtlFingerprint);
-            */
+            $("#dtl_nlbName").val(dtlNlbName);
+            $("#dtl_description").val(dtlDescription);
+            $("#dtl_hc_threshold").val(dtlHcThreshold);
+            $("#dtl_hc_interval").val(dtlHcInterval);
+            $("#dtl_hc_timeout").val(dtlHcTimeout);
+            $("#dtl_ls_protocol").val(dtlLsProtocol);
+            $("#dtl_ls_port").val(dtlLsPort);
+            $("#dtl_provider").val();
+            $("#dtl_connectionName").val(dtlConnectionName);
+            //$("#dtl_vNetId").val(dtlVNetId);
+            $("#dtl_tg_vms").val(dtlTgVms);
+            $("#dtl_tg_protocol").val(dtlTgProtocol);
+            $("#dtl_tg_port").val(dtlTgPort);
+            $("#dtl_tg_subGroupId").val(dtlTgSubGroupId);
         })
         .catch((error) => {
             console.warn(error);
@@ -309,54 +288,27 @@ function createNlb() {
     var nlbName = $("#reg_name").val();
     var description = $("#reg_description").val();
 
+    var cloudProvider = $("#regProvider").val();
     var connectionName = $("#regConnectionName").val();
 
     // Health Check
-    var hcProtocol = $("#hc_protocol").val();
-    var hcport = $("#hc_port").val();
     var hcThreshold = $("#hc_threshold").val();
     var hcInterval = $("#hc_interval").val();
     var hcTimeout = $("#hc_timeout").val();
 
     // Listener
     var lsProtocol = $("#ls_protocol").val();
-    var lsIp = $("#ls_ip").val();
     var lsPort = $("#ls_port").val();
-    var lsDnsName = $("#ls_dnsName").val();
-
+    
     // Target Group
     var tgVms = $("#tg_vms").val();
     var tgProtocol = $("#tg_protocol").val();
     var tgPort = $("#tg_port").val();
+    var tgSubGroupId = $("#tg_subGroupId").val();
 
     var vNetId = $("#regVNetId").val();
     var mcisId = $("#tg_mcisId").val();
-    /*
-    console.log("info param cspNlbName : ", cspNlbName);
-    console.log("info param description : ", description);
-
-    console.log("info param connectionName : ", connectionName);
-
-    // Health Check
-    console.log("info param hcProtocol : ", hcProtocol);
-    console.log("info param hcport : ", hcport);
-    console.log("info param hcThreshold : ", hcThreshold);
-    console.log("info param hcInterval : ", hcInterval);
-    console.log("info param hcTimeout : ", hcTimeout);
-
-    // Listener
-    console.log("info param lsProtocol : ", lsProtocol);
-    console.log("info param lsIp : ", lsIp);
-    console.log("info param lsPort : ", lsPort);
-    console.log("info param lsDnsName : ", lsDnsName);
-
-    // Target Group
-    console.log("info param tgVms : ", tgVms);
-    console.log("info param tgProtocol : ", tgProtocol);
-    console.log("info param tgPort : ", tgPort);
-
-    console.log("info param vNetId : ", vNetId);
-*/
+    
     if (!nlbName) {
         alert("Input New NLB Name");
         $("#reg_name").focus();
@@ -372,23 +324,21 @@ function createNlb() {
     console.log("nlb URL : ", url);
 
     var healthCheckerObj = {
-        protocol: hcProtocol,
-        port: hcport,
         threshold: hcThreshold,
         interval: hcInterval,
         timeout: hcTimeout,
     };
+
     var listenerObj = {
         protocol: lsProtocol,
-        ip: lsIp,
-        port: lsPort,
-        dnsName: lsDnsName,
+        port: lsPort
     };
 
     var targetGroupObj = {
         protocol: tgProtocol,
         port: tgPort,
-        vms: tgVms.split(","),
+        //vms: tgVms.split(","),
+        subGroupId: tgSubGroupId
     };
 
     var obj = {
@@ -402,20 +352,7 @@ function createNlb() {
         type: "PUBLIC",
         vNetId: vNetId,
     };
-    /*var nlbojb = {}
-    var listenerobj = {
-
-    }
-    nlbojb.listenre = listenerobj
-    var obj = {
-        name: cspNlbName,
-        connectionName: connectionName,
-        targetGroup: {
-            asfasf = afasfasf,
-        }
-
-    };
-    */
+    
     console.log("info connectionconfig obj Data : ", obj);
     if (nlbName) {
         axios
@@ -442,8 +379,8 @@ function createNlb() {
                 commonErrorAlert(statusCode, errorMessage);
             });
     } else {
-        commonAlert("Input SSH Key Name");
-        $("#regCspSshKeyName").focus();
+        commonAlert("Input NLB Name");
+        $("#reg_name").focus();
         return;
     }
 }
@@ -543,7 +480,16 @@ function ModalDetail() {
 
 function getMcisVmsPop() {
     var regVNetId = $("#regVNetId").val();
-    getCommonMcisList("nlbreg", true, "", "vnet=" + regVNetId);
+
+    console.log(regVNetId);
+
+    if(regVNetId == "" || regVNetId == null) {
+        commonAlert("VPC ID를 선택해주세요.");
+        return;
+    } 
+    //caller, isCallback, targetObjId, optionParam, filterKeyVal
+    getCommonMcisList("nlbreg", true, "", "", "filterKey=vnet&filterVal=" + regVNetId);
+    
 }
 
 // MCIS 목록 조회 후 화면에 Set
@@ -560,6 +506,7 @@ function getMcisListCallbackSuccess(caller, mcisList) {
         // 팝업 show
         displayMcisVmsListTable(mcisList);
     } else if ((caller = "nlbOnload")) {
+        $("#nlbList").empty();
         for (var i = 0; i < mcisList.length; i++) {
             mcisID = mcisList[i];
             getNLBList(mcisID);
@@ -606,7 +553,7 @@ function displayMcisVmsListTable(mcisList) {
         var addMcis = "";
         addMcis += "<tr>";
         addMcis +=
-            '<td class="overlay hidden" data-th="" colspan="8">No Data</td>';
+            '<td class="overlay hidden" data-th="" colspan="4">No Data</td>';
         addMcis += "</tr>";
         $("#mcisList").empty();
         $("#mcisList").append(addMcis);
@@ -616,6 +563,7 @@ function displayMcisVmsListTable(mcisList) {
 function setMcisListTableRow(aMcisData, mcisIndex) {
     var html = "";
     try {
+        console.log(aMcisData)
         var vmList = aMcisData.vm;
         for (var i = 0; i < vmList.length; i++) {
             html +=
@@ -636,7 +584,7 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
                 '" value="' +
                 vmList[i].id +
                 '"/>' +
-                '<input type="checkbox" name="chk" value="' +
+                '<input type="checkbox" name="vmchk" value="' +
                 vmList[i].id +
                 '" id="raw_' +
                 i +
@@ -667,13 +615,14 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
 function applySubGroup() {
     // 선택한 녀석들의 VM LIST 정보를 VMS칸(tg_vms)에다가 입력
     var subgrouplistValue = $("input[name='vms_info']").length;
-    var chk = $("input[name='chk']");
+    var vmchk = $("input[name='vmchk']");
     var subgrouplistData = new Array(subgrouplistValue);
     var mcisid = "";
     var infoshow = "";
 
     for (var i = 0; i < subgrouplistValue; i++) {
-        if (chk[i].checked) {
+        console.log(i+ " : ", $("input[name='vms_info']")[i].value, vmchk[i].checked);
+        if (vmchk[i].checked ) {
             mcisid = $("input[name='mcisId']")[i].value;
             subGroupId = $("input[name='subGroupId']")[i].value;
             subgrouplistData[i] = $("input[name='vms_info']")[i].value;
