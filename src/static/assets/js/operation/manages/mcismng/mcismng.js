@@ -462,7 +462,27 @@ function addNewVirtualMachine() {
     // location.href = "/Manage/MCIS/reg/"+mcis_id+"/"+mcis_name
     location.href = "/operation/manages/mcismng/regform/" + mcis_id + "/" + mcis_name;
 }
+function createSnapshot(createName){
+    var mcisID = $("#mcis_id").val();
+    var vmID = $("#vm_id").val();
+    var obj = {
+        name: createName
+    }
+    var url = "/operation/manages/mcismng/"+mcisID+"/vm/"+vmID+"/snapshot"
+    axios.post(url,obj).then(result=>{
+        var status = result.status
 
+        console.log("create snapshot result : ", result)
+        var data = result.data
+        console.log("create snapshot resutl Message : ", data.message)
+        if (status == 200 || status == 201) {
+            commonResultAlert(message);
+          
+        }
+    })
+
+
+}
 function vmLifeCycle(type) {
     var mcisID = $("#mcis_id").val();
     var vmID = $("#vm_id").val();
@@ -542,7 +562,7 @@ function vmLifeCycle(type) {
     }
     axios.post(url, obj, {
         headers: {
-            'Content-type': 'application/json',
+            // 'Content-type': 'application/json',
             // 'Authorization': apiInfo,
         }
         // })
@@ -2379,6 +2399,44 @@ function runDetachDisk(command){
 }
 
 
+function runattachDisk(command){
+   
+   
+    var mcis_id = $("#server_detail_disk_mcis_id").val();
+    var vm_id = $("#server_detail_disk_vm_id").val();
+    var count = 0;
+
+    $("input[namd='chk']:checked").each(index=>{
+        var dataDiskId = $(this).val();
+        count++;
+        var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;  
+        console.log("attach url : ", url)
+        var obj = {
+            dataDiskId
+        }
+        axios.put(url, obj).then(result=>{
+            var data = result.data;
+            console.log(data);
+            if(data.status == 200 || data.status == 201){
+                if(index == count-1){
+                    commonAlert("Success "+command+" DataDisk!")
+                    $("#dataDiskInfoBox").hide();
+                   // displayDataDiskInfo("MODIFY_SUCCESS");
+                    location.reload()
+                }
+    
+            }else{
+                commonAlert("Fail"+command+" DataDisk at "+item + data.message)
+                showDataDiskInfo(diskId, diskName);
+            }
+        }).catch(error=>{
+            console.log(error.response);
+        })
+
+    })
+    
+}
+
 function displayDiskAttachModal(isShow) {
     if (isShow) {
         var diskId = $("#server_detail_view_block_device").val();
@@ -2388,9 +2446,18 @@ function displayDiskAttachModal(isShow) {
         console.log("check available disk url : ",url);
         axios.get(url).then(result=>{
             console.log("get result : ",result);
-            var data = result.datadiskIdList;
+            var data = result.data.datadiskIdList;
             var html = "";
             console.log("get available disk : ",data);
+            if(data != null || data.length > 0){
+                data.forEach(item=>{
+                    console.log("get available disk : ", item);
+                    html +=""
+                })
+
+                $("#diskList").empty()
+                $("#diskList").append(html)
+            }
             // if(data){
             //     if(data.length >0){
             //         data.forEach(item=>{
@@ -2399,7 +2466,7 @@ function displayDiskAttachModal(isShow) {
             //     }
             // }
 
-            $("#diskSelectBox").show();
+            $("#diskSelectBox").modal();
             $('.dtbox.scrollbar-inner').scrollbar();
             
         })
