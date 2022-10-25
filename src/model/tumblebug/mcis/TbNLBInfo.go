@@ -1,6 +1,8 @@
 package mcis
 
-import tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+import (
+	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+)
 
 type TbNLBInfo struct {
 	AssociatedObjectList []string `json:"associatedObjectList"`
@@ -12,6 +14,7 @@ type TbNLBInfo struct {
 
 	HealthChecker TbNLBHealthCheckerInfo `json:"healthChecker"`
 	Listener      TbNLBListenerInfo      `json:"listener"`
+	Location      tbcommon.TbGeoLocation `json:"location"`
 	TargetGroup   TbNLBTargetGroup       `json:"targetGroup"`
 
 	ID              string                `json:"id"`
