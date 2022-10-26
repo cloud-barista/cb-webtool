@@ -8,6 +8,7 @@ import (
 	"github.com/cloud-barista/cb-webtool/src/model"
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	webtool "github.com/cloud-barista/cb-webtool/src/model/webtool"
 
 	// tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
@@ -1836,6 +1837,77 @@ func DataDiskDelProc(c echo.Context) error {
 	})
 }
 
+// Create, Update, Delete를 한번에 하는 Controller
+func DataDiskMngProc(c echo.Context) error {
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// 받아온 param maiing
+	dataDiskReq := new(webtool.DataDiskMngReq)
+	if err := c.Bind(dataDiskReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	vmID := c.Param("vmID")
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	// create data disk list
+	if dataDiskReq.CreateDataDiskList != nil {
+		for _, createDataDisk := range dataDiskReq.CreateDataDiskList {
+			// 생성 후 attach 할 vm이 있으면 attach 한다.
+			// disk생성의 경우 delay가 충분히 있어야 한다.
+			go service.AsyncRegDataDisk(defaultNameSpaceID, &createDataDisk, c)
+		}
+
+	}
+
+	// detach data disk list
+	if dataDiskReq.DetachDataDiskList != nil {
+		for _, detachDataDisk := range dataDiskReq.DetachDataDiskList {
+
+			// 2. vm에 attach
+			optionParam := "detach"
+			attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
+			attachDetachDataDiskReq.DataDiskId = detachDataDisk.DataDiskId
+
+			go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
+
+		}
+	}
+
+	// attach data disk list
+	if dataDiskReq.AttachDataDiskList != nil {
+		for _, attachDataDisk := range dataDiskReq.AttachDataDiskList {
+			optionParam := "attach"
+			attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
+			attachDetachDataDiskReq.DataDiskId = attachDataDisk.DataDiskId
+			go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
+		}
+	}
+
+	// delete data disk list
+	if dataDiskReq.DetachDataDiskList != nil {
+		for _, delDataDisk := range dataDiskReq.DetachDataDiskList {
+			go service.AsyncDelDataDisk(defaultNameSpaceID, delDataDisk.DataDiskId, c)
+		}
+	}
+	// return result
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+	})
+}
+
 // MyImage 관리화면 호출
 func MyImageMngForm(c echo.Context) error {
 	fmt.Println("MyImage ************ : ")
@@ -1930,7 +2002,7 @@ func MyImageRegProc(c echo.Context) error {
 			"status":  "fail",
 		})
 	}
-	resultDataDiskInfo, respStatus := service.RegCspCustomImageToMyImage(defaultNameSpaceID, myImageRegInfo)
+	resultMyImageInfo, respStatus := service.RegCspCustomImageToMyImage(defaultNameSpaceID, myImageRegInfo)
 
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -1940,9 +2012,9 @@ func MyImageRegProc(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":      "success",
-		"status":       respStatus.StatusCode,
-		"DataDiskInfo": resultDataDiskInfo,
+		"message":     "success",
+		"status":      respStatus.StatusCode,
+		"MyImageInfo": resultMyImageInfo,
 	})
 }
 

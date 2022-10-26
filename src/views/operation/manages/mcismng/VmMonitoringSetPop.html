@@ -395,7 +395,7 @@
 	});
 </script>
 
- <!-- select disk -->
+ <!-- attached disk list -->
  <div class="modal fade" id="attachDiskSelectBox" tabindex="-1" role="dialog" aria-hidden="true">
 
 	<div class="modal-dialog modal-dialog-centered" role="document">
@@ -406,6 +406,12 @@
 
 					<div class="title_box">
 						<div class="title">Attached Disk List</div>
+					</div>
+					<div class="btnbox">
+						<div class="btn_right">
+							<button name="" value="" class="btn_apply btn_co btn_cr_g"
+								onclick="displayAvailableDisk(true)"><span>Attach Disk</span></button>
+						</div>
 					</div>
 
 					<div class="pop-cont">
@@ -450,13 +456,25 @@
 				<div class="btnbox">
 					<div class="btn_right">
 						<button name="" value="" class="btn_apply btn_co btn_cr_g"
-							onclick="runAttachDataDisk('attach')"><span>Attach</span></button>
+							onclick="runDetachDisk('detach')"><span>Detach</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b"
 							data-dismiss="modal">cancel</button>
 					</div>
 				</div>
 			</div>
-			<hr>
+		</div>
+
+	</div>
+
+</div>
+<!-- //attached disk list -->
+
+ <!-- available disk list -->
+ <div class="modal fade" id="availableDiskSelectBox" tabindex="-1" role="dialog" aria-hidden="true">
+
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
 			<div class="modal-body">
 				<div class="pop-body">
 
@@ -512,11 +530,10 @@
 					</div>
 				</div>
 			</div>
-
 		</div>
 
 	</div>
 
 </div>
-<!-- //select disk -->
+<!-- //available disk list -->
 {{end}}

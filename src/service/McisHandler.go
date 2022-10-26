@@ -1961,6 +1961,21 @@ func AttachDetachDataDiskToVM(nameSpaceID string, mcisID string, vmID string, op
 	return &vmInfo, returnStatus
 }
 
+// AsyncAttachDetachDataDiskToVM
+func AsyncAttachDetachDataDiskToVM(nameSpaceID string, mcisID string, vmID string, optionParam string, attachDetachDataDiskReq *tbmcir.TbAttachDetachDataDiskReq, c echo.Context) {
+	taskKey := nameSpaceID + "||" + "vm" + "||" + vmID
+	lifecycle := "attache"
+	if optionParam == "detach" {
+		lifecycle = util.DISK_LIFECYCLE_DETACHED
+	}
+	_, respStatus := AttachDetachDataDiskToVM(nameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, lifecycle, util.TASK_STATUS_FAIL, c)
+	} else {
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, lifecycle, util.TASK_STATUS_COMPLETE, c)
+	}
+}
+
 // VM에서 Attach 가능한 DataDisk 목록 : Get available dataDisks for a VM
 func GetAvailableDataDiskListForVM(nameSpaceID string, mcisID string, vmID string) ([]string, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/dataDisk"

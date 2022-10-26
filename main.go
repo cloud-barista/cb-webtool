@@ -335,6 +335,27 @@ func main() {
 		DisableCache: true,
 	})
 
+	// PMKS 목록 form Template
+	pmksMngTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/pmks/pmksmng",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+
+			"operation/manages/pmksmng/PmksList",
+			"operation/manages/pmksmng/PmksInfo",
+			"operation/manages/pmksmng/PmksNodeGroupInfo",
+		},
+		DisableCache: true,
+	})
+
 	cloudConnectionTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
@@ -662,9 +683,9 @@ func main() {
 
 	e.GET("/operation/manages/mcksmng/list", controller.GetMcksList)
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
-	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName", controller.McksDelProc)
-	e.POST("/operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc", controller.NodeRegProc)
-	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName", controller.NodeDelProc)
+	e.DELETE("/operation/manages/mcksmng/:clusterUID/:clusterName", controller.McksDelProc)
+	e.POST("/operation/manages/mcksmng/:clusterUID/:clusterName/reg/proc", controller.NodeRegProc)
+	e.DELETE("/operation/manages/mcksmng/:clusterUID/:clusterName/del/:nodeID/:nodeName", controller.NodeDelProc)
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
@@ -784,6 +805,7 @@ func main() {
 	e.GET("/setting/resources/datadisk/:dataDiskID", controller.DataDiskGet)
 	e.PUT("/setting/resources/datadisk/:dataDiskID", controller.DataDiskPutProc)
 	e.DELETE("/setting/resources/datadisk/del/:dataDiskID", controller.DataDiskDelProc)
+	e.POST("/setting/resources/datadisk/mng", controller.DataDiskMngProc) // CRUD를 한번에 할 수 있는
 
 	resourcesGroup.GET("/myimage/mngform", controller.MyImageMngForm)
 	e.GET("/setting/resources/myimage/list", controller.MyImageList)
@@ -803,15 +825,19 @@ func main() {
 	e.POST("/operation/services/mcis/:mcisID/nlb/vm/reg/:nblID", controller.NlbVmRegProc)
 	e.DELETE("/operation/services/mcis/:mcisID/nlb/vm/del/:nlbID", controller.NlbVmDelProc)
 
-	pmksGroup := e.Group("/operation/services/pmks", pmksRegTemplate)
-	pmksGroup.GET("/mngform", controller.PmksMngForm)
+	pmksRegGroup := e.Group("/operation/manages/pmksmng/regform", pmksRegTemplate)
+	pmksRegGroup.GET("", controller.PmksRegForm)
+
+	pmksMngGroup := e.Group("/operation/manages/pmksmng/mngform", pmksMngTemplate)
+	pmksMngGroup.GET("", controller.PmksMngForm)
+
 	e.GET("/operation/manages/pmksmng/list", controller.GetPmksList)
 	e.POST("/operation/manages/pmksmng/reg/proc", controller.PmksRegProc)
-	e.DELETE("/operation/manages/pmksmng/:clusteruID/:clusterName", controller.PmksDelProc)
-	e.PUT("/operation/manages/pmksmng/:clusteruID/:clusterName", controller.PmksClusterUpdateProc)
+	e.DELETE("/operation/manages/pmksmng/:clusterUID/:clusterName", controller.PmksDelProc)
+	e.PUT("/operation/manages/pmksmng/:clusterUID/:clusterName", controller.PmksClusterUpdateProc)
 
-	e.POST("/operation/manages/pmksmng/:clusteruID/:clusterName/reg/proc", controller.PmksNodeGroupRegProc)
-	e.DELETE("/operation/manages/pmksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName", controller.PmksNodeGroupDelProc)
+	e.POST("/operation/manages/pmksmng/:clusterUID/:clusterName/reg/proc", controller.PmksNodeGroupRegProc)
+	e.DELETE("/operation/manages/pmksmng/:clusterUID/:clusterName/del/:nodeID/:nodeName", controller.PmksNodeGroupDelProc)
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)

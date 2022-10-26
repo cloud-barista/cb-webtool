@@ -1,14 +1,19 @@
 $(document).ready(function () {
-    checkLoadStatus();
+    setTableHeightForScroll("pmksListTable", 700);
 
-    setTableHeightForScroll("mcksListTable", 700);
+    getAllPmksList();
 });
 
-function clickListOfMcks(uid, mcksIndex) {
-    console.log("click view mcks id :", uid)
+// 모든 PMKS 목록 조회
+function getAllPmksList(){
+    // connection 목록
+}
+
+function clickListOfPmks(uid, pmksIndex) {
+    console.log("click view pmks id :", uid)
     $(".server_status").addClass("view");
 
-    // List Of MCKS에서 선택한 row 외에는 안보이게
+    // List Of PMKS에서 선택한 row 외에는 안보이게
     $("[id^='server_info_tr_']").each(function () {
         var item = $(this).attr("item").split("|")
         console.log(item)
@@ -19,59 +24,59 @@ function clickListOfMcks(uid, mcksIndex) {
         }
     })
 
-    $("#mcks_uid").val($("#mcksUID" + mcksIndex).val());
-    $("#mcks_name").val($("#mcksName" + mcksIndex).val());
+    $("#pmks_uid").val($("#pmksUID" + pmksIndex).val());
+    $("#pmks_name").val($("#pmksName" + pmksIndex).val());
 
-    // MCKS Info area set
-    showServerListAndStatusArea(uid, mcksIndex);
+    // PMKS Info area set
+    showServerListAndStatusArea(uid, pmksIndex);
 }
 
 
-// MCKS Info area 안의 Node List 내용 표시
-// 해당 MCKS의 모든 Node 표시
+// PMKS Info area 안의 Node List 내용 표시
+// 해당 PMKS의 모든 Node 표시
 // TODO : 클릭했을 때 서버에서 조회하는것으로 변경할 것.
-function showServerListAndStatusArea(uid, mcksIndex) {
+function showServerListAndStatusArea(uid, pmksIndex) {
 
-    var mcksUID = $("#mcksUID" + mcksIndex).val();
-    var mcksName = $("#mcksName" + mcksIndex).val();
-    var mcksStatus = $("#mcksStatus" + mcksIndex).val();
-    var mcksConfig = $("#mcksConfig" + mcksIndex).val();
-    var nodeTotalCountOfMcks = $("#mcksNodeTotalCount" + mcksIndex).val();
+    var pmksUID = $("#pmksUID" + pmksIndex).val();
+    var pmksName = $("#pmksName" + pmksIndex).val();
+    var pmksStatus = $("#pmksStatus" + pmksIndex).val();
+    var pmksConfig = $("#pmksConfig" + pmksIndex).val();
+    var nodeTotalCountOfPmks = $("#pmksNodeTotalCount" + pmksIndex).val();
 
     $(".server_status").addClass("view")
-    $("#mcks_info_txt").text("[ " + mcksName + " ]");
-    $("#mcks_server_info_status").empty();
-    $("#mcks_server_info_status").append('<strong>Node List </strong>  <span class="stxt">[ ' + mcksName + ' ]</span>  Node(' + nodeTotalCountOfMcks + ')')
+    $("#pmks_info_txt").text("[ " + pmksName + " ]");
+    $("#pmks_server_info_status").empty();
+    $("#pmks_server_info_status").append('<strong>Node List </strong>  <span class="stxt">[ ' + pmksName + ' ]</span>  Node(' + nodeTotalCountOfPmks + ')')
 
     //
-    $("#mcks_info_name").val(mcksName + " / " + mcksUID)
-    $("#mcks_info_Status").val(mcksStatus)
-    $("#mcks_info_cloud_connection").val(mcksConfig)
+    $("#pmks_info_name").val(pmksName + " / " + pmksUID)
+    $("#pmks_info_Status").val(pmksStatus)
+    $("#pmks_info_cloud_connection").val(pmksConfig)
 
-    $("#mcks_name").val(mcksName)
+    $("#pmks_name").val(pmksName)
 
-    var mcksNodes = "";
-    //var mcksStatusIcon = "";
-    $("[id^='mcksNodeUID_']").each(function () {
-        var mcksNode = $(this).attr("id").split("_")
-        thisMcksIndex = mcksNode[1]
-        nodeIndexOfMcks = mcksNode[2]
+    var pmksNodes = "";
+    //var pmksStatusIcon = "";
+    $("[id^='pmksNodeUID_']").each(function () {
+        var pmksNode = $(this).attr("id").split("_")
+        thisPmksIndex = pmksNode[1]
+        nodeIndexOfPmks = pmksNode[2]
 
-        if (thisMcksIndex == mcksIndex) {
-            var nodeID = $("#mcksNodeUID_" + thisMcksIndex + "_" + nodeIndexOfMcks).val();
-            var nodeName = $("#mcksNodeName_" + thisMcksIndex + "_" + nodeIndexOfMcks).val();
+        if (thisPmksIndex == pmksIndex) {
+            var nodeID = $("#pmksNodeUID_" + thisPmksIndex + "_" + nodeIndexOfPmks).val();
+            var nodeName = $("#pmksNodeName_" + thisPmksIndex + "_" + nodeIndexOfPmks).val();
 
             //nodeStatusIcon ="bgbox_g"
             nodeStatusIcon = "bgbox_b"
             // node 목록 표시
-            mcksNodes += '<li class="sel_cr ' + nodeStatusIcon + '"><a href="javascript:void(0);" onclick="nodeDetailInfo(\'' + thisMcksIndex + '\',\'' + nodeIndexOfMcks + '\')"><span class="txt">' + nodeName + '</span></a></li>';
+            pmksNodes += '<li class="sel_cr ' + nodeStatusIcon + '"><a href="javascript:void(0);" onclick="nodeDetailInfo(\'' + thisPmksIndex + '\',\'' + nodeIndexOfPmks + '\')"><span class="txt">' + nodeName + '</span></a></li>';
         }
     });
-    $("#mcks_server_info_box").empty();
-    $("#mcks_server_info_box").append(mcksNodes);
+    $("#pmks_server_info_box").empty();
+    $("#pmks_server_info_box").append(pmksNodes);
 
 
-    //Manage MCKS Server List on/off : table을 클릭하면 해당 Row 에 active style로 보여주기
+    //Manage PMKS Server List on/off : table을 클릭하면 해당 Row 에 active style로 보여주기
     $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function () {
         var $sel_list = $(this);
         var $detail = $(".server_info");
@@ -98,33 +103,33 @@ function showServerListAndStatusArea(uid, mcksIndex) {
     });
 }
 
-// 해당 mcks에 node 추가
-// mcks가 경로에 들어가야 함. node 등록 form으로 이동
-function addNewNode() {
-    //var clusterId = $("#mcks_uid").val(); // mcks id 값이 없음
-    var clusterId = $("#mcks_name").val();
-    var clusterName = $("#mcks_name").val();
+// 해당 pmks에 nodeGroup 추가
+// pmks가 경로에 들어가야 함. node 등록 form으로 이동
+function addNewNodeGroup() {
+    //var clusterId = $("#pmks_uid").val(); // pmks id 값이 없음
+    var clusterId = $("#pmks_name").val();
+    var clusterName = $("#pmks_name").val();
 
     if (clusterId == "") {
-        commonAlert("MCKS 정보가 올바르지 않습니다.");
+        commonAlert("PMKS 정보가 올바르지 않습니다.");
         return;
     }
-    var url = "/operation/manages/mcksmng/regform/" + clusterId + "/" + clusterName;
+    var url = "/operation/manages/pmksmng/regform/" + clusterId + "/" + clusterName;
     location.href = url;
 }
 
-// MCKS 삭제
-function deleteMCKS() {
+// PMKS 삭제
+function deletePMKS() {
     var checkedCount = 0;
-    var mcksID = "";
-    var mcksName = "";
+    var pmksID = "";
+    var pmksName = "";
     $("[id^='td_ch_']").each(function () {
         var checkedIndex = $(this).val();
         if ($(this).is(":checked")) {
             checkedCount++;
             console.log("checked")
-            mcksID = $("#mcksUID" + checkedIndex).val();
-            mcksName = $("#mcksName" + checkedIndex).val();
+            pmksID = $("#pmksUID" + checkedIndex).val();
+            pmksName = $("#pmksName" + checkedIndex).val();
             // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
         } else {
             console.log("checked nothing")
@@ -132,16 +137,16 @@ function deleteMCKS() {
     })
 
     if (checkedCount == 0) {
-        commonAlert("Please Select MCKS!!")
+        commonAlert("Please Select PMKS!!")
         return;
     } else if (checkedCount > 1) {
-        commonAlert("Please Select One MCKS at a time")
+        commonAlert("Please Select One PMKS at a time")
         return;
     }
 
     // TODO : 삭제 호출부분 function으로 뺼까?
     //var url = "/ns/{namespace}/clusters/{cluster}"
-    var url = "/operation/manages/mcksmng/" + mcksID + "/" + mcksName;
+    var url = "/operation/manages/pmksmng/" + pmksID + "/" + pmksName;
     axios.delete(url, {})
         .then(result => {
             console.log("get  Data : ", result.data);
@@ -156,7 +161,7 @@ function deleteMCKS() {
                 return;
             } else {
                 commonAlert(message);
-                // TODO : MCKS List 조회
+                // TODO : PMKS List 조회
                 //location.reload();
             }
 
@@ -170,15 +175,15 @@ function deleteMCKS() {
 
 }
 
-function deleteNodeOfMcks() {
+function deleteNodeOfPmks() {
     // worker만 삭제
     // 1개씩 삭제
 
-    var selectedMcksUid = $("#mcks_uid").val();
-    var selectedMcksName = $("#mcks_name").val();
+    var selectedPmksUid = $("#pmks_uid").val();
+    var selectedPmksName = $("#pmks_name").val();
     var selectedNodeUid = $("#node_uid").val();
     var selectedNodeName = $("#node_name").val();
-    var selectedNodeRole = $("#mcks_node_role").val();
+    var selectedNodeRole = $("#pmks_node_role").val();
 
     if (selectedNodeRole.toLowerCase() != "worker") {
         commonAlert("Only worker node can be deleted")
@@ -186,11 +191,11 @@ function deleteNodeOfMcks() {
     }
 
     var urlParamMap = new Map();
-    urlParamMap.set(":clusterUID", selectedMcksUid)
-    urlParamMap.set(":clusterName", selectedMcksName)
+    urlParamMap.set(":clusterUID", selectedPmksUid)
+    urlParamMap.set(":clusterName", selectedPmksName)
     urlParamMap.set(":nodeID", selectedNodeUid)
     urlParamMap.set(":nodeName", selectedNodeName)
-    var url = setUrlByParam("McksClusterNodeData", urlParamMap)
+    var url = setUrlByParam("PmksClusterNodeData", urlParamMap)
     console.log("URL : ", url)
     axios.delete(url, {
         headers: {
@@ -218,22 +223,22 @@ function deleteNodeOfMcks() {
 }
 
 // 선택한 Node의 상세정보 표시
-function nodeDetailInfo(mcksIndex, nodeIndex) {
-    var nodeUID = $("#mcksNodeUID_" + mcksIndex + "_" + nodeIndex).val();
-    var nodeName = $("#mcksNodeName_" + mcksIndex + "_" + nodeIndex).val();
-    var nodeKind = $("#mcksNodeKind_" + mcksIndex + "_" + nodeIndex).val();
-    var nodeRole = $("#mcksNodeRole_" + mcksIndex + "_" + nodeIndex).val();
+function nodeDetailInfo(pmksIndex, nodeIndex) {
+    var nodeUID = $("#pmksNodeUID_" + pmksIndex + "_" + nodeIndex).val();
+    var nodeName = $("#pmksNodeName_" + pmksIndex + "_" + nodeIndex).val();
+    var nodeKind = $("#pmksNodeKind_" + pmksIndex + "_" + nodeIndex).val();
+    var nodeRole = $("#pmksNodeRole_" + pmksIndex + "_" + nodeIndex).val();
 
     // hidden 값 setting. 삭제 등에서 사용
     $("#node_uid").val(nodeUID);
     $("#node_name").val(nodeName);
 
-    $("#mcks_node_txt").text(nodeName + " / " + nodeUID);
+    $("#pmks_node_txt").text(nodeName + " / " + nodeUID);
 
-    $("#mcks_node_name").val(nodeName);
-    $("#mcks_node_kind").val(nodeKind);
-    $("#mcks_node_role").val(nodeRole);
+    $("#pmks_node_name").val(nodeName);
+    $("#pmks_node_kind").val(nodeKind);
+    $("#pmks_node_role").val(nodeRole);
 
-    $("#mcks_node_detail").css("display", "block");
+    $("#pmks_node_detail").css("display", "block");
 
 }
