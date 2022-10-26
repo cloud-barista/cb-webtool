@@ -2390,11 +2390,37 @@ function runDetachDisk(command){
     var mcis_id = $("#server_detail_disk_mcis_id").val();
     var vm_id = $("#server_detail_disk_vm_id").val();
 
-    if(command == "attach"){
+    var count = 0;
 
-    }else if(command == "detach"){
+    $("input[name='chk_detach']:checked").each(index=>{
+        var dataDiskId = $(this).val();
+        count++;
+        var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;  
+        console.log("attach url : ", url)
+        var obj = {
+            dataDiskId
+        }
+        axios.put(url, obj).then(result=>{
+            var data = result.data;
+            console.log(data);
+            if(data.status == 200 || data.status == 201){
+                if(index == count-1){
+                    commonAlert("Success "+command+" DataDisk!")
+                    $("#dataDiskInfoBox").hide();
+                   // displayDataDiskInfo("MODIFY_SUCCESS");
+                    location.reload()
+                }
+    
+            }else{
+                commonAlert("Fail"+command+" DataDisk at "+item + data.message)
+                showDataDiskInfo(diskId, diskName);
+            }
+        }).catch(error=>{
+            console.log(error.response);
+        })
 
-    }
+    })
+
     
 }
 
@@ -2406,7 +2432,7 @@ function runattachDisk(command){
     var vm_id = $("#server_detail_disk_vm_id").val();
     var count = 0;
 
-    $("input[namd='chk']:checked").each(index=>{
+    $("input[name='chk_attach']:checked").each(index=>{
         var dataDiskId = $(this).val();
         count++;
         var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;  
@@ -2438,6 +2464,48 @@ function runattachDisk(command){
 }
 
 function displayDiskAttachModal(isShow) {
+    if (isShow) {
+        var diskId = $("#server_detail_view_block_device").val();
+        var mcis_id = $("#server_detail_disk_mcis_id").val();
+        var vm_id = $("#server_detail_disk_vm_id").val();
+        var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk";
+        console.log("check available disk url : ",url);
+        var temp_diskId = [];
+        temp_diskId = diskId.split(",");
+        axios.get(url).then(result=>{
+            console.log("get result : ",result);
+            var data = result.data.datadiskIdList;
+            var html = "";
+            console.log("get available disk : ",data);
+            if(data != null || data.length > 0){
+                data.forEach(item=>{
+                    console.log("get available disk : ", item);
+                    html +=""
+                })
+
+                $("#diskList").empty()
+                $("#diskList").append(html)
+            }
+            // if(data){
+            //     if(data.length >0){
+            //         data.forEach(item=>{
+
+            //         })
+            //     }
+            // }
+
+            $("#attachDiskSelectBox").modal();
+            $('.dtbox.scrollbar-inner').scrollbar();
+            
+        })
+
+
+    } else {
+        $("#vnetCreateBox").toggleClass("active");
+    }
+}
+
+function displayDiskDetachModal(isShow) {
     if (isShow) {
         var diskId = $("#server_detail_view_block_device").val();
         var mcis_id = $("#server_detail_disk_mcis_id").val();
