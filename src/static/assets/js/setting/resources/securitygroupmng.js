@@ -190,7 +190,7 @@ function setSecurityGroupListAtServerImage(data, sortType) {
             if (sortType) {
                 console.log("check : ", sortType);
                 data.filter(list => list.name !== "").sort((a, b) => (a[sortType] < b[sortType] ? - 1 : a[sortType] > b[sortType] ? 1 : 0)).map((item, index) => (
-                    html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">'
+                    html += '<tr onclick="showSecurityGroupInfo(\'' + item.id + '\');">'
                     + '<td class="overlay hidden column-50px" data-th="">'
                     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '|' + item.connectionName + '"/>'
                     + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span>'
@@ -206,7 +206,7 @@ function setSecurityGroupListAtServerImage(data, sortType) {
                 ))
             } else {
                 data.filter((list) => list.name !== "").map((item, index) => (
-                    html += '<tr onclick="showSecurityGroupInfo(\'' + item.cspSecurityGroupName + '\');">'
+                    html += '<tr onclick="showSecurityGroupInfo(\'' + item.id + '\');">'
                     + '<td class="overlay hidden column-50px" data-th="">'
                     + '<input type="hidden" id="sg_info_' + index + '" value="' + item.cspSecurityGroupName + '"/>'
                     + '<input type="checkbox" name="chk" value="' + item.cspSecurityGroupName + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span>'
