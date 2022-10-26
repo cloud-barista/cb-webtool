@@ -26,4 +26,6 @@ type TbNLBInfo struct {
 
 	Scope string `json:"scope"`
 	Type  string `json:"type"`
+
+	McisID string `json:"mcisId"` // TB에서 해당항목이 없지만 NLB는 McisID가 필수라 추가함.
 }

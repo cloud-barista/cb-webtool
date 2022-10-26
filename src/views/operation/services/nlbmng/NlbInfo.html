@@ -89,21 +89,16 @@
 								<input type="text" id="dtl_connectionName" name="dtl_connectionName" value=""
 									placeholder="" class="gray" title="" readonly />
 							</li>
-							<li>
+							<!-- <li>
 								<label>VPC ID</label>
 								<input type="text" id="dtl_vNetId" name="dtl_vNetId" value="" placeholder=""
 									class="gray" title="" readonly />
-							</li>
+							</li> -->
 
 							<div class="tit">
                                 <span class="ch">*</span>Target Group
-                            </div>
-
-							<li>
-								<label>VMS</label>
-								<input type="text" id="dtl_tg_vms" name="dtl_tg_vms" value="" placeholder=""
-									class="gray" title="" readonly />
-							</li>
+                            </div>							
+							
 							<li>
 								<label>Protocol</label>
 								<input type="text" id="dtl_tg_protocol" name="dtl_tg_protocol" value="" placeholder=""
@@ -119,6 +114,21 @@
 								<input type="text" id="dtl_tg_subGroupId" name="dtl_tg_subGroupId" value="" placeholder=""
 									class="gray" title="" readonly />
 							</li>
+							<li>
+                                <label>VMS</label>
+                                    <textarea
+                                        name="dtl_tg_vms"
+                                        id="dtl_tg_vms"
+                                        cols=""
+                                        rows=""
+                                        placeholder="VMs"
+                                        class="pline gray"
+                                        title=""
+                                        readonly
+                                    ></textarea>
+                                    <a href="javascript:void(0);" class="ma btn_register"
+											onClick="vmHealthCheck()">Health</a>
+                            </li>
 						</ul>
 					</div>
 				</div>

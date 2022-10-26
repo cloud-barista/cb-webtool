@@ -1,7 +1,7 @@
 $(document).ready(function () {
     setTableHeightForScroll("nlbList", 300);
-    //getNlbList("LB Name");
-    getCommonMcisList("nlbOnload", true, "", "id");
+    
+    getAllNlbList()    
 });
 
 // area 표시
@@ -30,7 +30,7 @@ function displayNlbInfo(targetAction) {
         $("#regProvider").val("");
         $("#regCregConnectionNameidrBlock").val("");
 
-       // getNLBList("LB Name");
+        getAllNlbList();
     } else if (targetAction == "DEL") {
         $("#nlbCreateBox").removeClass("active");
         $("#nlbInfoBox").addClass("view");
@@ -46,7 +46,7 @@ function displayNlbInfo(targetAction) {
         var offset = $("#sskKeyInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
 
-        getNLBList("NLB Name");
+        getAllNlbList();
     } else if (targetAction == "CLOSE") {
         $("#nlbCreateBox").removeClass("active");
         $("#nlbInfoBox").removeClass("view");
@@ -57,7 +57,71 @@ function displayNlbInfo(targetAction) {
     }
 }
 
-// SshKey 목록 조회
+function getAllNlbList(){
+    var url = "/operation/services/mcis/nlb/listall";
+    axios
+        .get(url, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then((result) => {
+            console.log("get Nlb Data : ", result.data);
+            var data = result.data.NlbList; // exception case : if null
+            var html = "";
+
+            if (data.length) {
+                data.filter((list) => list.name !== "").map((item, index) => (
+                    html += addNlbListTableRow(item, index))
+                );                
+                $("#nlbList").empty();
+                $("#nlbList").append(html);
+                ModalDetail();
+            } else {
+                html += nodataTableRow(8);
+                $("#nlbList").empty();
+                $("#nlbList").append(html);
+            }            
+        })
+        .catch((error) => {
+            console.warn(error);
+            console.log(error.response);
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage);
+        });
+}
+
+// nodata일 때 row 표시 : colspanCount를 받아 col을 합친다.
+function nodataTableRow(colspanCount){
+    var html = "";
+    html += "<tr>";
+    html += '<td class="overlay hidden" data-th="" colspan="' + colspanCount + '">No Data</td>';
+    html += "</tr>";
+    return html
+}
+// list의 1개 row에 대한 html 
+function addNlbListTableRow(item, index) {
+    var html = "";
+    html +=
+        "<tr onclick=\"showNlbInfo('" + item.mcisId + "', '"+ item.id + "');\">" 
+        + '<td class="overlay hidden column-50px" data-th="">' 
+        + '<input type="hidden" id="nlb_info_' + index + '" value="' + item.mcisId + "|" + item.name + "|" + item.connectionName + '"/>'
+        + '<input type="checkbox" name="vmchk" value="' + item.mcisId + "|" + item.name + '" id="raw_' + index + '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' 
+        + '<td class="btn_mtd ovm" data-th="provider">' + item.location.cloudType + "</td>" 
+        + '<td class="btn_mtd ovm" data-th="mcis">' + item.mcisId + "</td>" 
+        + '<td class="overlay hidden" data-th="nlbName">' + item.name + "</td>" 
+        + '<td class="overlay hidden" data-th="scope">' + item.scope + "</td>" 
+        + '<td class="overlay hidden" data-th="type">' +  item.type  + "</td>"         
+        //+ '<td class="overlay hidden column-80px" data-th="health">' + item.status + "</td>" 
+        + '<td class="overlay hidden" data-th="listenerInfo">' + item.listener.protocol + " | " + item.listener.port + "</td>" 
+        + '<td class="overlay hidden" data-th="listenerInfo">' + item.targetGroup.protocol + " | " + item.targetGroup.port +"</td>" 
+        + '<td class="overlay hidden" data-th="listenerInfo">' + item.targetGroup.subGroupId + "</td>" 
+        +"</tr>"
+        
+    return html
+}
+// nlb 목록 조회
 function getNLBList(mcisID) {
     console.log("mcisID : ", mcisID);
     var url = "/operation/services/mcis/" + mcisID + "/nlb/list";
@@ -73,66 +137,17 @@ function getNLBList(mcisID) {
             var html = "";
 
             if (data.length) {
-                    // null exception if not exist
-                       data.filter((list) => list.name !== "").map(
-                            (item, index) =>
-                                (html +=
-                                    "<tr onclick=\"showNlbInfo('" +
-                                        mcisID + "', '"+ item.id +
-                                        "');\">" +
-                                        '<td class="overlay hidden column-50px" data-th="">' +
-                                        '<input type="hidden" id="nlb_info_' +
-                                        index +
-                                        '" value="' +
-                                        mcisID  +
-                                        "|" +
-                                        item.name +
-                                        "|" +
-                                        item.connectionName +
-                                        '"/>' +
-                                        '<input type="checkbox" name="vmchk" value="' +
-                                        mcisID  +
-                                        "|" +
-                                        item.name +
-                                        '" id="raw_' +
-                                        index +
-                                        '" title="" /><label for="td_ch1"></label> <span class="ov off"></span></td>' +
-                                        '<td class="overlay hidden column-80px" data-th="health">' +
-                                        item.status 
-                                        + "</td>" +
-                                        '<td class="btn_mtd ovm" data-th="mcis">' +
-                                        mcisID 
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="nlbName">' +
-                                        item.name 
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="scope">' +
-                                        item.scope 
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="type">' +
-                                        item.type 
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="listenerInfo">' +
-                                        item.listener.protocol + " | " + item.listener.port                                    
-                                        + "</td>" +
-                                        '<td class="overlay hidden" data-th="listenerInfo">' +
-                                        item.targetGroup.protocol + " | " + item.targetGroup.port + " | " + item.targetGroup.subGroupId                                    
-                                        + "</td>" +
-                                        "</tr>")
-                        );
-                    //}
+                data.filter((list) => list.name !== "").map((item, index) => (
+                    html += addNlbListTableRow(item, index, mcisID))
+                );
+                $("#nlbList").append(html);
 
-                    //$("#nlbList").empty();
-                    $("#nlbList").append(html);
-
-                    ModalDetail();
-                } else {
-                    html += "<tr>";
-                    html += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>';
-                    html += "</tr>";
-                    $("#nlbList").empty();
-                    $("#nlbList").append(html);
-                }            
+                ModalDetail();
+            } else {
+                html += nodataTableRow(8);
+                $("#nlbList").empty();
+                $("#nlbList").append(html);
+            }            
         })
         .catch((error) => {
             console.warn(error);
@@ -191,9 +206,6 @@ function deleteNlb() {
                 commonAlert(data.message);
 
                 displayNlbInfo("DEL_SUCCESS");
-
-                getCommonMcisList("nlbOnload", true, "", "id");
-                //getNlbList(mcisId);
             } else {
                 commonAlert(data.error);
             }
@@ -232,14 +244,17 @@ function showNlbInfo(mcisId, nlbId) {
             var dtlHcInterval = data.healthChecker.interval;
             var dtlHcTimeout = data.healthChecker.timeout;
 
-            var dtlLsProtocol = data.listener.protocol;
-            var dtlLsPort = data.listener.port;
+            var dtlListenerProtocol = data.listener.protocol;
+            var dtlListenerPort = data.listener.port;
 
-            //var dtlProvider = data.;
+            var dtlProvider = data.location.cloudType;
             var dtlConnectionName = data.connectionName;
             //var dtlVNetId = data.keyValueList.keyValueList;
 
             var dtlTgVms = data.targetGroup.vms;
+            strVms = dtlTgVms.join();
+            strVms = strVms.replaceAll(",", "\r\n");
+
             var dtlTgProtocol = data.targetGroup.protocol;
             var dtlTgPort = data.targetGroup.port;
             var dtlTgSubGroupId = data.targetGroup.subGroupId;
@@ -264,12 +279,12 @@ function showNlbInfo(mcisId, nlbId) {
             $("#dtl_hc_threshold").val(dtlHcThreshold);
             $("#dtl_hc_interval").val(dtlHcInterval);
             $("#dtl_hc_timeout").val(dtlHcTimeout);
-            $("#dtl_ls_protocol").val(dtlLsProtocol);
-            $("#dtl_ls_port").val(dtlLsPort);
-            $("#dtl_provider").val();
+            $("#dtl_ls_protocol").val(dtlListenerProtocol);
+            $("#dtl_ls_port").val(dtlListenerPort);
+            $("#dtl_provider").val(dtlProvider);
             $("#dtl_connectionName").val(dtlConnectionName);
             //$("#dtl_vNetId").val(dtlVNetId);
-            $("#dtl_tg_vms").val(dtlTgVms);
+            $("#dtl_tg_vms").val(strVms);
             $("#dtl_tg_protocol").val(dtlTgProtocol);
             $("#dtl_tg_port").val(dtlTgPort);
             $("#dtl_tg_subGroupId").val(dtlTgSubGroupId);
@@ -488,7 +503,7 @@ function getMcisVmsPop() {
         return;
     } 
     //caller, isCallback, targetObjId, optionParam, filterKeyVal
-    getCommonMcisList("nlbreg", true, "", "", "filterKey=vnet&filterVal=" + regVNetId);
+    getCommonMcisList("nlbreg", true, "", "", "filterKey=vNetId&filterVal=" + regVNetId);
     
 }
 
@@ -613,31 +628,56 @@ function setMcisListTableRow(aMcisData, mcisIndex) {
 }
 
 function applySubGroup() {
-    // 선택한 녀석들의 VM LIST 정보를 VMS칸(tg_vms)에다가 입력
+    // 선택한 녀석의 VM LIST 정보를 VMS칸(tg_vms)에다가 입력
     var subgrouplistValue = $("input[name='vms_info']").length;
     var vmchk = $("input[name='vmchk']");
     var subgrouplistData = new Array(subgrouplistValue);
-    var mcisid = "";
-    var infoshow = "";
+    var mcisId = "";
+    var subGroupId = ""
+    var vmIdList = ""
+    // var infoshow = "";
 
+    // check 된 항목 찾기 : 1개만 가능
+    var checkedCount = 0;    
     for (var i = 0; i < subgrouplistValue; i++) {
-        console.log(i+ " : ", $("input[name='vms_info']")[i].value, vmchk[i].checked);
+        if( checkedCount > 1){
+            commonAlert("1개만 선택 가능")
+            return
+        }
+
+        //console.log(i+ " : ", $("input[name='vms_info']")[i].value, vmchk[i].checked);
         if (vmchk[i].checked ) {
-            mcisid = $("input[name='mcisId']")[i].value;
+            checkedCount++;
+
+            mcisId = $("input[name='mcisId']")[i].value;
             subGroupId = $("input[name='subGroupId']")[i].value;
-            subgrouplistData[i] = $("input[name='vms_info']")[i].value;
-            console.log("subgrouplistData" + [i] + " : ", subgrouplistData[i]);
-            if (infoshow != "") {
-                infoshow += ", ";
-            }
-            infoshow += subgrouplistData[i];
+            
+            // subgrouplistData[i] = $("input[name='vms_info']")[i].value;
+            // console.log("subgrouplistData" + [i] + " : ", subgrouplistData[i]);
+            // if (infoshow != "") {
+            //     //infoshow += ", ";
+            //     infoshow += "\r\n";
+                
+            // }
+            // infoshow += subgrouplistData[i];
         }
     }
 
-    $("#tg_vms").empty();
-    $("#tg_mcisId").val(mcisid);
+    for (var i = 0; i < subgrouplistValue; i++) {
+        tempSubGroupId = $("input[name='subGroupId']")[i].value;
+        if( subGroupId == tempSubGroupId){
+            vmIdList += $("input[name='vms_info']")[i].value;
+            vmIdList += "\r\n";
+        }
+    }
 
-    $("#tg_vms").val(infoshow);
+
+    $("#tg_vms").empty();
+    $("#tg_mcisId").val(mcisId);
+
+    // $("#tg_vms").val(infoshow);
+    $("#tg_vms").val(vmIdList);
     $("#tg_subGroupId").val(subGroupId);
     $("#vmRegisterBox").modal("hide");
 }
+

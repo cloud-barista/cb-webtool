@@ -816,6 +816,7 @@ func main() {
 
 	nlbGroup := e.Group("/operation/services/nlb", nlbTemplate)
 	nlbGroup.GET("/mngform", controller.NlbMngForm)
+	e.GET("/operation/services/mcis/nlb/listall", controller.AllNlbListOfNamespace)
 	e.GET("/operation/services/mcis/:mcisID/nlb/list", controller.NlbList)
 	e.POST("/operation/services/mcis/:mcisID/nlb/reg", controller.NlbRegProc)
 	e.DELETE("/operation/services/mcis/:mcisID/nlb/del", controller.NlbAllDelProc)
