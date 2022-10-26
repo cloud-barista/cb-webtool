@@ -120,7 +120,6 @@ function nodeDone_btn(){
 
     try{
         // configurer 는 mcks 선택하고 들어옴. : TODO : MCKS create 와 node create는 버튼 액션을 달리해야
-        // /operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc
         var url = "/operation/manages/mcksmng/" + mcksID + "/" + mcksName + "/reg/proc";
         axios.post(url,new_obj,{
             headers :{

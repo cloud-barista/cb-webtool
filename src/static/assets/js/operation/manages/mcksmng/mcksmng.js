@@ -185,9 +185,8 @@ function deleteNodeOfMcks() {
         return;
     }
 
-    //var orgUrl = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";
     var urlParamMap = new Map();
-    urlParamMap.set(":clusteruID", selectedMcksUid)
+    urlParamMap.set(":clusterUID", selectedMcksUid)
     urlParamMap.set(":clusterName", selectedMcksName)
     urlParamMap.set(":nodeID", selectedNodeUid)
     urlParamMap.set(":nodeName", selectedNodeName)
