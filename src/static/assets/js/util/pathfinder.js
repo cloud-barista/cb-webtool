@@ -58,15 +58,16 @@ function getWebToolUrl(controllerKeyName) {
             ["McksMngForm", "/operation/manages/mcksmng/mngform"],
             ["McksRegForm", "/operation/manages/mcksmng/regform"],
             ["McksRegProc", "/operation/manages/mcksmng/reg/proc"],
-            ["McksClusterNodeData", "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName"],
+            ["McksClusterNodeData", "/operation/manages/mcksmng/:clusterUID/:clusterName/del/:nodeID/:nodeName"],
             ["PmksMngForm", "/operation/manages/pmksmng/mngform"],
+            ["PmksRegForm", "/operation/manages/pmksmng/regform"],
 
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
             ["MonitoringPolicyConfigMngForm", "/operation/policies/monitoringconfigpolicy/mngform"],
             ["MonitoringPolicyThresholdMngForm", "/operation/policies/monitoringalertpolicy/mngform"],
             ["NlbMngForm", "/operation/services/nlb/mngform"],
             ["NlbRegForm", "/operation/services/nlb/regform"],
-
+            
             ["AboutForm", "/operation/about/about"],
             
         ]
@@ -411,6 +412,8 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam, filterK
         } else if (caller == "mciscreate") {
             console.log("return get Data")
             getImageListCallbackSuccess(caller, data)
+        }else{
+            getImageListCallbackSuccess(caller, data, sortType)
         }
         // }).catch(function(error){
         //     console.log("list error : ",error);        

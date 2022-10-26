@@ -17,6 +17,7 @@ import (
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
+	"github.com/cloud-barista/cb-webtool/src/model/webtool"
 
 	util "github.com/cloud-barista/cb-webtool/src/util"
 
@@ -2348,6 +2349,48 @@ func RegDataDisk(nameSpaceID string, dataDiskReqInfo *tbmcir.TbDataDiskReq) (*tb
 	return &resultDataDiskInfo, model.WebStatus{StatusCode: respStatus}
 }
 
+// Async로 Disk 생성 : 항목 안에 attached Vm 정보가 있으면 생성 후 attach까지 한다.
+func AsyncRegDataDisk(nameSpaceID string, dataDiskReqInfo *webtool.DataDiskCreateReq, c echo.Context) {
+	taskKey := nameSpaceID + "||" + "disk" + "||" + dataDiskReqInfo.Name
+
+	// DataDiskCreateReq -> tbmcir.TbDataDiskReq
+	tbDataDiskReq := tbmcir.TbDataDiskReq{}
+	tbDataDiskReq.Name = dataDiskReqInfo.Name
+	tbDataDiskReq.ConnectionName = dataDiskReqInfo.ConnectionName
+	tbDataDiskReq.CspDataDiskId = dataDiskReqInfo.CspDataDiskId
+	tbDataDiskReq.Description = dataDiskReqInfo.Description
+	tbDataDiskReq.DiskSize = dataDiskReqInfo.DiskSize
+	tbDataDiskReq.DiskType = dataDiskReqInfo.DiskType
+
+	resultDataDiskInfo, respStatus := RegDataDisk(nameSpaceID, &tbDataDiskReq)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		StoreWebsocketMessage(util.TASK_TYPE_DISK, taskKey, util.DISK_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c)
+	} else {
+		StoreWebsocketMessage(util.TASK_TYPE_DISK, taskKey, util.DISK_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c)
+
+		// create 성공이고 vm에 attach
+		if dataDiskReqInfo.AttachVmID != "" {
+			// disk 조회해서 available 상태일 때 attach한다.
+			// 1. disk 상태조회 : available까지 1초씩 1분 기다릴까?
+
+			// 2. vm에 attach
+			mcisID := dataDiskReqInfo.McisID
+			vmID := dataDiskReqInfo.VmID
+			optionParam := "attach"
+			attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
+			attachDetachDataDiskReq.DataDiskId = resultDataDiskInfo.ID
+
+			AsyncAttachDetachDataDiskToVM(nameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
+			// _, respStatus := AttachDetachDataDiskToVM(nameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq)
+			// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			// 	StoreWebsocketMessage(util.TASK_TYPE_DISK, taskKey, util.DISK_LIFECYCLE_ATTACHED, util.TASK_STATUS_FAIL, c)
+			// } else {
+			// 	StoreWebsocketMessage(util.TASK_TYPE_DISK, taskKey, util.DISK_LIFECYCLE_ATTACHED, util.TASK_STATUS_COMPLETE, c)
+			// }
+		}
+	}
+}
+
 // Namespace내 모든 DataDisk 삭제
 func DelAllDataDisk(nameSpaceID string) (model.WebStatus, model.WebStatus) {
 	webStatus := model.WebStatus{}
@@ -2413,6 +2456,17 @@ func DelDataDisk(nameSpaceID string, dataDiskID string) (model.WebStatus, model.
 	webStatus.StatusCode = respStatus
 	webStatus.Message = resultInfo.Message
 	return webStatus, model.WebStatus{StatusCode: respStatus}
+}
+
+func AsyncDelDataDisk(nameSpaceID string, dataDiskID string, c echo.Context) {
+	taskKey := nameSpaceID + "||" + "disk" + "||" + dataDiskID
+
+	_, respStatus := DelDataDisk(nameSpaceID, dataDiskID)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		StoreWebsocketMessage(util.TASK_TYPE_DISK, taskKey, util.DISK_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c)
+	} else {
+		StoreWebsocketMessage(util.TASK_TYPE_DISK, taskKey, util.DISK_LIFECYCLE_DELETE, util.TASK_STATUS_COMPLETE, c)
+	}
 }
 
 // DataDisk 상세 조회
