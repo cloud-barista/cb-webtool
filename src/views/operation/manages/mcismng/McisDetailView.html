@@ -291,6 +291,10 @@
 
 	<div class="tab_ipbox">
 		<div class="t_ipbox t_ip1">
+			<input type="hidden" id="server_detail_disk_status" value=""/>
+			<input type="hidden" id="server_detail_disk_id" value=""/>
+			<input type="hidden" id="server_detail_disk_mcis_id" value=""/>
+			<input type="hidden" id="server_detail_disk_vm_id" value=""/>
 			<ul>
 				<li>
 					<label>Root Device Type</label>
@@ -302,17 +306,8 @@
 					<input type="text" name="" value="" placeholder="" title="" readonly
 						id="server_detail_view_root_device" />
 				</li>
-				<li>
-					<label>Block Device</label>
-					<input type="hidden" id="server_detail_disk_status" value=""/>
-					<input type="hidden" id="server_detail_disk_id" value=""/>
-					<input type="hidden" id="server_detail_disk_mcis_id" value=""/>
-					<input type="hidden" id="server_detail_disk_vm_id" value=""/>
-					
-					<input type="text" name="" value="" placeholder="" title="" readonly
-						id="server_detail_view_block_device" />
-				    <button type="button" onclick="displayDiskAttachModal(true)">DataDisk 상세</button>	
-							
+				<li id="block_device_section">
+					<label>Block Device</label>				
 				</li>
 			</ul>
 		</div>
