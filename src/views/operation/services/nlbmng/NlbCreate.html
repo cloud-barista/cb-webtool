@@ -36,56 +36,12 @@
                                     title=""
                                 ></textarea>
                             </li>
-                            <div class="tit">
-                                <span class="ch">*</span>Health Check
-                            </div>
-                            <li class="reg_1">
-                                <label
-                                    ><span class="ch">*</span>Threshold</label
-                                >
-                                <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="hc_threshold"
-                                        name="hc_threshold"
-                                        placeholder=""
-                                        class="pline"
-                                        title=""
-                                    />
-                                </span>
-                            </li>
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>Interval</label>
-                                <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="hc_interval"
-                                        name="hc_interval"
-                                        placeholder=""
-                                        class="pline"
-                                        title=""
-                                    />
-                                </span>
-                            </li>
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>Timeout</label>
-                                <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="hc_timeout"
-                                        name="hc_timeout"
-                                        placeholder=""
-                                        class="pline"
-                                        title=""
-                                    />
-                                </span>
-                            </li>
 
                             <div class="tit">
                                 <span class="ch">*</span>Listener
                             </div>
                             <li class="reg_1">
-                                <label><span class="ch">*</span>Protocol</label>
+                                <label><span class="ch">*</span>Protocol/Port</label>
                                 <span class="sbox">
                                     <select id="ls_protocol" class="selectbox2 white pline w_ip1"
 									    required>
@@ -94,9 +50,6 @@
                                         <option value="UDP">UDP</option>
                                     </select>   
                                 </span>
-                            </li>
-                            <li class="reg_1">
-                                <label><span class="ch">*</span>Port</label>
                                 <span class="sbox">
                                     <input
                                         type="text"
@@ -108,6 +61,60 @@
                                     />
                                 </span>
                             </li>
+                            <!-- <li class="reg_1">
+                                <label><span class="ch">*</span>Port</label>
+                                <span class="sbox">
+                                    <input
+                                        type="text"
+                                        id="ls_port"
+                                        name="ls_port"
+                                        placeholder="1-65535"
+                                        class="pline"
+                                        title=""
+                                    />
+                                </span>
+                            </li> -->
+                            
+                            <div class="tit">
+                                <span class="ch">*</span>Target Group
+                            </div>
+                            <li class="reg_1">
+                                <label>Protocol/Port</label>
+                                <span class="sbox">
+                                    <select id="tg_protocol" class="selectbox2 white pline w_ip1"
+									    required>
+									    <option value="" selected>Select Protocol</option>
+                                        <option value="TCP">TCP</option>
+                                        <option value="HTTP">HTTP</option>
+                                        <option value="HTTPS">HTTPS</option>
+                                    </select>
+                                </span>
+                                <span class="sbox">
+                                    <input
+                                        type="text"
+                                        id="tg_port"
+                                        name="tg_port"
+                                        placeholder="1-65535"
+                                        class="pline"
+                                        title=""
+                                    />
+                                </span>
+                            </li>
+                            <!-- <li class="reg_1">
+                                <label>Port</label>
+                                <span class="sbox">
+                                    <input
+                                        type="text"
+                                        id="tg_port"
+                                        name="tg_port"
+                                        placeholder="1-65535"
+                                        class="pline"
+                                        title=""
+                                    />
+                                </span>
+                            </li> -->
+
+                            
                         </ul>
                     </div>
                     <div class="ipbox ipbox2">
@@ -160,6 +167,62 @@
                                 <label></label>
                                 <span class="sbox"> </span>
                             </li>
+
+                            <div class="tit">
+                                <span class="ch">*</span>Health Check
+                            </div>
+                            <li class="reg_1">
+                                <label
+                                    ><span class="ch">*</span>Threshold</label
+                                >
+                                <span class="sbox">
+                                    <input
+                                        type="text"
+                                        id="hc_threshold"
+                                        name="hc_threshold"
+                                        placeholder=""
+                                        class="pline"
+                                        title=""
+                                    />
+                                </span>
+                            </li>
+                            <li class="reg_1">
+                                <label><span class="ch">*</span>Interval/Timeout</label>
+                                <span class="sbox">
+                                    <input
+                                        type="text"
+                                        id="hc_interval"
+                                        name="hc_interval"
+                                        placeholder=""
+                                        class="pline"
+                                        title=""
+                                    />
+                                </span>
+                                <span class="sbox">
+                                    <input
+                                        type="text"
+                                        id="hc_timeout"
+                                        name="hc_timeout"
+                                        placeholder=""
+                                        class="pline"
+                                        title=""
+                                    />
+                                </span>
+                            </li>
+                            <!-- <li class="reg_1">
+                                <label><span class="ch">*</span>Timeout</label>
+                                <span class="sbox">
+                                    <input
+                                        type="text"
+                                        id="hc_timeout"
+                                        name="hc_timeout"
+                                        placeholder=""
+                                        class="pline"
+                                        title=""
+                                    />
+                                </span>
+                            </li> -->
+
                             <div class="tit">
                                 <span class="ch">*</span>Target Group
                             </div>
@@ -198,10 +261,21 @@
                                     </button>
                                 </span>
                             </li>
-                            <!-- <li class="reg_1">
+                            <li class="reg_1">
                                 <label>VMS</label>
-                                <span class="sbox">
-                                    <input
+                                    <textarea
+                                        name="tg_vms"
+                                        id="tg_vms"
+                                        cols=""
+                                        rows=""
+                                        placeholder="VMs"
+                                        class="pline gray"
+                                        title=""
+                                        readonly
+                                    ></textarea>
+                                    <a href="javascript:void(0);" class="ma btn_register"
+											onClick="displayHealthCheckModal(true)">Health</a>
+                                    <!-- <input
                                         type="text"
                                         id="tg_vms"
                                         name="tg_vms"
@@ -209,35 +283,9 @@
                                         class="ip_w1 gray noline"
                                         title=""
                                         readonly
-                                    />
-                                    
-                                </span>
-                            </li> -->
-                            <li class="reg_1">
-                                <label>Protocol</label>
-                                <span class="sbox">
-                                    <select id="tg_protocol" class="selectbox2 white pline w_ip1"
-									    required>
-									    <option value="" selected>Select Protocol</option>
-                                        <option value="TCP">TCP</option>
-                                        <option value="HTTP">HTTP</option>
-                                        <option value="HTTPS">HTTPS</option>
-                                    </select>
-                                </span>
+                                    /> -->
                             </li>
-                            <li class="reg_1">
-                                <label>Port</label>
-                                <span class="sbox">
-                                    <input
-                                        type="text"
-                                        id="tg_port"
-                                        name="tg_port"
-                                        placeholder="1-65535"
-                                        class="pline"
-                                        title=""
-                                    />
-                                </span>
-                            </li>
+                            
                         </ul>
                     </div>
                 </div>
