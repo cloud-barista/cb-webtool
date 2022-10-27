@@ -215,7 +215,16 @@ function runAttachDataDisk(command) {
     var mcis_id = $("#attach_mcis_id").val();
     var vm_id = $("#attach_vm_id").val();
     var dataDiskId = $("#selected_disk").val()
-    var diskId = dataDiskId.split(",");    
+    var diskId = dataDiskId.split(",");   
+    var url = "/setting/resources/datadisk/mng";
+    var obj = {
+        attach
+    }
+    axios.post(url, obj).then(result=>{
+
+    })
+    
+
     console.log("command : ",command);
     var count = diskId.length;
     console.log("count : ", count);
