@@ -72,6 +72,33 @@
 	background-color: #999ea7;
 }
 
+.sbox {
+	display: inline-block;
+	width: 50%;
+}
+
+.sbox input,
+.sbox select {
+	width: 100%;
+}
+
+.sbox input.with_btn {
+	width: calc(100% - 75px);
+}
+
+.sbox input.pair_input,
+.sbox select.pair_input {
+	width: calc((100% - 4px)/2);
+}
+
+.sub_titbox .tit {
+	position: relative;
+	padding: 0px 0 10px 40px;
+	color: #06a9b7;
+	font-size: 18px;
+	line-height: 16px;
+}
+
 #guideArea .modal-dialog {
 	max-width: 100%;
 	width: auto;
@@ -5929,6 +5956,7 @@ table tbody tr {
 	padding: 0 12px;
 	min-width: 50px;
 	height: 37px;
+	width: 70px;
 	line-height: 37px;
 	border: none;
 	color: #fff;
@@ -6094,6 +6122,7 @@ table tbody tr {
 
 .dashboard .register_box li.reg_1 textarea {
 	width: 50%;
+	height: 50px;
 }
 
 .dashboard .register_box li.reg_2 input[type="text"],
@@ -6169,7 +6198,7 @@ table tbody tr {
 	width: 28%;
 }
 
-.dashboard .register_box .graybox .g_ipbox1 input[type="text"],
+,
 .dashboard .register_box .graybox .g_ipbox1 textarea,
 .dashboard .register_box .graybox .g_ipbox1 .sel_w1 {
 	width: 62%;
@@ -6852,7 +6881,7 @@ table tbody tr {
 		padding: 0 0 0 15px;
 	}
 
-	.dashboard .register_box .graybox .g_ipbox1 input[type="text"],
+	,
 	.dashboard .register_box .graybox .g_ipbox1 textarea,
 	.dashboard .register_box .graybox .g_ipbox1 .sel_w1 {
 		width: 58%;
@@ -6895,6 +6924,22 @@ table tbody tr {
 }
 
 @media screen and (max-width:1400px) {
+	.sub_titbox {
+		width: 70%;
+		text-align: left;
+		display: inline-block;
+	}
+
+	.sub_titbox .tit {
+		padding: 0;
+		margin-bottom: 20px;
+	}
+
+	.g_box {
+		text-align: right;
+		padding-right: 30px;
+	}
+
 	.dashboard .register_box .top_ipbox .ipbox1 {
 		padding: 20px 0 0 15px;
 		text-align: right;
@@ -6935,18 +6980,16 @@ table tbody tr {
 		padding-top: 0;
 	}
 
-	.dashboard .register_box .graybox .g_ipbox1 label,
-	.dashboard .register_box .graybox .g_ipbox2 label {
-		width: 120px;
-	}
-
 	.dashboard .register_box .graybox .g_ipbox1,
 	.dashboard .register_box .graybox .g_ipbox2 {
 		width: 100%;
 	}
 
-	.dashboard .register_box .graybox .g_ipbox1 input[type="text"],
-	.dashboard .register_box .graybox .g_ipbox1 textarea,
+	.dashboard .register_box .graybox .g_ipbox1:not(:last-child),
+	.dashboard .register_box .graybox .g_ipbox2:not(:last-child) {
+		margin-bottom: 20px;
+	}
+
 	.dashboard .register_box .graybox .g_ipbox2 input[type="text"],
 	.dashboard .register_box .graybox .g_ipbox2 textarea,
 	.dashboard .register_box .graybox .g_ipbox1 .sel_w1,
@@ -6982,10 +7025,6 @@ table tbody tr {
 		width: auto;
 	}
 
-	.dashboard .register_box li.reg_1 textarea {
-		width: 53.5%;
-	}
-
 	.dashboard .register_box li.reg_3 input[type="text"],
 	.dashboard .register_box li.reg_3 textarea,
 	.dashboard .register_box .top_ipbox.bottom_ipbox .ipbox1 input[type="text"] {
@@ -6994,10 +7033,6 @@ table tbody tr {
 
 	.dashboard .register_box .top_ipbox.bottom_ipbox .ipbox1.ipbox5 input[type="text"] {
 		width: 60.5%;
-	}
-
-	.dashboard .register_box .top_ipbox .ipbox1 li.reg_1 input.pline[type="text"] {
-		width: 53.4%;
 	}
 
 	.dashboard .register_box .top_ipbox .ipbox1 li.reg_1n input[type="text"],
@@ -7407,9 +7442,6 @@ table tbody tr {
 }
 
 @media screen and (max-width:900px) {
-	.dashboard .register_box li.reg_1 textarea {
-		width: 54%;
-	}
 
 	.dashboard .register_box .graybox .logicbox .txtbox {
 		width: 640px;
@@ -7593,6 +7625,22 @@ table tbody tr {
 }
 
 @media screen and (max-width:640px) {
+	.sbox {
+		width: 100%;
+	}
+
+	.sub_titbox {
+		width: 100%;
+	}
+
+	.sub_titbox .tit {
+		margin: 10px 0;
+	}
+
+	.g_box {
+		padding: 0;
+	}
+
 	.dashboard .titbox_n .tit {
 		padding: 30px 0 0 15px;
 	}
@@ -7676,18 +7724,18 @@ table tbody tr {
 		display: block;
 		margin: 12px 0 8px 0;
 		text-align: left;
+		width: auto;
 	}
 
 	.dashboard .register_box .graybox .g_ipbox1 textarea,
 	.dashboard .register_box .graybox .g_ipbox2 textarea,
-	.dashboard .register_box .graybox .g_ipbox1 input[type="text"],
 	.dashboard .register_box .graybox .g_ipbox2 input[type="text"],
 	.dashboard .register_box .graybox .g_ipbox1 .sel_w1,
 	.dashboard .register_box .graybox .g_ipbox2 .sel_w1 {
 		width: 100%;
 	}
 
-	.dashboard .register_box .graybox .g_ipbox1 span.sbox input[type="text"] {
+		{
 		width: calc(100% - 30px) !important;
 	}
 
@@ -7726,14 +7774,13 @@ table tbody tr {
 		width: 100%;
 	}
 
-	.dashboard .register_box li.reg_1 input[type="text"],
 	.dashboard .register_box .top_ipbox .ipbox1 li.reg_1 input.pline[type="text"],
-	.dashboard .register_box li.reg_1 input,
 	.dashboard .register_box li.reg_1 textarea,
 	.dashboard .register_box li.reg_2 textarea,
 	.dashboard .register_box li.reg_3 textarea {
 		width: 100%;
 	}
+
 
 	.dashboard .register_box li.reg_1.reg_4 input,
 	.dashboard .register_box li.reg_1.reg_4 textarea,
