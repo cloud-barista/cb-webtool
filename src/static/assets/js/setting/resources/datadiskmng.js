@@ -60,6 +60,10 @@ function deleteDataDisk() {
 
     if (count != 1) {
         commonAlert("삭제할 대상을 하나만 선택하세요.");
+        var checkBox = document.getElementsByName("chk");
+        checkBox.forEach(item=>{
+        item.checked = false;
+        })
         return false;
     }
 
@@ -165,97 +169,122 @@ function attachDataDisk() {
 function runDetachDataDisk(command){
     var count = 0;
     var diskStatus = "";
-    $("input[name='chk']:checked").each(function (index) {
-        console.log("detach index :", index);
-        count++;
-        diskStatus = $(this).attr("diskstatus")
-        if(diskStatus != "attached"){
-            commonAlert("Disk에 할당된 VM이 없어 Detach 할 수 없습니다.");
-            return false;
-        }else{
-            var mcis_id = $(this).attr("mcis_id");
-            var vm_id = $(this).attr("vm_id");
-            var dataDiskId = $(this).val();
+    var chk_cnt = $("input[name='chk']:checked").length
+
+    if(chk_cnt > 1){
+        var checkBox = document.getElementsByName("chk");
+        checkBox.forEach(item=>{
+            item.checked = false;
+        })
+        commonAlert("한개의 DataDisk만 Detach 할 수 있습니다.");
+        return false;
+    }else{
+        //상태 체크
+        $("input[name='chk']:checked").each(function (index) {
+            diskStatus = $(this).attr("diskstatus")
+            if(diskStatus != "attached"){
+                commonAlert("Disk에 할당된 VM이 없어 Detach 할 수 없습니다.");
+                return false;
+            }
+
+        })
+        if(diskStatus == "attached" && chk_cnt == 1){
+            var mcis_id = "";
+            var vm_id = "";
+            var dataDiskId = "";
+            var obj = {};
+            $("input[name='chk']:checked").each(function (index) {
+                mcis_id = $(this).attr("mcis_id");
+                vm_id = $(this).attr("vm_id");
+                dataDiskId = $(this).val();
+                
+            })
             var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
             console.log("datach url : ",url)
-            var obj = {
+            obj = {
                 dataDiskId
-            }
+             }
             axios.put(url, obj).then(result=>{
                 var data = result.data;
                 console.log(data);
                 if(data.status == 200 || data.status == 201){
-                    if(index == count-1){
-                        commonAlert("Success Detach DataDisk!")
-                        $("#dataDiskInfoBox").hide();
-                       // displayDataDiskInfo("MODIFY_SUCCESS");
-                        location.reload()
-                    }
-        
+                    commonAlert("Success Detach DataDisk!")
+                    $("#dataDiskInfoBox").hide();
+                     // displayDataDiskInfo("MODIFY_SUCCESS");
+                   // location.reload()      
+                    getDataDiskList("name");
                 }else{
-                    commonAlert("Fail Detach DataDisk at "+item + data.message)
-                    showDataDiskInfo(diskId, diskName);
+                    commonAlert("Fail Detach DataDisk : "+ data.message)
+                    getDataDiskList("name");
                 }
             }).catch(error=>{
                 console.log(error.response);
             })
         }
-        
-    });
-    console.log("disk status at run detach : ",diskStatus)
-    if(diskStatus != "attached"){
-        var checkBox = document.getElementsByName("chk");
-        checkBox.forEach(item=>{
-        item.checked = false;
-        })
-        return false;
     }
-}
+ }
+
 function runAttachDataDisk(command) {
     var mcis_id = $("#attach_mcis_id").val();
     var vm_id = $("#attach_vm_id").val();
     var dataDiskId = $("#selected_disk").val()
-    var diskId = dataDiskId.split(",");   
-    var url = "/setting/resources/datadisk/mng";
+    var diskId = dataDiskId.split(",");
+    console.log("disk Ids arr : ",diskId);   
+    var url = "/setting/resources/datadisk/mng"
+        url +="?mcisID="+mcis_id+"&vmID="+vm_id;
+        console.log("attach url = ",url);
     var obj = {
-        attach
+        attachDataDiskList : diskId
     }
+    console.log("attach obj : ",obj)
     axios.post(url, obj).then(result=>{
-
-    })
-    
-
-    console.log("command : ",command);
-    var count = diskId.length;
-    console.log("count : ", count);
-    diskId.forEach((item,index)=>{
-        var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
-        console.log("attach url : ",url)
-        console.log("attach diskid : ",item);
-        var obj = {
-            dataDiskId : item
+        var data = result.data;
+        console.log(data);
+        if(data.status == 200 || data.status == 201){
+            commonAlert("Success Attach DataDisk!")
+            displayDataDiskInfo("MODIFY_SUCCESS");
+            //location.reload();
+        }else{
+            commonAlert("Fail attach DataDisk at "+item + data.message)
+           // showDataDiskInfo(diskId, diskName);
+            //location.reload();
         }
-        axios.put(url, obj).then(result=>{
-            var data = result.data;
-            console.log(data);
-            if(data.status == 200 || data.status == 201){
-                if(index == count-1){
-                    commonAlert("Success Attach DataDisk!")
-                    displayDataDiskInfo("MODIFY_SUCCESS");
-                    location.reload();
-                }else{
-                   
-                }
-    
-            }else{
-                commonAlert("Fail attach DataDisk at "+item + data.message)
-                showDataDiskInfo(diskId, diskName);
-                location.reload();
-            }
-        }).catch(error=>{
-            console.log("error response : ",error.response);
-        })
+    }).catch(error=>{
+        console.log("error response : ",error.response);
     })
+    
+
+    // console.log("command : ",command);
+    // var count = diskId.length;
+    // console.log("count : ", count);
+    // diskId.forEach((item,index)=>{
+    //     var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
+    //     console.log("attach url : ",url)
+    //     console.log("attach diskid : ",item);
+    //     var obj = {
+    //         dataDiskId : item
+    //     }
+    //     axios.put(url, obj).then(result=>{
+    //         var data = result.data;
+    //         console.log(data);
+    //         if(data.status == 200 || data.status == 201){
+    //             if(index == count-1){
+    //                 commonAlert("Success Attach DataDisk!")
+    //                 displayDataDiskInfo("MODIFY_SUCCESS");
+    //                 location.reload();
+    //             }else{
+                   
+    //             }
+    
+    //         }else{
+    //             commonAlert("Fail attach DataDisk at "+item + data.message)
+    //             showDataDiskInfo(diskId, diskName);
+    //             location.reload();
+    //         }
+    //     }).catch(error=>{
+    //         console.log("error response : ",error.response);
+    //     })
+    // })
 
 }
 
