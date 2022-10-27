@@ -83,7 +83,9 @@ func PmksMngForm(c echo.Context) error {
 		})
 }
 
-// PMKS 목록 조회
+// PMKS 목록 조회 :
+// namespace 내 모든 pmks 목록.
+// connection 조회 후 해당 connection으로 목록 재조회해서 합침
 func GetPmksList(c echo.Context) error {
 	log.Println("GetPmksList : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -93,21 +95,28 @@ func GetPmksList(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
+	//cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
+	cloudConnectionConfigInfoList := []spider.CloudConnectionConfigInfo{}
+	conn := spider.CloudConnectionConfigInfo{}
+	conn.ConfigName = "ali-test-conn"
+	cloudConnectionConfigInfoList = append(cloudConnectionConfigInfoList, conn)
 	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
 
 	clusterReqInfo := spider.ClusterReqInfo{}
 	clusterReqInfo.NameSpace = defaultNameSpaceID
 
-	totalPmksList := []spider.ClusterInfo{}
+	totalPmksList := []spider.SpClusterInfo{}
+	// totalPmksList := map[string][]spider.SpClusterInfo{}
 	// 모든 connection의 pmks목록 조회
 	for _, connectionInfo := range cloudConnectionConfigInfoList {
 		clusterReqInfo.ConnectionName = connectionInfo.ConfigName
 		pmksList, respStatus := service.GetPmksClusterList(clusterReqInfo)
+		log.Println("---------------------- result  ", pmksList)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			continue
 		}
 		totalPmksList = append(totalPmksList, pmksList...)
+		//totalPmksList[connectionInfo.ConfigName] = pmksList
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -128,15 +137,15 @@ func GetPmksInfoData(c echo.Context) error {
 	}
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	pmksID := c.Param("pmksID")
-	log.Println("pmksID= " + pmksID)
-	optionParam := c.QueryParam("connection")
+	clusterID := c.Param("clusterID")
+	log.Println("clusterID= " + clusterID)
+	optionParam := c.QueryParam("connectionName")
 	log.Println("optionParam= " + optionParam)
 
 	clusterReqInfo := spider.ClusterReqInfo{}
 	clusterReqInfo.NameSpace = defaultNameSpaceID
 	clusterReqInfo.ConnectionName = optionParam
-	resultPmksInfo, _ := service.GetPmksClusterData(pmksID, clusterReqInfo)
+	resultPmksInfo, _ := service.GetPmksClusterData(clusterID, clusterReqInfo)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",

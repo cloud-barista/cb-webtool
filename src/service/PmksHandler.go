@@ -19,7 +19,7 @@ import (
 )
 
 // Cluster 목록 조회
-func GetPmksClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.ClusterInfo, model.WebStatus) {
+func GetPmksClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.SpClusterInfo, model.WebStatus) {
 	var originalUrl = "/cluster"
 
 	url := util.SPIDER + originalUrl
@@ -30,20 +30,19 @@ func GetPmksClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.ClusterI
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	clusterList := []spider.ClusterInfo{}
+	clusterList := map[string][]spider.SpClusterInfo{}
 	json.NewDecoder(respBody).Decode(&clusterList)
 	fmt.Println(clusterList)
 	log.Println(respBody)
 
-	return clusterList, model.WebStatus{StatusCode: respStatus}
+	return clusterList["cluster"], model.WebStatus{StatusCode: respStatus}
 }
 
 // 특정 Cluster 조회
-func GetPmksClusterData(cluster string, clusterReqInfo spider.ClusterReqInfo) (*spider.ClusterInfo, model.WebStatus) {
+func GetPmksClusterData(cluster string, clusterReqInfo spider.ClusterReqInfo) (*spider.SpClusterInfo, model.WebStatus) {
 	var originalUrl = "/cluster/{cluster}"
 
 	var paramMapper = make(map[string]string)
@@ -56,7 +55,7 @@ func GetPmksClusterData(cluster string, clusterReqInfo spider.ClusterReqInfo) (*
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	// defer body.Close()
-	clusterInfo := spider.ClusterInfo{}
+	clusterInfo := spider.SpClusterInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &clusterInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -73,7 +72,7 @@ func GetPmksClusterData(cluster string, clusterReqInfo spider.ClusterReqInfo) (*
 }
 
 // Cluster 생성
-func RegPmksCluster(nameSpaceID string, clusterReqInfo *spider.ClusterReqInfo) (*spider.ClusterInfo, model.WebStatus) {
+func RegPmksCluster(nameSpaceID string, clusterReqInfo *spider.ClusterReqInfo) (*spider.SpClusterInfo, model.WebStatus) {
 
 	var originalUrl = "/cluster"
 
@@ -83,7 +82,7 @@ func RegPmksCluster(nameSpaceID string, clusterReqInfo *spider.ClusterReqInfo) (
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnClusterInfo := spider.ClusterInfo{}
+	returnClusterInfo := spider.SpClusterInfo{}
 	returnStatus := model.WebStatus{}
 
 	if err != nil {
@@ -148,7 +147,7 @@ func RegPmksClusterByAsync(clusterReqInfo *spider.ClusterReqInfo, c echo.Context
 }
 
 // PmksClusterUpdateProc : 현재는 버전만 upgrade. 추후 항목 update가 생기면 function 분리할 것
-func UpdatePmksCluster(clusterReqInfo *spider.ClusterReqInfo) (spider.ClusterInfo, model.WebStatus) {
+func UpdatePmksCluster(clusterReqInfo *spider.ClusterReqInfo) (spider.SpClusterInfo, model.WebStatus) {
 	var originalUrl = "/cluster/upgrade"
 
 	url := util.SPIDER + originalUrl
@@ -160,7 +159,7 @@ func UpdatePmksCluster(clusterReqInfo *spider.ClusterReqInfo) (spider.ClusterInf
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	resultClusterInfo := spider.ClusterInfo{}
+	resultClusterInfo := spider.SpClusterInfo{}
 	if err != nil {
 		fmt.Println(err)
 		failResultInfo := tbcommon.TbSimpleMsg{}
@@ -174,7 +173,7 @@ func UpdatePmksCluster(clusterReqInfo *spider.ClusterReqInfo) (spider.ClusterInf
 }
 
 // PMKS Cluster 삭제
-func DelPmksCluster(cluster string, clusterReqInfo spider.ClusterReqInfo) (*spider.ClusterInfo, model.WebStatus) {
+func DelPmksCluster(cluster string, clusterReqInfo spider.ClusterReqInfo) (*spider.SpClusterInfo, model.WebStatus) {
 	var originalUrl = "/cluster/{cluster}"
 
 	var paramMapper = make(map[string]string)
@@ -188,7 +187,7 @@ func DelPmksCluster(cluster string, clusterReqInfo spider.ClusterReqInfo) (*spid
 	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 	util.DisplayResponse(resp) // 수신내용 확인
 
-	resultClusterInfo := spider.ClusterInfo{}
+	resultClusterInfo := spider.SpClusterInfo{}
 	if err != nil {
 		fmt.Println("delCluster ", err)
 		return &resultClusterInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}

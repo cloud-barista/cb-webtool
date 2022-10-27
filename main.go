@@ -349,9 +349,9 @@ func main() {
 			"templates/MenuLeft",
 			"templates/Footer",
 
-			"operation/manages/pmksmng/PmksList",
-			"operation/manages/pmksmng/PmksInfo",
-			"operation/manages/pmksmng/PmksNodeGroupInfo",
+			"operation/manages/pmksmng/ClusterList",
+			"operation/manages/pmksmng/ClusterInfo",
+			"operation/manages/pmksmng/NodeGroupInfo",
 		},
 		DisableCache: true,
 	})
@@ -832,13 +832,14 @@ func main() {
 	pmksMngGroup := e.Group("/operation/manages/pmksmng/mngform", pmksMngTemplate)
 	pmksMngGroup.GET("", controller.PmksMngForm)
 
-	e.GET("/operation/manages/pmksmng/list", controller.GetPmksList)
-	e.POST("/operation/manages/pmksmng/reg/proc", controller.PmksRegProc)
-	e.DELETE("/operation/manages/pmksmng/:clusterUID/:clusterName", controller.PmksDelProc)
-	e.PUT("/operation/manages/pmksmng/:clusterUID/:clusterName", controller.PmksClusterUpdateProc)
+	e.GET("/operation/manages/pmks/list", controller.GetPmksList)
+	e.GET("/operation/manages/pmks/:clusterID", controller.GetPmksInfoData)
+	e.POST("/operation/manages/pmks/cluster", controller.PmksRegProc)
+	e.DELETE("/operation/manages/pmks/:clusterID", controller.PmksDelProc)
+	e.PUT("/operation/manages/pmks/:clusterID", controller.PmksClusterUpdateProc)
 
-	e.POST("/operation/manages/pmksmng/:clusterUID/:clusterName/reg/proc", controller.PmksNodeGroupRegProc)
-	e.DELETE("/operation/manages/pmksmng/:clusterUID/:clusterName/del/:nodeID/:nodeName", controller.PmksNodeGroupDelProc)
+	e.POST("/operation/manages/pmks/:clusterID/nodegroup", controller.PmksNodeGroupRegProc)
+	e.DELETE("/operation/manages/pmks/:clusterID/nodegroup/:nodeGroupID", controller.PmksNodeGroupDelProc)
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)
