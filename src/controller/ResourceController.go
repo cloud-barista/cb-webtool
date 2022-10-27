@@ -1838,6 +1838,7 @@ func DataDiskDelProc(c echo.Context) error {
 }
 
 // Create, Update, Delete를 한번에 하는 Controller
+// 단, Attach, Detach 는 1개 vm에 대해서만 가능하게?
 func DataDiskMngProc(c echo.Context) error {
 
 	loginInfo := service.CallLoginInfo(c)
@@ -1855,8 +1856,8 @@ func DataDiskMngProc(c echo.Context) error {
 		})
 	}
 
-	mcisID := c.Param("mcisID")
-	vmID := c.Param("vmID")
+	mcisID := c.QueryParam("mcisID")
+	vmID := c.QueryParam("vmID")
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
@@ -1872,25 +1873,29 @@ func DataDiskMngProc(c echo.Context) error {
 
 	// detach data disk list
 	if dataDiskReq.DetachDataDiskList != nil {
-		for _, detachDataDisk := range dataDiskReq.DetachDataDiskList {
+		if mcisID != "" && vmID != "" {
+			for _, detachDataDisk := range dataDiskReq.DetachDataDiskList {
 
-			// 2. vm에 attach
-			optionParam := "detach"
-			attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
-			attachDetachDataDiskReq.DataDiskId = detachDataDisk.DataDiskId
+				// 2. vm에 attach
+				optionParam := "detach"
+				attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
+				attachDetachDataDiskReq.DataDiskId = detachDataDisk.DataDiskId
 
-			go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
+				go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
 
+			}
 		}
 	}
 
 	// attach data disk list
 	if dataDiskReq.AttachDataDiskList != nil {
-		for _, attachDataDisk := range dataDiskReq.AttachDataDiskList {
-			optionParam := "attach"
-			attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
-			attachDetachDataDiskReq.DataDiskId = attachDataDisk.DataDiskId
-			go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
+		if mcisID != "" && vmID != "" {
+			for _, attachDataDisk := range dataDiskReq.AttachDataDiskList {
+				optionParam := "attach"
+				attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
+				attachDetachDataDiskReq.DataDiskId = attachDataDisk.DataDiskId
+				go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
+			}
 		}
 	}
 
