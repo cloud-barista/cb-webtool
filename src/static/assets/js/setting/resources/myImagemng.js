@@ -315,7 +315,7 @@ function addMyImageRow(item, index) {
     var ns = "";
     var mcis_id = "";
     var vm_id = "";
-    if(assoObjList.length > 0){
+    if(assoObjList != null){
         var tempAssoObjList = assoObjList[0];
         var parse = tempAssoObjList.split("/")
         ns = parse[2];

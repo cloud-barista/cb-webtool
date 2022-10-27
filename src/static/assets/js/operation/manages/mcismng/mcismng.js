@@ -468,7 +468,8 @@ function createSnapshot(createName){
     var obj = {
         name: createName
     }
-    var url = "/operation/manages/mcismng/"+mcisID+"/vm/"+vmID+"/snapshot"
+    var url = "/operation/manages/mcismng/"+mcisID+"/vm/"+vmID+"/snapshot";
+    console.log("snap shot url : ",url);
     axios.post(url,obj).then(result=>{
         var status = result.status
 
@@ -476,7 +477,7 @@ function createSnapshot(createName){
         var data = result.data
         console.log("create snapshot resutl Message : ", data.message)
         if (status == 200 || status == 201) {
-            commonResultAlert(message);
+            commonResultAlert("create Snap!");
           
         }
     })
