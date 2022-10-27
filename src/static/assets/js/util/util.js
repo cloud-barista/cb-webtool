@@ -1301,3 +1301,12 @@ function selectBoxFilterBy2Texts(targetObject, compareText1, compareText2) {
     });
 }
 
+
+// nodata일 때 row 표시 : colspanCount를 받아 col을 합친다.
+function CommonTableRowNodata(colspanCount){
+    var html = "";
+    html += "<tr>";
+    html += '<td class="overlay hidden" data-th="" colspan="' + colspanCount + '">No Data</td>';
+    html += "</tr>";
+    return html
+}

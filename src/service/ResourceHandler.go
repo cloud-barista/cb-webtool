@@ -2557,9 +2557,9 @@ func GetMyImageList(nameSpaceID string, optionParam string, filterKeyParam strin
 	myImageInfoList := map[string][]tbmcir.TbCustomImageInfo{}
 	json.NewDecoder(respBody).Decode(&myImageInfoList)
 	//spew.Dump(body)
-	fmt.Println(myImageInfoList["myImage"])
+	fmt.Println(myImageInfoList["customImage"])
 
-	return myImageInfoList["myImage"], model.WebStatus{StatusCode: respStatus}
+	return myImageInfoList["customImage"], model.WebStatus{StatusCode: respStatus}
 }
 
 func GetMyImageListByID(nameSpaceID string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
@@ -2626,9 +2626,9 @@ func GetMyImageListByOption(nameSpaceID string, optionParam string, filterKeyPar
 	myImageInfoList := map[string][]tbmcir.TbCustomImageInfo{}
 	json.NewDecoder(respBody).Decode(&myImageInfoList)
 	//spew.Dump(body)
-	fmt.Println(myImageInfoList["myImage"])
+	fmt.Println(myImageInfoList["customImage"])
 
-	return myImageInfoList["myImage"], model.WebStatus{StatusCode: respStatus}
+	return myImageInfoList["customImage"], model.WebStatus{StatusCode: respStatus}
 }
 
 // CSP에 등록 된 customImage를 TB의 customImage로 등록

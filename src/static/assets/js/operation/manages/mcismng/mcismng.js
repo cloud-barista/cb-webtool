@@ -468,7 +468,8 @@ function createSnapshot(createName){
     var obj = {
         name: createName
     }
-    var url = "/operation/manages/mcismng/"+mcisID+"/vm/"+vmID+"/snapshot"
+    var url = "/operation/manages/mcismng/"+mcisID+"/vm/"+vmID+"/snapshot";
+    console.log("snap shot url : ",url);
     axios.post(url,obj).then(result=>{
         var status = result.status
 
@@ -476,7 +477,7 @@ function createSnapshot(createName){
         var data = result.data
         console.log("create snapshot resutl Message : ", data.message)
         if (status == 200 || status == 201) {
-            commonResultAlert(message);
+            commonResultAlert("create Snap!");
           
         }
     })
@@ -2433,35 +2434,34 @@ function runDetachDisk(command){
     var vm_id = $("#server_detail_disk_vm_id").val();
 
     var count = 0;
+    var url = "/setting/resources/datadisk/mng";
+    url += "?mcisID="+mcis_id+"&vmID="+vm_id; 
+    var temp_ids = []; 
+    var obj = {};
 
     $("input[name='chk_detach']:checked").each(index=>{
-        console.log("this : ",this);
         var dataDiskId = this.value;
-        count++;
-        var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;  
-        console.log("attach url : ", url)
-        var obj = {
-            dataDiskId
+        console.log("dataDiskId : ",dataDiskId);
+        temp_ids.push(dataDiskId)       
+    })
+    obj = {
+        dettachDataDiskList: temp_ids
+    }
+    console.log("temp detach disk ids : ",temp_ids)
+    axios.post(url, obj).then(result=>{
+        var data = result.data;
+        console.log(data);
+        if(data.status == 200 || data.status == 201){
+            commonAlert("Success "+command+" DataDisk!")
+            $("#dataDiskInfoBox").hide();
+               // displayDataDiskInfo("MODIFY_SUCCESS");
+            location.reload()
+        }else{
+            commonAlert("Fail"+command+" DataDisk at "+item + data.message)
+            showDataDiskInfo(diskId, diskName);
         }
-        axios.put(url, obj).then(result=>{
-            var data = result.data;
-            console.log(data);
-            if(data.status == 200 || data.status == 201){
-                if(index == count-1){
-                    commonAlert("Success "+command+" DataDisk!")
-                    $("#dataDiskInfoBox").hide();
-                   // displayDataDiskInfo("MODIFY_SUCCESS");
-                    location.reload()
-                }
-    
-            }else{
-                commonAlert("Fail"+command+" DataDisk at "+item + data.message)
-                showDataDiskInfo(diskId, diskName);
-            }
-        }).catch(error=>{
-            console.log(error.response);
-        })
-
+    }).catch(error=>{
+        console.log(error.response);
     })
 
     
