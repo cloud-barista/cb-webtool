@@ -21,29 +21,28 @@
 {{template "Modal" .}}
 
 				<!-- contents -->
-				<input type="hidden" id="mcks_uid" value=''/>
-				<input type="hidden" id="mcks_name" value=''/>
-				<input type="hidden" id="node_uid" value=''/>
-				<input type="hidden" id="node_name" value=''/>
+				<input type="hidden" id="pmks_uid" value=''/>
+				<input type="hidden" id="pmks_name" value=''/>
+				<input type="hidden" id="pmks_version" value=''/>
 				
 				<!-- contents -->
 				<div class="contbox">
 					
 					<div class="titlebox">
-						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Manage / <strong>MCKS</strong></div>
-						<div class="location">Home  <span>></span>  Operation  <span>></span>  Manage  <span>></span>  <strong>MCKS</strong></div>
+						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Manage / <strong>PMKS</strong></div>
+						<div class="location">Home  <span>></span>  Operation  <span>></span>  Manage  <span>></span>  <strong>PMKS</strong></div>
 					</div>
 					
 					<!-- list -->
-					{{template "PmksList" .}}
+					{{template "ClusterList" .}}
 					<!-- //list -->
 					
 					<!-- Info -->
-					{{template "PmksInfo" .}}
+					{{template "ClusterInfo" .}}
 					<!-- //Info -->
 				
 					<!-- detail -->
-					{{template "PmksNodeGroupInfo" .}}
+					{{template "NodeGroupInfo" .}}
 					<!-- //detail -->
 				</div>
 				<!-- //contents -->

@@ -1,10 +1,10 @@
-{{define "PmksInfo"}}
+{{define "ClusterInfo"}}
 <!-- Info -->
 <div class="dashboard dashboard_cont server_status">
 
 	<div class="d_box box_m box_w100">
 		<div class="titbox">
-			<div class="tit initial"><strong>MCKS Info</strong> <span class="stxt" id="mcks_info_txt">[ ]</span></div>
+			<div class="tit initial"><strong>PMKS Info</strong> <span class="stxt" id="pmks_info_txt">[ ]</span></div>
 			<div class="top_info">
 				<ul>
 					<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" /></a></li>
@@ -12,6 +12,7 @@
 			</div>
 		</div>
 
+		<!-- cluster begin -->
 		<div class="ds_cont">
 
 			<div class="iparea">
@@ -20,7 +21,7 @@
 						<li>
 							<label>Name</label>
 							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
-								id="mcks_info_name" />
+								id="pmks_info_name" />
 						</li>
 					</ul>
 				</div>
@@ -28,9 +29,9 @@
 				<div class="boxlist ipbox ip2">
 					<ul>
 						<li>
-							<label>Status</label>
-							<input type="text" name="" value="" placeholder="None" title="" readonly
-								id="mcks_info_Status" />
+							<label>Version</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_version" />
 						</li>
 					</ul>
 				</div>
@@ -38,16 +39,60 @@
 				<div class="boxlist ipbox ip3">
 					<ul>
 						<li>
-							<label>Cloud Connections</label>
+							<label>Cloud Connection</label>
 							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
-								id="mcks_info_cloud_connection" readonly />
+								id="pmks_info_cloud_connection" readonly />
 						</li>
-
+					</ul>
+				</div>
+				<div class="boxlist ipbox ip4">
+					<ul>
+						<li>
+							<label>Status</label>
+							<input type="text" name="" value="" placeholder="None" title="" readonly
+								id="pmks_info_status" />
+						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
+		<!-- network -->
+		<div class="ds_cont">
 
+			<div class="iparea">
+				<div class="boxlist ipbox ip1">
+					<ul>
+						<li>
+							<label>VPC </label>
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+								id="pmks_vpc" />
+						</li>
+					</ul>
+				</div>
+
+				<div class="boxlist ipbox ip2">
+					<ul>
+						<li>
+							<label>Subnet</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_subnet" />
+						</li>
+					</ul>
+				</div>
+				<div class="boxlist ipbox ip3">
+					<ul>
+						<li>
+							<label>Security Group</label>
+							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
+								id="pmks_info_security_group" readonly />
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- end cluster-->
+
+		<!-- node group list : 간단정보 -->
 		<div class="ds_cont">
 
 			<div class="area_cont">
@@ -55,7 +100,7 @@
 				<div class="box">
 
 					<div class="titbox">
-						<div class="tit initial" id="mcks_server_info_status"></div>
+						<div class="tit initial" id="pmks_server_info_status"></div>
 						<div class="top_info">
 							<ul>
 
@@ -73,7 +118,7 @@
 																onClick="addNewNodeGroup()">Add/Extend</a></li>
 														<li><a href="javascript:void(0);" data-toggle="modal"
 																data-target="#NodeGroup_n_Delete"
-																onClick="commonConfirmOpen('DeleteNodeGroupOfMcks')">Delete</a>
+																onClick="commonConfirmOpen('DeleteNodeGroupOfPmks')">Delete</a>
 														</li>
 													</ul>
 												</li>
@@ -85,11 +130,9 @@
 						</div>
 					</div>
 
-
-
+					<!-- NodeGroup List 표시-->
 					<div class="listbox scrollbar-inner">
-						<ul id="mcks_server_info_box">
-
+						<ul id="pmks_server_info_box">
 						</ul>
 					</div>
 
