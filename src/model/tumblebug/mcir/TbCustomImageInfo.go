@@ -5,7 +5,7 @@ import tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 type TbCustomImageInfo struct {
 	AssociatedObjectList []string              `json:"associatedObjectList"`
 	ConnectionName       string                `json:"connectionName"`
-	CreatedTime          string                `json:"createdTime"`
+	CreationDate         string                `json:"creationDate"`
 	CspCustomImageId     string                `json:"cspCustomImageId"`
 	CspCustomImageName   string                `json:"cspCustomImageName"`
 	Description          string                `json:"description"`
@@ -17,4 +17,5 @@ type TbCustomImageInfo struct {
 	NameSpaceID          string                `json:"namespace"`
 	Status               string                `json:"status"`
 	SystemLabel          string                `json:"systemLabel"`
+	SourceVmId           string                `json:"sourceVmId"`
 }

@@ -321,22 +321,22 @@ function addMyImageRow(item, index) {
         ns = parse[2];
         mcis_id = parse[4];
         vm_id = parse[6];
-        diskStatus = "attached"
+       
     }
 
     var html = ""
     html += '<tr onclick="showMyImageInfo(\'' + item.id + '\',\'' + item.name + '\');">'
         + '<td class="overlay hidden column-50px" data-th="">'
         + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
-        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskname="'+item.name+'" diskstatus="'+diskStatus+'" mcis_id="'+mcis_id+'" vm_id="'+vm_id+'" /><label for="td_ch1"></label> <span class="ov off"></span>'
+        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskname="'+item.name+'" imageStatus="'+item.status+'" mcis_id="'+mcis_id+'" vm_id="'+vm_id+'" /><label for="td_ch1"></label> <span class="ov off"></span>'
 
         + '</td>'
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
-        + '<td class="overlay hidden" data-th="diskType">' + item.diskType + '</td>'
-        + '<td class="overlay hidden" data-th="diskSize">' + item.diskSize + '</td>'
-        + '<td class="overlay hidden" data-th="attachedVm">' + vm_id + '</td>'
-        + '<td class="overlay hidden" data-th="connectionName">' + item.connectionName + '</td>'
-        + '<td class="overlay hidden" data-th="description">' + item.description + '</td>'
+        + '<td class="overlay hidden" data-th="diskType">' + item.sourceVmId + '</td>'
+        + '<td class="overlay hidden" data-th="diskSize">' + "" + '</td>'
+        + '<td class="overlay hidden" data-th="attachedVm">' + item.connectionName + '</td>'
+        + '<td class="overlay hidden" data-th="connectionName">' + item.status + '</td>'
+        + '<td class="overlay hidden" data-th="description">' + item.creationDate + '</td>'
         + '</tr>'
     return html;
 }
