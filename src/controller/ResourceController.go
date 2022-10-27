@@ -1879,7 +1879,7 @@ func DataDiskMngProc(c echo.Context) error {
 				// 2. vm에 attach
 				optionParam := "detach"
 				attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
-				attachDetachDataDiskReq.DataDiskId = detachDataDisk.DataDiskId
+				attachDetachDataDiskReq.DataDiskId = detachDataDisk
 
 				go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
 
@@ -1893,7 +1893,7 @@ func DataDiskMngProc(c echo.Context) error {
 			for _, attachDataDisk := range dataDiskReq.AttachDataDiskList {
 				optionParam := "attach"
 				attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
-				attachDetachDataDiskReq.DataDiskId = attachDataDisk.DataDiskId
+				attachDetachDataDiskReq.DataDiskId = attachDataDisk
 				go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
 			}
 		}
@@ -1902,7 +1902,7 @@ func DataDiskMngProc(c echo.Context) error {
 	// delete data disk list
 	if dataDiskReq.DetachDataDiskList != nil {
 		for _, delDataDisk := range dataDiskReq.DetachDataDiskList {
-			go service.AsyncDelDataDisk(defaultNameSpaceID, delDataDisk.DataDiskId, c)
+			go service.AsyncDelDataDisk(defaultNameSpaceID, delDataDisk, c)
 		}
 	}
 	// return result
