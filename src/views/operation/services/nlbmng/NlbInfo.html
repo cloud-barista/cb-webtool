@@ -13,133 +13,144 @@
 		</div>
 
 		<div class="ds_cont">
-			<div class="register_box">
-
+			<div class="register_box reg">
 				<div class="top_ipbox">
 					<div class="ipbox ipbox1">
 						<ul>
-							<li>
+							<li class="reg_1">
 								<label>NLB Name</label>
-								<span class="sbox">
-									<input type="text" id="dtl_nlbName" name="dtl_nlbName" value="" placeholder=""
-										class="gray" title="" disabled />
-								</span>
+								<input type="text" id="dtl_nlbName" name="dtl_nlbName" value="" placeholder=""
+									class="gray" title="" disabled />
 							</li>
-							<li>
+							<li class="reg_1">
 								<label>Description</label>
-								<span class="sbox">
-									<textarea id="dtl_description" name="dtl_Description" cols="" rows=""
-										placeholder="" class="gray" title="" disabled></textarea>
-								</span>
+								<textarea id="dtl_description" name="dtl_Description" cols="" rows="" placeholder=""
+									class="gray" title="" disabled></textarea>
 							</li>
-
-							<div class="tit">
-                                <span class="ch">*</span>Health Check
-                            </div>
-							<li class="reg_1">
-                                <label>Threshold</label>
-                                <span class="sbox">
-									<input type="text" id="dtl_hc_threshold" name="dtl_hc_threshold" value="" placeholder=""
-										class="gray" title="" disabled />
-                                </span>
-                            </li>
-                            <li class="reg_1">
-                                <label>Interval</label>
-                                <span class="sbox">
-									<input type="text" id="dtl_hc_interval" name="dtl_hc_interval" value="" placeholder=""
-										class="gray" title="" disabled />
-                                </span>
-                            </li>
-                            <li class="reg_1">
-                                <label>Timeout</label>
-                                <span class="sbox">
-									<input type="text" id="dtl_hc_timeout" name="dtl_hc_timeout" value="" placeholder=""
-										class="gray" title="" disabled />
-                                </span>
-                            </li>
-
-							<div class="tit">
-                                <span class="ch">*</span>Listener
-                            </div>
-							<li class="reg_1">
-                                <label>Protocol</label>
-								<span class="sbox">
-									<input type="text" id="dtl_ls_protocol" name="dtl_ls_protocol" value="" placeholder=""
-										class="gray" title="" disabled />
-								</span>
-                            </li>
-                            <li class="reg_1">
-                                <label>Port</label>
-                                <span class="sbox">
-									<input type="text" id="dtl_ls_port" name="dtl_ls_port" value="" placeholder=""
-										class="gray" title="" disabled />
-                                </span>
-                            </li>
 						</ul>
 					</div>
-					<div class="ipbox ipbox2">
+					<div class="ipbox ipbox1">
 						<ul>
-							<li>
+							<li class="reg_1">
 								<label>Cloud Provider</label>
 								<input type="text" id="dtl_provider" name="dtl_provider" value="" placeholder=""
 									class="gray" title="" readonly />
 							</li>
-							<li>
-								<label>Connection Name</label>
+							<li class="reg_1">
+								<label>
+									Connection
+									Name</label>
 								<input type="text" id="dtl_connectionName" name="dtl_connectionName" value=""
 									placeholder="" class="gray" title="" readonly />
 							</li>
-							<!-- <li>
+							<!-- <li class="reg_1">
 								<label>VPC ID</label>
-								<input type="text" id="dtl_vNetId" name="dtl_vNetId" value="" placeholder=""
-									class="gray" title="" readonly />
+								<span class="sbox">
+									<select class="white pline w3" name="reg_vNetId" id="regVNetId">
+										<option value="">Selected VPC Id</option>
+									</select>
+								</span>
 							</li> -->
-
-							<div class="tit">
-                                <span class="ch">*</span>Target Group
-                            </div>							
-							
-							<li>
-								<label>Protocol</label>
-								<input type="text" id="dtl_tg_protocol" name="dtl_tg_protocol" value="" placeholder=""
-									class="gray" title="" readonly />
-							</li>
-							<li>
-								<label>Port</label>
-								<input type="text" id="dtl_tg_port" name="dtl_tg_port" value="" placeholder=""
-									class="gray" title="" readonly />
-							</li>
-							<li>
-								<label>Sub Group ID</label>
-								<input type="text" id="dtl_tg_subGroupId" name="dtl_tg_subGroupId" value="" placeholder=""
-									class="gray" title="" readonly />
-							</li>
-							<li>
-                                <label>VMS</label>
-                                    <textarea
-                                        name="dtl_tg_vms"
-                                        id="dtl_tg_vms"
-                                        cols=""
-                                        rows=""
-                                        placeholder="VMs"
-                                        class="pline gray"
-                                        title=""
-                                        readonly
-                                    ></textarea>
-                                    <a href="javascript:void(0);" class="ma btn_register"
-											onClick="vmHealthCheck()">Health</a>
-                            </li>
 						</ul>
 					</div>
 				</div>
-				<!-- TODO : tumblebug에 수정 기능 없음. 수정기능 생기면 처리
-								<div class="btnbox">
-									<div class="btn_center">
-										<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
-										<button name="" value="" class="btn_co btn_cr_g w135 btn_modify">Modify</button> 
+				<div class="graybox">
+					<div class="g_box">
+						<div class="g_ipbox g_ipbox1">
+							<ul>
+								<li>
+									<div class="sub_titbox">
+										<div class="tit">
+											<strong>Listener</strong>
+										</div>
 									</div>
-								</div>
-							 -->
+								</li>
+								<li class="reg_1">
+									<label>Protocol/Port</label>
+									<span class="sbox">
+										<input type="text" id="dtl_ls_protocol" name="dtl_ls_protocol" value=""
+											placeholder="" class="gray pair_input" title="" disabled />
+										<input type="text" id="dtl_ls_port" name="dtl_ls_port" value="" placeholder=""
+											class="gray pair_input" title="" disabled />
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div class="g_ipbox g_ipbox1">
+							<ul>
+								<li>
+									<div class="sub_titbox">
+										<div class="tit">
+											<strong>Health Check</strong>
+										</div>
+									</div>
+								</li>
+								<li class="reg_1">
+									<label>Threshold</label>
+									<span class="sbox">
+										<input type="text" id="dtl_hc_threshold" name="dtl_hc_threshold" value=""
+											placeholder="" class="gray" title="" disabled />
+									</span>
+								</li>
+								<li class="reg_1">
+									<label>Interval/Timeout</label>
+									<span class="sbox">
+										<input type="text" id="dtl_hc_interval" name="dtl_hc_interval" value=""
+											placeholder="" class="gray pair_input" title="" disabled />
+										<input type="text" id="dtl_hc_timeout" name="dtl_hc_timeout" value=""
+											placeholder="" class="gray pair_input" title="" disabled />
+									</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="graybox">
+					<div class="g_box">
+						<div class="sub_titbox">
+							<div class="tit">
+								<strong>Target Group</strong>
+							</div>
+						</div>
+						<div class="g_ipbox g_ipbox1">
+							<ul>
+								<li class="reg_1">
+									<label>Protocol/Port</label>
+									<span class="sbox">
+										<input type="text" id="dtl_tg_protocol" name="dtl_tg_protocol" value=""
+											placeholder="" class="gray pair_input" title="" readonly />
+										<input type="text" id="dtl_tg_port" name="dtl_tg_port" value="" placeholder=""
+											class="gray pair_input" title="" readonly />
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div class="g_ipbox g_ipbox1">
+							<ul>
+								<li class="reg_1">
+									<span class="sbox">
+										<input type="hidden" id="tg_mcisId" name="tg_mcisId" placeholder=""
+											class="ip_w1 gray noline" title="" readonly />
+									</span>
+								</li>
+								<li class="reg_1">
+									<label>Sub Group ID</label>
+									<span class="sbox">
+										<input type="text" id="dtl_tg_subGroupId" name="dtl_tg_subGroupId" value=""
+											placeholder="" class="gray" title="" readonly />
+									</span>
+								</li>
+								<li class="reg_1">
+									<label>VMS</label>
+									<textarea name="dtl_tg_vms" id="dtl_tg_vms" cols="" rows="" placeholder="VMs"
+										class="pline gray" title="" readonly></textarea>
+									<a href="javascript:void(0);" class="ma btn_register"
+										onClick="vmHealthCheck()">Health</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
