@@ -1,4 +1,4 @@
-{{define "PmksList"}}
+{{define "ClusterList"}}
 <!-- list -->
 <div class="dashboard dashboard_cont">
 
@@ -60,7 +60,12 @@
 							</div>
 						</div>
 					</li>
-					<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt="" /></a></li>
+					
+					<li>
+						<a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt="" /></a>
+						<a href="javascript:void(0);" onClick="getPmksList()"><img
+								src="/assets/img/common/icon_refresh.png" alt="refresh" /></a>
+					</li>					
 				</ul>
 			</div>
 		</div>
@@ -81,18 +86,19 @@
 										</colgroup> -->
 					<thead>
 						<tr>
+							<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall"
+								title="" /><label for="th_chall"></label></td>
 							<th class="column-80px">Status</th>
 							<th>Name</th>
-							<th>Total Infra</th>
-							<th>Nodes<span>Control Plane / Worker</span></th>
-							<th>NetworkCni</th>
-							<th>CpLeader</th>
-							<th>Connection</th>
-							<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall"
-									title="" /><label for="th_chall"></label></td>
+							<th>Provider</th>
+							<th>VPC</th>
+							<th>Subnet</th>
+							<th>Security Group</th>
+							<th>NodeGroup Group</th>
+							
 						</tr>
 					</thead>
-					<tbody id="pmksList">
+					<tbody id="clusterList">
 
 						<tr>
 							<td class="overlay hidden" data-th="" colspan="8">No Data</td>
