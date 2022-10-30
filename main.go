@@ -352,6 +352,7 @@ func main() {
 			"operation/manages/pmksmng/ClusterList",
 			"operation/manages/pmksmng/ClusterInfo",
 			"operation/manages/pmksmng/NodeGroupInfo",
+			"operation/manages/pmksmng/NodeInfo",
 		},
 		DisableCache: true,
 	})
