@@ -72,6 +72,20 @@
 	background-color: #999ea7;
 }
 
+.mapcont {
+	width: 60%;
+}
+
+.flexbox {
+	display: flex;
+}
+
+.flexbox .recommend_spec_filter {
+	display: flex;
+	flex-direction: column;
+	margin-left: 50px;
+}
+
 #guideArea .modal-dialog {
 	max-width: 100%;
 	width: auto;
@@ -8562,6 +8576,7 @@ table tbody tr {
 	text-align: center;
 	border-radius: 20px;
 	margin: 0 auto;
+	position: relative;
 }
 
 .dashboard .create_box .servers_box .list li .server .icon {
@@ -8577,6 +8592,39 @@ table tbody tr {
 	font-size: 16px;
 	line-height: 16px;
 	margin: 8px 0 0 0;
+}
+
+.dashboard .create_box .servers_box .list li .server .tooltip_text {
+	visibility: hidden;
+	width: max-content;
+	background-color: #5e636c;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 10px 5px;
+
+	position: absolute;
+	top: -45px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 1;
+}
+
+.dashboard .create_box .servers_box .list li .server:hover .tooltip_text {
+	visibility: visible;
+}
+
+.dashboard .create_box .servers_box .list li .server .tooltip_text::after {
+	content: " ";
+	position: absolute;
+	bottom: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-top: -5px;
+
+	border-style: solid;
+	border-width: 5px;
+	border-color: #5e636c transparent transparent transparent;
 }
 
 .dashboard .create_box .servers_box .list li .server.server_add {
@@ -10329,6 +10377,12 @@ table tbody tr {
 .popup_editBox .modal-body .pop-body .pop-cont .spec_box .s_box.recommend {
 	float: left;
 	width: 33%;
+}
+
+.popup_editBox .modal-body .pop-body .pop-cont .spec_box .flexbox .s_box.recommend {
+	float: left;
+	width: 100%;
+	margin-bottom: 30px;
 }
 
 .popup_editBox .modal-body .pop-body .pop-cont .spec_box .s_box>ul {}

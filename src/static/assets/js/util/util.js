@@ -1288,3 +1288,91 @@ function selectBoxFilterBy2Texts(targetObject, compareText1, compareText2) {
     });
 }
 
+function createVmSpec(caller) {
+    var specId
+    var specName
+    var connectionName
+    var cspSpecName
+
+    if (caller == "recommend") {
+        specId = $("#t_spec").val();
+        specName = $("#t_spec").val();
+        connectionName = $("#t_regRecommendConn").val();
+        cspSpecName = $("#t_regRecommendCspSpec").val();
+    } else {
+        specId = $("#regSpecName").val();
+        specName = $("#regSpecName").val();
+        connectionName = $("#regConnectionName").val();
+        cspSpecName = $("#regCspSpecName").val();
+    }
+
+
+    if (!specName) {
+        alert("Input New Spec Name")
+        $("#regSpecName").focus()
+        return;
+    }
+
+    // var apiInfo = "{{ .apiInfo}}";
+    var url = "/setting/resources" + "/vmspec/reg"
+    console.log("URL : ", url)
+    var obj = {
+        id: specId,
+        name: specName,
+        connectionName: connectionName,
+        cspSpecName: cspSpecName
+    }
+    console.log("info image obj Data : ", obj);
+
+    if (specName) {
+        axios.post(url, obj, {
+            // headers: {
+            //     'Content-type': 'application/json',
+            //     // 'Authorization': apiInfo,
+            // }
+        }).then(result => {
+            console.log("result spec : ", result);
+            var statusCode = result.data.status;
+            if (statusCode == 200 || statusCode == 201) {
+                // if (result.status == 200 || result.status == 201) {
+                commonAlert("Success Create Spec!!")
+                //등록하고 나서 화면을 그냥 고칠 것인가?
+                if (caller == "recommend") {
+                    $("#t_regConnectionName").val(connectionName)
+                    $("#t_spec").val(specName)
+                    getCommonVirtualMachineSpecList('addedspec')
+                    commonAlert("Success Create Spec!!")
+                    $("#connectionAssist").modal("hide");
+                    $("#recommendVmAssist").modal("hide");
+                } else {
+                    displayVmSpecInfo("REG_SUCCESS");
+                }
+                //getVmSpecList("name");
+                //아니면 화면을 리로딩 시킬것인가?
+                // location.reload();
+                // $("#btn_add2").click()
+                // $("#namespace").val('')
+                // $("#nsDesc").val('')
+            } else {
+                var message = result.data.message;
+                commonAlert("Fail Create Spec : " + message + "(" + statusCode + ")");
+                // TODO : 이 화면에서 오류날 항목은 CSP Spec Name이 없을 떄이긴 한데.... 중복일때는 알려주는데 ts.micro3(없는 spec)일 때는 어떤오류인지...
+            }
+            // }).catch(function(error){
+            //     console.log("get create error : ");
+            //     console.log(error);
+            //     commonAlert(error);// TODO : error처리하자.
+            // });
+        }).catch((error) => {
+            console.warn(error);
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage);
+        });
+    } else {
+        commonlert("Input Spec Name")
+        $("#regSpecName").focus()
+        return;
+    }
+}

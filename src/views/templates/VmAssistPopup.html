@@ -1603,8 +1603,8 @@
 <!-- SSH Assist popup -->
 
 
-<!-- Recommend Assist popup -->
-<div class="modal fade popup_editBox" id="recommendVmAssist" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- Server Spec Configuration Assist popup -->
+<div class="modal fade popup_editBox" id="recommendSpecAssist" tabindex="-1" role="dialog" aria-hidden="true">
 
 	<input type="hidden" id="t_regRecommendConn" value="" />
 	<input type="hidden" id="t_regRecommendCspSpec" value="" />
@@ -1616,15 +1616,28 @@
 				<div class="pop-body">
 
 					<div class="title_box">
-						<div class="title">Recommended VM List</div>
+						<div class="title">Server Configuration</div>
 					</div>
-
 					<div class="pop-cont">
+						<div class="toptxt search" id="serverNameBox" style="display: none;">
+							<ul>
+								<li class="reg_1">
+									<label>Server Name</label>
+									<input type="text" name="serverName" value="" placeholder="Input Name" class="pline"
+										title="" id="serverName">
+								</li>
+								<li class="reg_1">
+									<label>Server Quantity</label>
+									<input type="text" class="pline" value="1" name="serverQuantity"
+										id="serverQuantity">
+								</li>
+							</ul>
+						</div>
 						<div class="spec_box">
 							<div class="toptxt search">
 								<!-- <label>Search</label> -->
 								<!-- <input type="submit" name="" class="btn_search_spec" title="" value=""
-									onclick="searchSpecsByRange('searchVmSpecAssistAtReg')" /> -->
+										onclick="searchSpecsByRange('searchVmSpecAssistAtReg')" /> -->
 								<input type="hidden" id="longitude" name="" value="" class="pline" title="" />
 								<input type="hidden" id="latitude" name="" value="" class="pline" title="" />
 								<ul>
@@ -1632,9 +1645,10 @@
 										<label class="assistLabel"></span>Priority Option</label>
 										<select class="selectbox white pline w3"
 											name="assistRecommendSpecConnectionName"
-											id="assistRecommendSpecConnectionName">
+											id="assistRecommendSpecConnectionName"
+											onchange="showRecommendSpecSetting(this.value)">
 											<option value="" selected>Select Priority Option</option>
-											<option value="location" selected>Location</option>
+											<option value="location">Location</option>
 											<option value="cost">Cost</option>
 											<option value="latency">Latency</option>
 										</select>
@@ -1652,92 +1666,99 @@
 								</ul>
 
 							</div>
+							<div id="recommendSpecSetting">
+								<div class="mapcont">
+									<div class="map" id="recommend_map" style="height:300px; display: none;"></div>
+									<!--							<div class="map" id="map" style="height:300px;"></div>-->
+								</div>
 
-							<div class="s_box recommend s_box_1">
-								<ul>
+								<div class="recommend_spec_filter">
+									<div class="s_box recommend s_box_1">
+										<ul>
 
-									<li>
-										<label>Memory</label>
-										<div class="s_slider_box">
-											<input type="text" id="num_memory_min" name="assist_max_num_memory_min"
-												value="0" placeholder="1" class="components_input txt_ipbox" title=""
-												disabled />
-											<div class="slider_ip">
-												<button class="btn_s btn_s_minus">-</button>
-												<div class="slider_bar">
-													<!-- <input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="100" data-slider-step="1"
-															data-slider-value="1" /> -->
+											<li>
+												<label>Memory</label>
+												<div class="s_slider_box">
+													<input type="text" id="num_memory_min"
+														name="assist_max_num_memory_min" value="0" placeholder="1"
+														class="components_input txt_ipbox" title="" />
+													<div class="slider_ip">
+														<button class="btn_s btn_s_minus">-</button>
+														<div class="slider_bar">
+															<!-- <input type="text" name="" value="" placeholder=""
+																class="slider_bar" title="" data-slider-min="0"
+																data-slider-max="100" data-slider-step="1"
+																data-slider-value="1" /> -->
+														</div>
+														<button class="btn_s btn_s_plus">+</button>
+													</div>
+													<input type="text" id="num_memory_max"
+														name="assist_max_num_memory_min" value="1024" placeholder="1"
+														class="components_input txt_ipbox" title="" />
 												</div>
-												<button class="btn_s btn_s_plus">+</button>
-											</div>
-											<input type="text" id="num_memory_max" name="assist_max_num_memory_min"
-												value="100" placeholder="1" class="components_input txt_ipbox" title=""
-												disabled />
-										</div>
-										<span class="stxt">TiB</span>
-									</li>
+												<span class="stxt">GB</span>
+											</li>
 
-								</ul>
+										</ul>
+									</div>
+
+									<div class="s_box recommend s_box_2">
+										<ul>
+											<li>
+												<label>CPU</label>
+												<div class="s_slider_box">
+													<input type="text" id="num_vCPU_min" name="assist_num_vCPU_min"
+														value="0" placeholder="0" class="components_input txt_ipbox"
+														title="" />
+													<div class="slider_ip">
+														<button class="btn_s btn_s_minus">-</button>
+														<div class="slider_bar">
+															<!-- <input type="text" name="" value="" placeholder=""
+																class="slider_bar" title="" data-slider-min="0"
+																data-slider-max="10" data-slider-step="1"
+																data-slider-value="0" /> -->
+														</div>
+														<button class="btn_s btn_s_plus">+</button>
+													</div>
+													<input type="text" id="num_vCPU_max" name="assist_num_vCPU_max"
+														value="100" placeholder="0" class="components_input txt_ipbox"
+														title="" />
+												</div>
+												<span class="stxt">Unit</span>
+											</li>
+										</ul>
+									</div>
+
+									<div class="s_box recommend s_box_2">
+										<ul>
+											<li>
+												<label>COST</label>
+												<div class="s_slider_box">
+													<input type="text" id="num_cost_min" name="assist_num_vCPU_min"
+														value="0" placeholder="0" class="components_input txt_ipbox"
+														title="" />
+													<div class="slider_ip">
+														<button class="btn_s btn_s_minus">-</button>
+														<div class="slider_bar">
+															<!-- <input type="text" name="" value="" placeholder=""
+																class="slider_bar" title="" data-slider-min="0"
+																data-slider-max="10" data-slider-step="1"
+																data-slider-value="0" /> -->
+														</div>
+														<button class="btn_s btn_s_plus">+</button>
+													</div>
+													<input type="text" id="num_cost_max" name="assist_num_vCPU_max"
+														value="1" placeholder="0" class="components_input txt_ipbox"
+														title="" />
+												</div>
+												<span class="stxt">$</span>
+											</li>
+										</ul>
+									</div>
+								</div>
 							</div>
 
-							<div class="s_box recommend s_box_2">
-								<ul>
-									<li>
-										<label>CPU</label>
-										<div class="s_slider_box">
-											<input type="text" id="num_vCPU_min" name="assist_num_vCPU_min" value="0"
-												placeholder="0" class="components_input txt_ipbox" title="" disabled />
-											<div class="slider_ip">
-												<button class="btn_s btn_s_minus">-</button>
-												<div class="slider_bar">
-													<!-- <input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="0" /> -->
-												</div>
-												<button class="btn_s btn_s_plus">+</button>
-											</div>
-											<input type="text" id="num_vCPU_max" name="assist_num_vCPU_max" value="100"
-												placeholder="0" class="components_input txt_ipbox" title="" disabled />
-										</div>
-										<span class="stxt">Unit</span>
-									</li>
-								</ul>
-							</div>
 
-							<div class="s_box recommend s_box_2">
-								<ul>
-									<li>
-										<label>COST</label>
-										<div class="s_slider_box">
-											<input type="text" id="num_cost_min" name="assist_num_vCPU_min" value="0"
-												placeholder="0" class="components_input txt_ipbox" title="" disabled />
-											<div class="slider_ip">
-												<button class="btn_s btn_s_minus">-</button>
-												<div class="slider_bar">
-													<!-- <input type="text" name="" value="" placeholder=""
-															class="slider_bar" title="" data-slider-min="0"
-															data-slider-max="10" data-slider-step="1"
-															data-slider-value="0" /> -->
-												</div>
-												<button class="btn_s btn_s_plus">+</button>
-											</div>
-											<input type="text" id="num_cost_max" name="assist_num_vCPU_max" value="100"
-												placeholder="0" class="components_input txt_ipbox" title="" disabled />
-										</div>
-										<span class="stxt">Unit</span>
-									</li>
-								</ul>
-							</div>
-
-
-						</div>
-
-						<div class="mapcont">
-							<div class="map" id="recommend_map" style="height:150px;"></div>
-							<!--							<div class="map" id="map" style="height:300px;"></div>-->
 						</div>
 
 						<!-- table scrollbar -->
@@ -1746,14 +1767,17 @@
 								<table cellpadding="0" cellspacing="0" summary="" id="popRecommendSpec">
 									<thead>
 										<tr>
+											<th class="column-50px"><input type="checkbox" name="" value=""
+													id="th_chall" title=""><label for="th_chall"></label>
+											</th>
 											<th>Provider</th>
 											<th>Region</th>
-											<th>Name</th>
-											<th>CSPSpec</th>
+											<!-- <th>Name</th> -->
+											<th>Spec</th>
 											<th>Price</th>
 											<th>Memory</th>
 											<th>CPU</th>
-											<th>EvaluationScore01</th>
+											<!-- <th>EvaluationScore01</th> -->
 										</tr>
 									</thead>
 									<tbody id="assistRecommendSpecList">
@@ -1763,15 +1787,13 @@
 							</div>
 						</div>
 						<!-- //table scrollbar -->
-
 					</div>
-
 				</div>
 
 				<div class="btnbox">
 					<div class="btn_right">
 						<button name="" value="" class="btn_apply btn_co btn_cr_g"
-							onclick="applyAssistValidCheck('recommendVmAssist')"><span>Apply</span></button>
+							onclick="selectedSpecApply()"><span>Apply</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
 					</div>
 				</div>
@@ -1782,8 +1804,7 @@
 	</div>
 
 </div>
-<!-- Recommend Assist popup -->
-
+<!-- Server Spec Configuration Assist popup -->
 
 <!-- Connection Assist popup -->
 <div class="modal fade popup_editBox" id="connectionAssist" tabindex="-1" role="dialog" aria-hidden="true">
@@ -1824,9 +1845,6 @@
 
 				<div class="btnbox">
 					<div class="btn_right">
-						<button name="" value="" class="btn_co btn_cr_g" onclick="checkMcisNameExist()"
-							id="btn_create_mcis"><span>Create
-								MCIS</span></button>
 						<button name="" value="" class="btn_apply btn_co btn_cr_g"
 							onclick="applyAssistValidCheck('recommendVmAssist')"><span>Apply</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
