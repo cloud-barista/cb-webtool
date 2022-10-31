@@ -1174,7 +1174,9 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
                         + '<input type="checkbox" name="chk_detach" value="' + diskID + '"  title="" diskname="'+diskName+'" diskstatus="'+diskInfo.status+'" mcis_id="" /><label for="td_ch1"></label> <span class="ov off"></span>'
                 
                         + '</td>'
-                        + '<td class="btn_mtd ovm" data-th="name">' + diskName + '<span class="ov"></span></td>'
+                        + '<td class="btn_mtd ovm" data-th="name">' 
+                        + diskName
+                        + '<span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="diskType">' + diskType + '</td>'
                         + '<td class="overlay hidden" data-th="diskSize">' + diskSize + '</td>'
                         + '</tr>';
@@ -1189,6 +1191,14 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
                 })
                 console.log("temp disk info : ",temp_disk)
             }
+        }else{
+
+            var temp_btn = "<label>Block Device</label>";
+            temp_btn += '<button type="button" onclick="displayAvailableDisk(true)">Attach DISK</button>';
+            $("#block_device_section").empty()
+            $("#attachedDiskList").empty()
+            $("#block_device_section").append(temp_btn)
+          
         }
 
         if (temp_disk){
@@ -2558,13 +2568,14 @@ function displayAvailableDisk(isShow) {
         console.log("check available disk url : ",url);
         var temp_diskId = [];
         temp_diskId = diskId.split(",");
-
+        
         axios.get(url).then(result=>{
             console.log("get result : ",result);
             var data = result.data.datadiskIdList;
             var html = "";
             console.log("get available disk : ",data);
             if(data != null || data.length > 0){
+                var avDiskCnt = 0
                 data.forEach(item=>{
                     console.log("get available disk : ", item);
                     html +='<tr>'
@@ -2572,16 +2583,21 @@ function displayAvailableDisk(isShow) {
                     + '<input type="checkbox" name="chk_attach" value="' + item + '"  title=""  /><label for="td_ch1"></label> <span class="ov off"></span>'
             
                     + '</td>'
-                    + '<td class="btn_mtd ovm" data-th="name">' + diskName + '<span class="ov"></span></td>'
-                    + '<td class="overlay hidden" data-th="diskType">' + diskType + '</td>'
-                    + '<td class="overlay hidden" data-th="diskSize">' + diskSize + '</td>'
+                    + '<td class="btn_mtd ovm" data-th="name">' + item + '<span class="ov"></span></td>'
+                    + '<td class="overlay hidden" data-th="diskType">' 
+                    +'</td>'
+                    + '<td class="overlay hidden" data-th="diskSize">' 
+                    + '</td>'
                     + '</tr>';
+                    avDiskCnt++;
                 })
-
+                $("#availableDiskCnt").val(avDiskCnt)
                 $("#availableDiskList").empty()
                 $("#availableDiskList").append(html)
             }else{
-                commonAlert("해당 VM에 Attach 가능한 DISK가 없습니다");
+                //commonAlert("해당 VM에 Attach 가능한 DISK가 없습니다");
+                addRow();
+                $("#availableDiskCnt").val(0)
                 return;
             }
             // if(data){
