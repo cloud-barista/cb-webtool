@@ -1174,7 +1174,9 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
                         + '<input type="checkbox" name="chk_detach" value="' + diskID + '"  title="" diskname="'+diskName+'" diskstatus="'+diskInfo.status+'" mcis_id="" /><label for="td_ch1"></label> <span class="ov off"></span>'
                 
                         + '</td>'
-                        + '<td class="btn_mtd ovm" data-th="name">' + diskName + '<span class="ov"></span></td>'
+                        + '<td class="btn_mtd ovm" data-th="name">' 
+                        + diskName
+                        + '<span class="ov"></span></td>'
                         + '<td class="overlay hidden" data-th="diskType">' + diskType + '</td>'
                         + '<td class="overlay hidden" data-th="diskSize">' + diskSize + '</td>'
                         + '</tr>';

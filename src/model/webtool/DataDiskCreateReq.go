@@ -12,6 +12,6 @@ type DataDiskCreateReq struct {
 
 	// Attach VMID
 	McisID     string `json:"mcisId"`
-	VmID       string `json:"VmId"`
+	VmID       string `json:"vmId"`
 	AttachVmID string `json:"attachVmId"`
 }
