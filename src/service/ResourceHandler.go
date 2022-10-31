@@ -181,6 +181,8 @@ func GetVnetListByOption(nameSpaceID string, optionParam string, filterKeyParam 
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
 	}
 	if filterKeyParam != "" {
 		urlParam += "&filterKey=" + filterKeyParam
@@ -715,6 +717,8 @@ func GetSshKeyInfoListByOption(nameSpaceID string, optionParam string, filterKey
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
 	}
 	if filterKeyParam != "" {
 		urlParam += "&filterKey=" + filterKeyParam
@@ -2215,6 +2219,8 @@ func GetDataDiskList(nameSpaceID string, optionParam string, filterKeyParam stri
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
 	}
 	if filterKeyParam != "" {
 		urlParam += "&filterKey=" + filterKeyParam
@@ -2285,6 +2291,8 @@ func GetDataDiskListByOption(nameSpaceID string, optionParam string, filterKeyPa
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
 	}
 	if filterKeyParam != "" {
 		urlParam += "&filterKey=" + filterKeyParam
@@ -2534,6 +2542,8 @@ func GetMyImageList(nameSpaceID string, optionParam string, filterKeyParam strin
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
 	}
 	if filterKeyParam != "" {
 		urlParam += "&filterKey=" + filterKeyParam
@@ -2604,6 +2614,8 @@ func GetMyImageListByOption(nameSpaceID string, optionParam string, filterKeyPar
 
 	if optionParam != "" {
 		urlParam += "?option=" + optionParam
+	} else {
+		urlParam += "?option="
 	}
 	if filterKeyParam != "" {
 		urlParam += "&filterKey=" + filterKeyParam
