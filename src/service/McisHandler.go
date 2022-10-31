@@ -1977,7 +1977,7 @@ func AsyncAttachDetachDataDiskToVM(nameSpaceID string, mcisID string, vmID strin
 }
 
 // VM에서 Attach 가능한 DataDisk 목록 : Get available dataDisks for a VM
-func GetAvailableDataDiskListForVM(nameSpaceID string, mcisID string, vmID string) ([]string, model.WebStatus) {
+func GetAvailableDataDiskListForVM(nameSpaceID string, mcisID string, vmID string) ([]mcir.TbDataDiskInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/dataDisk"
 
 	if vmID == "" {
