@@ -2375,7 +2375,7 @@ func AsyncRegDataDisk(nameSpaceID string, dataDiskReqInfo *webtool.DataDiskCreat
 
 			// 2. vm에 attach
 			mcisID := dataDiskReqInfo.McisID
-			vmID := dataDiskReqInfo.VmID
+			vmID := dataDiskReqInfo.AttachVmID
 			optionParam := "attach"
 			attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
 			attachDetachDataDiskReq.DataDiskId = resultDataDiskInfo.ID
