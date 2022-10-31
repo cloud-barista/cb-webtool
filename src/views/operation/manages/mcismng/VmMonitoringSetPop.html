@@ -480,8 +480,80 @@
 
 					<div class="title_box">
 						<div class="title">Available Disk List</div>
+						<div class="btnbox">
+							<div class="btn_right">
+								<button name="" value="" class="btn_apply btn_co btn_cr_g"
+									onclick="addRow();"><span>+</span></button>
+								<button name="" value="" onclick="deleteRow();" class="btn_cancel btn_co btn_cr_b">X</button>
+							</div>
+						</div>
 					</div>
+					<script>
+						function diskType(provider){
+							//var provider = $("#provider").val();
+							var html = '<option value="default" selected>Select Disk Type</option>';
+							if(provider){
+								if(provider == "AWS"){
+									var diskType = ['standard','gp2','gp3','io1','io2','st1','sc1']
+									diskType.forEach((item)=>{
+										html +='<option value="'+item+'">'
+											 +item+'</option>'
+									})
+								}else if(provider == "AZURE"){
+									var diskType = ['standard','gp2','gp3','io1','io2','st1','sc1']
+									diskType.forEach((item)=>{
+										html +='<option value="'+item+'">'
+											 +item+'</option>'
+									})									
+								}
+							}
+							return html				
+						}
+						var add_row_cnt = 0
+						function addRow(){
+							add_row_cnt++;
+							var provider =  $("#manage_mcis_popup_csp").val();
+							console.log("select provider at add row : ",provider);
+							var upperCaseProvider = provider.toUpperCase();
+							console.log("select  upperCaseProvider: ",upperCaseProvider);
+							var addHtml = diskType(upperCaseProvider);
+							var html = "";
+							html +='<tr>'
+								 + '<td class="overlay hidden column-50px" data-th="">'
+								 + '<input type="checkbox" name="chk_attach" value=""  title=""  /><label for="td_ch1"></label> <span class="ov off"></span>'								 
+								 + '</td>'
+								 + '<td class="btn_mtd ovm" data-th="name">'
+								 +'<input type="text" class="pline" style="width:100px;height:50px;" name="addDiskName" placeholder="Disk Name" value =""/>'
+								 + '<span class="ov"></span></td>'
+								 + '<td class="overlay hidden" data-th="diskType">' 
+								 + '<select name="addDiskType" class="selectbox white pline w_ip1" style="width:108px;">'
+								 + addHtml
+								 + '</select>'
+								 +'</td>'
+								 + '<td class="overlay hidden" data-th="diskSize">' 
+								 +'<input type="text" class="pline" style="width:100px;height:50px;" placeholder="Disk Size" name="addDiskName" value =""/>'
+								 + '</select>'
+								 + '</td>'
+								 + '</tr>';
 
+								 $("#availableDiskList").append(html);
+								 $("#add_row_cnt").val(add_row_cnt);
+
+						}
+
+						function deleteRow(){
+							var availableDiskCnt = $("#availableDiskCnt").val();
+							var addRowCnt = $("#add_row_cnt").val()
+							var totalRowCnt = parseInt(availableDiskCnt)+parseInt(add_row_cnt);
+							console.log("totalRowCnt : ",totalRowCnt);
+							if(add_row_cnt > 0){
+								add_row_cnt--;
+								$("#add_row_cnt").val(add_row_cnt);
+								$("#availableDiskList").children('tr:last').remove();
+							}
+							
+						}
+					</script>
 					<div class="pop-cont">
 						
 						<!-- <div class="toptxt">
@@ -508,6 +580,8 @@
 											<th>Disk Size</th>
 										</tr>
 									</thead>
+									<input type="hidden" id="availableDiskCnt" />
+									<input type="hidden" id="add_row_cnt" />
 									<tbody id="availableDiskList">
 										
 									</tbody>
