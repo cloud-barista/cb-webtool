@@ -59,8 +59,15 @@ function getWebToolUrl(controllerKeyName) {
             ["McksRegForm", "/operation/manages/mcksmng/regform"],
             ["McksRegProc", "/operation/manages/mcksmng/reg/proc"],
             ["McksClusterNodeData", "/operation/manages/mcksmng/:clusterUID/:clusterName/del/:nodeID/:nodeName"],
+
             ["PmksMngForm", "/operation/manages/pmksmng/mngform"],
             ["PmksRegForm", "/operation/manages/pmksmng/regform"],
+            ["PmksClusterRegForm", "/operation/manages/pmksmng/cluster/regform"],            
+            ["PmksNodeGroupRegForm", "/operation/manages/pmksmng/cluster/:clusterID/regform"],
+            ["PmksClusterRegProc", "/operation/manages/pmks/cluster"],
+            ["PmksListOfNamespace", "/operation/manages/pmks/listall"],
+            ["PmksListByConnection", "/operation/manages/pmks/list"],
+            
 
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
             ["MonitoringPolicyConfigMngForm", "/operation/policies/monitoringconfigpolicy/mngform"],
@@ -547,7 +554,7 @@ function putFetchSpecs(connectionName) {
     var url = "/setting/resources/vmspec/fetchvmspec"
     axios.post(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName
@@ -581,7 +588,7 @@ function getCommonFilterSpecsByRange(caller, searchObj) {
     //     searchObj       
     axios.post(url, searchObj, {
         headers: {
-            'Content-type': 'application/json',
+            //'Content-type': 'application/json',
             // 'Authorization': apiInfo, 
         }
 
@@ -683,7 +690,7 @@ function getCommonFetchImages(caller, connectionName) {
     var url = "/setting/resources/machineimage/fetchimages"
     axios.post(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log(result);
@@ -903,6 +910,56 @@ function getCommonFilterVmSpecListByRange(specFilterObj, caller) {
     });
 }
 
+
+// 모든 PMKS 목록 조회
+function getCommonAllPmksList(caller){
+    //var url = "/operation/manages/pmks/list"
+    //var url = getWebToolUrl("PmksListOfNamespace")
+    var url = getWebToolUrl("PmksListByConnection");// for the test
+    url += "?connectionName=ali-test-conn";
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+//        console.log("get Cluster List : ", result.data);
+        getCommonAllPmksListSuccess(caller, result.data.PmksList)
+    }).catch(error => {
+        console.log(error);
+    });
+}
+
+// Connection의 PMKS 목록 조회
+function getCommonPmksList(caller, connectionName){
+    var url = "/operation/manages/pmks/list"
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+//        console.log("get Cluster List : ", result.data);
+        getCommonPmksListSuccess(caller, result.data.PmksList)
+    }).catch(error => {
+        console.log(error);
+    });
+}
+
+// PMKS 조회
+function getCommonPmksData(caller, clusterID, connectionName){
+    var url = "/operation/manages/pmks/" + clusterID + "?connectionName=" + connectionName
+    axios.get(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Cluster  : ", result.data);
+
+        var data = result.data.PmksInfo;
+        getPmksDataSuccess(caller, clusterID, data)
+    }).catch(error => {
+        console.log(error);
+    });
+}
 
 // MCIS에 명령어 날리기
 function postRemoteCommandMcis(mcisID, commandWord) {

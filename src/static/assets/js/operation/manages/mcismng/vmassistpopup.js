@@ -645,7 +645,7 @@ function getRecommendVmInfo() {
 	}
 	axios.post(url, obj, {
 		headers: {
-			'Content-type': 'application/json',
+			//'Content-type': 'application/json',
 		}
 	}).then(result => {
 		console.log("result spec : ", result);
@@ -720,7 +720,7 @@ function getConnectionConfigCandidateInfo(index) {
 	}
 	axios.post(url, obj, {
 		headers: {
-			'Content-type': 'application/json',
+			//'Content-type': 'application/json',
 		}
 	}).then(result => {
 		console.log("result connection : ", result);
