@@ -5,6 +5,7 @@ type TbVmReq struct {
 	Description    string `json:"description"`
 	IdByCsp        string `json:"idByCsp"`
 	ImageID        string `json:"imageId"`
+	ImageType      string `json:"imageType"`
 	Label          string `json:"label"`
 	Name           string `json:"name"`
 
