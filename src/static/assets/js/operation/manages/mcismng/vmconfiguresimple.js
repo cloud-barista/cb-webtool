@@ -85,7 +85,7 @@ function getVmiInfo(configName) {
 
 function displayAvailableDisk() {
   
-      
+        var configName = $("#ss_regConnectionName").val()
         var url = "/setting/resources/datadisk/list"
 		url +="?filterKey=connectionName&filterVal="+configName
         console.log("check disk list : ",url);

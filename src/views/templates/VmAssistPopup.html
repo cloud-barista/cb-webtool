@@ -1804,9 +1804,8 @@
 						</div>
 					</div>
 					<script>
-						function runAttachDataDisk(){
-							var mcis_id = $("#server_detail_disk_mcis_id").val();
-   							var vm_id = $("#server_detail_disk_vm_id").val();
+						function runSelectDataDisk(){
+							
 							var connectionName = $("#server_connection_view_connection_name").val();
 							var attachDataDiskList = [];
 							var createDataDiskList = [];
@@ -1836,9 +1835,9 @@
 							});
 							
 							
-							var url = "/setting/resources/datadisk/mng"
-							url +="?mcisID="+mcis_id+"&vmID="+vm_id;
-							console.log("attach url = ",url); 
+							// var url = "/setting/resources/datadisk/mng"
+							// url +="?mcisID="+mcis_id+"&vmID="+vm_id;
+							// console.log("attach url = ",url); 
 							console.log("attachDataDiskList : ",attachDataDiskList);
 							console.log("CreateDataDiskList : ",createDataDiskList);
 							var obj = {
@@ -1846,6 +1845,14 @@
 								createDataDiskList
 							}
 							console.log("runAttachDataDisk obj: ",obj);
+							if(attachDataDiskList){
+								var join_attach_disk = attachDataDiskList.join(",");
+								$("#ss_data_disk").val(join_attach_disk);
+								$("#availableDiskSelectBox").hide();
+							}
+
+
+
 
 
 						}
@@ -1872,7 +1879,7 @@
 						var add_row_cnt = 0
 						function addRow(){
 							add_row_cnt++;
-							var provider =  $("#manage_mcis_popup_csp").val();
+							var provider =  $("#ss_regProvider").val();
 							console.log("select provider at add row : ",provider);
 							var upperCaseProvider = provider.toUpperCase();
 							console.log("select  upperCaseProvider: ",upperCaseProvider);
@@ -1961,7 +1968,7 @@
 				<div class="btnbox">
 					<div class="btn_right">
 						<button name="" value="" class="btn_apply btn_co btn_cr_g"
-							onclick="runAttachDataDisk()"><span>Attach</span></button>
+							onclick="runSelectDataDisk()"><span>Select Data Disk</span></button>
 						<button name="" value="" class="btn_cancel btn_co btn_cr_b"
 							data-dismiss="modal">cancel</button>
 					</div>

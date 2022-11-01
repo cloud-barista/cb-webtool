@@ -92,7 +92,7 @@
 										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
 												onClick="runDetachDataDisk('detach')">Detach</a></li> -->
 										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist"
-												onClick="commonConfirmOpen('DeleteDataDisk')">Delete</a></li>
+												onClick="commonConfirmOpen('DeleteMyImage')">Delete</a></li>
 									</ul>
 								</div>
 							</div>
@@ -138,7 +138,7 @@
 
 		<div class="d_box box_m box_w100">
 			<div class="titbox_n">
-				<div class="tit initial"><strong>Disk Info</strong> [ <span class="stxt" id="myImageName"></span>
+				<div class="tit initial"><strong>Image Info</strong> [ <span class="stxt" id="myImageName"></span>
 					] </div>
 			</div>
 
@@ -149,7 +149,7 @@
 						<div class="ipbox ipbox1">
 							<ul>
 								<li>
-									<label>Disk Name</label>
+									<label>My Image Name</label>
 									<span class="sbox">
 										<input type="text" id="dtlMyImageName" name="dtlMyImageName" value="" placeholder=""
 											class="gray" title="" disabled />
@@ -158,33 +158,24 @@
 									</span>
 								</li>
 								<li>
-									<label>Disk Type</label>
+									<label>Source VM ID</label>
 									<span class="sbox">
-										<input type="text" id="dtlDiskType" name="dtlDiskType" value="" placeholder=""
+										<input type="text" id="dtlSouceVmId" name="dtlSouceVmId" value="" placeholder=""
 											class="gray" title="" disabled />
 									</span>
 								</li>
 								<li>
-									<label>Disk Size</label>
+									<label>Connection Name</label>
 									<span class="sbox">
-										<input type="text" id="dtlDiskSize" name="dtlDiskSize" value="" placeholder=""
-											class="" title=""  /> /GB
-										<input type="hidden" id="dtlPreDiskSize" name="dtlPreDiskSize" />
+										<input type="text" id="dtlConnectionName" name="dtlConnectionName" value="" placeholder=""
+										class="gray" title="" disabled  />
 									</span>
 								</li>
 								<li>
 									<label>Associated Object</label>
 									<span class="sbox">
-										<input type="text" id="dtlAssoObj" name="dtlAssoObj" value="" placeholder=""
-											class="" title=""  />
+										<input type="text" id="dtlAssoObj" name="dtlAssoObj" value="" class="gray" title="" disabled   />
 									
-									</span>
-								</li>
-								<li>
-									<label>Description</label>
-									<span class="sbox">
-										<textarea id="dtlDescription" name="dtlDescription" cols="" rows=""
-											placeholder="" class="" title="" ></textarea>
 									</span>
 								</li>
 							</ul>
@@ -192,8 +183,8 @@
 						<div class="ipbox ipbox2">
 							<ul>
 								<li>
-									<label>Cloud Provider</label>
-									<input type="text" id="dtlProvider" name="dtlProvider" value="" placeholder=""
+									<label>Status</label>
+									<input type="text" id="dtlStatus" name="dtlStatus" value="" placeholder=""
 										class="gray" title="" readonly />
 									<!-- <select class="selectbox w1 ">
 														<option value="1">Selected Provider</option>
@@ -205,8 +196,8 @@
 
 								</li>
 								<li>
-									<label>Connection Name</label>
-									<input type="text" id="dtlConnectionName" name="dtlConnectionName" value=""
+									<label>Creation Date</label>
+									<input type="text" id="dtlCreationDate" name="dtlCreationDate" value=""
 										placeholder="" class="gray" title="" readonly />
 								</li>
 								<!-- <li>
@@ -229,7 +220,7 @@
 					<div class="btnbox">
 						<div class="btn_center">
 							<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
-							<button name="" value="" class="btn_co btn_cr_g w135 btn_modify" onclick="putDataDisk();">Size UP</button> 
+							<button name="" value="" class="btn_co btn_cr_g w135 btn_modify" onclick="deleteMyImage();">Delete MyImage</button> 
 						</div>
 					</div>
 								 

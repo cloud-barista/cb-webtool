@@ -147,6 +147,7 @@ function commonConfirmOpen(targetAction, caller) {
         [
             ["CreateSnapshot", "Would you like to Create Snapshot?"],
             ["DeleteDataDisk", "Would you like to Delete Disk?"],
+            ["DeleteMyImage", "Would you like to Delete MyImage?"],
             ["Logout", "Would you like to logout?"],
             ["Config", "Would you like to set Cloud config ?"],
             ["SDK", "Would you like to set Cloud Driver SDK ?"],
@@ -476,6 +477,9 @@ function commonConfirmOk() {
     } else if (targetAction == "DeleteDataDisk") {
         deleteDataDisk();
 
+    }else if (targetAction == "DeleteMyImage") {
+            deleteMyImageDisk();
+    
     } else if (targetAction == "CreateSnapshot") {
         commonPromptOk
         createSnapshot();

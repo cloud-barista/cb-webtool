@@ -90,6 +90,77 @@ function deleteDataDisk() {
     });
 }
 
+function deleteMyImageDisk(){
+    var imageId = "";
+    var count = 0;
+    var chk_length = $("input[name='chk']:checked").length
+    if(chk_length > 1){
+        alert("한개만 삭제할 수 있습니다.")
+        return;
+    }else if(chk_length == 1){
+        $("input[name='chk']:checked").each(function () {
+            count++;
+            imageId = $(this).val();
+            console.log("image ID : ",imageId);
+            var url = "/setting/resources/myimage/del/" + imageId;
+            console.log("del dataDisk url : ", url);
+            axios.delete(url, {
+                headers: {
+                    'Content-Type': "application/json"
+                }
+            }).then(result => {
+                var data = result.data;
+                console.log(result);
+                console.log(data);
+                if (result.status == 200 || result.status == 201) {
+                    commonAlert(data.message)
+                    getMyImageList("name")
+                    $("#myImageInfoBox").hide();
+                   
+                } else {
+                    commonAlert(result.data.error)
+                }
+            }).catch((error) => {
+                console.warn(error);
+                console.log(error.response)
+                var errorMessage = error.response.data.error;
+                var statusCode = error.response.status;
+                commonErrorAlert(statusCode, errorMessage);
+            });
+          
+        });
+    }
+}
+
+function deleteMyImage() {
+    var myImageId = $("#dtlMyImageName").val()
+    var url = "/setting/resources/myimage/del/" + myImageId
+    console.log("del dataDisk url : ", url);
+
+    axios.delete(url, {
+        headers: {
+            'Content-Type': "application/json"
+        }
+    }).then(result => {
+        var data = result.data;
+        console.log(result);
+        console.log(data);
+        if (result.status == 200 || result.status == 201) {
+            commonAlert(data.message)
+            getMyImageList("name")
+            $("#myImageInfoBox").hide();
+        } else {
+            commonAlert(result.data.error)
+        }
+    }).catch((error) => {
+        console.warn(error);
+        console.log(error.response)
+        var errorMessage = error.response.data.error;
+        var statusCode = error.response.status;
+        commonErrorAlert(statusCode, errorMessage);
+    });
+}
+
 function chkDiskStatus(attr){
    
 }
@@ -523,10 +594,10 @@ function createDataDisk() {
 }
 
 // 선택한 dataDisk의 상세정보 : 이미 가져왔는데 다시 가져올 필요있나?? dataDiskID
-function showMyImageInfo(myImageId, dataDiskName) {
-    console.log("showMyImageInfo : ", dataDiskName);
+function showMyImageInfo(myImageId, myImageName) {
+    console.log("showMyImageInfo : ", myImageName);
     
-    $('#dataDiskName').text(dataDiskName)
+    $('#myImageName').text(myImageName)
 
     var url = "/setting/resources" + "/myimage/" + encodeURIComponent(myImageId);
     console.log("dataDisk detail URL : ", url)
@@ -538,16 +609,14 @@ function showMyImageInfo(myImageId, dataDiskName) {
         var data = result.data.myImageInfo
         console.log("Show Data : ", data);
 
-        var dtlDiskName = data.name;
-        var dtlDescription = data.description;
-        var dtlDiskType = data.diskType;
-        var dtlDiskSize = data.diskSize;
-        var dtlConnectionName = data.connectionName;
-        var dtlDiskId = data.id;
-        var dtlPreDiskSize = data.diskSize;
+        var dtlMyImageName = data.name;
+        var dtlSouceVmId = data.sourceVmId;
         var dtlAssoObj = data.associatedObjectList;
-        var vm_id = "";
-        if(dtlAssoObj.length > 0){
+        var dtlStatus = data.status;
+        var dtlConnectionName = data.connectionName;
+        var dtlCreationDate = data.creationDate;
+      
+        if(dtlAssoObj != null){
             var parse = dtlAssoObj[0];
             var temp_parse = parse.split("/");
             vm_id = temp_parse[6];
@@ -560,24 +629,20 @@ function showMyImageInfo(myImageId, dataDiskName) {
         // }
         // console.log("dtlSubnet : ", dtlSubnet);
 
-        $("#dtlDiskName").empty();
-        $("#dtlDiskType").empty();
-        $("#dtlDiskSize").empty();
-        $("#dtlDescription").empty();
-        $("#dtlConnectionName").empty();
-        $("#dtlPreDiskSize").empty();
-        $("#dtlDiskId").empty();
+        $("#dtlMyImageName").empty();
+        $("#dtlSouceVmId").empty();
         $("#dtlAssoObj").empty();
-
-
-        $("#dtlDiskName").val(dtlDiskName);
-        $("#dtlDiskType").val(dtlDiskType);
-        $("#dtlDiskSize").val(dtlDiskSize);
-        $("#dtlDescription").val(dtlDescription);
+        $("#dtlStatus").empty();
+        $("#dtlConnectionName").empty();
+        $("#dtlCreationDate").empty();
+        console.log("dtlMyImageName : ",dtlMyImageName);
+        $("#dtlMyImageName").val(dtlMyImageName);
+        $("#dtlSouceVmId").val(dtlSouceVmId);
+        $("#dtlAssoObj").val(dtlAssoObj);
+        $("#dtlStatus").val(dtlStatus);
         $("#dtlConnectionName").val(dtlConnectionName);
-        $("#dtlDiskId").val(dtlDiskId);
-        $("#dtlPreDiskSize").val(dtlPreDiskSize)
-        $("#dtlAssoObj").val(vm_id)
+        $("#dtlCreationDate").val(dtlCreationDate);
+      
 
         if (dtlConnectionName == '' || dtlConnectionName == undefined) {
             commonAlert("ConnectionName is empty")
