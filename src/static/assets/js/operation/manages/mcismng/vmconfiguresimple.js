@@ -28,7 +28,7 @@ function changeConnectionInfo(configName) {
 		// 0번째면 selectbox들을 초기화한다.(vmInfo, sshKey, image 등)
 	}
 	getVmiInfo(configName);
-	getVmMyiInfo(configName);
+	//getVmMyiInfo(configName);
 	getSecurityInfo(configName);
 	getSSHKeyInfo(configName);
 	getVnetInfo(configName);
@@ -346,16 +346,23 @@ function simpleDone_btn() {
 	$("#s_description").val($("#ss_description").val())
 	$("#s_regConnectionName").val($("#ss_regConnectionName").val())
 	$("#s_spec").val($("#ss_spec").val())
-	$("#s_imageId").val($("#ss_imageId").val())
+	//$("#s_imageId").val($("#ss_imageId").val()) 이미지는 내가 처리
 	$("#s_sshKey").val($("#ss_sshKey").val())
 	$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
-
+	var select_disk = $("#ss_data_disk").val();
+	
+	
 	console.log($("#s_imageId").val());
 	console.log($("#ss_imageId").val());
 
 	var simple_form = $("#simple_form").serializeObject()
-	console.log(simple_form);
-
+	
+	if(select_disk){
+		var arr_disk = select_disk.split(",");
+		simple_form.dataDiskIds = arr_disk;
+	}
+	console.log("simple form : ",simple_form);
+	
 	var server_name = simple_form.name
 	var server_cnt = parseInt(simple_form.subGroupSize)
 	// simple_form.subGroupSize = server_cnt
