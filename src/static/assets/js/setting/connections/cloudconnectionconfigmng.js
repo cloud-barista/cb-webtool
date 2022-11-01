@@ -275,9 +275,9 @@ function createCloudConnection() {
     console.log("info connectionconfig obj Data : ", obj);
     if (configname) {
         axios.post(url, obj, {
-            headers: {
-                'Content-type': 'application/json',
-            }
+            // headers: {
+            //     'Content-type': 'application/json',
+            // }
         }).then(result => {
             console.log(result);
             if (result.status == 200 || result.status == 201) {

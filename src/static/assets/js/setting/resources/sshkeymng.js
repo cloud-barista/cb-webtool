@@ -342,7 +342,7 @@ function createSSHKey() {
     if (cspSshKeyName) {
         axios.post(url, obj, {
             headers: {
-                'Content-type': 'application/json',
+                // 'Content-type': 'application/json',
                 // 'Authorization': apiInfo,
             }
         }).then(result => {
