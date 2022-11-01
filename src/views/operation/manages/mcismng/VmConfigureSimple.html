@@ -90,14 +90,41 @@
 						</li>
 						<li>
 							<label><span class="ch">*</span>which OS</label>
-							<select class="selectbox white pline sel_4" name="imageId" id="ss_imageId">
+							<div class="switch">
+								<span class="txt">Public Image									
+									<label>
+										<input type="checkbox" name="" class="ch" id="p_to_my" onclick="">
+										<span></span>
+									</label>
+								My Image</span>
+							</div>
+							<select class="selectbox white pline sel_4" name="imageId" id="ss_imageId" display="none;">
 								<option value="1">Select OS Platform</option>
+							</select>
+							<select class="selectbox white pline sel_4" name="mySnapShotId" id="ss_myImageId" display="none;">
+								<option value="1">Select My Snapshot</option>
 							</select>
 						</li>
 					</ul>
 				</div>
 			</div>
+			<div class="svc_ipbox svc_ipbox_2">
+				<div class="ipbox ipbox3">
+					<ul>
+						<li>
+							<label><span class="ch">*</span>DataDisk</label>
+							<div class="btn_right">
 
+								<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="displayAvailableDisk(true);"><span>Available Disk</span></button>
+							
+			
+							</div>
+
+						</li>
+					</ul>
+				</div>
+
+			</div>
 			<div class="svc_ipbox svc_ipbox_2">
 				<div class="ipbox ipbox3">
 					<ul>
@@ -111,6 +138,7 @@
 					</ul>
 				</div>
 
+			
 			</div>
 
 		</div>

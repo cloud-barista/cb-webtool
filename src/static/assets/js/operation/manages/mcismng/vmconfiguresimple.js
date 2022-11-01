@@ -28,6 +28,7 @@ function changeConnectionInfo(configName) {
 		// 0번째면 selectbox들을 초기화한다.(vmInfo, sshKey, image 등)
 	}
 	getVmiInfo(configName);
+	getVmMyiInfo(configName);
 	getSecurityInfo(configName);
 	getSSHKeyInfo(configName);
 	getVnetInfo(configName);
@@ -81,6 +82,101 @@ function getVmiInfo(configName) {
 		commonErrorAlert(statusCode, errorMessage)
 	});
 }
+
+function displayAvailableDisk() {
+  
+      
+        var url = "/setting/resources/datadisk/list"
+		url +="?filterKey=connectionName&filterVal="+configName
+        console.log("check disk list : ",url);
+            axios.get(url).then(result=>{
+            console.log("get result : ",result);
+            var data = result.data.dataDiskInfoList;
+            var html = "";
+            console.log("get available disk : ",data);
+            if(data != null || data.length > 0){
+                var avDiskCnt = 0
+                data.forEach(item=>{
+                    //console.log("get available disk : ", item);
+                    html +='<tr>'
+                    + '<td class="overlay hidden column-50px" data-th="">'
+                    + '<input type="checkbox" name="chk_attach" value="' + item.id + '"  title=""  /><label for="td_ch1"></label> <span class="ov off"></span>'
+            
+                    + '</td>'
+                    + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
+                    + '<td class="overlay hidden" data-th="diskType">' 
+                    + item.diskType
+                    +'</td>'
+                    + '<td class="overlay hidden" data-th="diskSize">' 
+                    + item.diskSize
+                    + '/GB</td>'
+                    + '</tr>';
+                    avDiskCnt++;
+                })
+                $("#availableDiskCnt").val(avDiskCnt)
+                $("#availableDiskList").empty()
+                $("#availableDiskList").append(html)
+            }else{
+                //commonAlert("해당 VM에 Attach 가능한 DISK가 없습니다");
+                addRow();
+                $("#availableDiskCnt").val(0)
+                return;
+            }
+            // if(data){
+            //     if(data.length >0){
+            //         data.forEach(item=>{
+
+            //         })
+            //     }
+            // }
+
+            $("#availableDiskSelectBox").modal();
+            $('.dtbox.scrollbar-inner').scrollbar();
+            
+        })
+
+
+    } 
+
+function getVmMyiInfo(configName) {
+
+	//var configName = $("#ss_regConnectionName option:selected").val();
+
+	console.log("2 : ", configName);
+	// getCommonVirtualMachineImageList("mcissimpleconfigure", "name"); setCommonVirtualMachineImageList()
+	// var url = "/setting/resources" + "/machineimage/lookupimage";//TODO : 조회 오류남... why? connectionName으로 lookup
+	var url = "/setting/resources" + "/myimage/list?filterKey=connectionName&filterVal="+configName
+	var html = "";
+	//  var apiInfo = 'Basic ZGVmYXVsdDpkZWZhdWx0'
+	axios.get(url).then(result => {
+		console.log("MyImage Info : ", result.data)
+		data = result.data.myImageInfoList
+		if (!data) {
+			alert("등록된 My Image 정보가 없습니다.")
+			// 		 location.href = "/Image/list"
+			return;
+		}
+
+		html += "<option value=''>Select My Snapshot</option>"
+		for (var i in data) {
+			if (data[i].connectionName == configName) {
+				html += '<option value="' + data[i].id + '" >' + data[i].name + '(' + data[i].id + ')</option>';
+			}
+		}
+		$("#ss_myImageId").empty();
+		$("#ss_myImageId").append(html);//which OS
+
+		//  }).catch(function(error){
+		// 	console.log(error);        
+		// });
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response)
+		var errorMessage = error.response.data.error;
+		commonErrorAlert(statusCode, errorMessage)
+	});
+}
+
 
 function getSecurityInfo(configName) {
 	var configName = configName;
