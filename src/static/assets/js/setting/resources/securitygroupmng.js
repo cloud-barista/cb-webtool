@@ -613,10 +613,10 @@ function createSecurityGroup() {
     console.log("info connectionconfig obj Data : ", obj);
     if (cspSecurityGroupName) {
         axios.post(url, obj, {
-            headers: {
-                'Content-type': 'application/json',
-                'Authorization': apiInfo,
-            }
+            // headers: {
+            //     'Content-type': 'application/json',
+            //     'Authorization': apiInfo,
+            // }
         }).then(result => {
             console.log("result sg : ", result);
             if (result.status == 200 || result.status == 201) {
