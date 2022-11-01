@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	spider "github.com/cloud-barista/cb-webtool/src/model/spider"
 
@@ -15,9 +16,9 @@ import (
 	"github.com/labstack/echo"
 )
 
-// PMKS 등록 form
-func PmksRegForm(c echo.Context) error {
-	fmt.Println("PmksRegForm ************ : ")
+// PMKS Cluster 등록 form
+func PmksClusterRegForm(c echo.Context) error {
+	fmt.Println("PmksClusterRegForm ************ : ")
 
 	loginInfo := service.CallLoginInfo(c)
 	if loginInfo.UserID == "" {
@@ -33,12 +34,55 @@ func PmksRegForm(c echo.Context) error {
 	log.Println(" cloudOsList  ", cloudOsList)
 
 	return echotemplate.Render(c, http.StatusOK,
-		"operation/manages/pmksmng/PmksCreate", // 파일명
+		"operation/manages/pmksmng/PmksClusterCreate", // 파일명
 		map[string]interface{}{
 			"LoginInfo":          loginInfo,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"NameSpaceList":      nsList,
 			"CloudOSList":        cloudOsList,
+		})
+}
+
+// PMKS NodeGroup 등록 form
+func PmksNodeGroupRegForm(c echo.Context) error {
+	fmt.Println("PmksNodeGroupRegForm ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	clusterID := c.Param("clusterID")
+	log.Println("clusterID= " + clusterID)
+	connectionName := c.QueryParam("connectionName")
+	log.Println("connectionName= " + connectionName)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	log.Println(" nsList  ", nsList)
+
+	cloudOsList, _ := service.GetCloudOSList()
+	log.Println(" cloudOsList  ", cloudOsList)
+
+	//clusterReqInfo := spider.ClusterReqInfo{}
+	// cluster 조회 // onload시 가져옴 대신 받은 Param은 바로 되돌려 줌.
+
+	//clusterReqInfo := spider.ClusterReqInfo{}
+	//clusterReqInfo.NameSpace = defaultNameSpaceID
+	//clusterReqInfo.ConnectionName = connectionName
+	//resultPmksInfo, _ := service.GetPmksClusterData(clusterID, clusterReqInfo)
+
+	return echotemplate.Render(c, http.StatusOK,
+		"operation/manages/pmksmng/PmksNodeGroupCreate", // 파일명
+		map[string]interface{}{
+			"LoginInfo":          loginInfo,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"NameSpaceList":      nsList,
+			"CloudOSList":        cloudOsList,
+			"ClusterID":          clusterID,
+			"ConnectionName":     connectionName,
+			//"PmksInfo":           resultPmksInfo,
 		})
 }
 
@@ -83,9 +127,47 @@ func PmksMngForm(c echo.Context) error {
 		})
 }
 
-// PMKS 목록 조회 :
 // namespace 내 모든 pmks 목록.
-// connection 조회 후 해당 connection으로 목록 재조회해서 합침
+func GetPmksListOfNamespace(c echo.Context) error {
+	log.Println("GetPmksListOfNamespace : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	clusterReqInfo := spider.ClusterReqInfo{}
+	clusterReqInfo.NameSpace = defaultNameSpaceID
+
+	// ","를 구분자로 하는 connectionNames 잘라서 다시 string 배열에 넣고 써야 함.
+	connectionNames := c.QueryParam("connectionNames")
+	if connectionNames != "" {
+		connNameArr := strings.Split(connectionNames, ",")
+		for _, connName := range connNameArr {
+			clusterReqInfo.ConnectionName = connName
+		}
+	}
+
+	pmksList, respStatus := service.GetPmksNamespaceClusterList(clusterReqInfo)
+	log.Println("---------------------- result  ", pmksList)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  "fail",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":            "success",
+		"status":             200,
+		"DefaultNameSpaceID": defaultNameSpaceID,
+		"PmksList":           pmksList,
+	})
+}
+
+// PMKS 목록 조회 :
+
 func GetPmksList(c echo.Context) error {
 	log.Println("GetPmksList : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -95,35 +177,46 @@ func GetPmksList(c echo.Context) error {
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	//cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
-	cloudConnectionConfigInfoList := []spider.CloudConnectionConfigInfo{}
-	conn := spider.CloudConnectionConfigInfo{}
-	conn.ConfigName = "ali-test-conn"
-	cloudConnectionConfigInfoList = append(cloudConnectionConfigInfoList, conn)
-	log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
-
 	clusterReqInfo := spider.ClusterReqInfo{}
 	clusterReqInfo.NameSpace = defaultNameSpaceID
 
-	totalPmksList := []spider.SpClusterInfo{}
+	connectionName := c.QueryParam("connectionName")
+	if connectionName != "" {
+		clusterReqInfo.ConnectionName = connectionName
+	}
+
+	pmksList, respStatus := service.GetPmksClusterList(clusterReqInfo)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": respStatus.Message,
+			"status":  "fail",
+		})
+	}
+	//cloudConnectionConfigInfoList, _ := service.GetCloudConnectionConfigList() // 등록된 모든 connection 정보
+	//cloudConnectionConfigInfoList := []spider.CloudConnectionConfigInfo{}
+	//conn := spider.CloudConnectionConfigInfo{}
+	//conn.ConfigName = "ali-test-conn"
+	//cloudConnectionConfigInfoList = append(cloudConnectionConfigInfoList, conn)
+	//log.Println("---------------------- GetCloudConnectionConfigList ", defaultNameSpaceID)
+	//totalPmksList := []spider.SpClusterInfo{}
 	// totalPmksList := map[string][]spider.SpClusterInfo{}
 	// 모든 connection의 pmks목록 조회
-	for _, connectionInfo := range cloudConnectionConfigInfoList {
-		clusterReqInfo.ConnectionName = connectionInfo.ConfigName
-		pmksList, respStatus := service.GetPmksClusterList(clusterReqInfo)
-		log.Println("---------------------- result  ", pmksList)
-		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-			continue
-		}
-		totalPmksList = append(totalPmksList, pmksList...)
-		//totalPmksList[connectionInfo.ConfigName] = pmksList
-	}
+	//for _, connectionInfo := range cloudConnectionConfigInfoList {
+	//	clusterReqInfo.ConnectionName = connectionInfo.ConfigName
+	//	pmksList, respStatus := service.GetPmksClusterList(clusterReqInfo)
+	//	log.Println("---------------------- result  ", pmksList)
+	//	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	//		continue
+	//	}
+	//	totalPmksList = append(totalPmksList, pmksList...)
+	//totalPmksList[connectionInfo.ConfigName] = pmksList
+	//}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":            "success",
 		"status":             200,
 		"DefaultNameSpaceID": defaultNameSpaceID,
-		"PmksList":           totalPmksList,
+		"PmksList":           pmksList,
 	})
 
 }
@@ -246,13 +339,16 @@ func PmksDelProc(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	clusterReqInfo.NameSpace = defaultNameSpaceID
 
-	clusterName := c.Param("clusterName")
-	log.Println("clusterName= " + clusterName)
+	clusterID := c.Param("clusterID")
+	log.Println("clusterID= " + clusterID)
+	connectionName := c.QueryParam("connectionName")
+	log.Println("connectionName= " + connectionName)
+	clusterReqInfo.ConnectionName = connectionName
 
-	taskKey := defaultNameSpaceID + "||" + "pmks" + "||" + clusterName
+	taskKey := defaultNameSpaceID + "||" + "pmks" + "||" + clusterID
 	service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_DELETE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
 
-	go service.DelPmksClusterByAsync(clusterName, clusterReqInfo, c)
+	go service.DelPmksClusterByAsync(clusterID, clusterReqInfo, c)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",

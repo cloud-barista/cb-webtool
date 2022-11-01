@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	"github.com/labstack/echo"
@@ -17,6 +18,29 @@ import (
 
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
+
+// 해당 namespace의 모든 pmks 목록 조회
+func GetPmksNamespaceClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/nscluster"
+
+	url := util.SPIDER + originalUrl
+	pbytes, _ := json.Marshal(clusterReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	clusterList := map[string][]spider.SpClusterInfo{}
+	json.NewDecoder(respBody).Decode(&clusterList)
+	fmt.Println(clusterList)
+	//log.Println(respBody)
+
+	return clusterList["AllClusterList"], model.WebStatus{StatusCode: respStatus}
+}
 
 // Cluster 목록 조회
 func GetPmksClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.SpClusterInfo, model.WebStatus) {
@@ -35,8 +59,9 @@ func GetPmksClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.SpCluste
 
 	clusterList := map[string][]spider.SpClusterInfo{}
 	json.NewDecoder(respBody).Decode(&clusterList)
+	fmt.Println("^^^^^^^^^^^^^^^^^^^^^^^")
 	fmt.Println(clusterList)
-	log.Println(respBody)
+	//log.Println(respBody)
 
 	return clusterList["cluster"], model.WebStatus{StatusCode: respStatus}
 }
@@ -124,18 +149,75 @@ func RegPmksClusterByAsync(clusterReqInfo *spider.ClusterReqInfo, c echo.Context
 
 	if err != nil {
 		fmt.Println(err)
-		StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		//Message: {"code":"400","message":"no managedkubernetes ros component exists. version: 1, labels: ap-southeast-1:common:26888:5513479151634744:GC0","requestId":"67CAB7BC-C0E1-3D93-A967-C89AE46138B2","status":400}
+		//Message: {"code":"QuotaExceeded.Cluster",
+		//"message":"Exceeded the quota for creating a cluster
+		//			(quota code: q_ManagedKubernetes_Default_ack.standard_Cluster)
+		//			, usage 2/2.","requestId":"EEF6F445-4549-39C7-B8AB-DB83B843A296","status":400}
+
+		errMsg := err.Error()
+
+		//StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c)
+		StoreWebsocketMessageDetail(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, errMsg, c)
 	} else {
 
 		respBody := resp.Body
 		respStatus := resp.StatusCode
-
+		//spew.Dump(resp)
 		if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-			failResultInfo := tbcommon.TbSimpleMsg{}
+			failResultInfo := spider.SpError{}
 			json.NewDecoder(respBody).Decode(&failResultInfo)
-			log.Println("RegPmksByAsync ", failResultInfo)
-			StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+			log.Println("RegPmksByAsync failed ", failResultInfo)
+			log.Println("RegPmksByAsync failed-------- ", failResultInfo.Message)
 
+			//jsonBytes, _ := json.Marshal(failResultInfo) // JSON ENCODING
+			//jsonString := string(jsonBytes)
+			//fmt.Println("personA String: ", jsonString)
+
+			//var result map[string]interface{}
+			//if err := json.Unmarshal([]byte(resp), &result); err != nil {
+			//	panic(err)
+			//}
+
+			//fmt.Println(result["kind"])       // Event 출력
+			//fmt.Println(result["apiVersion"]) // events.k8s.io/v1 출력
+
+			beginIndex := strings.Index(failResultInfo.Message, "Message:")
+			if beginIndex == -1 {
+				fmt.Println("cannot find Message:  ------------")
+			}
+			findMessageBegin := failResultInfo.Message[beginIndex:]
+			fmt.Println("findMessageBegin :  ", findMessageBegin)
+
+			beginIndex2 := strings.Index(findMessageBegin, "{")
+			findMessage := findMessageBegin[beginIndex2:]
+			fmt.Println("findMessage :  ", findMessage)
+
+			endIndex := strings.Index(findMessage, "}")
+			endMessage := findMessage[:endIndex]
+			fmt.Println("endMessage :  ", endMessage)
+			//findMessageBegin := strings.Index(failResultInfo.Message, "}"))
+
+			//byt := []byte(endMessage)
+			//var dat map[string]interface{}
+			//if err := json.Unmarshal(byt, &dat); err != nil {
+			//panic(err)
+			//}
+			//fmt.Println("********************")
+			//fmt.Println(dat)
+
+			//var errorDetailObj = spider.SpErrorDetail{}
+			//err := json.Unmarshal([]byte(endMessage), &errorDetailObj)
+			//if err != nil {
+			//	fmt.Println(err)
+			//}
+			//fmt.Println("personObj Object: ", errorDetailObj)
+			//detailInfo := spider.SpErrorDetail{}
+			//json.NewDecoder(failResultInfo).Decode(&detailInfo)
+			//log.Println("detail failed ", detailInfo)
+
+			//StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+			StoreWebsocketMessageDetail(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, endMessage, c)
 		} else {
 			returnClusterInfo := spider.ClusterInfo{}
 			json.NewDecoder(respBody).Decode(&returnClusterInfo)
@@ -227,7 +309,10 @@ func DelPmksClusterByAsync(cluster string, clusterReqInfo *spider.ClusterReqInfo
 
 	if err != nil {
 		fmt.Println(err)
-		StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		errMsg := err.Error()
+		//StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		StoreWebsocketMessageDetail(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, errMsg, c)
+
 	}
 
 	respBody := resp.Body

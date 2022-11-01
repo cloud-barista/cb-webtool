@@ -1,56 +1,12 @@
-{{template "OperationTop" .}}
-<div id="lnb">
-			
-	<div class="bg"></div>
-		
-	<div class="m_box">
-		
-		{{template "TopBox" .}}
-
-		{{template "LNBPopup" .}}
-		
-        <!-- menu -->
-		{{template "MenuLeft" .}}
-		<!-- //menu -->	
-	</div>
-	
-	
-	<div class="bottom"></div>
-	<a href="javascript:;" id="m_close"></a>
-	
-</div>
-{{template "Header" .}}
-{{template "Modal" .}}
-				<script>
-			
-				</script>
+{{define "NodeGroupCreate"}}
 				<!-- contents -->
 				<div class="contbox">
-					
-					<input type="hidden" name="mcis_id"  value="{{ .McksID}}" id="mcis_id" />
-					
-					<div class="titlebox">
-						<div class="tit"><img src="/assets/img/common/icon_cont.png" />Manage / <strong>MCKS</strong></div>
-						<div class="location">Home  <span>></span>  Operation  <span>></span>  Manage  <span>></span>  <strong>MCKS</strong></div>
-					</div>
-						
-					
+					<!-- 이미 있으면 NodeGroup 목록 표시-->	
 					<!-- Node list -->
 					<div class="dashboard dashboard_cont">
 						
 						<div class="d_box box_m box_w100">
-							<div class="titbox line_none">
-								<div class="tit initial"><strong>Extend Nodes</strong> [ {{ .McksID }} / {{ .McksName }} ]</div>
-								
-								<div class="step_box">
-									<div class="on">STEP 1 <div class="bar"></div></div>
-									<div>STEP 2 <div class="bar"></div></div>
-									<div>STEP 3 <div class="bar"></div></div>
-								</div>
-
-							</div>
-							
-							
+						
 							<div class="ds_cont">
 								
 								<div class="area_cont">
@@ -60,43 +16,37 @@
 										<div class="create_box">
 											
 											<div class="create_top">
-											
-												
-												<!-- Nodes -->
-												<div class="servers_box">
+												<!-- Exists Nodes -->
+												<div class="servers_box" id="existsNodeGroupArea">
 													<div class="title">Nodes</div>
 													
 													<div class="list">
-	
 														<ul id="node_list">
-															{{ $length := len .NodeList.Items }} 
-															{{ if eq $length 0 }}
-															<tr>
-																<td class="overlay hidden" data-th="" colspan="8">No Data</td>
-															</tr>
-															{{ end }}
-															{{range $nodeIndex, $nodeInfo := .NodeList.Items}}
-															
+															{{range $nodeGroupIndex, $nodeGroupInfo := .PmksInfo.NodeGroupList}}															
 															<li>
 																<div class="server server_on bgbox_g">
-																	<div class="icon"></div>
-																	<div class="txt" alt="{{$nodeInfo.Role}}">{{$nodeIndex}} : {{$nodeInfo.Name}}  </div>																													
+																	<div class="icon">{{ $nodeGroupIndex }}</div>
+																	<div class="txt" alt="">{{$nodeGroupIndex}} : {{$nodeGroupInfo.IId.NameId}}  </div>
 																</div>
-															</li>														
-
-															{{ end }}
-															
+															</li>
+															{{ end }}															
 														</ul>
 													</div>													
 													
 												</div>
-												<!-- //nodes -->												
+												<!-- Exists nodes -->												
 
-												<div>
-													<span class="text-center" id="nodeRegistResult">&nbsp;</span>
+												<!-- 새로운 NodeGroup 추가영역-->
+												<div id="addNodeGroupArea">
+													
 												</div>
 
-												{{template "NodeConfigure" .}}
+												<div> 
+													<!-- append button-->
+													<div class="btn_tab">
+														<a href="javascript:void(0);" onclick="addNewNodeGroupForm()">Add</a>
+													</div>	
+												</div>
 												
 											</div>
 											<!-- button -->
@@ -122,6 +72,4 @@
 					
 				</div>
 				<!-- //contents -->				
-				<script src="/assets/js/operation/manages/mcksmng/mcksnodecreate.js"></script>
-
-{{template "Footer" .}}			
+{{end}}

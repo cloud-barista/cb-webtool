@@ -4,9 +4,27 @@
 
 	<div class="d_box box_m box_w100">
 		<div class="titbox">
-			<div class="tit initial"><strong>PMKS Info</strong> <span class="stxt" id="pmks_info_txt">[ ]</span></div>
-			<div class="top_info">
+			<div class="tit initial"><strong>PMKS Cluster Info</strong> <span class="stxt" id="pmks_info_txt">[ ]</span></div>
+			<div class="top_info">				
 				<ul>
+					<li>
+						<a href="javascript:void(0);">Action</a>
+						<div class="infobox">
+							<div class="box">
+								<ul>
+
+									<li>
+										<strong>Manage</strong>
+										<ul>
+											<li><a href="javascript:void(0);" data-toggle="modal"
+													data-target="#NodeGroup_n_New"
+													onClick="addNewNodeGroup()">Add/Extend</a></li>											
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</li>
 					<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" /></a></li>
 				</ul>
 			</div>
@@ -65,7 +83,7 @@
 						<li>
 							<label>VPC </label>
 							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
-								id="pmks_vpc" />
+								id="pmks_info_vpc" />
 						</li>
 					</ul>
 				</div>
@@ -75,7 +93,7 @@
 						<li>
 							<label>Subnet</label>
 							<input type="text" name="" value="" placeholder="" title="" readonly
-								id="pmks_subnet" />
+								id="pmks_info_subnet" />
 						</li>
 					</ul>
 				</div>

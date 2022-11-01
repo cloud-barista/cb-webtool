@@ -318,7 +318,7 @@ func main() {
 	})
 
 	// PMKS 등록 form Template
-	pmksRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	pmksClusterRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
 		// Master:    "operation/pmks/pmksmng",
@@ -330,7 +330,25 @@ func main() {
 			"templates/Header",
 			"templates/MenuLeft",
 			"templates/Footer",
-			"operation/manages/pmksmng/NodeGroupConfigure",
+			"operation/manages/pmksmng/ClusterCreate",
+		},
+		DisableCache: true,
+	})
+
+	pmksNodeGroupRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/pmks/pmksmng",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+			"operation/manages/pmksmng/ClusterInfo",
+			"operation/manages/pmksmng/NodeGroupCreate",
 		},
 		DisableCache: true,
 	})
@@ -752,6 +770,11 @@ func main() {
 	resourcesGroup.POST("/network/reg", controller.VpcRegProc)
 	resourcesGroup.DELETE("/network/del/:vNetID", controller.VpcDelProc)
 
+	e.GET("/setting/resources/network/list", controller.GetVpcList)
+	e.GET("/setting/resources/network/:vNetID", controller.GetVpcData)
+	e.POST("/setting/resources/network/reg", controller.VpcRegProc)
+	e.DELETE("/setting/resources/network/del/:vNetID", controller.VpcDelProc)
+
 	resourcesGroup.GET("/securitygroup/mngform", controller.SecirityGroupMngForm)
 	resourcesGroup.GET("/securitygroup/list", controller.GetSecirityGroupList)
 	resourcesGroup.GET("/securitygroup/:securityGroupID", controller.GetSecirityGroupData)
@@ -827,12 +850,16 @@ func main() {
 	e.POST("/operation/services/mcis/:mcisID/nlb/vm/reg/:nblID", controller.NlbVmRegProc)
 	e.DELETE("/operation/services/mcis/:mcisID/nlb/vm/del/:nlbID", controller.NlbVmDelProc)
 
-	pmksRegGroup := e.Group("/operation/manages/pmksmng/regform", pmksRegTemplate)
-	pmksRegGroup.GET("", controller.PmksRegForm)
+	pmksClusterRegGroup := e.Group("/operation/manages/pmksmng/cluster/regform", pmksClusterRegTemplate)
+	pmksClusterRegGroup.GET("", controller.PmksClusterRegForm)
+
+	pmksNodeGroupRegGroup := e.Group("/operation/manages/pmksmng/cluster/:clusterID/regform", pmksNodeGroupRegTemplate)
+	pmksNodeGroupRegGroup.GET("", controller.PmksNodeGroupRegForm)
 
 	pmksMngGroup := e.Group("/operation/manages/pmksmng/mngform", pmksMngTemplate)
 	pmksMngGroup.GET("", controller.PmksMngForm)
 
+	e.GET("/operation/manages/pmks/listall", controller.GetPmksListOfNamespace)
 	e.GET("/operation/manages/pmks/list", controller.GetPmksList)
 	e.GET("/operation/manages/pmks/:clusterID", controller.GetPmksInfoData)
 	e.POST("/operation/manages/pmks/cluster", controller.PmksRegProc)

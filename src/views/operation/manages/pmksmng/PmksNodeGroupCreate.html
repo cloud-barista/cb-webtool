@@ -21,10 +21,11 @@
 {{template "Modal" .}}
 
 				<!-- contents -->
-				<input type="hidden" id="pmks_cluster_id" value=''/>
-				<input type="hidden" id="pmks_cluster_name" value=''/>
-				<input type="hidden" id="pmks_cluster_version" value=''/>
-				<input type="hidden" id="pmks_cluster_connection" value=''/>
+				<input type="hidden" id="pmks_cluster_id" value="{{ .ClusterID }}"/>
+				<input type="hidden" id="pmks_cluster_name" value=""/>
+				<input type="hidden" id="pmks_cluster_version" value=""/>
+				<input type="hidden" id="pmks_cluster_connection" value="{{ .ConnectionName }}"/>
+				
 				
 				<!-- contents -->
 				<div class="contbox">
@@ -34,27 +35,17 @@
 						<div class="location">Home  <span>></span>  Operation  <span>></span>  Manage  <span>></span>  <strong>PMKS</strong></div>
 					</div>
 					
-					<!-- list -->
-					{{template "ClusterList" .}}
-					<!-- //list -->
-					
 					<!-- Info -->
 					{{template "ClusterInfo" .}}
 					<!-- //Info -->
 				
-					<!-- list -->
-					{{template "NodeGroupInfo" .}}
-					<!-- //list -->
-
-					<!-- detail -->
-					{{template "NodeInfo" .}}
-					<!-- //detail -->
+					{{template "NodeGroupCreate" .}}
 					
 				</div>
 				<!-- //contents -->
 				
 				
 
-<script type="text/javascript" src="/assets/js/operation/manages/pmksmng/pmksmng.js"></script>
+<script type="text/javascript" src="/assets/js/operation/manages/pmksmng/pmksnodegroupcreate.js"></script>
 
 {{template "Footer" .}}
