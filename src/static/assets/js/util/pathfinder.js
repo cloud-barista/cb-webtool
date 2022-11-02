@@ -914,9 +914,9 @@ function getCommonFilterVmSpecListByRange(specFilterObj, caller) {
 // 모든 PMKS 목록 조회
 function getCommonAllPmksList(caller){
     //var url = "/operation/manages/pmks/list"
-    //var url = getWebToolUrl("PmksListOfNamespace")
-    var url = getWebToolUrl("PmksListByConnection");// for the test
-    url += "?connectionName=ali-test-conn";
+    var url = getWebToolUrl("PmksListOfNamespace")
+    //var url = getWebToolUrl("PmksListByConnection");// for the test
+    //url += "?connectionName=ali-test-conn";
     axios.get(url, {
         headers: {
             'Content-Type': "application/json"

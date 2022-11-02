@@ -15,3 +15,13 @@ type SpClusterInfo struct {
 }
 
 type SpClusterInfoList []SpClusterInfo
+
+// Connection이 다른 namespace내 모든 Cluster의 List
+type SpAllClusterInfoList struct {
+	ClusterList SpClusterInfoList `json:"ClusterList"`
+	//ClusterList []SpClusterInfo `json:"ClusterList"`
+}
+
+type SpTotalClusterInfoList struct {
+	AllClusterList []SpAllClusterInfoList `json:"AllClusterList"`
+}

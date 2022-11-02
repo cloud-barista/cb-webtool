@@ -34,12 +34,17 @@ func GetPmksNamespaceClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	clusterList := map[string][]spider.SpClusterInfo{}
-	json.NewDecoder(respBody).Decode(&clusterList)
-	fmt.Println(clusterList)
-	//log.Println(respBody)
+	totalClusterList := spider.SpTotalClusterInfoList{}
+	json.NewDecoder(respBody).Decode(&totalClusterList)
 
-	return clusterList["AllClusterList"], model.WebStatus{StatusCode: respStatus}
+	// AllClusterList배열의 Cluster배열 형태를  ClusterInfo의 배열로 변환
+	returnClusterList := []spider.SpClusterInfo{}
+	for _, clusterList := range totalClusterList.AllClusterList {
+		//log.Println(clusterList)
+		returnClusterList = append(returnClusterList, clusterList.ClusterList...)
+
+	}
+	return returnClusterList, model.WebStatus{StatusCode: respStatus}
 }
 
 // Cluster 목록 조회
