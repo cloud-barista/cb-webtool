@@ -9,6 +9,7 @@ type SpClusterInfo struct {
 	KeyValueList  SpKeyValueList       `json:"KeyValueList"`
 	Network       SpClusterNetworkInfo `json:"Network"`
 	NodeGroupList SpNodeGroupList      `json:"NodeGroupList"`
+	AccessInfo    SpClusterAccessInfo  `json:"AccessInfo"`
 
 	ConnectionName string `json:"ConnectionName"` // Spider 미제공으로 추가한 항목.
 	ProviderName   string `json:"ProviderName"`   // Spider 미제공으로 추가한 항목.
