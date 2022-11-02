@@ -63,7 +63,7 @@ function getVmiInfo(configName) {
 			return;
 		}
 
-		html += "<option value=''>Select OS Platform</option>"
+		html += "<option value=''>Select Public Image</option>"
 		for (var i in data) {
 			if (data[i].connectionName == configName) {
 				html += '<option value="' + data[i].id + '" >' + data[i].name + '(' + data[i].id + ')</option>';
@@ -84,59 +84,59 @@ function getVmiInfo(configName) {
 }
 
 function displayAvailableDisk() {
-  
-        var configName = $("#ss_regConnectionName").val()
-        var url = "/setting/resources/datadisk/list"
-		url +="?filterKey=connectionName&filterVal="+configName
-        console.log("check disk list : ",url);
-            axios.get(url).then(result=>{
-            console.log("get result : ",result);
-            var data = result.data.dataDiskInfoList;
-            var html = "";
-            console.log("get available disk : ",data);
-            if(data != null || data.length > 0){
-                var avDiskCnt = 0
-                data.forEach(item=>{
-                    //console.log("get available disk : ", item);
-                    html +='<tr>'
-                    + '<td class="overlay hidden column-50px" data-th="">'
-                    + '<input type="checkbox" name="chk_attach" value="' + item.id + '"  title=""  /><label for="td_ch1"></label> <span class="ov off"></span>'
-            
-                    + '</td>'
-                    + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
-                    + '<td class="overlay hidden" data-th="diskType">' 
-                    + item.diskType
-                    +'</td>'
-                    + '<td class="overlay hidden" data-th="diskSize">' 
-                    + item.diskSize
-                    + '/GB</td>'
-                    + '</tr>';
-                    avDiskCnt++;
-                })
-                $("#availableDiskCnt").val(avDiskCnt)
-                $("#availableDiskList").empty()
-                $("#availableDiskList").append(html)
-            }else{
-                //commonAlert("해당 VM에 Attach 가능한 DISK가 없습니다");
-                addRow();
-                $("#availableDiskCnt").val(0)
-                return;
-            }
-            // if(data){
-            //     if(data.length >0){
-            //         data.forEach(item=>{
 
-            //         })
-            //     }
-            // }
+	var configName = $("#ss_regConnectionName").val()
+	var url = "/setting/resources/datadisk/list"
+	url += "?filterKey=connectionName&filterVal=" + configName
+	console.log("check disk list : ", url);
+	axios.get(url).then(result => {
+		console.log("get result : ", result);
+		var data = result.data.dataDiskInfoList;
+		var html = "";
+		console.log("get available disk : ", data);
+		if (data != null || data.length > 0) {
+			var avDiskCnt = 0
+			data.forEach(item => {
+				//console.log("get available disk : ", item);
+				html += '<tr>'
+					+ '<td class="overlay hidden column-50px" data-th="">'
+					+ '<input type="checkbox" name="chk_attach" value="' + item.id + '"  title=""  /><label for="td_ch1"></label> <span class="ov off"></span>'
 
-            $("#availableDiskSelectBox").modal();
-            $('.dtbox.scrollbar-inner').scrollbar();
-            
-        })
+					+ '</td>'
+					+ '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
+					+ '<td class="overlay hidden" data-th="diskType">'
+					+ item.diskType
+					+ '</td>'
+					+ '<td class="overlay hidden" data-th="diskSize">'
+					+ item.diskSize
+					+ '/GB</td>'
+					+ '</tr>';
+				avDiskCnt++;
+			})
+			$("#availableDiskCnt").val(avDiskCnt)
+			$("#availableDiskList").empty()
+			$("#availableDiskList").append(html)
+		} else {
+			//commonAlert("해당 VM에 Attach 가능한 DISK가 없습니다");
+			addRow();
+			$("#availableDiskCnt").val(0)
+			return;
+		}
+		// if(data){
+		//     if(data.length >0){
+		//         data.forEach(item=>{
+
+		//         })
+		//     }
+		// }
+
+		$("#availableDiskSelectBox").modal();
+		$('.dtbox.scrollbar-inner').scrollbar();
+
+	})
 
 
-    } 
+}
 
 function getVmMyiInfo(configName) {
 
@@ -145,7 +145,7 @@ function getVmMyiInfo(configName) {
 	console.log("2 : ", configName);
 	// getCommonVirtualMachineImageList("mcissimpleconfigure", "name"); setCommonVirtualMachineImageList()
 	// var url = "/setting/resources" + "/machineimage/lookupimage";//TODO : 조회 오류남... why? connectionName으로 lookup
-	var url = "/setting/resources" + "/myimage/list?filterKey=connectionName&filterVal="+configName
+	var url = "/setting/resources" + "/myimage/list?filterKey=connectionName&filterVal=" + configName
 	var html = "";
 	//  var apiInfo = 'Basic ZGVmYXVsdDpkZWZhdWx0'
 	axios.get(url).then(result => {
@@ -350,19 +350,19 @@ function simpleDone_btn() {
 	$("#s_sshKey").val($("#ss_sshKey").val())
 	$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
 	var select_disk = $("#ss_data_disk").val();
-	
-	
+
+
 	console.log($("#s_imageId").val());
 	console.log($("#ss_imageId").val());
 
 	var simple_form = $("#simple_form").serializeObject()
-	
-	if(select_disk){
+
+	if (select_disk) {
 		var arr_disk = select_disk.split(",");
 		simple_form.dataDiskIds = arr_disk;
 	}
-	console.log("simple form : ",simple_form);
-	
+	console.log("simple form : ", simple_form);
+
 	var server_name = simple_form.name
 	var server_cnt = parseInt(simple_form.subGroupSize)
 	// simple_form.subGroupSize = server_cnt

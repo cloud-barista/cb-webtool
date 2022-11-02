@@ -91,50 +91,53 @@
 						</li>
 						<li>
 							<label><span class="ch">*</span>which OS</label>
-							<div class="switch">
-								<span class="txt">Public Image	
-									<input type="hidden" id="toggle_status" value="toggle_off"/>								
+							<select class="selectbox white pline sel_4" name="imageId" id="ss_imageId" display=""
+								onchange="select_image(this.value)">
+								<option value="">Select Public Image</option>
+							</select>
+							<select class="selectbox white pline sel_4" name="mySnapShotId" id="ss_myImageId"
+								onchange="select_image(this.value)" display="none;">
+
+							</select>
+							<div class="switch select_type">
+								<span class="txt">
+									<input type="hidden" id="toggle_status" value="toggle_off" />
 									<label>
-										<input type="checkbox" name="" class="ch" id="p_to_my" onclick="toggleMyImage();">
+										<input type="checkbox" name="" class="ch" id="p_to_my"
+											onclick="toggleMyImage();">
 										<span></span>
 									</label>
-								My Image</span>
+								</span>
 							</div>
-							<select class="selectbox white pline sel_4" name="imageId" id="ss_imageId" display="" onchange="select_image(this.value)">
-								<option value="">Select OS Platform</option>
-							</select>
-							<select class="selectbox white pline sel_4" name="mySnapShotId" id="ss_myImageId" onchange="select_image(this.value)" display="none;">
-								
-							</select>
 						</li>
 					</ul>
 				</div>
 				<script>
 					$("#ss_myImageId").hide();
-					function select_image(value){
+					function select_image(value) {
 						$("#s_imageId").val(value);
 					}
-					function toggleMyImage(){
+					function toggleMyImage() {
 						var configName = $("#ss_regConnectionName").val();
-						if(configName){
+						if (configName) {
 							var toggle_status = $("#toggle_status").val();
-							console.log("toggle status : ",toggle_status);
-							if(toggle_status == "toggle_off"){
-								
+							console.log("toggle status : ", toggle_status);
+							if (toggle_status == "toggle_off") {
+
 								getVmMyiInfo(configName);
 								$("#ss_imageId").hide();
 								$("#ss_myImageId").show();
 								$("#toggle_status").val("toggle_on");
 								$("#s_imageId").val("");
 								$("#ss_imageId").find("option").removeAttr("selected")
-							}else{
+							} else {
 								$("#toggle_status").val("toggle_off");
 								$("#ss_imageId").removeAttr("selected")
 								$("#ss_imageId").show();
 								$("#ss_myImageId").hide();
 								$("#s_imageId").val("");
 							}
-						}else{
+						} else {
 							alert("Please Select Connection Name");
 							return;
 						}
@@ -147,12 +150,13 @@
 						<li>
 							<label><span class="ch">*</span>DataDisk</label>
 							<input type="text" name="ss_data_disk" value="" placeholder="" class="pline ip_3" title=""
-								id="ss_data_disk" readonly/>
+								id="ss_data_disk" readonly />
 							<div class="btn_right">
 
-								<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="displayAvailableDisk(true);"><span>Available Disk</span></button>
-							
-			
+								<button type="button" name="" value="" class="btn_done btn_co btn_cr_g"
+									onclick="displayAvailableDisk(true);"><span>Available Disk</span></button>
+
+
 							</div>
 
 						</li>
@@ -173,7 +177,7 @@
 					</ul>
 				</div>
 
-			
+
 			</div>
 
 		</div>
