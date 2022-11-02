@@ -9605,11 +9605,12 @@ table tbody tr {
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox .sbox a {
 	position: absolute;
 	top: 6px;
-	right: -44px;
 	text-decoration: underline;
 	color: #06a9b7;
 	font-size: 14px;
 	font-weight: 200;
+	margin-left: 10px;
+	width: max-content;
 }
 
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox .sbox a.btn_edit {
