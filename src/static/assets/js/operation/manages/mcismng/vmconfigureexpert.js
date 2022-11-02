@@ -310,8 +310,8 @@ const expertServerCloneObj = obj => JSON.parse(JSON.stringify(obj))
 function expertDone_btn() {
   console.log("expert Done")
   // TODO : 원래는 같은 VM 을 여러개 만들 때 subGroupSize를 set 하는 것 같은데... for문으로 돌리고 있음.... 고칠까?
-  // $("#e_subGroupSize").val( $("#es_sub_add_cnt").val() )
-  // validation check 
+  $("#e_subGroupSize").val( $("#es_sub_add_cnt").val() )
+  //validation check 
   if ($("#e_name").val() == "") { commonAlert("VM Name is required"); return; }
   if ($("#e_connectionName").val() == "") { commonAlert("Connection is required"); return; }
   if ($("#e_vNetId").val() == "") { commonAlert("vNet is required"); return; }
@@ -323,9 +323,17 @@ function expertDone_btn() {
 
 
   $("#e_vm_add_cnt").val($("#es_vm_add_cnt").val());// 추가수량 값을 form에 추가.
-
+  var select_disk = $("#ss_data_disk").val();
+  
   // expertForm에는 vm생성에 필요한 값들만 있음.
   var expert_form = $("#expert_form").serializeObject()
+  if(select_disk){
+		var arr_disk = select_disk.split(",");
+		expert_form.dataDiskIds = arr_disk;
+	}
+
+  console.log("expert form : ",expert_form);
+
   var server_name = expert_form.name
   var server_cnt = parseInt(expert_form.vmAddCount) // expert
   console.log('server_cnt : ', server_cnt)
@@ -367,6 +375,8 @@ function expertDone_btn() {
   $("#expert_form").each(function () {
     this.reset();
   })
+  $("#ss_data_disk").val("");
+  $("#e_s_data_disk").val("");
 }
 
 

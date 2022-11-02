@@ -410,6 +410,8 @@ function simpleDone_btn() {
 	$("#simple_form").each(function () {
 		this.reset();
 	})
+	$("#ss_data_disk").val("");
+
 }
 function view_simple(cnt) {
 	console.log('view simple cnt : ', cnt);
