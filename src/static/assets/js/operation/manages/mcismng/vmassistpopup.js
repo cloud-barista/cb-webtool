@@ -456,6 +456,9 @@ function searchVmImageByKeyword(caller) {
 	if (caller == "searchVmImageAssistAtReg") {
 		keyword = $("#keywordAssistImage").val();
 		keywordObjId = "searchAssistImageKeywords";
+	}else if(caller =="searchVmMyImageAtReg"){
+		keyword = $("#keywordMyImage").val();
+		keywordObjId = "searchMyImageKeywords";
 	}
 
 	// if (!keyword) {
@@ -471,10 +474,95 @@ function searchVmImageByKeyword(caller) {
 	$("[name='keyword_" + caller + "']").each(function (idx, ele) {
 		keywords.push($(this).text());
 	});
-
-	getCommonSearchVmImageList(keywords, caller);
+	if(caller == "searchVmImageAssistAtReg"){
+		getCommonSearchVmImageList(keywords, caller);
+	}else if(caller == "searchVmMyImageAtReg"){
+		getCommonSearchMyImageList(keywords, caller);
+	}
 }
 
+function getCommonSearchMyImageList(keywordList, caller) {
+    // console.log("keywordObjId = " + keywordObjId)
+    // var keywords = $("#" + keywordObjId).val().split(" ");
+    // console.log("keywords = " + keywords)
+    // var keywordList = new Array();
+    // for (var i = 0; i < keywords.length; i++) {
+    //     keywordList.push(keywords[i]);
+    // }
+	var connectionName = $("#myImageConnectionName").val();
+	var url = "/setting/resources/myimage/list";
+	if(connectionName){
+		url +="?filterKey=connectionName&filterVal="+connectionName;
+	}
+
+    axios.get(url).then(result => {
+        console.log("result", result);
+
+        if (result.data.myImageInfoList == null || result.data.myImageInfoList == undefined || result.data.myImageInfoList == "null") {
+            commonAlert("There is no result")
+        } else {
+            getCommonSearchMyImageListCallbackSuccess(caller, result.data.myImageInfoList);
+        }
+    })
+}
+function getCommonSearchMyImageListCallbackSuccess(caller, myImageList) {
+    //console.log(vmImageList);
+    var html = ""
+    var rowCount = 0;
+    if (myImageList.length > 0) {
+        // if( caller == "imageAssist" ){
+        // 조회 조건으로 provider, connection이 선택되어 있으면 조회 후 filter
+        var assistProviderName = $("#myImageProviderName option:selected").val();
+        var assistConnectionName = $("#myImageConnectionName option:selected").val();
+        //console.log("getCommonSearchVmImageListCallbackSuccess")
+        myImageList.forEach(function (vImageItem, vImageIndex) {
+            //console.log(assistConnectionName + " : " + vImageItem.connectionName)
+            //console.log(vImageItem)
+            if (assistConnectionName == "" || assistConnectionName == vImageItem.connectionName) {
+                //connectionName
+                //cspSpecName
+                rowCount++;
+                html += '<tr onclick="setAssistValue(' + vImageIndex + ');">'
+                    + '     <input type="hidden" id="myImage_id_' + vImageIndex + '" value="' + vImageItem.id + '"/>'
+                    + '     <input type="hidden" id="myImage_name_' + vImageIndex + '" value="' + vImageItem.name + '"/>'
+                    + '     <input type="hidden" id="myImage_connectionName_' + vImageIndex + '" value="' + vImageItem.connectionName + '"/>'
+                    + '     <input type="hidden" id="myImage_cspImageId_' + vImageIndex + '" value="' + vImageItem.cspCustomImageId + '"/>'
+                    + '     <input type="hidden" id="myImage_cspImageName_' + vImageIndex + '" value="' + vImageItem.cspCustomImageName + '"/>'
+                    + '     <input type="hidden" id="myImage_guestOS_' + vImageIndex + '" value="' + vImageItem.guestOS + '"/>'
+                    + '     <input type="hidden" id="myImage_description_' + vImageIndex + '" value="' + vImageItem.description + '"/>'
+                    + '<td class="overlay hidden" data-th="Name">' + vImageItem.name + '</td>'
+                    + '<td class="overlay hidden" data-th="CspImageName">' + vImageItem.sourceVmId + '</td>'
+                    + '<td class="overlay hidden" data-th="CspImageId">' + vImageItem.status + '</td>'
+
+                    // + '<td class="overlay hidden" data-th="GuestOS">' + vImageItem.guestOS + '</td>'
+                    // + '<td class="overlay hidden" data-th="Description">' + vImageItem.description + '</td>'
+                    + '</tr>'
+            }
+        });
+
+    }
+
+    if (rowCount === 0) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="3">No Data</td></tr>'
+    }
+
+    $("#myImageList").empty()
+    $("#myImageList").append(html)
+
+    $("#myImageList tr").each(function () {
+        $selector = $(this)
+
+        $selector.on("click", function () {
+
+            if ($(this).hasClass("on")) {
+                $(this).removeClass("on");
+            } else {
+                $(this).addClass("on")
+                $(this).siblings().removeClass("on");
+            }
+        })
+    })
+}
 // Assist Spec filter Search버튼 클릭시
 function searchSpecsByRange(caller) {
 	// var specFilter = new Object();
