@@ -18,7 +18,7 @@
 										<ul>
 											<li><a href="javascript:void(0);" data-toggle="modal"
 													data-target="#NodeGroup_n_New"
-													onClick="addNewNodeGroup()">Add/Extend</a></li>											
+													onClick="addNewNodeGroup()">Add/Extend</a></li>									
 										</ul>
 									</li>
 								</ul>
@@ -32,7 +32,12 @@
 
 		<!-- cluster begin -->
 		<div class="ds_cont">
-
+			Cluster action : createCluster, update(cluster버전), listCluster(해당 Connection만)
+				, allCluster(namespace내 모든 Connectin), getCluster, delCluster, delClusterForce
+			<br>
+			update는 해당 항목 뒤에 set 버튼을 놓을 지....
+			<br>
+			NodeGroup action : addNodeGroup, updateNodeGroup, removeNodeGroup, 
 			<div class="iparea">
 				<div class="boxlist ipbox ip1">
 					<ul>
@@ -106,6 +111,31 @@
 						</li>
 					</ul>
 				</div>
+			</div>
+		</div>
+		<!-- access -->
+		<div class="ds_cont">
+
+			<div class="iparea">
+				<div class="boxlist ipbox ip1">
+					<ul>
+						<li>
+							<label>End Point </label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_endpoint" />
+						</li>
+					</ul>
+				</div>
+
+				<div class="boxlist ipbox ip2">
+					<ul>
+						<li>
+							<label>KubeConfig</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_kubeconfig" />
+						</li>
+					</ul>
+				</div>				
 			</div>
 		</div>
 		<!-- end cluster-->

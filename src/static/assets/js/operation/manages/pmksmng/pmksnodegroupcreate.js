@@ -61,6 +61,13 @@ function setClusterInfo(data){
         $("#pmks_info_security_group").val(networkInfo.SecurityGroupIIDs);
     }
 
+    // AccessInfo 영역
+    if ( data.AccessInfo != null ){
+        accessInfo = data.AccessInfo;
+        $("#pmks_info_endpoint").val(accessInfo.Endpoint);
+        $("#pmks_info_kubeconfig").val(accessInfo.Kubeconfig);
+    }
+
 }
 
 // 조회 된 
@@ -212,40 +219,40 @@ function addNewNodeGroupForm(){
     html += '<ul>';
     html += '   <li>';
     html += '       <label>Name</label>';
-    html += '       <input type="text" name="nodegroup_info_name" value="" id="nodegroup_info_name_' + newNodeGroupIndex + ' placeholder="" title="" />';
+    html += '       <input type="text" name="nodegroup_info_name" value="" id="nodegroup_info_name_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '   </li>';
     html += '   <li>';
     html += '       <label>Image ID</label>';
-    html += '       <input type="text" name="nodegroup_info_imageid" value="" id="nodegroup_info_imageid_' + newNodeGroupIndex + ' placeholder="" title="" />';
+    html += '       <input type="text" name="nodegroup_info_imageid" value="" id="nodegroup_info_imageid_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '   </li>';
     html += '   <li>';
     html += '       <label>VM Spec</label>';
-    html += '       <input type="text" name="nodegroup_info_vmspecid" value="" id="nodegroup_info_vmspecid_' + newNodeGroupIndex + ' placeholder="" title="" />';
+    html += '       <input type="text" name="nodegroup_info_vmspecid" value="" id="nodegroup_info_vmspecid_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '   </li>';
     html += '   <li>';
     html += '   <label>KeyPair</label>';
-    html += '       <input type="text" name="nodegroup_info_keypairid" value="" id="nodegroup_info_keypairid_' + newNodeGroupIndex + ' placeholder="" title="" />';
+    html += '       <input type="text" name="nodegroup_info_keypairid" value="" id="nodegroup_info_keypairid_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '   </li>';
     html += '   <li>';
     html += '   <label>Desired Node Size</label>';
-    html += '       <input type="text" name="nodegroup_info_desired_nodesize" value="" id="nodegroup_info_desired_nodesize_' + newNodeGroupIndex + ' placeholder="" title="" />';
+    html += '       <input type="text" name="nodegroup_info_desired_nodesize" value="" id="nodegroup_info_desired_nodesize_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '   </li>';
     html += '   <li>';
     html += '   <label>Max Node Size</label>';
-    html += '       <input type="text" name="nodegroup_info_max_nodesize" value="" id="nodegroup_info_max_nodesize_' + newNodeGroupIndex + ' placeholder="" title="" />';
+    html += '       <input type="text" name="nodegroup_info_max_nodesize" value="" id="nodegroup_info_max_nodesize_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '   </li>';
     html += '<li>';
     html += '<label>Min Node Size</label>';
-    html += '       <input type="text" name="nodegroup_info_min_nodesize" value="" id="nodegroup_info_min_nodesize_' + newNodeGroupIndex + ' placeholder="" title="" />';
+    html += '       <input type="text" name="nodegroup_info_min_nodesize" value="" id="nodegroup_info_min_nodesize_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '</li>';
     html += '<li>';
     html += '<label>On Auto Scaling</label>';
-    html += '       <input type="text" name="nodegroup_info_onautoscaling" value="" id=nodegroup_info_onautoscaling_"' + newNodeGroupIndex + ' placeholder="" title="" />';
+    html += '       <input type="text" name="nodegroup_info_onautoscaling" value="" id="nodegroup_info_onautoscaling_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '</li>';
     html += '<li>';
     html += '<label>Root Disk</label>';
-    html += '       <input type="text" name="nodegroup_info_rootdisk_type" value="" id="nodegroup_info_rootdisk_type_' + newNodeGroupIndex + ' placeholder="type" title="" />';
-    html += '       <input type="text" name="nodegroup_info_rootdisk_size" value="" id="nodegroup_info_rootdisk_size_' + newNodeGroupIndex + ' placeholder="size" title="" />';
+    html += '       <input type="text" name="nodegroup_info_rootdisk_type" value="" id="nodegroup_info_rootdisk_type_' + newNodeGroupIndex + '" placeholder="type" title="" />';
+    html += '       <input type="text" name="nodegroup_info_rootdisk_size" value="" id="nodegroup_info_rootdisk_size_' + newNodeGroupIndex + '" placeholder="size" title="" />';
     html += '</li>';  								
     html += '</ul>';
     html += '</div>';
@@ -272,4 +279,116 @@ function removeNodeGroupForm(nodeGroupIndex){
     console.log($("#nodegroup_idx_" + nodeGroupIndex))
     //alert("7")
     //$("#nodegroup_idx_" + nodeGroupIndex).empty();
+}
+
+// addButton 이 필요없어 주석처리.
+//function nodegroupDone_btn(){
+//}
+
+// 추가 된 nodeGroup을 저장
+function deployNodeGroup(){
+    var clusterID = $("#pmks_cluster_id").val();
+    var connectionName = $("#pmks_cluster_connection").val();
+
+    var obj = {};// request Obj
+    var nodeGroupObj = {};
+
+    var addNodeGroupIndex = 0;
+
+    // 추가한 nodeGroup들 
+    $("[name='nodegroup_idx']").each(function (idx, ele) {
+        // 중간에 이빨이 빠진게 있을 수 있으므로 id에서 index 추출하여 set
+        var addNodeGroup = $(this).attr("id")
+        // index 추출
+        var tempNodeGroupIdxArr = addNodeGroup.split("_")
+        addNodeGroupIndex = tempNodeGroupIdxArr[tempNodeGroupIdxArr.length -1]
+	});
+
+    // 1개만 추가하므로 루프 돌 필요 없음.
+    var nodeGroupName = $("#nodegroup_info_name_" + addNodeGroupIndex).val();
+    if( nodeGroupName == ""){
+        commonAlert("Please Input Name");
+        return
+    }
+    var nodeGroupImageId = $("#nodegroup_info_imageid_" + addNodeGroupIndex).val();
+    var nodeGroupVmSpecId = $("#nodegroup_info_vmspecid_" + addNodeGroupIndex).val();
+    if( nodeGroupVmSpecId == ""){
+        commonAlert("Please Input Spec");
+        return
+    }
+    var nodeGroupKeyPairId = $("#nodegroup_info_keypairid_" + addNodeGroupIndex).val();
+    if( nodeGroupVmSpecId == ""){
+        commonAlert("Please Input Key Pair");
+        return
+    }
+    var nodeGroupDesiredNodeSize = $("#nodegroup_info_desired_nodesize_" + addNodeGroupIndex).val();
+    if( nodeGroupVmSpecId == ""){
+        commonAlert("Please Input Desired Node Size");
+        return
+    }
+    var nodeGroupMaxNodeSize = $("#nodegroup_info_max_nodesize_" + addNodeGroupIndex).val();
+    if( nodeGroupVmSpecId == ""){
+        commonAlert("Please Input Max Node Size");
+        return
+    }
+    var nodeGroupMinNodeSize = $("#nodegroup_info_min_nodesize_" + addNodeGroupIndex).val();
+    if( nodeGroupVmSpecId == ""){
+        commonAlert("Please Input Min Node Size");
+        return
+    }
+    var nodeGroupOnAutoScaling = $("#nodegroup_info_onautoscaling_" + addNodeGroupIndex).val();
+    
+    var nodeGroupRootDiskType = $("#nodegroup_info_rootdisk_type_" + addNodeGroupIndex).val();
+    if( nodeGroupVmSpecId == ""){
+        commonAlert("Please Input Root Disk Type");
+        return
+    }
+    var nodeGroupRootDiskSize = $("#nodegroup_info_rootdisk_size_" + addNodeGroupIndex).val();
+    if( nodeGroupVmSpecId == ""){
+        commonAlert("Please Input Root Disk Size");
+        return
+    }
+    
+    
+
+    var url = "/operation/manages/pmks/" + clusterID + "/nodegroup"
+    console.log("URL : ", url)
+
+    nodeGroupObj = {
+        Name: nodeGroupName,
+        VMSpecName: nodeGroupVmSpecId,
+        KeyPairName: nodeGroupKeyPairId,
+        DesiredNodeSize: nodeGroupDesiredNodeSize,
+        MinNodeSize: nodeGroupMaxNodeSize,
+        MaxNodeSize: nodeGroupMinNodeSize,
+        OnAutoScaling: nodeGroupOnAutoScaling,
+        RootDiskType: nodeGroupRootDiskType,
+        RootDiskSize: nodeGroupRootDiskSize
+    }
+  
+    obj['ConnectionName'] = connectionName
+    obj['ReqInfo'] = nodeGroupObj;
+
+    console.log("info image obj Data : ", obj);
+
+    if (obj) {
+        axios.post(url, obj, {
+            headers: {
+                //'Content-type': 'application/json',
+                // 'Authorization': apiInfo,
+            }
+        }).then(result => {
+            console.log("result : ", result);
+            if (result.status == 200 || result.status == 201) {
+                commonAlert("NodeGroup Creation Requested")
+                // 목록 화면으로 전환
+            } else {
+                var message = result.data.message;
+                commonAlert("Failed to Create NodeGroup : " + message + "(" + result.status + ")");
+            }
+        }).catch((error) => {
+            console.warn(error);
+            //commonErrorAlert(statusCode, errorMessage);
+        });
+    }
 }

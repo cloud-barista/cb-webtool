@@ -34,12 +34,17 @@ func GetPmksNamespaceClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	clusterList := map[string][]spider.SpClusterInfo{}
-	json.NewDecoder(respBody).Decode(&clusterList)
-	fmt.Println(clusterList)
-	//log.Println(respBody)
+	totalClusterList := spider.SpTotalClusterInfoList{}
+	json.NewDecoder(respBody).Decode(&totalClusterList)
 
-	return clusterList["AllClusterList"], model.WebStatus{StatusCode: respStatus}
+	// AllClusterList배열의 Cluster배열 형태를  ClusterInfo의 배열로 변환
+	returnClusterList := []spider.SpClusterInfo{}
+	for _, clusterList := range totalClusterList.AllClusterList {
+		//log.Println(clusterList)
+		returnClusterList = append(returnClusterList, clusterList.ClusterList...)
+
+	}
+	return returnClusterList, model.WebStatus{StatusCode: respStatus}
 }
 
 // Cluster 목록 조회
@@ -331,12 +336,12 @@ func DelPmksClusterByAsync(cluster string, clusterReqInfo *spider.ClusterReqInfo
 }
 
 // NodeGroup 생성
-func RegPmksNodeGroup(clusterName string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (*spider.NodeGroupInfo, model.WebStatus) {
+func RegPmksNodeGroup(clusterID string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (*spider.NodeGroupInfo, model.WebStatus) {
 
 	var originalUrl = "/cluster/{cluster}/nodegroup"
 
 	var paramMapper = make(map[string]string)
-	paramMapper["{cluster}"] = clusterName
+	paramMapper["{cluster}"] = clusterID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.SPIDER + urlParam
 
@@ -370,20 +375,20 @@ func RegPmksNodeGroup(clusterName string, nodeGroupReqInfo *spider.NodeGroupReqI
 }
 
 // NodeGroup 삭제
-func DelPmksNodeGroup(clusterName string, nodeGroupName string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (bool, model.WebStatus) {
+func DelPmksNodeGroup(clusterID string, nodeGroupID string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (bool, model.WebStatus) {
 	var originalUrl = "/cluster/{cluster}/nodegroup/{nodegroup}"
 
 	var paramMapper = make(map[string]string)
-	paramMapper["{cluster}"] = clusterName
-	paramMapper["{nodegroup}"] = nodeGroupName
+	paramMapper["{cluster}"] = clusterID
+	paramMapper["{nodegroup}"] = nodeGroupID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.SPIDER + urlParam
 
-	if clusterName == "" {
+	if clusterID == "" {
 		return false, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
 	}
-	if nodeGroupName == "" {
-		return false, model.WebStatus{StatusCode: 500, Message: "nodeGroupName is required"}
+	if nodeGroupID == "" {
+		return false, model.WebStatus{StatusCode: 500, Message: "nodeGroup is required"}
 	}
 
 	pbytes, _ := json.Marshal(nodeGroupReqInfo)
@@ -399,4 +404,64 @@ func DelPmksNodeGroup(clusterName string, nodeGroupName string, nodeGroupReqInfo
 	respStatus := resp.StatusCode
 
 	return true, model.WebStatus{StatusCode: respStatus}
+}
+
+// NodeGroup 수정 : onAutoScaling
+func UpdatePmksNodeGroupAutoScaling(clusterID string, nodeGroupID string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/cluster/{cluster}/nodegroup/{nodegroup}/onautoscaling"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{cluster}"] = clusterID
+	paramMapper["{nodegroup}"] = nodeGroupID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.SPIDER + urlParam
+
+	pbytes, _ := json.Marshal(nodeGroupReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	util.DisplayResponse(resp) // 수신내용 확인
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	resultClusterInfo := spider.SpClusterInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return resultClusterInfo, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&resultClusterInfo)
+
+	return resultClusterInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// NodeGroup 수정 : node Size
+func UpdatePmksNodeGroupAutoscaleSize(clusterID string, nodeGroupID string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/cluster/{cluster}/nodegroup/{nodegroup}/autoscalesize"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{cluster}"] = clusterID
+	paramMapper["{nodegroup}"] = nodeGroupID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.SPIDER + urlParam
+
+	pbytes, _ := json.Marshal(nodeGroupReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	util.DisplayResponse(resp) // 수신내용 확인
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	resultClusterInfo := spider.SpClusterInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return resultClusterInfo, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&resultClusterInfo)
+
+	return resultClusterInfo, model.WebStatus{StatusCode: respStatus}
 }

@@ -215,13 +215,6 @@ function setNodeGroupList(clusterID){
     var nodeGroupList = clusterInfo.NodeGroupList;
     var html = "";
 
-    // PMKS Cluster Info
-    $("#pmks_cluster_id").val(clusterID);// hidden        
-    $("#pmks_cluster_name").val(clusterID);// hidden        
-    $("#pmks_info_txt").text("[ " + clusterID + " ]");
-
-    $("#pmks_cluster_connection").val(clusterInfo.ConnectionName);
-
     // Cluster만 있는 경우 NodeGroup이 없을 수 있음
     if (nodeGroupList != null ){
         if (nodeGroupList.length) {
@@ -268,6 +261,7 @@ function addNodeGroupData(item, nodeGroupIndex, clusterID){
     var onAutoScaling = item.OnAutoScaling;
     var rootDiskSize = item.RootDiskSize;
     var rootDiskType = item.RootDiskType;
+
     var status = item.Status;
     var nodeGroupStatusIcon = getNodeGroupStatusIcon(status);
     var nodeGroupDispStatus = getNodeGroupStatusDisp(status);
@@ -376,7 +370,36 @@ function addNodeRow(item, nodeIndex, clusterID, nodeGroupID){
 
 // Cluster 목록에서 Cluster 클릭
 function clickListOfCluster(clusterID, clusterIndex) {
-    setNodeGroupList(clusterID, clusterIndex);
+    var clusterInfo = TOTAL_PMKS_LIST.get(clusterID);
+    // cluster Info 표시    
+    $("#pmks_cluster_id").val(clusterID);// hidden        
+    $("#pmks_cluster_name").val(clusterID);// hidden        
+    $("#pmks_cluster_connection").val(clusterInfo.ConnectionName);// hidden
+
+    $("#pmks_info_txt").text("[ " + clusterID + " ]");// title    
+
+    // Cluster Info
+    $("#pmks_info_name").val(clusterID);
+    $("#pmks_info_version").val(clusterInfo.Version);
+    $("#pmks_info_cloud_connection").val(clusterInfo.ConnectionName);
+    $("#pmks_info_status").val(clusterInfo.Status);
+
+    // AccessInfo
+    if ( clusterInfo.AccessInfo != null){
+        var accessInfo = clusterInfo.AccessInfo;
+        $("#pmks_info_endpoint").val(accessInfo.Endpoint);
+        $("#pmks_info_kubeconfig").val(accessInfo.Kubeconfig);
+    }
+    
+    // NetworkInfo
+    if ( clusterInfo.Network != null){
+        var networkInfo = clusterInfo.Network;
+        
+        $("#pmks_info_vpc").val(networkInfo.VpcIID.NameId);
+        $("#pmks_info_subnet").val(networkInfo.SubnetIIDs);
+        $("#pmks_info_security_group").val(networkInfo.SecurityGroupIIDs);
+    }
+
 }
 
 // NodeGroup 목록에서 NodeGroup 클릭

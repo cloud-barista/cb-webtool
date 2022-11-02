@@ -9,9 +9,20 @@ type SpClusterInfo struct {
 	KeyValueList  SpKeyValueList       `json:"KeyValueList"`
 	Network       SpClusterNetworkInfo `json:"Network"`
 	NodeGroupList SpNodeGroupList      `json:"NodeGroupList"`
+	AccessInfo    SpClusterAccessInfo  `json:"AccessInfo"`
 
 	ConnectionName string `json:"ConnectionName"` // Spider 미제공으로 추가한 항목.
 	ProviderName   string `json:"ProviderName"`   // Spider 미제공으로 추가한 항목.
 }
 
 type SpClusterInfoList []SpClusterInfo
+
+// Connection이 다른 namespace내 모든 Cluster의 List
+type SpAllClusterInfoList struct {
+	ClusterList SpClusterInfoList `json:"ClusterList"`
+	//ClusterList []SpClusterInfo `json:"ClusterList"`
+}
+
+type SpTotalClusterInfoList struct {
+	AllClusterList []SpAllClusterInfoList `json:"AllClusterList"`
+}

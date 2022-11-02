@@ -874,6 +874,7 @@ function getCommonSearchVmImageList(keywordList, caller) {
     //     keywordList.push(keywords[i]);
     // }
 
+
     var url = "/setting/resources/machineimage/searchimage";
     axios.post(url, {
         // headers:{

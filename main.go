@@ -868,6 +868,7 @@ func main() {
 
 	e.POST("/operation/manages/pmks/:clusterID/nodegroup", controller.PmksNodeGroupRegProc)
 	e.DELETE("/operation/manages/pmks/:clusterID/nodegroup/:nodeGroupID", controller.PmksNodeGroupDelProc)
+	e.PUT("/operation/manages/pmks/:clusterID/nodegroup/:nodeGroupID", controller.PmksNodeGroupUpdateProc)
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)
