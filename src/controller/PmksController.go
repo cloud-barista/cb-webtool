@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	spider "github.com/cloud-barista/cb-webtool/src/model/spider"
@@ -373,12 +374,12 @@ func PmksNodeGroupRegProc(c echo.Context) error {
 		})
 	}
 
-	clusterName := c.Param("clusterName")
+	clusterID := c.Param("clusterID")
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	nodeGroupReqInfo.NameSpace = defaultNameSpaceID
 
-	nodeInfo, respStatus := service.RegPmksNodeGroup(clusterName, nodeGroupReqInfo)
+	nodeInfo, respStatus := service.RegPmksNodeGroup(clusterID, nodeGroupReqInfo)
 	log.Println("RegNodeGroup service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
@@ -430,5 +431,83 @@ func PmksNodeGroupDelProc(c echo.Context) error {
 		"message":    "success",
 		"status":     respStatus.StatusCode,
 		"StatusInfo": resultStatusInfo,
+	})
+}
+
+// NodeGroup Update
+// reqParameter에서 onautoscaling, nodesize, ...
+func PmksNodeGroupUpdateProc(c echo.Context) error {
+	log.Println("PmksNodeGroupUpdateProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	nodeGroupReqInfo := new(spider.NodeGroupReqInfo)
+	if err := c.Bind(nodeGroupReqInfo); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	clusterID := c.Param("clusterID")
+	nodeGroupID := c.Param("nodeGroupID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	nodeGroupReqInfo.NameSpace = defaultNameSpaceID
+
+	//taskKey := defaultNameSpaceID + "||" + "pmks" + "||" + nodeGroupReqInfo.ReqInfo.Name
+	//service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	// onautoscaling update
+	if nodeGroupReqInfo.ReqInfo.OnAutoScaling != "" {
+		respBody, respStatus := service.UpdatePmksNodeGroupAutoScaling(clusterID, nodeGroupID, nodeGroupReqInfo)
+		fmt.Println("=============respBody =============", respBody)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			//service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+	}
+
+	// node size update
+	if nodeGroupReqInfo.ReqInfo.DesiredNodeSize != "" || nodeGroupReqInfo.ReqInfo.MaxNodeSize != "" || nodeGroupReqInfo.ReqInfo.MinNodeSize != "" {
+		desiredNodeSize := nodeGroupReqInfo.ReqInfo.DesiredNodeSize
+		MaxNodeSize := nodeGroupReqInfo.ReqInfo.MaxNodeSize
+		MinNodeSize := nodeGroupReqInfo.ReqInfo.MinNodeSize
+		desiredNodeSizeInt, err := strconv.ParseInt(desiredNodeSize, 10, 64)
+		if err != nil {
+
+		}
+		MaxNodeSizeInt, err := strconv.ParseInt(MaxNodeSize, 10, 64)
+		if err != nil {
+
+		}
+		MinNodeSizeInt, err := strconv.ParseInt(MinNodeSize, 10, 64)
+		if err != nil {
+
+		}
+
+		if desiredNodeSizeInt > 0 && MaxNodeSizeInt > 0 && MinNodeSizeInt > 0 {
+			respBody, respStatus := service.UpdatePmksNodeGroupAutoscaleSize(clusterID, nodeGroupID, nodeGroupReqInfo)
+			fmt.Println("=============respBody =============", respBody)
+			if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+				//service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+
+				return c.JSON(respStatus.StatusCode, map[string]interface{}{
+					"error":  respStatus.Message,
+					"status": respStatus.StatusCode,
+				})
+			}
+		}
+	}
+
+	//service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  "200",
+		"Result":  "Update Success",
 	})
 }
