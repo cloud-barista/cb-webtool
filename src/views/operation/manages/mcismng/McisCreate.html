@@ -89,8 +89,11 @@
 											<li>
 												<label>Deployment Algorithm</label>
 												<select class="selectbox white pline sel_1" name="placement_algo"
-													id="placement_algo" disabled>
-													<option value="">Select Algorithm Name / (ID)</option>
+													id="placement_algo" onchange="closeNewServerForm()">
+													<!-- <option value="">Select Algorithm Name / (ID)</option> -->
+													<option value="express" selected>Express</option>
+													<option value="simple">Simple</option>
+													<option value="expert">Expert</option>
 												</select>
 											</li>
 											<li>
@@ -113,17 +116,17 @@
 								<!-- servers -->
 								<div class="servers_box" id="addVmList">
 									<div class="title">Servers</div>
-									<div class="switch">
-										<span class="txt">Expert
-											<!-- <span class="txt_c on d_none">ON</span>
+									<!-- <div class="switch">
+										<span class="txt">Expert -->
+									<!-- <span class="txt_c on d_none">ON</span>
 														<span class="txt_c off ">OFF</span></span> -->
-											<label>
+									<!-- <label>
 												<input type="checkbox" name="consent" class="ch" id="isExpert"
 													onclick="displayNewServerForm()" />
 												<span></span>
 											</label>
 										</span>
-									</div>
+									</div> -->
 
 									<div class="list">
 										<ul id="mcis_server_list">
@@ -168,7 +171,7 @@
 								<div class="btnbox">
 									<div class="btn_right">
 										<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply"
-											onclick="deployMcis();"><span>DEPLOY</span></button>
+											onclick="createMcisDynamic();"><span>DEPLOY</span></button>
 										<button name="" type="button" value="" class="btn_clear btn_co btn_cr_b"
 											id="addMcisCancel" style="display: none;"
 											onclick="displayMcisImportServerFormByImport(false);">CANCEL</button>
@@ -182,6 +185,10 @@
 								<!-- New Server Config -->
 								{{template "VmConfigureExpert" .}}
 								<!-- //New Server Config -->
+
+								<!-- Express Server Configuration -->
+								{{template "VmConfigureExpress" .}}
+								<!-- Express Server Configuration -->
 
 								<!-- Import Server Config -->
 								{{template "VmConfigureImport" .}}

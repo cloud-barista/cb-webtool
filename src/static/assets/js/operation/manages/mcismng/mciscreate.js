@@ -14,25 +14,44 @@ $(document).ready(function () {
 // newServers 와 simpleServers가 있음.
 function displayNewServerForm() {
 
+    var deploymentAlgo = $("#placement_algo").val();
     var simpleServerConfig = $("#simpleServerConfig");
     var expertServerConfig = $("#expertServerConfig");
     var importServerConfig = $("#importServerConfig");
+    var expressServerConfig = $("#expressServerConfig");
     console.log("is import = " + IsImport + " , is expert " + $("#isExpert").is(":checked"))
     // if ($("#isImport").is(":checked")) {
     if (IsImport) {
         simpleServerConfig.removeClass("active");
         expertServerConfig.removeClass("active");
         importServerConfig.addClass("active");
-    } else if ($("#isExpert").is(":checked")) {
+        expressServerConfig.removeClass("active");
+    } else if (deploymentAlgo == "expert") {
         simpleServerConfig.removeClass("active");
-        expertServerConfig.addClass("active");
+        expertServerConfig.toggleClass("active");
         importServerConfig.removeClass("active");
-    } else {
-        //simpleServerConfig        
-        simpleServerConfig.addClass("active");
+        expressServerConfig.removeClass("active");
+    } else if (deploymentAlgo == "express") {
+        simpleServerConfig.removeClass("active");
         expertServerConfig.removeClass("active");
         importServerConfig.removeClass("active");
+        expressServerConfig.toggleClass("active");
+    } else {
+        //simpleServerConfig        
+        simpleServerConfig.toggleClass("active");
+        expertServerConfig.removeClass("active");
+        importServerConfig.removeClass("active");
+        expressServerConfig.removeClass("active");
     }
+}
+
+function closeNewServerForm() {
+    var simpleServerConfig = $("#simpleServerConfig");
+    var expertServerConfig = $("#expertServerConfig");
+    var importServerConfig = $("#importServerConfig");
+    simpleServerConfig.removeClass("active");
+    expertServerConfig.removeClass("active");
+    importServerConfig.removeClass("active");
 }
 
 
@@ -334,6 +353,14 @@ function getSpecListCallbackSuccess(caller, data) {
     if (caller == "addedspec") {
         changeCloudConnection()
     }
+}
+
+function getSecurityGroupListCallbackSuccess(caller) {
+
+}
+
+function getNetworkListCallbackSuccess(caller) {
+
 }
 
 // 등록된 spec조회 성공 시 table에 뿌려주고, 클릭시 spec 내용 set.
@@ -750,34 +777,32 @@ function createRecommendSpec(recSpecName) {
 }
 
 function createMcisDynamic() {
-    var specIndex = $("#assistSelectedIndex").val();
     var mcisName = $("#mcis_name").val()
     var mcisDesc = $("#mcis_desc").val()
-    var specName = $("#recommendVmAssist_name_" + specIndex).val()
+
+    if (!mcis_name) {
+        commonAlert("Please Input MCIS Name!!!!!")
+        return;
+    }
 
     if (!mcisDesc) {
         mcisDesc = "Made in CB-TB"
     }
 
-    console.log(specName);
+
     var url = "/operation/manages/mcismng/mcisdynamic/proc"
-    var obj = {
-        "description": mcisDesc,
-        "name": mcisName,
-        "vm": [
-            {
-                "commonImage": "ubuntu18.04",
-                "commonSpec": specName,
-                "subGroupSize": "3"
-            }
-        ]
-    }
+    var obj = {}
+    obj['name'] = mcisName
+    obj['description'] = mcisDesc
+    obj['vm'] = Express_Server_Config_Arr
 
     try {
         axios.post(url, obj, {
+
             headers: {
                 //'Content-type': "application/json",
             },
+
         }).then(result => {
             console.log("MCIR Register data : ", result)
             console.log("Result Status : ", result.status)
@@ -796,5 +821,15 @@ function createMcisDynamic() {
     } catch (error) {
         commonAlert(error);
         console.log(error);
+    }
+}
+
+function createMcisDynamic() {
+    var deploymentAlgo = $("#placement_algo").val()
+
+    if (deploymentAlgo == express) {
+        createMcisDynamic()
+    } else {
+        deployMcis()
     }
 }

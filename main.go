@@ -265,6 +265,7 @@ func main() {
 			"operation/manages/mcismng/VmConfigureSimple",
 			"operation/manages/mcismng/VmConfigureExpert",
 			"operation/manages/mcismng/VmConfigureImport",
+			"operation/manages/mcismng/VmConfigureExpress",
 
 			"templates/VmAssistPopup",
 

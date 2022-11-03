@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 function showRecommendAssistPopup() {
 	console.log("showRecommendAssistPopup")
-	$("#recommendVmAssist").modal();
+	$("#recommendSpecAssist").modal();
 
 }
 
@@ -432,10 +432,10 @@ function simpleDone_btn() {
 	// 	}
 	// } else {
 	Simple_Server_Config_Arr.push(simple_form)
-	displayServerCnt = ""
-	if (server_cnt > 1) {
-		displayServerCnt = '(' + server_cnt + ')'
-	}
+
+
+	var displayServerCnt = '(' + server_cnt + ')'
+
 	add_server_html += '<li onclick="view_simple(\'' + simple_data_cnt + '\')">'
 		+ '<div class="server server_on bgbox_b">'
 		+ '<div class="icon"></div>'
