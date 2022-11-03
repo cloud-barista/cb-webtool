@@ -331,10 +331,55 @@ function getVnetInfo(configName) {
 		console.log("init_vnet=" + init_vnet + ", subnet=" + init_subnet)
 	})
 }
-
+var DISK_SIZE = [];
 function getCommonLookupDiskInfoSuccess(caller, provider, data){
-	console.log("getCommonLookupDiskInfoSuccess");
-	console.log(data);
+	
+	console.log("getCommonLookupDiskInfoSuccess",data[0]);
+	var root_disk_type = [];
+	var res_item = data
+	res_item.forEach(item=>{
+		var temp_provider = item.provider
+		if(temp_provider == provider){
+			root_disk_type = item.rootdisktype
+			DISK_SIZE = item.disksize
+		}
+	})
+
+	var html = '<option value="">Select Root Disk Type</option>'
+	console.log("root_disk_type : ",root_disk_type);
+	root_disk_type.forEach(item=>{
+		html += '<option value="'+item+'">'+item+'</option>'
+	})
+if(caller == "vmsimple"){
+	$("#ss_root_disk_type").empty();
+	$("#ss_root_disk_type").append(html);
+}else{
+	$("#e_root_disk_type").empty()
+	$("#e_root_disk_type").append(html)
+}
+console.log("const valie DISK_SIZE : ",DISK_SIZE);
+
+
+}
+var ROOT_DISK_MAX_VALUE = 0;
+var ROOT_DISK_MIN_VALUE = 0;
+
+function changeDiskSize(type){
+	var disk_size = DISK_SIZE;
+
+	if(disk_size){
+		disk_size.forEach(item=>{
+			var temp_size = item.split("|")
+			var temp_type = temp_size[0];
+			if(temp_type == type){
+				ROOT_DISK_MAX_VALUE = temp_size[1];
+				ROOT_DISK_MIN_VALUE = temp_size[2]
+			}
+		})
+	}
+	console.log("ROOT_DISK_MAX_VALUE : ",ROOT_DISK_MAX_VALUE)
+	console.log("ROOT_DISK_MIN_VALUE : ",ROOT_DISK_MIN_VALUE)
+
 }
 
 const Simple_Server_Config_Arr = new Array();

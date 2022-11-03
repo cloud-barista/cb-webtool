@@ -389,6 +389,9 @@ function setConnectionValue(connName) {
   console.log(" connection change")
   var connectionObj = $("#e_connectionName");
   var tempConnectionObj = $("#t_connectionName");
+  var provider = $("#es_regProvider").val();
+  console.log("provider : ",provider);
+  getCommonLookupDiskInfo("vmexpert", provider, connName);// -> getCommonLookupDiskInfoSuccess
   if (connName == "") {
     connectionObj.val(connName);
     tempConnectionObj.val(connName);
