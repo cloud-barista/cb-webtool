@@ -90,8 +90,8 @@
 												<label>Deployment Algorithm</label>
 												<select class="selectbox white pline sel_1" name="placement_algo"
 													id="placement_algo" onchange="closeNewServerForm()">
-													<option value="">Select Algorithm Name / (ID)</option>
-													<option value="express">Express</option>
+													<!-- <option value="">Select Algorithm Name / (ID)</option> -->
+													<option value="express" selected>Express</option>
 													<option value="simple">Simple</option>
 													<option value="expert">Expert</option>
 												</select>
@@ -185,6 +185,10 @@
 								<!-- New Server Config -->
 								{{template "VmConfigureExpert" .}}
 								<!-- //New Server Config -->
+
+								<!-- Express Server Configuration -->
+								{{template "VmConfigureExpress" .}}
+								<!-- Express Server Configuration -->
 
 								<!-- Import Server Config -->
 								{{template "VmConfigureImport" .}}

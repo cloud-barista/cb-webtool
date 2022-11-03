@@ -6,14 +6,6 @@ $(document).ready(function () {
 })
 
 function showRecommendAssistPopup() {
-	$("#serverNameBox").css("display", "none")
-
-	var deploymentAlgo = $("#placement_algo").val()
-
-	if (deploymentAlgo == "express") {
-		$("#serverNameBox").css("display", "block")
-	}
-
 	console.log("showRecommendAssistPopup")
 	$("#recommendSpecAssist").modal();
 

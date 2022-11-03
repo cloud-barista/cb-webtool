@@ -18,23 +18,30 @@ function displayNewServerForm() {
     var simpleServerConfig = $("#simpleServerConfig");
     var expertServerConfig = $("#expertServerConfig");
     var importServerConfig = $("#importServerConfig");
+    var expressServerConfig = $("#expressServerConfig");
     console.log("is import = " + IsImport + " , is expert " + $("#isExpert").is(":checked"))
     // if ($("#isImport").is(":checked")) {
     if (IsImport) {
         simpleServerConfig.removeClass("active");
         expertServerConfig.removeClass("active");
         importServerConfig.addClass("active");
+        expressServerConfig.removeClass("active");
     } else if (deploymentAlgo == "expert") {
         simpleServerConfig.removeClass("active");
         expertServerConfig.toggleClass("active");
         importServerConfig.removeClass("active");
+        expressServerConfig.removeClass("active");
     } else if (deploymentAlgo == "express") {
-        showRecommendAssistPopup();
+        simpleServerConfig.removeClass("active");
+        expertServerConfig.removeClass("active");
+        importServerConfig.removeClass("active");
+        expressServerConfig.toggleClass("active");
     } else {
         //simpleServerConfig        
         simpleServerConfig.toggleClass("active");
         expertServerConfig.removeClass("active");
         importServerConfig.removeClass("active");
+        expressServerConfig.removeClass("active");
     }
 }
 
