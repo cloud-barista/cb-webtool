@@ -91,6 +91,8 @@
 												onClick="displayDataDiskInfo('REG')">Add</a></li>
 										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
 												onClick="displayDataDiskInfo('Attach')">Attach</a></li>
+										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
+												onClick="runDetachDataDisk('detach')">Detach</a></li>
 										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist"
 												onClick="commonConfirmOpen('DeleteDataDisk')">Delete</a></li>
 									</ul>
@@ -110,11 +112,13 @@
 
 						<thead>
 							<tr>
-								<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall"
+								<th class="column-50px"><input type="checkbox" name="chk" value="" id="th_chall"
 										title="" /><label for="th_chall"></label></th>
 								<th>Disk Name</th>
 								<th>Disk Type</th>
 								<th>Disk Size</th>
+								<th>Associated Object</th>
+								<th>Connection Name</th>
 								<th>Description</th>
 							</tr>
 						</thead>
@@ -151,6 +155,8 @@
 									<span class="sbox">
 										<input type="text" id="dtlDiskName" name="dtlDiskName" value="" placeholder=""
 											class="gray" title="" disabled />
+										<input type="hidden" id="dtlDiskId" name="dtlDiskId" value="" placeholder=""
+										 />
 									</span>
 								</li>
 								<li>
@@ -164,14 +170,23 @@
 									<label>Disk Size</label>
 									<span class="sbox">
 										<input type="text" id="dtlDiskSize" name="dtlDiskSize" value="" placeholder=""
-											class="gray" title="" disabled />
+											class="" title=""  /> /GB
+										<input type="hidden" id="dtlPreDiskSize" name="dtlPreDiskSize" />
+									</span>
+								</li>
+								<li>
+									<label>Associated Object</label>
+									<span class="sbox">
+										<input type="text" id="dtlAssoObj" name="dtlAssoObj" value="" placeholder=""
+											class="" title=""  />
+									
 									</span>
 								</li>
 								<li>
 									<label>Description</label>
 									<span class="sbox">
 										<textarea id="dtlDescription" name="dtlDescription" cols="" rows=""
-											placeholder="" class="gray" title="" disabled></textarea>
+											placeholder="" class="" title="" ></textarea>
 									</span>
 								</li>
 							</ul>
@@ -212,15 +227,14 @@
 								</li> -->
 							</ul>
 						</div>
+					</div>					
+					<div class="btnbox">
+						<div class="btn_center">
+							<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
+							<button name="" value="" class="btn_co btn_cr_g w135 btn_modify" onclick="putDataDisk();">Size UP</button> 
+						</div>
 					</div>
-					<!-- TODO : tumblebug에 수정 기능 없음. 수정기능 생기면 처리
-									<div class="btnbox">
-										<div class="btn_center">
-											<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button> 
-											<button name="" value="" class="btn_co btn_cr_g w135 btn_modify">Modify</button> 
-										</div>
-									</div>
-								 -->
+								 
 				</div>
 			</div>
 
@@ -323,8 +337,11 @@
 						<div class="pop-cont">
 							
 							<div class="toptxt">
-								<label>Virtual Network cidrBlock</label>
-								<input type="text" name="" value="cidrBlock" placeholder="" class="gray" title="" readonly />
+								<label>Selected Disk : </label>
+								<input type="text" id="selected_disk"name="" value="" placeholder="" class="gray" title="" readonly />
+								<input type="hidden" id="selected_disk_id"name="" value="" placeholder="" class="gray" title="" readonly />
+								<input type="hidden" id="attach_mcis_id" value=""/>
+								<input type="hidden" id="attach_vm_id" value=""/>
 							</div>
 										
 							<!-- table scrollbar -->
@@ -338,9 +355,9 @@
 													<!-- <input type="checkbox" name="" value="" id="th_chall"
 													title="" /><label for="th_chall"></label> -->
 												</th>
-												<th class="column-40percent">MCIS Name</th>
+												<th>MCIS Name</th>
 												<th>VM Name</th>
-												<th class="column-100px"></th>
+												<th>Connection Name</th>
 											</tr>
 										</thead>
 										<tbody id="vmList">
@@ -351,7 +368,7 @@
 							</div>
 							<!-- //table scrollbar -->
 
-							<div class="b_txt"><span class="ch">*</span> Select the VM to be attached to DISK by clicking <span class="txt">“Apply”</span></div>
+							<div class="b_txt"><span class="ch">*</span> Select the VM to be attached to DISK by clicking <span class="txt"> “Attach”</span></div>
 						</div>
 
 					</div>
@@ -359,7 +376,7 @@
 					<div class="btnbox">
 						<div class="btn_right">
 							<button name="" value="" class="btn_apply btn_co btn_cr_g"
-								onclick="applyVM()"><span>Apply</span></button>
+								onclick="runAttachDataDisk('attach')"><span>Attach</span></button>
 							<button name="" value="" class="btn_cancel btn_co btn_cr_b"
 								data-dismiss="modal">cancel</button>
 						</div>

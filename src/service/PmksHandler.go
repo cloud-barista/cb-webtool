@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	"github.com/labstack/echo"
@@ -12,95 +13,79 @@ import (
 	"net/http"
 
 	// "os"
-	// model "github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/model"
-	// spider "github.com/cloud-barista/cb-webtool/src/model/spider"
-	"github.com/cloud-barista/cb-webtool/src/model/ladybug"
-	// "github.com/cloud-barista/cb-webtool/src/model/tumblebug"
+	spider "github.com/cloud-barista/cb-webtool/src/model/spider"
 
 	util "github.com/cloud-barista/cb-webtool/src/util"
 )
 
-// Cluster 목록 조회
-func GetPmksClusterList(nameSpaceID string) ([]ladybug.ClusterInfo, model.WebStatus) {
-	var originalUrl = "/ns/{namespace}/clusters"
+// 해당 namespace의 모든 pmks 목록 조회
+func GetPmksNamespaceClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/nscluster"
 
-	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-
-	url := util.SPIDER + urlParam
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+	url := util.SPIDER + originalUrl
+	pbytes, _ := json.Marshal(clusterReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	// 원래는 items 와 kind 가 들어오는데
-	// kind에는 clusterlist 라는 것만 있고 실제로는 items 에 cluster 정보들이 있음.
-	// 그래서 굳이 kind까지 처리하지 않고 item만 return
-	clusterList := map[string][]ladybug.ClusterInfo{}
-	json.NewDecoder(respBody).Decode(&clusterList)
-	fmt.Println(clusterList["items"])
-	log.Println(respBody)
-	// util.DisplayResponse(resp) // 수신내용 확인
 
-	return clusterList["items"], model.WebStatus{StatusCode: respStatus}
+	totalClusterList := spider.SpTotalClusterInfoList{}
+	json.NewDecoder(respBody).Decode(&totalClusterList)
+
+	// AllClusterList배열의 Cluster배열 형태를  ClusterInfo의 배열로 변환
+	returnClusterList := []spider.SpClusterInfo{}
+	for _, clusterList := range totalClusterList.AllClusterList {
+		//log.Println(clusterList)
+		returnClusterList = append(returnClusterList, clusterList.ClusterList...)
+
+	}
+	return returnClusterList, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetPmksClusterListByID(nameSpaceID string) ([]string, model.WebStatus) {
-	var originalUrl = "/ns/{namespace}/clusters"
+// Cluster 목록 조회
+func GetPmksClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/cluster"
 
-	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-
-	url := util.SPIDER + urlParam
-	// url := util.MCKS + "/ns/" + nameSpaceID + "/clusters"
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	url := util.SPIDER + originalUrl
+	pbytes, _ := json.Marshal(clusterReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
 		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
-
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-	// 원래는 items 와 kind 가 들어오는데
-	// kind에는 clusterlist 라는 것만 있고 실제로는 items 에 cluster 정보들이 있음.
-	// 그래서 굳이 kind까지 처리하지 않고 item만 return
-	clusterList := map[string][]ladybug.ClusterInfo{}
+
+	clusterList := map[string][]spider.SpClusterInfo{}
 	json.NewDecoder(respBody).Decode(&clusterList)
-	fmt.Println(clusterList["items"])
-	log.Println(respBody)
-	// util.DisplayResponse(resp) // 수신내용 확인
-	ids := []string{}
-	for _, keyPmksInfo := range clusterList["items"] {
-		ids = append(ids, keyPmksInfo.Mcis) // ID값이 없어 MCIS항목으로 처리
-	}
-	return ids, model.WebStatus{StatusCode: respStatus}
+	fmt.Println("^^^^^^^^^^^^^^^^^^^^^^^")
+	fmt.Println(clusterList)
+	//log.Println(respBody)
+
+	return clusterList["cluster"], model.WebStatus{StatusCode: respStatus}
 }
 
 // 특정 Cluster 조회
-func GetPmksClusterData(nameSpaceID string, cluster string) (*ladybug.ClusterInfo, model.WebStatus) {
-	var originalUrl = "/ns/{namespace}/clusters/{cluster}"
+func GetPmksClusterData(cluster string, clusterReqInfo spider.ClusterReqInfo) (*spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/cluster/{cluster}"
 
 	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
 	paramMapper["{cluster}"] = cluster
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
 	url := util.SPIDER + urlParam
 
-	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
+	pbytes, _ := json.Marshal(clusterReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	// defer body.Close()
-	clusterInfo := ladybug.ClusterInfo{}
+	clusterInfo := spider.SpClusterInfo{}
 	if err != nil {
 		fmt.Println(err)
 		return &clusterInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
@@ -117,20 +102,17 @@ func GetPmksClusterData(nameSpaceID string, cluster string) (*ladybug.ClusterInf
 }
 
 // Cluster 생성
-func RegPmksCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*ladybug.ClusterInfo, model.WebStatus) {
+func RegPmksCluster(nameSpaceID string, clusterReqInfo *spider.ClusterReqInfo) (*spider.SpClusterInfo, model.WebStatus) {
 
-	var originalUrl = "/ns/{namespace}/clusters"
+	var originalUrl = "/cluster"
 
-	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.SPIDER + urlParam
+	url := util.SPIDER + originalUrl
 
-	pbytes, _ := json.Marshal(clusterReq)
+	pbytes, _ := json.Marshal(clusterReqInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnClusterInfo := ladybug.ClusterInfo{}
+	returnClusterInfo := spider.SpClusterInfo{}
 	returnStatus := model.WebStatus{}
 
 	if err != nil {
@@ -155,98 +137,187 @@ func RegPmksCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*lad
 	return &returnClusterInfo, returnStatus
 }
 
-// Cluster 생성
-func RegPmksClusterByAsync(nameSpaceID string, clusterReq *ladybug.ClusterRegReq, c echo.Context) {
+// PMKS Cluster 생성
+func RegPmksClusterByAsync(clusterReqInfo *spider.ClusterReqInfo, c echo.Context) {
 
-	var originalUrl = "/ns/{namespace}/clusters"
+	var originalUrl = "/cluster"
 
-	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.SPIDER + urlParam
+	url := util.SPIDER + originalUrl
 
-	pbytes, _ := json.Marshal(clusterReq)
+	pbytes, _ := json.Marshal(clusterReqInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	taskKey := nameSpaceID + "||" + "pmks" + "||" + clusterReq.Name // TODO : 공통 function으로 뺄 것.
+	nameSpaceID := clusterReqInfo.NameSpace
+	clusterName := clusterReqInfo.ReqInfo.Name
+	taskKey := nameSpaceID + "||" + "pmks" + "||" + clusterName // TODO : 공통 function으로 뺄 것.
 
 	if err != nil {
 		fmt.Println(err)
-		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
-	}
+		//Message: {"code":"400","message":"no managedkubernetes ros component exists. version: 1, labels: ap-southeast-1:common:26888:5513479151634744:GC0","requestId":"67CAB7BC-C0E1-3D93-A967-C89AE46138B2","status":400}
+		//Message: {"code":"QuotaExceeded.Cluster",
+		//"message":"Exceeded the quota for creating a cluster
+		//			(quota code: q_ManagedKubernetes_Default_ack.standard_Cluster)
+		//			, usage 2/2.","requestId":"EEF6F445-4549-39C7-B8AB-DB83B843A296","status":400}
 
-	respBody := resp.Body
-	respStatus := resp.StatusCode
+		errMsg := err.Error()
 
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		failResultInfo := tbcommon.TbSimpleMsg{}
-		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("RegPmksByAsync ", failResultInfo)
-		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
-
+		//StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c)
+		StoreWebsocketMessageDetail(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, errMsg, c)
 	} else {
-		returnClusterInfo := ladybug.ClusterInfo{}
-		json.NewDecoder(respBody).Decode(&returnClusterInfo)
-		fmt.Println(returnClusterInfo)
-		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+
+		respBody := resp.Body
+		respStatus := resp.StatusCode
+		//spew.Dump(resp)
+		if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+			failResultInfo := spider.SpError{}
+			json.NewDecoder(respBody).Decode(&failResultInfo)
+			log.Println("RegPmksByAsync failed ", failResultInfo)
+			log.Println("RegPmksByAsync failed-------- ", failResultInfo.Message)
+
+			//jsonBytes, _ := json.Marshal(failResultInfo) // JSON ENCODING
+			//jsonString := string(jsonBytes)
+			//fmt.Println("personA String: ", jsonString)
+
+			//var result map[string]interface{}
+			//if err := json.Unmarshal([]byte(resp), &result); err != nil {
+			//	panic(err)
+			//}
+
+			//fmt.Println(result["kind"])       // Event 출력
+			//fmt.Println(result["apiVersion"]) // events.k8s.io/v1 출력
+
+			beginIndex := strings.Index(failResultInfo.Message, "Message:")
+			if beginIndex == -1 {
+				fmt.Println("cannot find Message:  ------------")
+			}
+			findMessageBegin := failResultInfo.Message[beginIndex:]
+			fmt.Println("findMessageBegin :  ", findMessageBegin)
+
+			beginIndex2 := strings.Index(findMessageBegin, "{")
+			findMessage := findMessageBegin[beginIndex2:]
+			fmt.Println("findMessage :  ", findMessage)
+
+			endIndex := strings.Index(findMessage, "}")
+			endMessage := findMessage[:endIndex]
+			fmt.Println("endMessage :  ", endMessage)
+			//findMessageBegin := strings.Index(failResultInfo.Message, "}"))
+
+			//byt := []byte(endMessage)
+			//var dat map[string]interface{}
+			//if err := json.Unmarshal(byt, &dat); err != nil {
+			//panic(err)
+			//}
+			//fmt.Println("********************")
+			//fmt.Println(dat)
+
+			//var errorDetailObj = spider.SpErrorDetail{}
+			//err := json.Unmarshal([]byte(endMessage), &errorDetailObj)
+			//if err != nil {
+			//	fmt.Println(err)
+			//}
+			//fmt.Println("personObj Object: ", errorDetailObj)
+			//detailInfo := spider.SpErrorDetail{}
+			//json.NewDecoder(failResultInfo).Decode(&detailInfo)
+			//log.Println("detail failed ", detailInfo)
+
+			//StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+			StoreWebsocketMessageDetail(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, endMessage, c)
+		} else {
+			returnClusterInfo := spider.ClusterInfo{}
+			json.NewDecoder(respBody).Decode(&returnClusterInfo)
+			fmt.Println(returnClusterInfo)
+			StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+		}
 	}
 
 }
 
-// Cluster 삭제
-func DelPmksCluster(nameSpaceID string, clusterName string) (*ladybug.StatusInfo, model.WebStatus) {
-	var originalUrl = "/ns/{namespace}/clusters/{cluster}"
+// PmksClusterUpdateProc : 현재는 버전만 upgrade. 추후 항목 update가 생기면 function 분리할 것
+func UpdatePmksCluster(clusterReqInfo *spider.ClusterReqInfo) (spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/cluster/upgrade"
 
-	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	paramMapper["{cluster}"] = clusterName
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.SPIDER + urlParam
+	url := util.SPIDER + originalUrl
 
-	if clusterName == "" {
-		return nil, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
+	pbytes, _ := json.Marshal(clusterReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	util.DisplayResponse(resp) // 수신내용 확인
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	resultClusterInfo := spider.SpClusterInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return resultClusterInfo, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
 	}
 
-	// 경로안에 parameter가 있어 추가 param없이 호출 함.
-	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
-	statusInfo := ladybug.StatusInfo{}
+	json.NewDecoder(respBody).Decode(&resultClusterInfo)
+
+	return resultClusterInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// PMKS Cluster 삭제
+func DelPmksCluster(cluster string, clusterReqInfo spider.ClusterReqInfo) (*spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/cluster/{cluster}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{cluster}"] = cluster
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.SPIDER + urlParam
+
+	pbytes, _ := json.Marshal(clusterReqInfo)
+
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+	util.DisplayResponse(resp) // 수신내용 확인
+
+	resultClusterInfo := spider.SpClusterInfo{}
 	if err != nil {
 		fmt.Println("delCluster ", err)
-		return &statusInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &resultClusterInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	json.NewDecoder(respBody).Decode(&statusInfo)
-	fmt.Println(statusInfo)
+	json.NewDecoder(respBody).Decode(&resultClusterInfo)
+	fmt.Println(resultClusterInfo)
 
 	if respStatus != 200 && respStatus != 201 {
-		fmt.Println(respBody)
-		return &statusInfo, model.WebStatus{StatusCode: respStatus, Message: statusInfo.Message}
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		fmt.Println(failResultInfo)
+		return &resultClusterInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
-	return &statusInfo, model.WebStatus{StatusCode: respStatus}
+	return &resultClusterInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // Cluster 삭제 비동기 처리
-func DelPmksClusterByAsync(nameSpaceID string, clusterName string, c echo.Context) {
-	var originalUrl = "/ns/{namespace}/clusters/{cluster}"
+func DelPmksClusterByAsync(cluster string, clusterReqInfo *spider.ClusterReqInfo, c echo.Context) {
+	var originalUrl = "/cluster/{cluster}"
 
 	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	paramMapper["{cluster}"] = clusterName
+	paramMapper["{cluster}"] = cluster
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
 	url := util.SPIDER + urlParam
 
-	// 경로안에 parameter가 있어 추가 param없이 호출 함.
-	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+	pbytes, _ := json.Marshal(clusterReqInfo)
 
-	taskKey := nameSpaceID + "||" + "pmks" + "||" + clusterName
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
+
+	nameSpaceID := clusterReqInfo.NameSpace
+	taskKey := nameSpaceID + "||" + "pmks" + "||" + cluster
 
 	if err != nil {
 		fmt.Println(err)
-		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		errMsg := err.Error()
+		//StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		StoreWebsocketMessageDetail(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, errMsg, c)
+
 	}
 
 	respBody := resp.Body
@@ -256,151 +327,29 @@ func DelPmksClusterByAsync(nameSpaceID string, clusterName string, c echo.Contex
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		log.Println("DelPmksByAsync ", failResultInfo)
-		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_DELETE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 
 	} else {
-		returnClusterInfo := ladybug.ClusterInfo{}
-		json.NewDecoder(respBody).Decode(&returnClusterInfo)
-		fmt.Println(returnClusterInfo)
-		StoreWebsocketMessage(util.TASK_TYPE_MCKS, taskKey, util.MCKS_LIFECYCLE_DELETE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+		log.Println("DelPmksByAsync respBody : ", respBody)
+		StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_LIFECYCLE_DELETE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
 	}
 }
 
-// MCKS의 상태값 숫자로 표시
-func GetPmksStatusCountMap(clusterList []ladybug.ClusterInfo) map[string]int {
-	pmksStatusRunning := 0
-	pmksStatusStopped := 0
-	pmksStatusTerminated := 0
+// NodeGroup 생성
+func RegPmksNodeGroup(clusterID string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (*spider.NodeGroupInfo, model.WebStatus) {
 
-	// for _, clusterInfo := range clusterList {
-	// 	pmksStatus := util.GetPmksStatus(clusterInfo.Status)
-	// 	if pmksStatus == util.MCKS_STATUS_RUNNING {
-	// 		pmksStatusRunning++
-	// 	} else if pmksStatus == util.MCKS_STATUS_TERMINATED {
-	// 		pmksStatusTerminated++
-	// 	} else {
-	// 		pmksStatusStopped++
-	// 	}
-	// }
-
-	pmksStatusMap := make(map[string]int)
-	pmksStatusMap["RUNNING"] = pmksStatusRunning
-	pmksStatusMap["STOPPED"] = pmksStatusStopped
-	pmksStatusMap["TERMINATED"] = pmksStatusTerminated
-	pmksStatusMap["TOTAL"] = pmksStatusRunning + pmksStatusStopped + pmksStatusTerminated
-
-	return pmksStatusMap
-}
-
-// Node의 간단정보(credential 제외) + kind별 node 갯수 return
-func GetPmksSimpleNodeCountMap(cluster ladybug.ClusterInfo) ([]ladybug.NodeSimpleInfo, map[string]int) {
-	var nodeSimpleList []ladybug.NodeSimpleInfo
-	nodeRoleCountMap := map[string]int{}
-	for nodeIndex, nodeInfo := range cluster.Nodes {
-		nodeSimpleObj := ladybug.NodeSimpleInfo{
-			NodeIndex:    nodeIndex,
-			NodeUID:      nodeInfo.UID,
-			NodeName:     nodeInfo.Name,
-			NodeKind:     nodeInfo.Kind, // Node냐 cluster냐
-			NodeCsp:      nodeInfo.Csp,
-			NodePublicIp: nodeInfo.PublicIp,
-			NodeRole:     nodeInfo.Role, // Control-plane냐, Worker냐
-			NodeSpec:     nodeInfo.Spec,
-		}
-		nodeSimpleList = append(nodeSimpleList, nodeSimpleObj)
-
-		_, exists := nodeRoleCountMap[nodeInfo.Role]
-		if !exists {
-			nodeRoleCountMap[nodeInfo.Role] = 0
-		}
-		nodeRoleCountMap[nodeInfo.Role] += 1
-	}
-	log.Println("nodeRoleCountMap")
-	log.Println(nodeRoleCountMap)
-	return nodeSimpleList, nodeRoleCountMap
-}
-
-////////
-
-// Node 목록 조회
-func GetPmksNodeList(nameSpaceID string, clusterName string) (ladybug.NodeList, model.WebStatus) {
-	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes"
+	var originalUrl = "/cluster/{cluster}/nodegroup"
 
 	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	paramMapper["{cluster}"] = clusterName
+	paramMapper["{cluster}"] = clusterID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-
 	url := util.SPIDER + urlParam
 
-	resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-
-	nodeList := ladybug.NodeList{} // 이름은 List이나 1개의 객체임
-	if err != nil {
-		fmt.Println(err)
-		return nodeList, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
-
-	respBody := resp.Body
-	respStatus := resp.StatusCode
-
-	json.NewDecoder(respBody).Decode(&nodeList)
-	fmt.Println(nodeList)
-	log.Println(respBody)
-	// util.DisplayResponse(resp) // 수신내용 확인
-
-	return nodeList, model.WebStatus{StatusCode: respStatus}
-}
-
-// 특정 Cluster 조회
-func GetPmksNodeData(nameSpaceID string, clusterName string, node string) (*ladybug.NodeInfo, model.WebStatus) {
-	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes/{node}"
-
-	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	paramMapper["{cluster}"] = clusterName
-	paramMapper["{node}"] = node
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-
-	url := util.SPIDER + urlParam
-
-	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
-
-	// defer body.Close()
-	nodeInfo := ladybug.NodeInfo{}
-	if err != nil {
-		fmt.Println(err)
-		return &nodeInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
-	// util.DisplayResponse(resp) // 수신내용 확인
-
-	respBody := resp.Body
-	respStatus := resp.StatusCode
-
-	json.NewDecoder(respBody).Decode(&nodeInfo)
-	fmt.Println(nodeInfo)
-
-	return &nodeInfo, model.WebStatus{StatusCode: respStatus}
-}
-
-// Node 생성
-func RegPmksNodeGroup(nameSpaceID string, clusterName string, nodeRegReq *ladybug.NodeRegReq) (*ladybug.NodeInfo, model.WebStatus) {
-
-	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes"
-
-	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	paramMapper["{cluster}"] = clusterName
-	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.MCKS + urlParam
-
-	pbytes, _ := json.Marshal(nodeRegReq)
+	pbytes, _ := json.Marshal(nodeGroupReqInfo)
 	fmt.Println(string(pbytes))
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
-	returnNodeInfo := ladybug.NodeInfo{}
+	returnNodeGroupInfo := spider.NodeGroupInfo{}
 	returnStatus := model.WebStatus{}
 
 	respBody := resp.Body
@@ -408,7 +357,7 @@ func RegPmksNodeGroup(nameSpaceID string, clusterName string, nodeRegReq *ladybu
 
 	if err != nil {
 		fmt.Println(err)
-		return &returnNodeInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return &returnNodeGroupInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
 	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
@@ -417,51 +366,102 @@ func RegPmksNodeGroup(nameSpaceID string, clusterName string, nodeRegReq *ladybu
 		fmt.Println("respStatus != 200 reason ", errorInfo)
 		returnStatus.Message = errorInfo.Message
 	} else {
-		json.NewDecoder(respBody).Decode(&returnNodeInfo)
-		fmt.Println(returnNodeInfo)
+		json.NewDecoder(respBody).Decode(&returnNodeGroupInfo)
+		fmt.Println(returnNodeGroupInfo)
 	}
 	returnStatus.StatusCode = respStatus
 
-	return &returnNodeInfo, returnStatus
+	return &returnNodeGroupInfo, returnStatus
 }
 
-// Node 삭제
-func DelPmksNodeGroup(nameSpaceID string, clusterName string, node string) (*ladybug.StatusInfo, model.WebStatus) {
-	var originalUrl = "/ns/{namespace}/clusters/{cluster}/nodes/{node}"
+// NodeGroup 삭제
+func DelPmksNodeGroup(clusterID string, nodeGroupID string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (bool, model.WebStatus) {
+	var originalUrl = "/cluster/{cluster}/nodegroup/{nodegroup}"
 
 	var paramMapper = make(map[string]string)
-	paramMapper["{namespace}"] = nameSpaceID
-	paramMapper["{cluster}"] = clusterName
-	paramMapper["{node}"] = node
+	paramMapper["{cluster}"] = clusterID
+	paramMapper["{nodegroup}"] = nodeGroupID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 	url := util.SPIDER + urlParam
 
-	if clusterName == "" {
-		return nil, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
+	if clusterID == "" {
+		return false, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
 	}
-	if node == "" {
-		return nil, model.WebStatus{StatusCode: 500, Message: "node is required"}
+	if nodeGroupID == "" {
+		return false, model.WebStatus{StatusCode: 500, Message: "nodeGroup is required"}
 	}
 
-	// 경로안에 parameter가 있어 추가 param없이 호출 함.
-	resp, err := util.CommonHttp(url, nil, http.MethodDelete)
+	pbytes, _ := json.Marshal(nodeGroupReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodDelete)
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return false, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 
-	statusInfo := ladybug.StatusInfo{}
-	if err != nil {
-		fmt.Println(err)
-		return &statusInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
-	}
-	// util.DisplayResponse(resp) // 수신내용 확인
+	util.DisplayResponse(resp) // 수신내용 확인
 
+	//respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	return true, model.WebStatus{StatusCode: respStatus}
+}
+
+// NodeGroup 수정 : onAutoScaling
+func UpdatePmksNodeGroupAutoScaling(clusterID string, nodeGroupID string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/cluster/{cluster}/nodegroup/{nodegroup}/onautoscaling"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{cluster}"] = clusterID
+	paramMapper["{nodegroup}"] = nodeGroupID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.SPIDER + urlParam
+
+	pbytes, _ := json.Marshal(nodeGroupReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	util.DisplayResponse(resp) // 수신내용 확인
+	// return body, err
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	json.NewDecoder(respBody).Decode(&statusInfo)
-	fmt.Println(statusInfo)
+	resultClusterInfo := spider.SpClusterInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return resultClusterInfo, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
 
-	return &statusInfo, model.WebStatus{StatusCode: respStatus}
+	json.NewDecoder(respBody).Decode(&resultClusterInfo)
+
+	return resultClusterInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// NodeGroup 수정 : node Size
+func UpdatePmksNodeGroupAutoscaleSize(clusterID string, nodeGroupID string, nodeGroupReqInfo *spider.NodeGroupReqInfo) (spider.SpClusterInfo, model.WebStatus) {
+	var originalUrl = "/cluster/{cluster}/nodegroup/{nodegroup}/autoscalesize"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{cluster}"] = clusterID
+	paramMapper["{nodegroup}"] = nodeGroupID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+	url := util.SPIDER + urlParam
+
+	pbytes, _ := json.Marshal(nodeGroupReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+	util.DisplayResponse(resp) // 수신내용 확인
+	// return body, err
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	resultClusterInfo := spider.SpClusterInfo{}
+	if err != nil {
+		fmt.Println(err)
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		return resultClusterInfo, model.WebStatus{StatusCode: 500, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&resultClusterInfo)
+
+	return resultClusterInfo, model.WebStatus{StatusCode: respStatus}
 }

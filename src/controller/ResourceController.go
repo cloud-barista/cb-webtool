@@ -8,6 +8,7 @@ import (
 	"github.com/cloud-barista/cb-webtool/src/model"
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	webtool "github.com/cloud-barista/cb-webtool/src/model/webtool"
 
 	// tbmcis "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
@@ -1688,8 +1689,7 @@ func DataDiskList(c echo.Context) error {
 
 }
 
-// e.POST("/setting/resources/datadisk/reg", controller.DataDiskRegProc)
-// Vpc 등록 :
+// e.POST("/setting/resources/datadisk/reg", controller.DataDiskRegProc):
 func DataDiskRegProc(c echo.Context) error {
 	log.Println("DataDiskRegProc : ")
 	loginInfo := service.CallLoginInfo(c)
@@ -1834,5 +1834,297 @@ func DataDiskDelProc(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": respMessage.Message,
 		"status":  respMessage.StatusCode,
+	})
+}
+
+// Create, Update, Delete를 한번에 하는 Controller
+// 단, Attach, Detach 는 1개 vm에 대해서만 가능하게?
+func DataDiskMngProc(c echo.Context) error {
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// 받아온 param maiing
+	dataDiskReq := new(webtool.DataDiskMngReq)
+	if err := c.Bind(dataDiskReq); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.QueryParam("mcisID")
+	vmID := c.QueryParam("vmID")
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	// create data disk list
+	if dataDiskReq.CreateDataDiskList != nil {
+		for _, createDataDisk := range dataDiskReq.CreateDataDiskList {
+			// 생성 후 attach 할 vm이 있으면 attach 한다.
+			// disk생성의 경우 delay가 충분히 있어야 한다.
+			go service.AsyncRegDataDisk(defaultNameSpaceID, &createDataDisk, c)
+		}
+
+	}
+
+	// detach data disk list
+	if dataDiskReq.DetachDataDiskList != nil {
+		if mcisID != "" && vmID != "" {
+			for _, detachDataDisk := range dataDiskReq.DetachDataDiskList {
+
+				// 2. vm에 attach
+				optionParam := "detach"
+				attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
+				attachDetachDataDiskReq.DataDiskId = detachDataDisk
+
+				go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
+
+			}
+		}
+	}
+
+	// attach data disk list
+	if dataDiskReq.AttachDataDiskList != nil {
+		if mcisID != "" && vmID != "" {
+			for _, attachDataDisk := range dataDiskReq.AttachDataDiskList {
+				optionParam := "attach"
+				attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
+				attachDetachDataDiskReq.DataDiskId = attachDataDisk
+				go service.AsyncAttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq, c)
+			}
+		}
+	}
+
+	// delete data disk list
+	if dataDiskReq.DetachDataDiskList != nil {
+		for _, delDataDisk := range dataDiskReq.DetachDataDiskList {
+			go service.AsyncDelDataDisk(defaultNameSpaceID, delDataDisk, c)
+		}
+	}
+	// return result
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+	})
+}
+
+// MyImage 관리화면 호출
+func MyImageMngForm(c echo.Context) error {
+	fmt.Println("MyImage ************ : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	//defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	store := echosession.FromContext(c)
+
+	cloudOsList, _ := service.GetCloudOSList()
+	store.Set("cloudos", cloudOsList)
+
+	// 최신 namespacelist 가져오기
+	nsList, _ := service.GetNameSpaceList()
+	store.Set("namespace", nsList)
+	store.Save()
+
+	return echotemplate.Render(c, http.StatusOK,
+		"setting/resources/MyImageMng", // 파일명
+		map[string]interface{}{
+			"LoginInfo":     loginInfo,
+			"CloudOSList":   cloudOsList,
+			"NameSpaceList": nsList,
+		})
+}
+
+// MyImage 목록조회
+func MyImageList(c echo.Context) error {
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	optionParam := c.QueryParam("option")
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
+	if optionParam == "id" {
+		myImageInfoList, respStatus := service.GetMyImageListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"defaultNameSpaceID": defaultNameSpaceID,
+			"myImageInfoList":    myImageInfoList,
+		})
+	} else {
+		myImageInfoList, respStatus := service.GetMyImageListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"defaultNameSpaceID": defaultNameSpaceID,
+			"myImageInfoList":    myImageInfoList,
+		})
+	}
+
+}
+
+// MyImage 등록 : csp에만 등록된 customImage를 cb-tb에 등록
+func MyImageRegProc(c echo.Context) error {
+	log.Println("MyImageRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	myImageRegInfo := new(tbmcir.TbCustomImageReq)
+	if err := c.Bind(myImageRegInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	resultMyImageInfo, respStatus := service.RegCspCustomImageToMyImage(defaultNameSpaceID, myImageRegInfo)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":     "success",
+		"status":      respStatus.StatusCode,
+		"MyImageInfo": resultMyImageInfo,
+	})
+}
+
+// MyImage 모두 제거 : ui에서는 빼는게 나을 지...
+func MyImageAllDelProc(c echo.Context) error {
+	log.Println("MyImageAllDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	respMessage, respStatus := service.DelAllMyImage(defaultNameSpaceID)
+	fmt.Println("=============respMessage =============", respMessage)
+	log.Println("respStatus : ", respStatus)
+	log.Println("respMessage : ", respMessage)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": respMessage.Message,
+		"status":  respMessage.StatusCode,
+	})
+}
+
+// MyImage상세 조회
+func MyImageGet(c echo.Context) error {
+	log.Println("MyImageGet : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	myImageID := c.Param("myImageID")
+	myImageInfo, respStatus := service.MyImageGet(defaultNameSpaceID, myImageID)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":     "success",
+		"status":      respStatus,
+		"myImageInfo": myImageInfo,
+	})
+}
+
+// MyImage삭제
+func MyImageDelProc(c echo.Context) error {
+	log.Println("MyImageDelProc : ")
+
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// store := echosession.FromContext(c)
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	myImageID := c.Param("myImageID")
+
+	respMessage, respStatus := service.DelMyImage(defaultNameSpaceID, myImageID)
+	fmt.Println("=============respMessage =============", respMessage)
+	log.Println("respStatus : ", respStatus)
+	log.Println("respMessage : ", respMessage)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": respMessage.Message,
+		"status":  respMessage.StatusCode,
+	})
+}
+
+// Provider, connection 에서 사용가능한 DiskType 조회
+// 현재 : spider의 cloudos_meta.yaml 값 사용
+func DataDiskLookupList(c echo.Context) error {
+	log.Println("DataDiskProviderDisList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	//defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	provider := c.QueryParam("provider")
+	connectionName := c.QueryParam("connectionName")
+
+	diskInfoList, err := service.DiskLookup(provider, connectionName)
+	if err != nil {
+
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":      "success",
+		"status":       "success",
+		"DiskInfoList": diskInfoList,
 	})
 }

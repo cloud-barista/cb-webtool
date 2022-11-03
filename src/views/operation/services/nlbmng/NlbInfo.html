@@ -13,91 +13,145 @@
 		</div>
 
 		<div class="ds_cont">
-
-			<div class="iparea">
-				<div class="boxlist ipbox ip1">
-					<ul>
-						<li>
-							<label>Name</label>
-							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
-								id="mcks_info_name" />
-						</li>
-					</ul>
+			<div class="register_box reg">
+				<div class="top_ipbox">
+					<div class="ipbox ipbox1">
+						<ul>
+							<li class="reg_1">
+								<label>NLB Name</label>
+								<input type="text" id="dtl_nlbName" name="dtl_nlbName" value="" placeholder=""
+									class="gray" title="" disabled />
+							</li>
+							<li class="reg_1">
+								<label>Description</label>
+								<textarea id="dtl_description" name="dtl_Description" cols="" rows="" placeholder=""
+									class="gray" title="" disabled></textarea>
+							</li>
+						</ul>
+					</div>
+					<div class="ipbox ipbox1">
+						<ul>
+							<li class="reg_1">
+								<label>Cloud Provider</label>
+								<input type="text" id="dtl_provider" name="dtl_provider" value="" placeholder=""
+									class="gray" title="" readonly />
+							</li>
+							<li class="reg_1">
+								<label>
+									Connection
+									Name</label>
+								<input type="text" id="dtl_connectionName" name="dtl_connectionName" value=""
+									placeholder="" class="gray" title="" readonly />
+							</li>
+							<!-- <li class="reg_1">
+								<label>VPC ID</label>
+								<span class="sbox">
+									<select class="white pline w3" name="reg_vNetId" id="regVNetId">
+										<option value="">Selected VPC Id</option>
+									</select>
+								</span>
+							</li> -->
+						</ul>
+					</div>
 				</div>
-
-				<div class="boxlist ipbox ip2">
-					<ul>
-						<li>
-							<label>Status</label>
-							<input type="text" name="" value="" placeholder="None" title="" readonly
-								id="mcks_info_Status" />
-						</li>
-					</ul>
-				</div>
-
-				<div class="boxlist ipbox ip3">
-					<ul>
-						<li>
-							<label>Cloud Connections</label>
-							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
-								id="mcks_info_cloud_connection" readonly />
-						</li>
-
-					</ul>
-				</div>
-			</div>
-		</div>
-
-		<div class="ds_cont">
-
-			<div class="area_cont">
-
-				<div class="box">
-
-					<div class="titbox">
-						<div class="tit initial" id="mcks_server_info_status"></div>
-						<div class="top_info">
+				<div class="graybox">
+					<div class="g_box">
+						<div class="g_ipbox g_ipbox1">
 							<ul>
-
 								<li>
-									<a href="javascript:void(0);">Action</a>
-									<div class="infobox">
-										<div class="box">
-											<ul>
-
-												<li>
-													<strong>Manage</strong>
-													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#Node_n_New"
-																onClick="addNewNode()">Add/Extend</a></li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#Node_n_Delete"
-																onClick="commonConfirmOpen('DeleteNodeOfMcks')">Delete</a>
-														</li>
-													</ul>
-												</li>
-											</ul>
+									<div class="sub_titbox">
+										<div class="tit">
+											<strong>Listener</strong>
 										</div>
 									</div>
+								</li>
+								<li class="reg_1">
+									<label>Protocol/Port</label>
+									<span class="sbox">
+										<input type="text" id="dtl_ls_protocol" name="dtl_ls_protocol" value=""
+											placeholder="" class="gray pair_input" title="" disabled />
+										<input type="text" id="dtl_ls_port" name="dtl_ls_port" value="" placeholder=""
+											class="gray pair_input" title="" disabled />
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div class="g_ipbox g_ipbox1">
+							<ul>
+								<li>
+									<div class="sub_titbox">
+										<div class="tit">
+											<strong>Health Check</strong>
+										</div>
+									</div>
+								</li>
+								<li class="reg_1">
+									<label>Threshold</label>
+									<span class="sbox">
+										<input type="text" id="dtl_hc_threshold" name="dtl_hc_threshold" value=""
+											placeholder="" class="gray" title="" disabled />
+									</span>
+								</li>
+								<li class="reg_1">
+									<label>Interval/Timeout</label>
+									<span class="sbox">
+										<input type="text" id="dtl_hc_interval" name="dtl_hc_interval" value=""
+											placeholder="" class="gray pair_input" title="" disabled />
+										<input type="text" id="dtl_hc_timeout" name="dtl_hc_timeout" value=""
+											placeholder="" class="gray pair_input" title="" disabled />
+									</span>
 								</li>
 							</ul>
 						</div>
 					</div>
-
-
-
-					<div class="listbox scrollbar-inner">
-						<ul id="mcks_server_info_box">
-
-						</ul>
-					</div>
-
-
 				</div>
-
+				<div class="graybox">
+					<div class="g_box">
+						<div class="sub_titbox">
+							<div class="tit">
+								<strong>Target Group</strong>
+							</div>
+						</div>
+						<div class="g_ipbox g_ipbox1">
+							<ul>
+								<li class="reg_1">
+									<label>Protocol/Port</label>
+									<span class="sbox">
+										<input type="text" id="dtl_tg_protocol" name="dtl_tg_protocol" value=""
+											placeholder="" class="gray pair_input" title="" readonly />
+										<input type="text" id="dtl_tg_port" name="dtl_tg_port" value="" placeholder=""
+											class="gray pair_input" title="" readonly />
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div class="g_ipbox g_ipbox1">
+							<ul>
+								<li class="reg_1">
+									<span class="sbox">
+										<input type="hidden" id="tg_mcisId" name="tg_mcisId" placeholder=""
+											class="ip_w1 gray noline" title="" readonly />
+									</span>
+								</li>
+								<li class="reg_1">
+									<label>Sub Group ID</label>
+									<span class="sbox">
+										<input type="text" id="dtl_tg_subGroupId" name="dtl_tg_subGroupId" value=""
+											placeholder="" class="gray" title="" readonly />
+									</span>
+								</li>
+								<li class="reg_1">
+									<label>VMS</label>
+									<textarea name="dtl_tg_vms" id="dtl_tg_vms" cols="" rows="" placeholder="VMs"
+										class="pline gray" title="" readonly></textarea>
+									<a href="javascript:void(0);" class="ma btn_register"
+										onClick="vmHealthCheck()">Health</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
-
 		</div>
 
 	</div>

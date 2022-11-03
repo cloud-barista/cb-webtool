@@ -110,11 +110,53 @@ func NlbMngForm(c echo.Context) error {
 			"Message":            mcisErr.Message,
 			"Status":             200, //mcisErr.StatusCode, // 주요한 객체 return message 를 사용
 			"LoginInfo":          loginInfo,
-			"CloudOSList":   cloudOsList,
-			"NameSpaceList": nsList,
+			"CloudOSList":        cloudOsList,
+			"NameSpaceList":      nsList,
 			"DefaultNameSpaceID": defaultNameSpaceID,
 			"SelectedMcisID":     selectedMcisID, // 선택한 MCIS ID
 		})
+}
+
+// Namespace의 모든 NLB 목록 조회
+func AllNlbListOfNamespace(c echo.Context) error {
+	log.Println("GetAllNlbList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	mcisIdList, respStatus := service.GetMcisListByID(defaultNameSpaceID, "", "")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	totalNlbList := []tbmcis.TbNLBInfo{}
+	for _, mcisID := range mcisIdList {
+		nlbList, respStatus := service.GetNlbListByOption(defaultNameSpaceID, mcisID, "")
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			continue
+		}
+		// mcisID set
+		for _, nlb := range nlbList {
+			nlb.McisID = mcisID
+			log.Println("nlb.McisID : ", nlb.McisID)
+			totalNlbList = append(totalNlbList, nlb)
+		}
+		//totalNlbList = append(totalNlbList, nlbList...) // mcisID가 set 안됨.
+
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":            "success",
+		"status":             respStatus.StatusCode,
+		"DefaultNameSpaceID": defaultNameSpaceID,
+		"NlbList":            totalNlbList,
+	})
+
 }
 
 // NLB 목록 조회
@@ -266,7 +308,7 @@ func NlbGet(c echo.Context) error {
 	nlbID := c.Param("nlbID")
 	log.Println("nlbID= " + nlbID)
 
-	resultNlbInfo, respStatus := service.GetNlbDataByID(defaultNameSpaceID, mcisID, nlbID)
+	resultNlbInfo, respStatus := service.GetNlbData(defaultNameSpaceID, mcisID, nlbID)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",

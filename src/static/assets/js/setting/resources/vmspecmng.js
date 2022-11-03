@@ -333,6 +333,7 @@ function showVmSpecInfo(target) {
 //         return;
 //     }
 
+
 //     // var apiInfo = "{{ .apiInfo}}";
 //     var url = "/setting/resources" + "/vmspec/reg"
 //     console.log("URL : ", url)
@@ -387,6 +388,7 @@ function showVmSpecInfo(target) {
 //         return;
 //     }
 // }
+
 
 function deleteVmSpec() {
     var selSpecId = "";

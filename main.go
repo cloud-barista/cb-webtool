@@ -319,7 +319,7 @@ func main() {
 	})
 
 	// PMKS 등록 form Template
-	pmksRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+	pmksClusterRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
 		Root:      "src/views",
 		Extension: ".html",
 		// Master:    "operation/pmks/pmksmng",
@@ -331,7 +331,47 @@ func main() {
 			"templates/Header",
 			"templates/MenuLeft",
 			"templates/Footer",
-			"operation/manages/pmksmng/NodeGroupConfigure",
+			"operation/manages/pmksmng/ClusterCreate",
+		},
+		DisableCache: true,
+	})
+
+	pmksNodeGroupRegTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/pmks/pmksmng",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+			"operation/manages/pmksmng/ClusterInfo",
+			"operation/manages/pmksmng/NodeGroupCreate",
+		},
+		DisableCache: true,
+	})
+
+	// PMKS 목록 form Template
+	pmksMngTemplate := echotemplate.NewMiddleware(echotemplate.TemplateConfig{
+		Root:      "src/views",
+		Extension: ".html",
+		// Master:    "operation/pmks/pmksmng",
+		Partials: []string{
+			"templates/OperationTop", // 불러오는 css, javascript 가 setting 과 다름
+			"templates/TopBox",
+			"templates/LNBPopup",
+			"templates/Modal",
+			"templates/Header",
+			"templates/MenuLeft",
+			"templates/Footer",
+
+			"operation/manages/pmksmng/ClusterList",
+			"operation/manages/pmksmng/ClusterInfo",
+			"operation/manages/pmksmng/NodeGroupInfo",
+			"operation/manages/pmksmng/NodeInfo",
 		},
 		DisableCache: true,
 	})
@@ -625,7 +665,10 @@ func main() {
 	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID", controller.GetVmInfoData)
 	e.GET("/operation/manages/mcismng/:mcisID/vnet/:vnetID", controller.GetVmInfoDataByVnet) // MCIS내 특정 Vnet을 사용하는 vm목록
 
-	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/:command", controller.DataDiskToVmUpdateProc)        // disk attach detach
+	e.POST("/operation/manages/mcismng/:mcisID/vm/:vmID/snapshot", controller.VmSnapshotRegProc)                 // vm의 snapshot 생성
+	e.PUT("/operation/manages/mcismng/:mcisID/vm/:vmID/datadisk", controller.AttachDetachDataDiskToVmUpdateProc) // vm에 disk attach detach
+	e.GET("/operation/manages/mcismng/:mcisID/vm/:vmID/datadisk", controller.GetAvailableDataDiskListForVM)      // vm에 사용가능한 diskId목록
+
 	e.GET("/operation/manages/mcismng/:mcisID/subgroup", controller.McisSubGroupList)                       // mcis의 subGroup List
 	e.POST("/operation/manages/mcismng/:mcisID/subgroup/reg/proc", controller.SubGroupRegProc)              // vm 등록이므로 vmID없이 reg/proc
 	e.GET("/operation/manages/mcismng/:mcisID/subgroup/:subGroupID", controller.SubGroupVmList)             // subGroup 내 vm 목록
@@ -660,9 +703,9 @@ func main() {
 
 	e.GET("/operation/manages/mcksmng/list", controller.GetMcksList)
 	e.POST("/operation/manages/mcksmng/reg/proc", controller.McksRegProc)
-	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName", controller.McksDelProc)
-	e.POST("/operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc", controller.NodeRegProc)
-	e.DELETE("/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName", controller.NodeDelProc)
+	e.DELETE("/operation/manages/mcksmng/:clusterUID/:clusterName", controller.McksDelProc)
+	e.POST("/operation/manages/mcksmng/:clusterUID/:clusterName/reg/proc", controller.NodeRegProc)
+	e.DELETE("/operation/manages/mcksmng/:clusterUID/:clusterName/del/:nodeID/:nodeName", controller.NodeDelProc)
 
 	// // Resource
 	// e.GET("/Resource/board", controller.ResourceBoard)
@@ -728,6 +771,11 @@ func main() {
 	resourcesGroup.POST("/network/reg", controller.VpcRegProc)
 	resourcesGroup.DELETE("/network/del/:vNetID", controller.VpcDelProc)
 
+	e.GET("/setting/resources/network/list", controller.GetVpcList)
+	e.GET("/setting/resources/network/:vNetID", controller.GetVpcData)
+	e.POST("/setting/resources/network/reg", controller.VpcRegProc)
+	e.DELETE("/setting/resources/network/del/:vNetID", controller.VpcDelProc)
+
 	resourcesGroup.GET("/securitygroup/mngform", controller.SecirityGroupMngForm)
 	resourcesGroup.GET("/securitygroup/list", controller.GetSecirityGroupList)
 	resourcesGroup.GET("/securitygroup/:securityGroupID", controller.GetSecirityGroupData)
@@ -777,14 +825,24 @@ func main() {
 
 	resourcesGroup.GET("/datadisk/mngform", controller.DataDiskMngForm)
 	e.GET("/setting/resources/datadisk/list", controller.DataDiskList)
+	e.GET("/setting/resources/datadisk/lookuplist", controller.DataDiskLookupList)
 	e.POST("/setting/resources/datadisk/reg", controller.DataDiskRegProc)
 	e.DELETE("/setting/resources/datadisk/del", controller.DataDiskAllDelProc)
 	e.GET("/setting/resources/datadisk/:dataDiskID", controller.DataDiskGet)
 	e.PUT("/setting/resources/datadisk/:dataDiskID", controller.DataDiskPutProc)
 	e.DELETE("/setting/resources/datadisk/del/:dataDiskID", controller.DataDiskDelProc)
+	e.POST("/setting/resources/datadisk/mng", controller.DataDiskMngProc) // CRUD를 한번에 할 수 있는
+
+	resourcesGroup.GET("/myimage/mngform", controller.MyImageMngForm)
+	e.GET("/setting/resources/myimage/list", controller.MyImageList)
+	e.POST("/setting/resources/myimage/reg", controller.MyImageRegProc)
+	e.DELETE("/setting/resources/myimage/del", controller.MyImageAllDelProc)
+	e.GET("/setting/resources/myimage/:myImageID", controller.MyImageGet)
+	e.DELETE("/setting/resources/myimage/del/:myImageID", controller.MyImageDelProc)
 
 	nlbGroup := e.Group("/operation/services/nlb", nlbTemplate)
 	nlbGroup.GET("/mngform", controller.NlbMngForm)
+	e.GET("/operation/services/mcis/nlb/listall", controller.AllNlbListOfNamespace)
 	e.GET("/operation/services/mcis/:mcisID/nlb/list", controller.NlbList)
 	e.POST("/operation/services/mcis/:mcisID/nlb/reg", controller.NlbRegProc)
 	e.DELETE("/operation/services/mcis/:mcisID/nlb/del", controller.NlbAllDelProc)
@@ -794,8 +852,25 @@ func main() {
 	e.POST("/operation/services/mcis/:mcisID/nlb/vm/reg/:nblID", controller.NlbVmRegProc)
 	e.DELETE("/operation/services/mcis/:mcisID/nlb/vm/del/:nlbID", controller.NlbVmDelProc)
 
-	pmksGroup := e.Group("/operation/services/pmks", pmksRegTemplate)
-	pmksGroup.GET("/mngform", controller.PmksMngForm)
+	pmksClusterRegGroup := e.Group("/operation/manages/pmksmng/cluster/regform", pmksClusterRegTemplate)
+	pmksClusterRegGroup.GET("", controller.PmksClusterRegForm)
+
+	pmksNodeGroupRegGroup := e.Group("/operation/manages/pmksmng/cluster/:clusterID/regform", pmksNodeGroupRegTemplate)
+	pmksNodeGroupRegGroup.GET("", controller.PmksNodeGroupRegForm)
+
+	pmksMngGroup := e.Group("/operation/manages/pmksmng/mngform", pmksMngTemplate)
+	pmksMngGroup.GET("", controller.PmksMngForm)
+
+	e.GET("/operation/manages/pmks/listall", controller.GetPmksListOfNamespace)
+	e.GET("/operation/manages/pmks/list", controller.GetPmksList)
+	e.GET("/operation/manages/pmks/:clusterID", controller.GetPmksInfoData)
+	e.POST("/operation/manages/pmks/cluster", controller.PmksRegProc)
+	e.DELETE("/operation/manages/pmks/:clusterID", controller.PmksDelProc)
+	e.PUT("/operation/manages/pmks/:clusterID", controller.PmksClusterUpdateProc)
+
+	e.POST("/operation/manages/pmks/:clusterID/nodegroup", controller.PmksNodeGroupRegProc)
+	e.DELETE("/operation/manages/pmks/:clusterID/nodegroup/:nodeGroupID", controller.PmksNodeGroupDelProc)
+	e.PUT("/operation/manages/pmks/:clusterID/nodegroup/:nodeGroupID", controller.PmksNodeGroupUpdateProc)
 
 	// e.GET("/operation/policies/monitoring/list", controller.GetPolicyMonitoringList)
 	// e.POST("/operation/policies/monitoring/reg/proc", controller.PolicyMonitoringRegProc)

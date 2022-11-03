@@ -1,6 +1,8 @@
 package mcis
 
-import tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+import (
+	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+)
 
 type TbNLBInfo struct {
 	AssociatedObjectList []string `json:"associatedObjectList"`
@@ -12,6 +14,7 @@ type TbNLBInfo struct {
 
 	HealthChecker TbNLBHealthCheckerInfo `json:"healthChecker"`
 	Listener      TbNLBListenerInfo      `json:"listener"`
+	Location      tbcommon.TbGeoLocation `json:"location"`
 	TargetGroup   TbNLBTargetGroup       `json:"targetGroup"`
 
 	ID              string                `json:"id"`
@@ -23,4 +26,6 @@ type TbNLBInfo struct {
 
 	Scope string `json:"scope"`
 	Type  string `json:"type"`
+
+	McisID string `json:"mcisId"` // TB에서 해당항목이 없지만 NLB는 McisID가 필수라 추가함.
 }

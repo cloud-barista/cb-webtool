@@ -72,6 +72,7 @@
 	background-color: #999ea7;
 }
 
+
 .mapcont {
 	width: 60%;
 }
@@ -84,6 +85,33 @@
 	display: flex;
 	flex-direction: column;
 	margin-left: 50px;
+  
+.sbox {
+	display: inline-block;
+	width: 50%;
+}
+
+.sbox input,
+.sbox select {
+	width: 100%;
+}
+
+.sbox input.with_btn {
+	width: calc(100% - 75px);
+}
+
+.sbox input.pair_input,
+.sbox select.pair_input {
+	width: calc((100% - 4px)/2);
+}
+
+.sub_titbox .tit {
+	position: relative;
+	padding: 0px 0 10px 40px;
+	color: #06a9b7;
+	font-size: 18px;
+	line-height: 16px;
+
 }
 
 #guideArea .modal-dialog {
@@ -2590,9 +2618,9 @@ table tbody tr {
 		overflow-x: auto !important;
 	}
 
-	.dataTable.scrollbar-inner table {
+	/* .dataTable.scrollbar-inner table {
 		width: 1300px;
-	}
+	} */
 
 	.table_plist .dataTable.scrollbar-inner {
 		max-width: 100%;
@@ -3673,8 +3701,12 @@ table tbody tr {
 
 .dashboard .switch {
 	height: 22px;
-	display: block;
+	display: inline-block;
 	position: relative;
+}
+
+.dashboard .switch.select_type {
+	position: absolute;
 }
 
 .dashboard .switch span.txt {
@@ -3706,6 +3738,7 @@ table tbody tr {
 	color: #3f4656;
 	position: relative;
 	white-space: nowrap;
+	margin-left: 5px;
 }
 
 .dashboard .switch input+span:not(:empty) {
@@ -5823,6 +5856,7 @@ table tbody tr {
 }
 
 .dashboard .register_box li label {
+	width: 145px;
 	position: relative;
 	text-align: right;
 	margin: 8px 14px 0 0;
@@ -5943,6 +5977,7 @@ table tbody tr {
 	padding: 0 12px;
 	min-width: 50px;
 	height: 37px;
+	width: 70px;
 	line-height: 37px;
 	border: none;
 	color: #fff;
@@ -6082,9 +6117,9 @@ table tbody tr {
 	padding: 0 0 0 0;
 }
 
-.dashboard .register_box .top_ipbox .ipbox1 input[type="text"] {
+/* .dashboard .register_box .top_ipbox .ipbox1 input[type="text"] {
 	width: 50%;
-}
+} */
 
 .dashboard .register_box .top_ipbox .ipbox1.ipbox3 input[type="text"] {
 	width: 65%;
@@ -6108,6 +6143,7 @@ table tbody tr {
 
 .dashboard .register_box li.reg_1 textarea {
 	width: 50%;
+	height: 50px;
 }
 
 .dashboard .register_box li.reg_2 input[type="text"],
@@ -6183,7 +6219,7 @@ table tbody tr {
 	width: 28%;
 }
 
-.dashboard .register_box .graybox .g_ipbox1 input[type="text"],
+,
 .dashboard .register_box .graybox .g_ipbox1 textarea,
 .dashboard .register_box .graybox .g_ipbox1 .sel_w1 {
 	width: 62%;
@@ -6866,7 +6902,7 @@ table tbody tr {
 		padding: 0 0 0 15px;
 	}
 
-	.dashboard .register_box .graybox .g_ipbox1 input[type="text"],
+	,
 	.dashboard .register_box .graybox .g_ipbox1 textarea,
 	.dashboard .register_box .graybox .g_ipbox1 .sel_w1 {
 		width: 58%;
@@ -6909,6 +6945,22 @@ table tbody tr {
 }
 
 @media screen and (max-width:1400px) {
+	.sub_titbox {
+		width: 70%;
+		text-align: left;
+		display: inline-block;
+	}
+
+	.sub_titbox .tit {
+		padding: 0;
+		margin-bottom: 20px;
+	}
+
+	.g_box {
+		text-align: right;
+		padding-right: 30px;
+	}
+
 	.dashboard .register_box .top_ipbox .ipbox1 {
 		padding: 20px 0 0 15px;
 		text-align: right;
@@ -6949,18 +7001,16 @@ table tbody tr {
 		padding-top: 0;
 	}
 
-	.dashboard .register_box .graybox .g_ipbox1 label,
-	.dashboard .register_box .graybox .g_ipbox2 label {
-		width: 120px;
-	}
-
 	.dashboard .register_box .graybox .g_ipbox1,
 	.dashboard .register_box .graybox .g_ipbox2 {
 		width: 100%;
 	}
 
-	.dashboard .register_box .graybox .g_ipbox1 input[type="text"],
-	.dashboard .register_box .graybox .g_ipbox1 textarea,
+	.dashboard .register_box .graybox .g_ipbox1:not(:last-child),
+	.dashboard .register_box .graybox .g_ipbox2:not(:last-child) {
+		margin-bottom: 20px;
+	}
+
 	.dashboard .register_box .graybox .g_ipbox2 input[type="text"],
 	.dashboard .register_box .graybox .g_ipbox2 textarea,
 	.dashboard .register_box .graybox .g_ipbox1 .sel_w1,
@@ -6996,10 +7046,6 @@ table tbody tr {
 		width: auto;
 	}
 
-	.dashboard .register_box li.reg_1 textarea {
-		width: 53.5%;
-	}
-
 	.dashboard .register_box li.reg_3 input[type="text"],
 	.dashboard .register_box li.reg_3 textarea,
 	.dashboard .register_box .top_ipbox.bottom_ipbox .ipbox1 input[type="text"] {
@@ -7008,10 +7054,6 @@ table tbody tr {
 
 	.dashboard .register_box .top_ipbox.bottom_ipbox .ipbox1.ipbox5 input[type="text"] {
 		width: 60.5%;
-	}
-
-	.dashboard .register_box .top_ipbox .ipbox1 li.reg_1 input.pline[type="text"] {
-		width: 53.4%;
 	}
 
 	.dashboard .register_box .top_ipbox .ipbox1 li.reg_1n input[type="text"],
@@ -7421,9 +7463,6 @@ table tbody tr {
 }
 
 @media screen and (max-width:900px) {
-	.dashboard .register_box li.reg_1 textarea {
-		width: 54%;
-	}
 
 	.dashboard .register_box .graybox .logicbox .txtbox {
 		width: 640px;
@@ -7607,6 +7646,22 @@ table tbody tr {
 }
 
 @media screen and (max-width:640px) {
+	.sbox {
+		width: 100%;
+	}
+
+	.sub_titbox {
+		width: 100%;
+	}
+
+	.sub_titbox .tit {
+		margin: 10px 0;
+	}
+
+	.g_box {
+		padding: 0;
+	}
+
 	.dashboard .titbox_n .tit {
 		padding: 30px 0 0 15px;
 	}
@@ -7690,18 +7745,18 @@ table tbody tr {
 		display: block;
 		margin: 12px 0 8px 0;
 		text-align: left;
+		width: auto;
 	}
 
 	.dashboard .register_box .graybox .g_ipbox1 textarea,
 	.dashboard .register_box .graybox .g_ipbox2 textarea,
-	.dashboard .register_box .graybox .g_ipbox1 input[type="text"],
 	.dashboard .register_box .graybox .g_ipbox2 input[type="text"],
 	.dashboard .register_box .graybox .g_ipbox1 .sel_w1,
 	.dashboard .register_box .graybox .g_ipbox2 .sel_w1 {
 		width: 100%;
 	}
 
-	.dashboard .register_box .graybox .g_ipbox1 span.sbox input[type="text"] {
+		{
 		width: calc(100% - 30px) !important;
 	}
 
@@ -7740,14 +7795,13 @@ table tbody tr {
 		width: 100%;
 	}
 
-	.dashboard .register_box li.reg_1 input[type="text"],
 	.dashboard .register_box .top_ipbox .ipbox1 li.reg_1 input.pline[type="text"],
-	.dashboard .register_box li.reg_1 input,
 	.dashboard .register_box li.reg_1 textarea,
 	.dashboard .register_box li.reg_2 textarea,
 	.dashboard .register_box li.reg_3 textarea {
 		width: 100%;
 	}
+
 
 	.dashboard .register_box li.reg_1.reg_4 input,
 	.dashboard .register_box li.reg_1.reg_4 textarea,
@@ -9600,11 +9654,12 @@ table tbody tr {
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox .sbox a {
 	position: absolute;
 	top: 6px;
-	right: -44px;
 	text-decoration: underline;
 	color: #06a9b7;
 	font-size: 14px;
 	font-weight: 200;
+	margin-left: 10px;
+	width: max-content;
 }
 
 .dashboard .create_tab .tab-content .tab_ipbox .ipbox .sbox a.btn_edit {
@@ -10685,6 +10740,43 @@ table tbody tr {
 	color: #06a9b7;
 	line-height: 18px;
 	font-weight: 400;
+}
+
+.popup_editBox .modal-body .title_box .btnbox {
+	margin: 0;
+	position: relative;
+}
+
+.popup_editBox .modal-body .title_box .btn_s {
+	position: absolute;
+	right: 0;
+	top: -5px;
+}
+
+.popup_editBox .modal-body .title_box .btn_s .btn_add {
+	padding: 0;
+	margin: 0 0 0 2px;
+	width: 26px;
+	height: 26px;
+	overflow: hidden;
+	text-indent: -9999em;
+	outline: none;
+	border: none;
+	box-sizing: border-box;
+	background: url(../img/contents/btn_add_s.png) center center no-repeat;
+}
+
+.popup_editBox .modal-body .title_box .btn_s .btn_delete {
+	padding: 0;
+	margin: 0 0 0 2px;
+	width: 26px;
+	height: 26px;
+	overflow: hidden;
+	text-indent: -9999em;
+	outline: none;
+	border: none;
+	box-sizing: border-box;
+	background: url(../img/contents/btn_del_s.png) center center no-repeat;
 }
 
 .popup_editBox .modal-body .pop-body .pop-cont {

@@ -272,7 +272,7 @@ func McksDelProc(c echo.Context) error {
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
-	//clusteruID := c.Param("clusteruID")
+	//clusterUID := c.Param("clusterUID")
 	clusterName := c.Param("clusterName")
 	log.Println("clusterName= " + clusterName)
 
@@ -358,7 +358,7 @@ func NodeRegProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	clusteruID := c.Param("clusteruID")
+	clusterUID := c.Param("clusterUID")
 	clusterName := c.Param("clusterName")
 
 	nodeRegReq := &ladybug.NodeRegReq{}
@@ -386,7 +386,7 @@ func NodeRegProc(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":    "success",
 		"status":     respStatus.StatusCode,
-		"ClusteruID": clusteruID,
+		"ClusterUID": clusterUID,
 		"NodeInfo":   nodeInfo,
 	})
 }
@@ -399,7 +399,7 @@ func NodeDelProc(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
-	//clusteruID := c.Param("clusteruID")
+	//clusterUID := c.Param("clusterUID")
 	clusterName := c.Param("clusterName")
 	//nodeID := c.Param("nodeID")
 	nodeName := c.Param("nodeName")
