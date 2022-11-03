@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 
 	// "math"
 	"net/http"
@@ -2773,4 +2774,41 @@ func MyImageGet(nameSpaceID string, myImageID string) (*tbmcir.TbCustomImageInfo
 	fmt.Println(myImageInfo)
 
 	return &myImageInfo, model.WebStatus{StatusCode: respStatus}
+}
+
+// Disk 정보 조회
+// Provider, connection 에서 사용가능한 DiskType 조회
+// 현재 : spider의 cloudos_meta.yaml 값 사용
+func DiskLookup(provider string, connectionName string) ([]webtool.LookupDiskInfo, error) {
+
+	//defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	diskInfoMap := map[string]webtool.LookupDiskInfo{}
+
+	// 변환 : 구분자만 빼서 공백 빼고 array로
+	awsRootdiskType := "standard / gp2 / gp3"
+	awsDiskType := "standard / gp2 / gp3 / io1 / io2 / st1 / sc1"
+	awsDiskSize := "standard|1|1024|GB / gp2|1|16384|GB / gp3|1|16384|GB / io1|4|16384|GB / io2|4|16384|GB / st1|125|16384|GB / sc1|125|16384|GB"
+
+	awsDiskInfo := webtool.LookupDiskInfo{}
+	awsDiskInfo.Provider = "AWS"
+	awsDiskInfo.RootDiskType = strings.Split(strings.ReplaceAll(awsRootdiskType, " ", ""), "/")
+	awsDiskInfo.DataDiskType = strings.Split(strings.ReplaceAll(awsDiskType, " ", ""), "/")
+	awsDiskInfo.DiskSize = strings.Split(strings.ReplaceAll(awsDiskSize, " ", ""), "/")
+	diskInfoMap["AWS"] = awsDiskInfo
+
+	dataDiskInfoList := []webtool.LookupDiskInfo{}
+	if provider != "" {
+		// TODO : 해당 connection으로 사용가능한 DISK 정보 조회
+		if connectionName != "" { // 현재는 connection으로 filter 하지 않음
+
+		}
+
+		//providerDisk := webtool.LookupDiskInfo{}
+		providerDisk := diskInfoMap[provider]
+		dataDiskInfoList = append(dataDiskInfoList, providerDisk)
+	} else {
+		// 모든 provider의 datadisk 정보 조회...
+	}
+
+	return dataDiskInfoList, nil
 }

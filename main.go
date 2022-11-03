@@ -824,6 +824,7 @@ func main() {
 
 	resourcesGroup.GET("/datadisk/mngform", controller.DataDiskMngForm)
 	e.GET("/setting/resources/datadisk/list", controller.DataDiskList)
+	e.GET("/setting/resources/datadisk/lookuplist", controller.DataDiskLookupList)
 	e.POST("/setting/resources/datadisk/reg", controller.DataDiskRegProc)
 	e.DELETE("/setting/resources/datadisk/del", controller.DataDiskAllDelProc)
 	e.GET("/setting/resources/datadisk/:dataDiskID", controller.DataDiskGet)

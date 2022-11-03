@@ -23,6 +23,8 @@ function showConnectionAssistPopup() {
 
 // Connection 정보가 바뀌면 등록에 필요한 목록들을 다시 가져온다.(config는 ID가아닌 configName을 사용한다.)
 function changeConnectionInfo(configName) {
+	// provider
+	var provider = $("#ss_regProvider").val();
 	console.log("config name : ", configName)
 	if (configName == "") {
 		// 0번째면 selectbox들을 초기화한다.(vmInfo, sshKey, image 등)
@@ -33,6 +35,7 @@ function changeConnectionInfo(configName) {
 	getSSHKeyInfo(configName);
 	getVnetInfo(configName);
 	getSpecInfo(configName);
+	getCommonLookupDiskInfo("vmsimple", provider, configName);// -> getCommonLookupDiskInfoSuccess
 }
 
 function getVmiInfo(configName) {
@@ -122,13 +125,6 @@ function displayAvailableDisk() {
 			$("#availableDiskCnt").val(0)
 			return;
 		}
-		// if(data){
-		//     if(data.length >0){
-		//         data.forEach(item=>{
-
-		//         })
-		//     }
-		// }
 
 		$("#availableDiskSelectBox").modal();
 		$('.dtbox.scrollbar-inner').scrollbar();
@@ -336,6 +332,10 @@ function getVnetInfo(configName) {
 	})
 }
 
+function getCommonLookupDiskInfoSuccess(caller, provider, data){
+	console.log("getCommonLookupDiskInfoSuccess");
+	console.log(data);
+}
 
 const Simple_Server_Config_Arr = new Array();
 var simple_data_cnt = 0

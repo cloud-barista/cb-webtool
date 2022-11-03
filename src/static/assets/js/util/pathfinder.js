@@ -111,7 +111,7 @@ function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam) {
 
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log(result);
@@ -172,7 +172,7 @@ function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId)
     var url = "/setting/connections/cloudconnectionconfig/list";
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get CloudConnection Data : ", result.data);
@@ -198,7 +198,7 @@ function getCommonCredentialList(caller, optionParam) {
     }
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Credential Data : ", result.data);
@@ -314,7 +314,7 @@ function getCommonSecurityGroupList(caller, sortType, optionParam, filterKey, fi
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get SG Data : ", result.data);
@@ -357,7 +357,7 @@ function getCommonSshKeyList(caller, optionParam, filterKey, filterVal) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get SSH Data : ", result.data);
@@ -396,7 +396,7 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam, filterK
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
@@ -456,7 +456,7 @@ function getCommonVirtualMachineSpecList(caller, sortType, optionParam, filterKe
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Spec List : ", result.data);
@@ -492,7 +492,7 @@ function getCommonLookupSpecList(caller, connectionName) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName
@@ -523,7 +523,7 @@ function getCommonLookupSpec(caller, connectionName, cspSpecName) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName,
@@ -626,7 +626,7 @@ function getCommonLookupImageList(caller, connectionName) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName
@@ -658,7 +658,7 @@ function getCommonLookupImage(caller, connectionName, cspImageID) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName,
@@ -731,7 +731,7 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam, filterK
     }
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Mcis List : ", result.data);
@@ -806,7 +806,7 @@ function getCommonMcksList(caller, optionParam) {
 
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Mcks List : ", result.data);
@@ -830,7 +830,7 @@ function getCommonVmSecurityGroupInfo(caller, securityGroupId) {
 
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get SecurityGroup List : ", result.data);
@@ -920,7 +920,7 @@ function getCommonAllPmksList(caller){
     url += "?connectionName=ali-test-conn";
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
 //        console.log("get Cluster List : ", result.data);
@@ -935,7 +935,7 @@ function getCommonPmksList(caller, connectionName){
     var url = "/operation/manages/pmks/list"
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
 //        console.log("get Cluster List : ", result.data);
@@ -950,7 +950,7 @@ function getCommonPmksData(caller, clusterID, connectionName){
     var url = "/operation/manages/pmks/" + clusterID + "?connectionName=" + connectionName
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Cluster  : ", result.data);
@@ -1019,6 +1019,26 @@ function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord) {
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage);
+    });
+}
+
+// 해당 provider, connection 으로 사용가능한 Disk의 Type 정보(type, min, max ) 조회
+// ex) AWS -> standard|1|1024, gp2|1|16384
+function getCommonLookupDiskInfo(caller, providerID, connectionName){
+    var url = "/setting/resources/datadisk/lookuplist"
+	url += "?provider=" + providerID +"&connectionName=" + connectionName
+    
+    axios.get(url, {
+        headers: {
+            //'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get LookupDisk  : ", result.data);
+
+        var data = result.data.DiskInfoList;
+        getCommonLookupDiskInfoSuccess(caller, providerID, data)
+    }).catch(error => {
+        console.log(error);
     });
 }
 

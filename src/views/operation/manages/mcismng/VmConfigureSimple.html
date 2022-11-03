@@ -148,19 +148,13 @@
 				<div class="ipbox ipbox3">
 					<ul>
 						<li>
-							<label><span class="ch">*</span>DataDisk</label>
-							<input type="text" name="ss_data_disk" value="" placeholder="" class="pline ip_3" title=""
-								id="ss_data_disk" readonly />
-							<div class="btn_right">
-
-								<button type="button" name="" value="" class="btn_done btn_co btn_cr_g"
-									onclick="displayAvailableDisk(true);"><span>Available Disk</span></button>
-
-
-							</div>
+							<label><span class="ch">*</span>Access (ssh key)</label>
+							<select class="selectbox white pline sel_4" name="sshKeyId" id="ss_sshKey">
+								<option value="">Select SSH Key</option>
+							</select>
 
 						</li>
-					</ul>
+					</ul>					
 				</div>
 
 			</div>
@@ -168,16 +162,25 @@
 				<div class="ipbox ipbox3">
 					<ul>
 						<li>
-							<label><span class="ch">*</span>Access (ssh key)</label>
-							<select class="selectbox white pline sel_4" name="sshKeyId" id="ss_sshKey">
-								<option value="">Select SSH Key</option>
+							<label><span class="ch">*</span>Root Disk</label>
+							<select class="selectbox white pline sel_4" name="rootDiskType" id="ss_root_disk_type">
+								<option value="">Select Root Disk Type</option>
 							</select>
-
+							<input type="text" name="rootDiskSize" value="" placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
+								id="ss_root_disk_size" />							
 						</li>
-					</ul>
+						<li>
+							<label>DataDisk</label>
+							<input type="text" name="dataDiskId" value="" placeholder="" class="pline ip_3" title=""
+								id="ss_data_disk" readonly />
+							<div class="btn_right">
+
+								<button type="button" name="" value="" class="btn_done btn_co btn_cr_g"
+									onclick="displayAvailableDisk(true);"><span>Available Disk</span></button>
+							</div>
+						</li>
+					</ul>					
 				</div>
-
-
 			</div>
 
 		</div>

@@ -2102,3 +2102,29 @@ func MyImageDelProc(c echo.Context) error {
 		"status":  respMessage.StatusCode,
 	})
 }
+
+// Provider, connection 에서 사용가능한 DiskType 조회
+// 현재 : spider의 cloudos_meta.yaml 값 사용
+func DataDiskLookupList(c echo.Context) error {
+	log.Println("DataDiskProviderDisList : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	//defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	provider := c.QueryParam("provider")
+	connectionName := c.QueryParam("connectionName")
+
+	diskInfoList, err := service.DiskLookup(provider, connectionName)
+	if err != nil {
+
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":      "success",
+		"status":       "success",
+		"DiskInfoList": diskInfoList,
+	})
+}
