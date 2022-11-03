@@ -1,13 +1,240 @@
 {{define "NodeGroupInfo"}}
 <div class="dashboard dashboard_cont server_status" id="pmks_node_detail">
-	
+
 	<div class="d_box box_m box_w100">
 		<div class="titbox">
-			<div class="tit initial"><strong>PMKS NodeGroup Info</strong> <span class="stxt" id="pmks_nodegroup_txt">[ ]</span></div>			
+			<div class="tit initial"><strong>PMKS NodeGroup Info</strong> <span class="stxt" id="pmks_nodegroup_txt">[
+					]</span></div>
+		</div>
+
+		<div class="ds_cont">
+			<!-- Cluster action : createCluster, update(cluster버전), listCluster(해당 Connection만)
+				, allCluster(namespace내 모든 Connectin), getCluster, delCluster, delClusterForce
+			<br>
+			update는 해당 항목 뒤에 set 버튼을 놓을 지....
+			<br>
+			NodeGroup action : addNodeGroup, updateNodeGroup, removeNodeGroup,  -->
+			<div class="iparea">
+				<div class="boxlist ipbox ip1">
+					<ul>
+						<li>
+							<label>Name</label>
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+								id="pmks_info_name" />
+						</li>
+						<li>
+							<label>Version</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_version" />
+						</li>
+						<li>
+							<label>Status</label>
+							<input type="text" name="" value="" placeholder="None" title="" readonly
+								id="pmks_info_status" />
+						</li>
+					</ul>
+				</div>
+
+				<div class="boxlist ipbox ip2">
+					<ul>
+						<li>
+							<label>VPC </label>
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+								id="pmks_info_vpc" />
+						</li>
+						<li>
+							<label>Subnet</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_subnet" />
+						</li>
+						<li>
+							<label>Security Group</label>
+							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
+								id="pmks_info_security_group" readonly />
+						</li>
+
+					</ul>
+				</div>
+				<div class="boxlist ipbox ip2">
+					<ul>
+						<li>
+							<label>Cloud Connection</label>
+							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
+								id="pmks_info_cloud_connection" readonly />
+						</li>
+						<li>
+							<label>End Point </label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_endpoint" />
+						</li>
+						<li>
+							<label>KubeConfig</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_kubeconfig" />
+						</li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- end cluster-->
+
+		<div class="ds_cont">
+
+			<div class="area_cont">
+
+				<div class="box">
+
+					<div class="titbox">
+						<div class="tit initial" id="mcis_server_info_status"><strong>Server List / Status</strong>
+							<span class="stxt">[ coffeefactory ]</span> Server(2)
+						</div>
+						<div class="top_info">
+							<ul>
+								<li>
+									<a href="javascript:void(0);">Filter</a>
+									<div class="infobox">
+										<div class="box">
+											<p>NS name</p>
+											<ul>
+												<li><a href="javascript:void(0);">name</a></li>
+												<li><a href="javascript:void(0);">status</a></li>
+												<li><a href="javascript:void(0);">Cloud</a></li>
+												<li><a href="javascript:void(0);">Region</a></li>
+											</ul>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Sort</a>
+									<div class="infobox">
+										<div class="box">
+											<ul>
+												<li><a href="javascript:void(0);">name</a></li>
+												<li><a href="javascript:void(0);">status</a></li>
+											</ul>
+										</div>
+									</div>
+								</li>
+								<li>
+									<a href="javascript:void(0);">Action</a>
+									<div class="infobox">
+										<div class="box">
+											<ul>
+												<li>
+													<strong>Life Cycle</strong>
+													<ul>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_Life_Reboot"
+																onclick="commonConfirmOpen('VmLifeCycleReboot')">Reboot</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_Life_Suspend"
+																onclick="commonConfirmOpen('VmLifeCycleSuspend')">Suspend</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_Life_Resume"
+																onclick="commonConfirmOpen('VmLifeCycleResume')">Resume</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_Life_Terminate"
+																onclick="commonConfirmOpen('VmLifeCycleTerminate')">Terminate</a>
+														</li>
+													</ul>
+												</li>
+												<li class="divider"></li>
+												<li>
+													<strong>Manage</strong>
+													<ul>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_n_New"
+																onclick="addNewVirtualMachine()">Add/Extend</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_create_snapshot"
+																onclick="commonPromptOpen('CreateSnapshot')">Create
+																Snapshot</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_ScriptExport"
+																onclick="commonConfirmOpen('ExportVmScriptOfMcis')">Export</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_n_New"
+																onclick="commonConfirmOpen('ShowMonitoring')">ShowMonitoring</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#VM_n_New"
+																onclick="commonPromptOpen('RemoteCommandVmOfMcis')">RemoteCommand</a>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+
+					<div class="modal fade layerpopup" id="Life_View" tabindex="-1" role="dialog" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+
+								<div class="modal-body">
+									<div class="txt">Would you like to view Server ?</div>
+									<div class="btnbox">
+										<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
+										<button type="button" class="btn_ok" data-dismiss="modal"
+											onclick="changePage('McisMngForm')">OK</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="scroll-wrapper listbox scrollbar-inner" style="position: relative;">
+						<div class="listbox scrollbar-inner scroll-content"
+							style="margin-bottom: 0px; margin-right: 0px; height: 135px; max-height: none;">
+							<ul id="mcis_server_info_box">
+								<li id="server_status_icon_hongkong-1" class="sel_cr bgbox_b active"><a
+										href="javascript:void(0);"
+										onclick="vmDetailInfo('coffeefactory','coffeefactory','hongkong-1')"><span
+											class="txt">hongkong-1</span></a></li>
+								<li id="server_status_icon_singapore" class="sel_cr bgbox_b"><a
+										href="javascript:void(0);"
+										onclick="vmDetailInfo('coffeefactory','coffeefactory','singapore')"><span
+											class="txt">singapore</span></a></li>
+							</ul>
+						</div>
+						<div class="scroll-element scroll-x">
+							<div class="scroll-element_outer">
+								<div class="scroll-element_size"></div>
+								<div class="scroll-element_track"></div>
+								<div class="scroll-bar" style="width: 100px;"></div>
+							</div>
+						</div>
+						<div class="scroll-element scroll-y">
+							<div class="scroll-element_outer">
+								<div class="scroll-element_size"></div>
+								<div class="scroll-element_track"></div>
+								<div class="scroll-bar" style="height: 100px;"></div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+
 		</div>
 
 		<!-- node group list : 간단정보 -->
-		<div class="ds_cont">
+		<!-- <div class="ds_cont">
 			
 			<div class="area_cont">
 
@@ -42,18 +269,18 @@
 								</li>
 							</ul>
 						</div>
-					</div>
+					</div> -->
 
-					<!-- NodeGroup List 표시-->
-					<div class="listbox scrollbar-inner" id="pmks_nodegroup_list_info_box">		
+		<!-- NodeGroup List 표시-->
+		<!-- <div class="listbox scrollbar-inner" id="pmks_nodegroup_list_info_box">		
 						NodeGroup action : addNodeGroup, updateNodeGroup(size, autoscaling), removeNodeGroup, 				
 						<ul>
 						</ul>						
-					</div>
+					</div> -->
 
-					
-					<!-- NodeGroup 내용 표시-->
-					<div class="iparea" id="pmks_nodegroup_detail_info_box">
+
+		<!-- NodeGroup 내용 표시-->
+		<!-- <div class="iparea" id="pmks_nodegroup_detail_info_box">
 						nodegroup click했을 때 나타나도록
 						<div class="boxlist ipbox ip1">
 							<ul>
@@ -123,9 +350,9 @@
 								</li>
 							</ul>
 						</div>						
-					</div>
-					<!-- Node List 표시-->
-					<div class="listbox scrollbar-inner">
+					</div> -->
+		<!-- Node List 표시-->
+		<!-- <div class="listbox scrollbar-inner">
 						<ul id="pmks_node_list_info_box">
 						</ul>
 					</div>
@@ -136,11 +363,11 @@
 
 			</div>
 
-		</div>
+		</div> -->
 		<!-- end node group list -->
-		
+
 	</div>
-	
+
 </div>
 <!-- //Info -->
 {{end}}
