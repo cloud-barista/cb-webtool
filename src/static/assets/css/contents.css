@@ -85,7 +85,8 @@
 	display: flex;
 	flex-direction: column;
 	margin-left: 50px;
-  
+}
+
 .sbox {
 	display: inline-block;
 	width: 50%;
