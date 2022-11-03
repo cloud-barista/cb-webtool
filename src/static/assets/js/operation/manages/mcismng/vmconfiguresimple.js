@@ -379,6 +379,8 @@ function changeDiskSize(type){
 	}
 	console.log("ROOT_DISK_MAX_VALUE : ",ROOT_DISK_MAX_VALUE)
 	console.log("ROOT_DISK_MIN_VALUE : ",ROOT_DISK_MIN_VALUE)
+	$("#s_rootDiskType").val(type);
+	$("#e_rootDiskType").val(type);
 
 }
 
