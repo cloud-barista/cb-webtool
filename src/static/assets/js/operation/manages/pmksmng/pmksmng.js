@@ -5,22 +5,27 @@ $(document).ready(function () {
     getCommonAllPmksList("onload");
 });
 
+// Cluster 목록
 function displayClusterListArea() {
     $(".dashboard .status_list tbody tr").each(function () {
         var $td_list = $(this),
-            $status = $(".server_status"),
+            $status = $(".server_status"),// 1단계
+            $status_sub = $(".server_status_sub"),// 2 단계
             $detail = $(".server_info");
         $td_list.off("click").click(function () {
             $td_list.addClass("on");
             $td_list.siblings().removeClass("on");
             $status.addClass("view");
             $status.siblings().removeClass("on");
+            $status_sub.siblings().removeClass("on");// 2 단계
+            
             $(".dashboard.register_cont").removeClass("active");
             $td_list.off("click").click(function () {
                 if ($(this).hasClass("on")) {
                     console.log("reg ok button click")
                     $td_list.removeClass("on");
                     $status.removeClass("view");
+                    $status_sub.removeClass("view");
                     $detail.removeClass("active");
                 } else {
                     $td_list.addClass("on");
@@ -28,6 +33,7 @@ function displayClusterListArea() {
                     $status.addClass("view");
 
                     $status.siblings().removeClass("view");
+                    $status_sub.siblings().removeClass("view");
                     $(".dashboard.register_cont").removeClass("active");
                 }
             });
@@ -35,7 +41,35 @@ function displayClusterListArea() {
     });
 }
 
+// NodeGroup 정보 표시, Node List 표시
+function displayNodeGroupInfoArea(){
+    $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function () {
+        var $sel_list = $(this);// nodeGroup icon 목록
+        //var $detail = $(".server_info");// node 목록
+        $status_sub = $(".server_status_sub"),// 2 단계
+        console.log(">>>>>");
+        $sel_list.off("click").click(function () {
+            $sel_list.addClass("active");
+            $sel_list.siblings().removeClass("active");
+
+            $status_sub.addClass("view");
+
+            $sel_list.off("click").click(function () {
+                if ($(this).hasClass("active")) {
+                    $sel_list.removeClass("active");
+                    $status_sub.removeClass("view");
+                } else {
+                    $sel_list.addClass("active");
+                    $sel_list.siblings().removeClass("active");
+                    $status_sub.addClass("view");                   
+                }
+            });
+        });
+    });
+}
+
 function displayNodeGroupListArea() {
+    //<div class="dashboard dashboard_cont server_status_sub" id="pmks_nodegroup_detail">
     $("#pmks_nodegroup_detail_info_box").addClass("view")
 
     $("[id^='server_info_tr_']").each(function () {
@@ -163,7 +197,6 @@ function addClusterData(item, index) {
         securityGroupSystemIds.push(securityGroup.SystemId)
     }
 
-
     // cluster 만 있을 때는 없을 수도 있음.
     if (item.NodeGroupList != null) {
         for (var i = 0; i < item.NodeGroupList.length; i++) {
@@ -172,8 +205,6 @@ function addClusterData(item, index) {
             nodeGroupIds.push(nodeGroupName)
         }
     }
-
-
 
     html +=
         "<tr onclick=\"clickListOfCluster('" + clusterID + "', " + index + ");\">"
@@ -239,7 +270,7 @@ function setNodeGroupList(clusterID) {
         }
     }
 
-    displayNodeGroupListArea();
+    displayNodeGroupInfoArea();
 }
 
 // NodeGroup Table : nodegroupList
@@ -302,6 +333,7 @@ function setNodeList(clusterID, nodeGroupID) {
     var nodeGroupInfo = "";
 
     // nodeGroup 정보 표시
+    console.log("nodeGroupList", nodeGroupList)
 
     $("#pmks_nodegroup_detail_info_box")
 
@@ -316,18 +348,25 @@ function setNodeList(clusterID, nodeGroupID) {
         }
     }
 
-    var nodeList = nodeGroupInfo.Nodes;
     var html = "";
-    for (var i in nodeList) {
-        html += addNodeRow(nodeList[i], i, clusterID, nodeGroupID);
+    if ( nodeGroupInfo.Nodes != null && nodeGroupInfo.Nodes.length > 0){
+        var nodeList = nodeGroupInfo.Nodes;
+        
+        console.log("nodeList size ", nodeGroupInfo.Nodes.length )
+        console.log("nodeList", nodeList)
+        var html = "";
+        for (var i in nodeList) {
+            html += addNodeRow(nodeList[i], i, clusterID, nodeGroupID);
+        }
+        
+    }else{
+        html = "<li><span>Node doesn't exists, Please check on auto scaling option</span></a></li>"
     }
     $("#pmks_node_list_info_box").empty();
     $("#pmks_node_list_info_box").append(html);
 
-
     // TODO : 각 Node의 상태정보 조회
-
-    //displayNodeGroupListArea(); // 이 function 만들어야 하나?? append(html) 로 되면 굳이 만들 필요없음
+    displayNodeGroupInfoArea();
 }
 
 // 선택한 Node의 상세정보 표시
@@ -368,7 +407,7 @@ function addNodeRow(item, nodeIndex, clusterID, nodeGroupID) {
     return nodeBadge
 }
 
-// Cluster 목록에서 Cluster 클릭
+// Cluster 목록에서 Cluster 클릭 -> Cluster Info + NodeGroup List icon 
 function clickListOfCluster(clusterID, clusterIndex) {
     var clusterInfo = TOTAL_PMKS_LIST.get(clusterID);
     // cluster Info 표시    
@@ -384,13 +423,6 @@ function clickListOfCluster(clusterID, clusterIndex) {
     $("#pmks_info_cloud_connection").val(clusterInfo.ConnectionName);
     $("#pmks_info_status").val(clusterInfo.Status);
 
-    // AccessInfo
-    if (clusterInfo.AccessInfo != null) {
-        var accessInfo = clusterInfo.AccessInfo;
-        $("#pmks_info_endpoint").val(accessInfo.Endpoint);
-        $("#pmks_info_kubeconfig").val(accessInfo.Kubeconfig);
-    }
-
     // NetworkInfo
     if (clusterInfo.Network != null) {
         var networkInfo = clusterInfo.Network;
@@ -400,10 +432,32 @@ function clickListOfCluster(clusterID, clusterIndex) {
         $("#pmks_info_security_group").val(networkInfo.SecurityGroupIIDs);
     }
 
+    // AccessInfo
+    if (clusterInfo.AccessInfo != null) {
+        var accessInfo = clusterInfo.AccessInfo;
+        $("#pmks_info_endpoint").val(accessInfo.Endpoint);
+        $("#pmks_info_kubeconfig").val(accessInfo.Kubeconfig);
+    }
+
+    // NodeGroup 이 있으면NodeGroup 목록 표시
+    if (clusterInfo.NodeGroupList != null){
+        var html = "";
+        for (var o in clusterInfo.NodeGroupList) {
+            var nodeGroupStatus = clusterInfo.NodeGroupList[o].Status;
+            var nodeGroupName = clusterInfo.NodeGroupList[o].IId.NameId
+
+            var nodeGroupDispStatus = "";//getNodeGroupStatusDisp(nodeGroupStatus);
+            var nodeGroupStatusClass = "bgbox_b";//getNodeGroupStatusClass(nodeGroupName)
+            html += '<li id="nodegroup_status_icon_' + o + '" class="sel_cr ' + nodeGroupStatusClass + '"><a href="javascript:void(0);" onclick="clickListOfNodeGroup(\'' + clusterID + '\',\'' + nodeGroupName + '\')"><span class="txt">' + nodeGroupName + '</span></a></li>';
+        }
+        $("#cluster_nodegroup_list").empty();
+        $("#cluster_nodegroup_list").append(html);        
+    }
 }
 
-// NodeGroup 목록에서 NodeGroup 클릭
+// NodeGroup 목록에서 NodeGroup 클릭 -> Node 목록
 function clickListOfNodeGroup(clusterID, nodeGrouID) {
+    console.log("clickListOfNodeGroup")
     setNodeList(clusterID, nodeGrouID);
 }
 
@@ -415,33 +469,33 @@ function clickListOfNode(clusterID, nodeGrouID, nodeID) {
 
 // PMKS Info area 안의 NodeList 내용 표시
 // 해당 PMKS를 조회하여 NodeGroup 상세정보 표시
-// function setNodeGroupList(clusterID, clusterIndex) {
-//     // Name, version
-//     $("#pmks_uid").val(clusterID);// hidden    
+function setNodeGroupList(clusterID, clusterIndex) {
+    // Name, version
+    $("#pmks_uid").val(clusterID);// hidden    
 
-//     // PMKS Info
-//     $("#pmks_info_txt").text("[ " + clusterID + " ]");
+    // PMKS Info
+    $("#pmks_info_txt").text("[ " + clusterID + " ]");
 
-//     // cluster 정보
-//     var clusterInfo = TOTAL_PMKS_LIST.get(clusterID);
-//     var connectionName = $("#cluster_connection_" + clusterIndex).val()
-//     connectionName = "ali-test-conn";// for the test
+    // cluster 정보
+    var clusterInfo = TOTAL_PMKS_LIST.get(clusterID);
+    var connectionName = $("#cluster_connection_" + clusterIndex).val()
+    connectionName = "ali-test-conn";// for the test
 
-//     $("#pmks_uid").val(clusterID);
-//     $("#pmks_info_version").val($("#cluster_version_" + clusterIndex).val());
-//     $("#pmks_info_name").val($("#cluster_info_" + clusterIndex).val() + " / " + $("#cluster_systemid_" + clusterIndex).val());
-//     $("#pmks_info_status").val($("#cluster_status_" + clusterIndex).val());
-//     $("#pmks_info_cloud_connection").val(connectionName);
+    $("#pmks_uid").val(clusterID);
+    $("#pmks_info_version").val($("#cluster_version_" + clusterIndex).val());
+    $("#pmks_info_name").val($("#cluster_info_" + clusterIndex).val() + " / " + $("#cluster_systemid_" + clusterIndex).val());
+    $("#pmks_info_status").val($("#cluster_status_" + clusterIndex).val());
+    $("#pmks_info_cloud_connection").val(connectionName);
 
-//     // Network
-//     $("#pmks_vpc").val($("#network_vpc_nameid_" + clusterIndex).val() + " / " + $("#network_vpc_systemid_" + clusterIndex).val());
-//     $("#pmks_subnet").val($("#network_subnet_nameid_" + clusterIndex).val());
-//     $("#pmks_info_security_group").val($("#network_securitygroup_nameid_" + clusterIndex).val());
+    // Network
+    $("#pmks_vpc").val($("#network_vpc_nameid_" + clusterIndex).val() + " / " + $("#network_vpc_systemid_" + clusterIndex).val());
+    $("#pmks_subnet").val($("#network_subnet_nameid_" + clusterIndex).val());
+    $("#pmks_info_security_group").val($("#network_securitygroup_nameid_" + clusterIndex).val());
 
-//     // NodeGroupList :     
-//     //getPmks(uid, connectionName)
-//     addNodeGroupData(clusterID)
-// }
+    // NodeGroupList :     
+    //getPmks(uid, connectionName)
+    addNodeGroupData(clusterID)
+}
 
 // 해당 pmks에 nodeGroup 추가
 // pmks가 경로에 들어가야 함. node 등록 form으로 이동

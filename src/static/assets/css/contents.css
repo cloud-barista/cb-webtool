@@ -3689,6 +3689,16 @@ table tbody tr {
 	transition: all 0.4s ease-in-out;
 }
 
+.dashboard.server_status_sub {
+	display: none;
+	transition: all 0.4s ease-in-out;
+}
+
+.dashboard.server_status_sub.view {
+	display: block;
+	transition: all 0.4s ease-in-out;
+}
+
 .dashboard.server_info {
 	display: none;
 	transition: all 0.4s ease-in-out;

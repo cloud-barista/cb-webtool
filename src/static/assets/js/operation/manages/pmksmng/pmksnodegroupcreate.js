@@ -24,9 +24,9 @@ function getPmksDataSuccess(caller, clusterID, data){
     // Cluster Info Set
     setClusterInfo(data);
     // NodeGroup이 있으면 NodeGroup icon을 표시? List로 표시?
-    if( data.NodeGroupList != null){
-        setNodeGroupList(data.NodeGroupList)
-    }    
+    // if( data.NodeGroupList != null){
+    //     setNodeGroupList(data.NodeGroupList)
+    // }    
 }
 
 // 해당 data에 Key가 있으면 해당 값을 return 없으면 ""
@@ -34,7 +34,7 @@ function getCommonStringValue(data, key){
     // ojbect의 parame 조회
 }
 
-
+// NodeGroup 추가 : pmksmng에도 이름이 동일한 function 있음.
 function setClusterInfo(data){
     var clusterID = data.IId.NameId;
     var clusterVersion = data.Version;
@@ -67,6 +67,24 @@ function setClusterInfo(data){
         $("#pmks_info_endpoint").val(accessInfo.Endpoint);
         $("#pmks_info_kubeconfig").val(accessInfo.Kubeconfig);
     }
+
+    // NodeGroup 이 있으면NodeGroup 목록 표시
+    if (data.NodeGroupList != null){
+        var html = "";
+        for (var o in data.NodeGroupList) {
+            var nodeGroupStatus = data.NodeGroupList[o].Status;
+            var nodeGroupName = data.NodeGroupList[o].IId.NameId
+
+            var nodeGroupDispStatus = "";//getNodeGroupStatusDisp(nodeGroupStatus);
+            var nodeGroupStatusClass = "bgbox_b";//getNodeGroupStatusClass(nodeGroupName)
+
+            // NodeGroup 생성부분이라 Click Event 는 없음 pmksmng.js 에서는 clickListOfNodeGroup 있음.
+            html += '<li id="nodegroup_status_icon_' + o + '" class="sel_cr ' + nodeGroupStatusClass + '"><span class="txt">' + nodeGroupName + '</span></li>';
+        }
+        $("#cluster_nodegroup_list").empty();
+        $("#cluster_nodegroup_list").append(html);        
+    }
+    
 
 }
 
