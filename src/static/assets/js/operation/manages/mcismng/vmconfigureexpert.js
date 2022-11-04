@@ -330,6 +330,8 @@ function expertDone_btn() {
   if(select_disk){
 		var arr_disk = select_disk.split(",");
 		expert_form.dataDiskIds = arr_disk;
+	}else{
+		expert_form.dataDiskIds = [];
 	}
 
   console.log("expert form : ",expert_form);

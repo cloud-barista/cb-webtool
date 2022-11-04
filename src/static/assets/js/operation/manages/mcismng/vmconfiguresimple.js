@@ -407,6 +407,8 @@ function simpleDone_btn() {
 	if (select_disk) {
 		var arr_disk = select_disk.split(",");
 		simple_form.dataDiskIds = arr_disk;
+	}else{
+		simple_form.dataDiskIds = [];
 	}
 	console.log("simple form : ", simple_form);
 
