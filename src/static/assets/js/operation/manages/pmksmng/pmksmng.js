@@ -290,7 +290,7 @@ function addNodeGroupData(item, nodeGroupIndex, clusterID) {
     }
     console.log("li attrt class " + nodeGroupStatusIcon)
 
-    var nodeGroupBadge = '<li class="_sel_cr_ ' + nodeGroupDispClass + '" id="nodeGroupOfCluster_' + nodeGroupIndex + '"><a href="javascript:void(0);" onclick="clickListOfNodeGroup(\'' + clusterID + '\',\'' + nodeGroupID + '\')"><span class="txt">' + nodeGroupID + '</span></a></li>';
+    var nodeGroupBadge = '<li class="sel_cr ' + nodeGroupDispClass + '" id="nodeGroupOfCluster_' + nodeGroupIndex + '"><a href="javascript:void(0);" onclick="clickListOfNodeGroup(\'' + clusterID + '\',\'' + nodeGroupID + '\')"><span class="txt">' + nodeGroupID + '</span></a></li>';
 
     return nodeGroupBadge
 }
@@ -316,6 +316,7 @@ function setNodeList(clusterID, nodeGroupID) {
         }
     }
 
+    console.log("node list");
     var nodeList = nodeGroupInfo.Nodes;
     var html = "";
     for (var i in nodeList) {
@@ -399,6 +400,8 @@ function clickListOfCluster(clusterID, clusterIndex) {
         $("#pmks_info_subnet").val(networkInfo.SubnetIIDs);
         $("#pmks_info_security_group").val(networkInfo.SecurityGroupIIDs);
     }
+
+    setNodeGroupList(clusterID)
 
 }
 
