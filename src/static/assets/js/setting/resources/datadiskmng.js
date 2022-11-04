@@ -242,6 +242,7 @@ function runAttachDataDisk(command) {
         console.log(data);
         if(data.status == 200 || data.status == 201){
             commonAlert("Success Attach DataDisk!")
+            $("#vmSelectBox").modal("hide");
             displayDataDiskInfo("MODIFY_SUCCESS");
             //location.reload();
         }else{
