@@ -81,7 +81,9 @@ function getWebToolUrl(controllerKeyName) {
     );
 
     var webtoolUrl = controllerMethodNameMap.get(controllerKeyName);
-
+    if (webtoolUrl == undefined ){
+        webtoolUrl = controllerKeyName
+    }
     return webtoolUrl;
 }
 
