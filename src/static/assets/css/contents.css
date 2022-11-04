@@ -8713,6 +8713,10 @@ table tbody tr {
 	display: block;
 }
 
+.dashboard .create_box .express_servers_config.active {
+	display: block;
+}
+
 .dashboard .create_box .simple_servers_config.active {
 	display: block;
 }
