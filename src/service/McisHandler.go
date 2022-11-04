@@ -392,6 +392,22 @@ func RegMcisByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisReq, c echo.Conte
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 
+	// dataDisk empty처리
+	// vms := mcisInfo.Vm
+	// for _, vm := range vms {
+	// 	dataDisks := vm.DataDiskIds
+	// 	var diskIds []string
+	// 	for _, dataDisk := range dataDisks {
+	// 		if dataDisk != "" {
+	// 			log.Println("dataDisk ", dataDisk)
+	// 			diskIds = append(diskIds, dataDisk)
+	// 		}
+	// 	}
+	// 	log.Println("diskIds ", diskIds)
+	// 	vm.DataDiskIds = diskIds
+	// }
+	// log.Println("vms ", vms)
+
 	pbytes, _ := json.Marshal(mcisInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
