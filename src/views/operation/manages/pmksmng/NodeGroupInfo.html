@@ -27,7 +27,7 @@
 						<li>
 							<label>Image</label>
 							<input type="text" name="" value="" placeholder="" title="" readonly
-								id="nodegroup_info_image" />
+								id="nodegroup_info_imageid" />
 						</li>
 						<li>
 							<label>Spec</label>
@@ -48,16 +48,19 @@
 							<label>Desired Node Size</label>
 							<input type="text" name="" value="" placeholder="" title="" readonly
 								id="nodegroup_info_desired_node_size" />
+							<a href="UpdateNodeGroupScaleSize('DesiredNodeSize');" class="btn_recommend">Update</a>
 						</li>
 						<li>
 							<label>Max Node Size</label>
 							<input type="text" name="" value="" placeholder="" title=""
 								id="nodegroup_info_max_node_size" readonly />
+							<a href="UpdateNodeGroupScaleSize('MaxNodeSize');" class="btn_recommend">Update</a>
 						</li>
 						<li>
 							<label>Min Node Size</label>
 							<input type="text" name="" value="" placeholder="" title=""
-								id="nodegroup_info_desired_node_size" readonly />
+								id="nodegroup_info_min_node_size" readonly />
+							<a href="UpdateNodeGroupScaleSize('MinNodeSize');" class="btn_recommend">Update</a>
 						</li>
 					</ul>
 				</div>
@@ -67,11 +70,18 @@
 							<label>On Scaling Auto</label>
 							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
 								id="nodegroup_info_on_scaling_auto" readonly />
+							<a href="UpdateNodeGroupAutoScalingOnOff();" class="btn_recommend">Update</a>
+
 						</li>
 						<li>
-							<label>Root Disk </label>
+							<label>Root Disk Type</label>
 							<input type="text" name="" value="" placeholder="" title="" readonly
-								id="nodegroup_info_root_disk" />
+								id="nodegroup_info_root_disk_type" />
+						</li>
+						<li>
+							<label>Root Disk Size</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="nodegroup_info_root_disk_size" />
 						</li>
 					</ul>
 				</div>

@@ -377,8 +377,8 @@ function deployNodeGroup(){
         VMSpecName: nodeGroupVmSpecId,
         KeyPairName: nodeGroupKeyPairId,
         DesiredNodeSize: nodeGroupDesiredNodeSize,
-        MinNodeSize: nodeGroupMaxNodeSize,
-        MaxNodeSize: nodeGroupMinNodeSize,
+        MaxNodeSize: nodeGroupMaxNodeSize,
+        MinNodeSize: nodeGroupMinNodeSize,
         OnAutoScaling: nodeGroupOnAutoScaling,
         RootDiskType: nodeGroupRootDiskType,
         RootDiskSize: nodeGroupRootDiskSize

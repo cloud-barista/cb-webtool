@@ -120,53 +120,19 @@
 									<a href="javascript:void(0);">Action</a>
 									<div class="infobox">
 										<div class="box">
-											<ul>
-												<li>
-													<strong>Life Cycle</strong>
-													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Reboot"
-																onclick="commonConfirmOpen('VmLifeCycleReboot')">Reboot</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Suspend"
-																onclick="commonConfirmOpen('VmLifeCycleSuspend')">Suspend</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Resume"
-																onclick="commonConfirmOpen('VmLifeCycleResume')">Resume</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Terminate"
-																onclick="commonConfirmOpen('VmLifeCycleTerminate')">Terminate</a>
-														</li>
-													</ul>
-												</li>
-												<li class="divider"></li>
+											<ul>												
 												<li>
 													<strong>Manage</strong>
 													<ul>
 														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="addNewVirtualMachine()">Add/Extend</a>
-														</li>
+																data-target="#NodeGroup_n_New"
+																onclick="addNewNodeGroup()">Add/Extend</a>
+														</li>														
 														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_create_snapshot"
-																onclick="commonPromptOpen('CreateSnapshot')">Create
-																Snapshot</a>
+																data-target="#NodeGroup_n_Delete"
+																onclick="commonConfirmOpen('DeleteNodeGroupOfPmks')">Delete</a>
 														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_ScriptExport"
-																onclick="commonConfirmOpen('ExportVmScriptOfMcis')">Export</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="commonConfirmOpen('ShowMonitoring')">ShowMonitoring</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="commonPromptOpen('RemoteCommandVmOfMcis')">RemoteCommand</a>
-														</li>
+														
 													</ul>
 												</li>
 											</ul>

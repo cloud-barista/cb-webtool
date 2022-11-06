@@ -67,7 +67,7 @@ function getWebToolUrl(controllerKeyName) {
             ["PmksClusterRegProc", "/operation/manages/pmks/cluster"],
             ["PmksListOfNamespace", "/operation/manages/pmks/listall"],
             ["PmksListByConnection", "/operation/manages/pmks/list"],
-            
+            ["PmksNodeGroupDelProc", "/operation/manages/pmks/:clusterID/nodegroup/:nodeGroupID"],
 
             ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
             ["MonitoringPolicyConfigMngForm", "/operation/policies/monitoringconfigpolicy/mngform"],
