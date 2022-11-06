@@ -535,7 +535,7 @@ function addNewNodeGroup() {
 
     var urlParamMap = new Map();
     urlParamMap.set(":clusterID", clusterId)
-    changePage('PmksNodeGroupRegForm', urlParamMap)
+    //changePage('PmksNodeGroupRegForm', urlParamMap)
     url = setUrlByParam("PmksNodeGroupRegForm", urlParamMap)
 
     //onClick="changePage('PmksNodeGroupRegForm')"
@@ -650,15 +650,74 @@ function deleteNodeGroupOfPmks() {
 
 // Scale Size 변경
 function UpdateNodeGroupScaleSize(caller){
+    var clusterId = $("#pmks_cluster_id").val();
+    var clusterName = $("#pmks_cluster_name").val();
+    var connectionName = $("#pmks_cluster_connection").val();
+    var nodeGroupId = $("#pmks_nodegroup_id").val();
+    var desiredSize = $("#nodegroup_info_desired_node_size").val();
+    var maxSize = $("#nodegroup_info_max_node_size").val();
+    var minSize = $("#nodegroup_info_min_node_size").val();
     var sizeValue = "";
     if( caller == "DesiredNodeSize"){
+        if( desiredSize > maxSize){
+            commonAlert("too many");
+            return
+        }
+        if( desiredSize < minSize){
+            commonAlert("too little");
+            return
+        }
         sizeValue = $("#nodegroup_info_desired_node_size").val();
     }else if( caller == "MaxNodeSize"){
+        if( minSize > maxSize){
+            commonAlert("too many");
+            return
+        }
+
         sizeValue = $("#nodegroup_info_max_node_size").val();
     }else if( caller == "MinNodeSize"){
+        if( minSize > maxSize){
+            commonAlert("too many");
+            return
+        }
         sizeValue = $("#nodegroup_info_min_node_size").val();
     }
-    //webtoolurl
+    
+    var urlParamMap = new Map();
+    urlParamMap.set(":clusterID", selectedMcksUid)
+    urlParamMap.set(":nodeGroupID", selectedNodeUid)
+
+    var new_obj = {}        
+    new_obj['ConnectionName'] = connectionName
+    
+            
+    var url = setUrlByParam("PmksNodeGroupDelProc", urlParamMap)    
+    try {
+        axios.put(url, new_obj, {
+            // headers: {
+            //     'Content-type': "application/json",
+            // },
+        }).then(result => {
+            console.log("update data : ", result);
+            console.log("Result Status : ", result.status);
+            if (result.status == 201 || result.status == 200) {
+                commonResultAlert("Updated")
+            } else {
+                commonAlert("Update Failed")
+            }
+        }).catch((error) => {
+            console.warn(error);
+            commonAlert(error);
+            // console.log(error.response)
+            // var errorMessage = error.response.data.error;
+            // var statusCode = error.response.status;
+            // commonErrorAlert(statusCode, errorMessage)
+
+        })
+    } catch (error) {
+        commonAlert(error);
+        console.log(error);
+    }
 }
 
 function UpdateNodeGroupAutoScalingOnOff(){
