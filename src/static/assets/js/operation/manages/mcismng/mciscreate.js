@@ -47,10 +47,14 @@ function displayNewServerForm() {
     }
 }
 
-function closeNewServerForm() {
-    var simpleServerConfig = $("#simpleServerConfig");
+// 모드가 바뀌면 Form을 Clear 한다.
+function closeNewServerForm() {    
+    var expressServerConfig = $("#expressServerConfig");
+    var simpleServerConfig = $("#simpleServerConfig");    
     var expertServerConfig = $("#expertServerConfig");
     var importServerConfig = $("#importServerConfig");
+
+    expressServerConfig.removeClass("active");
     simpleServerConfig.removeClass("active");
     expertServerConfig.removeClass("active");
     importServerConfig.removeClass("active");
@@ -101,6 +105,9 @@ function deployMcis() {
             new_obj['description'] = mcis_desc
             new_obj['installMonAgent'] = installMonAgent
     
+            // Express_Server_Config_Arr 은 별도처리
+
+
             if (Simple_Server_Config_Arr) {
                 vm_len = Simple_Server_Config_Arr.length;
                 for (var i in Simple_Server_Config_Arr) {
@@ -367,12 +374,118 @@ function getSpecListCallbackSuccess(caller, data) {
     }
 }
 
-function getSecurityGroupListCallbackSuccess(caller) {
-
+function getSecurityGroupListCallbackSuccess(caller, data) {
+    if ( caller == "searchSecurityGroupAssistAtReg"){
+        var rowCount = 0;
+        var html = "";
+        data.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
+            
+    
+                var firewallRulesArr = vSecurityGroupItem.firewallRules;
+                var firewallRules = firewallRulesArr[0];
+                console.log("firewallRules");
+                console.log(firewallRules);
+                rowCount++;
+                html += '<tr>'
+    
+                    + '<td class="overlay hidden column-50px" data-th="">'
+                    + '     <input type="checkbox" name="securityGroupAssist_chk" id="securityGroupAssist_Raw_' + vSecurityGroupIndex + '" title="" />'
+                    + '     <input type="hidden" name="securityGroupAssist_id" id="securityGroupAssist_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_name" id="securityGroupAssist_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_vNetId" id="securityGroupAssist_vNetId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.vNetId + '"/>'
+    
+                    + '     <input type="hidden" name="securityGroupAssist_connectionName" id="securityGroupAssist_connectionName_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.connectionName + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_description" id="securityGroupAssist_description_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.description + '"/>'
+    
+                    + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupId" id="securityGroupAssist_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.cspSecurityGroupId + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupName" id="securityGroupAssist_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.cspSecurityGroupName + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_firewallRules_cidr" id="securityGroupAssist_firewallRules_cidr_' + vSecurityGroupIndex + '" value="' + firewallRules.cidr + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_firewallRules_direction" id="securityGroupAssist_firewallRules_direction_' + vSecurityGroupIndex + '" value="' + firewallRules.direction + '"/>'
+    
+                    + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort_' + vSecurityGroupIndex + '" value="' + firewallRules.fromPort + '"/>'
+                    + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort_' + vSecurityGroupIndex + '" value="' + firewallRules.toPort + '"/>'
+                    + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol_' + vSecurityGroupIndex + '" value="' + firewallRules.ipProtocol + '"/>'
+    
+                    + '     <label for="td_ch1"></label> <span class="ov off"></span>'
+                    + '</td>'
+                    + '<td class="btn_mtd ovm td_left" data-th="Name">'
+                    + vSecurityGroupItem.name
+                    + '</td>'
+                    + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                    + vSecurityGroupItem.vNetId
+                    + '</td>'
+                    + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
+    
+                    + '</tr>'
+           
+        });
+        if (rowCount === 0) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="4">No Data</td></tr>'
+        }
+        $("#assistSecurityGroupList").empty()
+        $("#assistSecurityGroupList").append(html)
+    
+    }
 }
 
-function getNetworkListCallbackSuccess(caller) {
 
+function getNetworkListCallbackSuccess(caller, data) {
+    var html = "";
+    if ( caller == "searchNetworkAssistAtReg"){
+        //assistVnetList
+        var calNetIndex = 0;
+        data.forEach(function (vNetItem, vNetIndex) {
+            subnetInfoList = vNetItem.subnetInfoList;
+            subnetInfoList.forEach(function (subnetItem, subnetIndex) {
+                console.log(subnetItem)
+                
+                var subnetId = subnetItem.name
+
+                
+                html += '<tr onclick="setAssistValue(' + calNetIndex + ');">'
+                html += '        <input type="hidden" name="vNetAssist_id" id="vNetAssist_id_' + calNetIndex + '" value="' + vNetItem.id + '"/>'
+                html += '        <input type="hidden" name="vNetAssist_connectionName" id="vNetAssist_connectionName_' + vNetIndex + '" value="' + vNetItem.connectionName + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_name" id="vNetAssist_name_' + calNetIndex + '" value="' + vNetItem.name + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_description" id="vNetAssist_description_' + calNetIndex + '" value="' + vNetItem.description + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_cidrBlock" id="vNetAssist_cidrBlock_' + calNetIndex + '" value="' + vNetItem.cidrBlock + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_cspVnetName" id="vNetAssist_cspVnetName_' + calNetIndex + '" value="' + vNetItem.cspVNetName + '"/>'
+
+                html +=  '        <input type="hidden" name="vNetAssist_subnetId" id="vNetAssist_subnetId_' + calNetIndex + '" value="' + subnetItem.id + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_subnetName" id="vNetAssist_subnetName_' + calNetIndex + '" value="' + subnetItem.name + '"/>'
+
+                html +=  '    <td class="overlay hidden" data-th="Name">' + vNetItem.name + '</td>'
+                html +=  '    <td class="btn_mtd ovm td_left" data-th="CidrBlock">'
+                html +=  '        ' + vNetItem.cidrBlock
+                html +=  '    </td>'
+                html +=  '    <td class="btn_mtd ovm td_left" data-th="SubnetId">' + subnetItem.id + "<br>" + subnetItem.ipv4_CIDR
+
+                html +=  '    </td>'
+                html +=  '    <td class="overlay hidden" data-th="Description">' + vNetItem.description + '</td>'
+                html +=  '</tr>'
+            });
+            calNetIndex++
+        });
+
+        if (calNetIndex === 0) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="4">No Data</td></tr>'
+        }
+        $("#assistVnetList").empty()
+        $("#assistVnetList").append(html)
+    
+        $("#assistVnetList tr").each(function () {
+            $selector = $(this)
+    
+            $selector.on("click", function () {
+    
+                if ($(this).hasClass("on")) {
+                    $(this).removeClass("on");
+                } else {
+                    $(this).addClass("on")
+                    $(this).siblings().removeClass("on");
+                }
+            })
+        })
+    }
 }
 
 // 등록된 spec조회 성공 시 table에 뿌려주고, 클릭시 spec 내용 set.
@@ -653,13 +766,55 @@ function filterSecurityGroupList(keywords, caller) {
 }
 
 // pathfinder.js에서 호출하기 때문에 임시로 만들어 둠
+function getSecurityGroupCallbackFail (error){
+    console.log(error)
+}
 function getSecurityGroupListCallbackFail(error) {
-
+    console.log(error)
 }
 
 var totalSshKeyListByNamespace = new Array();
 function getSshKeyListCallbackSuccess(caller, data) {
-    totalSshKeyListByNamespace = data;
+    //totalSshKeyListByNamespace = data;
+    var html = "";
+    var rowCount = 0;
+    data.forEach(function (vSshKeyItem, vSshKeyIndex) {
+            
+            
+
+            rowCount++;
+            html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
+                + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
+                + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
+                + '<td class="overlay hidden" data-th="ConnectionName">' + vSshKeyItem.connectionName + '</td>'
+                + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
+                + '</td>'
+                + '</tr>'
+        
+    });
+
+    if (rowCount === 0) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="3">No Data</td></tr>'
+    }
+    $("#assistSshKeyList").empty()
+    $("#assistSshKeyList").append(html)
+
+    $("#assistSshKeyList tr").each(function () {
+        $selector = $(this)
+
+        $selector.on("click", function () {
+
+            if ($(this).hasClass("on")) {
+                $(this).removeClass("on");
+            } else {
+                $(this).addClass("on")
+                $(this).siblings().removeClass("on");
+            }
+        })
+    })
 }
 // 전체 목록에서 filter
 function filterSshKeyList(keywords, caller) {

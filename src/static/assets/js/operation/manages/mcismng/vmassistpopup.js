@@ -349,6 +349,7 @@ function searchNetworkByKeyword(caller) {
 	}
 
 	// connection
+	var connectionName = $("#assistNetworkConnectionName").val();
 
 	//
 	if (!keyword) {
@@ -363,8 +364,8 @@ function searchNetworkByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	//getCommonSearchVmImageList(keywords, caller);
-	filterNetworkList(keywords, caller)
+	getCommonNetworkList(caller, "", "connectionName", connectionName)	
+	//filterNetworkList(keywords, caller)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -387,6 +388,7 @@ function searchSecurityGroupByKeyword(caller) {
 	}
 
 	// connection
+	var connectionName = $("#assistSecurityGroupConnectionName").val();
 
 	//
 	if (!keyword) {
@@ -401,7 +403,8 @@ function searchSecurityGroupByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	filterSecurityGroupList(keywords, caller)
+	//filterSecurityGroupList(keywords, caller)
+	getCommonSecurityGroupList(caller, "", "", "connectionName", connectionName)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -423,7 +426,7 @@ function searchSshKeyByKeyword(caller) {
 	}
 
 	// connection
-
+	var connectionName = $("#assistSshKeyConnectionName").val();
 	//
 	if (!keyword) {
 		commonAlert("At least a keyword required");
@@ -437,8 +440,8 @@ function searchSshKeyByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	//getCommonSearchVmImageList(keywords, caller);
-	filterSshKeyList(keywords, caller)
+	getCommonSshKeyList(caller, "", "connectionName", connectionName);
+	//filterSshKeyList(keywords, caller)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)

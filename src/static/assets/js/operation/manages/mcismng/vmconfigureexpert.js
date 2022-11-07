@@ -41,6 +41,7 @@ $(document).ready(function () {
     osHardwareClear();
     vnetClear();
     vmSecurityClear();
+    vmOtherClear();
   });
 
   //OS_HW - Clear
@@ -135,6 +136,14 @@ function vmSecurityClear() {
 
 }
 
+// other tab 초기화
+function vmOtherClear(){
+  $("#tab_others_root_disk_type").val("");
+  $("#tab_others_root_disk_size").val("");
+
+  $("#es_root_disk_type").val("");
+  $("#es_root_disk_size").val("");
+}
 
 
 // multi 선택되는 checkbox를 한번에 초기화
@@ -844,11 +853,10 @@ function applyAssistValidCheck(caller) {
   } else if (caller == "myImage") {
     var orgPrefix = "myImage_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
-  }else if (caller == "vmSpecAssist") {
+  } else if (caller == "vmSpecAssist") {
     var orgPrefix = "vmSpecAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
-  }  
-  else if (caller == "networkAssist") {
+  } else if (caller == "networkAssist") {
     var orgPrefix = "vNetAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
   } else if (caller == "securityGroupAssist") {

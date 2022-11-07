@@ -54,6 +54,10 @@ function getWebToolUrl(controllerKeyName) {
             ["McisRegProc", "/operation/manages/mcismng/reg/proc"],
             ["McisCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID"],
             ["McisVmCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
+            ["McisVmRegProc", "/operation/manages/mcismng/:mcisID/vm/reg/proc"],
+            ["McisVmListRegProc", "/operation/manages/mcismng/:mcisID/vmlist/reg/proc"],// vm 목록으로 저장
+            
+            ["McisVmRegDynamicProc", "/operation/manages/mcismng/:mcisID/vmdynamic/proc"],
 
             ["McksMngForm", "/operation/manages/mcksmng/mngform"],
             ["McksRegForm", "/operation/manages/mcksmng/regform"],
@@ -287,6 +291,10 @@ function getCommonNetworkList(caller, optionParam, filterKey, filterVal) {
         data = result.data.VNetList;
         console.log("vNetwork Info : ", result);
         console.log("vNetwork data : ", data);
+
+        if ( caller == ""){
+            getNetworkListCallbackSuccess(caller,data)
+        }
         //setTotalNetworkList(data)
         getNetworkListCallbackSuccess(caller, data);
     }).catch(error => {

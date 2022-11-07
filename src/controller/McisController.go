@@ -492,25 +492,83 @@ func McisDynamicRegProc(c echo.Context) error {
 	// map[description:bb installMonAgent:yes name:aa vm:[map[connectionName:gcp-asia-east1 description:dd imageId:gcp-jsyoo-ubuntu name:cc provider:GCP securityGroupIds:[gcp-jsyoo-sg-01] specId:gcp-jsyoo-01 sshKeyId:gcp-jsyoo-sshkey subnetId:jsyoo-gcp-sub-01 vNetId:jsyoo-gcp-01 vm_add_cnt:0 vm_cnt:]]]
 	log.Println("get info")
 
-	mcisInfo := &tbmcis.TbMcisDynamicReq{}
-	if err := c.Bind(mcisInfo); err != nil {
+	mcisReqInfo := &tbmcis.TbMcisDynamicReq{}
+	if err := c.Bind(mcisReqInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
 			"status":  "5001",
 		})
 	}
-	log.Println(mcisInfo) // 여러개일 수 있음.
+	log.Println(mcisReqInfo) // 여러개일 수 있음.
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	// // socket의 key 생성 : ns + 구분 + id
-	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisInfo.Name // TODO : 공통 function으로 뺄 것.
+	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisReqInfo.Name // TODO : 공통 function으로 뺄 것.
 
 	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
 
-	go service.RegMcisDynamicByAsync(defaultNameSpaceID, mcisInfo, c)
+	go service.RegMcisDynamicByAsync(defaultNameSpaceID, mcisReqInfo, c)
+	// 원래는 호출 결과를 return하나 go routine으로 바꾸면서 요청성공으로 return
+	log.Println("before return")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+	})
+
+}
+
+// VM (Subgroup 추가)
+func VmDynamicRegProc(c echo.Context) error {
+	log.Println("McisDynamicRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	log.Println("get info")
+	mcisID := c.Param("mcisID")
+
+	//vmReqInfo := &tbmcis.TbVmDynamicReq{}
+	//if err := c.Bind(vmReqInfo); err != nil {
+	//	log.Println(err)
+	//	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	//		"message": "fail",
+	//		"status":  "5001",
+	//	})
+	//}
+	//log.Println(vmReqInfo) // 여러개일 수 있음.
+
+	mcisReqInfo := &tbmcis.TbMcisDynamicReq{}
+	if err := c.Bind(mcisReqInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "5001",
+		})
+	}
+	log.Println(mcisReqInfo)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	vmReqList := mcisReqInfo.Vm
+	for _, vmReqInfo := range vmReqList {
+		taskKey := defaultNameSpaceID + "||" + "vm" + "||" + vmReqInfo.Name // TODO : 공통 function으로 뺄 것.
+
+		service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+		go service.RegVmDynamicByAsync(defaultNameSpaceID, mcisID, &vmReqInfo, c)
+	}
+
+	// // socket의 key 생성 : ns + 구분 + id
+	//taskKey := defaultNameSpaceID + "||" + "vm" + "||" + vmReqInfo.Name // TODO : 공통 function으로 뺄 것.
+
+	//service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	//go service.RegVmDynamicByAsync(defaultNameSpaceID, mcisID, vmReqInfo, c)
+
 	// 원래는 호출 결과를 return하나 go routine으로 바꾸면서 요청성공으로 return
 	log.Println("before return")
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -802,7 +860,44 @@ func VmRegProc(c echo.Context) error {
 		"message": "Call success",
 		"status":  200,
 	})
+}
 
+// MCIS에 VM 목록으로 추가 등록
+func VmListRegProc(c echo.Context) error {
+	log.Println("VmListRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// mCISInfo := &tumblebug.McisInfo{}
+	mcisReqInfo := &tbmcis.TbMcisReq{}
+	if err := c.Bind(mcisReqInfo); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(mcisReqInfo)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	mcisID := c.Param("mcisID")
+
+	vms := mcisReqInfo.Vm
+	for _, vmInfo := range vms {
+		taskKey := defaultNameSpaceID + "||" + "vm" + "||" + mcisID + "||" + vmInfo.Name
+		service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, util.VM_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+		// go 루틴 호출 : return 값은 session에 저장
+		go service.AsyncRegVm(defaultNameSpaceID, mcisID, &vmInfo, c)
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Call success",
+		"status":  200,
+	})
 }
 
 // Register existing VM in a CSP to Cloud-Barista MCIS

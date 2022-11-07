@@ -350,10 +350,13 @@ function getCommonLookupDiskInfoSuccess(caller, provider, data){
 	root_disk_type.forEach(item=>{
 		html += '<option value="'+item+'">'+item+'</option>'
 	})
-if(caller == "vmsimple"){
+if(caller == "vmexpress"){
 	$("#ss_root_disk_type").empty();
 	$("#ss_root_disk_type").append(html);
-}else{
+}else if(caller == "vmsimple"){
+	$("#ss_root_disk_type").empty();
+	$("#ss_root_disk_type").append(html);
+}else if(caller == "vmexpert"){
 	$("#e_root_disk_type").empty()
 	$("#e_root_disk_type").append(html)
 }
@@ -472,39 +475,39 @@ function view_simple(cnt) {
 
 }
 
-function displayNewServerForm() {
-	var $SimpleServers = $("#simpleServerConfig");
-	var $ExpertServers = $("#expertServerConfig");
-	var $ImportServers = $("#importServerConfig");
-
-	var check = $(".switch .ch").is(":checked");
-	console.log("check=" + check);
-	if (check) {
-		$SimpleServers.removeClass("active");
-		$ExpertServers.addClass("active");
-		$ImportServers.removeClass("active");
-	} else {
-		$SimpleServers.addClass("active");
-		$ExpertServers.removeClass("active");
-		$ImportServers.removeClass("active");
-	}
-
-	// var vmFormType = $("input[name='vmInfoType']:checked").val();
-	// console.log("vmFormType = " + vmFormType)
-	// if( vmFormType == "expert"){
-	//     $SimpleServers.removeClass("active");
-	//     $ExpertServers.addClass("active");            
-	//     $ImportServers.removeClass("active");
-	// }else if( vmFormType == "import"){
-	//     $SimpleServers.removeClass("active");
-	//     $ExpertServers.removeClass("active");            
-	//     $ImportServers.addClass("active");
-	// }else{// simple
-	//     $SimpleServers.addClass("active");
-	//     $ExpertServers.removeClass("active");            
-	//     $ImportServers.removeClass("active");
-	// }
-}
+//function displayNewServerForm() {
+//	var $SimpleServers = $("#simpleServerConfig");
+//	var $ExpertServers = $("#expertServerConfig");
+//	var $ImportServers = $("#importServerConfig");
+//
+//	var check = $(".switch .ch").is(":checked");
+//	console.log("check=" + check);
+//	if (check) {
+//		$SimpleServers.removeClass("active");
+//		$ExpertServers.addClass("active");
+//		$ImportServers.removeClass("active");
+//	} else {
+//		$SimpleServers.addClass("active");
+//		$ExpertServers.removeClass("active");
+//		$ImportServers.removeClass("active");
+//	}
+//
+//	// var vmFormType = $("input[name='vmInfoType']:checked").val();
+//	// console.log("vmFormType = " + vmFormType)
+//	// if( vmFormType == "expert"){
+//	//     $SimpleServers.removeClass("active");
+//	//     $ExpertServers.addClass("active");            
+//	//     $ImportServers.removeClass("active");
+//	// }else if( vmFormType == "import"){
+//	//     $SimpleServers.removeClass("active");
+//	//     $ExpertServers.removeClass("active");            
+//	//     $ImportServers.addClass("active");
+//	// }else{// simple
+//	//     $SimpleServers.addClass("active");
+//	//     $ExpertServers.removeClass("active");            
+//	//     $ImportServers.removeClass("active");
+//	// }
+//}
 // Expert Mode에 Import 버튼 클릭 시 해당 form display  // MCIS Create 와 VM Create의 function이름이 같음
 function displayVmImportServerFormByImport() {
 	var $SimpleServers = $("#simpleServerConfig");
