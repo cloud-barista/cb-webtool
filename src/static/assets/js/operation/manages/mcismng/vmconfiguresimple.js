@@ -397,9 +397,13 @@ function simpleDone_btn() {
 	$("#s_spec").val($("#ss_spec").val())
 	//$("#s_imageId").val($("#ss_imageId").val()) 이미지는 내가 처리
 	$("#s_sshKey").val($("#ss_sshKey").val())
-	$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
-	var select_disk = $("#ss_data_disk").val();
+	$("#s_root_disk_size").val($("#ss_root_disk_size").val())
+	$("#s_root_disk_type").val($("#ss_root_disk_type").val())
 
+	//$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
+	$("#s_subGroupSize").val($("#ss_vm_add_cnt").val() + "")
+
+	var select_disk = $("#ss_data_disk").val();
 
 	console.log($("#s_imageId").val());
 	console.log($("#ss_imageId").val());

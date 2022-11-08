@@ -331,7 +331,8 @@ function expertDone_btn() {
   if ($("#e_specId").val() == "") { commonAlert("VM Spec is required"); return; }
 
 
-  $("#e_vm_add_cnt").val($("#es_vm_add_cnt").val());// 추가수량 값을 form에 추가.
+  //$("#e_vm_add_cnt").val($("#es_vm_add_cnt").val());// 추가수량 값을 form에 추가.
+  $("#e_subGroupSize").val($("#es_vm_add_cnt").val());// 추가수량 -> subGroupSize 로 변경
   var select_disk = $("#ss_data_disk").val();
   
   // expertForm에는 vm생성에 필요한 값들만 있음.
@@ -877,7 +878,6 @@ function applyAssistValidCheck(caller) {
       var sgIndex = sgEleArr[sgEleArr.length - 1];
 
       var currentConnectionName = $("#" + orgPrefix + "connectionName_" + sgIndex).val();
-      var currentConnectionName = $("#" + orgPrefix + "provider_" + sgIndex).val();
       if (tempConnectionName == "") {
         tempConnectionName = currentConnectionName
       } else if (tempConnectionName != currentConnectionName) {

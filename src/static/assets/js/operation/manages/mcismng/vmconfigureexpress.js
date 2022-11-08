@@ -116,7 +116,9 @@ function expressDone_btn() {
 	$("#p_name").val($("#ep_name").val())
 	$("#p_description").val($("#ep_description").val())
 	$("#p_spec").val($("#ep_spec").val())
+	$("#p_subGroupSize").val($("#ep_vm_add_cnt").val() + "")
 	$("#p_vm_cnt").val($("#ep_vm_add_cnt").val() + "")
+
 
 	//var express_form = $("#express_form").serializeObject()
 	// commonSpec 으로 set 해야하므로 재설정
@@ -124,7 +126,7 @@ function expressDone_btn() {
 	express_form["name"] = $("#p_name").val();
 	express_form["connectionName"] = $("#p_connectionName").val();
 	express_form["description"] = $("#p_description").val();
-	express_form["subGroupSize"] = $("#p_vm_cnt").val();
+	express_form["subGroupSize"] = $("#p_subGroupSize").val();
 	express_form["commonImage"] = "ubuntu18.04";
 	express_form["commonSpec"] = $("#p_spec").val();
 
