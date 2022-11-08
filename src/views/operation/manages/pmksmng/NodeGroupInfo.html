@@ -1,5 +1,7 @@
 {{define "NodeGroupInfo"}}
-<div class="dashboard dashboard_cont server_status" id="pmks_node_detail">
+<!-- <div class="dashboard dashboard_cont server_status" id="pmks_node_detail"></div> -->
+<div class="dashboard dashboard_cont server_status_sub" id="pmks_nodegroup_detail">
+
 
 	<div class="d_box box_m box_w100">
 		<div class="titbox">
@@ -20,17 +22,17 @@
 						<li>
 							<label>Name</label>
 							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
-								id="pmks_info_name" />
+								id="nodegroup_info_name" />
 						</li>
 						<li>
-							<label>Version</label>
+							<label>Image</label>
 							<input type="text" name="" value="" placeholder="" title="" readonly
-								id="pmks_info_version" />
+								id="nodegroup_info_imageid" />
 						</li>
 						<li>
-							<label>Status</label>
+							<label>Spec</label>
 							<input type="text" name="" value="" placeholder="None" title="" readonly
-								id="pmks_info_status" />
+								id="nodegroup_info_spec" />
 						</li>
 					</ul>
 				</div>
@@ -38,41 +40,49 @@
 				<div class="boxlist ipbox ip2">
 					<ul>
 						<li>
-							<label>VPC </label>
+							<label>Key Pair </label>
 							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
-								id="pmks_info_vpc" />
+								id="nodegroup_info_keypair" />
 						</li>
 						<li>
-							<label>Subnet</label>
+							<label>Desired Node Size</label>
 							<input type="text" name="" value="" placeholder="" title="" readonly
-								id="pmks_info_subnet" />
+								id="nodegroup_info_desired_node_size" />
+							<a href="UpdateNodeGroupScaleSize('DesiredNodeSize');" class="btn_recommend">Update</a>
 						</li>
 						<li>
-							<label>Security Group</label>
-							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
-								id="pmks_info_security_group" readonly />
+							<label>Max Node Size</label>
+							<input type="text" name="" value="" placeholder="" title=""
+								id="nodegroup_info_max_node_size" readonly />
+							<a href="UpdateNodeGroupScaleSize('MaxNodeSize');" class="btn_recommend">Update</a>
 						</li>
-
+						<li>
+							<label>Min Node Size</label>
+							<input type="text" name="" value="" placeholder="" title=""
+								id="nodegroup_info_min_node_size" readonly />
+							<a href="UpdateNodeGroupScaleSize('MinNodeSize');" class="btn_recommend">Update</a>
+						</li>
 					</ul>
 				</div>
 				<div class="boxlist ipbox ip2">
 					<ul>
 						<li>
-							<label>Cloud Connection</label>
+							<label>On Scaling Auto</label>
 							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
-								id="pmks_info_cloud_connection" readonly />
-						</li>
-						<li>
-							<label>End Point </label>
-							<input type="text" name="" value="" placeholder="" title="" readonly
-								id="pmks_info_endpoint" />
-						</li>
-						<li>
-							<label>KubeConfig</label>
-							<input type="text" name="" value="" placeholder="" title="" readonly
-								id="pmks_info_kubeconfig" />
-						</li>
+								id="nodegroup_info_on_scaling_auto" readonly />
+							<a href="UpdateNodeGroupAutoScalingOnOff();" class="btn_recommend">Update</a>
 
+						</li>
+						<li>
+							<label>Root Disk Type</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="nodegroup_info_root_disk_type" />
+						</li>
+						<li>
+							<label>Root Disk Size</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="nodegroup_info_root_disk_size" />
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -87,120 +97,91 @@
 				<div class="box">
 
 					<div class="titbox">
-						<div class="tit initial" id="mcis_server_info_status"><strong>Node List / Status</strong>
+						<<<<<<< HEAD <div class="tit initial" id="mcis_server_info_status"><strong>Node List /
+								Status</strong>
 							<span class="stxt">[ coffeefactory ]</span> Server(2)
-						</div>
-						<div class="top_info">
-							<ul>
-								<li>
-									<a href="javascript:void(0);">Filter</a>
-									<div class="infobox">
-										<div class="box">
-											<p>NS name</p>
-											<ul>
-												<li><a href="javascript:void(0);">name</a></li>
-												<li><a href="javascript:void(0);">status</a></li>
-												<li><a href="javascript:void(0);">Cloud</a></li>
-												<li><a href="javascript:void(0);">Region</a></li>
-											</ul>
-										</div>
-									</div>
-								</li>
-								<li>
-									<a href="javascript:void(0);">Sort</a>
-									<div class="infobox">
-										<div class="box">
-											<ul>
-												<li><a href="javascript:void(0);">name</a></li>
-												<li><a href="javascript:void(0);">status</a></li>
-											</ul>
-										</div>
-									</div>
-								</li>
-								<li>
-									<a href="javascript:void(0);">Action</a>
-									<div class="infobox">
-										<div class="box">
-											<ul>
-												<li>
-													<strong>Life Cycle</strong>
-													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Reboot"
-																onclick="commonConfirmOpen('VmLifeCycleReboot')">Reboot</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Suspend"
-																onclick="commonConfirmOpen('VmLifeCycleSuspend')">Suspend</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Resume"
-																onclick="commonConfirmOpen('VmLifeCycleResume')">Resume</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Terminate"
-																onclick="commonConfirmOpen('VmLifeCycleTerminate')">Terminate</a>
-														</li>
-													</ul>
-												</li>
-												<li class="divider"></li>
-												<li>
-													<strong>Manage</strong>
-													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="addNewVirtualMachine()">Add/Extend</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_create_snapshot"
-																onclick="commonPromptOpen('CreateSnapshot')">Create
-																Snapshot</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_ScriptExport"
-																onclick="commonConfirmOpen('ExportVmScriptOfMcis')">Export</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="commonConfirmOpen('ShowMonitoring')">ShowMonitoring</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="commonPromptOpen('RemoteCommandVmOfMcis')">RemoteCommand</a>
-														</li>
-													</ul>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-
-
-					<div class="modal fade layerpopup" id="Life_View" tabindex="-1" role="dialog" aria-hidden="true">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-
-								<div class="modal-body">
-									<div class="txt">Would you like to view Server ?</div>
-									<div class="btnbox">
-										<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-										<button type="button" class="btn_ok" data-dismiss="modal"
-											onclick="changePage('McisMngForm')">OK</button>
-									</div>
-								</div>
+							=======
+							<div class="tit initial" id="pmks_node_list_status"><strong>Node List / Status</strong>
+								<span class="stxt">[ ]</span>
+								>>>>>>> 66f773549c7b14ce96389e26a0823f6d15bdf635
 							</div>
-						</div>
-					</div>
+							<div class="top_info">
+								<ul>
 
+									<li>
+										<a href="javascript:void(0);">Action</a>
+										<div class="infobox">
+											<div class="box">
+												<ul>
+													<li>
+														<strong>Life Cycle</strong>
+														<ul>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_Life_Reboot"
+																	onclick="commonConfirmOpen('VmLifeCycleReboot')">Reboot</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_Life_Suspend"
+																	onclick="commonConfirmOpen('VmLifeCycleSuspend')">Suspend</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_Life_Resume"
+																	onclick="commonConfirmOpen('VmLifeCycleResume')">Resume</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_Life_Terminate"
+																	onclick="commonConfirmOpen('VmLifeCycleTerminate')">Terminate</a>
+															</li>
+														</ul>
+													</li>
+													<li class="divider"></li>
+													<li>
+														<strong>Manage</strong>
+														<ul>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_n_New"
+																	onclick="addNewVirtualMachine()">Add/Extend</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_create_snapshot"
+																	onclick="commonPromptOpen('CreateSnapshot')">Create
+																	Snapshot</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_ScriptExport"
+																	onclick="commonConfirmOpen('ExportVmScriptOfMcis')">Export</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_n_New"
+																	onclick="commonConfirmOpen('ShowMonitoring')">ShowMonitoring</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_n_New"
+																	onclick="commonPromptOpen('RemoteCommandVmOfMcis')">RemoteCommand</a>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+					</div>
 
 					<div class="scroll-wrapper listbox scrollbar-inner" style="position: relative;">
 						<div class="listbox scrollbar-inner scroll-content"
-							style="margin-bottom: 0px; margin-right: 0px; height: 135px; max-height: none;">
-							<ul id="pmks_node_list_info_box">
-
+							style="margin-bottom: 0px; margin-right: 0px; height: 135px; max-height: none;"
+							id="pmks_node_list_info_box">
+							<ul id="mcis_server_info_box">
+								<li id="server_status_icon_hongkong-1" class="sel_cr bgbox_b active"><a
+										href="javascript:void(0);"
+										onclick="vmDetailInfo('coffeefactory','coffeefactory','hongkong-1')"><span
+											class="txt">hongkong-1</span></a></li>
+								<li id="server_status_icon_singapore" class="sel_cr bgbox_b"><a
+										href="javascript:void(0);"
+										onclick="vmDetailInfo('coffeefactory','coffeefactory','singapore')"><span
+											class="txt">singapore</span></a></li>
 							</ul>
 						</div>
 						<div class="scroll-element scroll-x">

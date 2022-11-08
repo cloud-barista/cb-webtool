@@ -2117,6 +2117,13 @@ func DataDiskLookupList(c echo.Context) error {
 	provider := c.QueryParam("provider")
 	connectionName := c.QueryParam("connectionName")
 
+	if provider == "" {
+		connectionInfo, respStatus := service.GetCloudConnectionConfigData(connectionName) // (spider.CloudConnectionConfigInfo
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		}
+		provider = connectionInfo.ProviderName
+	}
+
 	diskInfoList, err := service.DiskLookup(provider, connectionName)
 	if err != nil {
 

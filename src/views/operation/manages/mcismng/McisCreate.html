@@ -171,13 +171,17 @@
 								<div class="btnbox">
 									<div class="btn_right">
 										<button name="" type="button" value="" class="btn_co btn_cr_g w95 btn_apply"
-											onclick="createMcisDynamic();"><span>DEPLOY</span></button>
+											onclick="deployMcis();"><span>DEPLOY</span></button>
 										<button name="" type="button" value="" class="btn_clear btn_co btn_cr_b"
 											id="addMcisCancel" style="display: none;"
 											onclick="displayMcisImportServerFormByImport(false);">CANCEL</button>
 									</div>
 								</div>
 
+								<!-- Express Server Configuration -->
+								{{template "VmConfigureExpress" .}}
+								<!-- Express Server Configuration -->
+								
 								<!-- Simple Server Configuration -->
 								{{template "VmConfigureSimple" .}}
 								<!-- Simple Server Configuration -->
@@ -185,10 +189,6 @@
 								<!-- New Server Config -->
 								{{template "VmConfigureExpert" .}}
 								<!-- //New Server Config -->
-
-								<!-- Express Server Configuration -->
-								{{template "VmConfigureExpress" .}}
-								<!-- Express Server Configuration -->
 
 								<!-- Import Server Config -->
 								{{template "VmConfigureImport" .}}

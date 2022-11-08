@@ -249,15 +249,89 @@ function filterConnectionByProvider(provider, targetObjId) {
 }
 
 var totalDeployServerCount = 0;
+var TotalServerConfigArr = new Array();// 최종 생성할 서버 목록
 function btn_deploy() {
-    var mcis_name = $("#mcis_name").val();
-    var mcis_id = $("#mcis_id").val();
-    if (!mcis_id) {
-        commonAlert("Please Select MCIS !!!!!")
-        return;
-    }
-    totalDeployServerCount = 0;// deploy vm 개수 초기화
+    var deploymentAlgo = $("#placement_algo").val()
+    if (deploymentAlgo == "express") {
+        createVmDynamic()
+    }else{
 
+        var mcis_name = $("#mcis_name").val();
+        var mcis_id = $("#mcis_id").val();
+        if (!mcis_id) {
+            commonAlert("Please Select MCIS !!!!!")
+            return;
+        }
+        totalDeployServerCount = 0;// deploy vm 개수 초기화
+        var new_obj = {}// vm이 담길 변수
+
+        // Express 는 별도처리임.
+
+        if (Simple_Server_Config_Arr) {
+            vm_len = Simple_Server_Config_Arr.length;
+            for (var i in Simple_Server_Config_Arr) {
+                TotalServerConfigArr.push(Simple_Server_Config_Arr[i]);
+            }
+        }
+
+        if (Expert_Server_Config_Arr) {
+            vm_len = Expert_Server_Config_Arr.length;
+            for (var i in Expert_Server_Config_Arr) {
+                TotalServerConfigArr.push(Expert_Server_Config_Arr[i]);
+            }
+        }
+
+        //Import_Server_Config_Arr : import도 같이 추가
+        if (Import_Server_Config_Arr) {
+            vm_len = Import_Server_Config_Arr.length;
+            for (var i in Import_Server_Config_Arr) {
+                TotalServerConfigArr.push(Import_Server_Config_Arr[i]);
+            }
+        }
+
+        if (TotalServerConfigArr) {
+            vm_len = TotalServerConfigArr.length;
+            console.log("Server_Config_Arr length: ", vm_len);
+            new_obj['vm'] = TotalServerConfigArr;
+            console.log("new obj is : ", new_obj);
+        } else {
+            commonAlert("Please Input Servers");
+            $(".simple_servers_config").addClass("active");
+            $("#s_name").focus();
+        }
+
+        //var url = "/operation/manages/mcismng/" + mcis_id + "/vm/reg/proc"
+        var urlParamMap = new Map();
+        urlParamMap.set(":mcisID", mcis_id)
+        var url = setUrlByParam("McisVmListRegProc", urlParamMap)
+        //var url = getWebToolUrl("McisVmRegProc")
+        try {
+            axios.post(url, new_obj, {
+                // headers: {
+                //     'Content-type': "application/json",
+                // },
+            }).then(result => {
+                console.log("VM Register data : ", result);
+                console.log("Result Status : ", result.status);
+                if (result.status == 201 || result.status == 200) {
+                    commonResultAlert("Register Requested")
+                } else {
+                    commonAlert("Register Fail")
+                }
+            }).catch((error) => {
+                // console.warn(error);
+                console.log(error.response)
+                var errorMessage = error.response.data.error;
+                var statusCode = error.response.status;
+                commonErrorAlert(statusCode, errorMessage)
+    
+            })
+        } catch (error) {
+            commonAlert(error);
+            console.log(error);
+        }
+    }
+    /* Simple/Expert/Import 따로 날릴 필요 없음
     console.log(Simple_Server_Config_Arr);
     if (Simple_Server_Config_Arr) {// mcissimpleconfigure.js 에 const로 정의 됨.
         var vm_len = Simple_Server_Config_Arr.length;
@@ -311,7 +385,7 @@ function btn_deploy() {
         }
     }
 
-    ///////// export
+    ///////// expert
     console.log(Expert_Server_Config_Arr);
     if (Expert_Server_Config_Arr) {
         var vm_len = Expert_Server_Config_Arr.length;
@@ -412,6 +486,7 @@ function btn_deploy() {
             }
         }
     }
+    */
 }
 
 // Import / Export Modal 표시
@@ -1285,13 +1360,105 @@ function createRecommendSpec(recSpecName) {
     }
 }
 
-
-
-
-
-
-
 function clearAssistSpecList(targetTableList) {
     $("#" + targetTableList).empty()
 }
 
+var IsImport = false;// 파일에서 script를 읽어들이는지 여부
+
+// 서버 더하기버튼 클릭시 서버정보 입력area 보이기/숨기기
+// isExpert의 체크 여부에 따라 바뀜.
+// newServers 와 simpleServers가 있음.
+function displayNewServerForm() {
+    var deploymentAlgo = $("#placement_algo").val();
+    var simpleServerConfig = $("#simpleServerConfig");
+    var expertServerConfig = $("#expertServerConfig");
+    var importServerConfig = $("#importServerConfig");
+    var expressServerConfig = $("#expressServerConfig");
+    console.log("is import = " + IsImport + " , deploymentAlgo " + deploymentAlgo)
+    // if ($("#isImport").is(":checked")) {
+    if (IsImport) {
+        simpleServerConfig.removeClass("active");
+        expertServerConfig.removeClass("active");
+        importServerConfig.addClass("active");
+        expressServerConfig.removeClass("active");
+    } else if (deploymentAlgo == "expert") {
+        simpleServerConfig.removeClass("active");
+        expertServerConfig.toggleClass("active");//
+        importServerConfig.removeClass("active");
+        expressServerConfig.removeClass("active");
+    } else if (deploymentAlgo == "simple") {
+        simpleServerConfig.toggleClass("active");//
+        expertServerConfig.removeClass("active");
+        importServerConfig.removeClass("active");
+        expressServerConfig.removeClass("active");
+
+    } else {
+        //simpleServerConfig        
+        console.log("exp")
+        simpleServerConfig.removeClass("active");
+        expertServerConfig.removeClass("active");
+        importServerConfig.removeClass("active");
+        expressServerConfig.toggleClass("active");//        
+    }
+}
+// 모드가 바뀌면 Form을 Clear 한다.
+function closeNewServerForm() {
+    var expressServerConfig = $("#expressServerConfig");
+    var simpleServerConfig = $("#simpleServerConfig");
+    var expertServerConfig = $("#expertServerConfig");
+    var importServerConfig = $("#importServerConfig");
+    expressServerConfig.removeClass("active");
+    simpleServerConfig.removeClass("active");
+    expertServerConfig.removeClass("active");
+    importServerConfig.removeClass("active");
+
+    // TODO : 해당 form 에 있는 Data 들 초기화
+}
+
+
+function createVmDynamic() {
+    var mcis_name = $("#mcis_name").val();
+    var mcis_id = $("#mcis_id").val();
+    if (!mcis_id) {
+        commonAlert("Please Select MCIS !!!!!")
+        return;
+    }
+
+    var urlParamMap = new Map();
+        urlParamMap.set(":mcisID", mcis_id)
+    var url = setUrlByParam("McisVmRegDynamicProc", urlParamMap)
+    //var url = "/operation/manages/mcismng/:mcisID/vmdynamic/proc"
+    var obj = {}
+    obj['name'] = mcis_id
+    //obj['description'] = mcisDesc
+    obj['vm'] = Express_Server_Config_Arr
+    //obj = Express_Server_Config_Arr
+
+    try {
+        axios.post(url, obj, {
+
+            headers: {
+                //'Content-type': "application/json",
+            },
+
+        }).then(result => {
+            console.log("MCIR Register data : ", result)
+            console.log("Result Status : ", result.status)
+            if (result.status == 201 || result.status == 200) {
+                commonResultAlert("Register requested")
+            } else {
+                commonAlert("Register Fail")
+            }
+        }).catch((error) => {
+            console.log(error.response)
+            var errorMessage = error.response.data.error;
+            var statusCode = error.response.status;
+            commonErrorAlert(statusCode, errorMessage)
+
+        })
+    } catch (error) {
+        commonAlert(error);
+        console.log(error);
+    }
+}

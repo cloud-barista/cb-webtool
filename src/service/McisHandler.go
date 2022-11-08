@@ -392,6 +392,23 @@ func RegMcisByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisReq, c echo.Conte
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 
+	//dataDisk empty처리
+	// vms := mcisInfo.Vm
+	// for _, vm := range vms {
+	// 	dataDisks := vm.DataDiskIds
+	// 	var diskIds []string
+	// 	for _, dataDisk := range dataDisks {
+	// 		if dataDisk != "" {
+	// 			log.Println("dataDisk ", dataDisk)
+	// 			diskIds = append(diskIds, dataDisk)
+	// 		}
+	// 	}
+	// 	log.Println("diskIds ", diskIds)
+	// 	vm.DataDiskIds = diskIds
+	// }
+	// log.Println("vms ", vms)
+	// log.Println("mcisInfo ", mcisInfo)
+
 	pbytes, _ := json.Marshal(mcisInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
@@ -716,6 +733,46 @@ func RegMcisDynamicByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisDynamicReq
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		log.Println("RegMcisDynamicByAsync ", failResultInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	} else {
+
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+	}
+}
+
+// Add VM dynamically from common spec and image
+func RegVmDynamicByAsync(nameSpaceID string, mcisID string, vmReqInfo *tbmcis.TbVmDynamicReq, c echo.Context) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmDynamic"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(vmReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	taskKey := nameSpaceID + "||" + "vm" + "||" + vmReqInfo.Name // TODO : 공통 function으로 뺄 것.
+
+	if err != nil {
+		fmt.Println(err)
+		log.Println("RegVmDynamicByAsync ", err)
+
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegVmDynamicByAsync ", failResultInfo)
 		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 	} else {
 

@@ -5,22 +5,27 @@ $(document).ready(function () {
     getCommonAllPmksList("onload");
 });
 
+// Cluster 목록
 function displayClusterListArea() {
     $(".dashboard .status_list tbody tr").each(function () {
         var $td_list = $(this),
-            $status = $(".server_status"),
+            $status = $(".server_status"),// 1단계
+            $status_sub = $(".server_status_sub"),// 2 단계
             $detail = $(".server_info");
         $td_list.off("click").click(function () {
             $td_list.addClass("on");
             $td_list.siblings().removeClass("on");
             $status.addClass("view");
             $status.siblings().removeClass("on");
+            $status_sub.siblings().removeClass("on");// 2 단계
+
             $(".dashboard.register_cont").removeClass("active");
             $td_list.off("click").click(function () {
                 if ($(this).hasClass("on")) {
                     console.log("reg ok button click")
                     $td_list.removeClass("on");
                     $status.removeClass("view");
+                    $status_sub.removeClass("view");
                     $detail.removeClass("active");
                 } else {
                     $td_list.addClass("on");
@@ -28,6 +33,7 @@ function displayClusterListArea() {
                     $status.addClass("view");
 
                     $status.siblings().removeClass("view");
+                    $status_sub.siblings().removeClass("view");
                     $(".dashboard.register_cont").removeClass("active");
                 }
             });
@@ -35,7 +41,35 @@ function displayClusterListArea() {
     });
 }
 
+// NodeGroup 정보 표시, Node List 표시
+function displayNodeGroupInfoArea() {
+    $(".dashboard .ds_cont .area_cont .listbox li.sel_cr").each(function () {
+        var $sel_list = $(this);// nodeGroup icon 목록
+        //var $detail = $(".server_info");// node 목록
+        $status_sub = $(".server_status_sub"),// 2 단계
+            console.log(">>>>>");
+        $sel_list.off("click").click(function () {
+            $sel_list.addClass("active");
+            $sel_list.siblings().removeClass("active");
+
+            $status_sub.addClass("view");
+
+            $sel_list.off("click").click(function () {
+                if ($(this).hasClass("active")) {
+                    $sel_list.removeClass("active");
+                    $status_sub.removeClass("view");
+                } else {
+                    $sel_list.addClass("active");
+                    $sel_list.siblings().removeClass("active");
+                    $status_sub.addClass("view");
+                }
+            });
+        });
+    });
+}
+
 function displayNodeGroupListArea() {
+    //<div class="dashboard dashboard_cont server_status_sub" id="pmks_nodegroup_detail">
     $("#pmks_nodegroup_detail_info_box").addClass("view")
 
     $("[id^='server_info_tr_']").each(function () {
@@ -163,7 +197,6 @@ function addClusterData(item, index) {
         securityGroupSystemIds.push(securityGroup.SystemId)
     }
 
-
     // cluster 만 있을 때는 없을 수도 있음.
     if (item.NodeGroupList != null) {
         for (var i = 0; i < item.NodeGroupList.length; i++) {
@@ -172,8 +205,6 @@ function addClusterData(item, index) {
             nodeGroupIds.push(nodeGroupName)
         }
     }
-
-
 
     html +=
         "<tr onclick=\"clickListOfCluster('" + clusterID + "', " + index + ");\">"
@@ -239,7 +270,7 @@ function setNodeGroupList(clusterID) {
         }
     }
 
-    displayNodeGroupListArea();
+    displayNodeGroupInfoArea();
 }
 
 // NodeGroup Table : nodegroupList
@@ -302,8 +333,9 @@ function setNodeList(clusterID, nodeGroupID) {
     var nodeGroupInfo = "";
 
     // nodeGroup 정보 표시
+    console.log("nodeGroupList", nodeGroupList)
 
-    $("#pmks_nodegroup_detail_info_box")
+    //$("#pmks_nodegroup_detail_info_box")
 
     // node 목록
     for (var i in nodeGroupList) {
@@ -316,19 +348,48 @@ function setNodeList(clusterID, nodeGroupID) {
         }
     }
 
-    console.log("node list");
-    var nodeList = nodeGroupInfo.Nodes;
+    $("#pmks_nodegroup_id").val(nodeGroupInfo.IId.NameId);// 선택한 nodeGroup Id. PmksMng.html에 정의.
+
+    $("#nodegroup_info_name").val(nodeGroupInfo.IId.NameId);
+    $("#nodegroup_info_imageid").val(nodeGroupInfo.ImageIID.NameId);
+    $("#nodegroup_info_spec").val(nodeGroupInfo.VMSpecName);
+    $("#nodegroup_info_keypair").val(nodeGroupInfo.KeyPairIID.NameId);
+    // nodeGroupInfo.Status
+    $("#nodegroup_info_desired_node_size").val(nodeGroupInfo.DesiredNodeSize);
+    $("#nodegroup_info_max_node_size").val(nodeGroupInfo.MaxNodeSize);
+    $("#nodegroup_info_min_node_size").val(nodeGroupInfo.MinNodeSize);
+
+    $("#nodegroup_info_on_scaling_auto").val(nodeGroupInfo.OnAutoScaling);
+
+
+    $("#nodegroup_info_root_disk_type").val(nodeGroupInfo.RootDiskType);
+    $("#nodegroup_info_root_disk_size").val(nodeGroupInfo.RootDiskSize);
+
+
+
+
+
+
+
     var html = "";
-    for (var i in nodeList) {
-        html += addNodeRow(nodeList[i], i, clusterID, nodeGroupID);
+    if (nodeGroupInfo.Nodes != null && nodeGroupInfo.Nodes.length > 0) {
+        var nodeList = nodeGroupInfo.Nodes;
+
+        console.log("nodeList size ", nodeGroupInfo.Nodes.length)
+        console.log("nodeList", nodeList)
+        var html = "";
+        for (var i in nodeList) {
+            html += addNodeRow(nodeList[i], i, clusterID, nodeGroupID);
+        }
+
+    } else {
+        html = "<li><span>Node doesn't exists, Please check on auto scaling option</span></a></li>"
     }
     $("#pmks_node_list_info_box").empty();
     $("#pmks_node_list_info_box").append(html);
 
-
     // TODO : 각 Node의 상태정보 조회
-
-    //displayNodeGroupListArea(); // 이 function 만들어야 하나?? append(html) 로 되면 굳이 만들 필요없음
+    displayNodeGroupInfoArea();
 }
 
 // 선택한 Node의 상세정보 표시
@@ -369,7 +430,7 @@ function addNodeRow(item, nodeIndex, clusterID, nodeGroupID) {
     return nodeBadge
 }
 
-// Cluster 목록에서 Cluster 클릭
+// Cluster 목록에서 Cluster 클릭 -> Cluster Info + NodeGroup List icon 
 function clickListOfCluster(clusterID, clusterIndex) {
     var clusterInfo = TOTAL_PMKS_LIST.get(clusterID);
     // cluster Info 표시    
@@ -385,13 +446,6 @@ function clickListOfCluster(clusterID, clusterIndex) {
     $("#pmks_info_cloud_connection").val(clusterInfo.ConnectionName);
     $("#pmks_info_status").val(clusterInfo.Status);
 
-    // AccessInfo
-    if (clusterInfo.AccessInfo != null) {
-        var accessInfo = clusterInfo.AccessInfo;
-        $("#pmks_info_endpoint").val(accessInfo.Endpoint);
-        $("#pmks_info_kubeconfig").val(accessInfo.Kubeconfig);
-    }
-
     // NetworkInfo
     if (clusterInfo.Network != null) {
         var networkInfo = clusterInfo.Network;
@@ -401,12 +455,32 @@ function clickListOfCluster(clusterID, clusterIndex) {
         $("#pmks_info_security_group").val(networkInfo.SecurityGroupIIDs);
     }
 
-    setNodeGroupList(clusterID)
+    // AccessInfo
+    if (clusterInfo.AccessInfo != null) {
+        var accessInfo = clusterInfo.AccessInfo;
+        $("#pmks_info_endpoint").val(accessInfo.Endpoint);
+        $("#pmks_info_kubeconfig").val(accessInfo.Kubeconfig);
+    }
 
+    // NodeGroup 이 있으면NodeGroup 목록 표시
+    if (clusterInfo.NodeGroupList != null) {
+        var html = "";
+        for (var o in clusterInfo.NodeGroupList) {
+            var nodeGroupStatus = clusterInfo.NodeGroupList[o].Status;
+            var nodeGroupName = clusterInfo.NodeGroupList[o].IId.NameId
+
+            var nodeGroupDispStatus = "";//getNodeGroupStatusDisp(nodeGroupStatus);
+            var nodeGroupStatusClass = "bgbox_b";//getNodeGroupStatusClass(nodeGroupName)
+            html += '<li id="nodegroup_status_icon_' + o + '" class="sel_cr ' + nodeGroupStatusClass + '"><a href="javascript:void(0);" onclick="clickListOfNodeGroup(\'' + clusterID + '\',\'' + nodeGroupName + '\')"><span class="txt">' + nodeGroupName + '</span></a></li>';
+        }
+        $("#cluster_nodegroup_list").empty();
+        $("#cluster_nodegroup_list").append(html);
+    }
 }
 
-// NodeGroup 목록에서 NodeGroup 클릭
+// NodeGroup 목록에서 NodeGroup 클릭 -> Node 목록
 function clickListOfNodeGroup(clusterID, nodeGrouID) {
+    console.log("clickListOfNodeGroup")
     setNodeList(clusterID, nodeGrouID);
 }
 
@@ -418,33 +492,33 @@ function clickListOfNode(clusterID, nodeGrouID, nodeID) {
 
 // PMKS Info area 안의 NodeList 내용 표시
 // 해당 PMKS를 조회하여 NodeGroup 상세정보 표시
-// function setNodeGroupList(clusterID, clusterIndex) {
-//     // Name, version
-//     $("#pmks_uid").val(clusterID);// hidden    
+function setNodeGroupList(clusterID, clusterIndex) {
+    // Name, version
+    $("#pmks_uid").val(clusterID);// hidden    
 
-//     // PMKS Info
-//     $("#pmks_info_txt").text("[ " + clusterID + " ]");
+    // PMKS Info
+    $("#pmks_info_txt").text("[ " + clusterID + " ]");
 
-//     // cluster 정보
-//     var clusterInfo = TOTAL_PMKS_LIST.get(clusterID);
-//     var connectionName = $("#cluster_connection_" + clusterIndex).val()
-//     connectionName = "ali-test-conn";// for the test
+    // cluster 정보
+    var clusterInfo = TOTAL_PMKS_LIST.get(clusterID);
+    var connectionName = $("#cluster_connection_" + clusterIndex).val()
+    connectionName = "ali-test-conn";// for the test
 
-//     $("#pmks_uid").val(clusterID);
-//     $("#pmks_info_version").val($("#cluster_version_" + clusterIndex).val());
-//     $("#pmks_info_name").val($("#cluster_info_" + clusterIndex).val() + " / " + $("#cluster_systemid_" + clusterIndex).val());
-//     $("#pmks_info_status").val($("#cluster_status_" + clusterIndex).val());
-//     $("#pmks_info_cloud_connection").val(connectionName);
+    $("#pmks_uid").val(clusterID);
+    $("#pmks_info_version").val($("#cluster_version_" + clusterIndex).val());
+    $("#pmks_info_name").val($("#cluster_info_" + clusterIndex).val() + " / " + $("#cluster_systemid_" + clusterIndex).val());
+    $("#pmks_info_status").val($("#cluster_status_" + clusterIndex).val());
+    $("#pmks_info_cloud_connection").val(connectionName);
 
-//     // Network
-//     $("#pmks_vpc").val($("#network_vpc_nameid_" + clusterIndex).val() + " / " + $("#network_vpc_systemid_" + clusterIndex).val());
-//     $("#pmks_subnet").val($("#network_subnet_nameid_" + clusterIndex).val());
-//     $("#pmks_info_security_group").val($("#network_securitygroup_nameid_" + clusterIndex).val());
+    // Network
+    $("#pmks_vpc").val($("#network_vpc_nameid_" + clusterIndex).val() + " / " + $("#network_vpc_systemid_" + clusterIndex).val());
+    $("#pmks_subnet").val($("#network_subnet_nameid_" + clusterIndex).val());
+    $("#pmks_info_security_group").val($("#network_securitygroup_nameid_" + clusterIndex).val());
 
-//     // NodeGroupList :     
-//     //getPmks(uid, connectionName)
-//     addNodeGroupData(clusterID)
-// }
+    // NodeGroupList :     
+    //getPmks(uid, connectionName)
+    addNodeGroupData(clusterID)
+}
 
 // 해당 pmks에 nodeGroup 추가
 // pmks가 경로에 들어가야 함. node 등록 form으로 이동
@@ -461,7 +535,7 @@ function addNewNodeGroup() {
 
     var urlParamMap = new Map();
     urlParamMap.set(":clusterID", clusterId)
-    changePage('PmksNodeGroupRegForm', urlParamMap)
+    //changePage('PmksNodeGroupRegForm', urlParamMap)
     url = setUrlByParam("PmksNodeGroupRegForm", urlParamMap)
 
     //onClick="changePage('PmksNodeGroupRegForm')"
@@ -533,35 +607,36 @@ function deleteCluster() {
 
 }
 
+// nodeGroup 삭제
 function deleteNodeGroupOfPmks() {
     // nodegroup 1개씩 삭제
 
     var selectedPmksId = $("#pmks_cluster_id").val();
-    var selectedPmksName = $("#pmks_cluster_name").val();
-    var selectedNodeId = $("#nodegroup_id").val();
-    var selectedNodeName = $("#nodegroup_name").val();
+    //var selectedPmksName = $("#pmks_cluster_name").val();
+    var selectedNodeId = $("#pmks_nodegroup_id").val();
+    //var selectedNodeName = $("#pmks_nodegroup_name").val();
 
     var urlParamMap = new Map();
     urlParamMap.set(":clusterID", selectedPmksId)
-    urlParamMap.set(":clusterName", selectedPmksName)
-    urlParamMap.set(":nodeGroupID", selectedNodeGroupId)
-    urlParamMap.set(":nodeGroupName", selectedNodeGroupName)
-    var url = setUrlByParam("PmksClusterNodeData", urlParamMap)
+    //urlParamMap.set(":clusterName", selectedPmksName)
+    urlParamMap.set(":nodeGroupID", selectedNodeId)
+    //urlParamMap.set(":nodeGroupName", selectedNodeId)
+    var url = setUrlByParam("PmksNodeGroupDelProc", urlParamMap)
     console.log("URL : ", url)
     axios.delete(url, {
-        headers: {
-            'Content-Type': "application/json"
-        }
+        // headers: {
+        //     'Content-Type': "application/json"
+        // }
     }).then(result => {
         // var data = result.data;
         // if (result.status == 200 || result.status == 201) {
         var statusCode = result.data.status;
         if (statusCode == 200 || statusCode == 201) {
-            commonAlert("Success Delete Node.");
+            commonAlert("NodeGroup Deleted");
 
         } else {
             var message = result.data.message;
-            commonAlert("Fail Delete Node : " + message + "(" + statusCode + ")");
+            commonAlert("Fail to Delete NodeGroup : " + message + "(" + statusCode + ")");
 
         }
     }).catch((error) => {
@@ -573,7 +648,82 @@ function deleteNodeGroupOfPmks() {
     });
 }
 
+// Scale Size 변경
+function UpdateNodeGroupScaleSize(caller) {
+    var clusterId = $("#pmks_cluster_id").val();
+    var clusterName = $("#pmks_cluster_name").val();
+    var connectionName = $("#pmks_cluster_connection").val();
+    var nodeGroupId = $("#pmks_nodegroup_id").val();
+    var desiredSize = $("#nodegroup_info_desired_node_size").val();
+    var maxSize = $("#nodegroup_info_max_node_size").val();
+    var minSize = $("#nodegroup_info_min_node_size").val();
+    var sizeValue = "";
+    if (caller == "DesiredNodeSize") {
+        if (desiredSize > maxSize) {
+            commonAlert("too many");
+            return
+        }
+        if (desiredSize < minSize) {
+            commonAlert("too little");
+            return
+        }
+        sizeValue = $("#nodegroup_info_desired_node_size").val();
+    } else if (caller == "MaxNodeSize") {
+        if (minSize > maxSize) {
+            commonAlert("too many");
+            return
+        }
 
+        sizeValue = $("#nodegroup_info_max_node_size").val();
+    } else if (caller == "MinNodeSize") {
+        if (minSize > maxSize) {
+            commonAlert("too many");
+            return
+        }
+        sizeValue = $("#nodegroup_info_min_node_size").val();
+    }
+
+    var urlParamMap = new Map();
+    urlParamMap.set(":clusterID", selectedMcksUid)
+    urlParamMap.set(":nodeGroupID", selectedNodeUid)
+
+    var new_obj = {}
+    new_obj['ConnectionName'] = connectionName
+
+
+    var url = setUrlByParam("PmksNodeGroupDelProc", urlParamMap)
+    try {
+        axios.put(url, new_obj, {
+            // headers: {
+            //     'Content-type': "application/json",
+            // },
+        }).then(result => {
+            console.log("update data : ", result);
+            console.log("Result Status : ", result.status);
+            if (result.status == 201 || result.status == 200) {
+                commonResultAlert("Updated")
+            } else {
+                commonAlert("Update Failed")
+            }
+        }).catch((error) => {
+            console.warn(error);
+            commonAlert(error);
+            // console.log(error.response)
+            // var errorMessage = error.response.data.error;
+            // var statusCode = error.response.status;
+            // commonErrorAlert(statusCode, errorMessage)
+
+        })
+    } catch (error) {
+        commonAlert(error);
+        console.log(error);
+    }
+}
+
+function UpdateNodeGroupAutoScalingOnOff() {
+    //
+    var scalingOnOff = $("#nodegroup_info_on_scaling_auto").val()
+}
 
 
 

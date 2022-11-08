@@ -349,6 +349,7 @@ function searchNetworkByKeyword(caller) {
 	}
 
 	// connection
+	var connectionName = $("#assistNetworkConnectionName").val();
 
 	//
 	if (!keyword) {
@@ -363,8 +364,8 @@ function searchNetworkByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	//getCommonSearchVmImageList(keywords, caller);
-	filterNetworkList(keywords, caller)
+	getCommonNetworkList(caller, "", "connectionName", connectionName)	
+	//filterNetworkList(keywords, caller)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -387,6 +388,7 @@ function searchSecurityGroupByKeyword(caller) {
 	}
 
 	// connection
+	var connectionName = $("#assistSecurityGroupConnectionName").val();
 
 	//
 	if (!keyword) {
@@ -401,7 +403,8 @@ function searchSecurityGroupByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	filterSecurityGroupList(keywords, caller)
+	//filterSecurityGroupList(keywords, caller)
+	getCommonSecurityGroupList(caller, "", "", "connectionName", connectionName)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -423,7 +426,7 @@ function searchSshKeyByKeyword(caller) {
 	}
 
 	// connection
-
+	var connectionName = $("#assistSshKeyConnectionName").val();
 	//
 	if (!keyword) {
 		commonAlert("At least a keyword required");
@@ -437,8 +440,8 @@ function searchSshKeyByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	//getCommonSearchVmImageList(keywords, caller);
-	filterSshKeyList(keywords, caller)
+	getCommonSshKeyList(caller, "", "connectionName", connectionName);
+	//filterSshKeyList(keywords, caller)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -814,7 +817,7 @@ function selectedSpecApply() {
 	var deploymentAlgo = $("#placement_algo").val()
 
 	if (deploymentAlgo == "express") {
-		expressDone_btn()
+		returnSpecInfo("express")		
 	} else {
 		getConnectionConfigCandidateInfo()
 	}
@@ -886,79 +889,64 @@ function getConnectionConfigCandidateInfo() {
 
 
 
-const Express_Server_Config_Arr = new Array();
-var express_data_cnt = 0
-function expressDone_btn() {
-	var specName = ""
-	var provider = ""
-	var cspSpecName = ""
-	var count = 0
-	var serverName = $("#serverName").val()
-	var subGroupSize = $("#serverQuantity").val()
+// 선택한 Spec을 express form에 전달 : 
+function returnSpecInfo(caller) {
+	// 전달 할 param
+	// connection
+	// image : 고정 (ubuntu)
+	// 선택한 spec
 
-	$("input[name='chk']:checked").each(function () {
-		count++
-		specName = $(this).val()
-		var index = this.id
+	// express 는 1개의 spec만 return.
+	if ( caller == "express"){
+		var specName = ""
+		var provider = ""
+		var cspSpecName = ""
+		var count = 0
+		
+		$("input[name='chk']:checked").each(function () {
+			count++
+			specName = $(this).val()
+			var index = this.id
 
-		provider = $("#recommendVmAssist_provider_" + index).val()
-		cspSpecName = $("#recommendVmAssist_cspSpec_" + index).val()
-	});
+			provider = $("#recommendVmAssist_provider_" + index).val()
+			connectionName = $("#recommendVmAssist_connectionName_" + index).val()		
+			cspSpecName = $("#recommendVmAssist_cspSpec_" + index).val()
+		});
 
-	console.log("specName : ", specName)
-	console.log("count : ", count)
+		console.log("specName : ", specName)
+		console.log("count : ", count)
 
-	if (specName == "") {
-		alert("Spec을 선택하세요.")
-		return false
+		if (count != 1) {
+			alert("Spec을 하나만 선택하세요.")
+			return false
+		}
+
+		if (specName == "") {
+			alert("Spec을 선택하세요.")
+			return false
+		}
+
+		
+		var specInfo = {
+			"Provider": provider,
+			"ConnectionName": connectionName,
+			"SpecID": specName,			
+		}
+		setAssistSpecToExpress(specInfo);
 	}
-
-	if (count != 1) {
-		alert("Spec을 하나만 선택하세요.")
-		return false
-	}
-
-
-	var express_form = {
-		"commonImage": "ubuntu18.04",
-		"commonSpec": specName,
-		"subGroupSize": subGroupSize,
-		"name": serverName
-	}
-
-	console.log(express_form)
-
-	var server_name = express_form.name
-	var server_cnt = parseInt(express_form.subGroupSize)
-	console.log('server_cnt : ', server_cnt)
-	var add_server_html = "";
-
-	Express_Server_Config_Arr.push(express_form)
-	// displayServerCnt = ""
-	// if (server_cnt > 1) {
-	var displayServerCnt = '(' + server_cnt + ')'
+	
+	// var express_form = {
+	// 	"commonImage": "ubuntu18.04",
+	// 	"commonSpec": specName,
+	// 	"subGroupSize": subGroupSize,
+	// 	"name": serverName
 	// }
-	add_server_html += '<li onclick="view_simple(\'' + express_data_cnt + '\')">'
-		+ '<div class="server server_on bgbox_b">'
-		+ '<div class="icon"></div>'
-		+ '<div class="txt">' + server_name + displayServerCnt + '</div>'
-		+ '<span class="tooltip_text">' + provider + ' : ' + cspSpecName + '</span>'
-		+ '</div>'
-		+ '</li>';
 
-
-	console.log("add server html");
-	$("#mcis_server_list").prepend(add_server_html)
-
-	$("#plusVmIcon").remove();
-	$("#mcis_server_list").prepend(getPlusVm());
-
-	console.log("simple btn click and simple form data : ", simple_form)
-	console.log("simple data array : ", Express_Server_Config_Arr);
-	express_data_cnt++;
+	
+	
+	
 	$("#recommendSpecAssist").modal("hide");
 }
-
 // connection 후보 보여주기
 // 가져온 connection 목록과 일치하는 spec 정보 보여주기
 // page Load 시 이미 해당 namespace의 전체 목록을 가져 옴.

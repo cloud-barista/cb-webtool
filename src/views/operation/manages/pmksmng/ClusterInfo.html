@@ -13,7 +13,6 @@
 						<div class="infobox">
 							<div class="box">
 								<ul>
-
 									<li>
 										<strong>Manage</strong>
 										<ul>
@@ -101,6 +100,8 @@
 					</ul>
 				</div>
 			</div>
+
+
 		</div>
 
 		<!-- end cluster-->
@@ -112,87 +113,28 @@
 				<div class="box">
 
 					<div class="titbox">
-						<div class="tit initial" id="mcis_server_info_status"><strong>NodeGroup List / Status</strong>
-							<span class="stxt">[ coffeefactory ]</span> Server(2)
-						</div>
+						<div class="tit initial" id="cluster_nodegroup_list_status"><strong>NodeGroup List /
+								Status</strong></div>
 						<div class="top_info">
 							<ul>
-								<li>
-									<a href="javascript:void(0);">Filter</a>
-									<div class="infobox">
-										<div class="box">
-											<p>NS name</p>
-											<ul>
-												<li><a href="javascript:void(0);">name</a></li>
-												<li><a href="javascript:void(0);">status</a></li>
-												<li><a href="javascript:void(0);">Cloud</a></li>
-												<li><a href="javascript:void(0);">Region</a></li>
-											</ul>
-										</div>
-									</div>
-								</li>
-								<li>
-									<a href="javascript:void(0);">Sort</a>
-									<div class="infobox">
-										<div class="box">
-											<ul>
-												<li><a href="javascript:void(0);">name</a></li>
-												<li><a href="javascript:void(0);">status</a></li>
-											</ul>
-										</div>
-									</div>
-								</li>
+
 								<li>
 									<a href="javascript:void(0);">Action</a>
 									<div class="infobox">
 										<div class="box">
 											<ul>
 												<li>
-													<strong>Life Cycle</strong>
-													<ul>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Reboot"
-																onclick="commonConfirmOpen('VmLifeCycleReboot')">Reboot</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Suspend"
-																onclick="commonConfirmOpen('VmLifeCycleSuspend')">Suspend</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Resume"
-																onclick="commonConfirmOpen('VmLifeCycleResume')">Resume</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_Life_Terminate"
-																onclick="commonConfirmOpen('VmLifeCycleTerminate')">Terminate</a>
-														</li>
-													</ul>
-												</li>
-												<li class="divider"></li>
-												<li>
 													<strong>Manage</strong>
 													<ul>
 														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="addNewVirtualMachine()">Add/Extend</a>
+																data-target="#NodeGroup_n_New"
+																onclick="addNewNodeGroup()">Add/Extend</a>
 														</li>
 														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_create_snapshot"
-																onclick="commonPromptOpen('CreateSnapshot')">Create
-																Snapshot</a>
+																data-target="#NodeGroup_n_Delete"
+																onclick="commonConfirmOpen('DeleteNodeGroupOfPmks')">Delete</a>
 														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_ScriptExport"
-																onclick="commonConfirmOpen('ExportVmScriptOfMcis')">Export</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="commonConfirmOpen('ShowMonitoring')">ShowMonitoring</a>
-														</li>
-														<li><a href="javascript:void(0);" data-toggle="modal"
-																data-target="#VM_n_New"
-																onclick="commonPromptOpen('RemoteCommandVmOfMcis')">RemoteCommand</a>
-														</li>
+
 													</ul>
 												</li>
 											</ul>
@@ -203,30 +145,14 @@
 						</div>
 					</div>
 
-
-					<div class="modal fade layerpopup" id="Life_View" tabindex="-1" role="dialog" aria-hidden="true">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-
-								<div class="modal-body">
-									<div class="txt">Would you like to view Server ?</div>
-									<div class="btnbox">
-										<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
-										<button type="button" class="btn_ok" data-dismiss="modal"
-											onclick="changePage('McisMngForm')">OK</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-
+					<!-- cluster에 등록 된 node group 목록 icon -->
 					<div class="scroll-wrapper listbox scrollbar-inner" style="position: relative;">
 						<div class="listbox scrollbar-inner scroll-content"
 							style="margin-bottom: 0px; margin-right: 0px; height: 135px; max-height: none;">
-							<ul id="pmks_nodegroup_list_info_box">
+							<ul id="cluster_nodegroup_list">
 							</ul>
 						</div>
+
 						<div class="scroll-element scroll-x">
 							<div class="scroll-element_outer">
 								<div class="scroll-element_size"></div>
@@ -242,17 +168,14 @@
 							</div>
 						</div>
 					</div>
-
+					<!-- cluster에 등록 된 node group 목록 icon end-->
 
 				</div>
 
 			</div>
 
 		</div>
-
-
 	</div>
-
 </div>
 <!-- //Info -->
 {{end}}

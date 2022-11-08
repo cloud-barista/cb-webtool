@@ -412,13 +412,13 @@ func PmksNodeGroupDelProc(c echo.Context) error {
 		})
 	}
 
-	clusterName := c.Param("clusterName")
-	nodeGroupName := c.Param("nodeGroupName")
+	clusterID := c.Param("clusterID")
+	nodeGroupID := c.Param("nodeGroupID")
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	nodeGroupReqInfo.NameSpace = defaultNameSpaceID
 
-	resultStatusInfo, respStatus := service.DelPmksNodeGroup(clusterName, nodeGroupName, nodeGroupReqInfo)
+	resultStatusInfo, respStatus := service.DelPmksNodeGroup(clusterID, nodeGroupID, nodeGroupReqInfo)
 	log.Println("DelPMKS service returned")
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{

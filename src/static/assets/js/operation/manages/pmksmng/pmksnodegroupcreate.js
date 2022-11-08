@@ -24,9 +24,9 @@ function getPmksDataSuccess(caller, clusterID, data){
     // Cluster Info Set
     setClusterInfo(data);
     // NodeGroup이 있으면 NodeGroup icon을 표시? List로 표시?
-    if( data.NodeGroupList != null){
-        setNodeGroupList(data.NodeGroupList)
-    }    
+    // if( data.NodeGroupList != null){
+    //     setNodeGroupList(data.NodeGroupList)
+    // }    
 }
 
 // 해당 data에 Key가 있으면 해당 값을 return 없으면 ""
@@ -34,7 +34,7 @@ function getCommonStringValue(data, key){
     // ojbect의 parame 조회
 }
 
-
+// NodeGroup 추가 : pmksmng에도 이름이 동일한 function 있음.
 function setClusterInfo(data){
     var clusterID = data.IId.NameId;
     var clusterVersion = data.Version;
@@ -68,6 +68,25 @@ function setClusterInfo(data){
         $("#pmks_info_kubeconfig").val(accessInfo.Kubeconfig);
     }
 
+    // NodeGroup 이 있으면NodeGroup 목록 표시
+    if (data.NodeGroupList != null){
+        var html = "";
+        for (var o in data.NodeGroupList) {
+            var nodeGroupStatus = data.NodeGroupList[o].Status;
+            var nodeGroupName = data.NodeGroupList[o].IId.NameId
+
+            var nodeGroupDispStatus = "";//getNodeGroupStatusDisp(nodeGroupStatus);
+            var nodeGroupStatusClass = "bgbox_b";//getNodeGroupStatusClass(nodeGroupName)
+
+            // NodeGroup 생성부분이라 Click Event 는 없음 pmksmng.js 에서는 clickListOfNodeGroup 있음.
+            html += '<li id="nodegroup_status_icon_' + o + '" class="sel_cr ' + nodeGroupStatusClass + '"><span class="txt">' + nodeGroupName + '</span></li>';
+        }
+        $("#cluster_nodegroup_list").empty();
+        $("#cluster_nodegroup_list").append(html);        
+    }
+    
+    //connectionName
+    getCommonLookupDiskInfo("pmksnodegroup", "", connectionName); // -> getCommonLookupDiskInfoSuccess
 }
 
 // 조회 된 
@@ -250,8 +269,9 @@ function addNewNodeGroupForm(){
     html += '       <input type="text" name="nodegroup_info_onautoscaling" value="" id="nodegroup_info_onautoscaling_' + newNodeGroupIndex + '" placeholder="" title="" />';
     html += '</li>';
     html += '<li>';
-    html += '<label>Root Disk</label>';
-    html += '       <input type="text" name="nodegroup_info_rootdisk_type" value="" id="nodegroup_info_rootdisk_type_' + newNodeGroupIndex + '" placeholder="type" title="" />';
+    html += '<label>Root Disk</label>';    
+    //html += '       <input type="text" name="nodegroup_info_rootdisk_type" value="" id="nodegroup_info_rootdisk_type_' + newNodeGroupIndex + '" placeholder="type" title="" />';
+    html += '<select class="selectbox white pline sel_4" name="rootDiskType" id="nodegroup_info_rootdisk_type_' + newNodeGroupIndex + '" onchange="changeDiskSize(this.value);"></select>';    
     html += '       <input type="text" name="nodegroup_info_rootdisk_size" value="" id="nodegroup_info_rootdisk_size_' + newNodeGroupIndex + '" placeholder="size" title="" />';
     html += '</li>';  								
     html += '</ul>';
@@ -359,8 +379,8 @@ function deployNodeGroup(){
         VMSpecName: nodeGroupVmSpecId,
         KeyPairName: nodeGroupKeyPairId,
         DesiredNodeSize: nodeGroupDesiredNodeSize,
-        MinNodeSize: nodeGroupMaxNodeSize,
-        MaxNodeSize: nodeGroupMinNodeSize,
+        MaxNodeSize: nodeGroupMaxNodeSize,
+        MinNodeSize: nodeGroupMinNodeSize,
         OnAutoScaling: nodeGroupOnAutoScaling,
         RootDiskType: nodeGroupRootDiskType,
         RootDiskSize: nodeGroupRootDiskSize
@@ -391,4 +411,50 @@ function deployNodeGroup(){
             //commonErrorAlert(statusCode, errorMessage);
         });
     }
+}
+
+
+var DISK_TYPES_SIZES
+// ConnectionName에 따른 DisType 목록
+function getCommonLookupDiskInfoSuccess(caller, providerID, data){
+    DISK_TYPES_SIZES = data;
+    var root_disk_type = [];    
+	var res_item = data
+    console.log(res_item)
+	res_item.forEach(item=>{
+		//var temp_provider = item.provider
+		//if(temp_provider == providerID){
+			root_disk_type = item.rootdisktype
+			DISK_TYPES_SIZES = item.disksize
+		//}
+	})
+
+	var html = '<option value="">Select Root Disk Type</option>'
+	console.log("root_disk_type : ",root_disk_type);
+	root_disk_type.forEach(item=>{
+		html += '<option value="'+item+'">'+item+'</option>'
+	})
+
+    
+    var addNodeGroupIndex = 0;
+    // 추가한 nodeGroup들 
+    $("[name='nodegroup_idx']").each(function (idx, ele) {
+        // 중간에 이빨이 빠진게 있을 수 있으므로 id에서 index 추출하여 set
+        var addNodeGroup = $(this).attr("id")
+        // index 추출
+        var tempNodeGroupIdxArr = addNodeGroup.split("_")
+        addNodeGroupIndex = tempNodeGroupIdxArr[tempNodeGroupIdxArr.length -1]
+
+        var rootDiskType = $("#nodegroup_info_rootdisk_type_" + addNodeGroupIndex);
+        rootDiskType.empty();
+		rootDiskType.append(html);
+        console.log(rootDiskType)
+        console.log("html", html)
+	});
+
+    
+}
+
+function changeDiskSize(diskType){
+
 }

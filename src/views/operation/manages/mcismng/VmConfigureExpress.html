@@ -1,29 +1,19 @@
 {{define "VmConfigureExpress"}}
 
 <!-- server 추가 form -->
-<div class="servers_config simple_servers_config" id="expressServerConfig">
-	<form id="simple_form">
-		<input type="hidden" name="provider" id="s_provider" />
+<div class="servers_config express_servers_config" id="expressServerConfig">
+	<form id="express_form">
+		<input type="hidden" name="provider" id="p_provider" />
 
-		<!-- <input type="hidden" name="specId"  value="" id="s_specId" /> -->
-		<!--id 에 간단설정이면 s_, Expert On 이면 e_ -->
-		<input type="hidden" name="subnetId" value="" id="s_subnetId" />
-		<input type="hidden" name="vNetId" value="" id="s_vNetId" />
-		<input type="hidden" name="securityGroupIds[]" value="" id="s_securityGroupIds" />
-		<!--		<input type="hidden" name="vm_cnt" value="" id="s_vm_cnt" />-->
-		<input type="hidden" name="subGroupSize" value="" id="s_vm_cnt" /><!-- vm_cnt에서 subGroupSize로 변경 -->
-		<input type="hidden" name="name" value="" id="s_name" />
-		<input type="hidden" name="description" id="s_description" />
-		<input type="hidden" name="provider" id="s_regProvider" />
-		<input type="hidden" name="connectionName" value="" id="s_regConnectionName" />
-		<input type="hidden" name="specId" id="s_spec" />
-		<input type="hidden" name="imageId" id="s_imageId" />
-		<input type="hidden" name="sshKeyId" id="s_sshKey" />
-		<input type="hidden" name="tempProvider" id="t_regProvider" />
-		<input type="hidden" name="tempConnectionName" id="t_regConnectionName" />
-		<input type="hidden" name="tempSpec" id="t_spec" />
-		<input type="hidden" name="tempImage" id="t_image" />
-		<input type="hidden" name="tempSshKey" id="t_sshKey" />
+		<!-- <input type="hidden" name="specId"  value="" id="p_specId" /> -->
+		<!--id 에 간단설정이면 s_, Expert On 이면 e_ , Express On 이면 p_-->
+		<input type="hidden" name="subGroupSize" value="" id="p_subGroupSize" /><!-- vm_cnt에서 subGroupSize로 변경 -->
+		<input type="hidden" name="name" value="" id="p_name" />
+		<input type="hidden" name="description" id="p_description" />
+		<input type="hidden" name="provider" id="p_provider" />
+		<input type="hidden" name="connectionName" value="" id="p_connectionName" />
+		<input type="hidden" name="specId" id="p_spec" />
+		
 	</form>
 
 	<div class="top_box">
@@ -39,7 +29,7 @@
 						<li>
 							<label><span class="ch">*</span>Server Name</label>
 							<input type="text" name="name" value="" placeholder="Input Name" class="pline ip_3" title=""
-								id="ss_name" />
+								id="ep_name" />
 						</li>
 					</ul>
 				</div>
@@ -48,69 +38,36 @@
 						<li>
 							<label>Description</label>
 							<textarea cols="" rows="" placeholder="Input Description" class="pline ta_3" title=""
-								name="description" id="ss_description"></textarea>
+								name="description" id="ep_description"></textarea>
 						</li>
 					</ul>
 				</div>
-			</div>
-
-			<div class="svc_ipbox svc_ipbox_2">
-				<div class="ipbox ipbox3">
-					<ul>
-						<li>
-							<label><span class="ch">*</span>Provider</label>
-							<select class="selectbox white pline sel_4" name="provider" id="ss_regProvider"
-								onchange="getConnectionListForSelectbox(this.value, 'ss_regConnectionName');">
-								<option value="">Select Provider</option>
-								{{ range $item := .CloudOSList}}
-								<option value="{{ $item }}">{{ $item }}</option>
-								{{ end }}
-							</select>
-						</li>
-						<li>
-							<label><span class="ch">*</span>Connection Name</label>
-							<select class="selectbox white pline sel_4" name="connectionName" id="ss_regConnectionName"
-								onchange="changeConnectionInfo(this.value);">
-								<option value="">Select Connection</option>
-							</select>
-						</li>
-					</ul>
-				</div>
-			</div>
+			</div>			
 
 			<div class="svc_ipbox svc_ipbox_2">
 				<div class="ipbox ipbox3">
 					<ul>
 						<li>
 							<label><span class="ch">*</span>Spec</label>
-							<select class="selectbox white pline sel_4" name="specId" id="ss_spec">
-								<option value="1">Select Spec</option>
-							</select>
+							<input type="text" name="specId" value="" placeholder="Please Use Assist " class="pline ip_3" title=""
+								id="ep_spec" />
 							<a href="javascript:void(0);" class="btn_recommend">Assist</a>
 						</li>
-						<li>
-							<label><span class="ch">*</span>which OS</label>
-							<select class="selectbox white pline sel_4" name="imageId" id="ss_imageId">
-								<option value="1">Select OS Platform</option>
-							</select>
-						</li>
+						<input type="hidden" name="provider" id="ep_provider" value=""/>
+						<input type="hidden" name="connectionName" id="ep_connectionName" value=""/>
+						<input type="hidden" name="imageId" id="ep_imageId" value=""/>
+						
 					</ul>
+					<li>
+						<label><span class="ch">*</span>Root Disk</label>
+						<select class="selectbox white pline sel_4" name="rootDiskType" id="ep_root_disk_type" onchange="changeDiskSize(this.value);">
+							<option value="">Select Root Disk Type</option>
+						</select>
+						<input type="text" name="rootDiskSize" value="" placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
+							id="ep_root_disk_size" />							
+					</li>
+
 				</div>
-			</div>
-
-			<div class="svc_ipbox svc_ipbox_2">
-				<div class="ipbox ipbox3">
-					<ul>
-						<li>
-							<label><span class="ch">*</span>Access (ssh key)</label>
-							<select class="selectbox white pline sel_4" name="sshKeyId" id="ss_sshKey">
-								<option value="">Select SSH Key</option>
-							</select>
-
-						</li>
-					</ul>
-				</div>
-
 			</div>
 
 		</div>
@@ -132,8 +89,8 @@
 									</div>
 									<button type="button" class="btn_s btn_s_plus">+</button>
 								</div>
-								<input type="text" name="ss_vm_add_cnt" value="1" class="components_input txt_ipbox"
-									title="" readonly id="ss_vm_add_cnt" />
+								<input type="text" name="exp_vm_add_cnt" value="1" class="components_input txt_ipbox"
+									title="" readonly id="ep_vm_add_cnt" />
 							</div>
 						</div>
 					</div>
@@ -145,7 +102,7 @@
 				<div class="btn_right">
 
 					<button type="button" name="" value="" class="btn_done btn_co btn_cr_g"
-						onclick="simpleDone_btn();"><span>DONE</span></button>
+						onclick="expressDone_btn();"><span>DONE</span></button>
 					<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button>
 
 				</div>
@@ -156,5 +113,5 @@
 
 </div>
 
-<script src="/assets/js/operation/manages/mcismng/vmconfiguresimple.js"></script>
+<script src="/assets/js/operation/manages/mcismng/vmconfigureexpress.js"></script>
 {{end}}

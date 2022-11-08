@@ -350,15 +350,17 @@ function getCommonLookupDiskInfoSuccess(caller, provider, data){
 	root_disk_type.forEach(item=>{
 		html += '<option value="'+item+'">'+item+'</option>'
 	})
-if(caller == "vmsimple"){
-	$("#ss_root_disk_type").empty();
-	$("#ss_root_disk_type").append(html);
-}else{
-	$("#e_root_disk_type").empty()
-	$("#e_root_disk_type").append(html)
-}
-console.log("const valie DISK_SIZE : ",DISK_SIZE);
-
+	//if(caller == "vmexpress"){
+		$("#ep_root_disk_type").empty();
+		$("#ep_root_disk_type").append(html);
+	//}else if(caller == "vmsimple"){
+		$("#ss_root_disk_type").empty();
+		$("#ss_root_disk_type").append(html);
+	//}else if(caller == "vmexpert"){
+		$("#tab_others_root_disk_type").empty()
+		$("#tab_others_root_disk_type").append(html)
+	//}
+	console.log("const valie DISK_SIZE : ",DISK_SIZE);
 
 }
 var ROOT_DISK_MAX_VALUE = 0;
@@ -395,9 +397,13 @@ function simpleDone_btn() {
 	$("#s_spec").val($("#ss_spec").val())
 	//$("#s_imageId").val($("#ss_imageId").val()) 이미지는 내가 처리
 	$("#s_sshKey").val($("#ss_sshKey").val())
-	$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
-	var select_disk = $("#ss_data_disk").val();
+	$("#s_root_disk_size").val($("#ss_root_disk_size").val())
+	$("#s_root_disk_type").val($("#ss_root_disk_type").val())
 
+	//$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
+	$("#s_subGroupSize").val($("#ss_vm_add_cnt").val() + "")
+
+	var select_disk = $("#ss_data_disk").val();
 
 	console.log($("#s_imageId").val());
 	console.log($("#ss_imageId").val());
@@ -407,6 +413,8 @@ function simpleDone_btn() {
 	if (select_disk) {
 		var arr_disk = select_disk.split(",");
 		simple_form.dataDiskIds = arr_disk;
+	}else{
+		simple_form.dataDiskIds = [];
 	}
 	console.log("simple form : ", simple_form);
 
@@ -470,39 +478,39 @@ function view_simple(cnt) {
 
 }
 
-function displayNewServerForm() {
-	var $SimpleServers = $("#simpleServerConfig");
-	var $ExpertServers = $("#expertServerConfig");
-	var $ImportServers = $("#importServerConfig");
-
-	var check = $(".switch .ch").is(":checked");
-	console.log("check=" + check);
-	if (check) {
-		$SimpleServers.removeClass("active");
-		$ExpertServers.addClass("active");
-		$ImportServers.removeClass("active");
-	} else {
-		$SimpleServers.addClass("active");
-		$ExpertServers.removeClass("active");
-		$ImportServers.removeClass("active");
-	}
-
-	// var vmFormType = $("input[name='vmInfoType']:checked").val();
-	// console.log("vmFormType = " + vmFormType)
-	// if( vmFormType == "expert"){
-	//     $SimpleServers.removeClass("active");
-	//     $ExpertServers.addClass("active");            
-	//     $ImportServers.removeClass("active");
-	// }else if( vmFormType == "import"){
-	//     $SimpleServers.removeClass("active");
-	//     $ExpertServers.removeClass("active");            
-	//     $ImportServers.addClass("active");
-	// }else{// simple
-	//     $SimpleServers.addClass("active");
-	//     $ExpertServers.removeClass("active");            
-	//     $ImportServers.removeClass("active");
-	// }
-}
+//function displayNewServerForm() {
+//	var $SimpleServers = $("#simpleServerConfig");
+//	var $ExpertServers = $("#expertServerConfig");
+//	var $ImportServers = $("#importServerConfig");
+//
+//	var check = $(".switch .ch").is(":checked");
+//	console.log("check=" + check);
+//	if (check) {
+//		$SimpleServers.removeClass("active");
+//		$ExpertServers.addClass("active");
+//		$ImportServers.removeClass("active");
+//	} else {
+//		$SimpleServers.addClass("active");
+//		$ExpertServers.removeClass("active");
+//		$ImportServers.removeClass("active");
+//	}
+//
+//	// var vmFormType = $("input[name='vmInfoType']:checked").val();
+//	// console.log("vmFormType = " + vmFormType)
+//	// if( vmFormType == "expert"){
+//	//     $SimpleServers.removeClass("active");
+//	//     $ExpertServers.addClass("active");            
+//	//     $ImportServers.removeClass("active");
+//	// }else if( vmFormType == "import"){
+//	//     $SimpleServers.removeClass("active");
+//	//     $ExpertServers.removeClass("active");            
+//	//     $ImportServers.addClass("active");
+//	// }else{// simple
+//	//     $SimpleServers.addClass("active");
+//	//     $ExpertServers.removeClass("active");            
+//	//     $ImportServers.removeClass("active");
+//	// }
+//}
 // Expert Mode에 Import 버튼 클릭 시 해당 form display  // MCIS Create 와 VM Create의 function이름이 같음
 function displayVmImportServerFormByImport() {
 	var $SimpleServers = $("#simpleServerConfig");
