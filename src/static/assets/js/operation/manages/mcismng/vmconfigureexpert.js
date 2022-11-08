@@ -683,7 +683,7 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
     $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
 
     $("#imageAssist").modal("hide");
   } else if (caller == "myImage") {
@@ -716,7 +716,7 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "numvCPU").val($("#" + orgPrefix + "numvCPU_" + selectedIndex).val());
     $("#" + targetPrefix + "numGpu").val($("#" + orgPrefix + "numGpu_" + selectedIndex).val());
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
     $("#specAssist").modal("hide");
   } else if (caller == "networkAssist") {
     var orgPrefix = "vNetAssist_";
@@ -731,7 +731,7 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "subnetId").val($("#" + orgPrefix + "subnetId_" + selectedIndex).val());
     $("#" + targetPrefix + "subnetName").val($("#" + orgPrefix + "subnetName_" + selectedIndex).val());
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
     $("#networkAssist").modal("hide");
   } else if (caller == "securityGroupAssist") {
 
@@ -778,7 +778,7 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
     $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
     $("#sshKeyAssist").modal("hide");
   } else if (caller == "recommendVmAssist") {
 
@@ -788,7 +788,7 @@ function applyAssistValues(caller) {
     $("#ss_regConnectionName").val("aws-test-conn");
     $("#ss_spec").val("aws-test-spec-t2-micro");
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
     $("#recommendVmAssist").modal("hide");
   }
 
@@ -797,6 +797,8 @@ function applyAssistValues(caller) {
   //선택된 connection과 기존 connection이 다른 tab의 data는 초기화하고 set한다
   if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != applyConnectionName) {
     setAndClearByDifferentConnectionName(caller);
+    // rootdiskType 조회하여 set
+    getCommonLookupDiskInfo('caller', "", applyConnectionName)
   }
 
   if (caller == "vmImageAssist") {
@@ -847,21 +849,27 @@ function applyAssistValidCheck(caller) {
 
   // 선택한 connection check : 이미 선택된 connection이 있을 때 비교하여 다른 connection이면 confirm을 띄우고 OK면 초기화 시키고 set
   var selectedConnectionName = "";
+  var selectedProvider = "";
   if (caller == "vmImageAssist") {
     var orgPrefix = "vmImageAssist_";
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
   } else if (caller == "myImage") {
     var orgPrefix = "myImage_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   } else if (caller == "vmSpecAssist") {
     var orgPrefix = "vmSpecAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   } else if (caller == "networkAssist") {
     var orgPrefix = "vNetAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   } else if (caller == "securityGroupAssist") {
     var orgPrefix = "securityGroupAssist_";
     var tempConnectionName = "";
+    var tempProvider = ""
     var isSameConnection = true;
     $("input[name='securityGroupAssist_chk']:checked").each(function () {
       var sgId = $(this).attr("id")
@@ -869,9 +877,12 @@ function applyAssistValidCheck(caller) {
       var sgIndex = sgEleArr[sgEleArr.length - 1];
 
       var currentConnectionName = $("#" + orgPrefix + "connectionName_" + sgIndex).val();
+      var currentConnectionName = $("#" + orgPrefix + "provider_" + sgIndex).val();
       if (tempConnectionName == "") {
         tempConnectionName = currentConnectionName
       } else if (tempConnectionName != currentConnectionName) {
+        tempConnectionName = currentConnectionName
+        tempProvider = currentProvider
         isSameConnection = false;
         return;
       }
@@ -882,19 +893,23 @@ function applyAssistValidCheck(caller) {
       return;
     }
     selectedConnectionName = tempConnectionName;
+    selectedProvider = tempProvider;
 
   } else if (caller == "sshKeyAssist") {
     var orgPrefix = "sshKeyAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   } else if (caller == "recommendVmAssist") {
     var orgPrefix = "recommendVmAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   }
 
   console.log("caller=" + caller)
   console.log($("#e_connectionName").val())
   console.log("selectedConnectionName=" + selectedConnectionName)
   $("#t_connectionName").val(selectedConnectionName);
+  $("#t_provider").val(selectedProvider);
   if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != selectedConnectionName) {
     //commonConfirmOpen("DifferentConnectionAtSecurityGroup");
     commonConfirmOpen("DifferentConnectionAtAssistPopup", caller)

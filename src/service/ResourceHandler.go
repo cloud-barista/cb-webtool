@@ -2802,12 +2802,13 @@ func DiskLookup(provider string, connectionName string) ([]webtool.LookupDiskInf
 		if connectionName != "" { // 현재는 connection으로 filter 하지 않음
 
 		}
-
 		//providerDisk := webtool.LookupDiskInfo{}
 		providerDisk := diskInfoMap[provider]
 		dataDiskInfoList = append(dataDiskInfoList, providerDisk)
-	} else {
+	} else if connectionName != "" {
 		// 모든 provider의 datadisk 정보 조회...
+		// getConnection 에서 Provider 가져옴
+
 	}
 
 	return dataDiskInfoList, nil

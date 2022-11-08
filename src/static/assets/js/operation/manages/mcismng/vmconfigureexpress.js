@@ -18,6 +18,8 @@ function setAssistSpecToExpress(specInfo){
 	$("#ep_imageId").val("ubuntu18.04")
 	console.log("setAssist", specInfo)
 
+	// rootDisk의 Type 조회
+	getCommonLookupDiskInfo('vmsimple', provider, connectionName)
 }
 
 function getSshKeyListCallbackSuccessForExpress(caller,data){

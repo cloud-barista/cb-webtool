@@ -350,18 +350,17 @@ function getCommonLookupDiskInfoSuccess(caller, provider, data){
 	root_disk_type.forEach(item=>{
 		html += '<option value="'+item+'">'+item+'</option>'
 	})
-if(caller == "vmexpress"){
-	$("#ss_root_disk_type").empty();
-	$("#ss_root_disk_type").append(html);
-}else if(caller == "vmsimple"){
-	$("#ss_root_disk_type").empty();
-	$("#ss_root_disk_type").append(html);
-}else if(caller == "vmexpert"){
-	$("#e_root_disk_type").empty()
-	$("#e_root_disk_type").append(html)
-}
-console.log("const valie DISK_SIZE : ",DISK_SIZE);
-
+	//if(caller == "vmexpress"){
+		$("#ep_root_disk_type").empty();
+		$("#ep_root_disk_type").append(html);
+	//}else if(caller == "vmsimple"){
+		$("#ss_root_disk_type").empty();
+		$("#ss_root_disk_type").append(html);
+	//}else if(caller == "vmexpert"){
+		$("#tab_others_root_disk_type").empty()
+		$("#tab_others_root_disk_type").append(html)
+	//}
+	console.log("const valie DISK_SIZE : ",DISK_SIZE);
 
 }
 var ROOT_DISK_MAX_VALUE = 0;
