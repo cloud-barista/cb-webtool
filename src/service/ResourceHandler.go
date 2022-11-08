@@ -2796,6 +2796,39 @@ func DiskLookup(provider string, connectionName string) ([]webtool.LookupDiskInf
 	awsDiskInfo.DiskSize = strings.Split(strings.ReplaceAll(awsDiskSize, " ", ""), "/")
 	diskInfoMap["AWS"] = awsDiskInfo
 
+	gcpRootdiskType := "pd-standard / pd-balanced / pd-ssd / pd-extreme"
+	gcpDiskType := "pd-standard / pd-balanced / pd-ssd / pd-extreme"
+	gcpDiskSize := "pd-standard|10|65536|GB / pd-balanced|10|65536|GB / pd-ssd|10|65536|GB / pd-extreme|500|65536|GB"
+
+	gcpDiskInfo := webtool.LookupDiskInfo{}
+	gcpDiskInfo.Provider = "GCP"
+	gcpDiskInfo.RootDiskType = strings.Split(strings.ReplaceAll(gcpRootdiskType, " ", ""), "/")
+	gcpDiskInfo.DataDiskType = strings.Split(strings.ReplaceAll(gcpDiskType, " ", ""), "/")
+	gcpDiskInfo.DiskSize = strings.Split(strings.ReplaceAll(gcpDiskSize, " ", ""), "/")
+	diskInfoMap["GCP"] = gcpDiskInfo
+
+	aliRootdiskType := "cloud_essd / cloud_efficiency / cloud / cloud_ssd"
+	aliDiskType := "cloud / cloud_efficiency / cloud_ssd / cloud_essd"
+	aliDiskSize := "cloud|5|2000|GB / cloud_efficiency|20|32768|GB / cloud_ssd|20|32768|GB / cloud_essd_PL0|40|32768|GB / cloud_essd_PL1|20|32768|GB / cloud_essd_PL2|461|32768|GB / cloud_essd_PL3|1261|32768|GB"
+
+	aliDiskInfo := webtool.LookupDiskInfo{}
+	aliDiskInfo.Provider = "ALIBABA"
+	aliDiskInfo.RootDiskType = strings.Split(strings.ReplaceAll(aliRootdiskType, " ", ""), "/")
+	aliDiskInfo.DataDiskType = strings.Split(strings.ReplaceAll(aliDiskType, " ", ""), "/")
+	aliDiskInfo.DiskSize = strings.Split(strings.ReplaceAll(aliDiskSize, " ", ""), "/")
+	diskInfoMap["ALIBABA"] = aliDiskInfo
+
+	tencentRootdiskType := "CLOUD_PREMIUM / CLOUD_SSD"
+	tencentDiskType := "CLOUD_PREMIUM / CLOUD_SSD / CLOUD_HSSD / CLOUD_BASIC / CLOUD_TSSD"
+	tencentDiskSize := "CLOUD_PREMIUM|10|32000|GB / CLOUD_SSD|20|32000|GB / CLOUD_HSSD|20|32000|GB / CLOUD_BASIC|10|32000|GB / CLOUD_TSSD|10|32000|GB"
+
+	tencentDiskInfo := webtool.LookupDiskInfo{}
+	tencentDiskInfo.Provider = "TENCENT"
+	tencentDiskInfo.RootDiskType = strings.Split(strings.ReplaceAll(tencentRootdiskType, " ", ""), "/")
+	tencentDiskInfo.DataDiskType = strings.Split(strings.ReplaceAll(tencentDiskType, " ", ""), "/")
+	tencentDiskInfo.DiskSize = strings.Split(strings.ReplaceAll(tencentDiskSize, " ", ""), "/")
+	diskInfoMap["TENCENT"] = aliDiskInfo
+
 	dataDiskInfoList := []webtool.LookupDiskInfo{}
 	if provider != "" {
 		// TODO : 해당 connection으로 사용가능한 DISK 정보 조회
