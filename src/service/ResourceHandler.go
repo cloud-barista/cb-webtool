@@ -2827,7 +2827,7 @@ func DiskLookup(provider string, connectionName string) ([]webtool.LookupDiskInf
 	tencentDiskInfo.RootDiskType = strings.Split(strings.ReplaceAll(tencentRootdiskType, " ", ""), "/")
 	tencentDiskInfo.DataDiskType = strings.Split(strings.ReplaceAll(tencentDiskType, " ", ""), "/")
 	tencentDiskInfo.DiskSize = strings.Split(strings.ReplaceAll(tencentDiskSize, " ", ""), "/")
-	diskInfoMap["TENCENT"] = aliDiskInfo
+	diskInfoMap["TENCENT"] = tencentDiskInfo
 
 	dataDiskInfoList := []webtool.LookupDiskInfo{}
 	if provider != "" {

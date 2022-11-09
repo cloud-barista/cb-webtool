@@ -23,10 +23,10 @@ function setUrlByParam(controllerKeyName, urlParamMap) {
 function getWebToolUrl(controllerKeyName) {
     let controllerMethodNameMap = new Map(
         [
-            
+
             ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
             ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
-            
+
             ["McisData", "/operation/manages/mcismng/:mcisID"],
             ["McisStatusData", "/operation/manages/mcismng/:mcisID?option=status"],
             ["VmOfMcisData", "/operation/manages/mcismng/:mcisID/vm/:vmID"],
@@ -35,12 +35,12 @@ function getWebToolUrl(controllerKeyName) {
             ["NamespaceMngForm", "/setting/namespaces/namespace/mngform"],
             ["NamespaceListData", "/setting/namespaces/namespace/list"],
             ["CloudConnectionMngForm", "/setting/connections/cloudconnectionconfig/mngform"],
-            ["VnetMngForm","/setting/resources/network/mngform"],
+            ["VnetMngForm", "/setting/resources/network/mngform"],
             ["SecurityGroupMngForm", "/setting/resources/securitygroup/mngform"],
             ["SshKeyMngForm", "/setting/resources/sshkey/mngform"],
             ["MachineImageMngForm", "/setting/resources/machineimage/mngform"],
             ["VmSpecMngForm", "/setting/resources/vmspec/mngform"],
-            
+
             ["DataDiskMngForm", "/setting/resources/datadisk/mngform"],
             ["MyImageMngForm", "/setting/resources/myimage/mngform"],
 
@@ -50,13 +50,13 @@ function getWebToolUrl(controllerKeyName) {
 
             ["McisMngForm", "/operation/manages/mcismng/mngform"],
             ["McisList", "/operation/manages/mcismng/list"],
-            ["McisRegForm", "/operation/manages/mcismng/regform"],            
+            ["McisRegForm", "/operation/manages/mcismng/regform"],
             ["McisRegProc", "/operation/manages/mcismng/reg/proc"],
             ["McisCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID"],
             ["McisVmCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
             ["McisVmRegProc", "/operation/manages/mcismng/:mcisID/vm/reg/proc"],
             ["McisVmListRegProc", "/operation/manages/mcismng/:mcisID/vmlist/reg/proc"],// vm 목록으로 저장
-            
+
             ["McisVmRegDynamicProc", "/operation/manages/mcismng/:mcisID/vmdynamic/proc"],
 
             ["McksMngForm", "/operation/manages/mcksmng/mngform"],
@@ -66,7 +66,7 @@ function getWebToolUrl(controllerKeyName) {
 
             ["PmksMngForm", "/operation/manages/pmksmng/mngform"],
             ["PmksRegForm", "/operation/manages/pmksmng/regform"],
-            ["PmksClusterRegForm", "/operation/manages/pmksmng/cluster/regform"],            
+            ["PmksClusterRegForm", "/operation/manages/pmksmng/cluster/regform"],
             ["PmksNodeGroupRegForm", "/operation/manages/pmksmng/cluster/:clusterID/regform"],
             ["PmksClusterRegProc", "/operation/manages/pmks/cluster"],
             ["PmksListOfNamespace", "/operation/manages/pmks/listall"],
@@ -78,14 +78,14 @@ function getWebToolUrl(controllerKeyName) {
             ["MonitoringPolicyThresholdMngForm", "/operation/policies/monitoringalertpolicy/mngform"],
             ["NlbMngForm", "/operation/services/nlb/mngform"],
             ["NlbRegForm", "/operation/services/nlb/regform"],
-            
+
             ["AboutForm", "/operation/about/about"],
-            
+
         ]
     );
 
     var webtoolUrl = controllerMethodNameMap.get(controllerKeyName);
-    if (webtoolUrl == undefined ){
+    if (webtoolUrl == undefined) {
         webtoolUrl = controllerKeyName
     }
     return webtoolUrl;
@@ -292,8 +292,8 @@ function getCommonNetworkList(caller, optionParam, filterKey, filterVal) {
         console.log("vNetwork Info : ", result);
         console.log("vNetwork data : ", data);
 
-        if ( caller == ""){
-            getNetworkListCallbackSuccess(caller,data)
+        if (caller == "") {
+            getNetworkListCallbackSuccess(caller, data)
         }
         //setTotalNetworkList(data)
         getNetworkListCallbackSuccess(caller, data);
@@ -429,7 +429,7 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam, filterK
         } else if (caller == "mciscreate") {
             console.log("return get Data")
             getImageListCallbackSuccess(caller, data)
-        }else{
+        } else {
             getImageListCallbackSuccess(caller, data, sortType)
         }
         // }).catch(function(error){
@@ -732,12 +732,12 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam, filterK
         hasOptionParam = true
     }
 
-    if (filterKeyVal != ""){
-        if (hasOptionParam){
-            url += "&"+filterKeyVal
-        }else{
-            url += "?"+filterKeyVal
-        }        
+    if (filterKeyVal != "") {
+        if (hasOptionParam) {
+            url += "&" + filterKeyVal
+        } else {
+            url += "?" + filterKeyVal
+        }
     }
     axios.get(url, {
         headers: {
@@ -923,7 +923,7 @@ function getCommonFilterVmSpecListByRange(specFilterObj, caller) {
 
 
 // 모든 PMKS 목록 조회
-function getCommonAllPmksList(caller){
+function getCommonAllPmksList(caller) {
     //var url = "/operation/manages/pmks/list"
     //var url = getWebToolUrl("PmksListOfNamespace")
     var url = getWebToolUrl("PmksListByConnection");// for the test
@@ -933,7 +933,7 @@ function getCommonAllPmksList(caller){
             //'Content-Type': "application/json"
         }
     }).then(result => {
-//        console.log("get Cluster List : ", result.data);
+        //        console.log("get Cluster List : ", result.data);
         getCommonAllPmksListSuccess(caller, result.data.PmksList)
     }).catch(error => {
         console.log(error);
@@ -941,14 +941,14 @@ function getCommonAllPmksList(caller){
 }
 
 // Connection의 PMKS 목록 조회
-function getCommonPmksList(caller, connectionName){
+function getCommonPmksList(caller, connectionName) {
     var url = "/operation/manages/pmks/list"
     axios.get(url, {
         headers: {
             //'Content-Type': "application/json"
         }
     }).then(result => {
-//        console.log("get Cluster List : ", result.data);
+        //        console.log("get Cluster List : ", result.data);
         getCommonPmksListSuccess(caller, result.data.PmksList)
     }).catch(error => {
         console.log(error);
@@ -956,7 +956,7 @@ function getCommonPmksList(caller, connectionName){
 }
 
 // PMKS 조회
-function getCommonPmksData(caller, clusterID, connectionName){
+function getCommonPmksData(caller, clusterID, connectionName) {
     var url = "/operation/manages/pmks/" + clusterID + "?connectionName=" + connectionName
     axios.get(url, {
         headers: {
@@ -1034,10 +1034,11 @@ function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord) {
 
 // 해당 provider, connection 으로 사용가능한 Disk의 Type 정보(type, min, max ) 조회
 // ex) AWS -> standard|1|1024, gp2|1|16384
-function getCommonLookupDiskInfo(caller, providerID, connectionName){
+function getCommonLookupDiskInfo(caller, providerID, connectionName) {
     var url = "/setting/resources/datadisk/lookuplist"
-	url += "?provider=" + providerID +"&connectionName=" + connectionName
-    
+    url += "?provider=" + providerID + "&connectionName=" + connectionName
+    console.log("disk get url: ", url);
+
     axios.get(url, {
         headers: {
             //'Content-Type': "application/json"

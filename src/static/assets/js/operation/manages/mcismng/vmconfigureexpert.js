@@ -137,7 +137,7 @@ function vmSecurityClear() {
 }
 
 // other tab 초기화
-function vmOtherClear(){
+function vmOtherClear() {
   $("#tab_others_root_disk_type").val("");
   $("#tab_others_root_disk_size").val("");
 
@@ -319,7 +319,7 @@ const expertServerCloneObj = obj => JSON.parse(JSON.stringify(obj))
 function expertDone_btn() {
   console.log("expert Done")
   // TODO : 원래는 같은 VM 을 여러개 만들 때 subGroupSize를 set 하는 것 같은데... for문으로 돌리고 있음.... 고칠까?
-  $("#e_subGroupSize").val( $("#es_sub_add_cnt").val() )
+  $("#e_subGroupSize").val($("#es_sub_add_cnt").val())
   //validation check 
   if ($("#e_name").val() == "") { commonAlert("VM Name is required"); return; }
   if ($("#e_connectionName").val() == "") { commonAlert("Connection is required"); return; }
@@ -334,17 +334,17 @@ function expertDone_btn() {
   //$("#e_vm_add_cnt").val($("#es_vm_add_cnt").val());// 추가수량 값을 form에 추가.
   $("#e_subGroupSize").val($("#es_vm_add_cnt").val());// 추가수량 -> subGroupSize 로 변경
   var select_disk = $("#ss_data_disk").val();
-  
+
   // expertForm에는 vm생성에 필요한 값들만 있음.
   var expert_form = $("#expert_form").serializeObject()
-  if(select_disk){
-		var arr_disk = select_disk.split(",");
-		expert_form.dataDiskIds = arr_disk;
-	}else{
-		expert_form.dataDiskIds = [];
-	}
+  if (select_disk) {
+    var arr_disk = select_disk.split(",");
+    expert_form.dataDiskIds = arr_disk;
+  } else {
+    expert_form.dataDiskIds = [];
+  }
 
-  console.log("expert form : ",expert_form);
+  console.log("expert form : ", expert_form);
 
   var server_name = expert_form.name
   var server_cnt = parseInt(expert_form.vmAddCount) // expert
@@ -402,7 +402,7 @@ function setConnectionValue(connName) {
   var connectionObj = $("#e_connectionName");
   var tempConnectionObj = $("#t_connectionName");
   var provider = $("#es_regProvider").val();
-  console.log("provider : ",provider);
+  console.log("provider : ", provider);
   getCommonLookupDiskInfo("vmexpert", provider, connName);// -> getCommonLookupDiskInfoSuccess
   if (connName == "") {
     connectionObj.val(connName);
@@ -705,7 +705,7 @@ function applyAssistValues(caller) {
     applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
 
     $("#myImage").modal("hide");
-  }else if (caller == "vmSpecAssist") {
+  } else if (caller == "vmSpecAssist") {
     var orgPrefix = "vmSpecAssist_";
     var targetPrefix = "tab_vmSpec_";
 
@@ -806,6 +806,10 @@ function applyAssistValues(caller) {
     var orgPrefix = "vmImageAssist_";
 
     $("#e_imageId").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+  } else if (caller == "myImage") {
+    var orgPrefix = "myImage_";
+    $("#e_imageId").val($("#" + orgPrefix + "cspImageId_" + selectedIndex).val());
+    console.log("e_imageId, org: ", $("#e_imageId").val(), $("#" + orgPrefix + "cspImageId_" + selectedIndex).val(), "#" + orgPrefix + "cspImageId_" + selectedIndex);
   } else if (caller == "vmSpecAssist") {
     var orgPrefix = "vmSpecAssist_";
 

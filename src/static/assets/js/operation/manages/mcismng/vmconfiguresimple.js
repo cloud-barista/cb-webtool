@@ -332,55 +332,56 @@ function getVnetInfo(configName) {
 	})
 }
 var DISK_SIZE = [];
-function getCommonLookupDiskInfoSuccess(caller, provider, data){
-	
-	console.log("getCommonLookupDiskInfoSuccess",data[0]);
+function getCommonLookupDiskInfoSuccess(caller, provider, data) {
+
+	console.log("getCommonLookupDiskInfoSuccess", data);
 	var root_disk_type = [];
-	var res_item = data
-	res_item.forEach(item=>{
+	var res_item = data;
+	res_item.forEach(item => {
+		console.log("item provider: ", item.provider);
 		var temp_provider = item.provider
-		if(temp_provider == provider){
+		if (temp_provider == provider) {
 			root_disk_type = item.rootdisktype
 			DISK_SIZE = item.disksize
 		}
 	})
 
 	var html = '<option value="">Select Root Disk Type</option>'
-	console.log("root_disk_type : ",root_disk_type);
-	root_disk_type.forEach(item=>{
-		html += '<option value="'+item+'">'+item+'</option>'
+	console.log("root_disk_type : ", root_disk_type);
+	root_disk_type.forEach(item => {
+		html += '<option value="' + item + '">' + item + '</option>'
 	})
 	//if(caller == "vmexpress"){
-		$("#ep_root_disk_type").empty();
-		$("#ep_root_disk_type").append(html);
+	$("#ep_root_disk_type").empty();
+	$("#ep_root_disk_type").append(html);
 	//}else if(caller == "vmsimple"){
-		$("#ss_root_disk_type").empty();
-		$("#ss_root_disk_type").append(html);
+	$("#ss_root_disk_type").empty();
+	$("#ss_root_disk_type").append(html);
 	//}else if(caller == "vmexpert"){
-		$("#tab_others_root_disk_type").empty()
-		$("#tab_others_root_disk_type").append(html)
+	$("#tab_others_root_disk_type").empty()
+	$("#tab_others_root_disk_type").append(html)
 	//}
-	console.log("const valie DISK_SIZE : ",DISK_SIZE);
+	console.log("const valie DISK_SIZE : ", DISK_SIZE);
 
 }
 var ROOT_DISK_MAX_VALUE = 0;
 var ROOT_DISK_MIN_VALUE = 0;
 
-function changeDiskSize(type){
+function changeDiskSize(type) {
 	var disk_size = DISK_SIZE;
 
-	if(disk_size){
-		disk_size.forEach(item=>{
+	if (disk_size) {
+		disk_size.forEach(item => {
 			var temp_size = item.split("|")
 			var temp_type = temp_size[0];
-			if(temp_type == type){
+			if (temp_type == type) {
 				ROOT_DISK_MAX_VALUE = temp_size[1];
 				ROOT_DISK_MIN_VALUE = temp_size[2]
 			}
 		})
 	}
-	console.log("ROOT_DISK_MAX_VALUE : ",ROOT_DISK_MAX_VALUE)
-	console.log("ROOT_DISK_MIN_VALUE : ",ROOT_DISK_MIN_VALUE)
+	console.log("ROOT_DISK_MAX_VALUE : ", ROOT_DISK_MAX_VALUE)
+	console.log("ROOT_DISK_MIN_VALUE : ", ROOT_DISK_MIN_VALUE)
 	$("#s_rootDiskType").val(type);
 	$("#e_rootDiskType").val(type);
 
@@ -413,7 +414,7 @@ function simpleDone_btn() {
 	if (select_disk) {
 		var arr_disk = select_disk.split(",");
 		simple_form.dataDiskIds = arr_disk;
-	}else{
+	} else {
 		simple_form.dataDiskIds = [];
 	}
 	console.log("simple form : ", simple_form);

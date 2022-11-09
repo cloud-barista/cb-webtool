@@ -34,16 +34,16 @@ function deleteDataDisk() {
         count++;
         dataDiskId = dataDiskId + $(this).val() + ",";
         diskStatus = $(this).attr("diskStatus")
-        if(diskStatus == "attached"){
+        if (diskStatus == "attached") {
             commonAlert("Disk에 할당된 VM이 있어 삭제 할 수 없습니다.");
             return false;
         }
     });
 
-    if(diskStatus == "attached"){
+    if (diskStatus == "attached") {
         var checkBox = document.getElementsByName("chk");
-        checkBox.forEach(item=>{
-        item.checked = false;
+        checkBox.forEach(item => {
+            item.checked = false;
         })
         return false;
     }
@@ -77,7 +77,7 @@ function deleteDataDisk() {
         if (result.status == 200 || result.status == 201) {
             commonAlert(data.message)
             displayDataDiskInfo("DEL_SUCCESS")
-           
+
         } else {
             commonAlert(result.data.error)
         }
@@ -90,18 +90,18 @@ function deleteDataDisk() {
     });
 }
 
-function deleteMyImageDisk(){
+function deleteMyImageDisk() {
     var imageId = "";
     var count = 0;
     var chk_length = $("input[name='chk']:checked").length
-    if(chk_length > 1){
+    if (chk_length > 1) {
         alert("한개만 삭제할 수 있습니다.")
         return;
-    }else if(chk_length == 1){
+    } else if (chk_length == 1) {
         $("input[name='chk']:checked").each(function () {
             count++;
             imageId = $(this).val();
-            console.log("image ID : ",imageId);
+            console.log("image ID : ", imageId);
             var url = "/setting/resources/myimage/del/" + imageId;
             console.log("del dataDisk url : ", url);
             axios.delete(url, {
@@ -116,7 +116,7 @@ function deleteMyImageDisk(){
                     commonAlert(data.message)
                     getMyImageList("name")
                     $("#myImageInfoBox").hide();
-                   
+
                 } else {
                     commonAlert(result.data.error)
                 }
@@ -127,7 +127,7 @@ function deleteMyImageDisk(){
                 var statusCode = error.response.status;
                 commonErrorAlert(statusCode, errorMessage);
             });
-          
+
         });
     }
 }
@@ -161,8 +161,8 @@ function deleteMyImage() {
     });
 }
 
-function chkDiskStatus(attr){
-   
+function chkDiskStatus(attr) {
+
 }
 function attachDataDisk() {
     var dataDiskId = "";
@@ -179,46 +179,46 @@ function attachDataDisk() {
         var tempDiskName = $(this).attr("diskName");
         var tempDiskId = $(this).val();
         diskStatus = $(this).attr("diskStatus")
-        if(diskStatus == "attached"){
+        if (diskStatus == "attached") {
             commonAlert("이미 Attach된 Disk 를 선택하셨습니다.");
             return false;
         }
         connectionName.push(tempConnectionName);
         selectDiskName.push(tempDiskName);
         chkDiskId.push(tempDiskId);
-        
+
     });
-    if(diskStatus == "attached"){
+    if (diskStatus == "attached") {
         var checkBox = document.getElementsByName("chk");
-        checkBox.forEach(item=>{
-        item.checked = false;
-        })  
+        checkBox.forEach(item => {
+            item.checked = false;
+        })
         return false;
     }
-    console.log("connectionName arr :",connectionName)
-    console.log("selectDiskName arr :",selectDiskName)
+    console.log("connectionName arr :", connectionName)
+    console.log("selectDiskName arr :", selectDiskName)
     // 선택된 디스크 이름 가져와서 뿌려주기
-    console.log("datadiskID : ",dataDiskId);
+    console.log("datadiskID : ", dataDiskId);
     var selectDisk = selectDiskName.join(",");
     var selectDiskId = chkDiskId.join(",")
     $("#selected_disk").val(selectDisk);
     $("#selected_disk_id").val(selectDiskId);
     //connection  다를경우 걸르기
-    connectionName.forEach((item)=>{
-       if(connectionName[0] == item){
+    connectionName.forEach((item) => {
+        if (connectionName[0] == item) {
 
-       }else{
-        connectionDup = true
-       }
+        } else {
+            connectionDup = true
+        }
     })
 
-    if(connectionDup){
+    if (connectionDup) {
         commonAlert("같은 Connection Name을 선택하세요.")
         return false;
-    }else{
+    } else {
         connectionName = connectionName[0];
     }
-    
+
     dataDiskId = dataDiskId.substring(0, dataDiskId.lastIndexOf(","));
 
     console.log("dataDiskId : ", dataDiskId);
@@ -229,55 +229,55 @@ function attachDataDisk() {
         return false;
     }
 
-    getCommonMcisList("dataDiskMng",true, "", "","connection="+connectionName)
-   
+    getCommonMcisList("dataDiskMng", true, "", "", "connection=" + connectionName)
+
 }
 
-function runDetachDataDisk(command){
+function runDetachDataDisk(command) {
     var count = 0;
     var diskStatus = "";
     $("input[name='chk']:checked").each(function (index) {
         console.log("detach index :", index);
         count++;
         diskStatus = $(this).attr("diskstatus")
-        if(diskStatus != "attached"){
+        if (diskStatus != "attached") {
             commonAlert("Disk에 할당된 VM이 없어 Detach 할 수 없습니다.");
             return false;
-        }else{
+        } else {
             var mcis_id = $(this).attr("mcis_id");
             var vm_id = $(this).attr("vm_id");
             var dataDiskId = $(this).val();
-            var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
-            console.log("datach url : ",url)
+            var url = "/operation/manages/mcismng/" + mcis_id + "/vm/" + vm_id + "/datadisk?option=" + command;
+            console.log("datach url : ", url)
             var obj = {
                 dataDiskId
             }
-            axios.put(url, obj).then(result=>{
+            axios.put(url, obj).then(result => {
                 var data = result.data;
                 console.log(data);
-                if(data.status == 200 || data.status == 201){
-                    if(index == count-1){
+                if (data.status == 200 || data.status == 201) {
+                    if (index == count - 1) {
                         commonAlert("Success Detach DataDisk!")
                         $("#dataDiskInfoBox").hide();
-                       // displayDataDiskInfo("MODIFY_SUCCESS");
+                        // displayDataDiskInfo("MODIFY_SUCCESS");
                         location.reload()
                     }
-        
-                }else{
-                    commonAlert("Fail Detach DataDisk at "+item + data.message)
+
+                } else {
+                    commonAlert("Fail Detach DataDisk at " + item + data.message)
                     showMyImageInfo(diskId, diskName);
                 }
-            }).catch(error=>{
+            }).catch(error => {
                 console.log(error.response);
             })
         }
-        
+
     });
-    console.log("disk status at run detach : ",diskStatus)
-    if(diskStatus != "attached"){
+    console.log("disk status at run detach : ", diskStatus)
+    if (diskStatus != "attached") {
         var checkBox = document.getElementsByName("chk");
-        checkBox.forEach(item=>{
-        item.checked = false;
+        checkBox.forEach(item => {
+            item.checked = false;
         })
         return false;
     }
@@ -286,36 +286,36 @@ function runAttachDataDisk(command) {
     var mcis_id = $("#attach_mcis_id").val();
     var vm_id = $("#attach_vm_id").val();
     var dataDiskId = $("#selected_disk").val()
-    var diskId = dataDiskId.split(",");    
-    console.log("command : ",command);
+    var diskId = dataDiskId.split(",");
+    console.log("command : ", command);
     var count = diskId.length;
     console.log("count : ", count);
-    diskId.forEach((item,index)=>{
-        var url = "/operation/manages/mcismng/"+mcis_id+"/vm/"+vm_id+"/datadisk?option="+command;
-        console.log("attach url : ",url)
-        console.log("attach diskid : ",item);
+    diskId.forEach((item, index) => {
+        var url = "/operation/manages/mcismng/" + mcis_id + "/vm/" + vm_id + "/datadisk?option=" + command;
+        console.log("attach url : ", url)
+        console.log("attach diskid : ", item);
         var obj = {
-            dataDiskId : item
+            dataDiskId: item
         }
-        axios.put(url, obj).then(result=>{
+        axios.put(url, obj).then(result => {
             var data = result.data;
             console.log(data);
-            if(data.status == 200 || data.status == 201){
-                if(index == count-1){
+            if (data.status == 200 || data.status == 201) {
+                if (index == count - 1) {
                     commonAlert("Success Attach DataDisk!")
                     displayDataDiskInfo("MODIFY_SUCCESS");
                     location.reload();
-                }else{
-                   
+                } else {
+
                 }
-    
-            }else{
-                commonAlert("Fail attach DataDisk at "+item + data.message)
+
+            } else {
+                commonAlert("Fail attach DataDisk at " + item + data.message)
                 showMyImageInfo(diskId, diskName);
                 location.reload();
             }
-        }).catch(error=>{
-            console.log("error response : ",error.response);
+        }).catch(error => {
+            console.log("error response : ", error.response);
         })
     })
 
@@ -335,12 +335,12 @@ function getMyImageList(sort_type) {
         console.log("get MyImage List : ", result.data);
         // var data = result.data.dataDisk;
         var data = result.data.myImageInfoList;
-        if(data == null){
+        if (data == null) {
             data = []
         }
         var html = ""
         var cnt = 0;
-        
+
         if (data.length == 0) {
             html += '<tr><td class="overlay hidden" data-th="" colspan="5">No Data</td></tr>'
 
@@ -386,25 +386,24 @@ function addMyImageRow(item, index) {
     var ns = "";
     var mcis_id = "";
     var vm_id = "";
-    if(assoObjList != null){
+    if (assoObjList != null) {
         var tempAssoObjList = assoObjList[0];
         var parse = tempAssoObjList.split("/")
         ns = parse[2];
         mcis_id = parse[4];
         vm_id = parse[6];
-       
+
     }
 
     var html = ""
     html += '<tr onclick="showMyImageInfo(\'' + item.id + '\',\'' + item.name + '\');">'
         + '<td class="overlay hidden column-50px" data-th="">'
         + '<input type="hidden" id="dataDisk_info_' + index + '" value="' + item.name + '"/>'
-        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="'+item.connectionName+'" diskname="'+item.name+'" imageStatus="'+item.status+'" mcis_id="'+mcis_id+'" vm_id="'+vm_id+'" /><label for="td_ch1"></label> <span class="ov off"></span>'
+        + '<input type="checkbox" name="chk" value="' + item.id + '" id="raw_' + index + '" title="" item="' + item.connectionName + '" diskname="' + item.name + '" imageStatus="' + item.status + '" mcis_id="' + mcis_id + '" vm_id="' + vm_id + '" /><label for="td_ch1"></label> <span class="ov off"></span>'
 
         + '</td>'
         + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
         + '<td class="overlay hidden" data-th="diskType">' + item.sourceVmId + '</td>'
-        + '<td class="overlay hidden" data-th="diskSize">' + "" + '</td>'
         + '<td class="overlay hidden" data-th="attachedVm">' + item.connectionName + '</td>'
         + '<td class="overlay hidden" data-th="connectionName">' + item.status + '</td>'
         + '<td class="overlay hidden" data-th="description">' + item.creationDate + '</td>'
@@ -471,8 +470,8 @@ function myImageInfo(targetAction) {
         $("#regDataDiskType").val('')
         $("#regDescription").val('')
         getDataDiskList("name");
-    }  else if (targetAction == "MODIFY_SUCCESS") {
-        
+    } else if (targetAction == "MODIFY_SUCCESS") {
+
         getDataDiskList("name");
     } else if (targetAction == "DEL") {
         $('#dataDiskCreateBox').removeClass("active");
@@ -498,7 +497,7 @@ function myImageInfo(targetAction) {
 
         var offset = $("#dataDiskInfoBox").offset();
         $("#TopWrap").animate({ scrollTop: offset.top }, 0);
-    }else if(targetAction == "Attach"){
+    } else if (targetAction == "Attach") {
         attachDataDisk();
     }
 }
@@ -550,8 +549,8 @@ function createDataDisk() {
     var description = $("#regDescription").val();
     var provider = $("#provider").val();
     var connectionName = $("#regConnectionName").val();
-    
-    
+
+
     var url = "/setting/resources" + "/datadisk/reg"
     console.log("dataDisk Reg URL : ", url)
     var obj = {
@@ -559,7 +558,7 @@ function createDataDisk() {
         description,
         name: diskName,
         diskSize,
-        diskType,        
+        diskType,
     }
     console.log("info dataDisk obj Data : ", obj);
 
@@ -576,7 +575,7 @@ function createDataDisk() {
                 commonAlert("Success Create DataDisk!")
 
                 displayDataDiskInfo("REG_SUCCESS")
-             
+
             } else {
                 commonAlert("Fail Create DataDisk " + data.message)
             }
@@ -596,7 +595,7 @@ function createDataDisk() {
 // 선택한 dataDisk의 상세정보 : 이미 가져왔는데 다시 가져올 필요있나?? dataDiskID
 function showMyImageInfo(myImageId, myImageName) {
     console.log("showMyImageInfo : ", myImageName);
-    
+
     $('#myImageName').text(myImageName)
 
     var url = "/setting/resources" + "/myimage/" + encodeURIComponent(myImageId);
@@ -615,14 +614,14 @@ function showMyImageInfo(myImageId, myImageName) {
         var dtlStatus = data.status;
         var dtlConnectionName = data.connectionName;
         var dtlCreationDate = data.creationDate;
-      
-        if(dtlAssoObj != null){
+
+        if (dtlAssoObj != null) {
             var parse = dtlAssoObj[0];
             var temp_parse = parse.split("/");
             vm_id = temp_parse[6];
         }
-       
-      
+
+
         // var subList = data.subnetInfoList;
         // for (var i in subList) {
         //     dtlSubnet += subList[i].id + " (" + subList[i].ipv4_CIDR + ")";
@@ -635,14 +634,14 @@ function showMyImageInfo(myImageId, myImageName) {
         $("#dtlStatus").empty();
         $("#dtlConnectionName").empty();
         $("#dtlCreationDate").empty();
-        console.log("dtlMyImageName : ",dtlMyImageName);
+        console.log("dtlMyImageName : ", dtlMyImageName);
         $("#dtlMyImageName").val(dtlMyImageName);
         $("#dtlSouceVmId").val(dtlSouceVmId);
         $("#dtlAssoObj").val(dtlAssoObj);
         $("#dtlStatus").val(dtlStatus);
         $("#dtlConnectionName").val(dtlConnectionName);
         $("#dtlCreationDate").val(dtlCreationDate);
-      
+
 
         if (dtlConnectionName == '' || dtlConnectionName == undefined) {
             commonAlert("ConnectionName is empty")
@@ -655,7 +654,7 @@ function showMyImageInfo(myImageId, myImageName) {
     });
 }
 
-function putDataDisk(){
+function putDataDisk() {
     var diskId = $("#dtlDiskId").val();
     var preDiskSize = $("#dtlPreDiskSize").val();
     var diskSize = $("#dtlDiskSize").val();
@@ -664,43 +663,43 @@ function putDataDisk(){
 
     console.log("preDiskSize : ", preDiskSize)
     console.log("diskSize : ", diskSize)
-    if(preDiskSize >= diskSize){
+    if (preDiskSize >= diskSize) {
         commonAlert("변경할 디스크 사이즈는 기존 디스크 사이즈 보다 커야 합니다.")
         $("#dtlDiskSize").focus();
         return;
     }
     var url = "/setting/resources" + "/datadisk/" + encodeURIComponent(diskId);
-    
-    if(diskId){
-        console.log("disk id : ",diskId)
-        console.log("disk modify by put url :",url);
+
+    if (diskId) {
+        console.log("disk id : ", diskId)
+        console.log("disk modify by put url :", url);
         //put
         var obj = {
             description,
             diskSize
         }
-        console.log("modify disk info : ",obj);
+        console.log("modify disk info : ", obj);
         axios.put(url, obj, {
             // headers: {
             //     'Content-type': 'application/json',
             //     // 'Authorization': apiInfo,
             // }
-        }).then(result=>{
+        }).then(result => {
             var data = result.data;
             console.log(data);
-            if(data.status == 200 || data.status == 201){
+            if (data.status == 200 || data.status == 201) {
                 commonAlert("Success Modify DataDisk!")
                 displayDataDiskInfo("MODIFY_SUCCESS");
                 showMyImageInfo(diskId, diskName);
 
-            }else{
+            } else {
                 commonAlert("Fail Create DataDisk " + data.message)
                 showMyImageInfo(diskId, diskName);
             }
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error.response);
         })
-    }else{
+    } else {
         commonAlert("Disk ID is empty")
         return;
     }
@@ -716,30 +715,30 @@ function displayDiskAttachModal(isShow) {
     }
 }
 
-function getMcisListCallbackSuccess(caller, data){
-    console.log("getMcis List data : ",data);
+function getMcisListCallbackSuccess(caller, data) {
+    console.log("getMcis List data : ", data);
     var html = "";
-    data.forEach((item)=>{
+    data.forEach((item) => {
 
-        console.log("vm: ",item.vm);
+        console.log("vm: ", item.vm);
         vm_list = item.vm;
         var mcis_name = item.name;
         var mcis_id = item.id
-        
-        vm_list.forEach((item, i)=>{
+
+        vm_list.forEach((item, i) => {
             console.log()
             html += '<tr>'
-            + '<td class="overlay hidden column-50px" data-th="">'
-            + '<input type="hidden" id="vm_info_' + i + '" value="' + item.name + '"/>'
-            + '<input type="checkbox" name="vmChk" value="' + item.id + '" title="" diskId="'+item.id+'" mcisId="'+mcis_id+'" onclick="checkOnlyOne(this,\''+mcis_id+'\',\''+item.id+'\')"/><label for="td_ch1"></label> <span class="ov off"></span>'
-    
-            + '</td>'
-            + '<td class="btn_mtd ovm" data-th="name">' + mcis_name + '<span class="ov"></span></td>'
-            + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
-            + '<td class="overlay hidden" data-th="diskType">' + item.connectionName + '</td>'
-            + '</tr>'
+                + '<td class="overlay hidden column-50px" data-th="">'
+                + '<input type="hidden" id="vm_info_' + i + '" value="' + item.name + '"/>'
+                + '<input type="checkbox" name="vmChk" value="' + item.id + '" title="" diskId="' + item.id + '" mcisId="' + mcis_id + '" onclick="checkOnlyOne(this,\'' + mcis_id + '\',\'' + item.id + '\')"/><label for="td_ch1"></label> <span class="ov off"></span>'
+
+                + '</td>'
+                + '<td class="btn_mtd ovm" data-th="name">' + mcis_name + '<span class="ov"></span></td>'
+                + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
+                + '<td class="overlay hidden" data-th="diskType">' + item.connectionName + '</td>'
+                + '</tr>'
         })
-       
+
 
     })
     console.log(html)
@@ -748,9 +747,9 @@ function getMcisListCallbackSuccess(caller, data){
     displayDiskAttachModal(true)
 }
 
-function checkOnlyOne(element, mcis_id, vm_id){
+function checkOnlyOne(element, mcis_id, vm_id) {
     var checkBox = document.getElementsByName("vmChk");
-    checkBox.forEach(item=>{
+    checkBox.forEach(item => {
         item.checked = false;
     })
     element.checked = true;
