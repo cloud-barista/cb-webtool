@@ -2263,3 +2263,15 @@ func RegVmSnapshot(nameSpaceID string, mcisID string, vmID string, vmSnapshotReq
 
 	return &returnCustomImageInfo, returnStatus
 }
+
+func AsyncRegVmSnapshot(nameSpaceID string, mcisID string, vmID string, vmSnapshotReq *mcis.TbVmSnapshotReq, c echo.Context) {
+	taskKey := nameSpaceID + "||" + "vm" + "||" + vmID
+	lifecycle := "snapshot"
+
+	_, respStatus := RegVmSnapshot(nameSpaceID, mcisID, vmID, vmSnapshotReq)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, lifecycle, util.TASK_STATUS_FAIL, c)
+	} else {
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, lifecycle, util.TASK_STATUS_COMPLETE, c)
+	}
+}

@@ -1643,19 +1643,26 @@ func VmSnapshotRegProc(c echo.Context) error {
 	vmID := c.Param("vmID")
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 
-	myImageInfo, respStatus := service.RegVmSnapshot(defaultNameSpaceID, mcisID, vmID, vmSnapshotReq)
-	log.Println("RegVmSnapshot result")
-	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+	// myImageInfo, respStatus := service.RegVmSnapshot(defaultNameSpaceID, mcisID, vmID, vmSnapshotReq)
+	// log.Println("RegVmSnapshot result")
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 
-		return c.JSON(respStatus.StatusCode, map[string]interface{}{
-			"error":  respStatus.Message,
-			"status": respStatus.StatusCode,
-		})
-	}
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
+
+	// return c.JSON(http.StatusOK, map[string]interface{}{
+	// 	"message":     respStatus.Message,
+	// 	"status":      respStatus.StatusCode,
+	// 	"MyImageInfo": myImageInfo,
+	// })
+
+	go service.AsyncRegVmSnapshot(defaultNameSpaceID, mcisID, vmID, vmSnapshotReq, c)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message":     respStatus.Message,
-		"status":      respStatus.StatusCode,
-		"MyImageInfo": myImageInfo,
+		"message": "success",
+		"status":  200,
 	})
 }
