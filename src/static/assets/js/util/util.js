@@ -73,12 +73,12 @@ function AjaxLoadingShow(isShow) {
 function changePage(pathFinderKey, urlParamMap) {
     $('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
     var url = "";
-    if ( urlParamMap != undefined){
+    if (urlParamMap != undefined) {
         url = setUrlByParam(pathFinderKey, urlParamMap)
-    }else{
+    } else {
         url = getWebToolUrl(pathFinderKey)
     }
-    
+
     location.href = url;
 }
 
@@ -246,7 +246,7 @@ function commonConfirmOpen(targetAction, caller) {
 
             ["RegisterRecommendSpec", "현재 해당 connection에서 사용가능한 spec 이 없습니다. 등록 하시겠습니까?"],
 
-            ["DeleteNlb","Would you like to delete NLB ?"],
+            ["DeleteNlb", "Would you like to delete NLB ?"],
 
             ["AddNewPmks", "Would you like to create PMKS ?"],
             ["DeletePmks", "Are you sure to delete this PMKS? "],
@@ -260,7 +260,7 @@ function commonConfirmOpen(targetAction, caller) {
         //$('#modalText').text(confirmModalTextMap.get(targetAction));
         $('#confirmText').html(confirmModalTextMap.get(targetAction));
         $('#confirmOkAction').val(targetAction);
-        console.log("caller : ",caller);
+        console.log("caller : ", caller);
         $('#confirmCaller').val(caller);
 
         if (targetAction == "Region") {
@@ -488,9 +488,9 @@ function commonConfirmOk() {
     } else if (targetAction == "DeleteDataDisk") {
         deleteDataDisk();
 
-    }else if (targetAction == "DeleteMyImage") {
-            deleteMyImageDisk();
-    
+    } else if (targetAction == "DeleteMyImage") {
+        deleteMyImageDisk();
+
     } else if (targetAction == "CreateSnapshot") {
         commonPromptOk
         createSnapshot();
@@ -584,6 +584,9 @@ function commonPromptOpen(targetAction, targetObjId) {
     try {
         $('#promptQuestion').html(promptModalTextMap.get(targetAction));
         $('#promptText').val('');
+        if (targetAction == 'CreateSnapshot') {
+            $('#promptText').val('my-' + $("#vm_id").val());
+        }
 
         $('#promptTargetObjId').val(targetObjId);
         $('#promptOkAction').val(targetAction);// Prompt입력창에서 OK버튼을 눌렀을 때 이동할 targetKey
@@ -852,7 +855,7 @@ function getVnetInfoListForSelectbox(configName, targetSelectBoxID, subSelectBox
 
         if (count == 0) {
             commonAlert("해당 Provider에 등록된 Connection 정보가 없습니다.")
-            if ( subSelectBoxID != undefined){
+            if (subSelectBoxID != undefined) {
                 $("#" + subSelectBoxID).empty();
                 $("#" + subSelectBoxID).append('<option value="">Select Subnet</option>');
             }
@@ -866,16 +869,16 @@ function getVnetInfoListForSelectbox(configName, targetSelectBoxID, subSelectBox
             $("#" + targetSelectBoxID + " option[value=" + vNetID + "]").prop('selected', true).change();
         }
     }).catch((error) => {
-        console.warn(error);        
+        console.warn(error);
     });
 }
 
 // vnet 에 등록된 subnet list를 selectbox에 표시
 // vnet을 조회하여 subnet목록을 추출
-function getSubnetInfoListForSelectbox(vnetId, targetSelectBoxID){
+function getSubnetInfoListForSelectbox(vnetId, targetSelectBoxID) {
     console.log("vnet : ", vnetId);
 
-    if( vnetId == ""){
+    if (vnetId == "") {
         console.log("vnetID is null ", vnetId)
         $("#" + targetSelectBoxID).empty();
         $("#" + targetSelectBoxID).append('<option value="">Select Subnet</option>');
@@ -897,11 +900,11 @@ function getSubnetInfoListForSelectbox(vnetId, targetSelectBoxID){
         for (var i in data) {
             count++;
             html += '<option value="' + data[i].id + '" selected>' + data[i].name + '(' + data[i].id + ')</option>';
-            
+
         }
 
         if (count == 0) {
-            commonAlert("해당 VPC에 등록된 SUBNET 정보가 없습니다.")            
+            commonAlert("해당 VPC에 등록된 SUBNET 정보가 없습니다.")
         }
 
         $("#" + targetSelectBoxID).empty();
@@ -912,12 +915,12 @@ function getSubnetInfoListForSelectbox(vnetId, targetSelectBoxID){
             $("#" + targetSelectBoxID + " option[value=" + subnetID + "]").prop('selected', true).change();
         }
     }).catch((error) => {
-        console.warn(error);        
+        console.warn(error);
     });
 }
 
 // connection에 등록된 securityGroup list를 selectbox에 표시
-function getSecurityGroupListForSelectbox(configName, targetSelectBoxID){
+function getSecurityGroupListForSelectbox(configName, targetSelectBoxID) {
 
     var url = "/setting/resources/securitygroup/list" + "?filterKey=connectionName" + "&filterVal=" + configName;
     var html = "";
@@ -929,7 +932,7 @@ function getSecurityGroupListForSelectbox(configName, targetSelectBoxID){
         data = result.data.SecurityGroupList;
         //console.log("SecurityGroupList : ", result);
         console.log("SecurityGroupList : ", data);
-        
+
         html += '<option value="" selected>Select Security Group</option>';
 
         var count = 0;
@@ -939,9 +942,9 @@ function getSecurityGroupListForSelectbox(configName, targetSelectBoxID){
         }
 
         if (count == 0) {
-            commonAlert("해당 Provider에 등록된 Security Group 정보가 없습니다.")            
+            commonAlert("해당 Provider에 등록된 Security Group 정보가 없습니다.")
         }
-        
+
         $("#" + targetSelectBoxID).empty();
         $("#" + targetSelectBoxID).append(html);
 
@@ -950,13 +953,13 @@ function getSecurityGroupListForSelectbox(configName, targetSelectBoxID){
             $("#" + targetSelectBoxID + " option[value=" + securityGroupID + "]").prop('selected', true).change();
         }
     }).catch((error) => {
-        console.warn(error);        
+        console.warn(error);
     });
 }
 
 // connection에 등록된 VM Spec list를 selectbox에 표시
-function getVmSpecListForSelectbox(configName, targetSelectBoxID){
-    
+function getVmSpecListForSelectbox(configName, targetSelectBoxID) {
+
     var url = "/setting/resources/vmspec/list" + "?filterKey=connectionName" + "&filterVal=" + configName;
     var html = "";
     axios.get(url, {
@@ -966,17 +969,17 @@ function getVmSpecListForSelectbox(configName, targetSelectBoxID){
     }).then(result => {
         data = result.data.VmSpecList;
         //console.log("SecurityGroupList : ", result);
-        
+
         html += '<option selected>Select VM Spec</option>';
 
         var count = 0;
         for (var i in data) {
             count++;
-            html += '<option value="' + data[i].id + '" selected>' + data[i].name + '(' + data[i].cspSpecName + ')</option>';            
+            html += '<option value="' + data[i].id + '" selected>' + data[i].name + '(' + data[i].cspSpecName + ')</option>';
         }
 
         if (count == 0) {
-            commonAlert("해당 Provider에 등록된 VM Spec 정보가 없습니다.")            
+            commonAlert("해당 Provider에 등록된 VM Spec 정보가 없습니다.")
         }
 
         $("#" + targetSelectBoxID).empty();
@@ -987,13 +990,13 @@ function getVmSpecListForSelectbox(configName, targetSelectBoxID){
             $("#" + targetSelectBoxID + " option[value=" + vmSpecID + "]").prop('selected', true).change();
         }
     }).catch((error) => {
-        console.warn(error);        
+        console.warn(error);
     });
 }
 
 // connection 에 등록된 vm image list를 selectbox에 표시
-function getVmImageListForSelectbox(configName, targetSelectBoxID){
-    
+function getVmImageListForSelectbox(configName, targetSelectBoxID) {
+
     var url = "/setting/resources/machineimage/list" + "?filterKey=connectionName" + "&filterVal=" + configName;
     var html = "";
     axios.get(url, {
@@ -1002,17 +1005,17 @@ function getVmImageListForSelectbox(configName, targetSelectBoxID){
         }
     }).then(result => {
         data = result.data.VirtualMachineImageList;
-        
+
         html += '<option selected>Select VM Spec</option>';
 
         var count = 0;
         for (var i in data) {
             count++;
-            html += '<option value="' + data[i].id + '" selected>' + data[i].name + '(' + data[i].cspImageName + ')</option>';            
+            html += '<option value="' + data[i].id + '" selected>' + data[i].name + '(' + data[i].cspImageName + ')</option>';
         }
 
         if (count == 0) {
-            commonAlert("해당 Provider에 등록된 VM Spec 정보가 없습니다.")            
+            commonAlert("해당 Provider에 등록된 VM Spec 정보가 없습니다.")
         }
 
         $("#" + targetSelectBoxID).empty();
@@ -1023,7 +1026,7 @@ function getVmImageListForSelectbox(configName, targetSelectBoxID){
             $("#" + targetSelectBoxID + " option[value=" + vmImageID + "]").prop('selected', true).change();
         }
     }).catch((error) => {
-        console.warn(error);        
+        console.warn(error);
     });
 }
 
@@ -1043,7 +1046,7 @@ function getProviderNameByConnection(configName, targetObjID) {
         $("#" + targetObjID).val(providerName);
 
     }).catch((error) => {
-        console.warn(error);        
+        console.warn(error);
     });
 }
 
@@ -1063,7 +1066,7 @@ function getRegionListByProviderForSelectbox(provider, targetObjID) {
         $("#" + targetObjID).val(providerName);
 
     }).catch((error) => {
-        console.warn(error);        
+        console.warn(error);
     });
 }
 
@@ -1591,7 +1594,7 @@ function createVmSpec(caller) {
 
 
 // nodata일 때 row 표시 : colspanCount를 받아 col을 합친다.
-function CommonTableRowNodata(colspanCount){
+function CommonTableRowNodata(colspanCount) {
     var html = "";
     html += "<tr>";
     html += '<td class="overlay hidden" data-th="" colspan="' + colspanCount + '">No Data</td>';

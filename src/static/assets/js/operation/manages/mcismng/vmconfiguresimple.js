@@ -398,6 +398,7 @@ function simpleDone_btn() {
 	$("#s_spec").val($("#ss_spec").val())
 	//$("#s_imageId").val($("#ss_imageId").val()) 이미지는 내가 처리
 	$("#s_sshKey").val($("#ss_sshKey").val())
+	$("#s_vmUserPassword").val($("#ss_password").val())
 	$("#s_root_disk_size").val($("#ss_root_disk_size").val())
 	$("#s_root_disk_type").val($("#ss_root_disk_type").val())
 

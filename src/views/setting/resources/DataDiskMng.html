@@ -266,31 +266,42 @@
 				<div class="register_box reg">
 
 					<div class="top_ipbox">
-						<div class="ipbox ipbox1 ipbox3">
+						<div class="ipbox ipbox1">
 							<ul>
 								<li>
 									<label><span class="ch">*</span>Disk Name</label>
-									<input type="text" id="regDataDiskName" name="reg_dataDiskName" value=""
-										placeholder="Input Disk Name" class="pline" title="" />
+									<span class="sbox">
+										<input type="text" id="regDataDiskName" name="reg_dataDiskName" value=""
+											placeholder="Input Disk Name" class="pline" title="" />
+									</span>
 								</li>
 								<li>
 									<label><span class="ch">*</span>Disk Type</label>
-									<select class="selectbox white pline w3" id="regDataDiskType"
-										name="reg_dataDiskType" onchange="diskSize(this.value, 'test_regDataDiskSize')">
-										<option selected>Select Disk Type</option>
-									</select>
+									<span class="sbox">
+										<select class="selectbox white pline w3" id="regDataDiskType"
+											name="reg_dataDiskType"
+											onchange="diskSize(this.value, 'test_regDataDiskSize')">
+											<option selected>Select Disk Type</option>
+										</select>
+									</span>
 								</li>
-								<li id="test_regDataDiskSize">
-									<label><span class="ch">*</span>Disk Size</label>
+								<li>
+									<label><span class="ch">*</span>Disk Size(GB)</label>
+									<span class="sbox">
+										<input type="text" id="regDataDiskSize" name="reg_dataDiskSize" value=""
+											placeholder="Input Disk Size" class="pline" title="" />
+									</span>
 								</li>
-								<li class="ta_1">
+								<li>
 									<label>Description</label>
-									<textarea id="regDescription" name="reg_description" cols="" rows=""
-										placeholder="Description" class="pline" title=""></textarea>
+									<span class="sbox">
+										<textarea id="regDescription" name="reg_description" cols="" rows=""
+											placeholder="Description" class="pline" title=""></textarea>
+									</span>
 								</li>
 							</ul>
 						</div>
-						<div class="ipbox ipbox2 ipbox4">
+						<div class="ipbox ipbox2">
 							<ul>
 								<li>
 									<label>Cloud Provider</label>
@@ -309,6 +320,20 @@
 										<option selected>Selected ConnectionName</option>
 									</select>
 								</li>
+								<!-- <li>
+									<label>CidrBlock</label>
+									<input type="text" id="dtlCidrBlock" name="dtlCidrBlock" value="" placeholder=""
+										class="gray" title="" readonly />
+								</li>
+								<li>
+									<label>Subnet</label>
+									<span class="sbox">
+										<input type="text" id="dtlSubnet" name="dtlSubnet" value="" placeholder=""
+											class="gray" title="" readonly />
+										<button name="" value="" class="btn_edit btn_register">Edit</button>
+										
+									</span>
+								</li> -->
 							</ul>
 						</div>
 					</div>

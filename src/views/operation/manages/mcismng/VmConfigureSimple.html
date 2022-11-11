@@ -17,6 +17,7 @@
 		<input type="hidden" name="specId" id="s_spec" />
 		<input type="hidden" name="imageId" id="s_imageId" />
 		<input type="hidden" name="sshKeyId" id="s_sshKey" />
+		<input type="hidden" name="vmUserPassword" id="s_vmUserPassword" />
 		<input type="hidden" name="tempProvider" id="t_regProvider" />
 		<input type="hidden" name="tempConnectionName" id="t_regConnectionName" />
 		<input type="hidden" name="tempSpec" id="t_spec" />
@@ -157,7 +158,12 @@
 							</select>
 
 						</li>
-					</ul>					
+						<li>
+							<label><span class="ch">*</span>Access (password)</label>
+							<input type="text" name="password" value="" placeholder="Input Password" class="pline ip_3"
+								title="" id="ss_password" />
+						</li>
+					</ul>
 				</div>
 
 			</div>
@@ -166,11 +172,12 @@
 					<ul>
 						<li>
 							<label><span class="ch">*</span>Root Disk</label>
-							<select class="selectbox white pline sel_4" name="rootDiskType" id="ss_root_disk_type" onchange="changeDiskSize(this.value);">
+							<select class="selectbox white pline sel_4" name="rootDiskType" id="ss_root_disk_type"
+								onchange="changeDiskSize(this.value);">
 								<option value="">Select Root Disk Type</option>
 							</select>
-							<input type="text" name="rootDiskSize" value="" placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
-								id="ss_root_disk_size" />							
+							<input type="text" name="rootDiskSize" value="" placeholder="Root Disk Size(GB)"
+								class="pline ip_3" title="" id="ss_root_disk_size" />
 						</li>
 
 						<li>
@@ -183,7 +190,7 @@
 									onclick="displayAvailableDisk(true);"><span>Available Disk</span></button>
 							</div>
 						</li>
-					</ul>					
+					</ul>
 				</div>
 			</div>
 
