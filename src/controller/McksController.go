@@ -116,9 +116,9 @@ func McksMngForm(c echo.Context) error {
 
 	for _, mcksInfo := range clusterList {
 		mcksSimpleInfo := ladybug.ClusterSimpleInfo{}
-		mcksSimpleInfo.UID = mcksInfo.UID
-		mcksSimpleInfo.Status = mcksInfo.Status
-		mcksSimpleInfo.McksStatus = util.GetMcksStatus(mcksInfo.Status)
+		//mcksSimpleInfo.UID = mcksInfo.UID
+		mcksSimpleInfo.Status = mcksInfo.Status.Phase
+		mcksSimpleInfo.McksStatus = util.GetMcksStatus(mcksInfo.Status.Phase)
 		mcksSimpleInfo.Name = mcksInfo.Name
 		mcksSimpleInfo.ClusterConfig = mcksInfo.ClusterConfig
 		mcksSimpleInfo.CpLeader = mcksInfo.CpLeader
