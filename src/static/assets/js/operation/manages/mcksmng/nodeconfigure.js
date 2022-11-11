@@ -26,7 +26,7 @@ function getSpecInfo(provider, configName, targetObjId){
         // 	'Authorization': apiInfo
         // }
     }).then(result=>{
-        // console.log(result.data)
+        console.log(result.data)
         var data = result.data.VmSpecList
         if(data){
             html +="<option value=''>Select SpecName</option>"

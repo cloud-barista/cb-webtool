@@ -523,18 +523,18 @@ function setNodeGroupList(clusterID, clusterIndex) {
 // 해당 pmks에 nodeGroup 추가
 // pmks가 경로에 들어가야 함. node 등록 form으로 이동
 function addNewNodeGroup() {
-    var clusterId = $("#pmks_cluster_id").val();
+    var clusterID = $("#pmks_cluster_id").val();
     var clusterName = $("#pmks_cluster_name").val();
     var connectionName = $("#pmks_cluster_connection").val();
     connectionName = "ali-test-conn";// for the test
 
-    if (clusterId == "") {
+    if (clusterID == "") {
         commonAlert("PMKS 정보가 올바르지 않습니다.");
         return;
     }
 
     var urlParamMap = new Map();
-    urlParamMap.set(":clusterID", clusterId)
+    urlParamMap.set(":clusterID", clusterID)
     //changePage('PmksNodeGroupRegForm', urlParamMap)
     url = setUrlByParam("PmksNodeGroupRegForm", urlParamMap)
 
@@ -650,7 +650,7 @@ function deleteNodeGroupOfPmks() {
 
 // Scale Size 변경
 function UpdateNodeGroupScaleSize(caller) {
-    var clusterId = $("#pmks_cluster_id").val();
+    var clusterID = $("#pmks_cluster_id").val();
     var clusterName = $("#pmks_cluster_name").val();
     var connectionName = $("#pmks_cluster_connection").val();
     var nodeGroupId = $("#pmks_nodegroup_id").val();
@@ -684,7 +684,7 @@ function UpdateNodeGroupScaleSize(caller) {
     }
 
     var urlParamMap = new Map();
-    urlParamMap.set(":clusterID", selectedMcksUid)
+    urlParamMap.set(":clusterID", clusterID)
     urlParamMap.set(":nodeGroupID", selectedNodeUid)
 
     var new_obj = {}

@@ -21,14 +21,14 @@ function btn_deploy(){
 
     // ClusterConfigReqKubernetesReq
     var kubernatesVersion = $("#clusterconfig_kubernates_version").val();
-    var kubernatesEtcd = $("#clustercclusterconfig_kubernates_etcdonfig_kubernates_version").val();
+    var kubernatesEtcd = $("#clusterconfig_kubernates_etcd").val();
     var kubernatesLoadBalancer = $("#clusterconfig_kubernates_loadbalancer").val();
     var kubernatesNetworkCni = $("#clusterconfig_kubernates_networkCni").val();
     var kubernatesPodCidr = $("#clusterconfig_kubernates_podCidr").val();
     var kubernatesServiceCidr = $("#clusterconfig_kubernates_serviceCidr").val();
     var kubernatesServiceDnsDomain = $("#clusterconfig_kubernates_serviceDnsDomain").val();
     var kubernatesStorageClassPath = $("#clusterconfig_kubernates_storageclass_nfs_path").val();
-    var kubernatesStorageClassServer = $("#clusterconfig_kubernates_storageclass_nfs_path").val();
+    var kubernatesStorageClassServer = $("#clusterconfig_kubernates_storageclass_nfs_server").val();
 
 	// ControlPlane
     var controlPlaneLength = $("input[name='controlPlaneCount']").length;
@@ -120,7 +120,7 @@ function btn_deploy(){
         rootDisk['type'] = controlPlaneRootDiskTypeData[i];
         rootDisk['size'] = controlPlaneRootDiskSizeData[i];
 
-        new_controlPlane['rootDisk'] = rootDisk[i]
+        new_controlPlane['rootDisk'] = rootDisk
         controlPlanes[i] = new_controlPlane
     }
     new_obj['controlPlane'] = controlPlanes;
@@ -136,14 +136,14 @@ function btn_deploy(){
         var rootDisk = {}
         rootDisk['type'] = workerRootDiskTypeData[i];
         rootDisk['size'] = workerRootDiskSizeData[i];
-        new_worker['rootDisk'] = rootDisk[i]
+        new_worker['rootDisk'] = rootDisk
 
         workers[i] = new_worker
     }
     new_obj['worker'] = workers;
   
     console.log(new_obj);
-
+    
     try{
         // configurer 는 mcks 선택하고 들어옴. : TODO : MCKS create 와 node create는 버튼 액션을 달리해야
         var url = "/operation/manages/mcksmng/reg/proc"

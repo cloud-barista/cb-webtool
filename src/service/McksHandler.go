@@ -347,8 +347,7 @@ func GetSimpleNodeCountMap(cluster ladybug.ClusterInfo) ([]ladybug.NodeSimpleInf
 	nodeRoleCountMap := map[string]int{}
 	for nodeIndex, nodeInfo := range cluster.Nodes {
 		nodeSimpleObj := ladybug.NodeSimpleInfo{
-			NodeIndex: nodeIndex,
-			//NodeUID:      nodeInfo.UID,
+			NodeIndex:    nodeIndex,
 			NodeName:     nodeInfo.Name,
 			NodeKind:     nodeInfo.Kind, // Node냐 cluster냐
 			NodeCsp:      nodeInfo.Csp,
