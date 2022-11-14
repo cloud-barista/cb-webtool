@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/labstack/echo"
 
 	// "io"
@@ -168,7 +169,7 @@ func RegPmksClusterByAsync(clusterReqInfo *spider.ClusterReqInfo, c echo.Context
 
 		respBody := resp.Body
 		respStatus := resp.StatusCode
-		//spew.Dump(resp)
+		spew.Dump(resp)
 		if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
 			failResultInfo := spider.SpError{}
 			json.NewDecoder(respBody).Decode(&failResultInfo)
@@ -188,19 +189,22 @@ func RegPmksClusterByAsync(clusterReqInfo *spider.ClusterReqInfo, c echo.Context
 			//fmt.Println(result["apiVersion"]) // events.k8s.io/v1 출력
 
 			beginIndex := strings.Index(failResultInfo.Message, "Message:")
+			var endMessage string
 			if beginIndex == -1 {
 				fmt.Println("cannot find Message:  ------------")
+				endMessage = failResultInfo.Message
+			} else {
+				findMessageBegin := failResultInfo.Message[beginIndex:]
+				fmt.Println("findMessageBegin :  ", findMessageBegin)
+
+				beginIndex2 := strings.Index(findMessageBegin, "{")
+				findMessage := findMessageBegin[beginIndex2:]
+				fmt.Println("findMessage :  ", findMessage)
+
+				endIndex := strings.Index(findMessage, "}")
+				endMessage = findMessage[:endIndex]
+				fmt.Println("endMessage :  ", endMessage)
 			}
-			findMessageBegin := failResultInfo.Message[beginIndex:]
-			fmt.Println("findMessageBegin :  ", findMessageBegin)
-
-			beginIndex2 := strings.Index(findMessageBegin, "{")
-			findMessage := findMessageBegin[beginIndex2:]
-			fmt.Println("findMessage :  ", findMessage)
-
-			endIndex := strings.Index(findMessage, "}")
-			endMessage := findMessage[:endIndex]
-			fmt.Println("endMessage :  ", endMessage)
 			//findMessageBegin := strings.Index(failResultInfo.Message, "}"))
 
 			//byt := []byte(endMessage)
