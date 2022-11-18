@@ -110,18 +110,13 @@ func GetMcisListByID(nameSpaceID string, filterKeyParam string, filterValParam s
 
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	//if optionParam != ""{
-	//	urlParam += "?option=" + optionParam
-	//}
 	urlParam += "?option=id"
 	if filterKeyParam != "" {
 		urlParam += "&filterKey=" + filterKeyParam
 		urlParam += "&filterVal=" + filterValParam
 	}
 	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
@@ -132,12 +127,7 @@ func GetMcisListByID(nameSpaceID string, filterKeyParam string, filterValParam s
 	respStatus := resp.StatusCode
 
 	mcisList := tbcommon.TbIdList{}
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		//errorInfo := model.ErrorInfo{}
-		//json.NewDecoder(respBody).Decode(&errorInfo)
-		//fmt.Println("respStatus != 200 reason ", errorInfo)
-		//returnStatus.Message = errorInfo.Message
-
+	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
@@ -164,9 +154,7 @@ func GetMcisListByOption(nameSpaceID string, optionParam string, filterKeyParam 
 		urlParam += "&filterVal=" + filterValParam
 	}
 	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
@@ -179,7 +167,7 @@ func GetMcisListByOption(nameSpaceID string, optionParam string, filterKeyParam 
 	mcisList := map[string][]tbmcis.TbMcisInfo{}
 	returnStatus := model.WebStatus{}
 
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}

@@ -298,12 +298,12 @@ func PmksClusterUpdateProc(c echo.Context) error {
 	clusterReqInfo.NameSpace = defaultNameSpaceID
 
 	taskKey := defaultNameSpaceID + "||" + "pmks" + "||" + clusterReqInfo.ReqInfo.Name
-	service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+	service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_REQUEST, c)
 
 	respBody, respStatus := service.UpdatePmksCluster(clusterReqInfo)
 	fmt.Println("=============respBody =============", respBody)
 	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
-		service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+		service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_FAIL, c)
 
 		return c.JSON(respStatus.StatusCode, map[string]interface{}{
 			"error":  respStatus.Message,
@@ -311,7 +311,7 @@ func PmksClusterUpdateProc(c echo.Context) error {
 		})
 	}
 
-	service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+	service.StoreWebsocketMessage(util.TASK_TYPE_PMKS, taskKey, util.PMKS_CLUSTER_UPDATE, util.TASK_STATUS_COMPLETE, c)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
