@@ -40,7 +40,7 @@ function setClusterInfo(data){
     var clusterVersion = data.Version;
     var clusterStatus = data.Status;
     var connectionName = data.ConnectionName;
-    connectionName = "ali-test-conn";// for the test
+
     // PMKS Info
     $("#pmks_cluster_id").val(clusterID);// hidden        
     $("#pmks_cluster_name").val(clusterID);// hidden        

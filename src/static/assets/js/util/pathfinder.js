@@ -924,19 +924,18 @@ function getCommonFilterVmSpecListByRange(specFilterObj, caller) {
 
 // 모든 PMKS 목록 조회
 function getCommonAllPmksList(caller) {
-    //var url = "/operation/manages/pmks/list"
-    //var url = getWebToolUrl("PmksListOfNamespace")
-    var url = getWebToolUrl("PmksListByConnection");// for the test
-    url += "?connectionName=ali-test-conn";
+    var url = getWebToolUrl("PmksListOfNamespace")    
     axios.get(url, {
         headers: {
             //'Content-Type': "application/json"
         }
     }).then(result => {
         //        console.log("get Cluster List : ", result.data);
+        console.log(result)
         getCommonAllPmksListSuccess(caller, result.data.PmksList)
     }).catch(error => {
         console.log(error);
+        commonAlert("Search Failed", error.message)
     });
 }
 

@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/labstack/echo"
 
 	// "io"
@@ -35,16 +34,30 @@ func GetPmksNamespaceClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider
 	respBody := resp.Body
 	respStatus := resp.StatusCode
 
-	totalClusterList := spider.SpTotalClusterInfoList{}
-	json.NewDecoder(respBody).Decode(&totalClusterList)
-
-	// AllClusterList배열의 Cluster배열 형태를  ClusterInfo의 배열로 변환
 	returnClusterList := []spider.SpClusterInfo{}
-	for _, clusterList := range totalClusterList.AllClusterList {
-		//log.Println(clusterList)
-		returnClusterList = append(returnClusterList, clusterList.ClusterList...)
 
+	fmt.Println(respStatus)
+	fmt.Println(respBody)
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+
+		//spew.Dump(respBody)
+		return returnClusterList, model.WebStatus{StatusCode: respStatus, Message: errorInfo.Message}
+	} else {
+		totalClusterList := spider.SpTotalClusterInfoList{}
+		json.NewDecoder(respBody).Decode(&totalClusterList)
+
+		// AllClusterList배열의 Cluster배열 형태를  ClusterInfo의 배열로 변환
+
+		for _, clusterList := range totalClusterList.AllClusterList {
+			//log.Println(clusterList)
+			returnClusterList = append(returnClusterList, clusterList.ClusterList...)
+		}
 	}
+
 	return returnClusterList, model.WebStatus{StatusCode: respStatus}
 }
 
@@ -169,7 +182,7 @@ func RegPmksClusterByAsync(clusterReqInfo *spider.ClusterReqInfo, c echo.Context
 
 		respBody := resp.Body
 		respStatus := resp.StatusCode
-		spew.Dump(resp)
+		//spew.Dump(resp)
 		if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
 			failResultInfo := spider.SpError{}
 			json.NewDecoder(respBody).Decode(&failResultInfo)

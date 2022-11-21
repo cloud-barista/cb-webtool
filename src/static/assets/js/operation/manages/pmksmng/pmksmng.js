@@ -502,7 +502,6 @@ function setNodeGroupList(clusterID, clusterIndex) {
     // cluster 정보
     var clusterInfo = TOTAL_PMKS_LIST.get(clusterID);
     var connectionName = $("#cluster_connection_" + clusterIndex).val()
-    connectionName = "ali-test-conn";// for the test
 
     $("#pmks_uid").val(clusterID);
     $("#pmks_info_version").val($("#cluster_version_" + clusterIndex).val());
@@ -526,7 +525,6 @@ function addNewNodeGroup() {
     var clusterID = $("#pmks_cluster_id").val();
     var clusterName = $("#pmks_cluster_name").val();
     var connectionName = $("#pmks_cluster_connection").val();
-    connectionName = "ali-test-conn";// for the test
 
     if (clusterID == "") {
         commonAlert("PMKS 정보가 올바르지 않습니다.");
@@ -576,8 +574,6 @@ function deleteCluster() {
         commonAlert("Please Select One PMKS at a time")
         return;
     }
-
-    connectionName = "ali-test-conn";//for the test
 
     var url = "/operation/manages/pmks/" + clusterID + "?connectionName=" + connectionName;
     axios.delete(url, {
