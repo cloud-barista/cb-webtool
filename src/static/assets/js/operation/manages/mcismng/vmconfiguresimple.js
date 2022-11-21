@@ -319,11 +319,16 @@ function getVnetInfo(configName) {
 					// html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].Ipv4_CIDR+'</option>';
 				}
 			}
+			if( v_net_cnt > 0 ){
+				break;
+			}
 		}
-		$("#vnet").empty();
-		$("#vnet").append(html);
-		$("#subnet").empty();
-		$("#subnet").append(html2);
+
+		// vnet, subnet 은 있었는데 system random으로 선택하도록 변경 됨.
+		//$("#vnet").empty();
+		//$("#vnet").append(html);
+		//$("#subnet").empty();
+		//$("#subnet").append(html2);
 
 		//setting default
 		$("#s_subnetId").val(init_subnet);
