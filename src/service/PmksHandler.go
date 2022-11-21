@@ -21,20 +21,22 @@ import (
 
 // 해당 namespace의 모든 pmks 목록 조회
 func GetPmksNamespaceClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.SpClusterInfo, model.WebStatus) {
+	// func GetPmksNamespaceClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider.SpAllClusterInfoList, model.WebStatus) {
 	var originalUrl = "/nscluster"
 
 	url := util.SPIDER + originalUrl
 	pbytes, _ := json.Marshal(clusterReqInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
+	//returnClusterList := spider.SpTotalClusterInfoList{}
+	returnClusterList := []spider.SpClusterInfo{}
+	//returnClusterList := []spider.SpAllClusterInfoList{}
 	if err != nil {
 		fmt.Println(err)
-		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return returnClusterList, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	respBody := resp.Body
 	respStatus := resp.StatusCode
-
-	returnClusterList := []spider.SpClusterInfo{}
 
 	fmt.Println(respStatus)
 	fmt.Println(respBody)
@@ -49,12 +51,21 @@ func GetPmksNamespaceClusterList(clusterReqInfo spider.ClusterReqInfo) ([]spider
 	} else {
 		totalClusterList := spider.SpTotalClusterInfoList{}
 		json.NewDecoder(respBody).Decode(&totalClusterList)
+		//json.NewDecoder(respBody).Decode(&returnClusterList)
 
 		// AllClusterList배열의 Cluster배열 형태를  ClusterInfo의 배열로 변환
 
 		for _, clusterList := range totalClusterList.AllClusterList {
-			//log.Println(clusterList)
-			returnClusterList = append(returnClusterList, clusterList.ClusterList...)
+			log.Println(clusterList)
+
+			for _, cluster := range clusterList.ClusterList {
+				cluster.ProviderName = clusterList.Provider
+				cluster.ConnectionName = clusterList.Connection
+				returnClusterList = append(returnClusterList, cluster)
+			}
+
+			//returnClusterList = append(returnClusterList, clusterList.ClusterList...)
+			//returnClusterList = append(returnClusterList, clusterList)
 		}
 	}
 
@@ -99,10 +110,10 @@ func GetPmksClusterData(cluster string, clusterReqInfo spider.ClusterReqInfo) (*
 	resp, err := util.CommonHttp(url, pbytes, http.MethodGet)
 
 	// defer body.Close()
-	clusterInfo := spider.SpClusterInfo{}
+	clusterInfo := spider.RespClusterInfo{}
 	if err != nil {
 		fmt.Println(err)
-		return &clusterInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
 	}
 	// util.DisplayResponse(resp) // 수신내용 확인
 
@@ -112,7 +123,8 @@ func GetPmksClusterData(cluster string, clusterReqInfo spider.ClusterReqInfo) (*
 	json.NewDecoder(respBody).Decode(&clusterInfo)
 	fmt.Println(clusterInfo)
 
-	return &clusterInfo, model.WebStatus{StatusCode: respStatus}
+	clusterInfo.ClusterInfo.ConnectionName = clusterReqInfo.ConnectionName
+	return &clusterInfo.ClusterInfo, model.WebStatus{StatusCode: respStatus}
 }
 
 // Cluster 생성

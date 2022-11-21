@@ -175,6 +175,7 @@ function addClusterData(item, index) {
     var clusterID = item.IId.NameId;
     var clusterSystemID = item.IId.SystemId;
     var clusterVersion = item.Version;
+    var clusterProviderName = item.ProviderName;
     var clusterConnectionName = item.ConnectionName;
     var clusterStatus = item.Status;
     var clusterNetwork = item.Network;
@@ -230,7 +231,7 @@ function addClusterData(item, index) {
 
         + '<td class="btn_mtd ovm column-80px" data-th="status">' + clusterStatus + "</td>"
         + '<td class="overlay hidden" data-th="clusterName">' + clusterID + "</td>"
-        + '<td class="btn_mtd ovm" data-th="provider">' + item.Provider + "</td>"
+        + '<td class="btn_mtd ovm" data-th="provider">' + clusterProviderName + "</td>"
 
         + '<td class="overlay hidden" data-th="vpc">' + vpcId + "</td>"
         + '<td class="overlay hidden" data-th="subnet">' + subnetIds + "</td>"

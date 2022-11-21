@@ -376,6 +376,7 @@ function deployNodeGroup(){
 
     nodeGroupObj = {
         Name: nodeGroupName,
+        ImageName: nodeGroupImageId,
         VMSpecName: nodeGroupVmSpecId,
         KeyPairName: nodeGroupKeyPairId,
         DesiredNodeSize: nodeGroupDesiredNodeSize,
