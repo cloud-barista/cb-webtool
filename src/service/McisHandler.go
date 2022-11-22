@@ -3,7 +3,6 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 
 	"github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
@@ -555,11 +554,10 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq, c echo.Context) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
 
-	subGroupSize, err := strconv.ParseInt(vmInfo.SubGroupSize, 10, 64)
-
-	if subGroupSize > 1 { // subGroupSize가 2개 이상일 때
-		originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup"
-	}
+	//subGroupSize, err := strconv.ParseInt(vmInfo.SubGroupSize, 10, 64)
+	//if subGroupSize > 1 { // subGroupSize가 2개 이상일 때
+	//	originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup"
+	//}
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
