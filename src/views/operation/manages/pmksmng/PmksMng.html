@@ -1,0 +1,61 @@
+{{ template "OperationTop" .}}
+<div id="lnb">
+			
+	<div class="bg"></div>
+		
+	<div class="m_box">
+		
+		{{template "TopBox" .}}
+
+		{{template "LNBPopup" .}}
+
+		{{template "MenuLeft" .}}
+		
+	</div>
+	
+	<div class="bottom"></div>
+	<a href="javascript:;" id="m_close"></a>
+	
+</div>
+{{template "Header" .}}
+{{template "Modal" .}}
+
+				<!-- contents -->
+				<input type="hidden" id="pmks_cluster_id" value=''/>
+				<input type="hidden" id="pmks_cluster_name" value=''/>
+				<input type="hidden" id="pmks_cluster_version" value=''/>
+				<input type="hidden" id="pmks_cluster_connection" value=''/>
+				<input type="hidden" id="pmks_nodegroup_id" value=''/>
+				
+				<!-- contents -->
+				<div class="contbox">
+					
+					<div class="titlebox">
+						<div class="tit"><img src="/assets/img/common/icon_cont.png" alt=""/>Manage / <strong>PMKS</strong></div>
+						<div class="location">Home  <span>></span>  Operation  <span>></span>  Manage  <span>></span>  <strong>PMKS</strong></div>
+					</div>
+					
+					<!-- list -->
+					{{template "ClusterList" .}}
+					<!-- //list -->
+					
+					<!-- Info -->
+					{{template "ClusterInfo" .}}
+					<!-- //Info -->
+				
+					<!-- list -->
+					{{template "NodeGroupInfo" .}}
+					<!-- //list -->
+
+					<!-- detail -->
+					{{template "NodeInfo" .}}
+					<!-- //detail -->
+					
+				</div>
+				<!-- //contents -->
+				
+				
+
+<script type="text/javascript" src="/assets/js/operation/manages/pmksmng/pmksmng.js"></script>
+
+{{template "Footer" .}}

@@ -4,13 +4,6 @@ $(document).ready(function () {
     setTableHeightForScroll('nameSpaceList', 300);
 })
 
-// commons.js에 정의 됨
-// function fnMove(target){
-// var offset = $("#" + target).offset();
-// console.log("fn move offset : ",offset)
-// $('html, body').animate({scrollTop : offset.top}, 400);
-// }
-
 function getNameSpaceListCallbackSuccess(caller, data) {
     var html = ""
     if (data == null) {
@@ -168,17 +161,21 @@ function createNameSpace() {
         return;
     }
 
-    // var apiInfo = "{ { .apiInfo} }";
-    var url = "/setting/namespaces" + "/namespace/reg/proc";
+    //var url = "/setting/namespaces" + "/namespace/reg/proc";
+    var url = "/setting/namespaces/namespace/reg/proc";
     var obj = {
         name: namespace,
-        description: desc
+        description: desc,
     }
+    //const obj = new FormData()
+    //obj.append('name', namespace)
+    //obj.append('description', desc)
+    
+    console.log(obj)
     if (namespace) {
         axios.post(url, obj, {
             headers: {
-                'Content-type': 'application/json',
-                // 'Authorization': apiInfo, 
+                //'Content-Type': "application/json"
             }
         }).then(result => {
             console.log(result);

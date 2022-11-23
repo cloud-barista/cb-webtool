@@ -1,7 +1,8 @@
 package ladybug
 
 type ClusterConfig struct {
-	Kubernetes Kubernetes `json:"kubernetes"`
+	InstallMonAgent string     `json:"installMonAgent"`
+	Kubernetes      Kubernetes `json:"kubernetes"`
 }
 
 type Kubernetes struct {

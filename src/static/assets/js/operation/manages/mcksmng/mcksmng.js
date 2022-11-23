@@ -4,8 +4,8 @@ $(document).ready(function () {
     setTableHeightForScroll("mcksListTable", 700);
 });
 
-function clickListOfMcks(uid, mcksIndex) {
-    console.log("click view mcks id :", uid)
+function clickListOfMcks(mcksID, mcksIndex) {
+    console.log("click view mcks id :", mcksID)
     $(".server_status").addClass("view");
 
     // List Of MCKS에서 선택한 row 외에는 안보이게
@@ -19,20 +19,20 @@ function clickListOfMcks(uid, mcksIndex) {
         }
     })
 
-    $("#mcks_uid").val($("#mcksUID" + mcksIndex).val());
+    $("#mcks_id").val($("#mcksID" + mcksIndex).val());
     $("#mcks_name").val($("#mcksName" + mcksIndex).val());
 
     // MCKS Info area set
-    showServerListAndStatusArea(uid, mcksIndex);
+    showServerListAndStatusArea(mcksID, mcksIndex);
 }
 
 
 // MCKS Info area 안의 Node List 내용 표시
 // 해당 MCKS의 모든 Node 표시
 // TODO : 클릭했을 때 서버에서 조회하는것으로 변경할 것.
-function showServerListAndStatusArea(uid, mcksIndex) {
+function showServerListAndStatusArea(mcksID, mcksIndex) {
 
-    var mcksUID = $("#mcksUID" + mcksIndex).val();
+    //var mcksID = $("#mcksID" + mcksIndex).val();
     var mcksName = $("#mcksName" + mcksIndex).val();
     var mcksStatus = $("#mcksStatus" + mcksIndex).val();
     var mcksConfig = $("#mcksConfig" + mcksIndex).val();
@@ -44,7 +44,7 @@ function showServerListAndStatusArea(uid, mcksIndex) {
     $("#mcks_server_info_status").append('<strong>Node List </strong>  <span class="stxt">[ ' + mcksName + ' ]</span>  Node(' + nodeTotalCountOfMcks + ')')
 
     //
-    $("#mcks_info_name").val(mcksName + " / " + mcksUID)
+    $("#mcks_info_name").val(mcksName + " / " + mcksID)
     $("#mcks_info_Status").val(mcksStatus)
     $("#mcks_info_cloud_connection").val(mcksConfig)
 
@@ -123,7 +123,7 @@ function deleteMCKS() {
         if ($(this).is(":checked")) {
             checkedCount++;
             console.log("checked")
-            mcksID = $("#mcksUID" + checkedIndex).val();
+            mcksID = $("#mcksID" + checkedIndex).val();
             mcksName = $("#mcksName" + checkedIndex).val();
             // 여러개를 지울 때 호출하는 함수를 만들어 여기에서 호출
         } else {
@@ -174,9 +174,9 @@ function deleteNodeOfMcks() {
     // worker만 삭제
     // 1개씩 삭제
 
-    var selectedMcksUid = $("#mcks_uid").val();
+    var selectedMcksID = $("#mcks_id").val();
     var selectedMcksName = $("#mcks_name").val();
-    var selectedNodeUid = $("#node_uid").val();
+    
     var selectedNodeName = $("#node_name").val();
     var selectedNodeRole = $("#mcks_node_role").val();
 
@@ -185,13 +185,11 @@ function deleteNodeOfMcks() {
         return;
     }
 
-    var orgUrl = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";
     var urlParamMap = new Map();
-    urlParamMap.set(":clusteruID", selectedMcksUid)
+    urlParamMap.set(":clusterID", selectedMcksID)
     urlParamMap.set(":clusterName", selectedMcksName)
-    urlParamMap.set(":nodeID", selectedNodeUid)
     urlParamMap.set(":nodeName", selectedNodeName)
-    var url = setUrlByParam(orgUrl, urlParamMap)
+    var url = setUrlByParam("McksClusterNodeData", urlParamMap)
     console.log("URL : ", url)
     axios.delete(url, {
         headers: {
@@ -220,13 +218,11 @@ function deleteNodeOfMcks() {
 
 // 선택한 Node의 상세정보 표시
 function nodeDetailInfo(mcksIndex, nodeIndex) {
-    var nodeUID = $("#mcksNodeUID_" + mcksIndex + "_" + nodeIndex).val();
     var nodeName = $("#mcksNodeName_" + mcksIndex + "_" + nodeIndex).val();
     var nodeKind = $("#mcksNodeKind_" + mcksIndex + "_" + nodeIndex).val();
     var nodeRole = $("#mcksNodeRole_" + mcksIndex + "_" + nodeIndex).val();
 
     // hidden 값 setting. 삭제 등에서 사용
-    $("#node_uid").val(nodeUID);
     $("#node_name").val(nodeName);
 
     $("#mcks_node_txt").text(nodeName + " / " + nodeUID);

@@ -13,7 +13,7 @@
 					<div class="pop-body">
 
 						<div class="title_box">
-							<div class="title">Firewall RuleSet</div>
+							<div class="title">Firewall RuleSet </div>
 						</div>
 
 						<div class="pop-cont">
@@ -291,21 +291,23 @@
 
 	<div class="tab_ipbox">
 		<div class="t_ipbox t_ip1">
+			<input type="hidden" id="server_detail_disk_status" value=""/>
+			<input type="hidden" id="server_detail_disk_id" value=""/>
+			<input type="hidden" id="server_detail_disk_mcis_id" value=""/>
+			<input type="hidden" id="server_detail_disk_vm_id" value=""/>
 			<ul>
 				<li>
 					<label>Root Device Type</label>
-					<input type="text" name="" value="ebs" placeholder="" title="" readonly
+					<input type="text" name="" value="" placeholder="" title="" readonly
 						id="server_detail_view_root_device_type" />
 				</li>
 				<li>
 					<label>Root Device</label>
-					<input type="text" name="" value="/dev/sda1" placeholder="" title="" readonly
+					<input type="text" name="" value="" placeholder="" title="" readonly
 						id="server_detail_view_root_device" />
 				</li>
-				<li>
-					<label>Block Device</label>
-					<input type="text" name="" value="/dev/sda1" placeholder="" title="" readonly
-						id="server_detail_view_block_device" />
+				<li id="block_device_section">
+					<label>Block Device</label>				
 				</li>
 			</ul>
 		</div>
@@ -333,4 +335,6 @@
 
 </div>
 <!-- //Detail -->
+
+ 
 {{end}}

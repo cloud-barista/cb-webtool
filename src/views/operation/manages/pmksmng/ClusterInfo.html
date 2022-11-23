@@ -1,0 +1,181 @@
+{{define "ClusterInfo"}}
+<!-- Info -->
+<div class="dashboard dashboard_cont server_status">
+
+	<div class="d_box box_m box_w100">
+		<div class="titbox">
+			<div class="tit initial"><strong>PMKS Cluster Info</strong> <span class="stxt" id="pmks_info_txt">[ ]</span>
+			</div>
+			<div class="top_info">
+				<ul>
+					<li>
+						<a href="javascript:void(0);">Action</a>
+						<div class="infobox">
+							<div class="box">
+								<ul>
+									<li>
+										<strong>Manage</strong>
+										<ul>
+											<li><a href="javascript:void(0);" data-toggle="modal"
+													data-target="#NodeGroup_n_New"
+													onClick="addNewNodeGroup()">Add/Extend</a></li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</li>
+					<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" /></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- cluster begin -->
+		<div class="ds_cont">
+			<!-- Cluster action : createCluster, update(cluster버전), listCluster(해당 Connection만)
+				, allCluster(namespace내 모든 Connectin), getCluster, delCluster, delClusterForce
+			<br>
+			update는 해당 항목 뒤에 set 버튼을 놓을 지....
+			<br>
+			NodeGroup action : addNodeGroup, updateNodeGroup, removeNodeGroup,  -->
+			<div class="iparea">
+				<div class="boxlist ipbox ip1">
+					<ul>
+						<li>
+							<label>Name</label>
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+								id="pmks_info_name" />
+						</li>
+						<li>
+							<label>Version</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_version" />
+						</li>
+						<li>
+							<label>Status</label>
+							<input type="text" name="" value="" placeholder="None" title="" readonly
+								id="pmks_info_status" />
+						</li>
+					</ul>
+				</div>
+
+				<div class="boxlist ipbox ip2">
+					<ul>
+						<li>
+							<label>VPC </label>
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+								id="pmks_info_vpc" />
+						</li>
+						<li>
+							<label>Subnet</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_subnet" />
+						</li>
+						<li>
+							<label>Security Group</label>
+							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
+								id="pmks_info_security_group" readonly />
+						</li>
+
+					</ul>
+				</div>
+				<div class="boxlist ipbox ip2">
+					<ul>
+						<li>
+							<label>Cloud Connection</label>
+							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
+								id="pmks_info_cloud_connection" readonly />
+						</li>
+						<li>
+							<label>End Point </label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_endpoint" />
+						</li>
+						<li>
+							<label>KubeConfig</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="pmks_info_kubeconfig" />
+						</li>
+
+					</ul>
+				</div>
+			</div>
+
+
+		</div>
+
+		<!-- end cluster-->
+
+		<div class="ds_cont">
+
+			<div class="area_cont">
+
+				<div class="box">
+
+					<div class="titbox">
+						<div class="tit initial" id="cluster_nodegroup_list_status"><strong>NodeGroup List /
+								Status</strong></div>
+						<div class="top_info">
+							<ul>
+
+								<li>
+									<a href="javascript:void(0);">Action</a>
+									<div class="infobox">
+										<div class="box">
+											<ul>
+												<li>
+													<strong>Manage</strong>
+													<ul>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#NodeGroup_n_New"
+																onclick="addNewNodeGroup()">Add/Extend</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#NodeGroup_n_Delete"
+																onclick="commonConfirmOpen('DeleteNodeGroupOfPmks')">Delete</a>
+														</li>
+
+													</ul>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- cluster에 등록 된 node group 목록 icon -->
+					<div class="scroll-wrapper listbox scrollbar-inner" style="position: relative;">
+						<div class="listbox scrollbar-inner scroll-content"
+							style="margin-bottom: 0px; margin-right: 0px; height: 135px; max-height: none;">
+							<ul id="cluster_nodegroup_list">
+							</ul>
+						</div>
+
+						<div class="scroll-element scroll-x">
+							<div class="scroll-element_outer">
+								<div class="scroll-element_size"></div>
+								<div class="scroll-element_track"></div>
+								<div class="scroll-bar" style="width: 100px;"></div>
+							</div>
+						</div>
+						<div class="scroll-element scroll-y">
+							<div class="scroll-element_outer">
+								<div class="scroll-element_size"></div>
+								<div class="scroll-element_track"></div>
+								<div class="scroll-bar" style="height: 100px;"></div>
+							</div>
+						</div>
+					</div>
+					<!-- cluster에 등록 된 node group 목록 icon end-->
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- //Info -->
+{{end}}

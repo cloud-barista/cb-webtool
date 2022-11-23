@@ -41,6 +41,7 @@ $(document).ready(function () {
     osHardwareClear();
     vnetClear();
     vmSecurityClear();
+    vmOtherClear();
   });
 
   //OS_HW - Clear
@@ -135,6 +136,14 @@ function vmSecurityClear() {
 
 }
 
+// other tab 초기화
+function vmOtherClear() {
+  $("#tab_others_root_disk_type").val("");
+  $("#tab_others_root_disk_size").val("");
+
+  $("#es_root_disk_type").val("");
+  $("#es_root_disk_size").val("");
+}
 
 
 // multi 선택되는 checkbox를 한번에 초기화
@@ -309,9 +318,9 @@ var expert_data_cnt = 0
 const expertServerCloneObj = obj => JSON.parse(JSON.stringify(obj))
 function expertDone_btn() {
   console.log("expert Done")
-  // TODO : 원래는 같은 VM 을 여러개 만들 때 vmGroupSize를 set 하는 것 같은데... for문으로 돌리고 있음.... 고칠까?
-  // $("#e_vmGroupSize").val( $("#es_vm_add_cnt").val() )
-  // validation check 
+  // TODO : 원래는 같은 VM 을 여러개 만들 때 subGroupSize를 set 하는 것 같은데... for문으로 돌리고 있음.... 고칠까?
+  $("#e_subGroupSize").val($("#es_sub_add_cnt").val())
+  //validation check 
   if ($("#e_name").val() == "") { commonAlert("VM Name is required"); return; }
   if ($("#e_connectionName").val() == "") { commonAlert("Connection is required"); return; }
   if ($("#e_vNetId").val() == "") { commonAlert("vNet is required"); return; }
@@ -322,10 +331,21 @@ function expertDone_btn() {
   if ($("#e_specId").val() == "") { commonAlert("VM Spec is required"); return; }
 
 
-  $("#e_vm_add_cnt").val($("#es_vm_add_cnt").val());// 추가수량 값을 form에 추가.
+  //$("#e_vm_add_cnt").val($("#es_vm_add_cnt").val());// 추가수량 값을 form에 추가.
+  $("#e_subGroupSize").val($("#es_vm_add_cnt").val());// 추가수량 -> subGroupSize 로 변경
+  var select_disk = $("#ss_data_disk").val();
 
   // expertForm에는 vm생성에 필요한 값들만 있음.
   var expert_form = $("#expert_form").serializeObject()
+  if (select_disk) {
+    var arr_disk = select_disk.split(",");
+    expert_form.dataDiskIds = arr_disk;
+  } else {
+    expert_form.dataDiskIds = [];
+  }
+
+  console.log("expert form : ", expert_form);
+
   var server_name = expert_form.name
   var server_cnt = parseInt(expert_form.vmAddCount) // expert
   console.log('server_cnt : ', server_cnt)
@@ -367,6 +387,8 @@ function expertDone_btn() {
   $("#expert_form").each(function () {
     this.reset();
   })
+  $("#ss_data_disk").val("");
+  $("#e_s_data_disk").val("");
 }
 
 
@@ -379,6 +401,9 @@ function setConnectionValue(connName) {
   console.log(" connection change")
   var connectionObj = $("#e_connectionName");
   var tempConnectionObj = $("#t_connectionName");
+  var provider = $("#es_regProvider").val();
+  console.log("provider : ", provider);
+  getCommonLookupDiskInfo("vmexpert", provider, connName);// -> getCommonLookupDiskInfoSuccess
   if (connName == "") {
     connectionObj.val(connName);
     tempConnectionObj.val(connName);
@@ -659,9 +684,27 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
     $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
 
     $("#imageAssist").modal("hide");
+  } else if (caller == "myImage") {
+    var orgPrefix = "myImage_";
+    var targetPrefix = "tab_vmImage_";
+    console.log("myImage----")
+    console.log(targetPrefix + "cspImageId")
+    console.log(orgPrefix + "cspImageId_" + selectedIndex)
+    console.log($("#" + orgPrefix + "cspImageId_" + selectedIndex).val())
+    $("#" + targetPrefix + "id").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+    $("#" + targetPrefix + "name").val($("#" + orgPrefix + "name_" + selectedIndex).val());
+    $("#" + targetPrefix + "cspImageId").val($("#" + orgPrefix + "cspImageId_" + selectedIndex).val());
+    $("#" + targetPrefix + "cspImageName").val($("#" + orgPrefix + "cspImageName_" + selectedIndex).val());
+    $("#" + targetPrefix + "guestOS").val($("#" + orgPrefix + "guestOS_" + selectedIndex).val());
+    $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
+    $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
+
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+
+    $("#myImage").modal("hide");
   } else if (caller == "vmSpecAssist") {
     var orgPrefix = "vmSpecAssist_";
     var targetPrefix = "tab_vmSpec_";
@@ -674,7 +717,7 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "numvCPU").val($("#" + orgPrefix + "numvCPU_" + selectedIndex).val());
     $("#" + targetPrefix + "numGpu").val($("#" + orgPrefix + "numGpu_" + selectedIndex).val());
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
     $("#specAssist").modal("hide");
   } else if (caller == "networkAssist") {
     var orgPrefix = "vNetAssist_";
@@ -689,7 +732,7 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "subnetId").val($("#" + orgPrefix + "subnetId_" + selectedIndex).val());
     $("#" + targetPrefix + "subnetName").val($("#" + orgPrefix + "subnetName_" + selectedIndex).val());
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
     $("#networkAssist").modal("hide");
   } else if (caller == "securityGroupAssist") {
 
@@ -736,7 +779,7 @@ function applyAssistValues(caller) {
     $("#" + targetPrefix + "connectionName").val($("#" + orgPrefix + "connectionName_" + selectedIndex).val());
     $("#" + targetPrefix + "description").val($("#" + orgPrefix + "description_" + selectedIndex).val());
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
     $("#sshKeyAssist").modal("hide");
   } else if (caller == "recommendVmAssist") {
 
@@ -746,7 +789,7 @@ function applyAssistValues(caller) {
     $("#ss_regConnectionName").val("aws-test-conn");
     $("#ss_spec").val("aws-test-spec-t2-micro");
 
-    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val()
+    applyConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
     $("#recommendVmAssist").modal("hide");
   }
 
@@ -755,12 +798,18 @@ function applyAssistValues(caller) {
   //선택된 connection과 기존 connection이 다른 tab의 data는 초기화하고 set한다
   if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != applyConnectionName) {
     setAndClearByDifferentConnectionName(caller);
+    // rootdiskType 조회하여 set
+    getCommonLookupDiskInfo('caller', "", applyConnectionName)
   }
 
   if (caller == "vmImageAssist") {
     var orgPrefix = "vmImageAssist_";
 
     $("#e_imageId").val($("#" + orgPrefix + "id_" + selectedIndex).val());
+  } else if (caller == "myImage") {
+    var orgPrefix = "myImage_";
+    $("#e_imageId").val($("#" + orgPrefix + "cspImageId_" + selectedIndex).val());
+    console.log("e_imageId, org: ", $("#e_imageId").val(), $("#" + orgPrefix + "cspImageId_" + selectedIndex).val(), "#" + orgPrefix + "cspImageId_" + selectedIndex);
   } else if (caller == "vmSpecAssist") {
     var orgPrefix = "vmSpecAssist_";
 
@@ -805,18 +854,27 @@ function applyAssistValidCheck(caller) {
 
   // 선택한 connection check : 이미 선택된 connection이 있을 때 비교하여 다른 connection이면 confirm을 띄우고 OK면 초기화 시키고 set
   var selectedConnectionName = "";
+  var selectedProvider = "";
   if (caller == "vmImageAssist") {
     var orgPrefix = "vmImageAssist_";
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+  } else if (caller == "myImage") {
+    var orgPrefix = "myImage_";
+    selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   } else if (caller == "vmSpecAssist") {
     var orgPrefix = "vmSpecAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   } else if (caller == "networkAssist") {
     var orgPrefix = "vNetAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   } else if (caller == "securityGroupAssist") {
     var orgPrefix = "securityGroupAssist_";
     var tempConnectionName = "";
+    var tempProvider = ""
     var isSameConnection = true;
     $("input[name='securityGroupAssist_chk']:checked").each(function () {
       var sgId = $(this).attr("id")
@@ -827,6 +885,8 @@ function applyAssistValidCheck(caller) {
       if (tempConnectionName == "") {
         tempConnectionName = currentConnectionName
       } else if (tempConnectionName != currentConnectionName) {
+        tempConnectionName = currentConnectionName
+        tempProvider = currentProvider
         isSameConnection = false;
         return;
       }
@@ -837,19 +897,23 @@ function applyAssistValidCheck(caller) {
       return;
     }
     selectedConnectionName = tempConnectionName;
+    selectedProvider = tempProvider;
 
   } else if (caller == "sshKeyAssist") {
     var orgPrefix = "sshKeyAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   } else if (caller == "recommendVmAssist") {
     var orgPrefix = "recommendVmAssist_";
     selectedConnectionName = $("#" + orgPrefix + "connectionName_" + selectedIndex).val();
+    selectedProvider = $("#" + orgPrefix + "provider_" + selectedIndex).val();
   }
 
   console.log("caller=" + caller)
   console.log($("#e_connectionName").val())
   console.log("selectedConnectionName=" + selectedConnectionName)
   $("#t_connectionName").val(selectedConnectionName);
+  $("#t_provider").val(selectedProvider);
   if ($("#e_connectionName").val() != "" && $("#e_connectionName").val() != selectedConnectionName) {
     //commonConfirmOpen("DifferentConnectionAtSecurityGroup");
     commonConfirmOpen("DifferentConnectionAtAssistPopup", caller)

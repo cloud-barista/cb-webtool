@@ -1,0 +1,342 @@
+{{define "NodeGroupInfo"}}
+<!-- <div class="dashboard dashboard_cont server_status" id="pmks_node_detail"></div> -->
+<div class="dashboard dashboard_cont server_status_sub" id="pmks_nodegroup_detail">
+
+
+	<div class="d_box box_m box_w100">
+		<div class="titbox">
+			<div class="tit initial"><strong>PMKS NodeGroup Info</strong> <span class="stxt" id="pmks_nodegroup_txt">[
+					]</span></div>
+		</div>
+
+		<div class="ds_cont">
+			<!-- Cluster action : createCluster, update(cluster버전), listCluster(해당 Connection만)
+				, allCluster(namespace내 모든 Connectin), getCluster, delCluster, delClusterForce
+			<br>
+			update는 해당 항목 뒤에 set 버튼을 놓을 지....
+			<br>
+			NodeGroup action : addNodeGroup, updateNodeGroup, removeNodeGroup,  -->
+			<div class="iparea">
+				<div class="boxlist ipbox ip1">
+					<ul>
+						<li>
+							<label>Name</label>
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+								id="nodegroup_info_name" />
+						</li>
+						<li>
+							<label>Image</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="nodegroup_info_imageid" />
+						</li>
+						<li>
+							<label>Spec</label>
+							<input type="text" name="" value="" placeholder="None" title="" readonly
+								id="nodegroup_info_spec" />
+						</li>
+					</ul>
+				</div>
+
+				<div class="boxlist ipbox ip2">
+					<ul>
+						<li>
+							<label>Key Pair </label>
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+								id="nodegroup_info_keypair" />
+						</li>
+						<li>
+							<label>Desired Node Size</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="nodegroup_info_desired_node_size" />
+							<a href="UpdateNodeGroupScaleSize('DesiredNodeSize');" class="btn_recommend">Update</a>
+						</li>
+						<li>
+							<label>Max Node Size</label>
+							<input type="text" name="" value="" placeholder="" title=""
+								id="nodegroup_info_max_node_size" readonly />
+							<a href="UpdateNodeGroupScaleSize('MaxNodeSize');" class="btn_recommend">Update</a>
+						</li>
+						<li>
+							<label>Min Node Size</label>
+							<input type="text" name="" value="" placeholder="" title=""
+								id="nodegroup_info_min_node_size" readonly />
+							<a href="UpdateNodeGroupScaleSize('MinNodeSize');" class="btn_recommend">Update</a>
+						</li>
+					</ul>
+				</div>
+				<div class="boxlist ipbox ip2">
+					<ul>
+						<li>
+							<label>On Scaling Auto</label>
+							<input type="text" name="" value="" placeholder="AWS, AZ, Ali, GCP" title=""
+								id="nodegroup_info_on_scaling_auto" readonly />
+							<a href="UpdateNodeGroupAutoScalingOnOff();" class="btn_recommend">Update</a>
+
+						</li>
+						<li>
+							<label>Root Disk Type</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="nodegroup_info_root_disk_type" />
+						</li>
+						<li>
+							<label>Root Disk Size</label>
+							<input type="text" name="" value="" placeholder="" title="" readonly
+								id="nodegroup_info_root_disk_size" />
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- end cluster-->
+
+		<div class="ds_cont">
+
+			<div class="area_cont">
+
+				<div class="box">
+
+					<div class="titbox">
+							<div class="tit initial" id="pmks_node_list_status"><strong>Node List / Status</strong>
+								<span class="stxt">[ ]</span>						
+							</div>
+							<div class="top_info">
+								<ul>
+
+									<li>
+										<a href="javascript:void(0);">Action</a>
+										<div class="infobox">
+											<div class="box">
+												<ul>
+													<li>
+														<strong>Life Cycle</strong>
+														<ul>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_Life_Reboot"
+																	onclick="commonConfirmOpen('VmLifeCycleReboot')">Reboot</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_Life_Suspend"
+																	onclick="commonConfirmOpen('VmLifeCycleSuspend')">Suspend</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_Life_Resume"
+																	onclick="commonConfirmOpen('VmLifeCycleResume')">Resume</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_Life_Terminate"
+																	onclick="commonConfirmOpen('VmLifeCycleTerminate')">Terminate</a>
+															</li>
+														</ul>
+													</li>
+													<li class="divider"></li>
+													<li>
+														<strong>Manage</strong>
+														<ul>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_n_New"
+																	onclick="addNewVirtualMachine()">Add/Extend</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_create_snapshot"
+																	onclick="commonPromptOpen('CreateSnapshot')">Create
+																	Snapshot</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_ScriptExport"
+																	onclick="commonConfirmOpen('ExportVmScriptOfMcis')">Export</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_n_New"
+																	onclick="commonConfirmOpen('ShowMonitoring')">ShowMonitoring</a>
+															</li>
+															<li><a href="javascript:void(0);" data-toggle="modal"
+																	data-target="#VM_n_New"
+																	onclick="commonPromptOpen('RemoteCommandVmOfMcis')">RemoteCommand</a>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+					</div>
+
+					<div class="scroll-wrapper listbox scrollbar-inner" style="position: relative;">
+						<div class="listbox scrollbar-inner scroll-content"
+							style="margin-bottom: 0px; margin-right: 0px; height: 135px; max-height: none;"
+							id="pmks_node_list_info_box">
+							<ul id="mcis_server_info_box">
+								<li id="server_status_icon_hongkong-1" class="sel_cr bgbox_b active"><a
+										href="javascript:void(0);"
+										onclick="vmDetailInfo('coffeefactory','coffeefactory','hongkong-1')"><span
+											class="txt">hongkong-1</span></a></li>
+								<li id="server_status_icon_singapore" class="sel_cr bgbox_b"><a
+										href="javascript:void(0);"
+										onclick="vmDetailInfo('coffeefactory','coffeefactory','singapore')"><span
+											class="txt">singapore</span></a></li>
+							</ul>
+						</div>
+						<div class="scroll-element scroll-x">
+							<div class="scroll-element_outer">
+								<div class="scroll-element_size"></div>
+								<div class="scroll-element_track"></div>
+								<div class="scroll-bar" style="width: 100px;"></div>
+							</div>
+						</div>
+						<div class="scroll-element scroll-y">
+							<div class="scroll-element_outer">
+								<div class="scroll-element_size"></div>
+								<div class="scroll-element_track"></div>
+								<div class="scroll-bar" style="height: 100px;"></div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- node group list : 간단정보 -->
+		<!-- <div class="ds_cont">
+			
+			<div class="area_cont">
+
+				<div class="box">
+
+					<div class="titbox">
+						<div class="tit initial" id="pmks_nodegroup_info_status"></div>
+						<div class="top_info">
+							<ul>
+
+								<li>
+									<a href="javascript:void(0);">Action</a>
+									<div class="infobox">
+										<div class="box">
+											<ul>
+
+												<li>
+													<strong>Manage</strong>
+													<ul>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#NodeGroup_n_New"
+																onClick="addNewNodeGroup()">Add/Extend</a></li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
+																data-target="#NodeGroup_n_Delete"
+																onClick="commonConfirmOpen('DeleteNodeGroupOfPmks')">Delete</a>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div> -->
+
+		<!-- NodeGroup List 표시-->
+		<!-- <div class="listbox scrollbar-inner" id="pmks_nodegroup_list_info_box">		
+						NodeGroup action : addNodeGroup, updateNodeGroup(size, autoscaling), removeNodeGroup, 				
+						<ul>
+						</ul>						
+					</div> -->
+
+
+		<!-- NodeGroup 내용 표시-->
+		<!-- <div class="iparea" id="pmks_nodegroup_detail_info_box">
+						nodegroup click했을 때 나타나도록
+						<div class="boxlist ipbox ip1">
+							<ul>
+								<li>
+									<label>Name</label>
+									<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+										id="nodegroup_info_name" />
+								</li>
+								<li>
+									<label>Image ID</label>
+									<input type="text" name="" value="" placeholder="" title="" readonly
+										id="nodegroup_info_imageid" />
+								</li>
+								<li>
+									<label>VM Spec</label>
+									<input type="text" name="" value="" placeholder="" title=""
+										id="nodegroup_info_spec" />
+								</li>
+								<li>
+									<label>KeyPair</label>
+									<input type="text" name="" value="" placeholder="None" title="" readonly
+										id="nodegroup_info_keypair" />
+								</li>
+							</ul>
+						</div>
+		
+						<div class="boxlist ipbox ip2">
+							<ul>
+								<li>
+									<label>Desired Node Size</label>
+									<input type="text" name="" value="" placeholder="" title="" readonly
+										id="nodegroup_info_desirednodesize" />
+								</li>
+								<li>
+									<label>Max Node Size</label>
+									<input type="text" name="" value="" placeholder="" title=""
+										id="nodegroup_info_maxnodesize" />
+								</li>
+								<li>
+									<label>Min Node Size</label>
+									<input type="text" name="" value="" placeholder="None" title="" readonly
+										id="nodegroup_info_minnodesize" />
+								</li>
+							</ul>
+						</div>
+		
+						<div class="boxlist ipbox ip3">
+							<ul>
+								<li>
+									<label>On Auto Scaling</label>
+									<input type="text" name="" value="" placeholder="None" title="" readonly
+										id="nodegroup_info_onautoscaling" />
+								</li>
+							</ul>
+						</div>
+						<div class="boxlist ipbox ip4">
+							<ul>
+								<li>
+									<label>Root Disk Type</label>
+									<input type="text" name="" value="" placeholder="None" title="" readonly
+										id="nodegroup_info_rootdisktype" />
+								</li>
+								<li>
+									<label>Root Disk Size</label>
+									<input type="text" name="" value="" placeholder="None" title="" readonly
+										id="nodegroup_info_rootdisksize" />
+								</li>
+							</ul>
+						</div>						
+					</div> -->
+		<!-- Node List 표시-->
+		<!-- <div class="listbox scrollbar-inner">
+						<ul id="pmks_node_list_info_box">
+						</ul>
+					</div>
+
+
+
+				</div>
+
+			</div>
+
+		</div> -->
+		<!-- end node group list -->
+
+	</div>
+
+</div>
+<!-- //Info -->
+{{end}}

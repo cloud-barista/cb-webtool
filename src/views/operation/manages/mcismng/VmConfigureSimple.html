@@ -10,8 +10,6 @@
 		<input type="hidden" name="subnetId" value="" id="s_subnetId" />
 		<input type="hidden" name="vNetId" value="" id="s_vNetId" />
 		<input type="hidden" name="securityGroupIds[]" value="" id="s_securityGroupIds" />
-		<!--		<input type="hidden" name="vm_cnt" value="" id="s_vm_cnt" />-->
-		<input type="hidden" name="vmGroupSize" value="" id="s_vm_cnt" /><!-- vm_cnt에서 vmGroupSize로 변경 -->
 		<input type="hidden" name="name" value="" id="s_name" />
 		<input type="hidden" name="description" id="s_description" />
 		<input type="hidden" name="provider" id="s_regProvider" />
@@ -19,11 +17,18 @@
 		<input type="hidden" name="specId" id="s_spec" />
 		<input type="hidden" name="imageId" id="s_imageId" />
 		<input type="hidden" name="sshKeyId" id="s_sshKey" />
+		<input type="hidden" name="vmUserPassword" id="s_vmUserPassword" />
 		<input type="hidden" name="tempProvider" id="t_regProvider" />
 		<input type="hidden" name="tempConnectionName" id="t_regConnectionName" />
 		<input type="hidden" name="tempSpec" id="t_spec" />
 		<input type="hidden" name="tempImage" id="t_image" />
 		<input type="hidden" name="tempSshKey" id="t_sshKey" />
+		<input type="hidden" name="dataDiskIds[]" id="s_dataDiskIds" />
+		<input type="hidden" namd="rootDiskSize" id="s_rootDiskSize" />
+		<input type="hidden" namd="rootDiskType" id="s_rootDiskType" />
+		<!--		<input type="hidden" name="vm_cnt" value="" id="s_vm_cnt" />-->
+		<input type="hidden" name="subGroupSize" value="" id="s_subGroupSize" /><!-- vm_cnt에서 subGroupSize로 변경 -->
+
 	</form>
 
 	<div class="top_box">
@@ -90,14 +95,59 @@
 						</li>
 						<li>
 							<label><span class="ch">*</span>which OS</label>
-							<select class="selectbox white pline sel_4" name="imageId" id="ss_imageId">
-								<option value="1">Select OS Platform</option>
+							<select class="selectbox white pline sel_4" name="imageId" id="ss_imageId" display=""
+								onchange="select_image(this.value)">
+								<option value="">Select Public Image</option>
 							</select>
+							<select class="selectbox white pline sel_4" name="mySnapShotId" id="ss_myImageId"
+								onchange="select_image(this.value)" display="none;">
+
+							</select>
+							<div class="switch select_type">
+								<span class="txt">
+									<input type="hidden" id="toggle_status" value="toggle_off" />
+									<label>
+										<input type="checkbox" name="" class="ch" id="p_to_my"
+											onclick="toggleMyImage();">
+										<span></span>
+									</label>
+								</span>
+							</div>
 						</li>
 					</ul>
 				</div>
-			</div>
+				<script>
+					$("#ss_myImageId").hide();
+					function select_image(value) {
+						$("#s_imageId").val(value);
+					}
+					function toggleMyImage() {
+						var configName = $("#ss_regConnectionName").val();
+						if (configName) {
+							var toggle_status = $("#toggle_status").val();
+							console.log("toggle status : ", toggle_status);
+							if (toggle_status == "toggle_off") {
 
+								getVmMyiInfo(configName);
+								$("#ss_imageId").hide();
+								$("#ss_myImageId").show();
+								$("#toggle_status").val("toggle_on");
+								$("#s_imageId").val("");
+								$("#ss_imageId").find("option").removeAttr("selected")
+							} else {
+								$("#toggle_status").val("toggle_off");
+								$("#ss_imageId").removeAttr("selected")
+								$("#ss_imageId").show();
+								$("#ss_myImageId").hide();
+								$("#s_imageId").val("");
+							}
+						} else {
+							alert("Please Select Connection Name");
+							return;
+						}
+					}
+				</script>
+			</div>
 			<div class="svc_ipbox svc_ipbox_2">
 				<div class="ipbox ipbox3">
 					<ul>
@@ -108,9 +158,40 @@
 							</select>
 
 						</li>
+						<li>
+							<label><span class="ch">*</span>Access (password)</label>
+							<input type="text" name="password" value="" placeholder="Input Password" class="pline ip_3"
+								title="" id="ss_password" />
+						</li>
 					</ul>
 				</div>
 
+			</div>
+			<div class="svc_ipbox svc_ipbox_2">
+				<div class="ipbox ipbox3">
+					<ul>
+						<li>
+							<label><span class="ch">*</span>Root Disk</label>
+							<select class="selectbox white pline sel_4" name="rootDiskType" id="ss_root_disk_type"
+								onchange="changeDiskSize(this.value);">
+								<option value="">Select Root Disk Type</option>
+							</select>
+							<input type="text" name="rootDiskSize" value="" placeholder="Root Disk Size(GB)"
+								class="pline ip_3" title="" id="ss_root_disk_size" />
+						</li>
+
+						<li>
+							<label>DataDisk</label>
+							<input type="text" name="dataDiskId" placeholder="" class="pline ip_3" title=""
+								id="ss_data_disk" readonly />
+							<div class="btn_right">
+
+								<button type="button" name="" value="" class="btn_done btn_co btn_cr_g"
+									onclick="displayAvailableDisk(true);"><span>Available Disk</span></button>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
 
 		</div>
@@ -121,7 +202,7 @@
 				<div class="amount_add s_slider_box">
 					<div class="add_box">
 						<div class="a_box">
-							<strong class="t font-NotoKR">추가 수량</strong>
+							<strong>Server Quantity</strong>
 							<div class="a_slider">
 								<div class="slider_ip">
 									<button type="button" class="btn_s btn_s_minus">-</button>

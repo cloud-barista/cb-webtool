@@ -20,7 +20,7 @@
 													<div class="logic_tbox lg_1">
 														<div class="tit">Step 1. NameSpace</div>
 														<div class="btn btn-primary btn-lg txtmain" id="infoNamePrs">
-															<a href="javascript:void(0);" onclick="changePage('/setting/namespaces/namespace/mngform')">NameSpace</a>
+															<a href="javascript:void(0);" onclick="changePage('NamespaceMngForm')">NameSpace</a>
 															
 															<!-- { {if eq .WorkingStep.NAMESPACE "PASS" }} <br> 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/namespaces/namespace/mngform')"> [미생성]</a>
@@ -47,7 +47,7 @@
 													
 													<div class="logic_tbox lg_1">
 														<div class="tit">Step 2. Connection</div>
-														<div class="btn btn-primary btn-lg txtmain"> <a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')">Connection</a>
+														<div class="btn btn-primary btn-lg txtmain"> <a href="javascript:void(0);" onclick="changePage('CloudConnectionMngForm')">Connection</a>
 														</div>														
 													</div>
 												</div>
@@ -60,7 +60,7 @@
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
 														<div class="btn btn-info btn-lg txt" style="min-height: 70px;">
-															<a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')" >Credential</a> 	<br/>
+															<a href="javascript:void(0);" onclick="changePage('CloudConnectionMngForm')" >Credential</a> 	<br/>
 															<!-- { {if eq .WorkingStep.CREDENTIAL "PASS" }} 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [미생성]</a>
 															{ { end }}	-->
@@ -74,7 +74,7 @@
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
 														<div class="btn btn-info btn-lg txt" style="min-height: 70px;">
-															<a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')" >Driver</a>  <br/>
+															<a href="javascript:void(0);" onclick="changePage('CloudConnectionMngForm')" >Driver</a>  <br/>
 															<!-- { {if eq .WorkingStep.DRIVER "PASS" }} 생성
 															{ { else }} <a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [미생성]</a>
 															{ { end }} -->
@@ -89,7 +89,7 @@
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
 														<div class="btn btn-info btn-lg txt" style="min-height: 70px;">
-															<a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')" >Region</a>  <br/>
+															<a href="javascript:void(0);" onclick="changePage('CloudConnectionMngForm')" >Region</a>  <br/>
 															<!-- { {if eq .WorkingStep.REGION "PASS" }} 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/connections/cloudconnectionconfig/mngform')"> [미생성]</a>
 															{ { end }} -->
@@ -125,7 +125,7 @@
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
 														<div class="btn btn-info btn-lg txt" style="min-height: 70px;">
-															<a href="javascript:void(0);" onclick="changePage('/setting/resources/network/mngform')">Network</a> <br/>
+															<a href="javascript:void(0);" onclick="changePage('VnetMngForm')">Network</a> <br/>
 															<!-- { {if eq .WorkingStep.VNET "PASS" }} 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/network/mngform')"> [미생성]</a>
 															{ { end }}	 -->
@@ -143,7 +143,7 @@
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
 														<div class="btn btn-info btn-lg txt" style="min-height: 70px;" >
-															<a href="javascript:void(0);" onclick="changePage('/setting/resources/securitygroup/mngform')"> Security</a><br/>
+															<a href="javascript:void(0);" onclick="changePage('SecurityGroupMngForm')"> Security</a><br/>
 															<!-- { {if eq .WorkingStep.SECURITY "PASS" }} 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/securitygroup/mngform')"> [미생성]</a>
 															{ { end }} -->
@@ -157,8 +157,8 @@
 	
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
-														<div class="btn btn-info btn-lg txt" style="min-height: 70px;" onclick="changePage('/setting/resources/sshkey/mngform')" >
-															<a href="javascript:void(0);" onclick="changePage('/setting/resources/sshkey/mngform')" > SSH Key</a><br/>
+														<div class="btn btn-info btn-lg txt" style="min-height: 70px;" onclick="changePage('SshKeyMngForm')" >
+															<a href="javascript:void(0);" onclick="changePage('SshKeyMngForm')" > SSH Key</a><br/>
 															<!-- { {if eq .WorkingStep.SSHKEY "PASS" }} 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/sshkey/mngform')"> [미생성]</a>
 															{ { end }} -->
@@ -173,7 +173,7 @@
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
 														<div class="btn btn-info btn-lg txt" style="min-height: 70px;">
-															<a href="javascript:void(0);" onclick="changePage('/setting/resources/machineimage/mngform')" > (Server) Image </a><br/>
+															<a href="javascript:void(0);" onclick="changePage('MachineImageMngForm')" > (Server) Image </a><br/>
 															<!-- { {if eq .WorkingStep.IMAGE "PASS" }} 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/machineimage/mngform')"> [미생성]</a>
 															{ { end }} -->
@@ -187,8 +187,8 @@
 	
 													<div class="logic_tbox lg_4">
 														<div class="tit">&nbsp;</div>
-														<div class="btn btn-info btn-lg txt" style="min-height: 70px;" onclick="changePage('/setting/resources/vmspec/mngform')" > 
-															<a href="javascript:void(0);" onclick="changePage('/setting/resources/vmspec/mngform')" > (Server) Spec </a><br/>
+														<div class="btn btn-info btn-lg txt" style="min-height: 70px;" onclick="changePage('VmSpecMngForm')" > 
+															<a href="javascript:void(0);" onclick="changePage('VmSpecMngForm')" > (Server) Spec </a><br/>
 															<!-- { {if eq .WorkingStep.SPEC "PASS" }} 생성
 															{ { else }} 미생성 <br/><a href="javascript:void(0);" onclick="changePage('/setting/resources/vmspec/mngform')"> [미생성]</a>
 															{ { end }} -->
@@ -214,7 +214,7 @@
 													<div class="logic_tbox lg_1">
 														<div class="tit">Step 4-1. MCIS </div>
 														<div class="btn btn-success btn-lg txtmain"  >
-															<a href="javascript:void(0);" onclick="changePage('/operation/manages/mcismng/mngform')"> MCIS </a><br/>
+															<a href="javascript:void(0);" onclick="changePage('McisMngForm')"> MCIS </a><br/>
 															<!-- { {if eq .WorkingStep.MCIS "PASS" }}  <br> 생성
 															{ { else }} 미생성 <br/>[미생성]
 															{ { end }} -->
@@ -232,7 +232,7 @@
 													<div class="logic_tbox lg_2">
 														<div class="tit">Step 4-2. MCKS </div>
 														<div class="btn btn-success btn-lg txtmain"  >
-															<a href="javascript:void(0);" onclick="changePage('/operation/manages/mcksmng/mngform')"> MCKS </a><br/>
+															<a href="javascript:void(0);" onclick="changePage('McksMngForm')"> MCKS </a><br/>
 															<!-- { {if eq .WorkingStep.MCKS "PASS" }}  <br> 생성
 															{ { else }} 미생성 <br/>[미생성]
 															{ { end }} -->

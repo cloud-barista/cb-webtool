@@ -5,11 +5,12 @@ type TbVmReq struct {
 	Description    string `json:"description"`
 	IdByCsp        string `json:"idByCsp"`
 	ImageID        string `json:"imageId"`
+	ImageType      string `json:"imageType"`
 	Label          string `json:"label"`
 	Name           string `json:"name"`
 
-	RootDiskSize     string `json:"rootDiskSize"`
-	RootDiskType     string `json:"rootDiskType"`
+	RootDiskSize string `json:"rootDiskSize"`
+	RootDiskType string `json:"rootDiskType"`
 
 	SecurityGroupIDs []string `json:"securityGroupIds"`
 
@@ -17,7 +18,9 @@ type TbVmReq struct {
 	SshKeyID       string `json:"sshKeyId"`
 	SubnetID       string `json:"subnetId"`
 	VNetID         string `json:"vNetId"`
-	VmGroupSize    string `json:"vmGroupSize"`
+	SubGroupSize   string `json:"subGroupSize"`
 	VmUserAccount  string `json:"vmUserAccount"`
 	VmUserPassword string `json:"vmUserPassword"`
+
+	DataDiskIds []string `json:"dataDiskIds"`
 }

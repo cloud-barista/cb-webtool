@@ -1,0 +1,117 @@
+{{define "VmConfigureExpress"}}
+
+<!-- server 추가 form -->
+<div class="servers_config express_servers_config" id="expressServerConfig">
+	<form id="express_form">
+		<input type="hidden" name="provider" id="p_provider" />
+
+		<!-- <input type="hidden" name="specId"  value="" id="p_specId" /> -->
+		<!--id 에 간단설정이면 s_, Expert On 이면 e_ , Express On 이면 p_-->
+		<input type="hidden" name="subGroupSize" value="" id="p_subGroupSize" /><!-- vm_cnt에서 subGroupSize로 변경 -->
+		<input type="hidden" name="name" value="" id="p_name" />
+		<input type="hidden" name="description" id="p_description" />
+		<input type="hidden" name="provider" id="p_provider" />
+		<input type="hidden" name="connectionName" value="" id="p_connectionName" />
+		<input type="hidden" name="specId" id="p_spec" />
+		
+	</form>
+
+	<div class="top_box">
+		<div class="titbox_sc">
+			<div class="tit">Server Configuration</div>
+		</div>
+
+		<div class="ip_box">
+
+			<div class="svc_ipbox">
+				<div class="ipbox ipbox3">
+					<ul>
+						<li>
+							<label><span class="ch">*</span>Server Name</label>
+							<input type="text" name="name" value="" placeholder="Input Name" class="pline ip_3" title=""
+								id="ep_name" />
+						</li>
+					</ul>
+				</div>
+				<div class="ipbox ipbox4">
+					<ul>
+						<li>
+							<label>Description</label>
+							<textarea cols="" rows="" placeholder="Input Description" class="pline ta_3" title=""
+								name="description" id="ep_description"></textarea>
+						</li>
+					</ul>
+				</div>
+			</div>			
+
+			<div class="svc_ipbox svc_ipbox_2">
+				<div class="ipbox ipbox3">
+					<ul>
+						<li>
+							<label><span class="ch">*</span>Spec</label>
+							<input type="text" name="specId" value="" placeholder="Please Use Assist " class="pline ip_3" title=""
+								id="ep_spec" />
+							<a href="javascript:void(0);" class="btn_recommend">Assist</a>
+						</li>
+						<input type="hidden" name="provider" id="ep_provider" value=""/>
+						<input type="hidden" name="connectionName" id="ep_connectionName" value=""/>
+						<input type="hidden" name="imageId" id="ep_imageId" value=""/>
+						
+					</ul>
+					<li>
+						<label><span class="ch">*</span>Root Disk</label>
+						<select class="selectbox white pline sel_4" name="rootDiskType" id="ep_root_disk_type" onchange="changeDiskSize(this.value);">
+							<option value="">Select Root Disk Type</option>
+						</select>
+						<input type="text" name="rootDiskSize" value="" placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
+							id="ep_root_disk_size" />							
+					</li>
+
+				</div>
+			</div>
+
+		</div>
+		<!-- button -->
+		<div class="btnbox spec_select_box">
+			<div class="svc_ipbox svc_ipbox_2">
+
+				<div class="amount_add s_slider_box">
+					<div class="add_box">
+						<div class="a_box">
+							<strong>Server Quantity</strong>
+							<div class="a_slider">
+								<div class="slider_ip">
+									<button type="button" class="btn_s btn_s_minus">-</button>
+									<div>
+										<input type="text" name="" value="" placeholder="" class="slider_bar" title=""
+											data-slider-min="0" data-slider-max="100" data-slider-step="1"
+											data-slider-value="0" />
+									</div>
+									<button type="button" class="btn_s btn_s_plus">+</button>
+								</div>
+								<input type="text" name="exp_vm_add_cnt" value="1" class="components_input txt_ipbox"
+									title="" readonly id="ep_vm_add_cnt" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="btnbox spec_select_box">
+				<div class="btn_right">
+
+					<button type="button" name="" value="" class="btn_done btn_co btn_cr_g"
+						onclick="expressDone_btn();"><span>DONE</span></button>
+					<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button>
+
+				</div>
+			</div>
+		</div>
+		<!-- //button -->
+	</div>
+
+</div>
+
+<script src="/assets/js/operation/manages/mcismng/vmconfigureexpress.js"></script>
+{{end}}

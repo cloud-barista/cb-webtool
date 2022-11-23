@@ -68,10 +68,13 @@ function map_init_target(target) {
         source: new ol.source.OSM(),
     });
 
+    // const source = new ol.source.OSM()
+
+    // const layer = new ol.layer.Tile()
+
 
     var m = new ol.Map({
         target: target,
-        logo: false,
         layers: [
             osmLayer
         ],
@@ -81,66 +84,67 @@ function map_init_target(target) {
         })
     });
     var JZMap = m;
-    ;
 
-    JZMap.on('click', function (evt) {
-        // var element = document.getElementById('map_pop2');
-        var element = document.createElement('div');
-        var feature = JZMap.forEachFeatureAtPixel(evt.pixel, function (feature) {
-            return feature;
-        })
-        //console.log("feature click info : ", feature.get("vm_id"));
+    // JZMap.on('click', function (evt) {
+    //     // var element = document.getElementById('map_pop2');
+    //     var element = document.createElement('div');
+    //     var feature = JZMap.forEachFeatureAtPixel(evt.pixel, function (feature) {
+    //         return feature;
+    //     })
+    //     //console.log("feature click info : ", feature.get("vm_id"));
 
-        if (feature) {
-            var coordinates = feature.getGeometry().getCoordinates();
-            // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
+    //     if (feature) {
+    //         var coordinates = feature.getGeometry().getCoordinates();
+    //         // $(element).html('<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>');
 
-            element.setAttribute("class", "popover");
-
-
-            //element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
-            element.setAttribute("onclick", "$(this).hide()");
-            // element.innerHTML="<p>"+feature.get("title")+"</p>";
-            // element.innerHTML='<div tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here\'s some amazing content. It\'s very engaging. Right?">Dismissible popover</a>';
+    //         element.setAttribute("class", "popover");
 
 
-            // $(element).empty()
-            // $(element).show()
-
-            $(element).popover({
-                placement: 'auto',
-                html: true,
-                content: "<div onclick='alert(\"Hello\")'><p>ID : " + feature.get('vm_id') + "</p>" + "Status :" + feature.get('vm_status') + "</div>",
-                title: feature.get('title'),
-                trigger: 'click',
-            });
-
-            var popup = new ol.Overlay({
-                element: element,
-                id: feature.get("id"),
-                positioning: 'bottom-center',
-                stopEvent: false,
-                offset: [0, -50]
-            });
-            popup.setPosition(coordinates);
-            // var popup = new ol.Overlay({
-            //   element: element,
-            //   id:feature.get("vm_id"),
-            //   positioning: 'bottom-center',
-            //   position: coordinates,
-            //   offset: [0, -70],
-            //   stopEvent: false,
-            //   offset: [0, -50]
-            // });
+    //         //element.setAttribute("onclick", "deleteOverlay('"+feature.get("vm_id")+"')");
+    //         element.setAttribute("onclick", "$(this).hide()");
+    //         // element.innerHTML="<p>"+feature.get("title")+"</p>";
+    //         // element.innerHTML='<div tabindex="0" class="btn btn-lg btn-danger" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here\'s some amazing content. It\'s very engaging. Right?">Dismissible popover</a>';
 
 
-            JZMap.addOverlay(popup);
+    //         // $(element).empty()
+    //         // $(element).show()
 
-            $(element).popover('toggle');
-        } else {
-            $(element).popover('hide');
-        }
-    });
+    //         $(element).popover({
+    //             placement: 'auto',
+    //             html: true,
+    //             content: "<div onclick='alert(\"Hello\")'><p>ID : " + feature.get('vm_id') + "</p>" + "Status :" + feature.get('vm_status') + "</div>",
+    //             title: feature.get('title'),
+    //             trigger: 'click',
+    //         });
+
+    //         var popup = new ol.Overlay({
+    //             element: element,
+    //             id: feature.get("id"),
+    //             positioning: 'bottom-center',
+    //             stopEvent: false,
+    //             offset: [0, -50]
+    //         });
+    //         popup.setPosition(coordinates);
+    //         // var popup = new ol.Overlay({
+    //         //   element: element,
+    //         //   id:feature.get("vm_id"),
+    //         //   positioning: 'bottom-center',
+    //         //   position: coordinates,
+    //         //   offset: [0, -70],
+    //         //   stopEvent: false,
+    //         //   offset: [0, -50]
+    //         // });
+
+
+    //         JZMap.addOverlay(popup);
+
+    //         $(element).popover('toggle');
+    //     } else {
+    //         $(element).popover('hide');
+    //     }
+    // });
+
+    //layer.setSource(source)
 
     return m;
 }

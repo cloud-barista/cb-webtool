@@ -16,16 +16,16 @@ $(document).ready(function () {
 	// 방안 1. shown 이후 sleep 3초
 	// 방안 2. z-index 변경
 	// 방안 3. 지도 클릭이 필수가 아니면 priority option 선택 시 지도 div를 show. 기본은 hide
-	$("#recommendVmAssist").on("shown.bs.modal", function (e) {
-		console.log("shown.bs.modal")
-		console.log(e)
-		showMap()
-	});
+	// $("#recommendVmAssist").on("shown.bs.modal", function (e) {
+	// 	console.log("shown.bs.modal")
+	// 	console.log(e)
+	// 	showMap()
+	// });
 
-	$("#recommendVmAssist").on("show.bs.modal", function (e) {
-		console.log("show.bs.modal")
-		console.log(e)
-	});
+	// $("#recommendVmAssist").on("show.bs.modal", function (e) {
+	// 	console.log("show.bs.modal")
+	// 	console.log(e)
+	// });
 });
 
 function sleep(ms) {
@@ -46,10 +46,11 @@ function showMap() {
 	// locationInfo.markerIndex = 1
 	// setMap(locationInfo)
 
-	$("#recommend_map").empty();
-	sleep(2000)
+	$("#recommend_map").empty()
+	clearLayers(JZMap)
 	JZMap = map_init_target("recommend_map")
 	addClickPin(JZMap)
+	console.log(JZMap)
 }
 
 // Map 관련 설정
@@ -144,65 +145,6 @@ function processFile(file) {
 	reader.readAsText(file);
 }
 
-
-// function exportVmScript(vmIndex){
-
-// 	var connectionNameVal = $("#p_connectionName_" + vmIndex).val();
-// 	var descriptionVal = $("#p_description_" + vmIndex).val();
-// 	var imageIdVal = $("#p_imageId_" + vmIndex).val();
-// 	var labelVal = $("#p_label_" + vmIndex).val();
-// 	var nameVal = $("#p_name_" + vmIndex).val();
-// 	var securityGroupIdsVal = $("#p_securityGroupIds_" + vmIndex).val();
-// 	var specIdVal = $("#p_specId_" + vmIndex).val();
-// 	var sshKeyIdVal = $("#p_sshKeyId_" + vmIndex).val();
-// 	var subnetIdVal = $("#p_subnetId_" + vmIndex).val();
-// 	var vNetIdVal = $("#p_vNetId_" + vmIndex).val();
-// 	var vmGroupSizeVal = $("#p_vmGroupSize_" + vmIndex).val();
-// 	var vmUserAccountVal = $("#p_vmUserAccount_" + vmIndex).val();
-// 	var vmUserPasswordVal = $("#p_vmUserPassword_" + vmIndex).val();
-
-// 	var paramValueAppend = '"';
-// 	var vmCreateScript = "";
-// 	vmCreateScript += '{	';
-// 	vmCreateScript += paramValueAppend + 'connectionName' + paramValueAppend + ' : ' + paramValueAppend + connectionNameVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'description' + paramValueAppend + ' : ' + paramValueAppend + descriptionVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'imageId' + paramValueAppend + ' : ' + paramValueAppend + imageIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'label' + paramValueAppend + ' : ' + paramValueAppend + labelVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'name' + paramValueAppend + ' : ' + paramValueAppend + nameVal + paramValueAppend;
-// 	// vmCreateScript += ',securityGroupIds: ';
-//     // vmCreateScript += '	' + paramValueAppend + securityGroupIdsVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'specId' + paramValueAppend + ' : ' + paramValueAppend + specIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
-// 	vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
-// 	vmCreateScript += '}';
-
-
-// 	$("#exportFileName").val(nameVal);
-// 	$("#vmExportScript").val(vmCreateScript);
-// }
-
-// function saveVmInfoToFile(){
-// 	var fileName = $("#exportFileName").val();
-// 	var exportScript = $("#vmExportScript").val();
-
-// 	var element = document.createElement('a');
-// 	// element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exportScript));
-// 	element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(exportScript));
-// 	// element.setAttribute('download', fileName);
-// 	element.setAttribute('download', fileName + ".json");
-
-// 	element.style.display = 'none';
-// 	document.body.appendChild(element);
-
-// 	element.click();
-
-// 	document.body.removeChild(element);
-
-// }
 
 // assist에서 provider 선택시 retion filter
 function getRegionListFilterAtAssist(provider, targetRegionObj) {
@@ -407,6 +349,7 @@ function searchNetworkByKeyword(caller) {
 	}
 
 	// connection
+	var connectionName = $("#assistNetworkConnectionName").val();
 
 	//
 	if (!keyword) {
@@ -421,8 +364,8 @@ function searchNetworkByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	//getCommonSearchVmImageList(keywords, caller);
-	filterNetworkList(keywords, caller)
+	getCommonNetworkList(caller, "", "connectionName", connectionName)	
+	//filterNetworkList(keywords, caller)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -445,6 +388,7 @@ function searchSecurityGroupByKeyword(caller) {
 	}
 
 	// connection
+	var connectionName = $("#assistSecurityGroupConnectionName").val();
 
 	//
 	if (!keyword) {
@@ -459,7 +403,8 @@ function searchSecurityGroupByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	filterSecurityGroupList(keywords, caller)
+	//filterSecurityGroupList(keywords, caller)
+	getCommonSecurityGroupList(caller, "", "", "connectionName", connectionName)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -481,7 +426,7 @@ function searchSshKeyByKeyword(caller) {
 	}
 
 	// connection
-
+	var connectionName = $("#assistSshKeyConnectionName").val();
 	//
 	if (!keyword) {
 		commonAlert("At least a keyword required");
@@ -495,8 +440,8 @@ function searchSshKeyByKeyword(caller) {
 		keywords.push($(this).text());
 	});
 
-	//getCommonSearchVmImageList(keywords, caller);
-	filterSshKeyList(keywords, caller)
+	getCommonSshKeyList(caller, "", "connectionName", connectionName);
+	//filterSshKeyList(keywords, caller)
 }
 
 // EnterKey입력 시 해당 값, keyword 들이 있는 object id, 구분자(caller)
@@ -515,6 +460,9 @@ function searchVmImageByKeyword(caller) {
 	if (caller == "searchVmImageAssistAtReg") {
 		keyword = $("#keywordAssistImage").val();
 		keywordObjId = "searchAssistImageKeywords";
+	}else if(caller =="searchVmMyImageAtReg"){
+		keyword = $("#keywordMyImage").val();
+		keywordObjId = "searchMyImageKeywords";
 	}
 
 	// if (!keyword) {
@@ -530,10 +478,95 @@ function searchVmImageByKeyword(caller) {
 	$("[name='keyword_" + caller + "']").each(function (idx, ele) {
 		keywords.push($(this).text());
 	});
-
-	getCommonSearchVmImageList(keywords, caller);
+	if(caller == "searchVmImageAssistAtReg"){
+		getCommonSearchVmImageList(keywords, caller);
+	}else if(caller == "searchVmMyImageAtReg"){
+		getCommonSearchMyImageList(keywords, caller);
+	}
 }
 
+function getCommonSearchMyImageList(keywordList, caller) {
+    // console.log("keywordObjId = " + keywordObjId)
+    // var keywords = $("#" + keywordObjId).val().split(" ");
+    // console.log("keywords = " + keywords)
+    // var keywordList = new Array();
+    // for (var i = 0; i < keywords.length; i++) {
+    //     keywordList.push(keywords[i]);
+    // }
+	var connectionName = $("#myImageConnectionName").val();
+	var url = "/setting/resources/myimage/list";
+	if(connectionName){
+		url +="?filterKey=connectionName&filterVal="+connectionName;
+	}
+
+    axios.get(url).then(result => {
+        console.log("result", result);
+
+        if (result.data.myImageInfoList == null || result.data.myImageInfoList == undefined || result.data.myImageInfoList == "null") {
+            commonAlert("There is no result")
+        } else {
+            getCommonSearchMyImageListCallbackSuccess(caller, result.data.myImageInfoList);
+        }
+    })
+}
+function getCommonSearchMyImageListCallbackSuccess(caller, myImageList) {
+    //console.log(vmImageList);
+    var html = ""
+    var rowCount = 0;
+    if (myImageList.length > 0) {
+        // if( caller == "imageAssist" ){
+        // 조회 조건으로 provider, connection이 선택되어 있으면 조회 후 filter
+        var assistProviderName = $("#myImageProviderName option:selected").val();
+        var assistConnectionName = $("#myImageConnectionName option:selected").val();
+        //console.log("getCommonSearchVmImageListCallbackSuccess")
+        myImageList.forEach(function (vImageItem, vImageIndex) {
+            //console.log(assistConnectionName + " : " + vImageItem.connectionName)
+            //console.log(vImageItem)
+            if (assistConnectionName == "" || assistConnectionName == vImageItem.connectionName) {
+                //connectionName
+                //cspSpecName
+                rowCount++;
+                html += '<tr onclick="setAssistValue(' + vImageIndex + ');">'
+                    + '     <input type="hidden" id="myImage_id_' + vImageIndex + '" value="' + vImageItem.id + '"/>'
+                    + '     <input type="hidden" id="myImage_name_' + vImageIndex + '" value="' + vImageItem.name + '"/>'
+                    + '     <input type="hidden" id="myImage_connectionName_' + vImageIndex + '" value="' + vImageItem.connectionName + '"/>'
+                    + '     <input type="hidden" id="myImage_cspImageId_' + vImageIndex + '" value="' + vImageItem.cspCustomImageId + '"/>'
+                    + '     <input type="hidden" id="myImage_cspImageName_' + vImageIndex + '" value="' + vImageItem.cspCustomImageName + '"/>'
+                    + '     <input type="hidden" id="myImage_guestOS_' + vImageIndex + '" value="' + vImageItem.guestOS + '"/>'
+                    + '     <input type="hidden" id="myImage_description_' + vImageIndex + '" value="' + vImageItem.description + '"/>'
+                    + '<td class="overlay hidden" data-th="Name">' + vImageItem.name + '</td>'
+                    + '<td class="overlay hidden" data-th="CspImageName">' + vImageItem.sourceVmId + '</td>'
+                    + '<td class="overlay hidden" data-th="CspImageId">' + vImageItem.status + '</td>'
+
+                    // + '<td class="overlay hidden" data-th="GuestOS">' + vImageItem.guestOS + '</td>'
+                    // + '<td class="overlay hidden" data-th="Description">' + vImageItem.description + '</td>'
+                    + '</tr>'
+            }
+        });
+
+    }
+
+    if (rowCount === 0) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="3">No Data</td></tr>'
+    }
+
+    $("#myImageList").empty()
+    $("#myImageList").append(html)
+
+    $("#myImageList tr").each(function () {
+        $selector = $(this)
+
+        $selector.on("click", function () {
+
+            if ($(this).hasClass("on")) {
+                $(this).removeClass("on");
+            } else {
+                $(this).addClass("on")
+                $(this).siblings().removeClass("on");
+            }
+        })
+    })
+}
 // Assist Spec filter Search버튼 클릭시
 function searchSpecsByRange(caller) {
 	// var specFilter = new Object();
@@ -623,6 +656,18 @@ function searchSpecsByRange(caller) {
 	// StorageGiB Range `json:"storageGiB"`
 }
 
+function showRecommendSpecSetting(option) {
+	$("#recommendSpecSetting").removeClass("flexbox")
+	$("#recommend_map").css("display", "none")
+
+	if (option == "location") {
+		showMap()
+		console.log("show map");
+		$("#recommendSpecSetting").addClass("flexbox")
+		$("#recommend_map").css("display", "block")
+	}
+}
+
 function getRecommendVmInfo() {
 	var max_cpu = $("#num_vCPU_max").val()
 	var min_cpu = $("#num_vCPU_min").val()
@@ -703,9 +748,11 @@ function getRecommendVmInfo() {
 		}
 	}
 	axios.post(url, obj, {
+
 		headers: {
-			'Content-type': 'application/json',
+			//'Content-type': 'application/json',
 		}
+
 	}).then(result => {
 		console.log("result spec : ", result);
 		var statusCode = result.data.status;
@@ -740,20 +787,21 @@ function recommendVmSpecListCallbackSuccess(data) {
 		if (data.length) {
 
 			data.map((item, index) => (
-				html += '<tr onclick="getConnectionConfigCandidateInfo(' + index + ');">'
+				html += '<tr>'
 				+ '     <input type="hidden" id="recommendVmAssist_id_' + index + '" value="' + item.id + '"/>'
 				+ '     <input type="hidden" id="recommendVmAssist_provider_' + index + '" value="' + item.providerName + '"/>'
 				+ '     <input type="hidden" id="recommendVmAssist_connectionName_' + index + '" value="' + item.connectionName + '"/>'
 				+ '     <input type="hidden" id="recommendVmAssist_name_' + index + '" value="' + item.name + '"/>'
 				+ '     <input type="hidden" id="recommendVmAssist_cspSpec_' + index + '" value="' + item.cspSpecName + '"/>'
+				+ '<td class="overlay hidden column-50px" data-th=""><input type="checkbox" name="chk" value="' + item.name + '" id="' + index + '" title=""></td>'
 				+ '<td class="overlay hidden" data-th="provider">' + item.providerName + '</td>'
 				+ '<td class="overlay hidden" data-th="region">' + item.regionName + '</td>'
-				+ '<td class="btn_mtd ovm" data-th="name ">' + item.name + '<span class="ov"></span></td>'
+				// + '<td class="btn_mtd ovm" data-th="name ">' + item.name + '<span class="ov"></span></td>'
 				+ '<td class="overlay hidden" data-th="cspSpec">' + item.cspSpecName + '</td>'
 				+ '<td class="overlay hidden" data-th="price">' + item.costPerHour + '</td>'
 				+ '<td class="btn_mtd ovm" data-th="mem ">' + item.memGiB + '<span class="ov"></span></td>'
 				+ '<td class="overlay hidden" data-th="vcpu">' + item.numvCPU + '</td>'
-				+ '<td class="overlay hidden" data-th="evaluationScore01">' + item.evaluationScore01 + '</td>'
+				// + '<td class="overlay hidden" data-th="evaluationScore01">' + item.evaluationScore01 + '</td>'
 				+ '</tr>'
 			))
 
@@ -765,22 +813,54 @@ function recommendVmSpecListCallbackSuccess(data) {
 	}
 }
 
+function selectedSpecApply() {
+	var deploymentAlgo = $("#placement_algo").val()
+
+	if (deploymentAlgo == "express") {
+		returnSpecInfo("express")		
+	} else {
+		getConnectionConfigCandidateInfo()
+	}
+}
+
 // mcisDynamicCheckRequest -> 해당 spec에 대해 가능한 connection 구하기
-function getConnectionConfigCandidateInfo(index) {
+function getConnectionConfigCandidateInfo() {
+	var index = ""
+	var specName = ""
+	var cspSpecName = ""
+	var count = 0
+	$("input[name='chk']:checked").each(function () {
+		count++
+		index = this.id
+		specName = $("#recommendVmAssist_name_" + index).val()
+		cspSpecName = $("#recommendVmAssist_cspSpec_" + index).val()
+	});
+
+	console.log("count : ", count)
+
+	if (specName == "") {
+		alert("Spec을 선택하세요.")
+		return false
+	}
+
+	if (count != 1) {
+		alert("Spec을 하나만 선택하세요.")
+		return false
+	}
+
 	$("#assistSelectedIndex").val(index);
-	var specName = $("#recommendVmAssist_name_" + index).val()
-	var cspSpecName = $("#recommendVmAssist_cspSpec_" + index).val()
-	console.log(specName);
-	//var specName = "aws-ap-northeast-1-t2-micro"
+
 	console.log(specName);
 	var url = "/operation/manages/mcismng/mcisdynamiccheck/list"
 	var obj = {
 		"commonSpec": [specName]
 	}
 	axios.post(url, obj, {
+
 		headers: {
-			'Content-type': 'application/json',
+			//'Content-type': 'application/json',
 		}
+
 	}).then(result => {
 		console.log("result connection : ", result);
 		var statusCode = result.data.status;
@@ -790,7 +870,7 @@ function getConnectionConfigCandidateInfo(index) {
 			var connectionInfo = result.data.mcisDynamicInfo.reqCheck[0]
 			var connectionCandidates = connectionInfo.connectionConfigCandidates
 			//if (connectionCandidates.length > 1) {
-			selectConnectionConfig(connectionCandidates, cspSpecName, connectionInfo.region.providerName)
+			selectConnectionConfig(connectionCandidates, cspSpecName, specName, connectionInfo.region.providerName)
 			//}
 		} else {
 			var message = result.data.message;
@@ -807,10 +887,70 @@ function getConnectionConfigCandidateInfo(index) {
 	});
 }
 
+
+
+// 선택한 Spec을 express form에 전달 : 
+function returnSpecInfo(caller) {
+	// 전달 할 param
+	// connection
+	// image : 고정 (ubuntu)
+	// 선택한 spec
+
+	// express 는 1개의 spec만 return.
+	if ( caller == "express"){
+		var specName = ""
+		var provider = ""
+		var cspSpecName = ""
+		var count = 0
+		
+		$("input[name='chk']:checked").each(function () {
+			count++
+			specName = $(this).val()
+			var index = this.id
+
+			provider = $("#recommendVmAssist_provider_" + index).val()
+			connectionName = $("#recommendVmAssist_connectionName_" + index).val()		
+			cspSpecName = $("#recommendVmAssist_cspSpec_" + index).val()
+		});
+
+		console.log("specName : ", specName)
+		console.log("count : ", count)
+
+		if (count != 1) {
+			alert("Spec을 하나만 선택하세요.")
+			return false
+		}
+
+		if (specName == "") {
+			alert("Spec을 선택하세요.")
+			return false
+		}
+
+		
+		var specInfo = {
+			"Provider": provider,
+			"ConnectionName": connectionName,
+			"SpecID": specName,			
+		}
+		setAssistSpecToExpress(specInfo);
+	}
+	
+	// var express_form = {
+	// 	"commonImage": "ubuntu18.04",
+	// 	"commonSpec": specName,
+	// 	"subGroupSize": subGroupSize,
+	// 	"name": serverName
+	// }
+
+	
+	
+	
+	$("#recommendSpecAssist").modal("hide");
+}
 // connection 후보 보여주기
 // 가져온 connection 목록과 일치하는 spec 정보 보여주기
 // page Load 시 이미 해당 namespace의 전체 목록을 가져 옴.
-function selectConnectionConfig(connections, selectedCspSpecName, selectedProvider) {
+function selectConnectionConfig(connections, selectedCspSpecName, selectedDefaultSpecName, selectedProvider) {
 	// assistConnectionList
 	console.log("selected csp spec :", selectedCspSpecName)
 	console.log("vmSpecList: ", totalVmSpecListByNamespace)
@@ -839,7 +979,7 @@ function selectConnectionConfig(connections, selectedCspSpecName, selectedProvid
 		//  spec이 존재하지 않으면 spec 등록 버튼 생성
 		if (!specExist) {
 			displayItemsCount++
-			var specButton = "<button name='' value='' class='btn_apply btn_co btn_cr_g' onclick=registerSpecOnClick('" + candidateConnectionName + "','" + selectedCspSpecName + "','" + selectedProvider + "')><span>spec 등록</span></button>"
+			var specButton = "<button name='' value='' class='btn_apply btn_co btn_cr_g' onclick=registerSpecOnClick('" + candidateConnectionName + "','" + selectedCspSpecName + "','" + selectedDefaultSpecName + "','" + selectedProvider + "')><span>spec 등록</span></button>"
 			html += '<tr>'
 				+ '<td class="overlay hidden" data-th="connection">' + candidateConnectionName + '</td>'
 				+ '<td class="overlay hidden" data-th="spec">' + specButton + ' </td>'
@@ -887,11 +1027,13 @@ function selectConnectionConfig(connections, selectedCspSpecName, selectedProvid
 	// }
 }
 
-function registerSpecOnClick(regCandidateConnection, selectedCspSpecName, regProvider) {
+function registerSpecOnClick(regCandidateConnection, selectedCspSpecName, defaultSpecName, regProvider) {
+	var suffix = Math.random().toString(36).slice(2)
 	$("#t_regProvider").val(regProvider)
+	$("#t_spec").val(defaultSpecName + '-' + suffix)
 	$("#t_regRecommendConn").val(regCandidateConnection)
 	$("#t_regRecommendCspSpec").val(selectedCspSpecName)
-	commonPromptOpen("RegisterRecommendSpec")
+	createVmSpec("recommend")
 }
 
 // 앞서 setting한 connection과 선택한 connection이 같으면 그대로 set
@@ -917,7 +1059,7 @@ function setConnectionAndSpec(index) {
 	}
 
 	$("#connectionAssist").modal("hide");
-	$("#recommendVmAssist").modal("hide");
+	$("#recommendSpecAssist").modal("hide");
 }
 
 // selct box option 세팅

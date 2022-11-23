@@ -165,6 +165,10 @@
 																onClick="addNewVirtualMachine()">Add/Extend</a>
 														</li>
 														<li><a href="javascript:void(0);" data-toggle="modal"
+															data-target="#VM_create_snapshot"
+															onClick="commonPromptOpen('CreateSnapshot')">Create Snapshot</a>
+														</li>
+														<li><a href="javascript:void(0);" data-toggle="modal"
 																data-target="#VM_ScriptExport"
 																onClick="commonConfirmOpen('ExportVmScriptOfMcis')">Export</a>
 														</li>
@@ -196,7 +200,7 @@
 									<div class="btnbox">
 										<button type="button" class="btn_cancel" data-dismiss="modal">Cancel</button>
 										<button type="button" class="btn_ok" data-dismiss="modal"
-											onclick="changePage('/operation/manages/mcismng/mngform')">OK</button>
+											onclick="changePage('McisMngForm')">OK</button>
 									</div>
 								</div>
 							</div>

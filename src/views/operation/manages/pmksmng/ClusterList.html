@@ -1,0 +1,117 @@
+{{define "ClusterList"}}
+<!-- list -->
+<div class="dashboard dashboard_cont">
+
+	<div class="d_box box_m box_w100">
+		<div class="titbox">
+			<div class="tit initial"><strong>List of PMKS</strong></div>
+			<div class="top_info">
+				<ul>
+					<li>
+						<a href="javascript:void(0);">Filter</a>
+						<div class="infobox">
+							<div class="box">
+								<ul>
+									<li><a href="javascript:void(0);"
+											onclick="commonPromptOpen('OprMngPmksStatus', 'pmksListTable')">Status</a>
+									</li>
+									<li><a href="javascript:void(0);"
+											onclick="commonPromptOpen('OprMngPmksName', 'pmksListTable')">Name</a></li>
+									<li><a href="javascript:void(0);"
+											onclick="commonPromptOpen('OprMngPmksNetworkCni', 'pmksListTable')">NetworkCni</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</li>
+					<li>
+						<a href="javascript:void(0);">Sort</a>
+						<div class="infobox">
+							<div class="box">
+								<ul>
+									<li><a href="javascript:void(0);"
+											onclick="tableSort('pmksListTable', 'Status')">Status</a></li>
+									<li><a href="javascript:void(0);"
+											onclick="tableSort('pmksListTable', 'Name')">Name</a></li>
+									<li><a href="javascript:void(0);"
+											onclick="tableSort('pmksListTable', 'NetworkCni')">NetworkCni</a></li>
+								</ul>
+							</div>
+						</div>
+					</li>
+					<li>
+						<a href="javascript:void(0);">Action</a>
+						<div class="infobox">
+							<div class="box">
+								<ul>
+									<li>
+										<strong>Manage</strong>
+										<ul>
+											<li><a href="javascript:void(0);" data-toggle="modal"
+													data-target="#PMKS_n_New"
+													onClick="changePage('PmksClusterRegForm')">New /
+													Extend</a></li>
+											<li><a href="javascript:void(0);" data-toggle="modal"
+													data-target="#PMKS_n_New"
+													onClick="commonConfirmOpen('DeletePmks')">Delete</a></li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</li>
+					
+					<li>
+						<a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt="" /></a>
+						<a href="javascript:void(0);" onClick="getCommonAllPmksList('onload')"><img
+								src="/assets/img/common/icon_refresh.png" alt="refresh" /></a>
+					</li>					
+				</ul>
+			</div>
+		</div>
+
+		<div class="ds_cont">
+
+			<div class="dataTable status_list">
+				<table cellpadding="0" cellspacing="0" summary="" id="pmksListTable">
+					<!-- <colgroup>
+											<col width="">
+											<col width="15%">
+											<col width="8%">
+											<col width="12%">
+											<col width="12%">
+											<col width="17%">
+											<col width="18%">
+											<col width="50px">
+										</colgroup> -->
+					<thead>
+						<tr>
+							<th class="column-50px"><input type="checkbox" name="" value="" id="th_chall"
+								title="" /><label for="th_chall"></label></td>
+							<th class="column-80px">Status</th>
+							<th>Name</th>
+							<th>Provider</th>
+							<th>VPC</th>
+							<th>Subnet</th>
+							<th>Security Group</th>
+							<th>NodeGroup Group</th>
+							
+						</tr>
+					</thead>
+					<tbody id="clusterList">
+
+						<tr>
+							<td class="overlay hidden" data-th="" colspan="8">No Data</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+<!-- //list -->
+{{end}}

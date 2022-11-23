@@ -163,7 +163,7 @@
 							{{ end }}
 
 							{{range $index, $item := .SecurityGroupList}}
-							<tr onclick="showSecurityGroupInfo('{{$item.CspSecurityGroupName }}');">
+							<tr onclick="showSecurityGroupInfo('{{$item.ID }}');">
 								<td class="overlay hidden column-50px" data-th="">
 									<input type="hidden" id="sg_info_{{$index }}"
 										value="{{$item.CspSecurityGroupName}}" />

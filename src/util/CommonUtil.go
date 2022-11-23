@@ -90,6 +90,7 @@ func GetMcisStatus(mcisStatus string) string {
 	return returnStatus
 }
 
+// CB-MCKS status phase : Pending, Provisioning, Provisioned, Failed
 func GetMcksStatus(mcksStatus string) string {
 	statusArr := strings.Split(mcksStatus, "-")
 	returnStatus := strings.ToLower(statusArr[0])

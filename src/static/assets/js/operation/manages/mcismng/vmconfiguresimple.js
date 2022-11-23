@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 function showRecommendAssistPopup() {
 	console.log("showRecommendAssistPopup")
-	$("#recommendVmAssist").modal();
+	$("#recommendSpecAssist").modal();
 
 }
 
@@ -23,15 +23,19 @@ function showConnectionAssistPopup() {
 
 // Connection 정보가 바뀌면 등록에 필요한 목록들을 다시 가져온다.(config는 ID가아닌 configName을 사용한다.)
 function changeConnectionInfo(configName) {
+	// provider
+	var provider = $("#ss_regProvider").val();
 	console.log("config name : ", configName)
 	if (configName == "") {
 		// 0번째면 selectbox들을 초기화한다.(vmInfo, sshKey, image 등)
 	}
 	getVmiInfo(configName);
+	//getVmMyiInfo(configName);
 	getSecurityInfo(configName);
 	getSSHKeyInfo(configName);
 	getVnetInfo(configName);
 	getSpecInfo(configName);
+	getCommonLookupDiskInfo("vmsimple", provider, configName);// -> getCommonLookupDiskInfoSuccess
 }
 
 function getVmiInfo(configName) {
@@ -62,7 +66,7 @@ function getVmiInfo(configName) {
 			return;
 		}
 
-		html += "<option value=''>Select OS Platform</option>"
+		html += "<option value=''>Select Public Image</option>"
 		for (var i in data) {
 			if (data[i].connectionName == configName) {
 				html += '<option value="' + data[i].id + '" >' + data[i].name + '(' + data[i].id + ')</option>';
@@ -81,6 +85,94 @@ function getVmiInfo(configName) {
 		commonErrorAlert(statusCode, errorMessage)
 	});
 }
+
+function displayAvailableDisk() {
+
+	var configName = $("#ss_regConnectionName").val()
+	var url = "/setting/resources/datadisk/list"
+	url += "?filterKey=connectionName&filterVal=" + configName
+	console.log("check disk list : ", url);
+	axios.get(url).then(result => {
+		console.log("get result : ", result);
+		var data = result.data.dataDiskInfoList;
+		var html = "";
+		console.log("get available disk : ", data);
+		if (data != null || data.length > 0) {
+			var avDiskCnt = 0
+			data.forEach(item => {
+				//console.log("get available disk : ", item);
+				html += '<tr>'
+					+ '<td class="overlay hidden column-50px" data-th="">'
+					+ '<input type="checkbox" name="chk_attach" value="' + item.id + '"  title=""  /><label for="td_ch1"></label> <span class="ov off"></span>'
+
+					+ '</td>'
+					+ '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
+					+ '<td class="overlay hidden" data-th="diskType">'
+					+ item.diskType
+					+ '</td>'
+					+ '<td class="overlay hidden" data-th="diskSize">'
+					+ item.diskSize
+					+ '/GB</td>'
+					+ '</tr>';
+				avDiskCnt++;
+			})
+			$("#availableDiskCnt").val(avDiskCnt)
+			$("#availableDiskList").empty()
+			$("#availableDiskList").append(html)
+		} else {
+			//commonAlert("해당 VM에 Attach 가능한 DISK가 없습니다");
+			addRow();
+			$("#availableDiskCnt").val(0)
+			return;
+		}
+
+		$("#availableDiskSelectBox").modal();
+		$('.dtbox.scrollbar-inner').scrollbar();
+
+	})
+
+
+}
+
+function getVmMyiInfo(configName) {
+
+	//var configName = $("#ss_regConnectionName option:selected").val();
+
+	console.log("2 : ", configName);
+	// getCommonVirtualMachineImageList("mcissimpleconfigure", "name"); setCommonVirtualMachineImageList()
+	// var url = "/setting/resources" + "/machineimage/lookupimage";//TODO : 조회 오류남... why? connectionName으로 lookup
+	var url = "/setting/resources" + "/myimage/list?filterKey=connectionName&filterVal=" + configName
+	var html = "";
+	//  var apiInfo = 'Basic ZGVmYXVsdDpkZWZhdWx0'
+	axios.get(url).then(result => {
+		console.log("MyImage Info : ", result.data)
+		data = result.data.myImageInfoList
+		if (!data) {
+			alert("등록된 My Image 정보가 없습니다.")
+			// 		 location.href = "/Image/list"
+			return;
+		}
+
+		html += "<option value=''>Select My Snapshot</option>"
+		for (var i in data) {
+			if (data[i].connectionName == configName) {
+				html += '<option value="' + data[i].id + '" >' + data[i].name + '(' + data[i].id + ')</option>';
+			}
+		}
+		$("#ss_myImageId").empty();
+		$("#ss_myImageId").append(html);//which OS
+
+		//  }).catch(function(error){
+		// 	console.log(error);        
+		// });
+	}).catch((error) => {
+		console.warn(error);
+		console.log(error.response)
+		var errorMessage = error.response.data.error;
+		commonErrorAlert(statusCode, errorMessage)
+	});
+}
+
 
 function getSecurityInfo(configName) {
 	var configName = configName;
@@ -227,11 +319,16 @@ function getVnetInfo(configName) {
 					// html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].Ipv4_CIDR+'</option>';
 				}
 			}
+			if( v_net_cnt > 0 ){
+				break;
+			}
 		}
-		$("#vnet").empty();
-		$("#vnet").append(html);
-		$("#subnet").empty();
-		$("#subnet").append(html2);
+
+		// vnet, subnet 은 있었는데 system random으로 선택하도록 변경 됨.
+		//$("#vnet").empty();
+		//$("#vnet").append(html);
+		//$("#subnet").empty();
+		//$("#subnet").append(html2);
 
 		//setting default
 		$("#s_subnetId").val(init_subnet);
@@ -239,7 +336,61 @@ function getVnetInfo(configName) {
 		console.log("init_vnet=" + init_vnet + ", subnet=" + init_subnet)
 	})
 }
+var DISK_SIZE = [];
+function getCommonLookupDiskInfoSuccess(caller, provider, data) {
 
+	console.log("getCommonLookupDiskInfoSuccess", data);
+	var root_disk_type = [];
+	var res_item = data;
+	res_item.forEach(item => {
+		console.log("item provider: ", item.provider);
+		var temp_provider = item.provider
+		if (temp_provider == provider) {
+			root_disk_type = item.rootdisktype
+			DISK_SIZE = item.disksize
+		}
+	})
+
+	var html = '<option value="">Select Root Disk Type</option>'
+	console.log("root_disk_type : ", root_disk_type);
+	root_disk_type.forEach(item => {
+		html += '<option value="' + item + '">' + item + '</option>'
+	})
+	//if(caller == "vmexpress"){
+	$("#ep_root_disk_type").empty();
+	$("#ep_root_disk_type").append(html);
+	//}else if(caller == "vmsimple"){
+	$("#ss_root_disk_type").empty();
+	$("#ss_root_disk_type").append(html);
+	//}else if(caller == "vmexpert"){
+	$("#tab_others_root_disk_type").empty()
+	$("#tab_others_root_disk_type").append(html)
+	//}
+	console.log("const valie DISK_SIZE : ", DISK_SIZE);
+
+}
+var ROOT_DISK_MAX_VALUE = 0;
+var ROOT_DISK_MIN_VALUE = 0;
+
+function changeDiskSize(type) {
+	var disk_size = DISK_SIZE;
+
+	if (disk_size) {
+		disk_size.forEach(item => {
+			var temp_size = item.split("|")
+			var temp_type = temp_size[0];
+			if (temp_type == type) {
+				ROOT_DISK_MAX_VALUE = temp_size[1];
+				ROOT_DISK_MIN_VALUE = temp_size[2]
+			}
+		})
+	}
+	console.log("ROOT_DISK_MAX_VALUE : ", ROOT_DISK_MAX_VALUE)
+	console.log("ROOT_DISK_MIN_VALUE : ", ROOT_DISK_MIN_VALUE)
+	$("#s_rootDiskType").val(type);
+	$("#e_rootDiskType").val(type);
+
+}
 
 const Simple_Server_Config_Arr = new Array();
 var simple_data_cnt = 0
@@ -250,19 +401,33 @@ function simpleDone_btn() {
 	$("#s_description").val($("#ss_description").val())
 	$("#s_regConnectionName").val($("#ss_regConnectionName").val())
 	$("#s_spec").val($("#ss_spec").val())
-	$("#s_imageId").val($("#ss_imageId").val())
+	//$("#s_imageId").val($("#ss_imageId").val()) 이미지는 내가 처리
 	$("#s_sshKey").val($("#ss_sshKey").val())
-	$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
+	$("#s_vmUserPassword").val($("#ss_password").val())
+	$("#s_root_disk_size").val($("#ss_root_disk_size").val())
+	$("#s_root_disk_type").val($("#ss_root_disk_type").val())
+
+	//$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
+	$("#s_subGroupSize").val($("#ss_vm_add_cnt").val() + "")
+
+	var select_disk = $("#ss_data_disk").val();
 
 	console.log($("#s_imageId").val());
 	console.log($("#ss_imageId").val());
 
 	var simple_form = $("#simple_form").serializeObject()
-	console.log(simple_form);
+
+	if (select_disk) {
+		var arr_disk = select_disk.split(",");
+		simple_form.dataDiskIds = arr_disk;
+	} else {
+		simple_form.dataDiskIds = [];
+	}
+	console.log("simple form : ", simple_form);
 
 	var server_name = simple_form.name
-	var server_cnt = parseInt(simple_form.vmGroupSize)
-	// simple_form.vmGroupSize = server_cnt
+	var server_cnt = parseInt(simple_form.subGroupSize)
+	// simple_form.subGroupSize = server_cnt
 	console.log('server_cnt : ', server_cnt)
 	var add_server_html = "";
 
@@ -282,10 +447,10 @@ function simpleDone_btn() {
 	// 	}
 	// } else {
 	Simple_Server_Config_Arr.push(simple_form)
-	displayServerCnt = ""
-	if (server_cnt > 1) {
-		displayServerCnt = '(' + server_cnt + ')'
-	}
+
+
+	var displayServerCnt = '(' + server_cnt + ')'
+
 	add_server_html += '<li onclick="view_simple(\'' + simple_data_cnt + '\')">'
 		+ '<div class="server server_on bgbox_b">'
 		+ '<div class="icon"></div>'
@@ -307,6 +472,8 @@ function simpleDone_btn() {
 	$("#simple_form").each(function () {
 		this.reset();
 	})
+	$("#ss_data_disk").val("");
+
 }
 function view_simple(cnt) {
 	console.log('view simple cnt : ', cnt);
@@ -318,39 +485,39 @@ function view_simple(cnt) {
 
 }
 
-function displayNewServerForm() {
-	var $SimpleServers = $("#simpleServerConfig");
-	var $ExpertServers = $("#expertServerConfig");
-	var $ImportServers = $("#importServerConfig");
-
-	var check = $(".switch .ch").is(":checked");
-	console.log("check=" + check);
-	if (check) {
-		$SimpleServers.removeClass("active");
-		$ExpertServers.addClass("active");
-		$ImportServers.removeClass("active");
-	} else {
-		$SimpleServers.addClass("active");
-		$ExpertServers.removeClass("active");
-		$ImportServers.removeClass("active");
-	}
-
-	// var vmFormType = $("input[name='vmInfoType']:checked").val();
-	// console.log("vmFormType = " + vmFormType)
-	// if( vmFormType == "expert"){
-	//     $SimpleServers.removeClass("active");
-	//     $ExpertServers.addClass("active");            
-	//     $ImportServers.removeClass("active");
-	// }else if( vmFormType == "import"){
-	//     $SimpleServers.removeClass("active");
-	//     $ExpertServers.removeClass("active");            
-	//     $ImportServers.addClass("active");
-	// }else{// simple
-	//     $SimpleServers.addClass("active");
-	//     $ExpertServers.removeClass("active");            
-	//     $ImportServers.removeClass("active");
-	// }
-}
+//function displayNewServerForm() {
+//	var $SimpleServers = $("#simpleServerConfig");
+//	var $ExpertServers = $("#expertServerConfig");
+//	var $ImportServers = $("#importServerConfig");
+//
+//	var check = $(".switch .ch").is(":checked");
+//	console.log("check=" + check);
+//	if (check) {
+//		$SimpleServers.removeClass("active");
+//		$ExpertServers.addClass("active");
+//		$ImportServers.removeClass("active");
+//	} else {
+//		$SimpleServers.addClass("active");
+//		$ExpertServers.removeClass("active");
+//		$ImportServers.removeClass("active");
+//	}
+//
+//	// var vmFormType = $("input[name='vmInfoType']:checked").val();
+//	// console.log("vmFormType = " + vmFormType)
+//	// if( vmFormType == "expert"){
+//	//     $SimpleServers.removeClass("active");
+//	//     $ExpertServers.addClass("active");            
+//	//     $ImportServers.removeClass("active");
+//	// }else if( vmFormType == "import"){
+//	//     $SimpleServers.removeClass("active");
+//	//     $ExpertServers.removeClass("active");            
+//	//     $ImportServers.addClass("active");
+//	// }else{// simple
+//	//     $SimpleServers.addClass("active");
+//	//     $ExpertServers.removeClass("active");            
+//	//     $ImportServers.removeClass("active");
+//	// }
+//}
 // Expert Mode에 Import 버튼 클릭 시 해당 form display  // MCIS Create 와 VM Create의 function이름이 같음
 function displayVmImportServerFormByImport() {
 	var $SimpleServers = $("#simpleServerConfig");

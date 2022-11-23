@@ -417,10 +417,10 @@ function createVNet() {
 
     if (vpcName) {
         axios.post(url, obj, {
-            headers: {
-                'Content-type': 'application/json',
-                // 'Authorization': apiInfo,
-            }
+            // headers: {
+            //     'Content-type': 'application/json',
+            //     // 'Authorization': apiInfo,
+            // }
         }).then(result => {
             console.log("result vNet : ", result);
             var data = result.data;

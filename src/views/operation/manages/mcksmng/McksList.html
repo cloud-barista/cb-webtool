@@ -49,7 +49,7 @@
 										<ul>
 											<li><a href="javascript:void(0);" data-toggle="modal"
 													data-target="#MCKS_n_New"
-													onClick="changePage('/operation/manages/mcksmng/regform')">New /
+													onClick="changePage('McksRegForm')">New /
 													Extend</a></li>
 											<li><a href="javascript:void(0);" data-toggle="modal"
 													data-target="#MCKS_n_New"
@@ -92,7 +92,7 @@
 									title="" /><label for="th_chall"></label></td>
 						</tr>
 					</thead>
-					<tbody id="mclsList">
+					<tbody id="mcksList">
 						<!-- //
 											// mcis.ID, mcis.status, mcis.name -->
 						{{ $length := len .ClusterList }}
@@ -103,8 +103,8 @@
 						{{ end }}
 
 						{{range $clusterIndex, $clusterItem := .ClusterList}}
-						<tr onclick="clickListOfMcks('{{$clusterItem.UID}}', '{{$clusterIndex}}' );"
-							id="node_info_tr_{{$clusterIndex}}" item="{{$clusterItem.UID}}|{{$clusterIndex}}">
+						<tr onclick="clickListOfMcks('{{$clusterItem.Mcis}}', '{{$clusterIndex}}' );"
+							id="node_info_tr_{{$clusterIndex}}" item="{{$clusterItem.Mcis}}|{{$clusterIndex}}">
 							<!-- { {$clusterItem} } -->
 							<td class="overlay hidden column-80px" data-th="Status">
 								<!--													<img src="/assets/img/contents/icon_{{$clusterItem.McksStatus}}.png" class="icon" alt=""/>{{$clusterItem.Status}}<span class="ov off"></span>-->
@@ -142,8 +142,8 @@
 								<label for="td_ch_{{$clusterIndex}}"></label>
 
 								<!--MCKS 기본정보 hidden : 클릭시 보여주기 위해-->
-								<input type="hidden" name="mcksUID" value="{{$clusterItem.UID}}"
-									id="mcksUID{{$clusterIndex}}" />
+								<input type="hidden" name="mcksID" value="{{$clusterItem.Name}}"
+									id="mcksID{{$clusterIndex}}" />
 								<input type="hidden" name="mcksName" value="{{$clusterItem.Name}}"
 									id="mcksName{{$clusterIndex}}" />
 								<input type="hidden" name="mcksStatus" value="{{$clusterItem.Status}}"
@@ -155,8 +155,6 @@
 
 								<!-- MCIS의 VM들 이름, ID, 상태-->
 								{{range $nIndex, $nodeItem := $clusterItem.Nodes}}
-								<input type="hidden" name="nodeUID" id="mcksNodeUID_{{ $clusterIndex}}_{{ $nIndex}}"
-									value="{{$nodeItem.NodeUID}}" />
 								<input type="hidden" name="nodeName" id="mcksNodeName_{{ $clusterIndex}}_{{ $nIndex}}"
 									value="{{$nodeItem.NodeName}}" />
 								<input type="hidden" name="nodeKind" id="mcksNodeKind_{{ $clusterIndex}}_{{ $nIndex}}"

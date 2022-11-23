@@ -95,14 +95,14 @@ func HelloGorillaWebSocket(c echo.Context) error {
 		// }
 		switch event {
 		case "open": // 화면이 처음 열렸을 때
-			log.Printf("Received: %s\n", event)
+			// log.Printf("Received: %s\n", event)
 
 			go testData(c) // test data 처리
-			log.Println("is socket working : open started")
+			// log.Println("is socket working : open started")
 			defaultTime := t.Add(time.Minute * -5) // 기본 조회시간은 현재시간 - 5분
 
 			socketDataMap := service.GetWebsocketMessageByProcessTime(defaultTime.UnixNano(), c)
-			log.Printf("Received: %s\n", event)
+			// log.Printf("Received: %s\n", event)
 			returnMessage := map[string]interface{}{
 				"event":    "res",
 				"messag":   socketDataMap,
@@ -113,11 +113,11 @@ func HelloGorillaWebSocket(c echo.Context) error {
 			if sendErr == nil {
 				// service.SetWebsocketMessageBySend(key, true, c)	// 전송 성공여부에 대해 굳이 update가 필요한가??
 			}
-			log.Println("is socket working : open finished")
+			// log.Println("is socket working : open finished")
 		case "req": // 특정시간 이후 모두 조회. 조회할 시간이 parameter로 넘어온다. // key값이 unixTime으로 되어 있으므로  string -> int64 -> unixTime -> time
 			// sendData["data"] = objmap["data"]
 			sCallTime := objmap["callTime"].(string)
-			log.Println("is socket working : req started")
+			// log.Println("is socket working : req started")
 			nCallTime, nErr := strconv.ParseInt(sCallTime, 10, 64)
 			if nErr != nil {
 				d2 := t.Add(time.Minute * -5)
@@ -126,7 +126,7 @@ func HelloGorillaWebSocket(c echo.Context) error {
 
 			uCallTime := time.Unix(nCallTime, 0)
 			socketDataMap := service.GetWebsocketMessageByProcessTime(uCallTime.UnixNano(), c)
-			log.Printf("Received: %s\n", event)
+			// log.Printf("Received: %s\n", event)
 			returnMessage := map[string]interface{}{
 				"event":    "res",
 				"messag":   socketDataMap,
@@ -137,7 +137,7 @@ func HelloGorillaWebSocket(c echo.Context) error {
 			if sendErr == nil {
 				// service.SetWebsocketMessageBySend(key, true, c)	// 전송 성공여부에 대해 굳이 update가 필요한가??
 			}
-			log.Println("is socket working : req finished")
+			// log.Println("is socket working : req finished")
 			// 마지막 조회
 		case "close": // page 이동시
 			ws.Close()
@@ -384,10 +384,10 @@ func GetWebSocketData(c echo.Context) error {
 		var objmap map[string]interface{}
 		_ = json.Unmarshal(message, &objmap)
 		event := objmap["event"].(string) // event에 구분 : 요청은 open, req, close.   응답은 res로 한다.
-		log.Printf("Received: %s\n", event)
+		// log.Printf("Received: %s\n", event)
 		switch event {
 		case "open": // 화면이 처음 열렸을 때
-			log.Println("is socket working : open started")
+			// log.Println("is socket working : open started")
 			defaultTime := t.Add(time.Minute * -60) // 기본 조회시간은 현재시간 - 60분
 
 			socketDataList := service.GetWebsocketMessageByProcessTime(defaultTime.UnixNano(), c)
@@ -402,12 +402,12 @@ func GetWebSocketData(c echo.Context) error {
 			if sendErr != nil {
 				log.Println("ws send Err ", sendErr.Error())
 			}
-			log.Println("is socket working : open finished")
+			// log.Println("is socket working : open finished")
 		case "req": // 특정시간 이후 모두 조회. 조회할 시간이 parameter로 넘어온다. // key값이 unixTime으로 되어 있으므로  string -> int64 -> unixTime -> time
 			// sendData["data"] = objmap["data"]
 			log.Println(objmap)
 			sCallTime := objmap["callTime"].(string)
-			log.Println("is socket working : req started")
+			// log.Println("is socket working : req started")
 			nCallTime, nErr := strconv.ParseInt(sCallTime, 10, 64)
 			if nErr != nil {
 				log.Println("sCallTime err  ", sCallTime)
@@ -428,7 +428,7 @@ func GetWebSocketData(c echo.Context) error {
 			if sendErr != nil {
 				log.Println("ws send Err ", sendErr.Error())
 			}
-			log.Println("is socket working : req finished")
+			// log.Println("is socket working : req finished")
 			// 마지막 조회
 		case "close": // page 이동시
 			ws.Close()

@@ -7,10 +7,9 @@
 
 // map에 담긴 Key를 value로 바꿔 url을 return한다.
 // url에는 main.go 에서 사용하는 path를 넣는다.
-function setUrlByParam(url, urlParamMap) {
-    //resultVmCreateMap.set(resultVmKey, resultStatus)
-    // var url = "/operation/manages/mcksmng/:clusteruID/:clusterName/del/:nodeID/:nodeName";    
-    var returnUrl = url;
+function setUrlByParam(controllerKeyName, urlParamMap) {
+
+    var returnUrl = getWebToolUrl(controllerKeyName)
     for (let key of urlParamMap.keys()) {
         console.log("urlParamMap " + key + " : " + urlParamMap.get(key));
 
@@ -22,21 +21,73 @@ function setUrlByParam(url, urlParamMap) {
 
 // conteroller의 methodName으로 main.go에 정의된 url값을 가져온다.
 function getWebToolUrl(controllerKeyName) {
-    // ex ) monitoringGroup.GET("/operation/monitorings/mcismonitoring/mngform", controller.McisMonitoringMngForm)    
     let controllerMethodNameMap = new Map(
         [
-            ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
+
             ["VmMonitoringAgentRegForm", "/operation/monitorings/mcismonitoring/:mcisID/vm/:vmID/agent/mngform"],
             ["RemoteCommandVmOfMcis", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
 
             ["McisData", "/operation/manages/mcismng/:mcisID"],
             ["McisStatusData", "/operation/manages/mcismng/:mcisID?option=status"],
-            ["VmOfMcisData", "/operation/manages/mcismng/:mcisID/vm/:vmID"]
+            ["VmOfMcisData", "/operation/manages/mcismng/:mcisID/vm/:vmID"],
+
+            // resources
+            ["NamespaceMngForm", "/setting/namespaces/namespace/mngform"],
+            ["NamespaceListData", "/setting/namespaces/namespace/list"],
+            ["CloudConnectionMngForm", "/setting/connections/cloudconnectionconfig/mngform"],
+            ["VnetMngForm", "/setting/resources/network/mngform"],
+            ["SecurityGroupMngForm", "/setting/resources/securitygroup/mngform"],
+            ["SshKeyMngForm", "/setting/resources/sshkey/mngform"],
+            ["MachineImageMngForm", "/setting/resources/machineimage/mngform"],
+            ["VmSpecMngForm", "/setting/resources/vmspec/mngform"],
+
+            ["DataDiskMngForm", "/setting/resources/datadisk/mngform"],
+            ["MyImageMngForm", "/setting/resources/myimage/mngform"],
+
+            // operations
+            ["NsDashboardForm", "/operation/dashboards/dashboardnamespace/mngform"],// Dashboard NS
+            ["GlobalDashboardForm", "/operation/dashboards/dashboardglobalnamespace/mngform"],// Dashboard NS
+
+            ["McisMngForm", "/operation/manages/mcismng/mngform"],
+            ["McisList", "/operation/manages/mcismng/list"],
+            ["McisRegForm", "/operation/manages/mcismng/regform"],
+            ["McisRegProc", "/operation/manages/mcismng/reg/proc"],
+            ["McisCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID"],
+            ["McisVmCmd", "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID"],
+            ["McisVmRegProc", "/operation/manages/mcismng/:mcisID/vm/reg/proc"],
+            ["McisVmListRegProc", "/operation/manages/mcismng/:mcisID/vmlist/reg/proc"],// vm 목록으로 저장
+
+            ["McisVmRegDynamicProc", "/operation/manages/mcismng/:mcisID/vmdynamic/proc"],
+
+            ["McksMngForm", "/operation/manages/mcksmng/mngform"],
+            ["McksRegForm", "/operation/manages/mcksmng/regform"],
+            ["McksRegProc", "/operation/manages/mcksmng/reg/proc"],
+            ["McksClusterNodeData", "/operation/manages/mcksmng/:clusterUID/:clusterName/del/:nodeID/:nodeName"],
+
+            ["PmksMngForm", "/operation/manages/pmksmng/mngform"],
+            ["PmksRegForm", "/operation/manages/pmksmng/regform"],
+            ["PmksClusterRegForm", "/operation/manages/pmksmng/cluster/regform"],
+            ["PmksNodeGroupRegForm", "/operation/manages/pmksmng/cluster/:clusterID/regform"],
+            ["PmksClusterRegProc", "/operation/manages/pmks/cluster"],
+            ["PmksListOfNamespace", "/operation/manages/pmks/listall"],
+            ["PmksListByConnection", "/operation/manages/pmks/list"],
+            ["PmksNodeGroupDelProc", "/operation/manages/pmks/:clusterID/nodegroup/:nodeGroupID"],
+
+            ["McisMonitoringMngForm", "/operation/monitorings/mcismonitoring/mngform"],
+            ["MonitoringPolicyConfigMngForm", "/operation/policies/monitoringconfigpolicy/mngform"],
+            ["MonitoringPolicyThresholdMngForm", "/operation/policies/monitoringalertpolicy/mngform"],
+            ["NlbMngForm", "/operation/services/nlb/mngform"],
+            ["NlbRegForm", "/operation/services/nlb/regform"],
+
+            ["AboutForm", "/operation/about/about"],
+
         ]
     );
 
     var webtoolUrl = controllerMethodNameMap.get(controllerKeyName);
-
+    if (webtoolUrl == undefined) {
+        webtoolUrl = controllerKeyName
+    }
     return webtoolUrl;
 }
 
@@ -49,7 +100,7 @@ function showHelp(helpKey) {
         location.href = "/main/apitestmng"
     } else {
         //$("#helpArea").modal()        
-        changePage("/operation/about/about");// About으로 이동
+        changePage("AboutForm");// About으로 이동
     }
 }
 
@@ -57,7 +108,8 @@ function showHelp(helpKey) {
 // 한 화면에서 서로다른 형태로 호출이 가능하므로 caller(호출자) 를 callback에 같이 넘겨서 구분할 수 있게 함.
 // isCallback = false 이고 targetObjId 가 있는 경우 해당 obj set
 function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam) {
-    var url = "/setting/namespaces/namespace/list";
+    // var url = "/setting/namespaces/namespace/list";
+    var url = getWebToolUrl("NamespaceListData")
 
     if (optionParam != "") {
         url += "?option=" + optionParam;
@@ -65,7 +117,7 @@ function getCommonNameSpaceList(caller, isCallback, targetObjId, optionParam) {
 
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log(result);
@@ -126,7 +178,7 @@ function getCommonCloudConnectionList(caller, sortType, isCallback, targetObjId)
     var url = "/setting/connections/cloudconnectionconfig/list";
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get CloudConnection Data : ", result.data);
@@ -152,7 +204,7 @@ function getCommonCredentialList(caller, optionParam) {
     }
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Credential Data : ", result.data);
@@ -239,6 +291,10 @@ function getCommonNetworkList(caller, optionParam, filterKey, filterVal) {
         data = result.data.VNetList;
         console.log("vNetwork Info : ", result);
         console.log("vNetwork data : ", data);
+
+        if (caller == "") {
+            getNetworkListCallbackSuccess(caller, data)
+        }
         //setTotalNetworkList(data)
         getNetworkListCallbackSuccess(caller, data);
     }).catch(error => {
@@ -268,7 +324,7 @@ function getCommonSecurityGroupList(caller, sortType, optionParam, filterKey, fi
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get SG Data : ", result.data);
@@ -311,7 +367,7 @@ function getCommonSshKeyList(caller, optionParam, filterKey, filterVal) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get SSH Data : ", result.data);
@@ -350,7 +406,7 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam, filterK
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Image List : ", result.data);
@@ -373,6 +429,8 @@ function getCommonVirtualMachineImageList(caller, sortType, optionParam, filterK
         } else if (caller == "mciscreate") {
             console.log("return get Data")
             getImageListCallbackSuccess(caller, data)
+        } else {
+            getImageListCallbackSuccess(caller, data, sortType)
         }
         // }).catch(function(error){
         //     console.log("list error : ",error);        
@@ -408,7 +466,7 @@ function getCommonVirtualMachineSpecList(caller, sortType, optionParam, filterKe
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Spec List : ", result.data);
@@ -444,7 +502,7 @@ function getCommonLookupSpecList(caller, connectionName) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName
@@ -475,7 +533,7 @@ function getCommonLookupSpec(caller, connectionName, cspSpecName) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName,
@@ -506,7 +564,7 @@ function putFetchSpecs(connectionName) {
     var url = "/setting/resources/vmspec/fetchvmspec"
     axios.post(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName
@@ -540,7 +598,7 @@ function getCommonFilterSpecsByRange(caller, searchObj) {
     //     searchObj       
     axios.post(url, searchObj, {
         headers: {
-            'Content-type': 'application/json',
+            //'Content-type': 'application/json',
             // 'Authorization': apiInfo, 
         }
 
@@ -578,7 +636,7 @@ function getCommonLookupImageList(caller, connectionName) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName
@@ -610,7 +668,7 @@ function getCommonLookupImage(caller, connectionName, cspImageID) {
     axios.get(url, {
         headers: {
             // 'Authorization': "{{ .apiInfo}}",
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         },
         params: {
             connectionName: connectionName,
@@ -642,7 +700,7 @@ function getCommonFetchImages(caller, connectionName) {
     var url = "/setting/resources/machineimage/fetchimages"
     axios.post(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log(result);
@@ -662,15 +720,28 @@ function getCommonFetchImages(caller, connectionName) {
 
 
 // MCIS 목록 존재여부
-function getCommonMcisList(caller, isCallback, targetObjId, optionParam) {
-    var url = "/operation/manages/mcismng/list"
+// optionParam이 id, status, simple 면 "?option=id", "?option=status" 등으로 호출
+// 그외 optionPapam이거나 2개 이상인 경우는 optionParam을 그대로 넘김. ex) vnet=aaa&bbb=ccc&option=status
+function getCommonMcisList(caller, isCallback, targetObjId, optionParam, filterKeyVal) {
+    // var url = "/operation/manages/mcismng/list"
+    var url = getWebToolUrl("McisList")
 
+    var hasOptionParam = false
     if (optionParam != "") {
         url += "?option=" + optionParam
+        hasOptionParam = true
+    }
+
+    if (filterKeyVal != "") {
+        if (hasOptionParam) {
+            url += "&" + filterKeyVal
+        } else {
+            url += "?" + filterKeyVal
+        }
     }
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Mcis List : ", result.data);
@@ -688,37 +759,12 @@ function getCommonMcisList(caller, isCallback, targetObjId, optionParam) {
     });
 }
 
-// 왜 똑같은게 있지?? 주석처리 함. 문제없으면 삭제할 것
-// function getCommonMcisList(caller) {
-//     var url = "/operation/manages/mcismng/list"
-//
-//     axios.get(url, {
-//         headers: {
-//             'Content-Type': "application/json"
-//         }
-//     }).then(result => {
-//         console.log("get Mcis List : ", result.data);
-//
-//         var data = result.data.McisList;
-//
-//         // if ( caller == "mainmcis") {
-//             console.log("return get Data");
-// 			getMcisListCallbackSuccess(caller, data)
-// 		// }
-//     }).catch(error => {
-// 		console.warn(error);
-// 		console.log(error.response)
-//         getMcisListCallbackFail(error)
-// 	});
-// }
-
 // MCIS 상세정보 조회
 function getCommonMcisData(caller, mcisID) {
     //var orgUrl = "/operation/manages/mcismng/:mcisID";
-    // McisData
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
-    var url = setUrlByParam(getWebToolUrl('McisData'), urlParamMap)
+    var url = setUrlByParam('McisData', urlParamMap)
     axios.get(url, {
 
     }).then(result => {
@@ -726,7 +772,6 @@ function getCommonMcisData(caller, mcisID) {
         if (result.data.status == 200 || result.data.status == 201) {
             getCommonMcisDataCallbackSuccess(caller, result.data.McisInfo, mcisID)
         } else {
-            //getMcisDataCallbackFail(caller, data)
             commonErrorAlert(result.data.status, "MCIS Data Search Failed");
         }
     }).catch(error => {
@@ -742,7 +787,7 @@ function getCommonMcisData(caller, mcisID) {
 function getCommonMcisStatusData(caller, mcisID) {
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
-    var url = setUrlByParam(getWebToolUrl('McisStatusData'), urlParamMap)
+    var url = setUrlByParam('McisStatusData', urlParamMap)
     axios.get(url, {
 
     }).then(result => {
@@ -771,7 +816,7 @@ function getCommonMcksList(caller, optionParam) {
 
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get Mcks List : ", result.data);
@@ -795,7 +840,7 @@ function getCommonVmSecurityGroupInfo(caller, securityGroupId) {
 
     axios.get(url, {
         headers: {
-            'Content-Type': "application/json"
+            //'Content-Type': "application/json"
         }
     }).then(result => {
         console.log("get SecurityGroup List : ", result.data);
@@ -839,6 +884,7 @@ function getCommonSearchVmImageList(keywordList, caller) {
     //     keywordList.push(keywords[i]);
     // }
 
+
     var url = "/setting/resources/machineimage/searchimage";
     axios.post(url, {
         // headers:{
@@ -876,12 +922,61 @@ function getCommonFilterVmSpecListByRange(specFilterObj, caller) {
 }
 
 
+// 모든 PMKS 목록 조회
+function getCommonAllPmksList(caller) {
+    var url = getWebToolUrl("PmksListOfNamespace")    
+    axios.get(url, {
+        headers: {
+            //'Content-Type': "application/json"
+        }
+    }).then(result => {
+        //        console.log("get Cluster List : ", result.data);
+        console.log(result)
+        getCommonAllPmksListSuccess(caller, result.data.PmksList)
+    }).catch(error => {
+        console.log(error);
+        commonAlert("Search Failed", error.message)
+    });
+}
+
+// Connection의 PMKS 목록 조회
+function getCommonPmksList(caller, connectionName) {
+    var url = "/operation/manages/pmks/list"
+    axios.get(url, {
+        headers: {
+            //'Content-Type': "application/json"
+        }
+    }).then(result => {
+        //        console.log("get Cluster List : ", result.data);
+        getCommonPmksListSuccess(caller, result.data.PmksList)
+    }).catch(error => {
+        console.log(error);
+    });
+}
+
+// PMKS 조회
+function getCommonPmksData(caller, clusterID, connectionName) {
+    var url = "/operation/manages/pmks/" + clusterID + "?connectionName=" + connectionName
+    axios.get(url, {
+        headers: {
+            //'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get Cluster  : ", result.data);
+
+        var data = result.data.PmksInfo;
+        getPmksDataSuccess(caller, clusterID, data)
+    }).catch(error => {
+        console.log(error);
+    });
+}
+
 // MCIS에 명령어 날리기
 function postRemoteCommandMcis(mcisID, commandWord) {
-    var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID";
+    //var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID";
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
-    var url = setUrlByParam(orgUrl, urlParamMap)
+    var url = setUrlByParam('McisCmd', urlParamMap)
 
     console.log(" command = " + commandWord)
     axios.post(url, {
@@ -908,11 +1003,11 @@ function postRemoteCommandMcis(mcisID, commandWord) {
 // VM에 명령어 날리기
 function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord) {
     //RemoteCommandVmOfMcis
-    var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID";
+    //var orgUrl = "/operation/manages/mcismng/cmd/mcis/:mcisID/vm/:vmID";
     var urlParamMap = new Map();
     urlParamMap.set(":mcisID", mcisID)
     urlParamMap.set(":vmID", vmID)
-    var url = setUrlByParam(orgUrl, urlParamMap)
+    var url = setUrlByParam('McisVmCmd', urlParamMap)
 
     console.log(" command = " + commandWord)
     axios.post(url, {
@@ -933,6 +1028,27 @@ function postRemoteCommandVmOfMcis(mcisID, vmID, commandWord) {
         var errorMessage = error.response.data.error;
         var statusCode = error.response.status;
         commonErrorAlert(statusCode, errorMessage);
+    });
+}
+
+// 해당 provider, connection 으로 사용가능한 Disk의 Type 정보(type, min, max ) 조회
+// ex) AWS -> standard|1|1024, gp2|1|16384
+function getCommonLookupDiskInfo(caller, providerID, connectionName) {
+    var url = "/setting/resources/datadisk/lookuplist"
+    url += "?provider=" + providerID + "&connectionName=" + connectionName
+    console.log("disk get url: ", url);
+
+    axios.get(url, {
+        headers: {
+            //'Content-Type': "application/json"
+        }
+    }).then(result => {
+        console.log("get LookupDisk  : ", result.data);
+
+        var data = result.data.DiskInfoList;
+        getCommonLookupDiskInfoSuccess(caller, providerID, data)
+    }).catch(error => {
+        console.log(error);
     });
 }
 

@@ -221,7 +221,7 @@ func NameSpaceDelProc(c echo.Context) error {
 }
 
 // NsListForm -> NameSpaceMngForm으로 변경
-//func NsListForm(c echo.Context) error {
+// func NsListForm(c echo.Context) error {
 func NameSpaceMngForm(c echo.Context) error {
 	fmt.Println("=============start NameSpaceMngForm =============")
 	loginInfo := service.CallLoginInfo(c)
@@ -349,7 +349,7 @@ func SetNameSpace(c echo.Context) error {
 		})
 	}
 
-	mcisList, _ := service.GetMcisListByID(loginInfo.DefaultNameSpaceID)
+	mcisList, _ := service.GetMcisListByID(loginInfo.DefaultNameSpaceID, "", "")
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":   "success",

@@ -1,0 +1,503 @@
+{{ template "Top" .}}
+
+<div id="lnb">
+
+	<div class="bg"></div>
+
+	<div class="m_box">
+
+		{{template "TopBox" .}}
+
+		{{template "LNBPopup" .}}
+
+		<!-- menu -->
+		{{template "MenuLeft" .}}
+		<!-- //menu -->
+	</div>
+
+	<div class="bottom"></div>
+	<a href="javascript:;" id="m_close"></a>
+
+</div>
+
+{{template "Header" .}}
+
+{{template "Modal" .}}
+
+<!-- contents -->
+<div class="contbox">
+
+	<div class="titlebox">
+		<div class="tit"><img src="/assets/img/common/icon_cont.png" alt="" />Resources / <strong>Disk</strong></div>
+		<div class="location">Home <span>></span> Setting <span>></span> Resources <span>></span>
+			<strong>Disk</strong>
+		</div>
+	</div>
+
+	<!-- list -->
+	<div class="dashboard dashboard_cont">
+
+		<div class="d_box box_m box_w100">
+			<div class="titbox">
+				<div class="tit initial"><strong>Disk</strong></div>
+				<div class="top_info">
+					<ul>
+						<li>
+							<a href="javascript:void(0);">Filter</a>
+							<div class="infobox">
+								<div class="box">
+									<ul>
+										<li><a href="javascript:void(0);"
+												onclick="commonPromptOpen('RsFltVPCName', 'dataDiskListTable')">Disk
+												Name</a>
+										</li>
+										<li><a href="javascript:void(0);"
+												onclick="commonPromptOpen('RsFltCIDRBlock', 'dataDiskListTable')">Disk
+												Type</a>
+										</li>
+										<li><a href="javascript:void(0);"
+												onclick="commonPromptOpen('RsFltCIDRBlock', 'dataDiskListTable')">Disk
+												Size</a>
+										</li>
+										<li class="divider"></li>
+										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
+												onClick="getDataDiskList()">Clear</a></li>
+
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void(0);">Sort</a>
+							<div class="infobox">
+								<div class="box">
+									<ul>
+										<li><a href="javascript:void(0);"
+												onclick="tableSort('dataDiskListTable', 'Disk Name')">Disk Name</a></li>
+										<li><a href="javascript:void(0);"
+												onclick="tableSort('dataDiskListTable', 'Disk Type')">Disk Type</a></li>
+										<li><a href="javascript:void(0);"
+												onclick="tableSort('dataDiskListTable', 'Disk Size')">Disk Size</a></li>
+										<!--
+														<li><a href="javascript:void(0);" onclick="getVpcList('name')">VPC Name</a></li>
+														<li><a href="javascript:void(0);" onclick="getVpcList('cidrBlock')">CIDR Block</a></li>
+														-->
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void(0);">Action</a>
+							<div class="infobox">
+								<div class="box">
+									<ul>
+										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
+												onClick="displayDataDiskInfo('REG')">Add</a></li>
+										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
+												onClick="displayDataDiskInfo('Attach')">Attach</a></li>
+										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#RegistBox"
+												onClick="runDetachDataDisk('detach')">Detach</a></li>
+										<li><a href="javascript:void(0);" data-toggle="modal" data-target="#UnRegist"
+												onClick="commonConfirmOpen('DeleteDataDisk')">Delete</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li><a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt="" /></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="ds_cont">
+
+				<div class="dataTable status_list" id="dataDiskListTable">
+					<table cellpadding="0" cellspacing="0" border="1" summary="" id="dataDiskListTable">
+
+						<thead>
+							<tr>
+								<th class="column-50px"><input type="checkbox" name="chk" value="" id="th_chall"
+										title="" /><label for="th_chall"></label></th>
+								<th>Disk Name</th>
+								<th>Disk Type</th>
+								<th>Disk Size</th>
+								<th>Associated Object</th>
+								<th>Connection Name</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody id="dataDiskList">
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+	<!-- //list -->
+
+
+	<!-- Modify -->
+	<div class="dashboard dashboard_cont server_status" id="dataDiskInfoBox">
+
+		<div class="d_box box_m box_w100">
+			<div class="titbox_n">
+				<div class="tit initial"><strong>Disk Info</strong> [ <span class="stxt" id="dataDiskName"></span>
+					] </div>
+			</div>
+
+			<div class="ds_cont">
+				<div class="register_box">
+
+					<div class="top_ipbox">
+						<div class="ipbox ipbox1">
+							<ul>
+								<li>
+									<label>Disk Name</label>
+									<span class="sbox">
+										<input type="text" id="dtlDiskName" name="dtlDiskName" value="" placeholder=""
+											class="gray" title="" disabled />
+										<input type="hidden" id="dtlDiskId" name="dtlDiskId" value="" placeholder="" />
+									</span>
+								</li>
+								<li>
+									<label>Disk Type</label>
+									<span class="sbox">
+										<input type="text" id="dtlDiskType" name="dtlDiskType" value="" placeholder=""
+											class="gray" title="" disabled />
+									</span>
+								</li>
+								<li>
+									<label>Disk Size(GB)</label>
+									<span class="sbox">
+										<input type="text" id="dtlPreDiskSize" name="dtlDiskSize" value=""
+											placeholder="" class="gray" title="" disabled />
+										<!-- <input type="hidden" id="dtlPreDiskSize" name="dtlPreDiskSize" /> -->
+									</span>
+								</li>
+								<li>
+									<label>Update Disk Size(GB)</label>
+									<span class="sbox">
+										<input type="text" id="dtlDiskSize" name="dtlDiskSize" value="" placeholder=""
+											class="" title="" />
+									</span>
+								</li>
+								<li>
+									<label>Associated Object</label>
+									<span class="sbox">
+										<input type="text" id="dtlAssoObj" name="dtlAssoObj" value="" placeholder=""
+											class="gray" title="" disabled />
+
+									</span>
+								</li>
+								<li>
+									<label>Description</label>
+									<span class="sbox">
+										<textarea id="dtlDescription" name="dtlDescription" cols="" rows=""
+											placeholder="" class="" title=""></textarea>
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div class="ipbox ipbox2">
+							<ul>
+								<li>
+									<label>Cloud Provider</label>
+									<input type="text" id="dtlProvider" name="dtlProvider" value="" placeholder=""
+										class="gray" title="" readonly />
+									<!-- <select class="selectbox w1 ">
+														<option value="1">Selected Provider</option>
+														<option value="2" disabled>Selected disabled</option>
+													</select>
+													<select class="selectbox w2">
+														<option value="1">Selected Region</option>
+													</select> -->
+
+								</li>
+								<li>
+									<label>Connection Name</label>
+									<input type="text" id="dtlConnectionName" name="dtlConnectionName" value=""
+										placeholder="" class="gray" title="" readonly />
+								</li>
+								<!-- <li>
+									<label>CidrBlock</label>
+									<input type="text" id="dtlCidrBlock" name="dtlCidrBlock" value="" placeholder=""
+										class="gray" title="" readonly />
+								</li>
+								<li>
+									<label>Subnet</label>
+									<span class="sbox">
+										<input type="text" id="dtlSubnet" name="dtlSubnet" value="" placeholder=""
+											class="gray" title="" readonly />
+										<button name="" value="" class="btn_edit btn_register">Edit</button>
+										
+									</span>
+								</li> -->
+							</ul>
+						</div>
+					</div>
+					<div class="btnbox">
+						<div class="btn_center">
+							<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel">Cancel</button>
+							<button name="" value="" class="btn_co btn_cr_g w135 btn_modify"
+								onclick="putDataDisk();">Update</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	<!-- //Modify -->
+
+	<!-- Register DataDisk -->
+	<div class="dashboard dashboard_cont register_cont" id="dataDiskCreateBox">
+
+		<div class="d_box box_m box_w100">
+			<div class="titbox_n">
+				<div class="tit initial cg"><strong>Create Disk</strong></div>
+			</div>
+
+			<div class="ds_cont">
+				<div class="register_box reg">
+
+					<div class="top_ipbox">
+						<div class="ipbox ipbox1">
+							<ul>
+								<li>
+									<label><span class="ch">*</span>Disk Name</label>
+									<span class="sbox">
+										<input type="text" id="regDataDiskName" name="reg_dataDiskName" value=""
+											placeholder="Input Disk Name" class="pline" title="" />
+									</span>
+								</li>
+								<li>
+									<label><span class="ch">*</span>Disk Type</label>
+									<span class="sbox">
+										<select class="selectbox white pline w3" id="regDataDiskType"
+											name="reg_dataDiskType"
+											onchange="diskSize(this.value, 'test_regDataDiskSize')">
+											<option selected>Select Disk Type</option>
+										</select>
+									</span>
+								</li>
+								<li>
+									<label><span class="ch">*</span>Disk Size(GB)</label>
+									<span class="sbox">
+										<input type="text" id="regDataDiskSize" name="reg_dataDiskSize" value=""
+											placeholder="Input Disk Size" class="pline" title="" />
+									</span>
+								</li>
+								<li>
+									<label>Description</label>
+									<span class="sbox">
+										<textarea id="regDescription" name="reg_description" cols="" rows=""
+											placeholder="Description" class="pline" title=""></textarea>
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div class="ipbox ipbox2">
+							<ul>
+								<li>
+									<label>Cloud Provider</label>
+									<select class="selectbox white pline w3" id="provider" name="ProvideName"
+										onchange="getConnectionListForSelectbox(this.value, 'regConnectionName'), diskType(this.value,'regDataDiskType')">
+										<option selected>Select Cloud Provider</option>
+										{{ range $item := .CloudOSList}}
+										<option value="{{ $item }}">{{ $item }}</option>
+										{{ end }}
+									</select>
+								</li>
+								<li>
+									<label><span class="ch">*</span>Connection</label>
+									<select class="selectbox white pline w3" id="regConnectionName"
+										name="reg_connectionName">
+										<option selected>Selected ConnectionName</option>
+									</select>
+								</li>
+								<!-- <li>
+									<label>CidrBlock</label>
+									<input type="text" id="dtlCidrBlock" name="dtlCidrBlock" value="" placeholder=""
+										class="gray" title="" readonly />
+								</li>
+								<li>
+									<label>Subnet</label>
+									<span class="sbox">
+										<input type="text" id="dtlSubnet" name="dtlSubnet" value="" placeholder=""
+											class="gray" title="" readonly />
+										<button name="" value="" class="btn_edit btn_register">Edit</button>
+										
+									</span>
+								</li> -->
+							</ul>
+						</div>
+					</div>
+
+					<div class="btnbox">
+						<div class="btn_center">
+							<button name="" value="" class="btn_co btn_cr_b w135 btn_cancel"
+								onclick="displayDataDiskInfo('CLOSE')">Cancel</button>
+							<button name="" value="" class="btn_co btn_cr_g w135 btn_ok"
+								onclick="createDataDisk()">Ok</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	<!-- //Register DataDisk -->
+
+	<!-- select vm -->
+	<div class="register_box modal fade" id="vmSelectBox" tabindex="-1" role="dialog" aria-hidden="true">
+
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+
+				<div class="modal-body">
+					<div class="pop-body">
+
+						<div class="title_box">
+							<div class="title">VM List</div>
+						</div>
+
+						<div class="pop-cont">
+
+							<div class="toptxt">
+								<label>Selected Disk : </label>
+								<input type="text" id="selected_disk" name="" value="" placeholder="" class="gray"
+									title="" readonly />
+								<input type="hidden" id="selected_disk_id" name="" value="" placeholder="" class="gray"
+									title="" readonly />
+								<input type="hidden" id="attach_mcis_id" value="" />
+								<input type="hidden" id="attach_vm_id" value="" />
+							</div>
+
+							<!-- table scrollbar -->
+							<div class="dtbox scrollbar-inner">
+								<div class="dataTable dt_overlay">
+									<table cellpadding="0" cellspacing="0" border="1" summary="">
+										<!-- <colgroup><col width=""><col width=""><col width="100px"></colgroup> -->
+										<thead>
+											<tr>
+												<th class="column-50px">
+													<!-- <input type="checkbox" name="" value="" id="th_chall"
+													title="" /><label for="th_chall"></label> -->
+												</th>
+												<th>MCIS Name</th>
+												<th>VM Name</th>
+												<th>Connection Name</th>
+											</tr>
+										</thead>
+										<tbody id="vmList">
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- //table scrollbar -->
+
+							<div class="b_txt"><span class="ch">*</span> Select the VM to be attached to DISK by
+								clicking <span class="txt"> “Attach”</span></div>
+						</div>
+
+					</div>
+
+					<div class="btnbox">
+						<div class="btn_right">
+							<button name="" value="" class="btn_apply btn_co btn_cr_g"
+								onclick="runAttachDataDisk('attach')"><span>Attach</span></button>
+							<button name="" value="" class="btn_cancel btn_co btn_cr_b"
+								data-dismiss="modal">cancel</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+	<!-- //select vm -->
+
+
+
+</div>
+<!-- //contents -->
+<script src="/assets/js/setting/resources/datadiskmng.js"></script>
+<script>
+	function diskType(provider, target) {
+		//var provider = $("#provider").val();
+		var html = '<option selected>Select Disk Type</option>';
+		if (provider) {
+			if (provider == "AWS") {
+				var diskType = ['standard', 'gp2', 'gp3', 'io1', 'io2', 'st1', 'sc1']
+				diskType.forEach((item) => {
+					html += '<option value="' + item + '">'
+						+ item + '</option>'
+				})
+				console.log(html);
+				$("#" + target).empty()
+				$("#" + target).append(html)
+			}
+			if (provider == "AZURE") {
+				var diskType = ['standard', 'gp2', 'gp3', 'io1', 'io2', 'st1', 'sc1']
+				diskType.forEach((item) => {
+					html += '<option value="' + item + '">'
+						+ item + '</option>'
+				})
+				console.log(html);
+				$("#" + target).empty()
+				$("#" + target).append(html)
+			}
+
+		} else {
+			alert("Please Select provider!")
+			return;
+		}
+	}
+
+	function diskSize(type, target) {
+		var provider = $("#provider").val();
+		var html = '<label><span class="ch">*</span>Disk Size</label>';
+		var id_arr = target.split('_');
+		var id = id_arr[1];
+		if (provider) {
+			if (provider == "AWS") {
+				var obj = {
+					standard: "1|1024",
+					gp2: "1|16384",
+					gp3: "1|16384",
+					io1: "1|16384",
+					io2: "1|16384",
+					st1: "1|16384",
+					sc1: "1|16384",
+				}
+				var diskType = obj[type];
+				var typeValue = diskType.split("|");
+				var min = typeValue[0];
+				var max = typeValue[1];
+				html += '<input type="range" min="' + min + '" max="' + max + '" value="' + min + '" id="' + id + '">';
+
+				$("#" + target + "").empty();
+				$("#" + target + "").append(html);
+			}
+
+
+		} else {
+			alert("Please Select provider!")
+			return;
+		}
+	}
+
+
+
+</script>
+{{template "Footer" .}}

@@ -1,6 +1,6 @@
 package ladybug
 
-// ladybug
+// ladybug : ClusterReq
 type ClusterRegReq struct {
 	// ControlPlaneNodeCount int    `json:"controlPlaneNodeCount"`
 	// ControlPlaneNodeSpec  string `json:"controlPlaneNodeSpec"`
@@ -8,8 +8,10 @@ type ClusterRegReq struct {
 	// WorkerNodeCount       int    `json:"workerNodeCount"`
 	// WorkerNodeSpec        string `json:"workerNodeSpec"`
 
-	Name         string        `json:"name"`
-	Config       ClusterConfig `json:"config"`
-	ControlPlane []NodeConfig  `json:"controlPlane"`
-	Worker       []NodeConfig  `json:"worker"`
+	Name         string           `json:"name"`
+	Label        string           `json:"label"`
+	Description  string           `json:"description"`
+	Config       ClusterConfigReq `json:"config"`
+	ControlPlane []NodeSetReq     `json:"controlPlane"`
+	Worker       []NodeSetReq     `json:"worker"`
 }
