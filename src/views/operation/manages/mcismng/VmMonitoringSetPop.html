@@ -315,12 +315,12 @@
 			user_name: userName,
 			ssh_key_name: sshKeyName,
 			cspType: cspType,
-			port : port
+			port: port
 		}
 		// var formData = new FormData(document.getElementById("manage_mcis_popup_form"));			
 		axios.post(url, obj, {
 			headers: {
-				'Content-type': 'application/json',
+				//'Content-type': 'application/json',
 				// 'Authorization': apiInfo, 
 			}
 			// axios.post(url,formData,{
@@ -394,4 +394,271 @@
 
 	});
 </script>
+
+<!-- attached disk list -->
+<div class="modal fade popup_editBox" id="attachDiskSelectBox" tabindex="-1" role="dialog" aria-hidden="true">
+
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<div class="modal-body">
+				<div class="pop-body">
+
+					<div class="title_box">
+						<div class="title">Attached Disk List</div>
+					</div>
+					<div class="btnbox">
+						<div class="btn_right">
+							<button name="" value="" class="btn_apply btn_co btn_cr_g"
+								onclick="displayAvailableDisk(true)"><span>Attach Disk</span></button>
+						</div>
+					</div>
+
+					<div class="pop-cont">
+
+						<!-- <div class="toptxt">
+							<label>Selected Disk : </label>
+							<input type="text" id="selected_disk"name="" value="" placeholder="" class="gray" title="" readonly />
+							<input type="hidden" id="selected_disk_id"name="" value="" placeholder="" class="gray" title="" readonly />
+							<input type="hidden" id="attach_mcis_id" value=""/>
+							<input type="hidden" id="attach_vm_id" value=""/>
+						</div> -->
+
+						<!-- table scrollbar -->
+						<div class="dtbox scrollbar-inner">
+							<div class="dataTable dt_overlay">
+								<table cellpadding="0" cellspacing="0" border="1" summary="">
+									<!-- <colgroup><col width=""><col width=""><col width="100px"></colgroup> -->
+									<thead>
+										<tr>
+											<th class="column-50px">
+												<input type="checkbox" name="" value="" id="th_chall" title="" /><label
+													for="th_chall"></label>
+											</th>
+											<th>Disk Name</th>
+											<th>Disk Type</th>
+											<th>Disk Size</th>
+										</tr>
+									</thead>
+									<tbody id="attachedDiskList">
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- //table scrollbar -->
+
+						<div class="b_txt"><span class="ch">*</span> Select the Disk to be detached from VM by clicking
+							<span class="txt"> “Detach”</span>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="btnbox">
+					<div class="btn_right">
+						<button name="" value="" class="btn_apply btn_co btn_cr_g"
+							onclick="runDetachDisk('detach')"><span>Detach</span></button>
+						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- //attached disk list -->
+
+<!-- available disk list -->
+<div class="modal fade popup_editBox" id="availableDiskSelectBox" tabindex="-1" role="dialog" aria-hidden="true">
+
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<div class="modal-body">
+				<div class="pop-body">
+
+					<div class="title_box">
+						<div class="title">Available Disk List</div>
+						<div class="btnbox">
+							<div class="btnbox">
+								<div class="btn_s">
+									<button class="btn_add" value="" name="" onclick="addRow()">add</button>
+									<button class="btn_delete" value="" name="" onclick="deleteRow()">delete</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<script>
+						function runAttachDataDisk() {
+							var mcis_id = $("#server_detail_disk_mcis_id").val();
+							var vm_id = $("#server_detail_disk_vm_id").val();
+							var connectionName = $("#server_connection_view_connection_name").val();
+							var attachDataDiskList = [];
+							var createDataDiskList = [];
+
+							$("input[name='chk_attach']:checked").each(function () {
+
+								var item = $(this).attr("item");
+								console.log("item : ", item);
+								if (item == "add_new") {
+									var row_index = $(this).attr("row_index");
+									var disk_name = $("#addDiskName_" + row_index).val();
+									var disk_type = $("#addDiskType_" + row_index).val();
+									var disk_size = $("#addDiskSize_" + row_index).val();
+									var disk_obj = {
+										name: disk_name,
+										diskSize: disk_size,
+										diskType: disk_type,
+										mcisId: mcis_id,
+										attachVmId: vm_id,
+										connectionName
+									}
+									createDataDiskList.push(disk_obj)
+								} else {
+									var dataDiskId = $(this).val();
+									attachDataDiskList.push(dataDiskId);
+								}
+							});
+
+
+							var url = "/setting/resources/datadisk/mng"
+							url += "?mcisID=" + mcis_id + "&vmID=" + vm_id;
+							console.log("attach url = ", url);
+							console.log("attachDataDiskList : ", attachDataDiskList);
+							console.log("CreateDataDiskList : ", createDataDiskList);
+							var obj = {
+								attachDataDiskList,
+								createDataDiskList
+							}
+							console.log("runAttachDataDisk obj: ", obj);
+
+
+						}
+						function diskType(provider) {
+							//var provider = $("#provider").val();
+							var html = '<option value="default" selected>Select Disk Type</option>';
+							if (provider) {
+								if (provider == "AWS") {
+									var diskType = ['standard', 'gp2', 'gp3', 'io1', 'io2', 'st1', 'sc1']
+									diskType.forEach((item) => {
+										html += '<option value="' + item + '">'
+											+ item + '</option>'
+									})
+								} else if (provider == "AZURE") {
+									var diskType = ['standard', 'gp2', 'gp3', 'io1', 'io2', 'st1', 'sc1']
+									diskType.forEach((item) => {
+										html += '<option value="' + item + '">'
+											+ item + '</option>'
+									})
+								}
+							}
+							return html
+						}
+						var add_row_cnt = 0
+						function addRow() {
+							add_row_cnt++;
+							var provider = $("#manage_mcis_popup_csp").val();
+							console.log("select provider at add row : ", provider);
+							var upperCaseProvider = provider.toUpperCase();
+							console.log("select  upperCaseProvider: ", upperCaseProvider);
+							var addHtml = diskType(upperCaseProvider);
+							var html = "";
+							html += '<tr>'
+								+ '<td class="overlay hidden column-50px" data-th="">'
+								+ '<input type="checkbox" name="chk_attach"  item="add_new" value="" '
+								+ 'row_index="'
+								+ add_row_cnt
+								+ '" title=""  /><label for="td_ch1"></label> <span class="ov off"></span>'
+								+ '</td>'
+								+ '<td class="btn_mtd ovm" data-th="name">'
+								+ '<input type="text" class="pline" style="width:100px;height:50px;" name="addDiskName" id="addDiskName_' + add_row_cnt + '" placeholder="Disk Name" value =""/>'
+								+ '<span class="ov"></span></td>'
+								+ '<td class="overlay hidden" data-th="diskType">'
+								+ '<select name="addDiskType" id="addDiskType_' + add_row_cnt + '"class="selectbox white pline w_ip1" style="width:108px;">'
+								+ addHtml
+								+ '</select>'
+								+ '</td>'
+								+ '<td class="overlay hidden" data-th="diskSize">'
+								+ '<input type="text" class="pline" style="width:100px;height:50px;" placeholder="Disk Size /GB" name="addDiskSize" id="addDiskSize_' + add_row_cnt + '"value =""/>'
+								+ '</select>'
+								+ '</td>'
+								+ '</tr>';
+
+							$("#availableDiskList").append(html);
+							$("#add_row_cnt").val(add_row_cnt);
+
+						}
+
+						function deleteRow() {
+							var availableDiskCnt = $("#availableDiskCnt").val();
+							var addRowCnt = $("#add_row_cnt").val()
+							var totalRowCnt = parseInt(availableDiskCnt) + parseInt(add_row_cnt);
+							console.log("totalRowCnt : ", totalRowCnt);
+							if (add_row_cnt > 0) {
+								add_row_cnt--;
+								$("#add_row_cnt").val(add_row_cnt);
+								$("#availableDiskList").children('tr:last').remove();
+							}
+
+						}
+					</script>
+					<div class="pop-cont">
+
+						<!-- <div class="toptxt">
+							<label>Selected Disk : </label>
+							<input type="text" id="selected_disk"name="" value="" placeholder="" class="gray" title="" readonly />
+							<input type="hidden" id="selected_disk_id"name="" value="" placeholder="" class="gray" title="" readonly />
+							<input type="hidden" id="attach_mcis_id" value=""/>
+							<input type="hidden" id="attach_vm_id" value=""/>
+						</div> -->
+
+						<!-- table scrollbar -->
+						<div class="dtbox scrollbar-inner">
+							<div class="dataTable dt_overlay">
+								<table cellpadding="0" cellspacing="0" border="1" summary="">
+									<!-- <colgroup><col width=""><col width=""><col width="100px"></colgroup> -->
+									<thead>
+										<tr>
+											<th class="column-50px">
+												<input type="checkbox" name="" value="" id="th_chall" title="" /><label
+													for="th_chall"></label>
+											</th>
+											<th>Disk Name</th>
+											<th>Disk Type</th>
+											<th>Disk Size</th>
+										</tr>
+									</thead>
+									<input type="hidden" id="availableDiskCnt" />
+									<input type="hidden" id="add_row_cnt" />
+									<tbody id="availableDiskList">
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- //table scrollbar -->
+
+						<div class="b_txt"><span class="ch">*</span> Select the Disk to be attached to VM by clicking
+							<span class="txt"> “Attach”</span>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="btnbox">
+					<div class="btn_right">
+						<button name="" value="" class="btn_apply btn_co btn_cr_g"
+							onclick="runAttachDataDisk()"><span>Attach</span></button>
+						<button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- //available disk list -->
 {{end}}

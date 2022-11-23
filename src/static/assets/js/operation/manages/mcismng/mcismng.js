@@ -1,6 +1,6 @@
 var selectedMcis = "";// 선택 된 mcisId :// 다른 화면 등에서 mcisID를 넘겨주는 경우 사용
 $(document).ready(function () {
-    AjaxLoadingShow(true);
+    //AjaxLoadingShow(true);
     checkLoadStatus();
 
     jQuery('.sc_box.scrollbar-inner').scrollbar();// CP / connectin의 구름 이미지들 창이 작아졌을 때 scroll 생기도록
@@ -180,219 +180,8 @@ function getMcisListCallbackSuccess(caller, mcisList) {
         }
 
     }
-    AjaxLoadingShow(false);
-    // // MCIS Status
-    // var totalMcisCnt = 0;
-    // var mcisStatusCountMap = new Map();
-    // mcisStatusCountMap.set("running", 0);
-    // mcisStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
-    // mcisStatusCountMap.set("terminate", 0);
-    //
-    // var totalServerCnt = 0;
-    // var totalVmStatusCountMap = new Map();
-    // totalVmStatusCountMap.set("running", 0);
-    // totalVmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
-    // totalVmStatusCountMap.set("terminate", 0);
-    //
-    // if(!isEmpty(mcisList) && mcisList.length > 0 ){
-    //     //totalMcisCnt = mcisList.length;
-    //     var addMcis = "";
-    //     for(var mcisIndex in mcisList){
-    //         var aMcis = mcisList[mcisIndex]
-    //         var mcisStatus = aMcis.status
-    //         var mcisTargetStatus = aMcis.targetStatus
-    //         var mcisTargetAction = aMcis.targetAction
-    //         var mcisProviderNames = "";//MCIS에 사용 된 provider
-    //         var totalVmCountOfMcis = 0;//MCIS의 VM 갯 수
-    //         var mcisDispStatus = getMcisStatusDisp(mcisStatus);// 화면 표시용 status
-    //         // mcis status
-    //         try{
-    //             // console.log(aMcis)
-    //             if( mcisStatus != ""){// mcis status 가 없는 경우는 skip
-    //                 if( mcisStatusCountMap.has(mcisDispStatus) ){
-    //                     mcisStatusCountMap.set(mcisDispStatus, mcisStatusCountMap.get(mcisDispStatus) + 1)
-    //                 }
-    //                 totalMcisCnt++;
-    //             }else{
-    //                 continue;// status가 없으면 mcks 일 수 있으므로 mcis에서는 count 제외
-    //             }
-    //         }catch(e){
-    //             console.log("mcis status error")
-    //         }
-    //
-    //         // vm status
-    //         try{
-    //             var vmListOfMcis = aMcis.vm;// array
-    //
-    //
-    //             var vmStatusCountMap = new Map();
-    //             vmStatusCountMap.set("running", 0);
-    //             vmStatusCountMap.set("stop", 0);  // partial 도 stop으로 보고있음.
-    //             vmStatusCountMap.set("terminate", 0);
-    //
-    //             var vmCloudConnectionMap = new Map();
-    //             console.log(vmListOfMcis)
-    //             if (typeof vmListOfMcis !== 'undefined' && vmListOfMcis.length > 0) {
-    //                 for(var vmIndex in vmListOfMcis){
-    //                     var aVm = vmListOfMcis[vmIndex];
-    //                     var vmDispStatus = getVmStatusDisp(aVm.status);
-    //                     totalVmCountOfMcis++;
-    //                     console.log(vmDispStatus)
-    //                     if( vmStatusCountMap.has(vmDispStatus) ){
-    //                         vmStatusCountMap.set(vmDispStatus, vmStatusCountMap.get(vmDispStatus) + 1)// mcis내 count
-    //                         totalVmStatusCountMap.set(vmDispStatus, totalVmStatusCountMap.get(vmDispStatus) + 1)// 전체 count
-    //                     }
-    //                     totalServerCnt++;
-    //
-    //                     // connections
-    //                     var location = aVm.location;
-    //                     if( !isEmpty(location) ){
-    //                         var cloudType = location.cloudType;
-    //                         if( vmCloudConnectionMap.has(cloudType) ){
-    //                             vmCloudConnectionMap.set(cloudType, vmCloudConnectionMap.get(cloudType) + 1)
-    //                         }else{
-    //                             vmCloudConnectionMap.set(cloudType, 0)
-    //                         }
-    //                     }
-    //                 }
-    //             }// end of vm list
-    //
-    //             // console.log(vmCloudConnectionMap);
-    //             vmCloudConnectionMap.forEach((value, key) => {
-    //                 mcisProviderNames += key + " ";
-    //             });
-    //             console.log("mcisProviderNames=" + mcisProviderNames);
-    //         }catch(e){
-    //             console.log("vm status error")
-    //         }
-    //
-    //
-    //
-    //         // List of Mcis table
-    //         try{
-    //
-    //
-    //             // var displayMcisStatus = "";// icon_running, icon_stop, icon_terminate
-    //             // if( mcisStatus.toLowerCase().indexOf("running") ){
-    //             //     displayMcisStatus = "running"
-    //             // }else if ( mcisStatus.toLowerCase().indexOf("suspend")){
-    //             //     displayMcisStatus = "stop"
-    //             // }else if ( mcisStatus.toLowerCase().indexOf("terminate")){
-    //             //     displayMcisStatus = "terminate"
-    //             // }else {
-    //             //     displayMcisStatus = "terminate"
-    //             // }
-    //
-    //
-    //
-    //             addMcis += '<tr onclick="clickListOfMcis(\'' + aMcis.id + '\', ' + mcisIndex +' );" id="server_info_tr_' + mcisIndex +'" item="' + aMcis.id +'|' + mcisIndex + '">'
-    //
-    //             addMcis += '<td class="overlay hidden td_left column-14percent" data-th="Status">'
-    //             addMcis += '<img id="mcisInfo_mcisStatus_icon" src="/assets/img/contents/icon_' + mcisDispStatus +'.png" class="icon" alt=""/><div id="mcisInfo_mcisstatus_' + mcisIndex + '">' + mcisStatus + '</div><span class="ov off"></span>'
-    //             addMcis += '</td>'
-    //             addMcis += '<td class="btn_mtd ovm column-14percent" data-th="Name"><div id="mcisInfo_mcisName_' + mcisIndex + '">' + aMcis.name + '</div><span class="ov"></span></td>'
-    //             addMcis += '<td class="overlay hidden column-14percent" data-th="Cloud Connection"><div id="mcisInfo_mcisProviderNames">' + mcisProviderNames + '</div></td>'
-    //
-    //             addMcis += '<td class="overlay hidden column-14percent" data-th="Total Infras"><div id="mcisInfo_totalVmCountOfMcis">' + totalVmCountOfMcis + '</div></td>'
-    //
-    //             addMcis += '<td class="overlay hidden column-14percent" data-th="# of Servers">'
-    //             addMcis += '<span class="bar" ></span> <span title="running" id="mcisInfo_vmstatus_running_' + mcisIndex + '_' + vmIndex + '">' + vmStatusCountMap.get('running') + '</span>'
-    //             addMcis += '<span class="bar" >/</span> <span title="stop" id="mcisInfo_vmstatus_stop' + mcisIndex + '_' + vmIndex + '">' + vmStatusCountMap.get('stop') + '</span>'
-    //             addMcis += '<span class="bar" >/</span> <span title="terminate" id="mcisInfo_vmstatus_terminate' + mcisIndex + '_' + vmIndex + '">' + vmStatusCountMap.get('terminate') + '</span>'
-    //             addMcis += '</td>'
-    //
-    //             addMcis += '<td class="overlay hidden" data-th="Description"><div id="mcisInfo_mcisDescription' + mcisIndex + '">' + aMcis.description + '</div></td>'
-    //
-    //             addMcis += '<td class="overlay hidden column-60px"  data-th="">'
-    //             addMcis += '<input type="checkbox" name="chk" value="' + aMcis.id + '" id="td_ch_' + mcisIndex + '" title="" />'
-    //             addMcis += '<label for="td_ch_' + mcisIndex + '"></label>'
-    //             addMcis += '</td>'
-    //
-    //             // MCIS 기본정보 hidden : 클릭시 보여주기 위해
-    //             addMcis += '<input type="hidden" name="mcisID" value="' + aMcis.id + '" id="mcisID' + mcisIndex + '"/>'
-    //             addMcis += '<input type="hidden" name="mcisName" value="' + aMcis.name + '" id="mcisName' + mcisIndex + '"/>'
-    //             addMcis += '<input type="hidden" name="mcisStatus" value="' + mcisStatus + '" id="mcisStatus' + mcisIndex + '"/>'
-    //             addMcis += '<input type="hidden" name="mcisTargetStatus" value="' + mcisTargetStatus + '" id="mcisTargetStatus' + mcisIndex + '"/>'
-    //             addMcis += '<input type="hidden" name="mcisTargetAction" value="' + mcisTargetAction + '" id="mcisTargetAction' + mcisIndex + '"/>'
-    //             addMcis += '<input type="hidden" name="mcisDescription" value="' + aMcis.description + '" id="mcisDescription' + mcisIndex + '"/>'
-    //             addMcis += '<input type="hidden" name="mcisCloudConnections" value="' + mcisProviderNames + '" id="mcisCloudConnections' + mcisIndex + '"/>'
-    //             addMcis += '<input type="hidden" name="mcisVmTotalCount" value="' + totalServerCnt + '" id="mcisVmTotalCount' + mcisIndex + '"/>'
-    //
-    //
-    //             addMcis += '<input type="hidden" name="m_exportFileName" id="m_exportFileName_' + mcisIndex + '" value="" />'
-    //             addMcis += '<input type="hidden" name="m_mcisExportScript" id="m_mcisExportScript_' + mcisIndex + '" value="" />'
-    //
-    //             // export 용
-    //
-    //             if (typeof vmListOfMcis !== 'undefined' && vmListOfMcis.length > 0) {
-    //                 for(var vmIndex in vmListOfMcis){
-    //                     var aVm = vmListOfMcis[vmIndex];
-    //                     addMcis += '<input type="hidden" name="vmID" id="mcisVmID_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.id + '" />'
-    //                     addMcis += '<input type="hidden" name="vmID" id="mcisVmName_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.name + '" />'
-    //                     addMcis += '<input type="hidden" name="vmStatus" id="mcisVmStatus_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.status + '" />'
-    //
-    //                     // vm export 용 m_ 는 mcis의 첫글자 m
-    //                     addMcis += '<input type="hidden" name="m_vmConnectionName" id="m_vmConnectionName_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.connectionName + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmDescription" id="m_vmDescription_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.description + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmImageId" id="m_vmImageId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.imageId + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmLabel" id="m_vmLabel_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.label + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmName" id="m_vmName_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.name + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmSecurityGroupIds" id="m_vmSecurityGroupIds_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.securityGroupIds + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmSpecId" id="m_vmSpecId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.specId + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmSshKeyId" id="m_vmSshKeyId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.sshKeyId + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmSubnetId" id="m_vmSubnetId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.subnetId + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmVnetId" id="m_vmVnetId_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.vNetId + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmGroupSize" id="m_vmGroupSize_' + mcisIndex + '_' + vmIndex + '" value="0" />' // vm 생성 시 동일한 것을 몇 개 만들 것인가이며 생성 param에만 있음.조회결과에는 없음.
-    //                     addMcis += '<input type="hidden" name="m_vmUserAccount" id="m_vmUserAccount_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.vmUserAccount + '" />'
-    //                     addMcis += '<input type="hidden" name="m_vmUserPassword" id="m_vmUserPassword_' + mcisIndex + '_' + vmIndex + '" value="' + aVm.vmUserPassword + '" />'
-    //
-    //                     addMcis += '<input type="hidden" name="m_vmExportFileName" id="m_vmExportFileName_' + mcisIndex + '_' + vmIndex + '" value="" />'
-    //                     addMcis += '<input type="hidden" name="m_vmExportScript" id="m_vmExportScript_' + mcisIndex + '_' + vmIndex + '" value="" />'
-    //
-    //                 }
-    //             }
-    //
-    //             // mcis export
-    //             addMcis += '<input type="hidden" name="m_mcisDescription" id="m_mcisDescription_' + mcisIndex + '" value="' + aMcis.description + '" />'
-    //             addMcis += '<input type="hidden" name="m_mcisID" id="m_mcisID_' + mcisIndex + '" value="' + aMcis.id + '" />'
-    //             addMcis += '<input type="hidden" name="m_mcisInstallMonAgent" id="m_mcisInstallMonAgent_' + mcisIndex + '" value="' + aMcis.installMonAgent + '" />'
-    //             addMcis += '<input type="hidden" name="m_mcisLabel" id="m_mcisLabel_' + mcisIndex + '" value="' + aMcis.label + '" />'
-    //             addMcis += '<input type="hidden" name="m_mcisName" id="m_mcisName_' + mcisIndex + '" value="' + aMcis.name + '" />'
-    //             addMcis += '<input type="hidden" name="m_mcisStatus" id="m_mcisStatus_' + mcisIndex + '" value="' + aMcis.status + '" />'
-    //
-    //
-    //             addMcis += '<input type="hidden" name="m_mcisExportFileName" id="m_exportFileName_' + mcisIndex + '" value="" />'
-    //             addMcis += '<input type="hidden" name="m_mcisExportScript" id="m_mcisExportScript_' + mcisIndex + '" value="" />'
-    //
-    //
-    //
-    //             addMcis += '</tr>'
-    //
-    //         }catch(e){
-    //             console.log("list of mcis error")
-    //             console.log(e)
-    //         }
-    //     }// end of mcis loop
-    //     $("#mcisList").empty();
-    //     $("#mcisList").append(addMcis);
-    //
-    //     $("#total_mcis").text(totalMcisCnt);
-    //     $("#mcis_status_running").text(mcisStatusCountMap.get("running"));
-    //     $("#mcis_status_stopped").text(mcisStatusCountMap.get("stop"));
-    //     $("#mcis_status_terminated").text(mcisStatusCountMap.get("terminate"));
-    //
-    //     $("#total_vm").text(totalServerCnt);
-    //     $("#vm_status_running").text(totalVmStatusCountMap.get("running"));
-    //     $("#vm_status_stopped").text(totalVmStatusCountMap.get("stop"));
-    //     $("#vm_status_terminated").text(totalVmStatusCountMap.get("terminate"));
-    // }else{
-    //     var addMcis = "";
-    //     addMcis += '<tr>'
-    //     addMcis += '<td class="overlay hidden" data-th="" colspan="8">No Data</td>'
-    //     addMcis += '</tr>'
-    //     $("#mcisList").empty();
-    //     $("#mcisList").append(addMcis);
-    // }
+    // AjaxLoadingShow(false);
+
 }
 
 // 조회 실패시.
@@ -489,11 +278,7 @@ function setMcisData(mcisInfo, mcisIndex) {
 
 // 등록 form으로 이동
 function createNewMcis() {// Manage_MCIS_Life_Cycle_popup.html
-    var targetUrl = "/operation/manage" + "/mcismng/regform"
-    // location.href = "/Manage/MCIS/reg"
-    // $('#loadingContainer').show();
-    // location.href = url;
-    changePage(targetUrl)
+    changePage("McisRegForm")
 }
 
 function changeLifeCycle(type) {
@@ -677,7 +462,28 @@ function addNewVirtualMachine() {
     // location.href = "/Manage/MCIS/reg/"+mcis_id+"/"+mcis_name
     location.href = "/operation/manages/mcismng/regform/" + mcis_id + "/" + mcis_name;
 }
+function createSnapshot(createName) {
+    var mcisID = $("#mcis_id").val();
+    var vmID = $("#vm_id").val();
+    var obj = {
+        name: createName
+    }
+    var url = "/operation/manages/mcismng/" + mcisID + "/vm/" + vmID + "/snapshot";
+    console.log("snap shot url : ", url);
+    axios.post(url, obj).then(result => {
+        var status = result.status
 
+        console.log("create snapshot result : ", result)
+        var data = result.data
+        console.log("create snapshot resutl Message : ", data.message)
+        if (status == 200 || status == 201) {
+            commonResultAlert("Snapshot Creation Requested");
+
+        }
+    })
+
+
+}
 function vmLifeCycle(type) {
     var mcisID = $("#mcis_id").val();
     var vmID = $("#vm_id").val();
@@ -757,7 +563,7 @@ function vmLifeCycle(type) {
     }
     axios.post(url, obj, {
         headers: {
-            'Content-type': 'application/json',
+            // 'Content-type': 'application/json',
             // 'Authorization': apiInfo,
         }
         // })
@@ -1143,7 +949,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
     // var data = result.data.VmInfo;
     // var connectionConfig = result.data.ConnectionConfigInfo;
     console.log("selected Vm");
-    console.log(data);
+    console.log("selected vm data : ", data);
     var vmId = data.id;
     var vmName = data.name;
     var vmStatus = data.status;
@@ -1271,6 +1077,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
     //////vm detail tab////
     var vmDetail = data.cspViewVmDetail;
     if (vmDetail) {
+        console.log("mcis vm Detail : ", vmDetail);
         //    //cspvmdetail
         // var vmDetailKeyValueList = vmDetail.KeyValueList
         var vmDetailKeyValueList = vmDetail.keyValueList
@@ -1331,6 +1138,81 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
         $("#server_detail_view_access_id_pass").val(vmDetail.vmuserId + "/ *** ")
         $("#server_detail_view_user_id_pass").val(data.vmUserAccount + "/ *** ")
         $("#manage_mcis_popup_user_name").val(data.vmUserAccount)
+
+        // Disk
+        var disk_arr = data.dataDiskIds;
+        console.log("disk arr : ", disk_arr);
+        var temp_disk = "";
+
+        if (disk_arr) {
+            if (disk_arr.length > 0) {
+                temp_disk = disk_arr.join(",");
+                var count = 0;
+                var arr_length = disk_arr.length;
+                disk_arr.forEach(item => {
+                    count++;
+                    var url = "/setting/resources/datadisk/" + item;
+                    console.log("disk get url by id : ", url);
+                    $("#block_device_section").empty()
+                    $("#attachedDiskList").empty()
+
+                    var attach_html = "";
+                    var html = "<label>Block Device</label>";
+                    axios.get(url).then(result => {
+                        var diskInfo = result.data.dataDiskInfo
+                        console.log("diskInfo result : ", result);
+                        console.log("diskInfo : ", diskInfo);
+                        var diskID = diskInfo.id;
+                        var diskName = diskInfo.name;
+                        var diskType = diskInfo.diskType;
+                        var diskSize = diskInfo.diskSize;
+                        var t_text = diskName + " ," + diskType + ", " + diskSize + "/GB";
+                        html += '<input type="text" name="" value="' + t_text + '" placeholder="" title="" readonly />'
+
+                        attach_html += '<tr>'
+                            + '<td class="overlay hidden column-50px" data-th="">'
+                            + '<input type="checkbox" name="chk_detach" value="' + diskID + '"  title="" diskname="' + diskName + '" diskstatus="' + diskInfo.status + '" mcis_id="" /><label for="td_ch1"></label> <span class="ov off"></span>'
+
+                            + '</td>'
+                            + '<td class="btn_mtd ovm" data-th="name">'
+                            + diskName
+                            + '<span class="ov"></span></td>'
+                            + '<td class="overlay hidden" data-th="diskType">' + diskType + '</td>'
+                            + '<td class="overlay hidden" data-th="diskSize">' + diskSize + '</td>'
+                            + '</tr>';
+
+                        $("#block_device_section").append(html);
+                        $("#attachedDiskList").append(attach_html);
+                        if (count == arr_length) {
+                            var temp_btn = '<button type="button" onclick="displayDiskAttachModal(true)">DataDisk 상세</button>';
+                            $("#block_device_section").append(temp_btn)
+                        }
+                    })
+                })
+                console.log("temp disk info : ", temp_disk)
+            }
+        } else {
+
+            var temp_btn = "<label>Block Device</label>";
+            temp_btn += '<button type="button" onclick="displayAvailableDisk(true)">Attach DISK</button>';
+            $("#block_device_section").empty()
+            $("#attachedDiskList").empty()
+            $("#block_device_section").append(temp_btn)
+
+        }
+
+        if (temp_disk) {
+            $("#server_detail_disk_status").val("attached");
+
+
+        } else {
+            $("#detach_button").hide();
+        }
+        $("#server_detail_view_root_device_type").val(vmDetail.rootDiskType);
+        $("#server_detail_view_root_device").val(vmDetail.rootDeviceName);
+        $("#server_detail_disk_id").val(temp_disk);
+        $("#server_detail_disk_mcis_id").val(mcisID);
+        $("#server_detail_disk_vm_id").val(vmId);
 
 
         var append_sg = ''
@@ -1696,7 +1578,7 @@ function makeVmScript(mcisIndex, vmIndex) {
     var sshKeyIdVal = $("#m_vmSshKeyId_" + mcisIndex + "_" + vmIndex).val();
     var subnetIdVal = $("#m_vmSubnetId_" + mcisIndex + "_" + vmIndex).val();
     var vNetIdVal = $("#m_vmVnetId_" + mcisIndex + "_" + vmIndex).val();
-    var vmGroupSizeVal = $("#m_vmGroupSize_" + mcisIndex + "_" + vmIndex).val();
+    var subGroupSizeVal = $("#m_subGroupSize_" + mcisIndex + "_" + vmIndex).val();
     var vmUserAccountVal = $("#m_vmUserAccount_" + mcisIndex + "_" + vmIndex).val();
     var vmUserPasswordVal = $("#m_vmUserPassword_" + mcisIndex + "_" + vmIndex).val();
 
@@ -1729,7 +1611,7 @@ function makeVmScript(mcisIndex, vmIndex) {
     vmCreateScript += ',' + paramValueAppend + 'sshKeyId' + paramValueAppend + ' : ' + paramValueAppend + sshKeyIdVal + paramValueAppend;
     vmCreateScript += ',' + paramValueAppend + 'subnetId' + paramValueAppend + ' : ' + paramValueAppend + subnetIdVal + paramValueAppend;
     vmCreateScript += ',' + paramValueAppend + 'vNetId' + paramValueAppend + ' : ' + paramValueAppend + vNetIdVal + paramValueAppend;
-    vmCreateScript += ',' + paramValueAppend + 'vmGroupSize' + paramValueAppend + ' : ' + paramValueAppend + vmGroupSizeVal + paramValueAppend;
+    vmCreateScript += ',' + paramValueAppend + 'subGroupSize' + paramValueAppend + ' : ' + paramValueAppend + subGroupSizeVal + paramValueAppend;
     vmCreateScript += ',' + paramValueAppend + 'vmUserAccount' + paramValueAppend + ' : ' + paramValueAppend + vmUserAccountVal + paramValueAppend;
     vmCreateScript += ',' + paramValueAppend + 'vmUserPassword' + paramValueAppend + ' : ' + paramValueAppend + vmUserPasswordVal + paramValueAppend;
     vmCreateScript += '}';
@@ -2552,4 +2434,229 @@ function displayServerDetailInfoArea(mcisID, mcisName, vmData) {
     $("#server_detail_view_server_status").val(vmStatus);// detail tab
 
 
+}
+
+
+function runDetachDisk(command) {
+
+    var diskId = $("#server_detail_view_block_device").val();
+    var mcis_id = $("#server_detail_disk_mcis_id").val();
+    var vm_id = $("#server_detail_disk_vm_id").val();
+
+    var count = 0;
+    var url = "/setting/resources/datadisk/mng";
+    url += "?mcisID=" + mcis_id + "&vmID=" + vm_id;
+    var temp_ids = [];
+    var obj = {};
+
+    $("input[name='chk_detach']:checked").each(index => {
+        var dataDiskId = this.value;
+        console.log("dataDiskId : ", dataDiskId);
+        temp_ids.push(dataDiskId)
+    })
+    obj = {
+        dettachDataDiskList: temp_ids
+    }
+    console.log("temp detach disk ids : ", temp_ids)
+    axios.post(url, obj).then(result => {
+        var data = result.data;
+        console.log(data);
+        if (data.status == 200 || data.status == 201) {
+            commonAlert("Success " + command + " DataDisk!")
+            $("#dataDiskInfoBox").hide();
+            // displayDataDiskInfo("MODIFY_SUCCESS");
+            location.reload()
+        } else {
+            commonAlert("Fail" + command + " DataDisk at " + item + data.message)
+            showDataDiskInfo(diskId, diskName);
+        }
+    }).catch(error => {
+        console.log(error.response);
+    })
+
+
+}
+
+
+function runattachDisk(command) {
+
+
+    var mcis_id = $("#server_detail_disk_mcis_id").val();
+    var vm_id = $("#server_detail_disk_vm_id").val();
+    var count = 0;
+
+    $("input[name='chk_attach']:checked").each(index => {
+        var dataDiskId = $(this).val();
+        count++;
+        var url = "/operation/manages/mcismng/" + mcis_id + "/vm/" + vm_id + "/datadisk?option=" + command;
+        console.log("attach url : ", url)
+        var obj = {
+            dataDiskId
+        }
+        axios.put(url, obj).then(result => {
+            var data = result.data;
+            console.log(data);
+            if (data.status == 200 || data.status == 201) {
+                if (index == count - 1) {
+                    commonAlert("Success " + command + " DataDisk!")
+                    $("#dataDiskInfoBox").hide();
+                    // displayDataDiskInfo("MODIFY_SUCCESS");
+                    location.reload()
+                }
+
+            } else {
+                commonAlert("Fail" + command + " DataDisk at " + item + data.message)
+                showDataDiskInfo(diskId, diskName);
+            }
+        }).catch(error => {
+            console.log(error.response);
+        })
+
+    })
+
+}
+
+function displayDiskAttachModal(isShow) {
+    if (isShow) {
+        var diskId = $("#server_detail_disk_id").val();
+        var mcis_id = $("#server_detail_disk_mcis_id").val();
+        var vm_id = $("#server_detail_disk_vm_id").val();
+        var url = "/operation/manages/mcismng/" + mcis_id + "/vm/" + vm_id + "/datadisk";
+        console.log("check available disk url : ", url);
+        var temp_diskId = [];
+        temp_diskId = diskId.split(",");
+
+        axios.get(url).then(result => {
+            console.log("get result : ", result);
+            var data = result.data.datadiskIdList;
+            var html = "";
+            console.log("get available disk : ", data);
+            if (data != null || data.length > 0) {
+                data.forEach(item => {
+                    console.log("get available disk : ", item);
+                    html += ""
+                })
+
+                $("#diskList").empty()
+                $("#diskList").append(html)
+            }
+            // if(data){
+            //     if(data.length >0){
+            //         data.forEach(item=>{
+
+            //         })
+            //     }
+            // }
+
+            $("#attachDiskSelectBox").modal();
+            $('.dtbox.scrollbar-inner').scrollbar();
+
+        })
+
+
+    } else {
+        $("#vnetCreateBox").toggleClass("active");
+    }
+}
+
+function displayAvailableDisk(isShow) {
+    if (isShow) {
+        var diskId = $("#server_detail_disk_id").val();
+        var mcis_id = $("#server_detail_disk_mcis_id").val();
+        var vm_id = $("#server_detail_disk_vm_id").val();
+        var url = "/operation/manages/mcismng/" + mcis_id + "/vm/" + vm_id + "/datadisk";
+        console.log("check available disk url : ", url);
+        var temp_diskId = [];
+        temp_diskId = diskId.split(",");
+
+        axios.get(url).then(result => {
+            console.log("get result : ", result);
+            var data = result.data.datadiskIdList;
+            var html = "";
+            console.log("get available disk : ", data);
+            if (data != null || data.length > 0) {
+                var avDiskCnt = 0
+                data.forEach(item => {
+                    //console.log("get available disk : ", item);
+                    html += '<tr>'
+                        + '<td class="overlay hidden column-50px" data-th="">'
+                        + '<input type="checkbox" name="chk_attach" value="' + item.id + '"  title=""  /><label for="td_ch1"></label> <span class="ov off"></span>'
+
+                        + '</td>'
+                        + '<td class="btn_mtd ovm" data-th="name">' + item.name + '<span class="ov"></span></td>'
+                        + '<td class="overlay hidden" data-th="diskType">'
+                        + item.diskType
+                        + '</td>'
+                        + '<td class="overlay hidden" data-th="diskSize">'
+                        + item.diskSize
+                        + '/GB</td>'
+                        + '</tr>';
+                    avDiskCnt++;
+                })
+                $("#availableDiskCnt").val(avDiskCnt)
+                $("#availableDiskList").empty()
+                $("#availableDiskList").append(html)
+            } else {
+                //commonAlert("해당 VM에 Attach 가능한 DISK가 없습니다");
+                addRow();
+                $("#availableDiskCnt").val(0)
+                return;
+            }
+            // if(data){
+            //     if(data.length >0){
+            //         data.forEach(item=>{
+
+            //         })
+            //     }
+            // }
+
+            $("#availableDiskSelectBox").modal();
+            $('.dtbox.scrollbar-inner').scrollbar();
+
+        })
+
+
+    } else {
+        $("#vnetCreateBox").toggleClass("active");
+    }
+}
+
+function displayDiskDetachModal(isShow) {
+    if (isShow) {
+        var diskId = $("#server_detail_view_block_device").val();
+        var mcis_id = $("#server_detail_disk_mcis_id").val();
+        var vm_id = $("#server_detail_disk_vm_id").val();
+        var url = "/operation/manages/mcismng/" + mcis_id + "/vm/" + vm_id + "/datadisk";
+        console.log("check available disk url : ", url);
+        axios.get(url).then(result => {
+            console.log("get result : ", result);
+            var data = result.data.datadiskIdList;
+            var html = "";
+            console.log("get available disk : ", data);
+            if (data != null || data.length > 0) {
+                data.forEach(item => {
+                    console.log("get available disk : ", item);
+                    html += ""
+                })
+
+                $("#diskList").empty()
+                $("#diskList").append(html)
+            }
+            // if(data){
+            //     if(data.length >0){
+            //         data.forEach(item=>{
+
+            //         })
+            //     }
+            // }
+
+            $("#diskSelectBox").modal();
+            $('.dtbox.scrollbar-inner').scrollbar();
+
+        })
+
+
+    } else {
+        $("#vnetCreateBox").toggleClass("active");
+    }
 }

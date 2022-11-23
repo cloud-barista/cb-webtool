@@ -9,5 +9,5 @@ type TbVmDynamicReq struct {
 	Name           string `json:"name"`
 	RootDiskSize   string `json:"rootDiskSize"`
 	RootDiskType   string `json:"rootDiskType"`
-	VmGroupSize    string `json:"VmGroupSize"`
+	SubGroupSize   string `json:"subGroupSize"`
 }

@@ -1,0 +1,77 @@
+{{define "NodeGroupCreate"}}
+				<!-- contents -->
+				<div class="contbox">
+					<!-- 이미 있으면 NodeGroup 목록 표시-->	
+					<!-- Node list -->
+					<div class="dashboard dashboard_cont">
+						
+						<div class="d_box box_m box_w100">
+						
+							<div class="ds_cont">
+								
+								<div class="area_cont">
+
+									<div class="box">
+																				
+										<div class="create_box">
+											
+											<div class="create_top">
+												<!-- Exists NodeGroups : Add 버튼으로 여러 NodeGroup을 추가하는 경우 추가되는 NodeGroup 표시 : 현재 한번에 1개만 추가이므로 의미없음.
+												<div class="servers_box" id="existsNodeGroupArea">
+													<div class="title">Nodes</div>
+													
+													<div class="list">
+														<ul id="node_list">
+															{{range $nodeGroupIndex, $nodeGroupInfo := .PmksInfo.NodeGroupList}}															
+															<li>
+																<div class="server server_on bgbox_g">
+																	<div class="icon">{{ $nodeGroupIndex }}</div>
+																	<div class="txt" alt="">{{$nodeGroupIndex}} : {{$nodeGroupInfo.IId.NameId}}  </div>
+																</div>
+															</li>
+															{{ end }}															
+														</ul>
+													</div>													
+													
+												</div>
+												Exists nodes -->												
+
+												<!-- 새로운 NodeGroup 추가영역-->
+												<div id="addNodeGroupArea">
+													
+												</div>
+
+												<div> 
+													<!-- append button : 현재 1개씩만 추가가능하여 주석처리.
+													<div class="btn_tab">
+														<a href="javascript:void(0);" onclick="addNewNodeGroupForm()">Add</a>
+													</div>	
+													-->
+												</div>
+												
+											</div>
+											<!-- button -->
+											<div class="btnbox spec_select_box">
+												<div class="btnbox spec_select_box">
+													<div class="btn_right">
+														<button type="button" name="" value="" class="btn_co btn_cr_g w95 btn_apply" onclick="deployNodeGroup();"><span>DEPLOY</span></button>
+														<!--<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="nodegroupDone_btn();"><span>DONE</span></button> -->
+														<button type="button" name="" value="" class="btn_clear btn_co btn_cr_b">CLEAR</button> 
+														
+													</div>
+												</div>
+											</div>
+											<!-- //button -->											
+										</div>
+									</div>									
+								</div>								
+							</div>
+							
+						</div>
+						
+					</div>
+					<!-- //list -->
+					
+				</div>
+				<!-- //contents -->				
+{{end}}

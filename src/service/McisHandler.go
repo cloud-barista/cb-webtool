@@ -3,9 +3,10 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
 
 	//tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
 	"io"
@@ -100,21 +101,21 @@ func GetMcisList(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, m
 	return mcisList["mcis"], returnStatus
 }
 
-func GetMcisListByID(nameSpaceID string) ([]string, model.WebStatus) {
+func GetMcisListByID(nameSpaceID string, filterKeyParam string, filterValParam string) ([]string, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
+
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	//if optionParam != ""{
-	//	urlParam += "?option=" + optionParam
-	//}
 	urlParam += "?option=id"
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
 	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
@@ -125,12 +126,7 @@ func GetMcisListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	respStatus := resp.StatusCode
 
 	mcisList := tbcommon.TbIdList{}
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		//errorInfo := model.ErrorInfo{}
-		//json.NewDecoder(respBody).Decode(&errorInfo)
-		//fmt.Println("respStatus != 200 reason ", errorInfo)
-		//returnStatus.Message = errorInfo.Message
-
+	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
@@ -143,21 +139,21 @@ func GetMcisListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	return mcisList.IDList, model.WebStatus{StatusCode: respStatus}
 }
 
-func GetMcisListByOption(nameSpaceID string, optionParam string) ([]tbmcis.TbMcisInfo, model.WebStatus) {
+func GetMcisListByOption(nameSpaceID string, optionParam string, filterKeyParam string, filterValParam string) ([]tbmcis.TbMcisInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis"
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	if optionParam != "" {
-		urlParam += "?option=" + optionParam
-	}
+	urlParam += "?option=" + optionParam
 
+	if filterKeyParam != "" {
+		urlParam += "&filterKey=" + filterKeyParam
+		urlParam += "&filterVal=" + filterValParam
+	}
 	url := util.TUMBLEBUG + urlParam
-	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
-	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
 	if err != nil {
 		fmt.Println(err)
@@ -170,7 +166,7 @@ func GetMcisListByOption(nameSpaceID string, optionParam string) ([]tbmcis.TbMci
 	mcisList := map[string][]tbmcis.TbMcisInfo{}
 	returnStatus := model.WebStatus{}
 
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
 		return nil, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
@@ -383,6 +379,23 @@ func RegMcisByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisReq, c echo.Conte
 	url := util.TUMBLEBUG + urlParam
 	// url := util.TUMBLEBUG + "/ns/" + nameSpaceID + "/mcis"
 
+	//dataDisk empty처리
+	// vms := mcisInfo.Vm
+	// for _, vm := range vms {
+	// 	dataDisks := vm.DataDiskIds
+	// 	var diskIds []string
+	// 	for _, dataDisk := range dataDisks {
+	// 		if dataDisk != "" {
+	// 			log.Println("dataDisk ", dataDisk)
+	// 			diskIds = append(diskIds, dataDisk)
+	// 		}
+	// 	}
+	// 	log.Println("diskIds ", diskIds)
+	// 	vm.DataDiskIds = diskIds
+	// }
+	// log.Println("vms ", vms)
+	// log.Println("mcisInfo ", mcisInfo)
+
 	pbytes, _ := json.Marshal(mcisInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
@@ -482,7 +495,6 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 	// 전송은 vm -> 수신 vm
 	returnVmInfo := tbmcis.TbVmInfo{}
 	returnStatus := model.WebStatus{}
-	fmt.Println("111")
 
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
 	// if len(vmList) == 0 {
@@ -493,7 +505,7 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 	// if mcisID != mcisInfoID {
 	// 	return nil, model.WebStatus{StatusCode: 500, Message: "MCIS Info not valid"}
 	// }
-	fmt.Println("333")
+
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
@@ -542,11 +554,10 @@ func RegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq) (*tbmcis.T
 func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq, c echo.Context) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm" // 1개만 추가할 때
 
-	vmGroupSize, err := strconv.ParseInt(vmInfo.VmGroupSize, 10, 64)
-
-	if vmGroupSize > 1 { // vmGroupSize가 2개 이상일 때
-		originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup"
-	}
+	//subGroupSize, err := strconv.ParseInt(vmInfo.SubGroupSize, 10, 64)
+	//if subGroupSize > 1 { // subGroupSize가 2개 이상일 때
+	//	originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup"
+	//}
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -599,19 +610,8 @@ func AsyncRegVm(nameSpaceID string, mcisID string, vmInfo *tbmcis.TbVmReq, c ech
 }
 
 // MCIS에 VM 추가 등록
-func RegVmGroup(nameSpaceID string, mcisID string, vmGroupInfo *tbmcis.TbVmReq) (*tbmcis.TbMcisInfo, model.WebStatus) {
-	// var mcisInfoID = mcisInfo.ID
-	// var vmList = mcisInfo.Vm
-
-	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmgroup" // 여러개 추가할 때
-	// if len(vmList) == 0 {
-	// 	return nil, model.WebStatus{StatusCode: 500, Message: "There no Vm info"}
-	// }
-
-	// mcisID 변조 체크
-	// if mcisID != mcisInfoID {
-	// 	return nil, model.WebStatus{StatusCode: 500, Message: "MCIS Info not valid"}
-	// }
+func RegSubGroup(nameSpaceID string, mcisID string, subGroupInfo *tbmcis.TbVmReq) (*tbmcis.TbMcisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup" // 여러개 추가할 때
 
 	var paramMapper = make(map[string]string)
 	paramMapper["{nsId}"] = nameSpaceID
@@ -620,7 +620,7 @@ func RegVmGroup(nameSpaceID string, mcisID string, vmGroupInfo *tbmcis.TbVmReq) 
 
 	url := util.TUMBLEBUG + urlParam
 
-	pbytes, _ := json.Marshal(vmGroupInfo)
+	pbytes, _ := json.Marshal(subGroupInfo)
 	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
 
 	// 전송은 vm이나 수신은 mcisInfo (mcis안에 vm목록이 있음.)
@@ -636,14 +636,10 @@ func RegVmGroup(nameSpaceID string, mcisID string, vmGroupInfo *tbmcis.TbVmReq) 
 	respStatus := resp.StatusCode
 	returnStatus.StatusCode = respStatus
 
-	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
-		//errorInfo := model.ErrorInfo{}
-		//json.NewDecoder(respBody).Decode(&errorInfo)
-		//fmt.Println("respStatus != 200 reason ", errorInfo)
-		//returnStatus.Message = errorInfo.Message
+	if respStatus != 200 && respStatus != 201 {
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("RegVmGroup ", failResultInfo)
+		log.Println("RegSubGroup ", failResultInfo)
 		return &returnMcisInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
 	}
 
@@ -730,6 +726,46 @@ func RegMcisDynamicByAsync(nameSpaceID string, mcisInfo *tbmcis.TbMcisDynamicReq
 	}
 }
 
+// Add VM dynamically from common spec and image
+func RegVmDynamicByAsync(nameSpaceID string, mcisID string, vmReqInfo *tbmcis.TbVmDynamicReq, c echo.Context) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vmDynamic"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(vmReqInfo)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	taskKey := nameSpaceID + "||" + "vm" + "||" + vmReqInfo.Name // TODO : 공통 function으로 뺄 것.
+
+	if err != nil {
+		fmt.Println(err)
+		log.Println("RegVmDynamicByAsync ", err)
+
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegVmDynamicByAsync ", failResultInfo)
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
+	} else {
+
+		StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
+	}
+}
+
 // Recommend MCIS plan (filter and priority)
 // 실제로는 추천 image 목록
 // async 로 만들 지
@@ -769,6 +805,7 @@ func GetMcisRecommendVmSpecList(mcisDeploymentPlan *tbmcis.DeploymentPlan) ([]tb
 
 /*
 // Checkavaiable ConnectionConfig list for creating MCIS Dynamically
+
 	사용 가능한 connectionConfig 목록 조회 : 동적생성에서 사용
 	해당 spec들을 사용할 수 있는 conection 정보 목록
 	ex) "commonSpec": ["aws-ap-northeast-2-t2-small","gcp-us-west1-g1-small"]
@@ -891,7 +928,7 @@ func GetSimpleVmWithStatusCountMap(mcisInfo tbmcis.TbMcisInfo) ([]webtool.VmSimp
 			VmSshKeyId:         vmInfo.SshKeyID,
 			VmSubnetId:         vmInfo.SubnetID,
 			VmVnetId:           vmInfo.VNetID,
-			VmGroupSize:        1, //? 는 없는데.. vmGroupId만 있는데... 1로 기본 setting
+			SubGroupSize:       1, //? 는 없는데.. subGroupId만 있는데... 1로 기본 setting
 			VmUserAccount:      vmInfo.VmUserAccount,
 			VmUserPassword:     vmInfo.VmUserPassword,
 		}
@@ -1464,7 +1501,7 @@ func CommandVmOfMcis(nameSpaceID string, mcisID string, vmID string, mcisCommand
 	return resultInfo, model.WebStatus{StatusCode: respStatus}
 }
 
-//Install the benchmark agent to specified MCIS
+// Install the benchmark agent to specified MCIS
 func InstallBenchmarkAgentToMcis(nameSpaceID string, mcisID string, mcisCommandInfo *tbmcis.McisCmdReq) (*tbmcis.RestPostCmdMcisResponseWrapper, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/installBenchmarkAgent/mcis/{mcisId}"
 
@@ -1923,3 +1960,304 @@ func UpdateAdaptiveNetwork(nameSpaceID string, mcisID string, networkReq *tbmcis
 
 // 	// return respBody, model.WebStatus{StatusCode: respStatus}
 // }
+
+// VM 에 DataDisk를 Attach 또는 Detach ( commane로 구분 )
+func AttachDetachDataDiskToVM(nameSpaceID string, mcisID string, vmID string, optionParam string, attachDetachDataDiskReq *tbmcir.TbAttachDetachDataDiskReq) (*tbmcis.TbVmInfo, model.WebStatus) {
+	//var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/{command}"
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/dataDisk"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	urlParam += "?option=" + optionParam
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(attachDetachDataDiskReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPut)
+
+	vmInfo := tbmcis.TbVmInfo{}
+	returnStatus := model.WebStatus{}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if err != nil {
+		fmt.Println(err)
+		return &vmInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		errorInfo := model.ErrorInfo{}
+		json.NewDecoder(respBody).Decode(&errorInfo)
+		fmt.Println("respStatus != 200 reason ", errorInfo)
+		returnStatus.Message = errorInfo.Message
+	} else {
+		json.NewDecoder(respBody).Decode(&vmInfo)
+		fmt.Println(vmInfo)
+	}
+	returnStatus.StatusCode = respStatus
+
+	return &vmInfo, returnStatus
+}
+
+// AsyncAttachDetachDataDiskToVM
+func AsyncAttachDetachDataDiskToVM(nameSpaceID string, mcisID string, vmID string, optionParam string, attachDetachDataDiskReq *tbmcir.TbAttachDetachDataDiskReq, c echo.Context) {
+	taskKey := nameSpaceID + "||" + "vm" + "||" + vmID
+	lifecycle := "attache"
+	if optionParam == "detach" {
+		lifecycle = util.DISK_LIFECYCLE_DETACHED
+	}
+	_, respStatus := AttachDetachDataDiskToVM(nameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, lifecycle, util.TASK_STATUS_FAIL, c)
+	} else {
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, lifecycle, util.TASK_STATUS_COMPLETE, c)
+	}
+}
+
+// VM에서 Attach 가능한 DataDisk 목록 : Get available dataDisks for a VM
+func GetAvailableDataDiskListForVM(nameSpaceID string, mcisID string, vmID string) ([]mcir.TbDataDiskInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/dataDisk"
+
+	if vmID == "" {
+		vmID = "g1-1"
+	}
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	availableDiskList := mcir.RestGetAvailableDataDisksResponse{}
+	json.NewDecoder(respBody).Decode(&availableDiskList)
+
+	log.Println(respBody)
+
+	return availableDiskList.DataDisk, model.WebStatus{StatusCode: respStatus}
+}
+
+// Mcis에 SubGroup 목록 조회
+func McisSubGroupList(nameSpaceID string, mcisID string) (*tbcommon.TbIdList, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	// defer body.Close()
+	idList := tbcommon.TbIdList{}
+	if err != nil {
+		fmt.Println(err)
+		return &idList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("McisSubGroupList ", failResultInfo)
+		return &idList, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&idList)
+	fmt.Println(idList)
+
+	return &idList, model.WebStatus{StatusCode: respStatus}
+}
+
+// Mcis의 SubGroup 내 VM 목록조회. ID 만 반환
+func SubGroupVmListByID(nameSpaceID string, mcisID string, subGroupID string) (*tbcommon.TbIdList, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup/{subgroupId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{subgroupId}"] = subGroupID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	// defer body.Close()
+	idList := tbcommon.TbIdList{}
+	if err != nil {
+		fmt.Println(err)
+		return &idList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("McisSubGroupList ", failResultInfo)
+		return &idList, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&idList)
+	fmt.Println(idList)
+
+	return &idList, model.WebStatus{StatusCode: respStatus}
+}
+
+// Mcis의 SubGroup 내 VM 목록조회
+// TODO : return형태가 다를 수 있으므로 조회 결과대로 수정할 것.
+func SubGroupVmListByOption(nameSpaceID string, mcisID string, subGroupID string, optionParam string) (*tbcommon.TbIdList, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup/{subgroupId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{subgroupId}"] = subGroupID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	optionParamVal := ""
+
+	if optionParam != "" {
+		optionParamVal = "?option=" + optionParam
+	}
+
+	// url := util.TUMBLEBUG + urlParam
+	url := util.TUMBLEBUG + urlParam + optionParamVal
+
+	resp, err := util.CommonHttp(url, nil, http.MethodGet)
+
+	// defer body.Close()
+	idList := tbcommon.TbIdList{}
+	if err != nil {
+		fmt.Println(err)
+		return &idList, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+
+	if respStatus != 200 && respStatus != 201 {
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("McisSubGroupList ", failResultInfo)
+		return &idList, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&idList)
+	fmt.Println(idList)
+
+	return &idList, model.WebStatus{StatusCode: respStatus}
+}
+
+// SubGroup의 vm개수 조정
+func ScaleOutSubGroup(nameSpaceID string, mcisID string, subGroupID string, subGroupScaleOutReq *mcis.TbScaleOutSubGroupReq) (*mcis.TbMcisInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/subgroup/{subgroupId}"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{subgroupId}"] = subGroupID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(subGroupScaleOutReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	returnMcisInfo := tbmcis.TbMcisInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnMcisInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	returnStatus.StatusCode = respStatus
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegMcisDynamic ", failResultInfo)
+		return &returnMcisInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&returnMcisInfo)
+	fmt.Println(returnMcisInfo)
+
+	return &returnMcisInfo, returnStatus
+}
+
+// VM의 snapshot 생성
+func RegVmSnapshot(nameSpaceID string, mcisID string, vmID string, vmSnapshotReq *mcis.TbVmSnapshotReq) (*mcis.TbCustomImageInfo, model.WebStatus) {
+	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/vm/{vmId}/snapshot"
+
+	var paramMapper = make(map[string]string)
+	paramMapper["{nsId}"] = nameSpaceID
+	paramMapper["{mcisId}"] = mcisID
+	paramMapper["{vmId}"] = vmID
+	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
+
+	url := util.TUMBLEBUG + urlParam
+
+	pbytes, _ := json.Marshal(vmSnapshotReq)
+	resp, err := util.CommonHttp(url, pbytes, http.MethodPost)
+
+	returnCustomImageInfo := tbmcis.TbCustomImageInfo{}
+	returnStatus := model.WebStatus{}
+
+	if err != nil {
+		fmt.Println(err)
+		return &returnCustomImageInfo, model.WebStatus{StatusCode: 500, Message: err.Error()}
+	}
+
+	respBody := resp.Body
+	respStatus := resp.StatusCode
+	returnStatus.StatusCode = respStatus
+
+	if respStatus != 200 && respStatus != 201 { // 호출은 정상이나, 가져온 결과값이 200, 201아닌 경우 message에 담겨있는 것을 WebStatus에 set
+		failResultInfo := tbcommon.TbSimpleMsg{}
+		json.NewDecoder(respBody).Decode(&failResultInfo)
+		log.Println("RegSnapshot ", failResultInfo)
+		return &returnCustomImageInfo, model.WebStatus{StatusCode: respStatus, Message: failResultInfo.Message}
+	}
+
+	json.NewDecoder(respBody).Decode(&returnCustomImageInfo)
+	fmt.Println(returnCustomImageInfo)
+
+	return &returnCustomImageInfo, returnStatus
+}
+
+func AsyncRegVmSnapshot(nameSpaceID string, mcisID string, vmID string, vmSnapshotReq *mcis.TbVmSnapshotReq, c echo.Context) {
+	taskKey := nameSpaceID + "||" + "vm" + "||" + vmID
+	lifecycle := "snapshot"
+
+	_, respStatus := RegVmSnapshot(nameSpaceID, mcisID, vmID, vmSnapshotReq)
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, lifecycle, util.TASK_STATUS_FAIL, c)
+	} else {
+		StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, lifecycle, util.TASK_STATUS_COMPLETE, c)
+	}
+}

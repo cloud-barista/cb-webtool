@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+
 	tbcommon "github.com/cloud-barista/cb-webtool/src/model/tumblebug/common"
 	"github.com/labstack/echo"
 
@@ -75,7 +76,6 @@ func GetClusterList(nameSpaceID string) ([]ladybug.ClusterInfo, model.WebStatus)
 	return clusterList["items"], model.WebStatus{StatusCode: respStatus}
 }
 
-//
 func GetClusterListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	var originalUrl = "/ns/{namespace}/clusters"
 
@@ -322,7 +322,7 @@ func GetMcksStatusCountMap(clusterList []ladybug.ClusterInfo) map[string]int {
 	mcksStatusTerminated := 0
 
 	for _, clusterInfo := range clusterList {
-		mcksStatus := util.GetMcksStatus(clusterInfo.Status)
+		mcksStatus := util.GetMcksStatus(clusterInfo.Status.Phase)
 		if mcksStatus == util.MCKS_STATUS_RUNNING {
 			mcksStatusRunning++
 		} else if mcksStatus == util.MCKS_STATUS_TERMINATED {
@@ -348,7 +348,6 @@ func GetSimpleNodeCountMap(cluster ladybug.ClusterInfo) ([]ladybug.NodeSimpleInf
 	for nodeIndex, nodeInfo := range cluster.Nodes {
 		nodeSimpleObj := ladybug.NodeSimpleInfo{
 			NodeIndex:    nodeIndex,
-			NodeUID:      nodeInfo.UID,
 			NodeName:     nodeInfo.Name,
 			NodeKind:     nodeInfo.Kind, // Node냐 cluster냐
 			NodeCsp:      nodeInfo.Csp,

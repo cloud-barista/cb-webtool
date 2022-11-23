@@ -216,7 +216,7 @@ function createMonitoringAlertPolicy(){
     if(monitoringAlertName) {
         axios.post(url, obj, {
             headers: {
-                'Content-type': 'application/json',
+                //'Content-type': 'application/json',
                 // 'Authorization': apiInfo,
             }
         }).then(result => {
@@ -485,7 +485,7 @@ function saveNewMonitoringAlertEventHandler() {
     if(monitoringAlertEventHandlerModalType || monitoringAlertEventHandlerModalName) {
         axios.post(url, monitoringAlertEventHandlerInfo, {
             headers: {
-                'Content-type': 'application/json',
+                //'Content-type': 'application/json',
                 // 'Authorization': apiInfo,
             }
         }).then(result => {

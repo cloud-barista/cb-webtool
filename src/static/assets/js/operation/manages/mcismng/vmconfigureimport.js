@@ -24,9 +24,10 @@ function setVmInfoToForm(vmInfoObj){
 	$("#i_vmUserAccount").val(vmInfoObj.vmUserAccount);
 	$("#i_vmUserPassword").val(vmInfoObj.vmUserPassword);
 
-	var addServerCnt = vmInfoObj.vmGroupSize == "" ? 0: vmInfoObj.vmGroupSize;
-	$("#i_vm_add_cnt").val(addServerCnt);
-
+	var addServerCnt = vmInfoObj.subGroupSize == "" ? 0: vmInfoObj.subGroupSize;
+	//$("#i_vm_add_cnt").val(addServerCnt);
+	$("#i_subGroupSize").val(addServerCnt);
+	
 	$("#i_vmImportScript").val(JSON.stringify(vmInfoObj));
 	
 }
@@ -45,23 +46,24 @@ function importDone_btn(){
 	var add_server_html = "";
 	var object = JSON.parse($("#vmImportScriptPretty").val());
 	var server_name = object.name
-	if(server_cnt > 1){
-		for(var i = 1; i <= server_cnt; i++){
-			// var new_vm_name = server_name+"-"+i;
-			// var object = importServerCloneObj(import_form)
-			var new_vm_name = object.name +"-"+i;
-			object.name = new_vm_name
-			
-			add_server_html +='<li onclick="view_import(\''+import_data_cnt+'\')">'
-					+'<div class="server server_on bgbox_b">'
-					+'<div class="icon"></div>'
-					+'<div class="txt">'+new_vm_name+'</div>'
-					+'</div>'
-					+'</li>';
-			Import_Server_Config_Arr.push(object)
-			console.log(i+"번째 import form data 입니다. : ",object);
-		}
-	}else{
+	object.subGroupSize = server_cnt
+	//if(server_cnt > 1){
+	//	for(var i = 1; i <= server_cnt; i++){
+	//		// var new_vm_name = server_name+"-"+i;
+	//		// var object = importServerCloneObj(import_form)
+	//		var new_vm_name = object.name +"-"+i;
+	//		object.name = new_vm_name
+	//		
+	//		add_server_html +='<li onclick="view_import(\''+import_data_cnt+'\')">'
+	//				+'<div class="server server_on bgbox_b">'
+	//				+'<div class="icon"></div>'
+	//				+'<div class="txt">'+new_vm_name+'</div>'
+	//				+'</div>'
+	//				+'</li>';
+	//		Import_Server_Config_Arr.push(object)
+	//		console.log(i+"번째 import form data 입니다. : ",object);
+	//	}
+	//}else{
 		// Import_Server_Config_Arr.push(import_form)
 		Import_Server_Config_Arr.push(object)
 		add_server_html +='<li onclick="view_import(\''+import_data_cnt+'\')">'
@@ -71,7 +73,7 @@ function importDone_btn(){
 						+'</div>'
 						+'</li>';
 
-	}
+	//}
 
 	// Done 버튼 클릭 시 form은 비활성
 	$(".import_servers_config").removeClass("active");

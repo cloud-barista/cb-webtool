@@ -1,20 +1,24 @@
 // connection 정보가 바뀌었을 때, 변경 될 object : 원래는 각각 만들어야 하나, 가져오는게 spec만 있어서 plane, worker 같이 씀.
-function changeConnectionInfo(configName, targetObjId){
+//('mcksWorker', this.value, 'worker', '0')
+function changeConnectionInfo(caller, configName, targetPrefix, objIndex){
     console.log("config name : ",configName)
     if( configName == ""){
         // 0번째면 selectbox들을 초기화한다.(vmInfo, sshKey, image 등)
     }
+
+    var provider = $("#" + targetPrefix + "Provider_" + objIndex).val();
     
-    getSpecInfo(configName, targetObjId);
+    var specObjId = targetPrefix + "SpecId_" + objIndex;
+    var rootDiskTypeId = targetPrefix + "RootDiskType_" + objIndex;
+
+    getSpecInfo(provider, configName, specObjId);
+    
+    getCommonLookupDiskInfo(rootDiskTypeId, provider, configName);// -> getCommonLookupDiskInfoSuccess
 }
 
 // connection에 맞는 spec들 조회
-function getSpecInfo(configName, targetObjId){
-    var configName = configName;
-    if(!configName){
-        configName = $("#nodeConnectionName option:selected").val();
-    }
-
+function getSpecInfo(provider, configName, targetObjId){
+    
     var url = "/setting/resources/vmspec/list"
     var html = "";
     axios.get(url,{
@@ -22,9 +26,8 @@ function getSpecInfo(configName, targetObjId){
         // 	'Authorization': apiInfo
         // }
     }).then(result=>{
-        // console.log(result.data)
+        console.log(result.data)
         var data = result.data.VmSpecList
-        console.log("spec result : ",data)
         if(data){
             html +="<option value=''>Select SpecName</option>"
             data.filter(csp => csp.connectionName === configName).map(item =>(
@@ -33,13 +36,57 @@ function getSpecInfo(configName, targetObjId){
 
         }else{
             html +=""
-        }       
-      
+        }
         $("#" + targetObjId).empty();
         $("#" + targetObjId).append(html);        
     })
 }
 
+// control plane은 1개정의, worker는 여러개정의 가능
+// targetID를 caller로 사용
+var DISK_SIZE = [];
+function getCommonLookupDiskInfoSuccess(caller, provider, data) {
+    var targetObjId = caller;
+    console.log("getCommonLookupDiskInfoSuccess", data);
+	var root_disk_type = [];
+	var res_item = data;
+	res_item.forEach(item => {
+        var temp_provider = item.provider
+		if (temp_provider == provider) {
+			root_disk_type = item.rootdisktype
+			DISK_SIZE = item.disksize
+		}
+	})
+
+	var html = '<option value="">Select Root Disk Type</option>'
+	root_disk_type.forEach(item => {
+		html += '<option value="' + item + '">' + item + '</option>'
+	})
+    $("#" +targetObjId).empty();
+    $("#" +targetObjId).append(html);    
+}
+
+// diskType이 변경되면 사용가능한 disk size의 range가 바뀜
+function changeDiskType(type, targetObjId) {
+	var disk_size = DISK_SIZE;
+    var maxDiskSize = 0;
+    var minDiskSize = 0;
+	if (disk_size) {
+		disk_size.forEach(item => {
+			var temp_size = item.split("|")
+			var temp_type = temp_size[0];
+			if (temp_type == type) {
+				maxDiskSize = temp_size[1];
+				minDiskSize = temp_size[2]
+			}
+		})
+	}
+    // min / max 표시
+	console.log("maxDiskSize : ", maxDiskSize)
+	console.log("ROOT_DISK_MIN_VALUE : ", minDiskSize)
+	//$("#targetObjId").val(type);
+
+}
 // mcks , node deploy
 // 우선 mcks 부터
 function nodeDone_btn(){
@@ -120,7 +167,6 @@ function nodeDone_btn(){
 
     try{
         // configurer 는 mcks 선택하고 들어옴. : TODO : MCKS create 와 node create는 버튼 액션을 달리해야
-        // /operation/manages/mcksmng/:clusteruID/:clusterName/reg/proc
         var url = "/operation/manages/mcksmng/" + mcksID + "/" + mcksName + "/reg/proc";
         axios.post(url,new_obj,{
             headers :{
@@ -136,8 +182,7 @@ function nodeDone_btn(){
 
             if(result.status == 201 || result.status == 200){
                 commonAlert("Node Add Success")
-                var targetUrl = "/operation/manages/mcksmng/mngform"
-                changePage(targetUrl);
+                changePage("McksMngForm");
             
             }else{
                 commonErrorAlert(statusCode, message) 

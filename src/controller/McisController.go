@@ -6,6 +6,9 @@ import (
 	"log"
 	"net/http"
 
+	tbmcir "github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcir"
+	"github.com/cloud-barista/cb-webtool/src/model/tumblebug/mcis"
+
 	// model "github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/model"
 	"github.com/cloud-barista/cb-webtool/src/model/dragonfly"
@@ -315,9 +318,10 @@ func GetMcisList(c echo.Context) error {
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 	// mcisList, respStatus := service.GetMcisList(defaultNameSpaceID)
 	optionParam := c.QueryParam("option")
-
+	filterKeyParam := c.QueryParam("filterKey")
+	filterValParam := c.QueryParam("filterVal")
 	if optionParam == "id" {
-		mcisList, respStatus := service.GetMcisListByID(defaultNameSpaceID)
+		mcisList, respStatus := service.GetMcisListByID(defaultNameSpaceID, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -332,7 +336,7 @@ func GetMcisList(c echo.Context) error {
 			"McisList":           mcisList,
 		})
 	} else {
-		mcisList, respStatus := service.GetMcisListByOption(defaultNameSpaceID, optionParam)
+		mcisList, respStatus := service.GetMcisListByOption(defaultNameSpaceID, optionParam, filterKeyParam, filterValParam)
 		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
 			return c.JSON(respStatus.StatusCode, map[string]interface{}{
 				"error":  respStatus.Message,
@@ -340,11 +344,51 @@ func GetMcisList(c echo.Context) error {
 			})
 		}
 
+		// 가져온 목록에서 특정 조건의 mcis만 추출
+		provider := c.QueryParam("provider")
+		connectionName := c.QueryParam("connection")
+		vnetID := c.QueryParam("vnet")
+		subGroupID := c.QueryParam("subgroup")
+		returnMcisList := []mcis.TbMcisInfo{}
+		if provider != "" || connectionName != "" || vnetID != "" || subGroupID != "" {
+			for _, mcis := range mcisList {
+				vmList := mcis.Vm
+
+				returnVmList := []tbmcis.TbVmInfo{}
+				for _, vm := range vmList {
+
+					//if provider != "" {	}
+
+					if connectionName != "" && connectionName != vm.ConnectionName {
+						continue
+					}
+
+					if vnetID != "" && vnetID != vm.VNetID {
+						continue
+					}
+
+					if subGroupID != "" && subGroupID != vm.SubGroupID {
+						continue
+					}
+					returnVmList = append(returnVmList, vm)
+				}
+
+				if len(returnVmList) == 0 {
+					continue
+				}
+
+				mcis.Vm = returnVmList
+				returnMcisList = append(returnMcisList, mcis)
+			}
+		} else {
+			returnMcisList = mcisList
+		}
+
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message":            "success",
 			"status":             respStatus.StatusCode,
 			"DefaultNameSpaceID": defaultNameSpaceID,
-			"McisList":           mcisList,
+			"McisList":           returnMcisList,
 		})
 	}
 }
@@ -448,25 +492,83 @@ func McisDynamicRegProc(c echo.Context) error {
 	// map[description:bb installMonAgent:yes name:aa vm:[map[connectionName:gcp-asia-east1 description:dd imageId:gcp-jsyoo-ubuntu name:cc provider:GCP securityGroupIds:[gcp-jsyoo-sg-01] specId:gcp-jsyoo-01 sshKeyId:gcp-jsyoo-sshkey subnetId:jsyoo-gcp-sub-01 vNetId:jsyoo-gcp-01 vm_add_cnt:0 vm_cnt:]]]
 	log.Println("get info")
 
-	mcisInfo := &tbmcis.TbMcisDynamicReq{}
-	if err := c.Bind(mcisInfo); err != nil {
+	mcisReqInfo := &tbmcis.TbMcisDynamicReq{}
+	if err := c.Bind(mcisReqInfo); err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "fail",
 			"status":  "5001",
 		})
 	}
-	log.Println(mcisInfo) // 여러개일 수 있음.
+	log.Println(mcisReqInfo) // 여러개일 수 있음.
 
 	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
 	// TODO : defaultNameSpaceID 가 없으면 설정화면으로 보낼 것
 
 	// // socket의 key 생성 : ns + 구분 + id
-	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisInfo.Name // TODO : 공통 function으로 뺄 것.
+	taskKey := defaultNameSpaceID + "||" + "mcis" + "||" + mcisReqInfo.Name // TODO : 공통 function으로 뺄 것.
 
 	service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
 
-	go service.RegMcisDynamicByAsync(defaultNameSpaceID, mcisInfo, c)
+	go service.RegMcisDynamicByAsync(defaultNameSpaceID, mcisReqInfo, c)
+	// 원래는 호출 결과를 return하나 go routine으로 바꾸면서 요청성공으로 return
+	log.Println("before return")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+	})
+
+}
+
+// VM (Subgroup 추가)
+func VmDynamicRegProc(c echo.Context) error {
+	log.Println("McisDynamicRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	log.Println("get info")
+	mcisID := c.Param("mcisID")
+
+	//vmReqInfo := &tbmcis.TbVmDynamicReq{}
+	//if err := c.Bind(vmReqInfo); err != nil {
+	//	log.Println(err)
+	//	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	//		"message": "fail",
+	//		"status":  "5001",
+	//	})
+	//}
+	//log.Println(vmReqInfo) // 여러개일 수 있음.
+
+	mcisReqInfo := &tbmcis.TbMcisDynamicReq{}
+	if err := c.Bind(mcisReqInfo); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "5001",
+		})
+	}
+	log.Println(mcisReqInfo)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	vmReqList := mcisReqInfo.Vm
+	for _, vmReqInfo := range vmReqList {
+		taskKey := defaultNameSpaceID + "||" + "vm" + "||" + vmReqInfo.Name // TODO : 공통 function으로 뺄 것.
+
+		service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+		go service.RegVmDynamicByAsync(defaultNameSpaceID, mcisID, &vmReqInfo, c)
+	}
+
+	// // socket의 key 생성 : ns + 구분 + id
+	//taskKey := defaultNameSpaceID + "||" + "vm" + "||" + vmReqInfo.Name // TODO : 공통 function으로 뺄 것.
+
+	//service.StoreWebsocketMessage(util.TASK_TYPE_MCIS, taskKey, util.MCIS_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+	//go service.RegVmDynamicByAsync(defaultNameSpaceID, mcisID, vmReqInfo, c)
+
 	// 원래는 호출 결과를 return하나 go routine으로 바꾸면서 요청성공으로 return
 	log.Println("before return")
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -662,6 +764,23 @@ func GetMcisInfoData(c echo.Context) error {
 
 	resultMcisInfo, _ := service.GetMcisData(defaultNameSpaceID, mcisID)
 
+	provider := c.QueryParam("provider")
+	if provider != "" {
+
+	}
+	connectionName := c.QueryParam("connection")
+	if connectionName != "" {
+
+	}
+	vnetID := c.QueryParam("vnet")
+	if vnetID != "" {
+
+	}
+	subGroupID := c.QueryParam("subgroup")
+	if subGroupID != "" {
+
+	}
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message":  "success",
 		"status":   200,
@@ -741,7 +860,44 @@ func VmRegProc(c echo.Context) error {
 		"message": "Call success",
 		"status":  200,
 	})
+}
 
+// MCIS에 VM 목록으로 추가 등록
+func VmListRegProc(c echo.Context) error {
+	log.Println("VmListRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	// mCISInfo := &tumblebug.McisInfo{}
+	mcisReqInfo := &tbmcis.TbMcisReq{}
+	if err := c.Bind(mcisReqInfo); err != nil {
+		// if err := c.Bind(mCISInfoList); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+	log.Println(mcisReqInfo)
+
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+	mcisID := c.Param("mcisID")
+
+	vms := mcisReqInfo.Vm
+	for _, vmInfo := range vms {
+		taskKey := defaultNameSpaceID + "||" + "vm" + "||" + mcisID + "||" + vmInfo.Name
+		service.StoreWebsocketMessage(util.TASK_TYPE_VM, taskKey, util.VM_LIFECYCLE_CREATE, util.TASK_STATUS_REQUEST, c) // session에 작업내용 저장
+
+		// go 루틴 호출 : return 값은 session에 저장
+		go service.AsyncRegVm(defaultNameSpaceID, mcisID, &vmInfo, c)
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Call success",
+		"status":  200,
+	})
 }
 
 // Register existing VM in a CSP to Cloud-Barista MCIS
@@ -842,6 +998,44 @@ func GetVmInfoData(c echo.Context) error {
 		"status":               respStatus.StatusCode,
 		"VmInfo":               returnVmInfo,
 		"ConnectionConfigInfo": cloudConnectionConfigInfo,
+	})
+}
+
+// MCIS의 특정 vnet을 사용하는 vm 들만 추출
+func GetVmInfoDataByVnet(c echo.Context) error {
+	log.Println("GetVmInfoDataByVnet")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login") // 조회기능에서 바로 login화면으로 돌리지말고 return message로 하는게 낫지 않을까?
+	}
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	mcisID := c.Param("mcisID")
+	vnetID := c.Param("vnetID")
+	log.Println("mcisID= " + mcisID + " , vnetID= " + vnetID)
+
+	resultMcisInfo, respStatus := service.GetMcisData(defaultNameSpaceID, mcisID)
+
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	vmList := resultMcisInfo.Vm
+	resultVmList := []tbmcis.TbVmInfo{}
+	for _, vm := range vmList {
+		if vm.VNetID == vnetID {
+			resultVmList = append(resultVmList, vm)
+		}
+	}
+	resultMcisInfo.Vm = resultVmList
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  respStatus.Message,
+		"status":   respStatus.StatusCode,
+		"McisInfo": resultMcisInfo,
 	})
 }
 
@@ -1082,7 +1276,9 @@ func CommandVmOfMcis(c echo.Context) error {
 
 /*
 // Check avaiable ConnectionConfig list for creating MCIS Dynamically
+
 	사용 가능한 connection config  목록 조회
+
 GetMcisListByID
 */
 func GetConnectionConfigCandidateList(c echo.Context) error {
@@ -1191,4 +1387,282 @@ func UpdateAdaptiveNetwork(c echo.Context) error {
 		"networkResult": agentInstallContentWrapper,
 	})
 
+}
+
+// vm에 disk attach/detech
+func AttachDetachDataDiskToVmUpdateProc(c echo.Context) error {
+	log.Println("AttachDetachDataDiskToVmUpdateProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	attachDetachDataDiskReq := new(tbmcir.TbAttachDetachDataDiskReq)
+	if err := c.Bind(attachDetachDataDiskReq); err != nil {
+
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	vmID := c.Param("vmID")
+	optionParam := c.QueryParam("option") // attach, detach
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	vmInfo, respStatus := service.AttachDetachDataDiskToVM(defaultNameSpaceID, mcisID, vmID, optionParam, attachDetachDataDiskReq)
+	log.Println("AttachDetachDataDisk result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": respStatus.Message,
+		"status":  respStatus.StatusCode,
+		"vmInfo":  vmInfo,
+	})
+}
+
+// VM이 사용가능한 DataDisk 목록
+func GetAvailableDataDiskListForVM(c echo.Context) error {
+	log.Println("GetAvailableDataDiskListForVM : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	mcisID := c.Param("mcisID")
+	vmID := c.Param("vmID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	idList, respStatus := service.GetAvailableDataDiskListForVM(defaultNameSpaceID, mcisID, vmID)
+	log.Println("GetAvailableDataDiskListForVM result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":        respStatus.Message,
+		"status":         respStatus.StatusCode,
+		"datadiskIdList": idList,
+	})
+}
+
+// mcis의 subGroup 목록
+func McisSubGroupList(c echo.Context) error {
+	log.Println("UpdateAdaptiveNetwork : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	mcisID := c.Param("mcisID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	idList, respStatus := service.McisSubGroupList(defaultNameSpaceID, mcisID)
+	log.Println("RegAdaptiveNetwork result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":        respStatus.Message,
+		"status":         respStatus.StatusCode,
+		"subGroupIdList": idList,
+	})
+}
+
+// mcis에 subGroup 추가
+func SubGroupRegProc(c echo.Context) error {
+	log.Println("UpdateAdaptiveNetwork : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	subGroupReq := new(tbmcis.TbVmReq)
+	if err := c.Bind(subGroupReq); err != nil {
+
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	mcisInfo, respStatus := service.RegSubGroup(defaultNameSpaceID, mcisID, subGroupReq)
+	log.Println("mcisInfo result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  respStatus.Message,
+		"status":   respStatus.StatusCode,
+		"mcisInfo": mcisInfo,
+	})
+}
+
+// subGroup 내 vm 목록
+func SubGroupVmList(c echo.Context) error {
+	log.Println("UpdateAdaptiveNetwork : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	networkReq := new(tbmcis.NetworkReq)
+	if err := c.Bind(networkReq); err != nil {
+
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	subGroupID := c.Param("subGroupID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	optionParam := c.QueryParam("option")
+
+	if optionParam == "id" {
+		idList, respStatus := service.SubGroupVmListByID(defaultNameSpaceID, mcisID, subGroupID)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"VmIdList":           idList,
+		})
+	} else {
+		// 결과값확인 필요.
+		mcisList, respStatus := service.SubGroupVmListByOption(defaultNameSpaceID, mcisID, subGroupID, optionParam)
+		if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+			return c.JSON(respStatus.StatusCode, map[string]interface{}{
+				"error":  respStatus.Message,
+				"status": respStatus.StatusCode,
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message":            "success",
+			"status":             respStatus.StatusCode,
+			"DefaultNameSpaceID": defaultNameSpaceID,
+			"McisList":           mcisList,
+		})
+	}
+}
+
+// subGroup vm추가
+func SubGroupScaleOutUpdateProc(c echo.Context) error {
+	log.Println("UpdateAdaptiveNetwork : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	vmScaleOutReq := new(tbmcis.TbScaleOutSubGroupReq)
+	if err := c.Bind(vmScaleOutReq); err != nil {
+
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	subGroupID := c.Param("subGroupID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	mcisInfo, respStatus := service.ScaleOutSubGroup(defaultNameSpaceID, mcisID, subGroupID, vmScaleOutReq)
+	log.Println("ScaleOutSubGroup result")
+	if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+		return c.JSON(respStatus.StatusCode, map[string]interface{}{
+			"error":  respStatus.Message,
+			"status": respStatus.StatusCode,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":  respStatus.Message,
+		"status":   respStatus.StatusCode,
+		"mcisInfo": mcisInfo,
+	})
+}
+
+// vm의 snapshot을 떠서 myImage로 사용
+func VmSnapshotRegProc(c echo.Context) error {
+	log.Println("VmSnapshotRegProc : ")
+	loginInfo := service.CallLoginInfo(c)
+	if loginInfo.UserID == "" {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
+	vmSnapshotReq := new(tbmcis.TbVmSnapshotReq)
+	if err := c.Bind(vmSnapshotReq); err != nil {
+
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "fail",
+			"status":  "fail",
+		})
+	}
+
+	mcisID := c.Param("mcisID")
+	vmID := c.Param("vmID")
+	defaultNameSpaceID := loginInfo.DefaultNameSpaceID
+
+	// myImageInfo, respStatus := service.RegVmSnapshot(defaultNameSpaceID, mcisID, vmID, vmSnapshotReq)
+	// log.Println("RegVmSnapshot result")
+	// if respStatus.StatusCode != 200 && respStatus.StatusCode != 201 {
+
+	// 	return c.JSON(respStatus.StatusCode, map[string]interface{}{
+	// 		"error":  respStatus.Message,
+	// 		"status": respStatus.StatusCode,
+	// 	})
+	// }
+
+	// return c.JSON(http.StatusOK, map[string]interface{}{
+	// 	"message":     respStatus.Message,
+	// 	"status":      respStatus.StatusCode,
+	// 	"MyImageInfo": myImageInfo,
+	// })
+
+	go service.AsyncRegVmSnapshot(defaultNameSpaceID, mcisID, vmID, vmSnapshotReq, c)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"status":  200,
+	})
 }

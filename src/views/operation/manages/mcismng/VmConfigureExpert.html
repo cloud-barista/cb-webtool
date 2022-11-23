@@ -26,9 +26,12 @@
 		<input type="hidden" name="imageId" id="e_imageId" />
 		<input type="hidden" name="specId" id="e_specId" />
 		<input type="hidden" name="label" id="e_label" />
-		<input type="hidden" name="vm_userAccount" id="e_vmUserAccount" />
-		<input type="hidden" name="vm_password" id="e_vmUserPassword" />
-		<input type="hidden" name="vmGroupSize" id="e_vmGroupSize" />
+		<input type="hidden" name="vmUserAccount" id="e_vmUserAccount" />
+		<input type="hidden" name="vmUserPassword" id="e_vmUserPassword" />
+		<input type="hidden" name="dataDiskIds[]" id="e_dataDiskIds" />
+		<input type="hidden" namd="rootDiskSize" id="e_rootDiskSize" />
+		<input type="hidden" namd="rootDiskType" id="e_rootDiskType" />
+		<input type="hidden" name="subGroupSize" id="e_subGroupSize" />
 		<input type="hidden" name="vmAddCount" id="e_vm_add_cnt" />
 
 	</form>
@@ -227,7 +230,7 @@
 				<div class="amount_add s_slider_box">
 					<div class="add_box">
 						<div class="a_box">
-							<strong class="t font-NotoKR">추가 수량</strong>
+							<strong>Server Quantity</strong>
 							<div class="a_slider">
 								<div class="slider_ip">
 									<button type="button" class="btn_s btn_s_minus">-</button>

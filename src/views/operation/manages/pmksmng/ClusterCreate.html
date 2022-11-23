@@ -1,0 +1,64 @@
+{{define "ClusterCreate"}}
+<div class="top_ipbox">
+	<div class="ipbox ipbox1">
+		<ul>
+			<li>
+				<label>Name</label>
+				<input type="text" class="pline ip_1" name="" value="" placeholder="Name" title=""
+					id="cluster_info_name" />
+			</li>
+			<li>
+				<label>Version</label>
+				<input type="text" class="pline ip_1" name="" value="1.22.15-aliyun.1" placeholder="" title=""
+					id="cluster_info_version" />
+			</li>
+		</ul>
+	</div>
+	<div class="ipbox ipbox2">
+		<ul>
+			<li>
+				<label><span class="ch">*</span>Provider</label>
+				<select class="selectbox white pline sel_1" name="reg_provider" id="regProvider"
+					onchange="getConnectionListForSelectbox(this.value, 'regConnectionName');">
+					<option value="">Select Provider</option>
+					{{ range $item := .CloudOSList}}
+					<option value="{{ $item }}">{{ $item }}</option>
+					{{ end }}
+				</select>
+			</li>
+			<li>
+				<label><span class="ch">*</span>Connection Name</label>
+				<select class="selectbox white pline sel_1" name="reg_connectionName" id="regConnectionName"
+					onchange="changeConnectionInfo(this.value);">
+					<option value="">Select Connection</option>
+				</select>
+			</li>
+			<li class="reg_1">
+				<label><span class="ch">*</span>VPC ID</label>
+				<select class="selectbox white pline sel_1" name="reg_vNetId" id="regVNetId"
+					onchange="getSubnetInfoListForSelectbox(this.value, 'regSubnetId');">
+					<option value="">Selected VPC Id</option>
+				</select>
+			</li>
+			<li class="reg_1">
+				<label><span class="ch">*</span>Subnet ID</label>
+				<select class="selectbox white pline sel_1" name="reg_subnetId" id="regSubnetId" multiple>
+					<option value="">Selected Subnet Id</option>
+				</select>
+			</li>
+			<li>
+				<label><span class="ch">*</span>Security Group</label>
+				<select class="selectbox white pline sel_1" name="reg_securityGroupId" id="regSecurityGroupId" multiple>
+					<option value="">Select Security Group</option>
+				</select>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="btnbox">
+	<div class="btn_right">
+		<button type="button" name="" value="" class="btn_done btn_co btn_cr_g" onclick="createCluster();"><span>Create
+				Cluster</span></button>
+	</div>
+</div>
+{{end}}

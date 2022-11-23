@@ -42,36 +42,36 @@ import (
 // 뭐에쓰는 거지?
 type RESP struct {
 	Region []struct {
-		RegionName       string                    `json:"RegionName"`
-		ProviderName     string                    `json:"ProviderName"`
-		KeyValueInfoList []spider.KeyValueInfoList `json:"KeyValueInfoList"`
+		RegionName       string                `json:"RegionName"`
+		ProviderName     string                `json:"ProviderName"`
+		KeyValueInfoList spider.SpKeyValueList `json:"KeyValueInfoList"`
 	} `json:"region"`
 }
 
 // 뭐에쓰는 거지?
 type ImageRESP struct {
 	Image []struct {
-		id               string                    `json:"id"`
-		name             string                    `json:"name"`
-		connectionName   string                    `json:"connectionName"`
-		cspImageId       string                    `json:"cspImageId"`
-		cspImageName     string                    `json:"cspImageName"`
-		description      string                    `json:"description"`
-		guestOS          string                    `json:"guestOS"`
-		status           string                    `json:"status"`
-		KeyValueInfoList []spider.KeyValueInfoList `json:"KeyValueList"`
+		id             string                `json:"id"`
+		name           string                `json:"name"`
+		connectionName string                `json:"connectionName"`
+		cspImageId     string                `json:"cspImageId"`
+		cspImageName   string                `json:"cspImageName"`
+		description    string                `json:"description"`
+		guestOS        string                `json:"guestOS"`
+		status         string                `json:"status"`
+		KeyValueList   spider.SpKeyValueList `json:"KeyValueList"`
 	} `json:"image"`
 }
 type Image struct {
-	id               string                    `json:"id"`
-	name             string                    `json:"name"`
-	connectionName   string                    `json:"connectionName"`
-	cspImageId       string                    `json:"cspImageId"`
-	cspImageName     string                    `json:"cspImageName"`
-	description      string                    `json:"description"`
-	guestOS          string                    `json:"guestOS"`
-	status           string                    `json:"status"`
-	KeyValueInfoList []spider.KeyValueInfoList `json:"KeyValueList"`
+	id             string                `json:"id"`
+	name           string                `json:"name"`
+	connectionName string                `json:"connectionName"`
+	cspImageId     string                `json:"cspImageId"`
+	cspImageName   string                `json:"cspImageName"`
+	description    string                `json:"description"`
+	guestOS        string                `json:"guestOS"`
+	status         string                `json:"status"`
+	KeyValueList   spider.SpKeyValueList `json:"KeyValueList"`
 }
 type IPStackInfo struct {
 	IP          string  `json:"ip"`
@@ -870,7 +870,7 @@ func DelDriver(driverName string) (io.ReadCloser, model.WebStatus) {
 	return respBody, model.WebStatus{StatusCode: respStatus}
 }
 
-///////////// Config
+// /////////// Config
 // 현재 설정된 Config 목록  TODO :Spider에서 /config 가 없는 것 같은데.... 나중에 확인해서 안쓰면 제거할 것
 func GetConfigList() ([]spider.ConfigInfo, model.WebStatus) {
 	url := util.SPIDER + "/config"

@@ -81,7 +81,7 @@ var VM_STATUS_ETC = "etc"
 
 var VM_STATUS_ARRAY = []string{"running", "suspended", "terminated", "etc"}
 
-/////// Store 저장 용 Const
+// ///// Store 저장 용 Const
 var STORE_NAMESPACELIST = "namespacelist"
 var STORE_CLOUDOSLIST = "cloudoslist"
 var STORE_REGIONLIST = "regionlist"
@@ -106,6 +106,9 @@ var TASK_TYPE_VMIMAGE = "vmimage"
 var TASK_TYPE_VMSPEC = "vmspec"
 var TASK_TYPE_MONITORING_POLICY = "monitoringpolicy"
 var TASK_TYPE_MONITORINGTHRESHOLD_EVENTHANDLER = "monitoringthresholdeventhandler"
+var TASK_TYPE_NLB = "nlb"
+var TASK_TYPE_PMKS = "pmks"
+var TASK_TYPE_DISK = "disk"
 
 // 요청상태 : socket 으로 전달하는 요청 상태
 var TASK_STATUS_REQUEST = "requested"
@@ -113,7 +116,6 @@ var TASK_STATUS_PROCESS = "processing"
 var TASK_STATUS_FAIL = "failed"
 var TASK_STATUS_COMPLETE = "completed"
 
-//
 var VMSPEC_LIFECYCLE_CREATE = "create"
 
 var MCKS_LIFECYCLE_CREATE = "create"
@@ -121,3 +123,19 @@ var MCKS_LIFECYCLE_SUSPEND = "suspend"
 var MCKS_LIFECYCLE_RESUME = "resume"
 var MCKS_LIFECYCLE_TERMINATE = "terminate"
 var MCKS_LIFECYCLE_DELETE = "delete"
+
+var NLB_LIFECYCLE_CREATE = "create"
+var NLB_LIFECYCLE_DELETE = "delete"
+
+var PMKS_LIFECYCLE_CREATE = "create"
+var PMKS_LIFECYCLE_SUSPEND = "suspend"
+var PMKS_LIFECYCLE_RESUME = "resume"
+var PMKS_LIFECYCLE_TERMINATE = "terminate"
+var PMKS_LIFECYCLE_DELETE = "delete"
+
+var PMKS_CLUSTER_UPDATE = "update"
+
+var DISK_LIFECYCLE_CREATE = "create"
+var DISK_LIFECYCLE_ATTACHED = "attached"
+var DISK_LIFECYCLE_DETACHED = "detached"
+var DISK_LIFECYCLE_DELETE = "delete"

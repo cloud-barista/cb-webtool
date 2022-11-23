@@ -1,0 +1,126 @@
+{{define "NodeInfo"}}
+<!-- detail -->
+<div class="dashboard dashboard_cont dashboard_detail server_info" id="dashboard_detailBox">
+
+	<div class="d_box box_m box_w100">
+		<div class="titbox">
+			<div class="tit initial"><strong>Node Info</strong> <span class="stxt" id="node_info_text">[ ]</span></div>
+			<div class="top_info">
+				<ul>
+					<li>
+						<a href="javascript:void(0);"><img src="/assets/img/common/icon_question.png" alt="" /></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="ds_cont">
+
+			<div class="iparea">
+				<div class="boxlist ipbox d_ip1">
+					<div class="iconbox">
+						<div class="img" id="node_info_status_img"><img id="service_status_icon_img" src="/assets/img/contents/icon_running_db.png"
+								alt="" /></div>
+
+					</div>
+					<ul>
+						<li>
+							<label>Name</label>
+							<input type="text" name="" value="" placeholder="Name / ID" title="" readonly
+								id="node_info_name" />
+						</li>
+						<li>
+							<label>Description</label>
+							<input type="text" name="" value="" placeholder="description" title="description" readonly
+								id="node_info_desc" />
+
+						</li>
+					</ul>
+				</div>
+
+				<div class="boxlist ipbox d_ip2">
+					<ul>
+						<li>
+							<label>Public IP</label>
+							<input type="text" name="" value="" placeholder="Public IP" title=""
+								id="node_info_public_ip" readonly />
+						</li>
+						<li>
+							<label>/ DNS</label>
+							<input type="text" name="" value="" placeholder="Public DNS" title="" readonly
+								id="node_info_public_dns" />
+						</li>
+						<li>
+							<label>Private IP</label>
+							<input type="text" name="" value="" placeholder="Private IP" title="" readonly
+								id="node_info_private_ip" />
+						</li>
+						<li>
+							<label>/ DNS</label>
+							<input type="text" name="" value="" placeholder="Private DNS" title="" readonly
+								id="node_info_private_dns" />
+						</li>
+					</ul>
+				</div>
+
+				<div class="boxlist ipbox d_ip3">
+					<ul>
+						<li>
+							<label>Operating System</label>
+							<input type="text" name="" value="" placeholder="Operating System" title="" readonly
+								id="node_info_os" />
+						</li>
+						<li>
+							<label>Architecture</label>
+							<input type="text" name="" value="" placeholder="Architecture" title="" readonly
+								id="node_info_archi" />
+						</li>
+						<li>
+							<label>VMSpecName</label>
+							<input type="text" name="" value="t2.micro" placeholder="" title="" readonly
+								id="node_info_vmspec_name" />
+						</li>
+						<li>
+							<label>StartTime</label>
+							<input type="text" name="" value="2020-05-08T14:49:47Z" placeholder="" title="" readonly
+								id="node_info_start_time" />
+						</li>
+					</ul>
+				</div>
+
+				<div class="boxlist ipbox d_ip4">
+					<div class="iconbox">
+						<div class="img" id="node_info_csp_icon"><img src="/assets/img/contents/img_logo_a.png"
+								alt="" /></div>
+					</div>
+					<ul>
+						<li>
+							<label>Region</label>
+							<input type="text" name="" value="Seoul : 리전(지역)" placeholder="" title="" readonly
+								id="node_info_region" />
+						</li>
+						<li>
+							<label>Zone</label>
+							<input type="text" name="" value="a1 : 존" placeholder="" title="" readonly
+								id="node_info_zone" />
+						</li>
+						<li>
+							<label>VMID</label>
+							<input type="text" name="" value="cspVMID : CSP VM ID" placeholder="" title="" readonly
+								id="node_info_cspVMID" />
+						</li>
+						<li>
+							<label>ConfigName</label>
+							<input type="text" name="" value="" placeholder="Cloud Connection name" title="" readonly
+								id="node_info_connection_name" />
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+<!-- //detail -->
+{{end}}

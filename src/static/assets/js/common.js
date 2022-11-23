@@ -192,6 +192,54 @@ function getVmStatusDisp(vmFullStatus) {
 	return returnVmStatus
 }
 
+function getNodeGroupStatusDisp(status) {
+	console.log("getNodeGroupStatusDisp " + status);
+	var returnStatus = status.toLowerCase() // 소문자로 변환
+
+	const NODEGROUP_STATUS_RUNNING = "running"
+	const NODEGROUP_STATUS_STOPPED = "stop"
+	const NODEGROUP_STATUS_RESUMING = "resuming";
+	const NODEGROUP_STATUS_INCLUDE = "include"
+	const NODEGROUP_STATUS_SUSPENDED = "suspended"
+	const NODEGROUP_STATUS_TERMINATED = "terminated"
+	const NODEGROUP_STATUS_FAILED = "failed"
+
+	if (returnStatus == NODEGROUP_STATUS_RUNNING) {
+		returnStatus = "running"
+	} else if (returnStatus == NODEGROUP_STATUS_TERMINATED) {
+		returnStatus = "terminate"
+	} else if (returnStatus == NODEGROUP_STATUS_FAILED) {
+		returnStatus = "terminate"
+	} else {
+		returnStatus = "stop"
+	}
+	return returnStatus
+}
+
+function getNodeStatusDisp(status) {
+	console.log("getNodeStatusDisp " + status);
+	var returnStatus = status.toLowerCase() // 소문자로 변환
+
+	const NODE_STATUS_RUNNING = "running"
+	const NODE_STATUS_STOPPED = "stop"
+	const NODE_STATUS_RESUMING = "resuming";
+	const NODE_STATUS_INCLUDE = "include"
+	const NODE_STATUS_SUSPENDED = "suspended"
+	const NODE_STATUS_TERMINATED = "terminated"
+	const NODE_STATUS_FAILED = "failed"
+
+	if (returnStatus == NODE_STATUS_RUNNING) {
+		returnStatus = "running"
+	} else if (returnStatus == NODE_STATUS_TERMINATED) {
+		returnStatus = "terminate"
+	} else if (returnStatus == NODE_STATUS_FAILED) {
+		returnStatus = "terminate"
+	} else {
+		returnStatus = "stop"
+	}
+	return returnStatus
+}
+
 function getVmStatus(vm_name, connection_name) {
 	var url = "/vmstatus/" + vm_name + "?connection_name=" + connection_name
 	var apiInfo = ApiInfo;
@@ -240,6 +288,55 @@ function getVmStatusIcon(vmDispStatus){
 	}
 	return vmStatusIcon;
 }
+
+function getNodeGroupStatusClass(status){
+	var statusClass = "bgbox_g";
+	if (status == "running") {
+		statusClass = "bgbox_b"
+	} else if (status == "include") {
+		statusClass = "bgbox_g"
+	} else if (status == "suspended") {
+		statusClass = "bgbox_g"
+	} else if (status == "terminated") {
+		statusClass = "bgbox_r"
+	} else {
+		statusClass = "bgbox_r"
+	}
+	return statusClass;
+}
+function getNodeGroupStatusIcon(status){
+	var statusIcon = "icon_running_db.png";
+	if(status == "running"){
+	    statusIcon = "icon_running_db.png";
+	}else if(status == "stop"){
+	    statusIcon = "icon_stop_db.png";
+	}else if(status == "suspended"){
+	    statusIcon = "icon_stop_db.png";
+	}else if(status == "terminate"){
+	    statusIcon = "icon_terminate_db.png";
+	}else{
+	    statusIcon = "icon_stop_db.png";
+	}
+	return statusIcon;
+}
+
+function getNodeStatusIcon(status){
+	var statusIcon = "icon_running_db.png";
+	if(status == "running"){
+	    statusIcon = "icon_running_db.png";
+	}else if(status == "stop"){
+	    statusIcon = "icon_stop_db.png";
+	}else if(status == "suspended"){
+	    statusIcon = "icon_stop_db.png";
+	}else if(status == "terminate"){
+	    statusIcon = "icon_terminate_db.png";
+	}else{
+	    statusIcon = "icon_stop_db.png";
+	}
+	return statusIcon;
+}
+
+
 // 좌측메뉴 선택 표시
 // 경로를 split하여 첫번째 : Operation / Setting, 두번째 선택, 세번째 선택하도록 
 // //http://localhost:1234/setting/connections/cloudconnectionconfig/mngform
@@ -678,9 +775,7 @@ function setDefaultNameSpace(nsid, callerLocation) {
 
 			if (callerLocation == "Main") {
 				// $('#loadingContainer').show();// page 이동 전 loading bar를 보여준다.
-				// location.href = "/operation/dashboards/dashboardnamespace/mngform"
-				var targetUrl = "/operation/dashboards/dashboardnamespace/mngform"
-				changePage(targetUrl)
+				changePage("NsDashboardForm")
 			} else if (callerLocation == "NameSpace") {
 				// commonAlert(data.DefaultNameSpaceID + "가 기본 NameSpace로 변경되었습니다.")
 				commonAlert("기본 NameSpace로 변경되었습니다")

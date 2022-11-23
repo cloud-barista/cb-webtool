@@ -67,18 +67,61 @@
 								<div class="top_ipbox">
 									<div class="ipbox first">
 										<ul>
+											<!-- clusterReq Area-->
 											<li>
-												<label>MCKS Name</label>
+												<label>Name</label>
 												<input type="text" name="mcksreg_name" value="" id="mcksreg_name"
 													placeholder="small letter, number, hyphen only" class="pline ip_1"
 													title="" />
 											</li>
-											<!-- 															
-															<li>
-																<label>Description</label>
-																<textarea  cols="" rows="" id="mcis_desc" placeholder="type Description" name="mcis_desc" class="pline ta_1" title="" ></textarea>
-															</li>
-															 -->
+																						
+											<li>
+												<label>Description</label>
+												<textarea  cols="" rows="" id="mcksreg_desc" placeholder="type Description" name="mcksreg_desc" class="pline ta_1" title="" ></textarea>
+											</li>
+											<!-- clusterReq Area end-->
+
+											<!-- clusterConfigReq Area-->
+											<li>
+												<label>Monitoring Agent</label>
+												<select class="selectbox white pline sel_1" name="clusterconfig_installMonitoringAgent"
+													id="clusterconfig_installMonitoringAgent">
+													<option value="no" selected>NO</option>
+													<option value="yes">YES</option>
+												</select>
+											</li>
+											<!-- kubernetes -->
+											<li>
+												<label>Version</label>
+												<input type="text" name="clusterconfig_kubernates_version" value="1.23.13" id="clusterconfig_kubernates_version"
+													placeholder="example: 1.23.13" class="pline ip_1"
+													title="" />
+											</li>
+											<li>
+												<label>ETCD</label>
+												<select class="selectbox white pline sel_1" name="clusterconfig_kubernates_etcd"
+													id="clusterconfig_kubernates_etcd">
+													<option value="local" selected>Local</option>
+													<option value="external">External</option>
+												</select>
+											</li>
+											<li>
+												<label>LoadBalancer</label>
+												<select class="selectbox white pline sel_1" name="clusterconfig_kubernates_loadbalancer"
+													id="clusterconfig_kubernates_loadbalancer">
+													<option value="haproxy" selected>Haproxy</option>
+													<option value="nlb">NLB</option>
+												</select>
+											</li>
+											<li>
+												<label>Storage Class NFS</label>
+												<input type="text" name="clusterconfig_kubernates_storageclass_nfs_path" value="" id="clusterconfig_kubernates_storageclass_nfs_path"
+													placeholder="example: /nfs/data" class="pline ip_1"
+													title="" />
+												<input type="text" name="clusterconfig_kubernates_storageclass_nfs_server" value="" id="clusterconfig_kubernates_storageclass_nfs_server"
+													placeholder="example: xxx.xxx.xxx.xxx" class="pline ip_1"
+													title="" />
+											</li>
 										</ul>
 									</div>
 									<!-- config -->
@@ -86,8 +129,8 @@
 										<ul id="mcks_kubernated_list">
 											<li>
 												<label>NetworkCni</label>
-												<select class="selectbox white pline sel_1" name="kubernatesNetworkCni"
-													id="kubernatesNetworkCni">
+												<select class="selectbox white pline sel_1" name="clusterconfig_kubernates_networkCni"
+													id="clusterconfig_kubernates_networkCni">
 													<option value="kilo" selected>Kilo</option>
 													<option value="canal">Canal</option>
 												</select>
@@ -95,20 +138,20 @@
 
 											<li>
 												<label>PodCidr</label>
-												<input type="text" name="kubernatesPodCidr" value=""
-													id="kubernatesPodCidr" placeholder="Input PodCidr"
+												<input type="text" name="clusterconfig_kubernates_podCidr" value=""
+													id="clusterconfig_kubernates_podCidr" placeholder="Input PodCidr"
 													class="pline ip_1" title="" />
 											</li>
 											<li>
 												<label>ServiceCidr</label>
-												<input type="text" name="kubernatesServiceCidr" value=""
-													id="kubernatesServiceCidr" placeholder="Input ServiceCidr"
+												<input type="text" name="clusterconfig_kubernates_serviceCidr" value=""
+													id="clusterconfig_kubernates_serviceCidr" placeholder="Input ServiceCidr"
 													class="pline ip_1" title="" />
 											</li>
 											<li>
 												<label>ServiceDnsDomain</label>
-												<input type="text" name="kubernatesServiceDnsDomain" value=""
-													id="kubernatesServiceDnsDomain" placeholder="Input ServiceDnsDomain"
+												<input type="text" name="clusterconfig_kubernates_serviceDnsDomain" value=""
+													id="clusterconfig_kubernates_serviceDnsDomain" placeholder="Input ServiceDnsDomain"
 													class="pline ip_1" title="" />
 											</li>
 										</ul>

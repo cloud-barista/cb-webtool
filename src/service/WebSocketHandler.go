@@ -77,7 +77,7 @@ func GetWebsocketMessageByTaskKey(taskType string, taskKey string, c echo.Contex
 }
 
 // 전송 상태에 따른 값 목록 조회. sendMessage==false 이면 전송 전 data목록만 :: 시간을 param으로 하므로 필요 없을 것. deprecated.
-//func GetWebsocketMessageBySend(send bool, c echo.Context) map[int64]modelsocket.WebSocketMessage {
+// func GetWebsocketMessageBySend(send bool, c echo.Context) map[int64]modelsocket.WebSocketMessage {
 func GetWebsocketMessageBySend(send bool, c echo.Context) []modelsocket.WebSocketMessage {
 	store := echosession.FromContext(c)
 	socketDataStore, ok := store.Get("socketdata")
@@ -105,7 +105,7 @@ func GetWebsocketMessageBySend(send bool, c echo.Context) []modelsocket.WebSocke
 }
 
 // 특정 시점 이후의 data만 추출
-//func GetWebsocketMessageByProcessTime(beginTime time.Time, c echo.Context) map[int64]modelsocket.WebSocketMessage {
+// func GetWebsocketMessageByProcessTime(beginTime time.Time, c echo.Context) map[int64]modelsocket.WebSocketMessage {
 func GetWebsocketMessageByProcessTime(beginTime int64, c echo.Context) []modelsocket.WebSocketMessage {
 	store := echosession.FromContext(c)
 	socketDataStore, ok := store.Get("socketdata")
@@ -157,6 +157,29 @@ func StoreWebsocketMessage(taskType string, taskKey string, lifeCycle string, re
 	websocketMessage.TaskKey = taskKey
 	websocketMessage.LifeCycle = lifeCycle
 	websocketMessage.Status = requestStatus
+	websocketMessage.ProcessTime = time.Now()
+
+	socketDataMap[time.Now().UnixNano()] = websocketMessage
+	store.Set("socketdata", socketDataMap)
+	store.Save()
+	log.Println("setsocketdata" + taskKey + " :  " + lifeCycle + " " + requestStatus)
+}
+
+func StoreWebsocketMessageDetail(taskType string, taskKey string, lifeCycle string, requestStatus string, desc string, c echo.Context) {
+	store := echosession.FromContext(c)
+	socketDataStore, isStoreOk := store.Get("socketdata")
+	socketDataMap := map[int64]modelsocket.WebSocketMessage{}
+	if !isStoreOk {
+	} else {
+		socketDataMap = socketDataStore.(map[int64]modelsocket.WebSocketMessage) // 없으면 생성
+	}
+
+	websocketMessage := modelsocket.WebSocketMessage{}
+
+	websocketMessage.TaskType = taskType
+	websocketMessage.TaskKey = taskKey
+	websocketMessage.LifeCycle = lifeCycle
+	websocketMessage.Status = requestStatus + ", " + desc
 	websocketMessage.ProcessTime = time.Now()
 
 	socketDataMap[time.Now().UnixNano()] = websocketMessage

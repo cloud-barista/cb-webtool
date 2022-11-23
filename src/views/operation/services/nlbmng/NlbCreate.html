@@ -1,0 +1,263 @@
+{{define "NlbCreate"}}
+
+<!-- Register NLB -->
+<div class="dashboard dashboard_cont register_cont" id="nlbCreateBox">
+    <div class="d_box box_m box_w100">
+        <div class="titbox_n">
+            <div class="tit initial cg"><strong>Create NLB</strong></div>
+        </div>
+
+        <div class="ds_cont">
+            <div class="register_box reg">
+                <div class="top_ipbox">
+                    <div class="ipbox ipbox1">
+                        <ul>
+                            <li class="reg_1">
+                                <label><span class="ch">*</span>NLB Name</label>
+                                <input type="text" name="reg_name" id="reg_name" value="" placeholder="Input NLB Name"
+                                    class="pline" title="" />
+                            </li>
+                            <li class="reg_1">
+                                <label>Description</label>
+                                <textarea name="reg_description" id="reg_description" cols="" rows=""
+                                    placeholder="Description" class="pline" title=""></textarea>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="ipbox ipbox1">
+                        <ul>
+                            <li class="reg_1">
+                                <label>Cloud Provider</label>
+                                <span class="sbox">
+                                    <select class="white pline w3" name="ProviderName" id="regProvider"
+                                        onchange="getConnectionListForSelectbox(this.value, 'regConnectionName')">
+                                        <option value="" selected>
+                                            Select Cloud Provider
+                                        </option>
+                                        {{ range $item := .CloudOSList}}
+                                        <option value="{{ $item }}">
+                                            {{ $item }}
+                                        </option>
+                                        {{ end }}
+                                    </select>
+                                </span>
+                            </li>
+                            <li class="reg_1">
+                                <label>
+                                    <span class="ch">*</span>Connection
+                                    Name</label>
+                                <span class="sbox">
+                                    <select class="white pline w3" name="reg_connectionName" id="regConnectionName"
+                                        onchange="getVnetInfoListForSelectbox(this.value, 'regVNetId')">
+                                        <option value="1">
+                                            Selected Connection
+                                        </option>
+                                    </select>
+                                </span>
+                            </li>
+                            <li class="reg_1">
+                                <label><span class="ch">*</span>VPC ID</label>
+                                <span class="sbox">
+                                    <select class="white pline w3" name="reg_vNetId" id="regVNetId">
+                                        <option value="">Selected VPC Id</option>
+                                    </select>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="graybox">
+                    <div class="g_box">
+                        <div class="g_ipbox g_ipbox1">
+                            <ul>
+                                <li>
+                                    <div class="sub_titbox">
+                                        <div class="tit">
+                                            <strong>Listener</strong>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="reg_1">
+                                    <label><span class="ch">*</span>Protocol/Port</label>
+                                    <span class="sbox">
+                                        <select id="ls_protocol" class=" white pline w_ip1 pair_input" required>
+                                            <option value="" selected>Select Protocol</option>
+                                            <option value="TCP">TCP</option>
+                                            <option value="UDP">UDP</option>
+                                        </select>
+                                        <input type="text" id="ls_port" name="ls_port" placeholder="1-65535"
+                                            class="pline pair_input" title="" />
+                                    </span>
+                                    <!-- <span class="sbox">
+                                        
+                                    </span> -->
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="g_ipbox g_ipbox1">
+                            <ul>
+                                <li>
+                                    <div class="sub_titbox">
+                                        <div class="tit">
+                                            <strong>Health Check</strong>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="reg_1">
+                                    <label><span class="ch">*</span>Threshold</label>
+                                    <span class="sbox">
+                                        <input type="text" id="hc_threshold" name="hc_threshold" placeholder=""
+                                            class="pline" title="" />
+                                    </span>
+                                </li>
+                                <li class="reg_1">
+                                    <label><span class="ch">*</span>Interval/Timeout</label>
+                                    <span class="sbox">
+                                        <input type="text" id="hc_interval" name="hc_interval" placeholder=""
+                                            class="pline pair_input" title="" />
+                                        <input type="text" id="hc_timeout" name="hc_timeout" placeholder=""
+                                            class="pline pair_input" title="" />
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="graybox">
+                    <div class="g_box">
+                        <div class="sub_titbox">
+                            <div class="tit">
+                                <strong>Target Group</strong>
+                            </div>
+                        </div>
+                        <div class="g_ipbox g_ipbox1">
+                            <ul>
+                                <li class="reg_1">
+                                    <label>Protocol/Port</label>
+                                    <span class="sbox">
+                                        <select id="tg_protocol" class=" white pline w_ip1 pair_input" required>
+                                            <option value="" selected>Select Protocol</option>
+                                            <option value="TCP">TCP</option>
+                                            <option value="HTTP">HTTP</option>
+                                            <option value="HTTPS">HTTPS</option>
+                                        </select>
+                                        <input type="text" id="tg_port" name="tg_port" placeholder="1-65535"
+                                            class="pline pair_input" title="" />
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="g_ipbox g_ipbox1">
+                            <ul>
+                                <li class="reg_1">
+                                    <span class="sbox">
+                                        <input type="hidden" id="tg_mcisId" name="tg_mcisId" placeholder=""
+                                            class="ip_w1 gray noline" title="" readonly />
+                                    </span>
+                                </li>
+                                <li class="reg_1">
+                                    <label>Sub Group ID</label>
+                                    <span class="sbox">
+                                        <input type="text" id="tg_subGroupId" name="tg_subGroupId" placeholder=""
+                                            class="pline gray with_btn" title="" readonly />
+                                        <button name="" value="" class="btn_edit btn_register" id="btn_nlb_vm"
+                                            onClick="getMcisVmsPop()">
+                                            Search
+                                        </button>
+                                    </span>
+                                </li>
+                                <li class="reg_1">
+                                    <label>VMS</label>
+                                    <textarea name="tg_vms" id="tg_vms" cols="" rows="" placeholder="VMs"
+                                        class="pline gray" title="" readonly></textarea>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="btnbox">
+                    <div class="btn_center">
+                        <button name="" value="" class="btn_co btn_cr_b w135 btn_cancel"
+                            onclick="displayNlbInfo('CLOSE')">
+                            Cancel
+                        </button>
+                        <button name="" value="" class="btn_co btn_cr_g w135 btn_ok" onclick="createNlb()">
+                            Ok
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Register NLB -->
+
+<!-- register vmpop -->
+<div class="register_box modal fade" id="vmRegisterBox" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="pop-body">
+                    <div class="title_box">
+                        <div class="title">VM List</div>
+                    </div>
+
+                    <div class="pop-cont">
+                        <!-- 
+											<div class="toptxt">
+												<label>Virtual Network cidrBlock</label>
+												<input type="text" name="" value="cidrBlock" placeholder="" class="gray" title="" readonly />
+											</div>
+											-->
+                        <!-- table scrollbar -->
+                        <div class="dtbox scrollbar-inner">
+                            <div class="dataTable dt_overlay">
+                                <table cellpadding="0" cellspacing="0" border="1" summary="">
+                                    <!-- <colgroup><col width=""><col width=""><col width="100px"></colgroup> -->
+                                    <thead>
+                                        <tr>
+                                            <th class="column-50px">
+                                                <input type="checkbox" name="" value="" id="th_chall" title="" /><label
+                                                    for="th_chall"></label>
+                                            </th>
+                                            <th>MCIS</th>
+                                            <th>Sub Group</th>
+                                            <th>VM List</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="subGroupList">
+                                        <tr>
+                                            <td class="overlay hidden" data-th="" colspan="4">
+                                                No Data
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- //table scrollbar -->
+
+                        <div class="b_txt">
+                            <span class="ch">*</span> Define the VM Group to be
+                            added to MCIS and VMs and add it by clicking
+                            <span class="txt">“Apply”</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btnbox">
+                    <div class="btn_right">
+                        <button name="" value="" class="btn_apply btn_co btn_cr_g" onclick="applySubGroup()">
+                            <span>Apply</span>
+                        </button>
+                        <button name="" value="" class="btn_cancel btn_co btn_cr_b" data-dismiss="modal">
+                            cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //register vmpop -->
+{{end}}

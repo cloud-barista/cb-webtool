@@ -1,0 +1,203 @@
+{{define "NodeGroupConfigure"}}
+
+<!-- nodegroup 추가 form -->
+<div class="servers_config node_config" id="nodeConfig" style="display:block">
+	<form id="node_form">
+		<input type="hidden" name="pmksID" value="{{ .PmksID}}" id="pmksID" />
+		<input type="hidden" name="pmksName" value="{{ .PmksName}}" id="pmksName" />
+
+		<div class="top_box">
+			<div class="titbox_sc">
+				<div class="tit">NodeGroup Configuration </div>
+			</div>
+
+			<div class="ip_box" id="pmksNodeGroupArea">
+
+				<div class="servers_box" id="pmks_nodegroup_list">
+					<div class="title">NodeGroup Pool</div>
+					<div class="ipbox ipbox1">
+						<ul>
+							<li>
+								<div class="svc_ipbox">
+									<div class="ipbox ipbox3">
+										<ul>
+											<li>
+												<label>Name</label>
+												<input type="text" name="nodeGroupName" value="" id="nodeGroupName_0"
+													placeholder="pmks version" class="pline ip_1"
+													title="" />
+											</li>
+											<li>
+												<label><span class="ch">*</span>Public Image</label>
+												<select class="selectbox white pline sel_4" name="nodeGroupPublicImageId"
+													id="nodeGroupImageId_0">
+													<option value="">Select Image</option>
+												</select>
+											</li>
+											<li>
+												<label><span class="ch">*</span>My Image</label>
+												<select class="selectbox white pline sel_4" name="nodeGroupMyImageId"
+													id="nodeGroupImageId_0">
+													<option value="">Select Image</option>
+												</select>
+											</li>											
+											<li>
+												<label><span class="ch">*</span>Spec</label>
+												<select class="selectbox white pline sel_4" name="nodeGroupSpecId"
+													id="nodeGroupSpecId_0">
+													<option value="">Select Spec</option>
+												</select>
+											</li>
+										
+											<li>
+												<label><span class="ch">*</span>SSH Key</label>
+												<select class="selectbox white pline sel_4" name="nodeGroupSshKeyId"
+													id="nodeGroupSpecId_0">
+													<option value="">Select SSH Key</option>
+												</select>
+											</li>
+											<li>
+												<label>Root Disk Type</label>
+												<input type="text" name="nodeGroupRootDiskType" value="" id="nodeGroupRootDiskType_0"
+													placeholder="pmks version" class="pline ip_1"
+													title="" />
+											</li>
+											<li>
+												<label>Root Disk Size</label>
+												<input type="text" name="nodeGroupRootDiskSize" value="" id="nodeGroupRootDiskSize_0"
+													placeholder="pmks version" class="pline ip_1"
+													title="" />
+											</li>
+										</ul>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="ipbox ipbox2">
+						<ul>
+							<li>
+								<div class="svc_ipbox">
+									<div class="ipbox ipbox3">
+										<ul>
+											<li>
+												<label>Auto Scaling</label>
+												<select class="selectbox white pline sel_4" name="nodeGroupImageId"
+													id="nodeGroupImageId_0">
+													<option value="1">Select Image</option>
+												</select>
+											</li>										
+											<li>
+												<label><span class="ch">*</span>Desire Node Size</label>
+												<input type="text" name="nodeGroupDesireNodeSize" value="" id="nodeGroupDesireNodeSize_0"
+													placeholder="Desire Node Size" class="pline ip_1"
+													title="" />
+											</li>
+											<li>
+												<label><span class="ch">*</span>Minimum Node Size</label>
+												<input type="text" name="nodeGroupMinimumNodeSize" value="" id="nodeGroupMinimumNodeSize_0"
+													placeholder="Minimum Node Size" class="pline ip_1"
+													title="" />
+											</li>
+											<li>
+												<label><span class="ch">*</span>Maximum Node Size</label>
+												<input type="text" name="nodeGroupMaximumNodeSize" value="" id="nodeGroupMaximumNodeSize_0"
+													placeholder="aximum Node Size" class="pline ip_1"
+													title="" />
+											</li>
+										</ul>
+									</div>
+									
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- //worker -->
+
+
+
+
+			</div>
+			<!-- worker -->
+
+			<div class="btnbox">
+				<div class="btn_right">
+					<button type="button" name="" value="" class="btn_done btn_co btn_cr_g"
+						onclick="addNodeGroup();"><span>NodeGroup Add</span></button>
+				</div>
+			</div>
+
+		</div>
+	</form>
+</div>
+<!-- hidden area start -->
+<!-- hidden worker 추가시 사용하는 것으로 hidden-->
+<div id="hidden_work_area" style="display:none">
+	<div class="servers_box" id="hidden_pmks_Worker_list">
+		<div class="title">Worker Pool <span id="hidden_WorkerAddCount"></span></div>
+		<div>
+			<ul>
+				<li>
+					<div class="svc_ipbox">
+						<div class="ipbox ipbox4">
+							<ul>
+								<li>
+									<label><span class="ch">*</span>Provider</label>
+									<select class="selectbox white pline sel_4" name="workerProvider"
+										id="hidden_workerProvider"
+										onchange="getConnectionListForSelectbox(this.value, 'hidden_workerConnectionName');">
+										<option value="">Select Provider</option>
+										{{ range $item := .CloudOSList}}
+										<option value="{{ $item }}">{{ $item }}</option>
+										{{ end }}
+									</select>
+								</li>
+							</ul>
+						</div>
+						<div class="ipbox ipbox4">
+							<ul>
+								<li>
+									<label><span class="ch">*</span>Connection Name</label>
+									<select class="selectbox white pline sel_4" name="workerConnectionName"
+										id="hidden_workerConnectionName"
+										onchange="changeConnectionInfo(this.value, 'hidden_workerSpecId');">
+										<option value="">Select Connection</option>
+									</select>
+								</li>
+							</ul>
+						</div>
+						<div class="ipbox ipbox4">
+							<ul>
+								<li>
+									<label><span class="ch">*</span>Count</label>
+									<input type="text" name="workerCount" id="hidden_workerCount"
+										placeholder="Input Count" class="pline count" title="" value="2" />
+								</li>
+							</ul>
+						</div>
+						<div class="ipbox ipbox4">
+							<ul>
+								<li>
+									<label><span class="ch">*</span>Spec</label>
+									<select class="selectbox white pline sel_4" name="workerSpecId"
+										id="hidden_workerSpecId">
+										<option value="1">Select Spec</option>
+									</select>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="btnbox">
+			<div class="btn_right">
+				<button type="button" id="hidden_workerRemove" value="" class="btn_done btn_del"
+					onclick="removeWorkerNode('hidden_workerRemove');"></button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- hidden area end-->
+{{end}}

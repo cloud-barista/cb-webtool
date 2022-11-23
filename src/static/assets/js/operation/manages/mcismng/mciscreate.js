@@ -2,60 +2,11 @@ $(document).ready(function () {
 
     // 생성 완료 시 List화면으로 page이동
     $('#alertResultArea').on('hidden.bs.modal', function () {// bootstrap 3 또는 4
-        //$('#alertResultArea').on('hidden', function () {// bootstrap 2.3 이전
-        console.log("test");
-        let targetUrl = "/operation/manages/mcismng/mngform"
-        changePage(targetUrl)
-
+        changePage("McisMngForm")
     });
-
-    console.log("mcisCreate.js ")
-    // getCommonCloudConnectionList('mciscreate', '', true)
-    // getCommonVirtualMachineSpecList('mciscreate')
 
     getResources('mciscreate')
 
-
-    //Servers Expert on/off
-    //     var check = $(".switch .ch");
-    //     var $Servers = $(".servers_config");
-    //     var $NewServers = $(".new_servers_config");
-    //     var $SimpleServers = $(".simple_servers_config");
-    //     var simple_config_cnt = 0;
-    //     var expert_config_cnt = 0;
-
-    //     check.click(function(){
-    //         $(".switch span.txt_c").toggle();
-    //         $NewServers.removeClass("active");
-    //     });
-
-    //   //Expert add
-    //     $('.servers_box .server_add').click(function(){
-    //         $NewServers.toggleClass("active");
-    //         if($Servers.hasClass("active")) {
-    //         $Servers.toggleClass("active");
-    //         } else {
-    //             $Servers.toggleClass("active");
-    //         }
-    //     });
-    //     // Simple add
-    //     $(".servers_box .switch").change(function() {
-    //         if ($(".switch .ch").is(":checked")) {	
-    //                 $('.servers_box .server_add').click(function(){	
-
-    //                     $NewServers.addClass("active");
-    //                     $SimpleServers.removeClass("active");		
-    //                 });
-    //         } else {
-    //             $('.servers_box .server_add').click(function(){
-
-    //                 $NewServers.removeClass("active");
-    //                 $SimpleServers.addClass("active");
-
-
-    //             });		
-    //         }
-    //     });
 });
 
 // 서버 더하기버튼 클릭시 서버정보 입력area 보이기/숨기기
@@ -63,25 +14,50 @@ $(document).ready(function () {
 // newServers 와 simpleServers가 있음.
 function displayNewServerForm() {
 
+    var deploymentAlgo = $("#placement_algo").val();
     var simpleServerConfig = $("#simpleServerConfig");
     var expertServerConfig = $("#expertServerConfig");
     var importServerConfig = $("#importServerConfig");
-    console.log("is import = " + IsImport + " , is expert " + $("#isExpert").is(":checked"))
+    var expressServerConfig = $("#expressServerConfig");
+    console.log("is import = " + IsImport + " , deploymentAlgo " + deploymentAlgo)
     // if ($("#isImport").is(":checked")) {
     if (IsImport) {
         simpleServerConfig.removeClass("active");
         expertServerConfig.removeClass("active");
         importServerConfig.addClass("active");
-    } else if ($("#isExpert").is(":checked")) {
+        expressServerConfig.removeClass("active");
+    } else if (deploymentAlgo == "expert") {
         simpleServerConfig.removeClass("active");
-        expertServerConfig.addClass("active");
+        expertServerConfig.toggleClass("active");//
         importServerConfig.removeClass("active");
-    } else {
-        //simpleServerConfig        
-        simpleServerConfig.addClass("active");
+        expressServerConfig.removeClass("active");
+    } else if (deploymentAlgo == "simple") {
+        simpleServerConfig.toggleClass("active");//
         expertServerConfig.removeClass("active");
         importServerConfig.removeClass("active");
+        expressServerConfig.removeClass("active");
+
+    } else {
+        //simpleServerConfig        
+        console.log("exp")
+        simpleServerConfig.removeClass("active");
+        expertServerConfig.removeClass("active");
+        importServerConfig.removeClass("active");
+        expressServerConfig.toggleClass("active");//        
     }
+}
+
+// 모드가 바뀌면 Form을 Clear 한다.
+function closeNewServerForm() {    
+    var expressServerConfig = $("#expressServerConfig");
+    var simpleServerConfig = $("#simpleServerConfig");    
+    var expertServerConfig = $("#expertServerConfig");
+    var importServerConfig = $("#importServerConfig");
+
+    expressServerConfig.removeClass("active");
+    simpleServerConfig.removeClass("active");
+    expertServerConfig.removeClass("active");
+    importServerConfig.removeClass("active");
 }
 
 
@@ -92,92 +68,101 @@ var TotalServerConfigArr = new Array();
 // deploy 버튼 클릭시 등록한 서버목록을 배포.
 // function btn_deploy(){
 function deployMcis() {
-    var mcis_name = $("#mcis_name").val();
-    if (!mcis_name) {
-        commonAlert("Please Input MCIS Name!!!!!")
-        return;
-    }
-    var mcis_desc = $("#mcis_desc").val();
-    var placement_algo = $("#placement_algo").val();
-    var installMonAgent = $("#installMonAgent").val();
 
-    var new_obj = {}
-
-    var vm_len = 0;
-
-    if (IsImport) {
-        // ImportedMcisScript.name = mcis_name;
-        // ImportedMcisScript.description = mcis_desc;
-        // ImportedMcisScript.installMonAgent = installMonAgent;
-        // console.log(ImportedMcisScript);
-        //var theJson = jQuery.parseJSON($(this).val())
-        //$("#mcisImportScriptPretty").val(fmt);	
-        new_obj = $("#mcisImportScriptPretty").val();
-        new_obj.id = "";// id는 비워준다.
-    } else {
-        //         console.log(Simple_Server_Config_Arr)
-
-        // mcis 생성이므로 mcisID가 없음
-        new_obj['name'] = mcis_name
-        new_obj['description'] = mcis_desc
-        new_obj['installMonAgent'] = installMonAgent
-
-        if (Simple_Server_Config_Arr) {
-            vm_len = Simple_Server_Config_Arr.length;
-            for (var i in Simple_Server_Config_Arr) {
-                TotalServerConfigArr.push(Simple_Server_Config_Arr[i]);
-            }
+    // express 는 express 만, simple + expert + import 는 합쳐서
+    // 두개의 mcis는 만들어 질 수 없으므로 
+    var deploymentAlgo = $("#placement_algo").val()
+    if (deploymentAlgo == "express") {
+        createMcisDynamic()
+    }else{
+        var mcis_name = $("#mcis_name").val();
+        if (!mcis_name) {
+            commonAlert("Please Input MCIS Name!!!!!")
+            return;
         }
-
-        if (Expert_Server_Config_Arr) {
-            vm_len = Expert_Server_Config_Arr.length;
-            for (var i in Expert_Server_Config_Arr) {
-                TotalServerConfigArr.push(Expert_Server_Config_Arr[i]);
-            }
-        }
-
-        if (TotalServerConfigArr) {
-            vm_len = TotalServerConfigArr.length;
-            console.log("Server_Config_Arr length: ", vm_len);
-            new_obj['vm'] = TotalServerConfigArr;
-            console.log("new obj is : ", new_obj);
+        var mcis_desc = $("#mcis_desc").val();
+        var placement_algo = $("#placement_algo").val();
+        var installMonAgent = $("#installMonAgent").val();
+    
+        var new_obj = {}
+    
+        var vm_len = 0;
+    
+        if (IsImport) {
+            // ImportedMcisScript.name = mcis_name;
+            // ImportedMcisScript.description = mcis_desc;
+            // ImportedMcisScript.installMonAgent = installMonAgent;
+            // console.log(ImportedMcisScript);
+            //var theJson = jQuery.parseJSON($(this).val())
+            //$("#mcisImportScriptPretty").val(fmt);	
+            new_obj = $("#mcisImportScriptPretty").val();
+            new_obj.id = "";// id는 비워준다.
         } else {
-            commonAlert("Please Input Servers");
-            $(".simple_servers_config").addClass("active");
-            $("#s_name").focus();
+            //         console.log(Simple_Server_Config_Arr)
+    
+            // mcis 생성이므로 mcisID가 없음
+            new_obj['name'] = mcis_name
+            new_obj['description'] = mcis_desc
+            new_obj['installMonAgent'] = installMonAgent
+    
+            // Express_Server_Config_Arr 은 별도처리
+
+
+            if (Simple_Server_Config_Arr) {
+                vm_len = Simple_Server_Config_Arr.length;
+                for (var i in Simple_Server_Config_Arr) {
+                    TotalServerConfigArr.push(Simple_Server_Config_Arr[i]);
+                }
+            }
+    
+            if (Expert_Server_Config_Arr) {
+                vm_len = Expert_Server_Config_Arr.length;
+                for (var i in Expert_Server_Config_Arr) {
+                    TotalServerConfigArr.push(Expert_Server_Config_Arr[i]);
+                }
+            }
+    
+            if (TotalServerConfigArr) {
+                vm_len = TotalServerConfigArr.length;
+                console.log("Server_Config_Arr length: ", vm_len);
+                new_obj['vm'] = TotalServerConfigArr;
+                console.log("new obj is : ", new_obj);
+            } else {
+                commonAlert("Please Input Servers");
+                $(".simple_servers_config").addClass("active");
+                $("#s_name").focus();
+            }
+        }
+    
+        var url = getWebToolUrl("McisRegProc")
+        try {
+            axios.post(url, new_obj, {
+                // headers: {
+                //     'Content-type': "application/json",
+                // },
+            }).then(result => {
+                console.log("MCIR Register data : ", result);
+                console.log("Result Status : ", result.status);
+                if (result.status == 201 || result.status == 200) {
+                    commonResultAlert("Register Requested")
+                } else {
+                    commonAlert("Register Fail")
+                }
+            }).catch((error) => {
+                // console.warn(error);
+                console.log(error.response)
+                var errorMessage = error.response.data.error;
+                var statusCode = error.response.status;
+                commonErrorAlert(statusCode, errorMessage)
+    
+            })
+        } catch (error) {
+            commonAlert(error);
+            console.log(error);
         }
     }
 
-    // var url = CommonURL+"/ns/"+NAMESPACE+"/mcis";
-    var url = "/operation/manages/mcismng/reg/proc"
-    try {
-        axios.post(url, new_obj, {
-            headers: {
-                'Content-type': 'application/json',
-            },
-        }).then(result => {
-            console.log("MCIR Register data : ", result);
-            console.log("Result Status : ", result.status);
-            if (result.status == 201 || result.status == 200) {
-                commonResultAlert("Register Success")
-                // var targetUrl = "/operation/manages/mcismng/mngform"
-                // changePage(targetUrl)
-            } else {
-                commonAlert("Register Fail")
-                //location.reload(true);
-            }
-        }).catch((error) => {
-            // console.warn(error);
-            console.log(error.response)
-            var errorMessage = error.response.data.error;
-            var statusCode = error.response.status;
-            commonErrorAlert(statusCode, errorMessage)
-
-        })
-    } catch (error) {
-        commonAlert(error);
-        console.log(error);
-    }
+    
 }
 
 // MCIS Create 와 VM Create의 function이름이 같음
@@ -292,42 +277,6 @@ function setMcisInfoToForm(mcisInfoObj) {
     $("#mcis_desc").val(mcisInfoObj.description);
     // $("#label").val(mcisInfoObj.label);
     $("#installMonAgent").val(mcisInfoObj.installMonAgent);
-
-    // // 수신한 obj를 바로 deploy로 던질까?
-    // var url = "/operation/manages/mcismng/reg/proc"
-    // try{        
-    //     axios.post(url,mcisInfoObj,{
-    //         headers :{
-    //             'Content-type': 'application/json',
-    //             // 'Authorization': apiInfo,
-    //             },
-    //     }).then(result=>{
-    //         console.log("MCIR Register data : ",result);
-    //         console.log("Result Status : ",result.status); 
-    //         if(result.status == 201 || result.status == 200){
-    //             commonAlert("Register Success")
-    //             // location.href = "/Manage/MCIS/list";
-    //             // $('#loadingContainer').show();
-    //             // location.href = "/operation/manages/mcismng/mngform/"
-    //             var targetUrl = "/operation/manages/mcismng/mngform"
-    //             changePage(targetUrl)
-    //         }else{
-    //             commonAlert("Register Fail")
-    //             //location.reload(true);
-    //         }
-    //     }).catch((error) => {
-    //         // console.warn(error);
-    //         console.log(error.response)
-    //         var errorMessage = error.response.data.error;
-    //         var statusCode = error.response.status;
-    //         commonErrorAlert(statusCode, errorMessage) 
-
-    //     })
-    // }finally{
-    //     // AjaxLoadingShow(false);
-    // }  
-
-
 }
 
 
@@ -422,6 +371,120 @@ function getSpecListCallbackSuccess(caller, data) {
 
     if (caller == "addedspec") {
         changeCloudConnection()
+    }
+}
+
+function getSecurityGroupListCallbackSuccess(caller, data) {
+    if ( caller == "searchSecurityGroupAssistAtReg"){
+        var rowCount = 0;
+        var html = "";
+        data.forEach(function (vSecurityGroupItem, vSecurityGroupIndex) {
+            
+    
+                var firewallRulesArr = vSecurityGroupItem.firewallRules;
+                var firewallRules = firewallRulesArr[0];
+                console.log("firewallRules");
+                console.log(firewallRules);
+                rowCount++;
+                html += '<tr>'
+    
+                    + '<td class="overlay hidden column-50px" data-th="">'
+                    + '     <input type="checkbox" name="securityGroupAssist_chk" id="securityGroupAssist_Raw_' + vSecurityGroupIndex + '" title="" />'
+                    + '     <input type="hidden" name="securityGroupAssist_id" id="securityGroupAssist_id_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.id + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_name" id="securityGroupAssist_name_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.name + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_vNetId" id="securityGroupAssist_vNetId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.vNetId + '"/>'
+    
+                    + '     <input type="hidden" name="securityGroupAssist_connectionName" id="securityGroupAssist_connectionName_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.connectionName + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_description" id="securityGroupAssist_description_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.description + '"/>'
+    
+                    + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupId" id="securityGroupAssist_cspSecurityGroupId_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.cspSecurityGroupId + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_cspSecurityGroupName" id="securityGroupAssist_cspSecurityGroupName_' + vSecurityGroupIndex + '" value="' + vSecurityGroupItem.cspSecurityGroupName + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_firewallRules_cidr" id="securityGroupAssist_firewallRules_cidr_' + vSecurityGroupIndex + '" value="' + firewallRules.cidr + '"/>'
+                    + '     <input type="hidden" name="securityGroupAssist_firewallRules_direction" id="securityGroupAssist_firewallRules_direction_' + vSecurityGroupIndex + '" value="' + firewallRules.direction + '"/>'
+    
+                    + '     <input type="hidden" name="securityGroup_firewallRules_fromPort" id="securityGroup_firewallRules_fromPort_' + vSecurityGroupIndex + '" value="' + firewallRules.fromPort + '"/>'
+                    + '     <input type="hidden" name="securityGroup_firewallRules_toPort" id="securityGroup_firewallRules_toPort_' + vSecurityGroupIndex + '" value="' + firewallRules.toPort + '"/>'
+                    + '     <input type="hidden" name="securityGroup_firewallRules_ipProtocol" id="securityGroup_firewallRules_ipProtocol_' + vSecurityGroupIndex + '" value="' + firewallRules.ipProtocol + '"/>'
+    
+                    + '     <label for="td_ch1"></label> <span class="ov off"></span>'
+                    + '</td>'
+                    + '<td class="btn_mtd ovm td_left" data-th="Name">'
+                    + vSecurityGroupItem.name
+                    + '</td>'
+                    + '<td class="btn_mtd ovm td_left" data-th="ConnectionName">'
+                    + vSecurityGroupItem.vNetId
+                    + '</td>'
+                    + '<td class="overlay hidden" data-th="Description">' + vSecurityGroupItem.description + '</td>'
+    
+                    + '</tr>'
+           
+        });
+        if (rowCount === 0) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="4">No Data</td></tr>'
+        }
+        $("#assistSecurityGroupList").empty()
+        $("#assistSecurityGroupList").append(html)
+    
+    }
+}
+
+
+function getNetworkListCallbackSuccess(caller, data) {
+    var html = "";
+    if ( caller == "searchNetworkAssistAtReg"){
+        //assistVnetList
+        var calNetIndex = 0;
+        data.forEach(function (vNetItem, vNetIndex) {
+            subnetInfoList = vNetItem.subnetInfoList;
+            subnetInfoList.forEach(function (subnetItem, subnetIndex) {
+                console.log(subnetItem)
+                
+                var subnetId = subnetItem.name
+
+                
+                html += '<tr onclick="setAssistValue(' + calNetIndex + ');">'
+                html += '        <input type="hidden" name="vNetAssist_id" id="vNetAssist_id_' + calNetIndex + '" value="' + vNetItem.id + '"/>'
+                html += '        <input type="hidden" name="vNetAssist_connectionName" id="vNetAssist_connectionName_' + vNetIndex + '" value="' + vNetItem.connectionName + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_name" id="vNetAssist_name_' + calNetIndex + '" value="' + vNetItem.name + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_description" id="vNetAssist_description_' + calNetIndex + '" value="' + vNetItem.description + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_cidrBlock" id="vNetAssist_cidrBlock_' + calNetIndex + '" value="' + vNetItem.cidrBlock + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_cspVnetName" id="vNetAssist_cspVnetName_' + calNetIndex + '" value="' + vNetItem.cspVNetName + '"/>'
+
+                html +=  '        <input type="hidden" name="vNetAssist_subnetId" id="vNetAssist_subnetId_' + calNetIndex + '" value="' + subnetItem.id + '"/>'
+                html +=  '        <input type="hidden" name="vNetAssist_subnetName" id="vNetAssist_subnetName_' + calNetIndex + '" value="' + subnetItem.name + '"/>'
+
+                html +=  '    <td class="overlay hidden" data-th="Name">' + vNetItem.name + '</td>'
+                html +=  '    <td class="btn_mtd ovm td_left" data-th="CidrBlock">'
+                html +=  '        ' + vNetItem.cidrBlock
+                html +=  '    </td>'
+                html +=  '    <td class="btn_mtd ovm td_left" data-th="SubnetId">' + subnetItem.id + "<br>" + subnetItem.ipv4_CIDR
+
+                html +=  '    </td>'
+                html +=  '    <td class="overlay hidden" data-th="Description">' + vNetItem.description + '</td>'
+                html +=  '</tr>'
+            });
+            calNetIndex++
+        });
+
+        if (calNetIndex === 0) {
+            html += '<tr><td class="overlay hidden" data-th="" colspan="4">No Data</td></tr>'
+        }
+        $("#assistVnetList").empty()
+        $("#assistVnetList").append(html)
+    
+        $("#assistVnetList tr").each(function () {
+            $selector = $(this)
+    
+            $selector.on("click", function () {
+    
+                if ($(this).hasClass("on")) {
+                    $(this).removeClass("on");
+                } else {
+                    $(this).addClass("on")
+                    $(this).siblings().removeClass("on");
+                }
+            })
+        })
     }
 }
 
@@ -703,13 +766,55 @@ function filterSecurityGroupList(keywords, caller) {
 }
 
 // pathfinder.js에서 호출하기 때문에 임시로 만들어 둠
+function getSecurityGroupCallbackFail (error){
+    console.log(error)
+}
 function getSecurityGroupListCallbackFail(error) {
-
+    console.log(error)
 }
 
 var totalSshKeyListByNamespace = new Array();
 function getSshKeyListCallbackSuccess(caller, data) {
-    totalSshKeyListByNamespace = data;
+    //totalSshKeyListByNamespace = data;
+    var html = "";
+    var rowCount = 0;
+    data.forEach(function (vSshKeyItem, vSshKeyIndex) {
+            
+            
+
+            rowCount++;
+            html += '<tr onclick="setAssistValue(' + vSshKeyIndex + ');">'
+                + '     <input type="hidden" id="sshKeyAssist_id_' + vSshKeyIndex + '" value="' + vSshKeyItem.id + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_name_' + vSshKeyIndex + '" value="' + vSshKeyItem.name + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_connectionName_' + vSshKeyIndex + '" value="' + vSshKeyItem.connectionName + '"/>'
+                + '     <input type="hidden" id="sshKeyAssist_description_' + vSshKeyIndex + '" value="' + vSshKeyItem.description + '"/>'
+                + '<td class="overlay hidden" data-th="Name">' + vSshKeyItem.name + '</td>'
+                + '<td class="overlay hidden" data-th="ConnectionName">' + vSshKeyItem.connectionName + '</td>'
+                + '<td class="overlay hidden" data-th="Description">' + vSshKeyItem.description + '</td>'
+                + '</td>'
+                + '</tr>'
+        
+    });
+
+    if (rowCount === 0) {
+        html += '<tr><td class="overlay hidden" data-th="" colspan="3">No Data</td></tr>'
+    }
+    $("#assistSshKeyList").empty()
+    $("#assistSshKeyList").append(html)
+
+    $("#assistSshKeyList tr").each(function () {
+        $selector = $(this)
+
+        $selector.on("click", function () {
+
+            if ($(this).hasClass("on")) {
+                $(this).removeClass("on");
+            } else {
+                $(this).addClass("on")
+                $(this).siblings().removeClass("on");
+            }
+        })
+    })
 }
 // 전체 목록에서 filter
 function filterSshKeyList(keywords, caller) {
@@ -805,7 +910,7 @@ function createRecommendSpec(recSpecName) {
     if (specName) {
         axios.post(url, obj, {
             headers: {
-                'Content-type': 'application/json',
+                //'Content-type': "application/json",
                 // 'Authorization': apiInfo,
             }
         }).then(result => {
@@ -839,34 +944,31 @@ function createRecommendSpec(recSpecName) {
 }
 
 function createMcisDynamic() {
-    var specIndex = $("#assistSelectedIndex").val();
     var mcisName = $("#mcis_name").val()
     var mcisDesc = $("#mcis_desc").val()
-    var specName = $("#recommendVmAssist_name_" + specIndex).val()
+
+    if (!mcis_name) {
+        commonAlert("Please Input MCIS Name!!!!!")
+        return;
+    }
 
     if (!mcisDesc) {
         mcisDesc = "Made in CB-TB"
     }
 
-    console.log(specName);
     var url = "/operation/manages/mcismng/mcisdynamic/proc"
-    var obj = {
-        "description": mcisDesc,
-        "name": mcisName,
-        "vm": [
-            {
-                "commonImage": "ubuntu18.04",
-                "commonSpec": specName,
-                "vmGroupSize": "3"
-            }
-        ]
-    }
+    var obj = {}
+    obj['name'] = mcisName
+    obj['description'] = mcisDesc
+    obj['vm'] = Express_Server_Config_Arr
 
     try {
         axios.post(url, obj, {
+
             headers: {
-                'Content-type': 'application/json',
+                //'Content-type': "application/json",
             },
+
         }).then(result => {
             console.log("MCIR Register data : ", result)
             console.log("Result Status : ", result.status)
@@ -887,3 +989,13 @@ function createMcisDynamic() {
         console.log(error);
     }
 }
+
+// function createMcisDynamic() {
+//     var deploymentAlgo = $("#placement_algo").val()
+
+//     if (deploymentAlgo == express) {
+//         createMcisDynamic()
+//     } else {
+//         deployMcis()
+//     }
+// }

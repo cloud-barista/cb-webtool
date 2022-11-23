@@ -80,8 +80,11 @@
 											<li>
 												<label>Deployment Algorithm</label>
 												<select class="selectbox white pline sel_1" name="placement_algo"
-													id="placement_algo" disabled>
-													<option value="">Select Algorithm Name / (ID)</option>
+													id="placement_algo" onchange="closeNewServerForm()">
+													<!-- <option value="">Select Algorithm Name / (ID)</option> -->
+													<option value="express" selected>Express</option>
+													<option value="simple">Simple</option>
+													<option value="expert">Expert</option>
 												</select>
 											</li>
 										</ul>
@@ -92,12 +95,11 @@
 								<div class="servers_box">
 									<div class="title">Servers</div>
 
-									<div class="switch">
-										<span class="txt">Expert
-											<!-- <span class="txt_c on d_none">ON</span><span class="txt_c off ">OFF</span> -->
+									<!--<div class="switch">
+										<span class="txt">Expert											
 										</span>
 										<label><input type="checkbox" name="consent" class="ch" onclick="displayNewServerForm()" /><span></span></label>
-									</div>
+									</div>-->
 
 									<div class="list">
 										<!-- <div class="radio">
@@ -147,6 +149,10 @@
 									</div>
 								</div>
 
+								<!-- Express Server Configuration -->
+								{{template "VmConfigureExpress" .}}
+								<!-- Express Server Configuration -->
+								
 								<!-- Simple Server Configuration -->
 								{{template "VmConfigureSimple" .}}
 								<!-- Simple Server Configuration -->

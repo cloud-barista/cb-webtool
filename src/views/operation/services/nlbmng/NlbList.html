@@ -1,0 +1,163 @@
+{{define "NlbList"}}
+<!-- list -->
+<div class="dashboard dashboard_cont">
+    <div class="d_box box_m box_w100">
+        <div class="titbox">
+            <div class="tit initial"><strong>List of NLB</strong></div>
+            <div class="top_info">
+                <ul>
+                    <li>
+                        <a href="javascript:void(0);">Filter</a>
+                        <div class="infobox">
+                            <div class="box">
+                                <ul>
+                                    <li>
+                                        <a
+                                            href="javascript:void(0);"
+                                            onclick="commonPromptOpen('OprMngMcksStatus', 'nlbListTable')"
+                                            >Status</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="javascript:void(0);"
+                                            onclick="commonPromptOpen('OprMngMcksName', 'nlbListTable')"
+                                            >Name</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="javascript:void(0);"
+                                            onclick="commonPromptOpen('OprMngMcksNetworkCni', 'nlbListTable')"
+                                            >NetworkCni</a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);">Sort</a>
+                        <div class="infobox">
+                            <div class="box">
+                                <ul>
+                                    <li>
+                                        <a
+                                            href="javascript:void(0);"
+                                            onclick="tableSort('nlbListTable', 'Status')"
+                                            >Status</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="javascript:void(0);"
+                                            onclick="tableSort('nlbListTable', 'Name')"
+                                            >Name</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="javascript:void(0);"
+                                            onclick="tableSort('nlbListTable', 'NetworkCni')"
+                                            >NetworkCni</a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);">Action</a>
+                        <div class="infobox">
+                            <div class="box">
+                                <ul>
+                                    <li>
+                                        <strong>Manage</strong>
+                                        <ul>
+                                            <li>
+                                                <a
+                                                    href="javascript:void(0);"
+                                                    data-toggle="modal"
+                                                    data-target="#NLB_n_New"
+                                                    onClick="displayNlbInfo('REG')"
+                                                    >New</a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a
+                                                    href="javascript:void(0);"
+                                                    data-toggle="modal"
+                                                    data-target="#MCKS_n_New"
+                                                    onClick="commonConfirmOpen('DeleteNlb')"
+                                                    >Delete</a
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);"
+                            ><img
+                                src="/assets/img/common/icon_question.png"
+                                alt=""
+                        /></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="ds_cont">
+            <div class="dataTable status_list">
+                <table
+                    cellpadding="0"
+                    cellspacing="0"
+                    summary=""
+                    id="nlbListTable"
+                >
+                    <thead>
+                        <tr>
+                            <th class="column-50px">
+                                <input
+                                    type="checkbox"
+                                    name=""
+                                    value=""
+                                    id="th_chall"
+                                    title=""
+                                /><label for="th_chall"></label>
+                            </th>
+                            <th>Provider</th>
+                            <th>MCIS</th>
+                            <th>NLB Name</th>
+                            <th>Scope</th>
+                            <th>Type</th>
+                            <!-- <th class="column-80px">
+                                Health<span>Status</span>
+                            </th>                             -->
+                            <th class="column-18percent">
+                                Listener Info<span>Protocol | Port</span>
+                            </th>
+                            <th class="column-18percent">
+                                Destination</span>
+                            </th>
+                            <th class="column-18percent">
+                                Target</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="nlbList">
+                        <tr>
+                            <td class="overlay hidden" data-th="" colspan="8">
+                                No Data
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //list -->
+{{end}}

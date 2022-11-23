@@ -24,7 +24,7 @@ type VmSimpleInfo struct {
 	VmSshKeyId         string   `json:"vmSshKeyId"`
 	VmSubnetId         string   `json:"vmSubnetId"`
 	VmVnetId           string   `json:"vmVnetId"`
-	VmGroupSize        int      `json:"vmGroupSize"` //? 는 없는데.. vmGroupId만 있는데...
+	SubGroupSize       int      `json:"subGroupSize"` //subGroupId만 있는데...
 	VmUserAccount      string   `json:"vmUserAccount"`
 	VmUserPassword     string   `json:"vmUserPassword"`
 }
