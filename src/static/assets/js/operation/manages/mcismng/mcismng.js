@@ -908,18 +908,10 @@ function refreshVmDetailInfo() {
 
 // VM 목록에서 VM 클릭시 해당 VM의 상세정보
 function vmDetailInfo(mcisID, mcisName, vmID) {
-    // var url = "/operation/manages/mcismng/" + mcisID + "/vm/" + vmID
-    // axios.get(url, {})
-    //     .then(result => {
-    //         console.log("get  Data : ", result.data);
-
-    // var statusCode = result.data.status;
-    // var message = result.data.message;
-    //
-    // if (statusCode != 200 && statusCode != 201) {
-    //     commonAlert(message + "(" + statusCode + ")");
-    //     return;
-    // }
+    console.log("vmDetailInfo " + vmID)
+    // 기존 값들 초기화
+    clearServerInfo();
+    
     console.log("vmDetailInfo " + vmID)
     var aMcis = new Object();
     for (var mcisIndex in totalMcisListObj) {
@@ -1144,8 +1136,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
         console.log("disk arr : ", disk_arr);
         var temp_disk = "";
 
-        if (disk_arr) {
-            if (disk_arr.length > 0) {
+        if (disk_arr && disk_arr.length > 0) {
                 temp_disk = disk_arr.join(",");
                 var count = 0;
                 var arr_length = disk_arr.length;
@@ -1157,7 +1148,7 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
                     $("#attachedDiskList").empty()
 
                     var attach_html = "";
-                    var html = "<label>Block Device</label>";
+                    var html = "";
                     axios.get(url).then(result => {
                         var diskInfo = result.data.dataDiskInfo
                         console.log("diskInfo result : ", result);
@@ -1184,27 +1175,25 @@ function vmDetailInfo(mcisID, mcisName, vmID) {
                         $("#block_device_section").append(html);
                         $("#attachedDiskList").append(attach_html);
                         if (count == arr_length) {
-                            var temp_btn = '<button type="button" onclick="displayDiskAttachModal(true)">DataDisk 상세</button>';
+                            // var temp_btn = '<a<button type="button" onclick="displayDiskAttachModal(true)">DataDisk 상세</button>';
+                            var temp_btn = '<a href="javascript:void(0);" onclick="displayDiskAttachModal(true);" title="datadisk" >Data Disk Detail</a>'
                             $("#block_device_section").append(temp_btn)
                         }
-                    })
+                    })                    
                 })
-                console.log("temp disk info : ", temp_disk)
-            }
+                
+                console.log("temp disk info : ", temp_disk)            
         } else {
-
-            var temp_btn = "<label>Block Device</label>";
-            temp_btn += '<button type="button" onclick="displayAvailableDisk(true)">Attach DISK</button>';
+            var temp_btn = '<a href="javascript:void(0);" onclick="displayAvailableDisk(true);" title="datadisk" >Attach Disk</a>'
+            //temp_btn += '<button type="button" onclick="displayAvailableDisk(true)">Attach DISK</button>';
             $("#block_device_section").empty()
             $("#attachedDiskList").empty()
             $("#block_device_section").append(temp_btn)
-
+            console.log("temp_btn : empty disk arr ")
         }
 
         if (temp_disk) {
             $("#server_detail_disk_status").val("attached");
-
-
         } else {
             $("#detach_button").hide();
         }
@@ -2659,4 +2648,104 @@ function displayDiskDetachModal(isShow) {
     } else {
         $("#vnetCreateBox").toggleClass("active");
     }
+}
+
+// VM 정보 초기화
+function clearServerInfo(){
+        //vm info
+        $("#vm_id").val("");
+        $("#vm_name").val("");
+    
+        $("#manage_mcis_popup_vm_id").val("")
+        $("#manage_mcis_popup_mcis_id").val("")
+        $("#manage_mcis_popup_sshkey_name").val("")
+    
+        $("#server_info_text").text("")
+        $("#server_detail_info_text").text("")
+    
+        $("#server_detail_view_server_status").val("");
+        
+        $("#server_info_status_icon_img").attr("src", "");
+    
+        $("#server_info_name").val("")
+        $("#server_info_desc").val("")
+    
+        // ip information
+        $("#server_info_public_ip").val("")
+        $("#server_detail_info_public_ip_text").text("")
+        $("#server_info_public_dns").val("")
+        $("#server_info_private_ip").val("")
+        $("#server_info_private_dns").val("")
+    
+        $("#server_detail_view_public_ip").val("")
+        $("#server_detail_view_public_dns").val("")
+        $("#server_detail_view_private_ip").val("")
+        $("#server_detail_view_private_dns").val("")
+    
+        $("#manage_mcis_popup_public_ip").val("")
+    
+        // connection tab
+        $("#server_info_csp_icon").empty()
+        $("#server_connection_view_csp").val("")
+        $("#manage_mcis_popup_csp").val("")
+    
+        $("#server_location_latitude").val("")
+        $("#server_location_longitude").val("")
+    
+        $("#server_info_region").val("")
+        $("#server_info_zone").val("")
+        
+        $("#server_detail_view_region").val("")
+        $("#server_detail_view_zone").val("")
+    
+        $("#server_connection_view_region").val("")
+        $("#server_connection_view_zone").val("")
+    
+        $("#server_info_connection_name").val("")
+        $("#server_connection_view_connection_name").val("")
+    
+        $("#server_connection_view_credential_name").val("")
+        $("#server_connection_view_driver_name").val("")
+    
+        $("#server_info_archi").val("")
+        $("#server_detail_view_archi").val("")
+    
+        $("#server_info_vmspec_name").val("")
+        $("#server_detail_view_server_spec").text("")
+    
+        $("#server_info_start_time").val("")
+    
+        $("#server_detail_view_server_id").val("")
+    
+        $("#server_detail_view_image_id").text("")
+    
+        $("#server_detail_view_vpc_id").text("")
+            
+        $("#server_detail_view_subnet_id").text("")
+        $("#server_detail_view_eth").val("")
+    
+        // user account
+        $("#server_detail_view_access_id_pass").val("")
+        $("#server_detail_view_user_id_pass").val("")
+        $("#manage_mcis_popup_user_name").val("")
+    
+        $("#block_device_section").empty()
+        $("#attachedDiskList").empty()
+    
+        $("#server_detail_view_root_device_type").val("");
+        $("#server_detail_view_root_device").val("");
+        $("#server_detail_disk_id").val("");
+        $("#server_detail_disk_mcis_id").val("");
+        $("#server_detail_disk_vm_id").val("");
+    
+        $("#server_detail_view_security_group").empty()
+        $("#server_detail_view_keypair_name").val("")
+        $("#server_info_cspVMID").val("")
+    
+        $("#selected_mcis_id").val("");
+        $("#selected_vm_id").val("");
+    
+        $("#exportFileName").val("");
+        $("#exportScript").val("");
+    
 }
