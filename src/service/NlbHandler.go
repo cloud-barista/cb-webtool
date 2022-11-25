@@ -125,7 +125,7 @@ func RegNlbByAsync(nameSpaceID string, mcisID string, nlbReq *tbmcis.TbNLBReq, c
 	paramMapper["{nsId}"] = nameSpaceID
 	paramMapper["{mcisId}"] = mcisID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	urlParam += "?register" // 등록 일 때 option으로 register를 붙임.
+	// urlParam += "?option=register" // csp에만 있는 resource를 tumblebug에 등록 할 때 option으로 register를 붙임.
 
 	url := util.TUMBLEBUG + urlParam
 
@@ -149,7 +149,7 @@ func RegNlbByAsync(nameSpaceID string, mcisID string, nlbReq *tbmcis.TbNLBReq, c
 
 		failResultInfo := tbcommon.TbSimpleMsg{}
 		json.NewDecoder(respBody).Decode(&failResultInfo)
-		log.Println("RegMcisByAsync ", failResultInfo)
+		log.Println("RegNlbByAsync ", failResultInfo)
 		StoreWebsocketMessage(util.TASK_TYPE_NLB, taskKey, util.NLB_LIFECYCLE_CREATE, util.TASK_STATUS_FAIL, c) // session에 작업내용 저장
 	} else {
 		StoreWebsocketMessage(util.TASK_TYPE_NLB, taskKey, util.NLB_LIFECYCLE_CREATE, util.TASK_STATUS_COMPLETE, c) // session에 작업내용 저장
@@ -237,7 +237,7 @@ func DelNlb(nameSpaceID string, mcisID string, nlbID string, optionParam string)
 }
 
 // 특정 NLB 조회
-func GetNlbData(nameSpaceID string, mcisID string, nlbID string) ( tbmcis.TbNLBInfo, model.WebStatus) {
+func GetNlbData(nameSpaceID string, mcisID string, nlbID string) (tbmcis.TbNLBInfo, model.WebStatus) {
 	var originalUrl = "/ns/{nsId}/mcis/{mcisId}/nlb/{nlbId}"
 
 	var paramMapper = make(map[string]string)
