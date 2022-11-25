@@ -1,3 +1,21 @@
+# v.0.7.0-Cortado (2022.11.25)
+### API Change
+- cb-spider, cb-tumblebug 변경된 API 반영
+
+### Feature
+- MCIR(Data Disk, MyImage) Management 기능 추가
+- NLB Management 기능 추가
+- PMKS Management 기능 추가
+- MCIS/VM 생성 시 Express 모드 추가
+
+### Bug Fix
+- MCKS Create 고도화
+- 최적배치 UI/UX 개선
+- VM 생성 시 Root Disk Type, Size 설정 지원
+- VM Detail Information 보완
+
+
+
 # v.0.6.0-CafeLatte (2022.07.08)
 ### API Change
 - cb-tumblebug 변경된 API 반영
