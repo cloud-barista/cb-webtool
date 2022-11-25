@@ -319,7 +319,7 @@ function getVnetInfo(configName) {
 					// html2 += '<option value="'+subnetInfoList[k].IId.NameId+'" >'+subnetInfoList[k].Ipv4_CIDR+'</option>';
 				}
 			}
-			if( v_net_cnt > 0 ){
+			if (v_net_cnt > 0) {
 				break;
 			}
 		}
@@ -372,6 +372,7 @@ function getCommonLookupDiskInfoSuccess(caller, provider, data) {
 var ROOT_DISK_MAX_VALUE = 0;
 var ROOT_DISK_MIN_VALUE = 0;
 
+// Disk Type 선택 시 Disk Size Min/Max 설정 > 보완할 것
 function changeDiskSize(type) {
 	var disk_size = DISK_SIZE;
 
@@ -380,7 +381,7 @@ function changeDiskSize(type) {
 			var temp_size = item.split("|")
 			var temp_type = temp_size[0];
 			if (temp_type == type) {
-				ROOT_DISK_MAX_VALUE = temp_size[1];
+				ROOT_DISK_MAX_VALUE = temp_size[1]
 				ROOT_DISK_MIN_VALUE = temp_size[2]
 			}
 		})
@@ -404,8 +405,10 @@ function simpleDone_btn() {
 	//$("#s_imageId").val($("#ss_imageId").val()) 이미지는 내가 처리
 	$("#s_sshKey").val($("#ss_sshKey").val())
 	$("#s_vmUserPassword").val($("#ss_password").val())
-	$("#s_root_disk_size").val($("#ss_root_disk_size").val())
-	$("#s_root_disk_type").val($("#ss_root_disk_type").val())
+	$("#s_rootDiskSize").val($("#ss_root_disk_size").val())
+	$("#s_rootDiskType").val($("#ss_root_disk_type").val())
+
+	console.log($("#s_rootDiskSize").val());
 
 	//$("#s_vm_cnt").val($("#ss_vm_add_cnt").val() + "")
 	$("#s_subGroupSize").val($("#ss_vm_add_cnt").val() + "")
