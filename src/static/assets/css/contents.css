@@ -115,6 +115,10 @@
 
 }
 
+#api_mng_list {
+	height: auto;
+}
+
 #guideArea .modal-dialog {
 	max-width: 100%;
 	width: auto;
