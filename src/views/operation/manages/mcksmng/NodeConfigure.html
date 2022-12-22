@@ -72,11 +72,14 @@
 										<ul>
 											<li>
 												<label><span class="ch">*</span>Root Disk</label>
-												<select class="selectbox white pline sel_4" name="controlPlaneRootDiskType" id="controlPlaneRootDiskType_0" onchange="changeDiskType(this.value, 'controlPlaneRootDiskSize_0');">
+												<select class="selectbox white pline sel_4"
+													name="controlPlaneRootDiskType" id="controlPlaneRootDiskType_0"
+													onchange="changeDiskType(this.value, 'controlPlaneRootDiskSize_0');">
 													<option value="">Select Root Disk Type</option>
 												</select>
-												<input type="text" name="controlPlaneRootDiskSize" value="" placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
-													id="controlPlaneRootDiskSize_0" />							
+												<input type="text" name="controlPlaneRootDiskSize" value=""
+													placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
+													id="controlPlaneRootDiskSize_0" />
 											</li>
 										</ul>
 									</div>
@@ -149,11 +152,13 @@
 										<ul>
 											<li>
 												<label><span class="ch">*</span>Root Disk</label>
-												<select class="selectbox white pline sel_4" name="workerRootDiskType" id="workerRootDiskType_0" onchange="changeDiskType(this.value);">
+												<select class="selectbox white pline sel_4" name="workerRootDiskType"
+													id="workerRootDiskType_0" onchange="changeDiskType(this.value);">
 													<option value="">Select Root Disk Type</option>
 												</select>
-												<input type="text" name="workerRootDiskSize" value="" placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
-													id="workerRootDiskSize_0" />							
+												<input type="text" name="workerRootDiskSize" value=""
+													placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
+													id="workerRootDiskSize_0" />
 											</li>
 										</ul>
 									</div>
@@ -210,7 +215,7 @@
 									<label><span class="ch">*</span>Connection Name</label>
 									<select class="selectbox white pline sel_4" name="workerConnectionName"
 										id="hidden_workerConnectionName"
-										onchange="changeConnectionInfo(this.value, 'hidden_workerSpecId');">
+										onchange="changeConnectionInfo('mcksaddwork',this.value, 'worker', 'addedWorker');">
 										<option value="">Select Connection</option>
 									</select>
 								</li>
@@ -233,6 +238,20 @@
 										id="hidden_workerSpecId">
 										<option value="1">Select Spec</option>
 									</select>
+								</li>
+							</ul>
+						</div>
+						<div class="ipbox ipbox4">
+							<ul>
+								<li>
+									<label><span class="ch">*</span>Root Disk</label>
+									<select class="selectbox white pline sel_4" name="workerRootDiskType"
+										id="hidden_workerRootDiskType" onchange="changeDiskType(this.value);">
+										<option value="">Select Root Disk Type</option>
+									</select>
+									<input type="text" name="workerRootDiskSize" value=""
+										placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
+										id="hidden_workerRootDiskSize" />
 								</li>
 							</ul>
 						</div>
