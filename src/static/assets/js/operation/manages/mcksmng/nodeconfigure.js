@@ -17,8 +17,6 @@ function changeConnectionInfo(caller, configName, targetPrefix, objIndex) {
     var specObjId = targetPrefix + "SpecId_" + objIndex;
     var rootDiskTypeId = targetPrefix + "RootDiskType_" + objIndex;
 
-    console.log("mcks : " + provider, specObjId, rootDiskTypeId);
-
     getSpecInfo(provider, configName, specObjId);
 
     getCommonLookupDiskInfo(rootDiskTypeId, provider, configName);// -> getCommonLookupDiskInfoSuccess
@@ -258,6 +256,8 @@ function addWorkNode() {
         addW = addW.replace(/hidden_workerConnectionName/gi, 'workerConnectionName_' + addWorkerIndex);
         addW = addW.replace(/hidden_workerCount/gi, 'workerCount_' + addWorkerIndex);
         addW = addW.replace(/hidden_workerSpecId/gi, 'workerSpecId_' + addWorkerIndex);
+        addW = addW.replace(/hidden_workerRootDiskType/gi, 'workerRootDiskType_' + addWorkerIndex);
+        addW = addW.replace(/hidden_workerRootDiskSize/gi, 'workerRootDiskSize_' + addWorkerIndex);
         addW = addW.replace(/hidden_workerRemove/gi, 'workerRemove_' + addWorkerIndex);
         addW = addW.replace(/hidden_workerAddCount/gi, 'workerAddCount_' + addWorkerIndex);
 

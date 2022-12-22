@@ -215,7 +215,7 @@
 									<label><span class="ch">*</span>Connection Name</label>
 									<select class="selectbox white pline sel_4" name="workerConnectionName"
 										id="hidden_workerConnectionName"
-										onchange="changeConnectionInfo('mcksaddwork',this.value, 'worker', '1');">
+										onchange="changeConnectionInfo('mcksaddwork',this.value, 'worker', 'addedWorker');">
 										<option value="">Select Connection</option>
 									</select>
 								</li>
@@ -238,6 +238,20 @@
 										id="hidden_workerSpecId">
 										<option value="1">Select Spec</option>
 									</select>
+								</li>
+							</ul>
+						</div>
+						<div class="ipbox ipbox4">
+							<ul>
+								<li>
+									<label><span class="ch">*</span>Root Disk</label>
+									<select class="selectbox white pline sel_4" name="workerRootDiskType"
+										id="hidden_workerRootDiskType" onchange="changeDiskType(this.value);">
+										<option value="">Select Root Disk Type</option>
+									</select>
+									<input type="text" name="workerRootDiskSize" value=""
+										placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
+										id="hidden_workerRootDiskSize" />
 								</li>
 							</ul>
 						</div>
