@@ -56,16 +56,16 @@
 						<input type="hidden" name="provider" id="ep_provider" value=""/>
 						<input type="hidden" name="connectionName" id="ep_connectionName" value=""/>
 						<input type="hidden" name="imageId" id="ep_imageId" value=""/>
-						
+						<li>
+							<label><span class="ch">*</span>Root Disk</label>
+							<select class="selectbox white pline sel_4" name="rootDiskType" id="ep_root_disk_type" onchange="changeDiskSize(this.value);">
+								<option value="">Select Root Disk Type</option>
+							</select>
+							<input type="text" name="rootDiskSize" value="" placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
+								id="ep_root_disk_size" />							
+						</li>
 					</ul>
-					<li>
-						<label><span class="ch">*</span>Root Disk</label>
-						<select class="selectbox white pline sel_4" name="rootDiskType" id="ep_root_disk_type" onchange="changeDiskSize(this.value);">
-							<option value="">Select Root Disk Type</option>
-						</select>
-						<input type="text" name="rootDiskSize" value="" placeholder="Root Disk Size(GB)" class="pline ip_3" title=""
-							id="ep_root_disk_size" />							
-					</li>
+					
 
 				</div>
 			</div>

@@ -501,6 +501,14 @@ function addPin(map, long, lat) {
 
 function addClickPin(map) {
     map.on('click', function (evt) {
+        // remove pin (== remove layer)
+        map.getLayers().forEach(function(layer) {
+            if (layer instanceof ol.layer.Vector) {
+                map.removeLayer(layer)
+            }
+        });
+        
+        // add pin
         var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
         addPin(map, lonlat[0], lonlat[1])
         $("#longitude").val(lonlat[0])

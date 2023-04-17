@@ -30,6 +30,9 @@ func GetUserInfo(c echo.Context, userID string) (map[string]string, bool) {
 	if !ok && userID == user { // setup.env에서 받아온 userID와 비교
 		setAdminUser(c)
 		result, ok = store.Get(userID)
+	} else {
+		setNomalUser(c)
+		result, ok = store.Get(userID)
 	}
 	return result.(map[string]string), ok
 }
@@ -54,6 +57,25 @@ func setAdminUser(c echo.Context) {
 	store.Set(user, obj)
 	store.Save() // 사용자정보를 따로 저장하지 않으므로 설정파일에 유저를 set.
 	log.Println("Set Admin")
+}
+func setNomalUser(c echo.Context) {
+
+	paramUserID := c.FormValue("userID")
+	paramPass := c.FormValue("password")
+
+	store := echosession.FromContext(c) // store내 param은 모두 소문자.
+	obj := map[string]string{
+		"userid":           paramUserID,
+		"username":         paramUserID,
+		"email":            paramUserID,
+		"password":         paramPass,
+		"defaultnamespage": "",
+		"accesstoken":      "",
+		"refreshtoken":     "",
+	}
+	store.Set(paramUserID, obj)
+	store.Save() // 사용자정보를 따로 저장하지 않으므로 설정파일에 유저를 set.
+	log.Println("Set NomalUser")
 }
 
 func SetStore(c echo.Context, storeKeyName string, storeKeyValue interface{}) {

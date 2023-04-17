@@ -35,16 +35,6 @@ function sleep(ms) {
 
 var JZMap;
 function showMap() {
-	// //
-	//
-	// var locationInfo = new Object();
-	// locationInfo.id = "1"
-	// locationInfo.name = "pin"
-	// locationInfo.cloudType = "aws";
-	// locationInfo.latitude = "34.3800";
-	// locationInfo.longitude = "131.7000"
-	// locationInfo.markerIndex = 1
-	// setMap(locationInfo)
 
 	$("#recommend_map").empty()
 	clearLayers(JZMap)
@@ -661,10 +651,10 @@ function showRecommendSpecSetting(option) {
 	$("#recommend_map").css("display", "none")
 
 	if (option == "location") {
-		showMap()
 		console.log("show map");
 		$("#recommendSpecSetting").addClass("flexbox")
 		$("#recommend_map").css("display", "block")
+		showMap()
 	}
 }
 

@@ -6,8 +6,8 @@ html, body { height:100%; }
 
 body.bg_login{ width:100%; height:100%; background-position:center top; background-repeat:no-repeat; background-size:cover; background-image:url(../img/common/bg_login.jpg); transition:all 0.4s ease-in-out; }
 .loginarea { position:relative; height:100%; min-height:800px; }
-.logintop { position:relative; height:calc(100% - 10%); }
-.loginbox { position:absolute; z-index:3; right:250px; top:50%; transform:translateY(-52%); }
+.logintop { position:relative; height:calc(100% - 25%); }
+.loginbox { position:absolute; z-index:3; right:250px; top:50%; transform:translateY(-55%); }
 .loginbox .loginlogo { text-align:center; padding:0; }
 .loginbox .title { text-align:center; padding:30px 0 0 0; color:#fff; font-size:21px; font-weight:800; line-height:22px; text-transform: uppercase; font-family: 'Nanum Myeongjo', sans-serif; }
 .loginbox .title span { font-size:35px; font-family: 'Nanum Myeongjo', sans-serif; font-weight:800; }
@@ -37,7 +37,7 @@ body.bg_login{ width:100%; height:100%; background-position:center top; backgrou
 .loginbox .ipbox .btnbox .btn_pw a:first-child { margin-left:0; }
 .loginbox .ipbox .btnbox  button.btn_login { float:right; cursor:pointer; width:180px; padding:20px 0; height:63px; line-height:23px; border:none; font-size:22px; font-weight:300; color:#fff;  outline:none; border-radius:5px; background-color:#06a9b7; }
 .loginbox .ipbox .btnbox #googleBtn img { width: 240px; margin: 35px 0; cursor: pointer;}
-.login_footer { position:absolute; width:100%; height:30%; background-color:rgba(0,0,0, .33); font-size:12px; }
+.login_footer { position:absolute; width:100%; height:25%; background-color:rgba(0,0,0, .33); font-size:12px; }
 .login_footer .infobox { position:absolute; z-index:3; right:250px; top:40%; transform:translateY(-40%); width:500px; color:#fff; }
 .login_footer .infobox .tit { font-size:20px; line-height:20px; color:#14d4e5; font-weight:300; }
 .login_footer .infobox .linkbox { margin:25px 0 0 0; }
@@ -71,7 +71,7 @@ body.bg_login{ width:100%; height:100%; background-position:center top; backgrou
 	.login_footer .infobox .linkbox { margin:20px 0 0 0; }
 }
 @media screen and (max-width:640px){
-	body.bg_login{ background-size:auto; background-image:url(../img/common/bg_login_m.jpg);} 
+	body.bg_login{ background-size:cover; background-image:url(../img/common/bg_login_m.jpg);} 
 	.loginarea { position:relative; height:100%; min-height:720px; }
 	.loginbox { right:auto; width:100%; }
 	.loginbox .ipbox { padding:20px 20px 0 20px; width:auto; }
@@ -105,7 +105,7 @@ body.bg_login{ width:100%; height:100%; background-position:center top; backgrou
 	.loginbox .loginlogo img { width:70%; }
 	.loginbox .title { padding:18px 0 0 0; font-size:16px; line-height:16px; }
 	.loginbox .title span { font-size:28px; }
-	.login_footer { position:relative; bottom:auto; height:auto; margin:10px 0 0 0; }
+	.login_footer { height:auto; margin:10px 0 0 0; }
 	.loginbox .ipbox { padding:10px 20px 0 20px; }
 	.loginbox .ipbox .btnbox { margin:15px 0 0 0; padding:0 0 25px 0; }
 	.loginbox .ipbox .btnbox span { display:none; }
