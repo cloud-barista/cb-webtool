@@ -25,7 +25,7 @@ import (
 func GetHealthy() model.WebStatus {
 	var originalUrl = "/healthy"
 	urlParam := util.MappingUrlParameter(originalUrl, nil)
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
@@ -52,8 +52,8 @@ func GetClusterList(nameSpaceID string) ([]ladybug.ClusterInfo, model.WebStatus)
 	paramMapper["{namespace}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.MCKS + urlParam
-	// url := util.MCKS + "/ns/" + nameSpaceID + "/clusters"
+	url := util.LADYBUG + urlParam
+	// url := util.LADYBUG + "/ns/" + nameSpaceID + "/clusters"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
@@ -83,8 +83,8 @@ func GetClusterListByID(nameSpaceID string) ([]string, model.WebStatus) {
 	paramMapper["{namespace}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.MCKS + urlParam
-	// url := util.MCKS + "/ns/" + nameSpaceID + "/clusters"
+	url := util.LADYBUG + urlParam
+	// url := util.LADYBUG + "/ns/" + nameSpaceID + "/clusters"
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
 
@@ -119,7 +119,7 @@ func GetClusterData(nameSpaceID string, cluster string) (*ladybug.ClusterInfo, m
 	paramMapper["{cluster}"] = cluster
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
@@ -149,7 +149,7 @@ func RegCluster(nameSpaceID string, clusterReq *ladybug.ClusterRegReq) (*ladybug
 	var paramMapper = make(map[string]string)
 	paramMapper["{namespace}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	pbytes, _ := json.Marshal(clusterReq)
 	fmt.Println(string(pbytes))
@@ -188,7 +188,7 @@ func RegClusterByAsync(nameSpaceID string, clusterReq *ladybug.ClusterRegReq, c 
 	var paramMapper = make(map[string]string)
 	paramMapper["{namespace}"] = nameSpaceID
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	pbytes, _ := json.Marshal(clusterReq)
 	fmt.Println(string(pbytes))
@@ -231,7 +231,7 @@ func DelCluster(nameSpaceID string, clusterName string) (*ladybug.StatusInfo, mo
 	paramMapper["{namespace}"] = nameSpaceID
 	paramMapper["{cluster}"] = clusterName
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	if clusterName == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
@@ -266,7 +266,7 @@ func DelClusterByAsync(nameSpaceID string, clusterName string, c echo.Context) {
 	paramMapper["{namespace}"] = nameSpaceID
 	paramMapper["{cluster}"] = clusterName
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	//if clusterName == "" {
 	//	return nil, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
@@ -379,7 +379,7 @@ func GetNodeList(nameSpaceID string, clusterName string) (ladybug.NodeList, mode
 	paramMapper["{cluster}"] = clusterName
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	// resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
@@ -411,7 +411,7 @@ func GetNodeData(nameSpaceID string, clusterName string, node string) (*ladybug.
 	paramMapper["{node}"] = node
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
 
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	// resp, err := util.CommonHttp(url, nil, http.MethodGet)
 	resp, err := util.CommonHttpWithoutParam(url, http.MethodGet)
@@ -442,7 +442,7 @@ func RegNode(nameSpaceID string, clusterName string, nodeRegReq *ladybug.NodeReg
 	paramMapper["{namespace}"] = nameSpaceID
 	paramMapper["{cluster}"] = clusterName
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	pbytes, _ := json.Marshal(nodeRegReq)
 	fmt.Println(string(pbytes))
@@ -482,7 +482,7 @@ func DelNode(nameSpaceID string, clusterName string, node string) (*ladybug.Stat
 	paramMapper["{cluster}"] = clusterName
 	paramMapper["{node}"] = node
 	urlParam := util.MappingUrlParameter(originalUrl, paramMapper)
-	url := util.MCKS + urlParam
+	url := util.LADYBUG + urlParam
 
 	if clusterName == "" {
 		return nil, model.WebStatus{StatusCode: 500, Message: "cluster is required"}
