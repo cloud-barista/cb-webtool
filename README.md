@@ -1,3 +1,15 @@
+<br>
+
+---
+
+> ⚠️ **Archived Repository**  
+> This repository has been archived and is no longer actively maintained.  
+> It is kept for historical reference, and no new issues or pull requests are being accepted.  
+
+---
+
+<br>
+
 ```
 [NOTE]
 cb-webtool is currently under development. (the latest version is v0.6.0 (Cafe Latte))
